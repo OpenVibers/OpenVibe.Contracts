@@ -190974,6 +190974,55 @@ export interface ChatTicketConversation {
   };
 }
 
+/** chat.vibe-ask-request@1.0.0 (owner: chat) */
+/**
+ * chat.vibe-ask-request@1: a first-party service asks Vibe, OpenVibe's assistant, on a person's behalf (Vibe by voice: OpenVibe.Bot passes what the person said after their machine's call word). Chat keeps it in the person's own Vibe chats, one chat per source ("Voice on <machine>"), and answers with Vibe's reply, which counts against the person's daily allowance like any of their Vibe answers. POST /internal/chat/vibe/ask, capability chat.vibe.ask, loopback only.
+ */
+export interface ChatVibeAskRequest {
+  /**
+   * The person Vibe answers, as the calling service vouches (Bot: the machine's owner, with voice on for that machine).
+   */
+  subject: string;
+  /**
+   * What they asked.
+   */
+  text: string;
+  source: {
+    kind: "voice";
+    /**
+     * The source's stable id (the machine's device id): one chat per source.
+     */
+    id: string;
+    /**
+     * What to call it in the chat's name (the machine's name).
+     */
+    name?: string;
+  };
+  lang?: string;
+  /**
+   * The caller's id for this ask (Bot: device id and the voice_ask id): asked again, the same answer, once.
+   */
+  idempotency_key?: string;
+}
+
+/** chat.vibe-ask-result@1.0.0 (owner: chat) */
+/**
+ * chat.vibe-ask-result@1: Vibe's answer to a chat.vibe-ask-request@1. `answered` carries the reply (plain text, Markdown stripped, for speech); `refused` says why nothing was asked (Vibe resting, the person's daily allowance spent). `url` is the Vibe chat that keeps the question and the answer.
+ */
+export interface ChatVibeAskResult {
+  state: "answered" | "refused";
+  text: string;
+  url?: string;
+  /**
+   * The Vibe chat's slug.
+   */
+  chat?: string;
+  /**
+   * Why it was refused (chat.vibe.off, chat.vibe.allowance).
+   */
+  code?: string;
+}
+
 /** live.moderation.action@1.0.0 (owner: live) */
 /**
  * live.moderation.action v1 (OpenVibe.Live server/db/database.js logModerationAction; ADR-022). A staff or channel moderator action taken on OpenVibe.Live outside chat: site and global bans, IP bans, message deletes and purges from Live's admin panel, a stream force-ended, relay users hidden, channel moderators added or removed. Not a person tidying their own messages or configuring their own channel. Written to Live's outbox in the transaction that records the action. OpenVibe.Network keeps it in the moderation audit log. Envelope: subject { type: moderation_action, id: <action_id> }, visibility internal, actor the acting person when known. details is free-form per action (never secrets or message text beyond what moderators saw).

@@ -1,0 +1,22 @@
+{
+  "id": "chat.vibe.ask",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Ask Vibe, OpenVibe's assistant, on a person's behalf and get its answer: the question and the answer are kept in that person's own Vibe chats (one per source) and count against their daily allowance. For OpenVibe.Bot's Vibe by voice (a machine's owner turned voice on; Bot vouches for the owner). Loopback only, first-party service token; never granted to an app or delegated to an agent.",
+  "permissions": [
+    "chat:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/vibe/ask"
+  ],
+  "inputSchema": "chat.vibe-ask-request@1",
+  "outputSchema": "chat.vibe-ask-result@1"
+}

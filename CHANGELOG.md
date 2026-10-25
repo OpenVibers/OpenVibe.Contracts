@@ -14,6 +14,11 @@ the notes were in the tag and commit messages (`git tag -n1`).
     `url` of the Vibe chat that keeps it.
   - `config` carries `voice` (the owner turned it on for this machine) and `call_word`.
   Fixtures for each, and two invalid ones.
+- **`chat.vibe.ask`** (first-party, sensitive, owned by `chat`): a first-party service asks Vibe on a person's behalf
+  (`POST /internal/chat/vibe/ask`): Bot's Vibe by voice, with the machine's owner as `subject`. Chat keeps the question
+  and the answer in that person's own Vibe chats (one chat per source, "Voice on <machine>") and counts the answer
+  against their daily allowance. Schemas `chat.vibe-ask-request@1` (subject, text, source { kind voice, id, name },
+  lang, idempotency_key) and `chat.vibe-ask-result@1` (state answered | refused, text, url, chat, code), with fixtures.
 - **Quiet hours for personal agents** (consumer plan step 4: "recurring work … with quiet hours and a budget").
   `actor.agent-manage-request@1` and `-result@1` carry `quiet_from` / `quiet_to` (HH:MM UTC, both or neither; the window
   may cross midnight): no scheduled run starts inside it, an hourly run waits until it ends, and a run the owner starts

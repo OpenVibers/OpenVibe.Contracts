@@ -4083,6 +4083,62 @@
     }
    }
   },
+  "/internal/chat/vibe/ask": {
+   "post": {
+    "operationId": "post_internal_chat_vibe_ask",
+    "summary": "Ask Vibe, OpenVibe's assistant, on a person's behalf and get its answer: the question and the answer are kept in that person's own Vibe chats (one per source) and count against their daily allowance.",
+    "description": "**chat.vibe.ask** (first-party): Ask Vibe, OpenVibe's assistant, on a person's behalf and get its answer: the question and the answer are kept in that person's own Vibe chats (one per source) and count against their daily allowance. For OpenVibe.Bot's Vibe by voice (a machine's owner turned voice on; Bot vouches for the owner). Loopback only, first-party service token; never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.vibe"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.vibe.ask"
+    ],
+    "x-openvibe-visibility": [
+     "first-party"
+    ],
+    "x-openvibe-quota-class": "internal-write",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.vibe.ask"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/chat.vibe-ask-request.v1"
+       }
+      }
+     }
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.vibe-ask-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/internal/live/calls": {
    "post": {
     "operationId": "post_internal_live_calls",
@@ -8152,6 +8208,100 @@
       "$ref": "#/components/schemas/chat.ingress-ack.v1/$defs/error"
      }
     ]
+   },
+   "chat.vibe-ask-request.v1": {
+    "title": "ChatVibeAskRequest",
+    "description": "chat.vibe-ask-request@1: a first-party service asks Vibe, OpenVibe's assistant, on a person's behalf (Vibe by voice: OpenVibe.Bot passes what the person said after their machine's call word). Chat keeps it in the person's own Vibe chats, one chat per source (\"Voice on <machine>\"), and answers with Vibe's reply, which counts against the person's daily allowance like any of their Vibe answers. POST /internal/chat/vibe/ask, capability chat.vibe.ask, loopback only.",
+    "type": "object",
+    "required": [
+     "subject",
+     "text",
+     "source"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person Vibe answers, as the calling service vouches (Bot: the machine's owner, with voice on for that machine)."
+     },
+     "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "What they asked."
+     },
+     "source": {
+      "type": "object",
+      "required": [
+       "kind",
+       "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "kind": {
+        "enum": [
+         "voice"
+        ]
+       },
+       "id": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+        "description": "The source's stable id (the machine's device id): one chat per source."
+       },
+       "name": {
+        "type": "string",
+        "maxLength": 80,
+        "description": "What to call it in the chat's name (the machine's name)."
+       }
+      }
+     },
+     "lang": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8}){0,2}$"
+     },
+     "idempotency_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+      "description": "The caller's id for this ask (Bot: device id and the voice_ask id): asked again, the same answer, once."
+     }
+    }
+   },
+   "chat.vibe-ask-result.v1": {
+    "title": "ChatVibeAskResult",
+    "description": "chat.vibe-ask-result@1: Vibe's answer to a chat.vibe-ask-request@1. `answered` carries the reply (plain text, Markdown stripped, for speech); `refused` says why nothing was asked (Vibe resting, the person's daily allowance spent). `url` is the Vibe chat that keeps the question and the answer.",
+    "type": "object",
+    "required": [
+     "state",
+     "text"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "state": {
+      "enum": [
+       "answered",
+       "refused"
+      ]
+     },
+     "text": {
+      "type": "string",
+      "maxLength": 4000
+     },
+     "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+     },
+     "chat": {
+      "type": "string",
+      "pattern": "^v-[0-9a-f]{12}$",
+      "description": "The Vibe chat's slug."
+     },
+     "code": {
+      "type": "string",
+      "description": "Why it was refused (chat.vibe.off, chat.vibe.allowance)."
+     }
+    }
    },
    "common.owned-resource-control-request.v1": {
     "title": "OwnedResourceControlRequest",
