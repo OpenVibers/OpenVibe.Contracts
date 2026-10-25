@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 73,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-73",
+  "kind": "desk",
+  "value": {
+    "action": "exec",
+    "width": 1280
+  }
+}
