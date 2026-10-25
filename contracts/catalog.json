@@ -5079,6 +5079,24 @@
       "status": "active"
     },
     {
+      "id": "chat.vibe-ask-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/vibe-ask-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.vibe-ask-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/vibe-ask-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.moderation.action",
       "version": "1.0.0",
       "owner": "live",

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/vibe-ask-result.v1.json",
+  "title": "ChatVibeAskResult",
+  "description": "chat.vibe-ask-result@1: Vibe's answer to a chat.vibe-ask-request@1. `answered` carries the reply (plain text, Markdown stripped, for speech); `refused` says why nothing was asked (Vibe resting, the person's daily allowance spent). `url` is the Vibe chat that keeps the question and the answer.",
+  "type": "object",
+  "required": [
+    "state",
+    "text"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "state": {
+      "enum": [
+        "answered",
+        "refused"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "chat": {
+      "type": "string",
+      "pattern": "^v-[0-9a-f]{12}$",
+      "description": "The Vibe chat's slug."
+    },
+    "code": {
+      "type": "string",
+      "description": "Why it was refused (chat.vibe.off, chat.vibe.allowance)."
+    }
+  }
+}

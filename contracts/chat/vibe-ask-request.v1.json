@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/vibe-ask-request.v1.json",
+  "title": "ChatVibeAskRequest",
+  "description": "chat.vibe-ask-request@1: a first-party service asks Vibe, OpenVibe's assistant, on a person's behalf (Vibe by voice: OpenVibe.Bot passes what the person said after their machine's call word). Chat keeps it in the person's own Vibe chats, one chat per source (\"Voice on <machine>\"), and answers with Vibe's reply, which counts against the person's daily allowance like any of their Vibe answers. POST /internal/chat/vibe/ask, capability chat.vibe.ask, loopback only.",
+  "type": "object",
+  "required": [
+    "subject",
+    "text",
+    "source"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person Vibe answers, as the calling service vouches (Bot: the machine's owner, with voice on for that machine)."
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "What they asked."
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "voice"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+          "description": "The source's stable id (the machine's device id): one chat per source."
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 80,
+          "description": "What to call it in the chat's name (the machine's name)."
+        }
+      }
+    },
+    "lang": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8}){0,2}$"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+      "description": "The caller's id for this ask (Bot: device id and the voice_ask id): asked again, the same answer, once."
+    }
+  }
+}
