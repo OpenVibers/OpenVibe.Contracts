@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "seq": 1,
+  "ts": 1,
+  "type": "voice_answer",
+  "id": "x",
+  "state": "done"
+}

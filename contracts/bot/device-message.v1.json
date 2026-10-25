@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/device-message.v1.json",
   "title": "BotDeviceMessage",
-  "description": "bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state. The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).",
+  "description": "bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).",
   "oneOf": [
     {
       "description": "Server to device, once authenticated.",
@@ -122,6 +122,16 @@
         },
         "estop_latched": {
           "type": "boolean"
+        },
+        "voice": {
+          "type": "boolean",
+          "description": "Vibe by voice: the owner turned it on for this machine, so it may listen for its call word and send voice_ask (absent or false: it does not)."
+        },
+        "call_word": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 40,
+          "description": "The call word the owner chose (\"hey vibe\" unless they chose another); sent with voice on."
         }
       }
     },
@@ -901,6 +911,108 @@
         },
         "reason": {
           "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Server to device (Vibe by voice): Vibe's answer to a voice_ask, for the machine to speak and show. `working` says Vibe is on it (a longer task), `answered` carries the answer, `refused` says why nothing was done (voice off for the machine, the daily allowance spent, the request refused).",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "state"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "voice_answer"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+          "description": "The voice_ask this answers."
+        },
+        "state": {
+          "enum": [
+            "working",
+            "answered",
+            "refused"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The answer to speak (answered), a short line (working), or why not (refused)."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "Where the person can read it later: the Vibe chat that keeps the question and the answer."
+        }
+      }
+    },
+    {
+      "description": "Device to server (Vibe by voice, consumer plan §8): the person said the machine's call word, and this is what they asked after it, transcribed on the machine itself (nothing leaves it before the call word). OpenVibe.Bot hands it to Vibe as the machine's owner, only when the owner turned voice on for the machine (config `voice`), and answers with voice_answer frames carrying the same id.",
+      "type": "object",
+      "required": [
+        "v",
+        "seq",
+        "ts",
+        "type",
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "const": "voice_ask"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+          "description": "The device's id for this request (unique per device for a day); the answers carry it."
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "What the person asked after the call word, as the machine heard it."
+        },
+        "lang": {
+          "type": "string",
+          "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8}){0,2}$",
+          "description": "The language it was heard in (BCP 47), when the recogniser knows."
+        },
+        "robot_id": {
+          "type": "string",
+          "pattern": "^rob_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "The robot whose microphone heard it, when the device is a robot's bridge."
         }
       }
     }

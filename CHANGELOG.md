@@ -6,6 +6,14 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.214.0 — 2026-10-26
 
+- **Vibe by voice on a person's own machine** (the owner, 2026-10-24: "a call word on Live and on Node"; consumer plan
+  §8). `bot.device-message@1` gains two frames and two config fields, all additive:
+  - `voice_ask` (device to server): `id` and `text`, what the person asked after the machine's call word, transcribed
+    on the machine (nothing leaves it before the call word); optional `lang` (BCP 47) and `robot_id`.
+  - `voice_answer` (server to device): the same `id`, `state` working | answered | refused, the `text` to speak and the
+    `url` of the Vibe chat that keeps it.
+  - `config` carries `voice` (the owner turned it on for this machine) and `call_word`.
+  Fixtures for each, and two invalid ones.
 - **Quiet hours for personal agents** (consumer plan step 4: "recurring work … with quiet hours and a budget").
   `actor.agent-manage-request@1` and `-result@1` carry `quiet_from` / `quiet_to` (HH:MM UTC, both or neither; the window
   may cross midnight): no scheduled run starts inside it, an hourly run waits until it ends, and a run the owner starts
