@@ -31,7 +31,8 @@
     "chat.inbox.read",
     "chat.inbox.reply",
     "chat.inbox.manage",
-    "chat.vibe.ask"
+    "chat.vibe.ask",
+    "chat.vibe.deliver"
   ],
   "eventsProduced": [
     "chat.message.created",

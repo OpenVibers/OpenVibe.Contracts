@@ -4139,6 +4139,62 @@
     }
    }
   },
+  "/internal/chat/vibe/deliver": {
+   "post": {
+    "operationId": "post_internal_chat_vibe_deliver",
+    "summary": "Put a result of a person's own work into their Vibe chats: OpenVibe.Actor posts each finished run of one of their OpenVibe Agents (one chat per agent, named after it) as Vibe's message, so each run is",
+    "description": "**chat.vibe.deliver** (first-party): Put a result of a person's own work into their Vibe chats: OpenVibe.Actor posts each finished run of one of their OpenVibe Agents (one chat per agent, named after it) as Vibe's message, so each run is a chat they can open and continue. No AI answer is made and nothing counts against their allowance. Loopback only, first-party service token; never granted to an app or delegated to an agent.",
+    "tags": [
+     "chat.vibe"
+    ],
+    "x-openvibe-capabilities": [
+     "chat.vibe.deliver"
+    ],
+    "x-openvibe-visibility": [
+     "first-party"
+    ],
+    "x-openvibe-quota-class": "internal-write",
+    "security": [
+     {
+      "openvibeToken": [
+       "chat.vibe.deliver"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/chat.vibe-deliver-request.v1"
+       }
+      }
+     }
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/chat.vibe-deliver-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/internal/live/calls": {
    "post": {
     "operationId": "post_internal_live_calls",
@@ -8300,6 +8356,93 @@
      "code": {
       "type": "string",
       "description": "Why it was refused (chat.vibe.off, chat.vibe.allowance)."
+     }
+    }
+   },
+   "chat.vibe-deliver-request.v1": {
+    "title": "ChatVibeDeliverRequest",
+    "description": "chat.vibe-deliver-request@1: a first-party service puts a result of the person's own work into their Vibe chats (OpenVibe.Actor: each finished run of one of their OpenVibe Agents, when the agent sends its results to Vibe). Chat keeps one chat per source, named after it, and posts the text there as Vibe's message, so each run is a chat they can open and continue. No AI answer is made and nothing counts against their allowance. POST /internal/chat/vibe/deliver, capability chat.vibe.deliver, loopback only.",
+    "type": "object",
+    "required": [
+     "subject",
+     "source",
+     "text",
+     "idempotency_key"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person whose work it is, as the calling service vouches (Actor: the agent's owner)."
+     },
+     "source": {
+      "type": "object",
+      "required": [
+       "kind",
+       "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "kind": {
+        "enum": [
+         "agent"
+        ]
+       },
+       "id": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+        "description": "The source's stable id (the agent's agt_ id): one chat per source."
+       },
+       "name": {
+        "type": "string",
+        "maxLength": 80,
+        "description": "What to call it in the chat's name (the agent's name)."
+       }
+      }
+     },
+     "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000,
+      "description": "The result, in Markdown (as Vibe's answers are shown)."
+     },
+     "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "description": "Where the whole run is (its steps, sources and cost)."
+     },
+     "idempotency_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+      "description": "The caller's id for this result (Actor: the run's task id): sent again, it is posted once."
+     }
+    }
+   },
+   "chat.vibe-deliver-result.v1": {
+    "title": "ChatVibeDeliverResult",
+    "description": "chat.vibe-deliver-result@1: where a chat.vibe-deliver-request@1 was posted. `repeated` is true when the idempotency key was seen before (nothing was posted again).",
+    "type": "object",
+    "required": [
+     "chat",
+     "url",
+     "repeated"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "chat": {
+      "type": "string",
+      "pattern": "^v-[0-9a-f]{12}$",
+      "description": "The Vibe chat's slug."
+     },
+     "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+     },
+     "repeated": {
+      "type": "boolean"
      }
     }
    },

@@ -6,6 +6,13 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.214.0 — 2026-10-26
 
+- **`chat.vibe.deliver`** (first-party, sensitive, owned by `chat`; consumer plan §4: "each run is a chat you can
+  open"): a first-party service puts a result of the person's own work into their Vibe chats (`POST
+  /internal/chat/vibe/deliver`). OpenVibe.Actor posts each finished run of one of their OpenVibe Agents into one chat per
+  agent, named after it, as Vibe's message. No AI answer is made and nothing counts against the allowance. Schemas
+  `chat.vibe-deliver-request@1` (subject, source { kind agent, id, name }, text in Markdown, url, idempotency_key) and
+  `chat.vibe-deliver-result@1` (chat, url, repeated), with fixtures. `actor.agent-manage-request@1` and `-result@1`
+  gain `send_to_vibe` (boolean, default true), the agent's switch for it.
 - **`actor.agent.manage`** lists the suggestions routes (`GET /api/v1/me/agents/:id/suggestions`, `POST
   …/suggestions/:pid/:action` with apply | dismiss | undo): a personal agent may suggest a line for its instructions after a
   run that passed its check, which waits for the person (OpenVibe.Actor#115).

@@ -1,0 +1,11 @@
+{
+  "subject": "usr_01JABCDEFGHJKMNPQRSTVWXYZ0",
+  "source": {
+    "kind": "agent",
+    "id": "agt_01JABCDEFGHJKMNPQRSTVWXYZ1",
+    "name": "Remote jobs"
+  },
+  "text": "**3 new remote video editing jobs** today:\n\n- [Editor at Example](https://example.com/jobs/1)",
+  "url": "https://openvibe.actor/tasks/tsk_01JABCDEFGHJKMNPQRSTVWXYZ2",
+  "idempotency_key": "agent-run-0001"
+}
