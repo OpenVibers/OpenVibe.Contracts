@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/command.v1.json",
   "title": "BotCommand",
-  "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input, browser; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Node scales them to the real screen): refused at level observe, approved one by one at ask. browser (added in 0.174.0) drives a Chromium-family browser the agent uses on the machine, in a profile of its own: open an http(s) URL, click a CSS selector or the button or link showing a text, fill a field, press a named key, go back, read the page, take a screenshot, or close it. read, screenshot and close run at every level; the rest act (refused at observe, approved one by one at ask), and below level full open refuses an address on the machine's own network.",
+  "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input, browser; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Node scales them to the real screen): refused at level observe, approved one by one at ask. browser (added in 0.174.0) drives a Chromium-family browser the agent uses on the machine, in a profile of its own: open an http(s) URL, click a CSS selector or the button or link showing a text, fill a field, press a named key, go back, read the page, take a screenshot, or close it. read, screenshot and close run at every level; the rest act (refused at observe, approved one by one at ask), and below level full open refuses an address on the machine's own network. desk (added in 0.214.0; plan track K, Vibe's desk) starts, stops or reports a private desk on the machine: a display of its own (Xvfb, a window manager, its own session and browser profile) where an agent works without touching the person's screen, which the person can watch and take over; screen, input and browser take desk: private to act there instead of on the person's screen (main, the default). Starting and stopping a desk act (refused at observe, approved one by one at ask); status runs at every level.",
   "type": "object",
   "required": [
     "type",
@@ -44,7 +44,8 @@
         "screen",
         "probe",
         "input",
-        "browser"
+        "browser",
+        "desk"
       ]
     },
     "value": {
@@ -280,6 +281,13 @@
                 "type": "integer",
                 "minimum": 320,
                 "maximum": 3840
+              },
+              "desk": {
+                "enum": [
+                  "main",
+                  "private"
+                ],
+                "description": "which display: the person's own screen (main, the default) or the machine's private desk (desk: start first)"
               }
             }
           }
@@ -402,6 +410,13 @@
                 "maxLength": 64,
                 "pattern": "^[A-Za-z0-9_+\\-]+$",
                 "description": "one key or chord, for example Return, Escape, ctrl+s, alt+Tab"
+              },
+              "desk": {
+                "enum": [
+                  "main",
+                  "private"
+                ],
+                "description": "which display: the person's own screen (main, the default) or the machine's private desk (desk: start first)"
               }
             }
           }
@@ -485,6 +500,13 @@
                 "type": "integer",
                 "minimum": 320,
                 "maximum": 2560
+              },
+              "desk": {
+                "enum": [
+                  "main",
+                  "private"
+                ],
+                "description": "which display: the person's own screen (main, the default) or the machine's private desk (desk: start first)"
               }
             },
             "allOf": [
@@ -567,6 +589,54 @@
                 }
               }
             ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "desk"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "action": {
+                "enum": [
+                  "start",
+                  "stop",
+                  "status"
+                ],
+                "description": "start the private desk (a no-op when it runs), stop it, or report it"
+              },
+              "width": {
+                "type": "integer",
+                "minimum": 640,
+                "maximum": 3840,
+                "description": "start only: the desk's width in pixels (default 1280)"
+              },
+              "height": {
+                "type": "integer",
+                "minimum": 480,
+                "maximum": 2160,
+                "description": "start only: the desk's height in pixels (default 800)"
+              }
+            }
           }
         }
       }

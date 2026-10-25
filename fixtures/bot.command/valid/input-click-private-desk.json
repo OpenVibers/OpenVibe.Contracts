@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "seq": 71,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-71",
+  "kind": "input",
+  "value": {
+    "action": "click",
+    "x": 640,
+    "y": 400,
+    "width": 1280,
+    "height": 800,
+    "desk": "private"
+  }
+}

@@ -6,6 +6,12 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.214.0 — 2026-10-26
 
+- **A private desk for agents on a person's own machine** (plan track K, consumer plan step 2: Vibe's desk on Node).
+  `bot.command@1` takes kind `desk` (`action`: start | stop | status; `width`, `height` on start): a display of its own
+  on the machine (Xvfb, a window manager, its own session and browser profile) where an agent works without touching
+  the person's screen, which the person can watch and take over. `screen`, `input` and `browser` take `desk: private`
+  to act there instead of on the person's screen (`main`, the default). Starting and stopping act (refused at observe,
+  approved one by one at ask); status runs at every level. Fixtures for both.
 - **Support inboxes open to developer apps** (the owner, 2026-10-24/25: openvibe.chat "fully modular and SDK and
   API"). Three public, sensitive capabilities owned by `chat`, on the routes OpenVibe.Chat already serves; an app acts
   only for the person who authorized it (`on_behalf_of`), and that person's role in the inbox decides the rest:
