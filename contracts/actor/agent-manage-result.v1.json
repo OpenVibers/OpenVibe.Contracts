@@ -84,6 +84,22 @@
                 "maximum": 6,
                 "description": "0 is Sunday; for weekly."
               },
+              "quiet_from": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                "description": "HH:MM UTC: quiet hours start. No scheduled run starts from quiet_from to quiet_to (the window may cross midnight; an hourly run waits until it ends); a run its owner starts still runs. Both or neither."
+              },
+              "quiet_to": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                "description": "HH:MM UTC: quiet hours end."
+              },
               "status": {
                 "enum": [
                   "active",
@@ -234,6 +250,22 @@
           "minimum": 0,
           "maximum": 6,
           "description": "0 is Sunday; for weekly."
+        },
+        "quiet_from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+          "description": "HH:MM UTC: quiet hours start. No scheduled run starts from quiet_from to quiet_to (the window may cross midnight; an hourly run waits until it ends); a run its owner starts still runs. Both or neither."
+        },
+        "quiet_to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+          "description": "HH:MM UTC: quiet hours end."
         },
         "status": {
           "enum": [

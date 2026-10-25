@@ -200335,7 +200335,7 @@ export interface ActorTaskCreateRequest {
 
 /** actor.agent-manage-request@1.0.0 (owner: actor) */
 /**
- * actor.agent-manage-request@1: bodies of actor.agent.manage on OpenVibe.Actor. POST /api/v1/me/agents { name, instructions, mode?, budget_per_run_usd?, daily_runs_max?, schedule?, schedule_at?, schedule_dow?, status? } creates a personal agent (10 per person: 429 actor.agent.limit); PATCH /api/v1/me/agents/:id takes any subset. POST /api/v1/me/agents/:id/memory { text } adds a note (1–1000 characters; 50 notes, the oldest agent-written note goes first, a person's note never automatically) and PATCH /api/v1/me/agents/:id/memory/:mem { text } edits one. Unknown fields are 422 actor.agent.invalid; another person's agent is 404 actor.agent.not_found.
+ * actor.agent-manage-request@1: bodies of actor.agent.manage on OpenVibe.Actor. POST /api/v1/me/agents { name, instructions, mode?, budget_per_run_usd?, daily_runs_max?, schedule?, schedule_at?, schedule_dow?, quiet_from?, quiet_to?, status? } creates a personal agent (10 per person: 429 actor.agent.limit); PATCH /api/v1/me/agents/:id takes any subset. POST /api/v1/me/agents/:id/memory { text } adds a note (1–1000 characters; 50 notes, the oldest agent-written note goes first, a person's note never automatically) and PATCH /api/v1/me/agents/:id/memory/:mem { text } edits one. Unknown fields are 422 actor.agent.invalid; another person's agent is 404 actor.agent.not_found.
  */
 export type ActorAgentManageRequest =
   | {
@@ -200356,6 +200356,14 @@ export type ActorAgentManageRequest =
        * 0 is Sunday; for weekly.
        */
       schedule_dow?: number | null;
+      /**
+       * HH:MM UTC: quiet hours start. No scheduled run starts from quiet_from to quiet_to (the window may cross midnight; an hourly run waits until it ends); a run its owner starts still runs. Both or neither.
+       */
+      quiet_from?: string | null;
+      /**
+       * HH:MM UTC: quiet hours end.
+       */
+      quiet_to?: string | null;
       status?: "active" | "paused";
     }
   | {
@@ -200388,6 +200396,14 @@ export type ActorAgentManageResult =
          * 0 is Sunday; for weekly.
          */
         schedule_dow?: number | null;
+        /**
+         * HH:MM UTC: quiet hours start. No scheduled run starts from quiet_from to quiet_to (the window may cross midnight; an hourly run waits until it ends); a run its owner starts still runs. Both or neither.
+         */
+        quiet_from?: string | null;
+        /**
+         * HH:MM UTC: quiet hours end.
+         */
+        quiet_to?: string | null;
         status: "active" | "paused";
         next_run_at?: string | null;
         last_run_at?: string | null;
@@ -200426,6 +200442,14 @@ export type ActorAgentManageResult =
        * 0 is Sunday; for weekly.
        */
       schedule_dow?: number | null;
+      /**
+       * HH:MM UTC: quiet hours start. No scheduled run starts from quiet_from to quiet_to (the window may cross midnight; an hourly run waits until it ends); a run its owner starts still runs. Both or neither.
+       */
+      quiet_from?: string | null;
+      /**
+       * HH:MM UTC: quiet hours end.
+       */
+      quiet_to?: string | null;
       status: "active" | "paused";
       next_run_at?: string | null;
       last_run_at?: string | null;

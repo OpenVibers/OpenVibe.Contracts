@@ -6,6 +6,10 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.214.0 — 2026-10-26
 
+- **Quiet hours for personal agents** (consumer plan step 4: "recurring work … with quiet hours and a budget").
+  `actor.agent-manage-request@1` and `-result@1` carry `quiet_from` / `quiet_to` (HH:MM UTC, both or neither; the window
+  may cross midnight): no scheduled run starts inside it, an hourly run waits until it ends, and a run the owner starts
+  still runs. Fixtures for both.
 - **A private desk for agents on a person's own machine** (plan track K, consumer plan step 2: Vibe's desk on Node).
   `bot.command@1` takes kind `desk` (`action`: start | stop | status; `width`, `height` on start): a display of its own
   on the machine (Xvfb, a window manager, its own session and browser profile) where an agent works without touching
