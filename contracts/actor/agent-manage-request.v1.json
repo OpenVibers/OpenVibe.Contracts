@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/actor/agent-manage-request.v1.json",
   "title": "ActorAgentManageRequest",
-  "description": "actor.agent-manage-request@1: bodies of actor.agent.manage on OpenVibe.Actor. POST /api/v1/me/agents { name, instructions, mode?, budget_per_run_usd?, daily_runs_max?, schedule?, schedule_at?, schedule_dow?, status? } creates a personal agent (10 per person: 429 actor.agent.limit); PATCH /api/v1/me/agents/:id takes any subset. POST /api/v1/me/agents/:id/memory { text } adds a note (1–1000 characters; 50 notes, the oldest agent-written note goes first, a person's note never automatically) and PATCH /api/v1/me/agents/:id/memory/:mem { text } edits one. Unknown fields are 422 actor.agent.invalid; another person's agent is 404 actor.agent.not_found.",
+  "description": "actor.agent-manage-request@1: bodies of actor.agent.manage on OpenVibe.Actor. POST /api/v1/me/agents { name, instructions, mode?, budget_per_run_usd?, daily_runs_max?, schedule?, schedule_at?, schedule_dow?, quiet_from?, quiet_to?, status? } creates a personal agent (10 per person: 429 actor.agent.limit); PATCH /api/v1/me/agents/:id takes any subset. POST /api/v1/me/agents/:id/memory { text } adds a note (1–1000 characters; 50 notes, the oldest agent-written note goes first, a person's note never automatically) and PATCH /api/v1/me/agents/:id/memory/:mem { text } edits one. Unknown fields are 422 actor.agent.invalid; another person's agent is 404 actor.agent.not_found.",
   "anyOf": [
     {
       "type": "object",
@@ -61,6 +61,22 @@
           "minimum": 0,
           "maximum": 6,
           "description": "0 is Sunday; for weekly."
+        },
+        "quiet_from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+          "description": "HH:MM UTC: quiet hours start. No scheduled run starts from quiet_from to quiet_to (the window may cross midnight; an hourly run waits until it ends); a run its owner starts still runs. Both or neither."
+        },
+        "quiet_to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+          "description": "HH:MM UTC: quiet hours end."
         },
         "status": {
           "enum": [
