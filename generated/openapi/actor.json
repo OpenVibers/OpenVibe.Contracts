@@ -65,8 +65,8 @@
   "/api/v1/me/agents": {
    "get": {
     "operationId": "get_api_v1_me_agents",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -112,8 +112,8 @@
    },
    "post": {
     "operationId": "post_api_v1_me_agents",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -168,8 +168,8 @@
   "/api/v1/me/agents/{id}": {
    "delete": {
     "operationId": "delete_api_v1_me_agents_id",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -225,8 +225,8 @@
    },
    "get": {
     "operationId": "get_api_v1_me_agents_id",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -282,8 +282,8 @@
    },
    "patch": {
     "operationId": "patch_api_v1_me_agents_id",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -348,8 +348,8 @@
   "/api/v1/me/agents/{id}/memory": {
    "delete": {
     "operationId": "delete_api_v1_me_agents_id_memory",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -405,8 +405,8 @@
    },
    "get": {
     "operationId": "get_api_v1_me_agents_id_memory",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -462,8 +462,8 @@
    },
    "post": {
     "operationId": "post_api_v1_me_agents_id_memory",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -528,8 +528,8 @@
   "/api/v1/me/agents/{id}/memory/{mem}": {
    "delete": {
     "operationId": "delete_api_v1_me_agents_id_memory_mem",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -593,8 +593,8 @@
    },
    "patch": {
     "operationId": "patch_api_v1_me_agents_id_memory_mem",
-    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete wh",
-    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), and read, add, edit and delete what it remembers, or forget everything. A person's agents are theirs alone; another person's agent is 404.",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
     "tags": [
      "actor.agent"
     ],
@@ -781,6 +781,147 @@
        "application/json": {
         "schema": {
          "$ref": "#/components/schemas/platform.task.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/agents/{id}/suggestions": {
+   "get": {
+    "operationId": "get_api_v1_me_agents_id_suggestions",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
+    "tags": [
+     "actor.agent"
+    ],
+    "x-openvibe-capabilities": [
+     "actor.agent.manage"
+    ],
+    "x-openvibe-visibility": [
+     "public"
+    ],
+    "x-openvibe-quota-class": "actor-task",
+    "security": [
+     {
+      "openvibeToken": [
+       "actor.agent.manage"
+      ]
+     }
+    ],
+    "x-openvibe-input": {
+     "$ref": "#/components/schemas/actor.agent-manage-request.v1"
+    },
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/actor.agent-manage-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/agents/{id}/suggestions/{pid}/{action}": {
+   "post": {
+    "operationId": "post_api_v1_me_agents_id_suggestions_pid_action",
+    "summary": "Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what i",
+    "description": "**actor.agent.manage** (public): Keep your personal agents on OpenVibe.Actor: create, read, change and delete an agent (standing instructions, mode, a budget per run, a daily run cap and a schedule), read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
+    "tags": [
+     "actor.agent"
+    ],
+    "x-openvibe-capabilities": [
+     "actor.agent.manage"
+    ],
+    "x-openvibe-visibility": [
+     "public"
+    ],
+    "x-openvibe-quota-class": "actor-task",
+    "security": [
+     {
+      "openvibeToken": [
+       "actor.agent.manage"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/actor.agent-manage-request.v1"
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "pid",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "action",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/actor.agent-manage-result.v1"
         }
        }
       }
