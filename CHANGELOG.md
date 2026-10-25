@@ -6,6 +6,9 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.214.0 — 2026-10-26
 
+- **`actor.agent.manage`** lists the suggestions routes (`GET /api/v1/me/agents/:id/suggestions`, `POST
+  …/suggestions/:pid/:action` with apply | dismiss | undo): a personal agent may suggest a line for its instructions after a
+  run that passed its check, which waits for the person (OpenVibe.Actor#115).
 - **Run's manifest names its loopback origin** (`internalOrigin` http://127.0.0.1:4920, `health` /api/health, `ready`
   /api/ready): Network's status page showed Run as unknown ("no internal address known to Network") although it runs.
   Its `lifecycle` said "not built yet" throughout; it now says what Run does (shutdown drains, what it resumes at boot,
