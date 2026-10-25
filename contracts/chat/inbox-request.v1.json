@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/inbox-request.v1.json",
+  "title": "ChatInboxRequest",
+  "description": "chat.inbox-request@1: a support inbox, made (POST /api/chat/inboxes, name required) or changed by its owner (PATCH /api/chat/inboxes/:id, any subset). Unknown fields are ignored; a bad value is 422 with a code (inbox.name, inbox.origin, inbox.hours, inbox.retention, …). Members (POST /:id/members { username }), saved replies (POST /:id/replies { shortcut, body }), webhooks (POST /:id/webhooks { url }), actions (POST /:id/actions { name, description, url, params }) and verified visitors (POST /:id/identity { action: on | rotate | off }) take their own small bodies on the routes chat.inbox.manage names.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 60
+    },
+    "greeting": {
+      "type": "string",
+      "maxLength": 300,
+      "description": "The first line a visitor sees."
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "ai_enabled": {
+      "type": "boolean",
+      "description": "Vibe, the assistant, answers first."
+    },
+    "ai_instructions": {
+      "type": "string",
+      "maxLength": 4000,
+      "description": "What Vibe should know and how to answer (content, never rules that override Chat's)."
+    },
+    "knowledge_urls": {
+      "anyOf": [
+        {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        {
+          "type": "string",
+          "maxLength": 5000
+        }
+      ],
+      "description": "https pages Vibe may read (an array, or one a line)."
+    },
+    "allowed_origins": {
+      "anyOf": [
+        {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        {
+          "type": "string",
+          "maxLength": 4000
+        }
+      ],
+      "description": "The sites the widget answers (empty: any)."
+    },
+    "handoff": {
+      "type": "boolean",
+      "description": "The inbox's people answer too (false: a site assistant where only Vibe answers)."
+    },
+    "hours": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "tz": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6
+          }
+        },
+        "start": {
+          "type": "string",
+          "pattern": "^\\d{2}:\\d{2}$"
+        },
+        "end": {
+          "type": "string",
+          "pattern": "^\\d{2}:\\d{2}$"
+        }
+      },
+      "description": "When the people answer; null: always."
+    },
+    "route": {
+      "enum": [
+        "none",
+        "round_robin"
+      ],
+      "description": "round_robin: a visitor waiting for a person goes to the next of the people."
+    },
+    "retention_days": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 7,
+      "maximum": 3650,
+      "description": "How long finished conversations stay; null: forever."
+    }
+  }
+}

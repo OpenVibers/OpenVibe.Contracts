@@ -1,0 +1,37 @@
+{
+  "id": "chat.inbox.manage",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Set up support inboxes for the person on OpenVibe.Chat: make one (it is theirs), and as its owner change it (name, greeting, colour, Vibe and its instructions and pages, allowed sites, hours, routing, retention), add and remove its people, keep saved replies, and connect webhooks, actions (endpoints Vibe may call) and verified visitors. Secrets are shown only on the answer that made them. Deleting an inbox archives it.",
+  "permissions": [
+    "chat:inbox:manage"
+  ],
+  "resourceConstraints": [
+    "inbox_member"
+  ],
+  "quotaClass": "chat-inbox-manage",
+  "events": [],
+  "implementedBy": [
+    "POST /api/chat/inboxes",
+    "PATCH /api/chat/inboxes/:id",
+    "DELETE /api/chat/inboxes/:id",
+    "POST /api/chat/inboxes/:id/members",
+    "DELETE /api/chat/inboxes/:id/members/:userId",
+    "POST /api/chat/inboxes/:id/replies",
+    "DELETE /api/chat/inboxes/:id/replies/:replyId",
+    "GET /api/chat/inboxes/:id/webhooks",
+    "POST /api/chat/inboxes/:id/webhooks",
+    "POST /api/chat/inboxes/:id/webhooks/:hookId/test",
+    "DELETE /api/chat/inboxes/:id/webhooks/:hookId",
+    "GET /api/chat/inboxes/:id/actions",
+    "POST /api/chat/inboxes/:id/actions",
+    "POST /api/chat/inboxes/:id/actions/:actionId/test",
+    "DELETE /api/chat/inboxes/:id/actions/:actionId",
+    "POST /api/chat/inboxes/:id/identity"
+  ],
+  "inputSchema": "chat.inbox-request@1",
+  "outputSchema": "chat.inbox-result@1"
+}

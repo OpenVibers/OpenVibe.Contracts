@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.214.0 — 2026-10-26
+
+- **Support inboxes open to developer apps** (the owner, 2026-10-24/25: openvibe.chat "fully modular and SDK and
+  API"). Three public, sensitive capabilities owned by `chat`, on the routes OpenVibe.Chat already serves; an app acts
+  only for the person who authorized it (`on_behalf_of`), and that person's role in the inbox decides the rest:
+  - `chat.inbox.read`: the inboxes the person works in, conversations (waiting first), messages, saved replies, and
+    the owner's export (JSON or CSV);
+  - `chat.inbox.reply`: reply, resolve, reopen, give back to Vibe, assign, mark read, translate;
+  - `chat.inbox.manage`: make an inbox, and as its owner change it (Vibe, sites, hours, routing, retention), its people,
+    saved replies, webhooks, actions and verified visitors.
+- **Schemas:** `chat.inbox-request@1`, `chat.inbox-result@1`, `chat.inbox-reply-request@1`,
+  `chat.inbox-conversations-result@1` (public), with fixtures.
+- **`capability@1`:** `resourceConstraints` may say `inbox_member`.
+
 ## 0.213.0 — 2026-10-25
 
 - **Plain names in every menu** (the owner, 2026-10-24: make the products consumer-friendly and familiar, with the

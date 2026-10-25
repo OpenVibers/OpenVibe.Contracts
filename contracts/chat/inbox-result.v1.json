@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/inbox-result.v1.json",
+  "title": "ChatInboxResult",
+  "description": "chat.inbox-result@1: a support inbox as its people see it ({ inbox, members?, embed? }: the widget snippet and panel address), or the inboxes a person works in ({ inboxes }, each with their role and how many conversations wait and are open). Secrets (the identity secret, webhook and action secrets) appear only on the answer that made them.",
+  "type": "object",
+  "properties": {
+    "inbox": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^inb_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "inboxes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "role"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "agent"
+            ]
+          },
+          "waiting": {
+            "type": "integer"
+          },
+          "open": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "embed": {
+      "type": "object",
+      "properties": {
+        "script": {
+          "type": "string"
+        },
+        "panel": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

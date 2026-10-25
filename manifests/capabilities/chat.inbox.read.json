@@ -1,0 +1,27 @@
+{
+  "id": "chat.inbox.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Read the support inboxes the person works in on OpenVibe.Chat (docs/platform.md): the inboxes, each one's conversations (waiting first) and messages, and its saved replies; the owner also exports every conversation (JSON or CSV). Visitors' messages are people's words to a team, so an app sees only inboxes its person works in, and the person's own role decides the rest (the export is the owner's).",
+  "permissions": [
+    "chat:inbox:read"
+  ],
+  "resourceConstraints": [
+    "inbox_member"
+  ],
+  "quotaClass": "chat-inbox-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/chat/inboxes",
+    "GET /api/chat/inboxes/:id",
+    "GET /api/chat/inboxes/:id/conversations",
+    "GET /api/chat/inboxes/:id/conversations/:cid/messages",
+    "GET /api/chat/inboxes/:id/replies",
+    "GET /api/chat/inboxes/:id/export"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "chat.inbox-conversations-result@1"
+}

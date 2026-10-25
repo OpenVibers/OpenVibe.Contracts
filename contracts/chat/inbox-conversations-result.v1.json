@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/inbox-conversations-result.v1.json",
+  "title": "ChatInboxConversationsResult",
+  "description": "chat.inbox-conversations-result@1: an inbox's conversations ({ conversations }: waiting first, each with status, who has it, the visitor's name and whether their site verified them, a preview and unread count), one conversation's messages ({ conversation, messages }, ?after= a message id), a reply ({ message }), its saved replies ({ replies }), or the owner's export (?format=json: { inbox, exported_at, conversations: [{ …, messages }] }; ?format=csv is text/csv, one row per message). A message is { id, author: visitor | agent | ai | system, author_name, body, created_at, account? }.",
+  "type": "object",
+  "properties": {
+    "conversations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^cnv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "enum": [
+              "bot",
+              "waiting",
+              "open",
+              "resolved"
+            ]
+          }
+        }
+      }
+    },
+    "conversation": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "author",
+          "body"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "author": {
+            "enum": [
+              "visitor",
+              "agent",
+              "ai",
+              "system"
+            ]
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "message": {
+      "type": "object"
+    },
+    "replies": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}
