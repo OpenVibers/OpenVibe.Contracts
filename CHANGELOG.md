@@ -6,6 +6,10 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.214.0 — 2026-10-26
 
+- **Run's manifest names its loopback origin** (`internalOrigin` http://127.0.0.1:4920, `health` /api/health, `ready`
+  /api/ready): Network's status page showed Run as unknown ("no internal address known to Network") although it runs.
+  Its `lifecycle` said "not built yet" throughout; it now says what Run does (shutdown drains, what it resumes at boot,
+  rollback, no leases).
 - **Vibe by voice on a person's own machine** (the owner, 2026-10-24: "a call word on Live and on Node"; consumer plan
   §8). `bot.device-message@1` gains two frames and two config fields, all additive:
   - `voice_ask` (device to server): `id` and `text`, what the person asked after the machine's call word, transcribed
