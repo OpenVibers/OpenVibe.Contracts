@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.220.0 — 2026-10-27
+
+- **A person's own provider may be their own machine** (AI on your own machines, step 4). `ai.credential-put@1` and
+  `ai.credential@1` take provider **`node`** with **`machine`**, a `dev_` id.
+  - There is no key or base_url, and no cost.
+  - OpenVibe.AI reaches the model only through OpenVibe.Bot (capability `bot.machine.ai`), only for that person, and
+    only where they turned on "Let my AI use this computer's models".
+  - A node credential has no `key_hint`; the others still require one.
+- Fixtures: a valid node credential (put and read), a node credential with a key, and one without its machine.
+
 ## 0.219.0 — 2026-10-27
 
 - **AI on your own machines** (the roadmap's user-owned GPU route; `OpenVibe_AI_On_Your_Machines_Plan_2026-10-27.md`).

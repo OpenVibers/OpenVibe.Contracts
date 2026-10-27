@@ -145534,13 +145534,19 @@ export interface BlogThemeRequest {
 
 /** ai.credential-put@1.0.0 (owner: ai) */
 /**
- * ai.credential-put@1 (OpenVibe.AI; roadmap WS-O task 2): a person's own provider key, stored by the service that holds their consent (Live, for a streamer's AI viewers), PUT /api/v1/credentials/{subject} with capability ai.credential.manage. OpenVibe.AI encrypts the key at rest and never returns it; runs that name the credential call that provider with it, never a shared key, and are limited by `budget_usd_per_day`. `base_url` is any https endpoint (OpenAI-compatible or Anthropic); OpenVibe.AI connects only to public addresses.
+ * ai.credential-put@1 (OpenVibe.AI; roadmap WS-O task 2): a person's own provider key, stored by the service that holds their consent (Live, for a streamer's AI viewers), PUT /api/v1/credentials/{subject} with capability ai.credential.manage. OpenVibe.AI encrypts the key at rest and never returns it; runs that name the credential call that provider with it, never a shared key, and are limited by `budget_usd_per_day`. `base_url` is any https endpoint (OpenAI-compatible or Anthropic); OpenVibe.AI connects only to public addresses. Provider `node` (contracts 0.220.0) is the person's own machine instead: `machine` names it, there is no key or base_url, and a run reaches it only through OpenVibe.Bot (capability bot.machine.ai), only for that person, where they turned on "Let my AI use this computer's models".
  */
-export interface AiCredentialPut {
+export type AiCredentialPut = {
+  [k: string]: unknown | undefined;
+} & {
   /**
-   * openai = any OpenAI-compatible endpoint.
+   * openai = any OpenAI-compatible endpoint. node = the person's own machine: a model on their own model server, through their OpenVibe Node and OpenVibe.Bot (no key, no base_url, no cost).
    */
-  provider: "openai" | "anthropic";
+  provider: "openai" | "anthropic" | "node";
+  /**
+   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model (the ai plugin, contracts 0.219.0)
+   */
+  machine?: string;
   base_url?: string;
   /**
    * Required the first time, and whenever provider or base_url changes (a key is never sent to a new endpoint without being entered again); otherwise the stored key is kept.
@@ -145560,21 +145566,27 @@ export interface AiCredentialPut {
    * The person's own daily cap on estimated spend with this key; 0 or absent = no cap.
    */
   budget_usd_per_day?: number;
-}
+};
 
 /** ai.credential@1.0.0 (owner: ai) */
 /**
  * ai.credential@1 (OpenVibe.AI; roadmap WS-O task 2): a stored credential as its owner service reads it (GET or PUT /api/v1/credentials/{subject}): never the key, only its last four characters.
  */
-export interface AiCredential {
+export type AiCredential = {
+  [k: string]: unknown | undefined;
+} & {
   subject: string;
   /**
    * The service that stored it; only it may use or change it.
    */
   owner: string;
-  provider: "openai" | "anthropic";
+  provider: "openai" | "anthropic" | "node";
+  /**
+   * provider node: the machine it runs on
+   */
+  machine?: string | null;
   base_url?: string | null;
-  key_hint: string;
+  key_hint?: string;
   /**
    * Model per Live role; `chat` is the default for the others.
    */
@@ -145590,7 +145602,7 @@ export interface AiCredential {
   created_at: string;
   updated_at: string;
   last_used_at?: string | null;
-}
+};
 
 /** ai.attribution-quota-put@1.0.0 (owner: ai) */
 /**
