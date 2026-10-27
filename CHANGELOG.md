@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.221.0 — 2026-10-27
+
+- **Any of your own machines** (AI on your own machines). A node credential's `machine`, in `ai.credential-put@1` and
+  `ai.credential@1`, may be **`any`**: whichever of the person's machines is on, lets their AI use its models and offers
+  the model.
+  - The fastest goes first, by the speed OpenVibe.Bot reports (`computer.ai_speed`, OpenVibe.Node v0.29.0).
+  - The next one is tried when one is busy or away.
+  - It is never anyone else's machine, and never another provider.
+- Fixtures: a valid `any`, and an invalid machine that is neither a `dev_` id nor `any`.
+
 ## 0.220.0 — 2026-10-27
 
 - **A person's own provider may be their own machine** (AI on your own machines, step 4). `ai.credential-put@1` and
