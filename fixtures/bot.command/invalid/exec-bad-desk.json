@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 89,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-89",
+  "kind": "exec",
+  "value": {
+    "argv": ["xterm"],
+    "desk": "desk-../x"
+  }
+}

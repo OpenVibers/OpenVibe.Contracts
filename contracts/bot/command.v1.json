@@ -185,6 +185,15 @@
               "stdin": {
                 "type": "string",
                 "maxLength": 65536
+              },
+              "desk": {
+                "type": "string",
+                "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
+                "description": "which session it runs in (Node v0.26.0): the person's own (main, the default), or a desk's (private or desk-<name>): the desk's display, session bus and temp folder, so a program with windows opens on that desk; start the desk first"
+              },
+              "detach": {
+                "type": "boolean",
+                "description": "on a whole desk only (Node v0.26.0): start a program that keeps running (an office suite, a terminal, an editor) and answer at once with its pid; it runs until the desk stops. Never on the person's own session or a browser desk"
               }
             }
           }

@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.218.0 — 2026-10-27
+
+- **Programs on a desk** (the Desks plan's desk templates; OpenVibe.Node v0.26.0). `bot.command@1`'s `exec` takes:
+  - `desk`: the program runs in that desk's session (its display, session bus and temp folder), so a program with
+    windows opens on the desk.
+  - `detach`: on a whole desk only. It starts a program that keeps running, such as an office suite, a terminal or an
+    editor, and answers at once with its pid. The program runs until the desk stops.
+  - An agent can now work in real applications on a desk of its own: open them with `exec`, look with `screen`, use
+    them with `input`.
+- Fixtures: a valid detached program on a named desk, and an invalid one with a bad desk name.
+
 ## 0.217.0 — 2026-10-27
 
 - **Kept desk profiles** (the Desks plan's step D7, on one machine; OpenVibe.Node v0.24.0). On `start`, kind `desk`
