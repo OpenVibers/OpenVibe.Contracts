@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.216.0 — 2026-10-27
+
+- **Browser desks** (the Desks plan's step D2; OpenVibe.Node v0.23.0). Kind `desk` takes `kind` on start:
+  - `desktop` (the default) is a whole screen: a display, a window manager and a browser shown on it. It needs Linux
+    with Xvfb.
+  - `browser` is a browser alone, with no display, at about half the cost. Its screen, mouse and keyboard, and its live
+    view, are the page's own. It runs on Linux or macOS with Chromium, so a Mac can host desks too.
+  - A machine says which kinds it runs in its computer capabilities (`desk.kinds`).
+- Fixtures: a valid browser desk start, and an invalid start with an unknown kind.
+
 ## 0.215.0 — 2026-10-27
 
 - **Several desks per machine** (the Desks plan's step D1, `OpenVibe_Agent_Desks_Plan_2026-10-27.md`; OpenVibe.Node
