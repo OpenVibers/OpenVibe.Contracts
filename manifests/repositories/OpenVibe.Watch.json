@@ -2,7 +2,7 @@
   "name": "OpenVibe.Watch",
   "repository": "OpenVibers/OpenVibe.Watch",
   "service": "watch",
-  "product": "Watch",
+  "product": "Alerts",
   "stage": "alpha",
   "version": "0.1.0",
   "runtime": "node 22",
@@ -15,9 +15,9 @@
     "openvibe.watch"
   ],
   "pins": {
-    "openvibe-contracts": "v0.209.0",
-    "openvibe-sdk": "v0.62.0",
-    "openvibe-shared": "v4.9.0"
+    "openvibe-contracts": "v0.214.0",
+    "openvibe-sdk": "v0.65.0",
+    "openvibe-shared": "v4.15.2"
   },
   "deployed": true,
   "exposure": "live",

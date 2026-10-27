@@ -2,12 +2,12 @@
   "name": "OpenVibe.AI",
   "repository": "OpenVibers/OpenVibe.AI",
   "service": "ai",
-  "product": "AI",
+  "product": "AI API",
   "stage": "alpha",
   "version": "0.1.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 9,
+  "migrations": 10,
   "authority": [
     "ai.usage_summary"
   ],
@@ -17,9 +17,9 @@
     "openvibe.ai"
   ],
   "pins": {
-    "openvibe-contracts": "v0.209.0",
-    "openvibe-sdk": "v0.62.0",
-    "openvibe-shared": "v4.9.0"
+    "openvibe-contracts": "v0.214.0",
+    "openvibe-sdk": "v0.65.0",
+    "openvibe-shared": "v4.15.2"
   },
   "deployed": true,
   "exposure": "live",
