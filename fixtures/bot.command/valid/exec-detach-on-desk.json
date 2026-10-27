@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "seq": 88,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-88",
+  "kind": "exec",
+  "value": {
+    "argv": ["libreoffice", "--writer", "/home/me/work/notes.odt"],
+    "desk": "desk-task-01k8ab",
+    "detach": true
+  }
+}
