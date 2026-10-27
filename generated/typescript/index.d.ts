@@ -197207,7 +197207,8 @@ export type BotCommand = {
     | "probe"
     | "input"
     | "browser"
-    | "desk";
+    | "desk"
+    | "ai";
   value?: {};
   ms?: number;
 };

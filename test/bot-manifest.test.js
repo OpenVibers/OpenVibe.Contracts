@@ -10,7 +10,8 @@ const c = require('..');
 // bot.computer.control: an owner's agent uses their own machine (0.166.0, plan T14/T17; Bot's STATUS.json lists it with
 // the computer kinds).
 // bot.resource.control: an owner stops or resumes their robot from OpenVibe.Services (0.176.0, ADR-048 step 8 phase 2).
-const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
+// bot.machine.ai: a model on the person's own machine, for that person (0.219.0, the AI-on-your-machines plan).
+const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
 
 const bot = c.services.get('bot');
@@ -28,6 +29,10 @@ assert.ok(!c.validate('bot.command@1', cmd('exec', { argv: 'ls -la' })).valid, '
 assert.ok(!c.validate('bot.command@1', cmd('exec', {})).valid, 'exec needs argv');
 assert.ok(!c.validate('bot.command@1', cmd('fs', { op: 'delete', path: '/x' })).valid, 'fs has no delete');
 assert.ok(!c.validate('bot.command@1', cmd('screen', { max_width: 100 })).valid, 'a screen at least 320 wide');
+// Kind ai (0.219.0): one chat completion, its messages each a role and text, nothing that reaches the machine itself.
+assert.ok(c.validate('bot.command@1', cmd('ai', { model: 'llama3.1:8b', messages: [{ role: 'user', content: 'hi' }] })).valid, 'ai with a model and messages');
+assert.ok(!c.validate('bot.command@1', cmd('ai', { model: 'llama3.1:8b', messages: [{ role: 'tool', content: 'x' }] })).valid, 'ai messages are system, user or assistant');
+assert.ok(!c.validate('bot.command@1', cmd('ai', { model: 'm', messages: [{ role: 'user', content: 'x' }], endpoint: 'http://10.0.0.1/' })).valid, 'ai never names an endpoint');
 assert.ok(c.validate('bot.command@1', cmd('probe', { target: 'tcp://192.168.1.5:22' })).valid, 'a probe of a LAN port');
 assert.ok(!c.validate('bot.command@1', cmd('probe', { target: 'file:///etc/passwd' })).valid, 'a probe is http(s) or tcp');
 assert.ok(c.validate('bot.command@1', cmd('input', { action: 'click', x: 10, y: 20, width: 1280, height: 720 })).valid, 'a click in a picture\'s space');

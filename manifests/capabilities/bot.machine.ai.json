@@ -1,0 +1,24 @@
+{
+  "id": "bot.machine.ai",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Run a model on a person's own machine for them (the AI-on-your-machines plan, the roadmap's user-owned GPU route): bot.command@1 kind ai through POST /api/v1/machines/:id/commands, with a Network service token naming that person in X-OV-Subject, for a machine whose owner is that person and who turned on 'Let my AI use this computer's models'. The machine's OpenVibe.Node relays the chat completion to its own local model server and answers with the reply; it reads and changes nothing else there. Bot takes it from no one else, never places one person's request on another's machine, and audits the model and token counts, never the text.",
+  "permissions": [
+    "bot:machine:ai"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "bot-control",
+  "events": [
+    "bot.command.refused"
+  ],
+  "implementedBy": [
+    "POST /api/v1/machines/:id/commands with kind ai (bot.command@1, answered by bot.command-result@1 with data)"
+  ],
+  "inputSchema": "bot.command@1",
+  "outputSchema": "bot.command-result@1"
+}

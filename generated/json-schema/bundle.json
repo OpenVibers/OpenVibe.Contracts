@@ -72848,7 +72848,8 @@
               "probe",
               "input",
               "browser",
-              "desk"
+              "desk",
+              "ai"
             ]
           },
           "value": {
@@ -73459,6 +73460,78 @@
                       "minimum": 480,
                       "maximum": 2160,
                       "description": "start only: the desk's height in pixels (default 800)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "ai"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "object",
+                  "required": [
+                    "model",
+                    "messages"
+                  ],
+                  "additionalProperties": false,
+                  "description": "one chat completion on the person's own machine (OpenVibe.Node v0.27.0's ai plugin, relayed to a local OpenAI-compatible model server: Ollama, llama.cpp, LM Studio); the answer's data is { model, message: { role, content }, usage? }. It reads nothing on the machine and changes nothing there",
+                  "properties": {
+                    "model": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "description": "a model the machine lists in its capabilities (ai.models)"
+                    },
+                    "messages": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 200,
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "role",
+                          "content"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "role": {
+                            "enum": [
+                              "system",
+                              "user",
+                              "assistant"
+                            ]
+                          },
+                          "content": {
+                            "type": "string",
+                            "maxLength": 65536
+                          }
+                        }
+                      }
+                    },
+                    "max_tokens": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32768
+                    },
+                    "temperature": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 2
                     }
                   }
                 }

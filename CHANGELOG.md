@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.219.0 — 2026-10-27
+
+- **AI on your own machines** (the roadmap's user-owned GPU route; `OpenVibe_AI_On_Your_Machines_Plan_2026-10-27.md`).
+  `bot.command@1` gains kind `ai`: one chat completion (`model`, `messages`, `max_tokens`, `temperature`) on the
+  person's own machine. OpenVibe.Node v0.27.0's `ai` plugin relays it to a local model server (Ollama, llama.cpp,
+  LM Studio) and answers `{ model, message, usage? }`.
+- New capability **`bot.machine.ai`** (first-party, sensitive, owned by `bot`). A service, OpenVibe.AI, runs a model on a
+  person's own machine for that person, where they turned on "Let my AI use this computer's models". It never places
+  one person's request on another's machine, and the audit keeps the model and token counts, never the text.
+- Fixtures: a valid chat, and an invalid one with no messages.
+
 ## 0.218.0 — 2026-10-27
 
 - **Programs on a desk** (the Desks plan's desk templates; OpenVibe.Node v0.26.0). `bot.command@1`'s `exec` takes:
