@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "seq": 82,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-82",
+  "kind": "browser",
+  "value": {
+    "action": "open",
+    "url": "https://openvibe.network/",
+    "desk": "desk-task-01k8ab"
+  }
+}

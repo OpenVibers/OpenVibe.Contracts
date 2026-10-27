@@ -283,11 +283,9 @@
                 "maximum": 3840
               },
               "desk": {
-                "enum": [
-                  "main",
-                  "private"
-                ],
-                "description": "which display: the person's own screen (main, the default) or the machine's private desk (desk: start first)"
+                "type": "string",
+                "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
+                "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Node v0.19.0: one per agent task); start the desk first"
               }
             }
           }
@@ -412,11 +410,9 @@
                 "description": "one key or chord, for example Return, Escape, ctrl+s, alt+Tab"
               },
               "desk": {
-                "enum": [
-                  "main",
-                  "private"
-                ],
-                "description": "which display: the person's own screen (main, the default) or the machine's private desk (desk: start first)"
+                "type": "string",
+                "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
+                "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Node v0.19.0: one per agent task); start the desk first"
               }
             }
           }
@@ -502,11 +498,9 @@
                 "maximum": 2560
               },
               "desk": {
-                "enum": [
-                  "main",
-                  "private"
-                ],
-                "description": "which display: the person's own screen (main, the default) or the machine's private desk (desk: start first)"
+                "type": "string",
+                "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
+                "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Node v0.19.0: one per agent task); start the desk first"
               }
             },
             "allOf": [
@@ -620,9 +614,15 @@
                 "enum": [
                   "start",
                   "stop",
-                  "status"
+                  "status",
+                  "list"
                 ],
-                "description": "start the private desk (a no-op when it runs), stop it, or report it"
+                "description": "start a desk (a no-op when it runs), stop it, report it, or list the desks that run (list, Node v0.19.0)"
+              },
+              "desk": {
+                "type": "string",
+                "pattern": "^(private|desk-[a-z0-9][a-z0-9-]{0,23})$",
+                "description": "which desk (Node v0.19.0): private (the default, the first desk) or desk-<name>; each desk has its own display, browser profile, downloads and temp folder, and a machine runs at most its max_desks at once"
               },
               "width": {
                 "type": "integer",

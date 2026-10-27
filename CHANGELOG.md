@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.215.0 — 2026-10-27
+
+- **Several desks per machine** (the Desks plan's step D1, `OpenVibe_Agent_Desks_Plan_2026-10-27.md`; OpenVibe.Node
+  v0.19.0). `bot.command@1`'s `desk` on `screen`, `input` and `browser` takes a named desk, `desk-<name>` (lower-case
+  letters, digits and dashes, up to 24 after `desk-`), besides `main` and `private`. Kind `desk` takes `desk` (which
+  desk; `private` by default) and the action `list` (the desks that run). Each desk is a separate computer for its
+  agent: its own display, browser profile, downloads and temp folder. A machine runs at most its `max_desks` at once.
+  Fixtures for a named start, list, a browser on a named desk, a bad name and `main` as a desk to start.
+
 ## 0.214.1 — 2026-10-27
 
 - Site text only (`manifests/services/*.json`), so the Network's home and menus say what each product does today:

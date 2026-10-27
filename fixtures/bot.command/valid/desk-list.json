@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "seq": 81,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-81",
+  "kind": "desk",
+  "value": {
+    "action": "list"
+  }
+}
