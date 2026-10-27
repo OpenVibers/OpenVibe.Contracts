@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.214.1 — 2026-10-27
+
+- Site text only (`manifests/services/*.json`), so the Network's home and menus say what each product does today:
+  - **Games:** the tagline is "Browser games, and games you make". The description and the build-your-own FAQ name
+    the creator platform shipped on 10-27: starter ground, a team of up to eight, remix with credit, the asset store,
+    and first-person or top-down. World scripts are left out while they are switched off in production.
+  - **Tools:** more than 180 tools (184 on the home today), with barcodes and QR codes.
+  - **Robots:** drive by keyboard, gamepad or on-screen joystick, from the robot's page or under a live stream.
+- `docs/ESTATE.md` and `manifests/repositories/` regenerated from every repository's main (Contracts#219).
+
 ## 0.214.0 — 2026-10-26
 
 - **`chat.vibe.deliver`** (first-party, sensitive, owned by `chat`; consumer plan §4: "each run is a chat you can

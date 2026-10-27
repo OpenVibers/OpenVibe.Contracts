@@ -22,7 +22,7 @@
     "name": "Robots",
     "icon": "bot",
     "tagline": "Drive any robot from your browser",
-    "what": "Pair a robot with one pasted command and drive it from any browser, with roles, limits and an emergency stop on every command.",
+    "what": "Pair a robot with one pasted command and drive it from any browser, by keyboard, gamepad or on-screen joystick, from its own page or under a live stream, with roles, limits and an emergency stop on every command.",
     "legalProfile": "games",
     "position": 21
   },

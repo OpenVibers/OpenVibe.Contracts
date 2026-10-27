@@ -22,8 +22,8 @@
   "site": {
     "name": "Games",
     "icon": "games",
-    "tagline": "Browser games, and worlds you build",
-    "what": "Scraplandia, Salvage Rush and other multiplayer games that run in a tab, know your OpenVibe account and keep leaderboards. Build your own world in the map editor and publish it for anyone to join.",
+    "tagline": "Browser games, and games you make",
+    "what": "Scraplandia, Salvage Rush and other multiplayer games that run in a tab and keep your progress. Make your own: build a world in the map editor with a team, remix anyone's, use builds other creators share, play it first-person or top-down, and publish it for anyone to join.",
     "legalProfile": "games",
     "position": 3,
     "faq": [
@@ -33,7 +33,7 @@
       },
       {
         "question": "Can I build my own world?",
-        "answer": "Yes. Any account can make up to five worlds in the map editor, publish them and let anyone join from a browser."
+        "answer": "Yes. Any account can make up to five worlds. Each starts on flat ground you can sculpt in the map editor; invite up to eight people to build it with you, place builds and scripts other creators share in the asset store, choose first-person or top-down, and publish it for anyone to join from a browser. Others can remix it into their own, with your name on it."
       },
       {
         "question": "Is my progress saved?",
