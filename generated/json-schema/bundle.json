@@ -13132,8 +13132,8 @@
           },
           "machine": {
             "type": "string",
-            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model (the ai plugin, contracts 0.219.0)"
+            "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
+            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine."
           },
           "base_url": {
             "type": "string",
@@ -13261,8 +13261,8 @@
               "string",
               "null"
             ],
-            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "provider node: the machine it runs on"
+            "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
+            "description": "provider node: the machine it runs on, or `any` of the person's own (contracts 0.221.0)"
           },
           "base_url": {
             "type": [

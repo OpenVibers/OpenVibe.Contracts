@@ -145544,7 +145544,7 @@ export type AiCredentialPut = {
    */
   provider: "openai" | "anthropic" | "node";
   /**
-   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model (the ai plugin, contracts 0.219.0)
+   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine.
    */
   machine?: string;
   base_url?: string;
@@ -145582,7 +145582,7 @@ export type AiCredential = {
   owner: string;
   provider: "openai" | "anthropic" | "node";
   /**
-   * provider node: the machine it runs on
+   * provider node: the machine it runs on, or `any` of the person's own (contracts 0.221.0)
    */
   machine?: string | null;
   base_url?: string | null;
