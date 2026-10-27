@@ -1,0 +1,7 @@
+{
+  "provider": "node",
+  "machine": "dev_01M5YGM39VC2RRGDQPRD6D4SHD",
+  "models": {
+    "chat": "llama3.1:8b"
+  }
+}
