@@ -96,7 +96,7 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4730",
   "site": {
-    "name": "Alerts",
+    "name": "Watch",
     "icon": "watch",
     "tagline": "Know the moment it changes",
     "what": "Watch a page, a feed or a JSON API and get told when the value you care about changes or crosses the line you set, checked politely on your cadence.",

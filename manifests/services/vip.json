@@ -19,7 +19,7 @@
     "publicSite": "service"
   },
   "site": {
-    "name": "Memberships",
+    "name": "VIP",
     "icon": "vip",
     "tagline": "Memberships for creators and their software",
     "what": "Memberships open to anyone on OpenVibe: creators publish plans with perks, members join through the network’s billing ledger, and apps and tools check a membership with the SDK.",
