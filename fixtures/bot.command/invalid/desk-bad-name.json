@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "seq": 83,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-83",
+  "kind": "screen",
+  "value": {
+    "desk": "desk-../../etc"
+  }
+}
