@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "seq": 91,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-91",
+  "kind": "ai",
+  "value": {
+    "model": "llama3.1:8b",
+    "messages": []
+  }
+}

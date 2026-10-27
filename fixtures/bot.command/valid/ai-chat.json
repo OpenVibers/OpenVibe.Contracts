@@ -1,0 +1,23 @@
+{
+  "v": 1,
+  "seq": 90,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-90",
+  "kind": "ai",
+  "value": {
+    "model": "llama3.1:8b",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Answer in one sentence."
+      },
+      {
+        "role": "user",
+        "content": "What is a mutex?"
+      }
+    ],
+    "max_tokens": 200,
+    "temperature": 0.2
+  }
+}
