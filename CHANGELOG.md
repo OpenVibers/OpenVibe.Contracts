@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.222.0 — 2026-10-27
+
+- **Site names say their domain** (owner, 2026-10-27: "it says memberships … couldn't it say VIP memberships since the
+  domain is VIP? … consider these kind of small things, especially when it comes to domain names across all the tools
+  and websites"). The `site.name` the launcher, menus and pages show is now the domain's own word:
+  - VIP (was Memberships), Trade (Markets), Host (Hosting), Space (Spaces), Bot (Robots), Actor (Agents), Work (Jobs)
+  - Quest (Quests), Rent (Rentals), Watch (Alerts), Inventory (Items), AI (AI API), Run (Compute), Play (Game services)
+  - Zone (Storage), Codes (Code)
+- Each tagline still says what the site is for: "Memberships for creators and their software", "Watchlists and alerts".
+- Live, Video, OpenRestream and the rest already matched.
+
 ## 0.221.0 — 2026-10-27
 
 - **Any of your own machines** (AI on your own machines). A node credential's `machine`, in `ai.credential-put@1` and

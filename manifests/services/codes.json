@@ -19,7 +19,7 @@
     "publicSite": "service"
   },
   "site": {
-    "name": "Code",
+    "name": "Codes",
     "icon": "codes",
     "tagline": "Build and fix apps with AI",
     "what": "The open coding-agent harness: Claude Code, Codex, OpenCode, Command Code, the DeepSeek API and self-hosted models behind one router with hand-offs, sessions and budgets, OpenVibe Git (a code forge with OpenVibe sign-in at git.openvibe.codes) and the way to improve OpenVibe itself.",

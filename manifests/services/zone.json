@@ -86,7 +86,7 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5050",
   "site": {
-    "name": "Storage",
+    "name": "Zone",
     "icon": "zone",
     "tagline": "Private S3-compatible storage for your projects.",
     "what": "Named storage zones for each project and environment: buckets that the AWS SDKs, rclone and backup tools reach over S3, with access keys you scope to a zone and quotas you set.",

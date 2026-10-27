@@ -83,7 +83,7 @@
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:4950",
   "site": {
-    "name": "Agents",
+    "name": "Actor",
     "icon": "actor",
     "tagline": "Agents that work while you are away",
     "what": "Agents that run tasks for you, now or on a schedule, on OpenVibe's own agent or another platform's, on your computers and robots when you allow it, with every result checked and its cost shown.",
