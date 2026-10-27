@@ -7,7 +7,7 @@
   "version": "1.0.0",
   "runtime": "node 22",
   "database": "PostgreSQL",
-  "migrations": 13,
+  "migrations": 15,
   "authority": [
     "media.*"
   ],
@@ -16,9 +16,9 @@
     "s3.openvibe.media"
   ],
   "pins": {
-    "openvibe-contracts": "v0.209.0",
-    "openvibe-sdk": "v0.62.0",
-    "openvibe-shared": "v4.9.0"
+    "openvibe-contracts": "v0.214.0",
+    "openvibe-sdk": "v0.65.0",
+    "openvibe-shared": "v4.15.2"
   },
   "deployed": true,
   "exposure": "live",

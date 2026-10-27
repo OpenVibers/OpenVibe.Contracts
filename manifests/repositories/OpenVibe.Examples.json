@@ -13,8 +13,8 @@
   ],
   "domains": [],
   "pins": {
-    "openvibe-sdk": "v0.62.0",
-    "openvibe-contracts": "v0.209.0"
+    "openvibe-sdk": "v0.65.0",
+    "openvibe-contracts": "v0.214.0"
   },
   "deployed": false,
   "exposure": "repository",
