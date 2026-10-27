@@ -4,7 +4,7 @@
   "service": null,
   "product": null,
   "stage": "alpha",
-  "version": "0.16.1",
+  "version": "0.18.0",
   "runtime": "go 1.24 (one static binary per platform)",
   "database": "none",
   "migrations": 0,
