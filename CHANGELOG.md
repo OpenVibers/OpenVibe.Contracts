@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.217.0 — 2026-10-27
+
+- **Kept desk profiles** (the Desks plan's step D7, on one machine; OpenVibe.Node v0.24.0). On `start`, kind `desk`
+  takes `profile`: a browser profile kept on the machine by that name.
+  - The desk's browser starts from that profile, with its cookies and site storage, so a person signs in once, on any
+    desk (an agent's "Needs you" sign-in carries over to the next task).
+  - The desk saves the profile back when it stops; when several desks stop, the last one wins. Caches are never kept.
+  - The private desk keeps its own profile. A machine that keeps profiles says so in its computer capabilities
+    (`desk.profiles`).
+- Fixtures: a valid start from a kept profile, and an invalid start with a bad profile name.
+
 ## 0.216.0 — 2026-10-27
 
 - **Browser desks** (the Desks plan's step D2; OpenVibe.Node v0.23.0). Kind `desk` takes `kind` on start:
