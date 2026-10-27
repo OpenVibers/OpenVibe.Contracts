@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "seq": 87,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-87",
+  "kind": "desk",
+  "value": {
+    "action": "start",
+    "desk": "desk-task-01k8ab",
+    "profile": "../agent"
+  }
+}

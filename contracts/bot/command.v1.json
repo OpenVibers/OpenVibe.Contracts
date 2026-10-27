@@ -631,6 +631,11 @@
                 ],
                 "description": "start only (Node v0.23.0, Desks plan D2): what the desk is. desktop (the default) is a whole screen: a display, a window manager and a browser shown on it (Linux with Xvfb). browser is a browser alone with no display (Linux or macOS with Chromium), about half the cost: its screen, mouse and keyboard and its live view are the page's own. A machine says which it runs in its computer capabilities (desk.kinds)"
               },
+              "profile": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,23}$",
+                "description": "start only, a named desk (Node v0.24.0): a browser profile kept on the machine by that name. The desk's browser starts from it (its cookies and site storage: the person signs in once, on any desk) and the desk saves it back when it stops (the last desk to stop wins); caches are never kept. The private desk keeps its own profile. A machine that keeps profiles says so in its computer capabilities (desk.profiles)"
+              },
               "width": {
                 "type": "integer",
                 "minimum": 640,

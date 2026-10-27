@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "seq": 86,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-86",
+  "kind": "desk",
+  "value": {
+    "action": "start",
+    "desk": "desk-task-01k8ab",
+    "kind": "browser",
+    "profile": "agent"
+  }
+}
