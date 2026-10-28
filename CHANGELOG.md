@@ -4,6 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.237.0 — 2026-10-28
+
+- **OpenVibe.Cam** (`cam`, live at openvibe.cam, port 5160, database `ov_cam`): the camera app (preview, timer,
+  3-shot burst, grid and an on-device colour/light/softness filter), a private wall for the cameras a person owns,
+  and the still Live's cam button takes. A camera is private to its owner and visible to a viewer only while the
+  grant naming them is unrevoked and unexpired, checked on every read, with no staff bypass. Photos and stills are
+  uploaded to OpenVibe.Pics with the person's own Network token and stored by reference (Pics slug, page and direct
+  links, filter, caption) — Cam keeps no picture bytes and runs no face recognition. The manifest names `cam.*` and
+  the two account events it consumes, and the site block (Cam, icon `cam`, position 46, legal profile `ugc`) in
+  Streams & places. Live calls `POST /api/v1/stills` with the viewer's own Network token, which Cam verifies against
+  Network's JWKS; no service token is involved, so it registers no capability of its own. The account export/deletion
+  pair, `identity.subject.resolve`, Events subscriptions and the (absent) Search relay are Network grants.
+
 ## 0.236.0 — 2026-10-28
 
 - **OpenVibe.Design** gets the Design Arena and its database `ov_design`: rounds, outputs, votes and Elo ratings.
