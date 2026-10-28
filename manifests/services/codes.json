@@ -46,8 +46,23 @@
     "codes.task.cancel",
     "codes.actions.read"
   ],
-  "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsProduced": [
+    "codes.task.queued",
+    "codes.task.running",
+    "codes.task.succeeded",
+    "codes.task.failed",
+    "codes.task.cancelled"
+  ],
+  "eventsConsumed": [
+    "run.job.queued",
+    "run.job.started",
+    "run.job.succeeded",
+    "run.job.failed",
+    "run.job.cancelled",
+    "run.job.expired",
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
   "namespacesOwned": [
     "codes.*"
   ],
@@ -69,6 +84,10 @@
         {
           "kind": "sessions",
           "what": "signed-in visitors keep their session cookies (verified offline against Network's JWKS); nothing else is pending: the harness catalog is read from the release at boot"
+        },
+        {
+          "kind": "outbox",
+          "what": "codes.task.* rows not yet published are sent by the relay after a restart under their fixed evt_ ids; run.job.* deliveries missed while down are redelivered by OpenVibe.Events and claimed once in codes_events_inbox"
         }
       ]
     },
@@ -89,5 +108,5 @@
       "none": "no claims: one process owns the ov_codes PostgreSQL database; writes are transactions there"
     }
   },
-  "notes": "Port 4900, unit openvibe-codes.service. The open coding-agent harness (owner 2026-10-08): the harness catalog and router (GET /api/v1/harnesses, POST /api/v1/harnesses/route), the way to improve OpenVibe (contributing, code of conduct, the contributor ladder) and permanent redirects from the former developer-portal paths to openvibe.services, where the portal moved (manifests, releases, trust, playgrounds, docs, OAuth and webhook tools)."
+  "notes": "Port 4900, unit openvibe-codes.service. The open coding-agent harness (owner 2026-10-08): the harness catalog and router (GET /api/v1/harnesses, POST /api/v1/harnesses/route), the way to improve OpenVibe (contributing, code of conduct, the contributor ladder) and permanent redirects from the former developer-portal paths to openvibe.services, where the portal moved (manifests, releases, trust, playgrounds, docs, OAuth and webhook tools). Coding tasks on the person's own machine (plan T16) are Run jobs: their sessions are kept line by line in codes_session_lines as the stream arrives (back-filled from the machine's final log; GET /run/tasks/:id/session.json replays them), run.job.* events from OpenVibe.Run finalize a task without polling, and every state change is published as codes.task.queued|running|succeeded|failed|cancelled from a transactional outbox."
 }

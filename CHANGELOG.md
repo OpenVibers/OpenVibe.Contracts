@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.232.0 — 2026-10-28
+
+- **codes.task.queued|running|succeeded|failed|cancelled** (new payload contracts, first-party, owner `codes`; plan
+  2026-10-28 §6, decisions 2 and 3). OpenVibe.Codes announces each state change of a coding task:
+  `{ task_id, state, agent, repo, cost_usd, files_changed, started_at, finished_at, error }`. The envelope's subject
+  is the owner; the prompt is never in a payload.
+- The Codes manifest now names what it produces (the five topics) and consumes: `run.job.*`, which finalize a task
+  without polling, and the two account events. Its notes and startup recovery cover the session lines and the
+  outbox.
+
 ## 0.231.0 — 2026-10-28
 
 - **OpenVibe.Surf** (`surf`, live at openvibe.surf, port 5110; plan 2026-10-28 §5.6, the Surf room). One room, three
