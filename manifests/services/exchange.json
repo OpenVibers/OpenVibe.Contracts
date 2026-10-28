@@ -1,0 +1,87 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.229.0 <1.0.0"
+  },
+  "id": "exchange",
+  "name": "OpenVibe.Exchange",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Exchange",
+  "domains": [
+    "openvibe.exchange"
+  ],
+  "publicOrigin": "https://openvibe.exchange",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "exchange.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the PostgreSQL database, Valkey, Network's JWKS and the Events subscriptions are what /api/ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped",
+        "telemetry interval and retention stopped, then the telemetry buffer flushed",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "exchange_outbox rows committed with a listing change survive a stop under their fixed evt_ ids; v1 has no relay yet, so unpublished documents wait for Search's document writer rather than being sent at boot"
+        },
+        {
+          "kind": "state",
+          "what": "listings, tests, trials, installs and offers live in PostgreSQL; a restart reopens the pool, and an install keeps the passport snapshot it was made with"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop; account_data_events applies each once, so a redelivery changes nothing"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Exchange's own tables (listings, tests, status events, sandbox trials, installs, offers, outbox, account-data receipts, telemetry); an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.229.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5150, unit openvibe-exchange.service, database ov_exchange. The Exchange room: trade what people make. v1 is free and swap only, with a permission passport, four conformance tests per version, a manifest/passport sandbox dry run, install with the exact passport snapshot, one-tap idempotent revoke, free claims and swap offers, a fixed prohibited-items/no-money filter and staff hide. Every public listing is one search.index-document@1 queued in exchange_outbox, with a tombstone when it closes or is hidden; the relay waits for Network's search.document.write grant. v1 writes no Network grant and runs no listing code, so network.grants.write, network.grants.revoke and run.sandbox.execute are not registered. OAuth client `exchange`; answers account export and deletion (ADR-033) and subscribes to the two account Events topics. No money, no AI and no capability of its own.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5150",
+  "site": {
+    "name": "Exchange",
+    "icon": "exchange",
+    "tagline": "Trade what people make",
+    "what": "Free and swap listings for agents, MCP tools, templates, themes, game assets and creator services, each with a permission passport, conformance tests, a sandbox dry run, install with the passport snapshot and one-tap revoke.",
+    "legalProfile": "ugc",
+    "position": 44
+  }
+}

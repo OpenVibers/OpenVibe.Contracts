@@ -4,6 +4,24 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.235.0 — 2026-10-28
+
+- **OpenVibe.Vision** (`vision`, live at openvibe.vision, port 5130, database `ov_vision`; plan 2026-10-28 §5.8): ask
+  a picture, read its text with the local Tesseract engine first, compare the local reader with up to three AI hints,
+  and check HTML, a public URL or a screenshot for overflow, cut-off text, low contrast, overlap and layering faults.
+  OpenVibe.AI is the only model gateway (`ai.run.create`, workflow `ai.complete`); Vision holds no provider key, uses
+  no face recognition and stores no image bytes. The manifest names `vision.*`, the two account events it consumes, and
+  the site block (Vision, icon `vision`, position 43, legal profile `ugc`) in News & answers. It registers one
+  capability, `vision.ui.check` (first-party, the route Design's Arena calls), with `vision.ui-check-request@1` and
+  `vision.ui-check-result@1` (new); `vision.ask`, `vision.ocr` and `vision.compare` are served but wait for a caller.
+- **OpenVibe.Exchange** (`exchange`, live at openvibe.exchange, port 5150, database `ov_exchange`): free and swap
+  listings with a permission passport, conformance tests for each version, a manifest/passport sandbox dry run,
+  install with the exact passport snapshot, one-tap revoke, claims and swap offers, a prohibited-items/no-money filter
+  and staff hide. Every public listing is one `search.index-document@1` queued in `exchange_outbox`; v1 writes no
+  Network grant and executes no listing code, so it registers no capability of its own. The manifest names
+  `exchange.*`, the two account events it consumes, and the site block (Exchange, icon `exchange`, position 44, legal
+  profile `ugc`) in Shop & swap.
+
 ## 0.234.0 — 2026-10-28
 
 - **OpenVibe.Meme** (`meme`, live at openvibe.meme, port 5120, database `ov_meme`): the open meme database, rebuilt

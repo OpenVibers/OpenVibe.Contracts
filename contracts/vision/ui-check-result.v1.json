@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/ui-check-result.v1.json",
+  "title": "VisionUiCheckResult",
+  "description": "vision.ui-check-result@1: the answer of POST /api/v1/ui-check and GET /api/v1/ui-checks/:id on OpenVibe.Vision. `check` names the engine that ran (static HTML/CSS or a screenshot through OCR boxes and pixels), the viewport, every finding with its stable kind and severity, and the summary the saved row keeps. No image bytes are returned; a screenshot is identified only by its sha256.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["check"],
+  "properties": {
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "viewport", "engine", "findings", "created_at"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^vuc_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "source": { "enum": ["html", "url", "screenshot"] },
+        "url": { "type": ["string", "null"], "format": "uri" },
+        "image_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["w", "h"],
+          "properties": {
+            "w": { "type": "integer", "minimum": 160, "maximum": 10000 },
+            "h": { "type": "integer", "minimum": 160, "maximum": 10000 }
+          }
+        },
+        "engine": { "enum": ["static-html", "screenshot"] },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "severity", "selector", "detail"],
+            "properties": {
+              "kind": { "enum": ["overflow", "cut_off", "contrast", "overlap", "layering"] },
+              "severity": { "enum": ["high", "medium", "low"] },
+              "selector": { "type": "string" },
+              "detail": { "type": "string" },
+              "evidence": { "type": "object" }
+            }
+          }
+        },
+        "summary": { "type": "object" },
+        "counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "severity": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "summary_text": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

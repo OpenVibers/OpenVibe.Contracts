@@ -1,0 +1,22 @@
+{
+  "id": "vision.ui.check",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Run OpenVibe.Vision's UI check: POST /api/v1/ui-check takes HTML, a public URL or a screenshot plus an optional viewport and returns overflow, cut-off text, low contrast, overlap and layering findings with counts and severity; GET /api/v1/ui-checks/:id reads a saved check. OpenVibe.Design's Arena is the caller today; a signed-in person may also use it. The check runs entirely on Vision's host (static HTML/CSS parsing, or OCR boxes and pixel sampling for a screenshot): it executes no JavaScript and fetches only a public URL through the SSRF guard.",
+  "permissions": [
+    "vision:ui-check"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-ui-check",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/ui-check",
+    "GET /api/v1/ui-checks/:id"
+  ],
+  "inputSchema": "vision.ui-check-request@1",
+  "outputSchema": "vision.ui-check-result@1"
+}

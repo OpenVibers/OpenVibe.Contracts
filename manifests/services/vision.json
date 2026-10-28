@@ -1,0 +1,85 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.229.0 <1.0.0"
+  },
+  "id": "vision",
+  "name": "OpenVibe.Vision",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Vision",
+  "domains": [
+    "openvibe.vision"
+  ],
+  "publicOrigin": "https://openvibe.vision",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [
+    "vision.ui.check"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "vision.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the PostgreSQL database, Valkey, Network's JWKS, the Events subscriptions and OpenVibe.AI are what /api/ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped",
+        "telemetry interval and retention stopped, then the telemetry buffer flushed",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "answers, compare samples and UI checks live in PostgreSQL; a restart reopens the pool and clears only the in-process rate limits and telemetry buffer, so saved rows stay readable by id"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop; account_data_events applies each once, so a redelivery changes nothing"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Vision's own tables (answers, compare samples, UI checks, account-data receipts, telemetry); an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.229.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5130, unit openvibe-vision.service, database ov_vision. The Vision room (plan 2026-10-28 §5.8): ask a picture, read text with the local Tesseract 5 engine first, compare the local reader with up to three AI hints, and check HTML, a public URL or a screenshot for overflow, cut-off, low contrast, overlap and layering faults. OpenVibe.AI is the only model gateway (ai.run.create; the OpenAI-compatible POST /v1/chat/completions is workflow ai.complete); no provider key is held, no face recognition is used and no image bytes are stored. OAuth client `vision`; answers account export and deletion (ADR-033) and subscribes to the two account Events topics. v1 has no public records, so it has no Search outbox. Of Vision's four machine capabilities (vision.ask, vision.ocr, vision.compare, vision.ui_check), 0.235.0 registers only vision.ui.check, the route Design's Arena calls today; the other three are served but wait for a caller.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5130",
+  "site": {
+    "name": "Vision",
+    "icon": "vision",
+    "tagline": "See with the best model for the job",
+    "what": "Ask a picture a question, read its text with a local engine, compare models side by side with cost and latency, or point the UI check at a page to find overflow, cut-off text, low contrast, overlap and layering faults.",
+    "legalProfile": "ugc",
+    "position": 43
+  }
+}

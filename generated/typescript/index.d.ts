@@ -213347,3 +213347,67 @@ export interface DomainsProposal {
   error?: string | null;
   href: string;
 }
+
+/** vision.ui-check-request@1.0.0 (owner: vision) */
+/**
+ * vision.ui-check-request@1: the JSON body of POST /api/v1/ui-check on OpenVibe.Vision (Design's Arena and signed-in people; HTML, URL and screenshot checks also work anonymously). Send exactly one source: `html` with the markup, `url` with a public http(s) page, `image` with a data URL, or `image_url` with a public image URL. The multipart form field `image` is the same screenshot source. `viewport` defaults to 1280x800 and is clamped to 160..10000; the check executes no JavaScript and fetches only a public URL through the SSRF guard.
+ */
+export type VisionUiCheckRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The HTML to check, including any inline CSS.
+   */
+  html?: string;
+  /**
+   * A public page to fetch and check.
+   */
+  url?: string;
+  /**
+   * A screenshot as an image data URL.
+   */
+  image?: string;
+  /**
+   * A public screenshot URL.
+   */
+  image_url?: string;
+  viewport?: {
+    w: number;
+    h: number;
+  };
+};
+
+/** vision.ui-check-result@1.0.0 (owner: vision) */
+/**
+ * vision.ui-check-result@1: the answer of POST /api/v1/ui-check and GET /api/v1/ui-checks/:id on OpenVibe.Vision. `check` names the engine that ran (static HTML/CSS or a screenshot through OCR boxes and pixels), the viewport, every finding with its stable kind and severity, and the summary the saved row keeps. No image bytes are returned; a screenshot is identified only by its sha256.
+ */
+export interface VisionUiCheckResult {
+  check: {
+    id: string;
+    source: "html" | "url" | "screenshot";
+    url?: string | null;
+    image_sha256?: string | null;
+    viewport: {
+      w: number;
+      h: number;
+    };
+    engine: "static-html" | "screenshot";
+    findings: {
+      kind: "overflow" | "cut_off" | "contrast" | "overlap" | "layering";
+      severity: "high" | "medium" | "low";
+      selector: string;
+      detail: string;
+      evidence?: {};
+    }[];
+    summary?: {};
+    counts?: {
+      [k: string]: number | undefined;
+    };
+    severity?: {
+      [k: string]: number | undefined;
+    };
+    warnings?: string[];
+    summary_text?: string;
+    created_at: string;
+  };
+}

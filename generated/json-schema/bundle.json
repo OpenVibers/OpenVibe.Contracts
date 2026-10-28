@@ -86730,6 +86730,238 @@
           }
         }
       }
+    },
+    "vision.ui-check-request": {
+      "version": "1.0.0",
+      "owner": "vision",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/vision/ui-check-request.v1.json",
+        "title": "VisionUiCheckRequest",
+        "description": "vision.ui-check-request@1: the JSON body of POST /api/v1/ui-check on OpenVibe.Vision (Design's Arena and signed-in people; HTML, URL and screenshot checks also work anonymously). Send exactly one source: `html` with the markup, `url` with a public http(s) page, `image` with a data URL, or `image_url` with a public image URL. The multipart form field `image` is the same screenshot source. `viewport` defaults to 1280x800 and is clamped to 160..10000; the check executes no JavaScript and fetches only a public URL through the SSRF guard.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "html": {
+            "type": "string",
+            "maxLength": 5000000,
+            "description": "The HTML to check, including any inline CSS."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "description": "A public page to fetch and check."
+          },
+          "image": {
+            "type": "string",
+            "pattern": "^data:image/",
+            "description": "A screenshot as an image data URL."
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "description": "A public screenshot URL."
+          },
+          "viewport": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "w",
+              "h"
+            ],
+            "properties": {
+              "w": {
+                "type": "integer",
+                "minimum": 160,
+                "maximum": 10000
+              },
+              "h": {
+                "type": "integer",
+                "minimum": 160,
+                "maximum": 10000
+              }
+            }
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "html"
+            ]
+          },
+          {
+            "required": [
+              "url"
+            ]
+          },
+          {
+            "required": [
+              "image"
+            ]
+          },
+          {
+            "required": [
+              "image_url"
+            ]
+          }
+        ]
+      }
+    },
+    "vision.ui-check-result": {
+      "version": "1.0.0",
+      "owner": "vision",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/vision/ui-check-result.v1.json",
+        "title": "VisionUiCheckResult",
+        "description": "vision.ui-check-result@1: the answer of POST /api/v1/ui-check and GET /api/v1/ui-checks/:id on OpenVibe.Vision. `check` names the engine that ran (static HTML/CSS or a screenshot through OCR boxes and pixels), the viewport, every finding with its stable kind and severity, and the summary the saved row keeps. No image bytes are returned; a screenshot is identified only by its sha256.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "check"
+        ],
+        "properties": {
+          "check": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "source",
+              "viewport",
+              "engine",
+              "findings",
+              "created_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^vuc_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "source": {
+                "enum": [
+                  "html",
+                  "url",
+                  "screenshot"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "image_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "viewport": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "w",
+                  "h"
+                ],
+                "properties": {
+                  "w": {
+                    "type": "integer",
+                    "minimum": 160,
+                    "maximum": 10000
+                  },
+                  "h": {
+                    "type": "integer",
+                    "minimum": 160,
+                    "maximum": 10000
+                  }
+                }
+              },
+              "engine": {
+                "enum": [
+                  "static-html",
+                  "screenshot"
+                ]
+              },
+              "findings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "severity",
+                    "selector",
+                    "detail"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "overflow",
+                        "cut_off",
+                        "contrast",
+                        "overlap",
+                        "layering"
+                      ]
+                    },
+                    "severity": {
+                      "enum": [
+                        "high",
+                        "medium",
+                        "low"
+                      ]
+                    },
+                    "selector": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "evidence": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "summary": {
+                "type": "object"
+              },
+              "counts": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "severity": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "summary_text": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
