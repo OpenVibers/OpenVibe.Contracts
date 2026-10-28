@@ -1,0 +1,73 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.225.0 <1.0.0"
+  },
+  "id": "design",
+  "name": "OpenVibe.Design",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Design",
+  "domains": [
+    "openvibe.design"
+  ],
+  "publicOrigin": "https://openvibe.design",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "design.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "nothing to rebuild: the theme catalogue, the person's theme and its history live in OpenVibe.Network; a restart only empties the five-minute catalogue cache, and sign-in sessions live in the person's cookies"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "v1 has no database and no migrations"
+      }
+    },
+    "contracts": {
+      "range": ">=0.225.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 5090, unit openvibe-design.service. The Design room (plan 2026-10-28 \u00a75.2): the theme studio. v1 is a stateless front and an OAuth client of OpenVibe.Network (`design`): it proxies the person's calls to Network's theme API (the catalogue, the active theme, saving with source 'studio', history and restore, submissions to the gallery). The studio tries a theme on a Live channel, a Chat room and a shop at once, with colour-vision views and WCAG checks that gate Use. Theme selection stays in OpenVibe.Network; the Arena (AI designers judged by people) comes next.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5090",
+  "site": {
+    "name": "Design",
+    "icon": "design",
+    "tagline": "Make it yours",
+    "what": "Try any OpenVibe theme on a Live channel, a Chat room and a shop at once, change its colours with contrast checks that must pass, use it on every site, and step back to any earlier look.",
+    "legalProfile": "account",
+    "position": 39
+  }
+}
