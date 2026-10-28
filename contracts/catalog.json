@@ -7694,6 +7694,15 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "domains.proposal",
+      "version": "1.0.0",
+      "owner": "domains",
+      "schema": "domains/proposal.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

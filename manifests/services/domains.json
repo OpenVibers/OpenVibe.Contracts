@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.225.0 <1.0.0"
+    "openvibe-contracts": ">=0.233.0 <1.0.0"
   },
   "id": "domains",
   "name": "OpenVibe.Domains",
@@ -15,7 +15,10 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": [
+    "domains.actions.read",
+    "domains.proposal.decide"
+  ],
   "eventsProduced": [],
   "eventsConsumed": [],
   "namespacesOwned": [
@@ -37,7 +40,11 @@
       "resumes": [
         {
           "kind": "state",
-          "what": "nothing to rebuild: v1 reads prices from OpenVibe.Host and history from OpenVibe.Tools on demand; a restart only empties the minutes-long in-memory cache, refilled on the next request"
+          "what": "connections, synced zones, proposals and their audit are rows in ov_domains; the price catalog stays in OpenVibe.Host and the net tools in OpenVibe.Tools"
+        },
+        {
+          "kind": "jobs",
+          "what": "a proposal a stop left 'applying' is marked failed at boot with what was applied, so its person can roll it back; a credential is never held outside one call"
         }
       ]
     },
@@ -48,17 +55,17 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "v1 has no database and no migrations"
+        "none": "migration 0001 only creates Domains' own tables (connections, zones, proposals, audit); an earlier release reads none of them"
       }
     },
     "contracts": {
-      "range": ">=0.225.0 <1.0.0"
+      "range": ">=0.233.0 <1.0.0"
     },
     "leases": {
       "none": "no claims: one process serves the site"
     }
   },
-  "notes": "Port 5070, unit openvibe-domains.service. The Domains room (plan 2026-10-28 \u00a75.1): one box prices a name across every ending and registrar with 1-, 3- and 5-year totals and the renewal trap flagged; a page per ending with its price history; a page per domain with its public history. v1 is a stateless front over OpenVibe.Host's price catalog (catalog_tld_prices, fed by Sources) and OpenVibe.Tools' domain history; v2 adds the control panel (registrar connections as Network project secrets, the portfolio and change proposals), which is the domains.* authority.",
+  "notes": "Port 5070, unit openvibe-domains.service, database ov_domains. The Domains room (plan 2026-10-28 §5.1). v1: one box prices a name across every ending with 1/3/5-year totals (Host's price catalog), TLD pages, and domain info from OpenVibe.Tools' net tools. v2, the control panel: a signed-in person (OAuth client `domains`) connects a registrar or DNS account through its official API, Cloudflare first. The credential is stored as a Network project secret in the person's own project (ADR-056), granted to `domains` for reveal to the provider's origin only, and revealed per call (network.secret.use); Domains keeps its name, never its value. Every DNS change is a proposal (domains.proposal@1) with the record diff, why, the risk and its rollback; nothing touches DNS until the person approves it on the proposal's page or in the Action Center (domains.actions.read, domains.proposal.decide for OpenVibe.Network). A change whose record moved since the proposal is refused as stale; an applied proposal can be rolled back. Answers account export and deletion (ADR-033).",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5070",

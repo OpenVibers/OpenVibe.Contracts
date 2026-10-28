@@ -212425,9 +212425,9 @@ export interface ActionItem {
   /**
    * The authority that owns the item.
    */
-  service: "actor" | "codes" | "ai" | "network" | "run";
+  service: "actor" | "codes" | "ai" | "network" | "run" | "domains";
   /**
-   * The authority's own id (tsk_…, a Codes task id, run_…, a confirmation id).
+   * The authority's own id (tsk_…, a Codes task id, run_…, a confirmation id, dpr_…).
    */
   id: string;
   /**
@@ -212500,7 +212500,7 @@ export interface ActionItem {
 
 /** common.action-list-result@1.0.0 (owner: contracts) */
 /**
- * One authority's Action Center items for a person (capabilities actor.actions.read, codes.actions.read, ai.actions.read): GET /api/v1/actions?subject=usr_… with the caller's service token. Everything running, waiting or scheduled, then done and failed items from the last 30 days, newest first, at most 50.
+ * One authority's Action Center items for a person (capabilities actor.actions.read, codes.actions.read, ai.actions.read, domains.actions.read): GET /api/v1/actions?subject=usr_… with the caller's service token. Everything running, waiting or scheduled, then done and failed items from the last 30 days, newest first, at most 50.
  */
 export interface ActionListResult {
   /**
@@ -212727,4 +212727,134 @@ export interface CodesTaskCancelledPayload {
   started_at: string | null;
   finished_at: string | null;
   error: string | null;
+}
+
+/** domains.proposal@1.0.0 (owner: domains) */
+/**
+ * A change to a person's DNS on OpenVibe.Domains (plan 2026-10-28 §5.1): nothing an agent, a bulk edit or the person's own edit asks for touches DNS until the person approves it. A proposal holds the record diff, why, what could break, and its rollback; approving it applies the changes in order through the provider's API with the person's connected credential (a Network project secret, ADR-056, never part of this document). A change whose record moved since the proposal was made is refused as stale; rolling back applies the inverse changes.
+ */
+export interface DomainsProposal {
+  id: string;
+  domain: string;
+  provider: "cloudflare" | "porkbun" | "namecheap" | "spaceship";
+  connection_id: string;
+  title: string;
+  why?: string | null;
+  /**
+   * What could break, in plain words.
+   */
+  risk?: string | null;
+  status: "pending" | "applying" | "applied" | "declined" | "failed" | "rolled_back" | "expired";
+  /**
+   * @minItems 1
+   * @maxItems 50
+   */
+  changes: [
+    {
+      op: "create" | "update" | "delete";
+      /**
+       * The provider's record id (update, delete; a create's after it is applied).
+       */
+      record_id?: string | null;
+      before?: {
+        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+        /**
+         * The full record name (example.com, www.example.com).
+         */
+        name: string;
+        content: string;
+        /**
+         * Seconds; 1 is the provider's automatic TTL.
+         */
+        ttl?: number;
+        /**
+         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+         */
+        proxied?: boolean | null;
+        /**
+         * MX and SRV only.
+         */
+        priority?: number | null;
+        comment?: string | null;
+      } | null;
+      after?: {
+        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+        /**
+         * The full record name (example.com, www.example.com).
+         */
+        name: string;
+        content: string;
+        /**
+         * Seconds; 1 is the provider's automatic TTL.
+         */
+        ttl?: number;
+        /**
+         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+         */
+        proxied?: boolean | null;
+        /**
+         * MX and SRV only.
+         */
+        priority?: number | null;
+        comment?: string | null;
+      } | null;
+    },
+    ...{
+      op: "create" | "update" | "delete";
+      /**
+       * The provider's record id (update, delete; a create's after it is applied).
+       */
+      record_id?: string | null;
+      before?: {
+        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+        /**
+         * The full record name (example.com, www.example.com).
+         */
+        name: string;
+        content: string;
+        /**
+         * Seconds; 1 is the provider's automatic TTL.
+         */
+        ttl?: number;
+        /**
+         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+         */
+        proxied?: boolean | null;
+        /**
+         * MX and SRV only.
+         */
+        priority?: number | null;
+        comment?: string | null;
+      } | null;
+      after?: {
+        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+        /**
+         * The full record name (example.com, www.example.com).
+         */
+        name: string;
+        content: string;
+        /**
+         * Seconds; 1 is the provider's automatic TTL.
+         */
+        ttl?: number;
+        /**
+         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+         */
+        proxied?: boolean | null;
+        /**
+         * MX and SRV only.
+         */
+        priority?: number | null;
+        comment?: string | null;
+      } | null;
+    }[]
+  ];
+  created_by: string;
+  created_at: string;
+  decided_at?: string | null;
+  applied_at?: string | null;
+  rolled_back_at?: string | null;
+  expires_at?: string | null;
+  error?: string | null;
+  href: string;
 }

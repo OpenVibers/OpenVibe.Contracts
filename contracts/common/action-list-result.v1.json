@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/common/action-list-result.v1.json",
   "title": "ActionListResult",
-  "description": "One authority's Action Center items for a person (capabilities actor.actions.read, codes.actions.read, ai.actions.read): GET /api/v1/actions?subject=usr_… with the caller's service token. Everything running, waiting or scheduled, then done and failed items from the last 30 days, newest first, at most 50.",
+  "description": "One authority's Action Center items for a person (capabilities actor.actions.read, codes.actions.read, ai.actions.read, domains.actions.read): GET /api/v1/actions?subject=usr_… with the caller's service token. Everything running, waiting or scheduled, then done and failed items from the last 30 days, newest first, at most 50.",
   "type": "object",
   "additionalProperties": false,
   "required": [

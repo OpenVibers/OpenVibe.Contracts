@@ -72,6 +72,13 @@
       "capabilities": 12
     },
     {
+      "service": "domains",
+      "name": "OpenVibe.Domains",
+      "origin": "https://openvibe.domains",
+      "operations": 2,
+      "capabilities": 2
+    },
+    {
       "service": "events",
       "name": "OpenVibe.Events",
       "origin": "https://openvibe.events",

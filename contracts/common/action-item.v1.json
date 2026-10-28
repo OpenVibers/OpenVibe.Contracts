@@ -24,7 +24,8 @@
         "codes",
         "ai",
         "network",
-        "run"
+        "run",
+        "domains"
       ],
       "description": "The authority that owns the item."
     },
@@ -32,7 +33,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 80,
-      "description": "The authority's own id (tsk_…, a Codes task id, run_…, a confirmation id)."
+      "description": "The authority's own id (tsk_…, a Codes task id, run_…, a confirmation id, dpr_…)."
     },
     "kind": {
       "enum": [
