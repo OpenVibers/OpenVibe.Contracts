@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.228.0 — 2026-10-28
+
+- **OpenVibe.Design** (`design`, live at openvibe.design, port 5090; plan 2026-10-28 §5.2, the Design room). v1 is the
+  theme studio, a stateless front and an OAuth client of OpenVibe.Network (`design`). It has:
+  - every theme in the catalogue, tried on a Live channel, a Chat room and a shop at once, with colour-vision views;
+  - a six-colour editor that derives the full token set, with WCAG checks that must pass before the theme is used;
+  - Use (Network's `PUT /api/themes/me`, source `studio`), sharing to the gallery, and History with Restore.
+
+  The site block (Design, icon `design`, position 39, legal profile `account`) puts it in the menu's Make
+  neighbourhood. `design.*` is its namespace: the Arena (AI designers judged by people) comes next.
+
 ## 0.227.0 — 2026-10-28
 
 - **OpenVibe.Report** (`report`, live at openvibe.report, port 5080; plan 2026-10-28 §5.4, the Report room). v1 is a
