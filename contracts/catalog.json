@@ -7622,6 +7622,33 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "today.event.scheduled",
+      "version": "1.0.0",
+      "owner": "today",
+      "schema": "events/payloads/today.event.scheduled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "today.event.updated",
+      "version": "1.0.0",
+      "owner": "today",
+      "schema": "events/payloads/today.event.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "today.event.cancelled",
+      "version": "1.0.0",
+      "owner": "today",
+      "schema": "events/payloads/today.event.cancelled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

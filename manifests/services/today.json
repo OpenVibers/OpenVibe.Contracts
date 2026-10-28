@@ -1,0 +1,92 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.225.0 <1.0.0"
+  },
+  "id": "today",
+  "name": "OpenVibe.Today",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Today",
+  "domains": [
+    "openvibe.today"
+  ],
+  "publicOrigin": "https://openvibe.today",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [
+    "today.event.scheduled",
+    "today.event.updated",
+    "today.event.cancelled"
+  ],
+  "eventsConsumed": [
+    "live.stream.started",
+    "live.stream.ended",
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "today.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "the outbox publisher and the reminder and brief jobs stopped",
+        "PostgreSQL pool closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "today_outbox rows not yet published are sent again under their fixed evt_ ids (Events keeps one per id)"
+        },
+        {
+          "kind": "jobs",
+          "what": "reminders due while it was down are sent on the first pass (claimed by UPDATE … WHERE sent_at IS NULL, never twice); the brief job builds a missing day"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers live.stream.* and the account events pending during the stop; today_processed applies each once"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Today's own tables; an earlier release has none to read"
+      }
+    },
+    "contracts": {
+      "range": ">=0.225.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 5100, unit openvibe-today.service, PostgreSQL database ov_today. The Today room (plan 2026-10-28 §5.3): the network's time bus and calendar authority. v1 owns schedules (streams and events), reminders (sent as Network notifications through network.notifications.push), calendar feeds (RFC 5545: a channel's public feed and a person's private one) and the daily brief. It publishes today.event.* from an outbox and moves a stream live and ended from live.stream.started / ended. OAuth client `today` (sign-in), Network follows for the agenda.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5100",
+  "site": {
+    "name": "Today",
+    "icon": "today",
+    "tagline": "Everything happening for you, today",
+    "what": "Stream schedules, reminders that find you on any OpenVibe site, calendar feeds for your own calendar app, and a morning brief, all in one place.",
+    "legalProfile": "account",
+    "position": 40
+  }
+}
