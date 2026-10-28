@@ -1,0 +1,83 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.229.0 <1.0.0"
+  },
+  "id": "cam",
+  "name": "OpenVibe.Cam",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Cam",
+  "domains": [
+    "openvibe.cam"
+  ],
+  "publicOrigin": "https://openvibe.cam",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "cam.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; the PostgreSQL database is what /api/ready requires, and the Network signing key, the OAuth client, identity resolution and Valkey are reported as degraded honestly when they are not ready"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped",
+        "telemetry buffer flushed and its retention timer stopped",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "cameras, grants, photos and stills committed in ov_cam survive a stop unchanged; a restart re-reads no picture, because each photo and still is a Pics slug and links, never the bytes"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop; account_data_events applies each once, so a redelivery changes nothing"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Cam's own tables (cameras, grants, photos, stills, account-data receipts and telemetry); an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.229.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5160, unit openvibe-cam.service, database ov_cam. The Cam room: the camera app (preview, timer, burst, grid and an on-device filter), a private wall for the cameras a person owns, and the still Live's cam button takes. A camera is private to its owner; a viewer reads it only while the grant the owner gave is active and not revoked, checked on every read, and staff have no bypass. Photos and stills are saved to OpenVibe.Pics with the person's own Network token and stored by reference (Pics slug, page and direct links, filter, caption) — Cam keeps no picture bytes and runs no face recognition. OAuth client `cam`; answers account export and deletion (ADR-033) and subscribes to the two account Events topics. It resolves a grant's @username through Network (identity.subject.resolve). Media's live frame and Live's stream read are public GETs, and Pics takes the viewer's own token, so Cam holds no service grant for them. Live's cam button calls POST /api/v1/stills with the viewer's own Network token, which Cam verifies against Network's JWKS; no service token is involved, so Cam registers no capability of its own. v1 makes nothing public and queues no Search document.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5160",
+  "site": {
+    "name": "Cam",
+    "icon": "cam",
+    "tagline": "Your camera, your cameras, and Live's cam button",
+    "what": "The camera app with a timer, burst, grid and on-device filter; a private wall for the cameras you own, shared through revocable viewer grants; and the stills Live's cam button takes, every photo saved to Pics.",
+    "legalProfile": "ugc",
+    "position": 46
+  }
+}
