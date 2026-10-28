@@ -101,6 +101,7 @@
     "tagline": "Know the moment it changes",
     "what": "Watch a page, a feed or a JSON API and get told when the value you care about changes or crosses the line you set, checked politely on your cadence.",
     "legalProfile": "tools",
-    "position": 29
+    "position": 29,
+    "neighbourhood": "build"
   }
 }

@@ -137,6 +137,7 @@
         "answer": "Yes. Its event stream shows each state change and the node's output as it happens."
       }
     ],
-    "keywords": "openvibe run, job runner, run jobs on nodes, sandbox api, per-second metering"
+    "keywords": "openvibe run, job runner, run jobs on nodes, sandbox api, per-second metering",
+    "neighbourhood": "build"
   }
 }

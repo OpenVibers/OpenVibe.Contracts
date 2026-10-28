@@ -149,6 +149,7 @@
         "question": "Can I send pictures?",
         "answer": "Yes. Pictures in rooms and server channels go through OpenVibe.Pics and show inline."
       }
-    ]
+    ],
+    "neighbourhood": "people"
   }
 }

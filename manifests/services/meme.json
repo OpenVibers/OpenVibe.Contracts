@@ -75,6 +75,7 @@
     "tagline": "The internet's meme database",
     "what": "Every entry in the open meme database cites the chat line or VOD second it came from, follows the later uses on a timeline, and keeps a status. Vote for meme of the week, caption a template, and report what needs fixing.",
     "legalProfile": "ugc",
-    "position": 42
+    "position": 42,
+    "neighbourhood": "games"
   }
 }

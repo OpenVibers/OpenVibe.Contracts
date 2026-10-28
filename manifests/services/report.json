@@ -58,7 +58,7 @@
       "none": "no claims: one process serves the site"
     }
   },
-  "notes": "Port 5080, unit openvibe-report.service. The Report room (plan 2026-10-28 \u00a75.4): the network's open numbers, The Rundown (what streamers talked about) and each stream's after-show report, in one place. v1 is a stateless front over OpenVibe.Network's open stats (/api/v1/stats) and OpenVibe.Live's Rundown and recap APIs; v2 makes Report the analytics authority (Network's analytics move here, Live's recap and Rundown jobs move here, the external SDK).",
+  "notes": "Port 5080, unit openvibe-report.service. The Report room (plan 2026-10-28 §5.4): the network's open numbers, The Rundown (what streamers talked about) and each stream's after-show report, in one place. v1 is a stateless front over OpenVibe.Network's open stats (/api/v1/stats) and OpenVibe.Live's Rundown and recap APIs; v2 makes Report the analytics authority (Network's analytics move here, Live's recap and Rundown jobs move here, the external SDK).",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5080",
@@ -68,6 +68,7 @@
     "tagline": "Every number on OpenVibe, honest",
     "what": "The network's numbers open to everyone, what streamers talked about in The Rundown, and every stream's after-show report, each number with its definition and its date.",
     "legalProfile": "info",
-    "position": 38
+    "position": 38,
+    "neighbourhood": "answers"
   }
 }

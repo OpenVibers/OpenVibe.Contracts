@@ -1,0 +1,9 @@
+{
+  "metric": "watch_minutes",
+  "scope": "channel",
+  "scope_id": "carol",
+  "window_days": 7,
+  "value": 312.5,
+  "unit": "minutes",
+  "source": "live"
+}

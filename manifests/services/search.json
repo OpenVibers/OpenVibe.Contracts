@@ -74,7 +74,7 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "the schema code only adds (CREATE \u2026 IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
       }
     },
     "contracts": {
@@ -101,6 +101,7 @@
         "question": "Why is a page missing?",
         "answer": "Search lists only what its site marks public and indexable. Private, draft and noindex pages never appear, and a page removed from its site leaves Search too."
       }
-    ]
+    ],
+    "neighbourhood": "answers"
   }
 }

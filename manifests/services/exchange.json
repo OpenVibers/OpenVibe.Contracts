@@ -82,6 +82,7 @@
     "tagline": "Trade what people make",
     "what": "Free and swap listings for agents, MCP tools, templates, themes, game assets and creator services, each with a permission passport, conformance tests, a sandbox dry run, install with the passport snapshot and one-tap revoke.",
     "legalProfile": "ugc",
-    "position": 44
+    "position": 44,
+    "neighbourhood": "shop"
   }
 }

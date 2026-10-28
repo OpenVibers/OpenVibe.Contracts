@@ -80,6 +80,7 @@
     "tagline": "See with the best model for the job",
     "what": "Ask a picture a question, read its text with a local engine, compare models side by side with cost and latency, or point the UI check at a page to find overflow, cut-off text, low contrast, overlap and layering faults.",
     "legalProfile": "ugc",
-    "position": 43
+    "position": 43,
+    "neighbourhood": "answers"
   }
 }

@@ -1,0 +1,5 @@
+{
+  "from": "ovrn:meme:prj_01J0000000000000000000000A:meme/mem_01K0000000000000000000000B",
+  "rel": "derivedFrom",
+  "to": "ovrn:video:prj_01J0000000000000000000000A:clip/clp_01K0000000000000000000000C"
+}

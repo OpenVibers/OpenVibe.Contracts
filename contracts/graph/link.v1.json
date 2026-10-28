@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/graph/link.v1.json",
+  "title": "GraphLink",
+  "description": "graph.link@1: a directed, typed relation between canonical OpenVibe object names (plan 2026-10-28 section 4.1). The owning service supplies the OVRNs and relation; no graph producer is live yet.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["from", "rel", "to"],
+  "properties": {
+    "from": { "type": "string", "pattern": "^ovrn:[a-z][a-z0-9-]*:.+$", "maxLength": 512 },
+    "rel": { "type": "string", "pattern": "^[a-z][A-Za-z0-9]{0,63}$", "description": "Typed relation, for example derivedFrom, on, soldBy or cites." },
+    "to": { "type": "string", "pattern": "^ovrn:[a-z][a-z0-9-]*:.+$", "maxLength": 512 }
+  }
+}

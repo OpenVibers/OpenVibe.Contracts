@@ -114,7 +114,8 @@
           "note": "How the restream paths work."
         }
       ]
-    }
+    },
+    "neighbourhood": "streams"
   },
   "capabilities": [
     "openre.stream.read",

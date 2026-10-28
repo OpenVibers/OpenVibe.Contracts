@@ -83,6 +83,7 @@
     "tagline": "Find work, with an agent on your side",
     "what": "Job listings from open job boards in one search, saved searches that tell you what is new, and an application tracker where your agent helps you prepare.",
     "legalProfile": "info",
-    "position": 26
+    "position": 26,
+    "neighbourhood": "shop"
   }
 }

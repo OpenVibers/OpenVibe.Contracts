@@ -111,6 +111,7 @@
     "tagline": "Badges for what you really do",
     "what": "One quest log across every OpenVibe site: real things you do on the network complete quests that pay badges and OpenCoins, and developer apps add quests on their own events.",
     "legalProfile": "account",
-    "position": 27
+    "position": 27,
+    "neighbourhood": "games"
   }
 }

@@ -74,7 +74,8 @@
           "note": "What is happening across OpenVibe."
         }
       ]
-    }
+    },
+    "neighbourhood": "answers"
   },
   "capabilities": [
     "news.story.create",

@@ -74,7 +74,8 @@
         "question": "Do you get paid for deals?",
         "answer": "Some links may be affiliate links, and they are marked as such. They never change the order or what is shown."
       }
-    ]
+    ],
+    "neighbourhood": "shop"
   },
   "capabilities": [
     "deals.offer.submit",

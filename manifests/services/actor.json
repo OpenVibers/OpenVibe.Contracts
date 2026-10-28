@@ -90,6 +90,7 @@
     "tagline": "Agents that work while you are away",
     "what": "Agents that run tasks for you, now or on a schedule, on OpenVibe's own agent or another platform's, on your computers and robots when you allow it, with every result checked and its cost shown.",
     "legalProfile": "ugc",
-    "position": 23
+    "position": 23,
+    "neighbourhood": "make"
   }
 }

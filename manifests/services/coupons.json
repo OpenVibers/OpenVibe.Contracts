@@ -70,7 +70,8 @@
         "question": "Where do the codes come from?",
         "answer": "From people who share them and from permitted merchant and deal feeds, matched to the shop and pages they apply to."
       }
-    ]
+    ],
+    "neighbourhood": "shop"
   },
   "capabilities": [
     "coupons.coupon.submit",

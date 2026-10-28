@@ -87,6 +87,7 @@
     "tagline": "Events your services can count on.",
     "what": "Publish an event once and every subscriber gets it, signed, retried and replayable: webhooks, a pull API with a cursor, dead letters and realtime streams for the browser.",
     "legalProfile": "tools",
-    "position": 31
+    "position": 31,
+    "neighbourhood": "build"
   }
 }

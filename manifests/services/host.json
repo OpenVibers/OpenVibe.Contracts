@@ -91,7 +91,8 @@
         "question": "Where do the benchmarks come from?",
         "answer": "From people running YABS on their own servers with a one-time link from openvibe.host/catalog/benchmarks/new. A result keeps the CPU, memory and disk, Geekbench scores with their public link, fio disk speeds, iperf3 network speeds and the city and network. Never the server's address, and never who ran it on the public page."
       }
-    ]
+    ],
+    "neighbourhood": "make"
   },
   "capabilities": [
     "host.catalog.manage"

@@ -1,0 +1,9 @@
+{
+  "metric": "pageviews",
+  "scope": "site",
+  "scope_id": "network",
+  "day": "2026-10-28",
+  "value": 147,
+  "unit": "count",
+  "source": "network-stats"
+}

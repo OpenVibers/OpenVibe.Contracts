@@ -38,7 +38,8 @@
         "question": "What does 'Not yet reviewed by a person' mean?",
         "answer": "The page was written with AI assistance. It stays readable with that label, and out of search engines and network search until a person reviews it."
       }
-    ]
+    ],
+    "neighbourhood": "answers"
   },
   "capabilities": [
     "wiki.space.create",
