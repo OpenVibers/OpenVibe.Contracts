@@ -1,0 +1,21 @@
+{
+  "id": "bench.round.read",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a benchmark round on OpenVibe.Bench: GET /api/v1/rounds/:id returns the round with entries; entries stay blind until the caller has judged or started the round.",
+  "permissions": [
+    "bench:rounds:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/rounds/:id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.round@1"
+}

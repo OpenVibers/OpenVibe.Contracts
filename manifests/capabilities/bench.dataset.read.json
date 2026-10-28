@@ -1,0 +1,21 @@
+{
+  "id": "bench.dataset.read",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read the open dataset for a benchmark kind on OpenVibe.Bench: GET /api/v1/datasets/:kindId.jsonl returns prompts, entries, judgements without voter ids and ratings as JSON lines.",
+  "permissions": [
+    "bench:datasets:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/datasets/:kindId.jsonl"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.binary@1"
+}

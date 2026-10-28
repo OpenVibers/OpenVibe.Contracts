@@ -1,0 +1,16 @@
+{
+  "kind_id": "knd_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
+  "category": "model",
+  "subject": "gpt-4o",
+  "elo": 1500,
+  "games": 10,
+  "wins": 6,
+  "losses": 3,
+  "ties": 1,
+  "win_rate": 0.6,
+  "ci_lower": 1400,
+  "ci_upper": 1600,
+  "median_cost_usd": null,
+  "median_ms": null,
+  "provisional": false
+}

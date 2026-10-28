@@ -1,0 +1,21 @@
+{
+  "id": "bench.judgement.cast",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Cast a blind judgement on a benchmark round on OpenVibe.Bench: POST /api/v1/rounds/:id/judgements with { judge?, pair?, outcome?, score? }. Human judges are people; automatic, test-suite and game-outcome judges are services.",
+  "permissions": [
+    "bench:judgements:cast"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/rounds/:id/judgements"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.judgement@1"
+}

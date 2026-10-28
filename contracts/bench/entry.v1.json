@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/entry.v1.json",
+  "title": "BenchEntry",
+  "description": "bench.entry@1: one submitted entry in a benchmark round on OpenVibe.Bench. PROVIDER and MODEL name the offer; ROUTE is the exact route taken; PAYLOAD is the entry's output; COST_USD, MS and TOKENS are the measured use.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "round_id", "provider", "model", "route", "payload", "cost_usd", "ms", "tokens"],
+  "properties": {
+    "id": { "type": "string" },
+    "round_id": { "type": "string" },
+    "provider": { "type": "string" },
+    "model": { "type": "string" },
+    "route": { "type": "object" },
+    "payload": { "type": "object" },
+    "cost_usd": { "type": "number" },
+    "ms": { "type": "number" },
+    "tokens": { "type": "number" },
+    "error": { "type": ["string", "null"] },
+    "ui_check": { "type": ["object", "null"] },
+    "run_id": { "type": ["string", "null"] }
+  }
+}

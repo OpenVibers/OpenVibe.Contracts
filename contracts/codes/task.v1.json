@@ -174,6 +174,15 @@
           "maxLength": 1000
         }
       }
+    },
+    "actor_ref": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "task_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "step_id": { "type": "string", "minLength": 1, "maxLength": 256 }
+      },
+      "description": "The OpenVibe.Actor task and step that started this coding task, when it came from Actor."
     }
   }
 }

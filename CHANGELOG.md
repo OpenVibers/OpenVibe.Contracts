@@ -4,6 +4,22 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.238.0 — 2026-10-28
+
+- **OpenVibe.Bench** (`bench`, live at bench.openvibe.services, port 5230, database `ov_bench`): the shared AI
+  benchmark and comparison engine for every room (plan §4.12). It owns kinds, pinned rounds, entries, blind
+  judgements, ratings, boards, the open dataset per kind and private evals; AI stays the run authority and Report
+  the analytics authority. New `bench.kind@1`, `bench.task@1`, `bench.round@1`, `bench.entry@1`,
+  `bench.judgement@1` and `bench.rating@1` schemas, the `bench.round.finished`, `bench.judgement.recorded` and
+  `bench.rating.changed` event payloads, and nine first-party `bench.*` capabilities. The manifest is modeled on
+  OpenVibe.AI (`bench.openvibe.services`, not `openvibe.bench`) and its site block (Bench, icon `bench`, position 47,
+  legal profile `tools`) sits in For developers. Bench calls `ai.run.create` (namespace `ai.generate`) and subscribes
+  to the account events; Design moves its Arena onto Bench with `bench.task.create`, `bench.round.create`,
+  `bench.round.read`, `bench.judgement.cast` and `bench.board.read`.
+- **Codes** (`codes.task-start-request@1` 1.1.0, `codes.task@1` 1.1.0): optional `actor_task_id`/`actor_step_id`
+  request fields and the `actor_ref` back-reference, so a task started from OpenVibe.Actor can carry its Actor task
+  and step. Both are optional, so existing producers and consumers are unaffected.
+
 ## 0.237.0 — 2026-10-28
 
 - **OpenVibe.Cam** (`cam`, live at openvibe.cam, port 5160, database `ov_cam`): the camera app (preview, timer,

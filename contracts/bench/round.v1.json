@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/round.v1.json",
+  "title": "BenchRound",
+  "description": "bench.round@1: a pinned, reproducible benchmark round on OpenVibe.Bench. TASK_ID names the task; OFFERS are the exact offers (provider, model, route) the round runs; STATUS follows queued, running, ready, finished or failed; SEED and RECEIPT make the round reproducible.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "task_id", "kind_id", "offers", "status", "seed", "created_by", "created_at"],
+  "properties": {
+    "id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "kind_id": { "type": "string" },
+    "offers": { "type": "array", "items": { "type": "object" } },
+    "status": { "type": "string", "enum": ["queued", "running", "ready", "finished", "failed"] },
+    "seed": { "type": "integer" },
+    "pool_fallback": { "type": "boolean" },
+    "receipt": { "type": ["string", "null"] },
+    "created_by": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

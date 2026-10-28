@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bench.rating.changed.v1.json",
+  "title": "BenchRatingChangedPayload",
+  "description": "bench.rating.changed v1 (OpenVibe.Bench): a rating moved on a benchmark board. Envelope: source bench, subject { type: service, id: bench }, visibility first-party.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind_id", "category", "subject", "elo", "games", "win_rate", "at"],
+  "properties": {
+    "kind_id": { "type": "string" },
+    "category": { "type": "string" },
+    "subject": { "type": "string" },
+    "elo": { "type": "number" },
+    "games": { "type": "number" },
+    "wins": { "type": "number" },
+    "losses": { "type": "number" },
+    "ties": { "type": "number" },
+    "win_rate": { "type": "number" },
+    "ci_lower": { "type": "number" },
+    "ci_upper": { "type": "number" },
+    "median_cost_usd": { "type": ["number", "null"] },
+    "median_ms": { "type": ["number", "null"] },
+    "provisional": { "type": "boolean" },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "bench.kind.read",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a benchmark kind on OpenVibe.Bench: GET /api/v1/kinds lists the kinds, GET /api/v1/kinds/:kindId reads one kind and its entry schema and metrics. Granted to rooms and developer services that render a kind or its board.",
+  "permissions": [
+    "bench:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/kinds",
+    "GET /api/v1/kinds/:kindId"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.kind@1"
+}

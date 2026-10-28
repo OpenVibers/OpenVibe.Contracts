@@ -1,0 +1,21 @@
+{
+  "id": "bench.round.create",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Pin a reproducible benchmark round on OpenVibe.Bench: POST /api/v1/tasks/:id/rounds with { offers?, seed? }. The round's job generates entries from the exact offers and seed.",
+  "permissions": [
+    "bench:rounds:create"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/tasks/:id/rounds"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.round@1"
+}

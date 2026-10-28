@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bench.round.finished.v1.json",
+  "title": "BenchRoundFinishedPayload",
+  "description": "bench.round.finished v1 (OpenVibe.Bench): a pinned round reached finished with at least two usable entries and is ready for judgements. Envelope: source bench, subject { type: user, id: <created_by> }, visibility first-party.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["round_id", "task_id", "kind_id", "status", "entries", "finished_at"],
+  "properties": {
+    "round_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "kind_id": { "type": "string" },
+    "status": { "const": "finished" },
+    "entries": { "type": "integer", "minimum": 0 },
+    "finished_at": { "type": "string", "format": "date-time" }
+  }
+}

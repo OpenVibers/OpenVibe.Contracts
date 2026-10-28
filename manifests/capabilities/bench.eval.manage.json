@@ -1,0 +1,23 @@
+{
+  "id": "bench.eval.manage",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Manage private evals on OpenVibe.Bench: POST /api/v1/evals creates a private task suite, POST /api/v1/evals/:id/run runs it against chosen offers, and GET /api/v1/evals/:id/results reads a private eval and its runs. Never in the public dataset.",
+  "permissions": [
+    "bench:evals:manage"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/evals",
+    "POST /api/v1/evals/:id/run",
+    "GET /api/v1/evals/:id/results"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.task@1"
+}
