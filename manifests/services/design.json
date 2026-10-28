@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.225.0 <1.0.0"
+    "openvibe-contracts": ">=0.236.0 <1.0.0"
   },
   "id": "design",
   "name": "OpenVibe.Design",
@@ -37,7 +37,7 @@
       "resumes": [
         {
           "kind": "state",
-          "what": "nothing to rebuild: the theme catalogue, the person's theme and its history live in OpenVibe.Network; a restart only empties the five-minute catalogue cache, and sign-in sessions live in the person's cookies"
+          "what": "the Arena's rounds, outputs, votes and Elo ratings are rows in ov_design; the theme catalogue, the person's theme and its history live in OpenVibe.Network; sign-in sessions live in the person's cookies"
         }
       ]
     },
@@ -48,17 +48,17 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "v1 has no database and no migrations"
+        "none": "migration 0001 only creates the Arena's own tables (rounds, outputs, votes, ratings, account data events); an earlier release reads none of them"
       }
     },
     "contracts": {
-      "range": ">=0.225.0 <1.0.0"
+      "range": ">=0.236.0 <1.0.0"
     },
     "leases": {
       "none": "no claims: one process serves the site"
     }
   },
-  "notes": "Port 5090, unit openvibe-design.service. The Design room (plan 2026-10-28 \u00a75.2): the theme studio. v1 is a stateless front and an OAuth client of OpenVibe.Network (`design`): it proxies the person's calls to Network's theme API (the catalogue, the active theme, saving with source 'studio', history and restore, submissions to the gallery). The studio tries a theme on a Live channel, a Chat room and a shop at once, with colour-vision views and WCAG checks that gate Use. Theme selection stays in OpenVibe.Network; the Arena (AI designers judged by people) comes next.",
+  "notes": "Port 5090, unit openvibe-design.service. The Design room (plan 2026-10-28 §5.2): the theme studio. The studio is a front and an OAuth client of OpenVibe.Network (`design`): it proxies the person's calls to Network's theme API (the catalogue, the active theme, saving with source 'studio', history and restore, submissions to the gallery). The studio tries a theme on a Live channel, a Chat room and a shop at once, with colour-vision views and WCAG checks that gate Use. Theme selection stays in OpenVibe.Network; The Arena (database ov_design): one prompt to three pinned AI generate offers, blind pairs at 390 and 1280 px, one vote per person, Elo per category with cost and time, and an open dataset; Design calls ai.run.create (namespace ai.generate) and may call vision.ui.check.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5090",

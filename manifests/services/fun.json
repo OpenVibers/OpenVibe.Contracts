@@ -1,0 +1,88 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.229.0 <1.0.0"
+  },
+  "id": "fun",
+  "name": "OpenVibe.Fun",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Fun",
+  "domains": [
+    "openvibe.fun"
+  ],
+  "publicOrigin": "https://openvibe.fun",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "fun.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; the PostgreSQL database, Valkey, Network's JWKS and OAuth client, the Events subscriptions and the optional guide/coin paths are what /api/ready checks or degrades honestly"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped",
+        "chat-vote reader and OpenCoin retry timers cleared",
+        "telemetry buffer flushed and its retention timer stopped",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "fun_outbox rows committed with a quest or plan change survive a stop under their fixed evt_ ids; v1 has no relay, so unpublished documents wait for Search's writer rather than being sent at boot"
+        },
+        {
+          "kind": "jobs",
+          "what": "the chat-vote reader starts on its interval from fun_chat_cursors, so a stop between pages resumes after the last message id; the OpenCoin retry timer picks up pending or failed rewards by idempotency key"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop; account_data_events applies each once, so a redelivery changes nothing"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Fun's own tables (quests, plans, votes, checks, badges, rewards, reports, chat cursors, geo cache, outbox, account-data receipts and telemetry); an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.229.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5140, unit openvibe-fun.service, database ov_fun. The Fun room: IRL quest boards on a public Live channel, a deterministic local guide from OpenStreetMap (Nominatim/Overpass; Ticketmaster only when a key is set), and group plans the group votes on, with the winner added to the viewer's own Today using the viewer's token. Live and Chat are public reads, never writes. Every public quest/plan is one search.index-document@1 queued in fun_outbox with a tombstone; the relay waits for Network's search.document.write grant. OAuth client `fun`; answers account export and deletion (ADR-033) and subscribes to the two account Events topics. OpenCoins are off by default and need their own Network grants when FUN_COINS=on. No route needs a service token, so it registers no capability of its own.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5140",
+  "site": {
+    "name": "Fun",
+    "icon": "fun",
+    "tagline": "Something to do, alone, together, or live",
+    "what": "IRL quest boards on Live, a local guide from OpenStreetMap and group plans the group votes on; add the winner to your own Today.",
+    "legalProfile": "ugc",
+    "position": 45
+  }
+}
