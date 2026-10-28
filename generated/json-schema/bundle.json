@@ -85874,6 +85874,449 @@
           }
         }
       }
+    },
+    "codes.task.queued": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/codes.task.queued.v1.json",
+        "title": "CodesTaskQueuedPayload",
+        "description": "codes.task.queued v1 (OpenVibe.Codes): a coding task was stored and handed to OpenVibe.Run; the person's machine has not started it. Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "state",
+          "agent",
+          "repo",
+          "cost_usd",
+          "files_changed",
+          "started_at",
+          "finished_at",
+          "error"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "state": {
+            "const": "queued"
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "repo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[^/\\s]+/[^/\\s]+$",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "owner/name from the task's repository URL, or null when it is not a repository path."
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "files_changed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "codes.task.running": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/codes.task.running.v1.json",
+        "title": "CodesTaskRunningPayload",
+        "description": "codes.task.running v1 (OpenVibe.Codes): Run placed or started the task on the person's machine (both task states placed and running announce as running). Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "state",
+          "agent",
+          "repo",
+          "cost_usd",
+          "files_changed",
+          "started_at",
+          "finished_at",
+          "error"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "state": {
+            "const": "running"
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "repo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[^/\\s]+/[^/\\s]+$",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "owner/name from the task's repository URL, or null when it is not a repository path."
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "files_changed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "codes.task.succeeded": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/codes.task.succeeded.v1.json",
+        "title": "CodesTaskSucceededPayload",
+        "description": "codes.task.succeeded v1 (OpenVibe.Codes): the task ended and its result is stored on the task page. cost_usd and files_changed are the machine's result (null when it returned neither). Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "state",
+          "agent",
+          "repo",
+          "cost_usd",
+          "files_changed",
+          "started_at",
+          "finished_at",
+          "error"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "state": {
+            "const": "succeeded"
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "repo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[^/\\s]+/[^/\\s]+$",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "owner/name from the task's repository URL, or null when it is not a repository path."
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "files_changed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "codes.task.failed": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/codes.task.failed.v1.json",
+        "title": "CodesTaskFailedPayload",
+        "description": "codes.task.failed v1 (OpenVibe.Codes): the task ended failed, or expired because no machine took it in time (Run's expired state is announced on the failed topic). Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "state",
+          "agent",
+          "repo",
+          "cost_usd",
+          "files_changed",
+          "started_at",
+          "finished_at",
+          "error"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "state": {
+            "enum": [
+              "failed",
+              "expired"
+            ]
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "repo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[^/\\s]+/[^/\\s]+$",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "owner/name from the task's repository URL, or null when it is not a repository path."
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "files_changed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "codes.task.cancelled": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/codes.task.cancelled.v1.json",
+        "title": "CodesTaskCancelledPayload",
+        "description": "codes.task.cancelled v1 (OpenVibe.Codes): the task ended cancelled, by its owner or by a service holding codes.task.cancel. Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "state",
+          "agent",
+          "repo",
+          "cost_usd",
+          "files_changed",
+          "started_at",
+          "finished_at",
+          "error"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "state": {
+            "const": "cancelled"
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "repo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[^/\\s]+/[^/\\s]+$",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "owner/name from the task's repository URL, or null when it is not a repository path."
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "files_changed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          }
+        }
+      }
     }
   }
 }

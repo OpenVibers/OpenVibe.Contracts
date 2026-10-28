@@ -7649,6 +7649,51 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "codes.task.queued",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "events/payloads/codes.task.queued.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.task.running",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "events/payloads/codes.task.running.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.task.succeeded",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "events/payloads/codes.task.succeeded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.task.failed",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "events/payloads/codes.task.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.task.cancelled",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "events/payloads/codes.task.cancelled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

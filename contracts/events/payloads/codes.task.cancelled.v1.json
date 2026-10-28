@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/codes.task.cancelled.v1.json",
+  "title": "CodesTaskCancelledPayload",
+  "description": "codes.task.cancelled v1 (OpenVibe.Codes): the task ended cancelled, by its owner or by a service holding codes.task.cancel. Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "state", "agent", "repo", "cost_usd", "files_changed", "started_at", "finished_at", "error"],
+  "properties": {
+    "task_id": { "type": "string", "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "state": { "const": "cancelled" },
+    "agent": { "type": ["string", "null"], "maxLength": 80 },
+    "repo": {
+      "anyOf": [
+        { "type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$", "maxLength": 300 },
+        { "type": "null" }
+      ],
+      "description": "owner/name from the task's repository URL, or null when it is not a repository path."
+    },
+    "cost_usd": { "type": ["number", "null"], "minimum": 0 },
+    "files_changed": { "type": ["integer", "null"], "minimum": 0 },
+    "started_at": { "type": ["string", "null"], "format": "date-time" },
+    "finished_at": { "type": ["string", "null"], "format": "date-time" },
+    "error": { "type": ["string", "null"], "maxLength": 500 }
+  }
+}

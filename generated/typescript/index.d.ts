@@ -212633,3 +212633,98 @@ export interface TodayEventCancelledPayload {
    */
   seq: number;
 }
+
+/** codes.task.queued@1.0.0 (owner: codes) */
+/**
+ * codes.task.queued v1 (OpenVibe.Codes): a coding task was stored and handed to OpenVibe.Run; the person's machine has not started it. Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.
+ */
+export interface CodesTaskQueuedPayload {
+  task_id: string;
+  state: "queued";
+  agent: string | null;
+  /**
+   * owner/name from the task's repository URL, or null when it is not a repository path.
+   */
+  repo: string | null;
+  cost_usd: number | null;
+  files_changed: number | null;
+  started_at: string | null;
+  finished_at: string | null;
+  error: string | null;
+}
+
+/** codes.task.running@1.0.0 (owner: codes) */
+/**
+ * codes.task.running v1 (OpenVibe.Codes): Run placed or started the task on the person's machine (both task states placed and running announce as running). Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.
+ */
+export interface CodesTaskRunningPayload {
+  task_id: string;
+  state: "running";
+  agent: string | null;
+  /**
+   * owner/name from the task's repository URL, or null when it is not a repository path.
+   */
+  repo: string | null;
+  cost_usd: number | null;
+  files_changed: number | null;
+  started_at: string | null;
+  finished_at: string | null;
+  error: string | null;
+}
+
+/** codes.task.succeeded@1.0.0 (owner: codes) */
+/**
+ * codes.task.succeeded v1 (OpenVibe.Codes): the task ended and its result is stored on the task page. cost_usd and files_changed are the machine's result (null when it returned neither). Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.
+ */
+export interface CodesTaskSucceededPayload {
+  task_id: string;
+  state: "succeeded";
+  agent: string | null;
+  /**
+   * owner/name from the task's repository URL, or null when it is not a repository path.
+   */
+  repo: string | null;
+  cost_usd: number | null;
+  files_changed: number | null;
+  started_at: string | null;
+  finished_at: string | null;
+  error: string | null;
+}
+
+/** codes.task.failed@1.0.0 (owner: codes) */
+/**
+ * codes.task.failed v1 (OpenVibe.Codes): the task ended failed, or expired because no machine took it in time (Run's expired state is announced on the failed topic). Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.
+ */
+export interface CodesTaskFailedPayload {
+  task_id: string;
+  state: "failed" | "expired";
+  agent: string | null;
+  /**
+   * owner/name from the task's repository URL, or null when it is not a repository path.
+   */
+  repo: string | null;
+  cost_usd: number | null;
+  files_changed: number | null;
+  started_at: string | null;
+  finished_at: string | null;
+  error: string | null;
+}
+
+/** codes.task.cancelled@1.0.0 (owner: codes) */
+/**
+ * codes.task.cancelled v1 (OpenVibe.Codes): the task ended cancelled, by its owner or by a service holding codes.task.cancel. Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.
+ */
+export interface CodesTaskCancelledPayload {
+  task_id: string;
+  state: "cancelled";
+  agent: string | null;
+  /**
+   * owner/name from the task's repository URL, or null when it is not a repository path.
+   */
+  repo: string | null;
+  cost_usd: number | null;
+  files_changed: number | null;
+  started_at: string | null;
+  finished_at: string | null;
+  error: string | null;
+}
