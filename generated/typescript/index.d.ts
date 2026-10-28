@@ -213219,6 +213219,7 @@ export interface DomainsProposal {
             priority?: number | null;
             comment?: string | null;
           }
+        | null
         | [string]
         | [string, string]
         | [string, string, string]
@@ -213226,8 +213227,7 @@ export interface DomainsProposal {
         | [string, string, string, string, string]
         | [string, string, string, string, string, string]
         | [string, string, string, string, string, string, string]
-        | [string, string, string, string, string, string, string, string]
-        | null;
+        | [string, string, string, string, string, string, string, string];
       after?:
         | {
             type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
@@ -213250,6 +213250,7 @@ export interface DomainsProposal {
             priority?: number | null;
             comment?: string | null;
           }
+        | null
         | [string]
         | [string, string]
         | [string, string, string]
@@ -213257,8 +213258,7 @@ export interface DomainsProposal {
         | [string, string, string, string, string]
         | [string, string, string, string, string, string]
         | [string, string, string, string, string, string, string]
-        | [string, string, string, string, string, string, string, string]
-        | null;
+        | [string, string, string, string, string, string, string, string];
       /**
        * A registrar change: the domain's nameservers at the registry. op is update only; before and after are the lists.
        */
@@ -213292,6 +213292,7 @@ export interface DomainsProposal {
             priority?: number | null;
             comment?: string | null;
           }
+        | null
         | [string]
         | [string, string]
         | [string, string, string]
@@ -213299,8 +213300,7 @@ export interface DomainsProposal {
         | [string, string, string, string, string]
         | [string, string, string, string, string, string]
         | [string, string, string, string, string, string, string]
-        | [string, string, string, string, string, string, string, string]
-        | null;
+        | [string, string, string, string, string, string, string, string];
       after?:
         | {
             type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
@@ -213323,6 +213323,7 @@ export interface DomainsProposal {
             priority?: number | null;
             comment?: string | null;
           }
+        | null
         | [string]
         | [string, string]
         | [string, string, string]
@@ -213330,8 +213331,7 @@ export interface DomainsProposal {
         | [string, string, string, string, string]
         | [string, string, string, string, string, string]
         | [string, string, string, string, string, string, string]
-        | [string, string, string, string, string, string, string, string]
-        | null;
+        | [string, string, string, string, string, string, string, string];
       /**
        * A registrar change: the domain's nameservers at the registry. op is update only; before and after are the lists.
        */

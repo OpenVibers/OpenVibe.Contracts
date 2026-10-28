@@ -163,6 +163,9 @@
                 }
               },
               {
+                "type": "null"
+              },
+              {
                 "type": "array",
                 "minItems": 1,
                 "maxItems": 8,
@@ -171,9 +174,6 @@
                   "minLength": 1,
                   "maxLength": 253
                 }
-              },
-              {
-                "type": "null"
               }
             ]
           },
@@ -244,6 +244,9 @@
                 }
               },
               {
+                "type": "null"
+              },
+              {
                 "type": "array",
                 "minItems": 1,
                 "maxItems": 8,
@@ -252,9 +255,6 @@
                   "minLength": 1,
                   "maxLength": 253
                 }
-              },
-              {
-                "type": "null"
               }
             ]
           },
