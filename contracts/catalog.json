@@ -7703,6 +7703,24 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "vision.ui-check-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/ui-check-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.ui-check-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/ui-check-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -1,0 +1,57 @@
+{
+  "check": {
+    "id": "vuc_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "source": "html",
+    "url": null,
+    "image_sha256": null,
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "engine": "static-html",
+    "findings": [
+      {
+        "kind": "overflow",
+        "severity": "medium",
+        "selector": "div.card",
+        "detail": "the box is 1400px wide and reaches 1400px in a 390px viewport",
+        "evidence": {
+          "width": 1400,
+          "right": 1400,
+          "viewport": 390
+        }
+      }
+    ],
+    "summary": {
+      "ok": false,
+      "engine": "static-html",
+      "source": "html",
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "counts": {
+        "overflow": 1
+      },
+      "severity": {
+        "high": 0,
+        "medium": 1,
+        "low": 0
+      },
+      "findings": 1,
+      "summary": "1 UI fault found (1 overflow)",
+      "warnings": []
+    },
+    "counts": {
+      "overflow": 1
+    },
+    "severity": {
+      "high": 0,
+      "medium": 1,
+      "low": 0
+    },
+    "warnings": [],
+    "summary_text": "1 UI fault found (1 overflow)",
+    "created_at": "2026-10-28T12:00:00.000Z"
+  }
+}

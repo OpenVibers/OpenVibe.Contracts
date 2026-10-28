@@ -240,6 +240,13 @@
       "capabilities": 14
     },
     {
+      "service": "vision",
+      "name": "OpenVibe.Vision",
+      "origin": "https://openvibe.vision",
+      "operations": 2,
+      "capabilities": 1
+    },
+    {
       "service": "watch",
       "name": "OpenVibe.Watch",
       "origin": "https://openvibe.watch",
