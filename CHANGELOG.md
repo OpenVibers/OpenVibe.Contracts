@@ -4,6 +4,23 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.224.0 — 2026-10-28
+
+- **A `crawl` source type for OpenVibe.Sources** (the owner, 2026-10-28: "aggregate all websites and select deals on all
+  sites… a full comprehensive crawler system… the open source Google"). A crawl source walks one site from its endpoints
+  (the seeds):
+  - **How pages are found:** the site's own sitemaps (robots.txt `Sitemap` lines, else `/sitemap.xml`, indexes
+    followed), and, if asked, its same-host links.
+  - **Which pages:** `include` and `exclude` patterns.
+  - **Limits:** `max_pages`, `pages_per_run`, `recrawl_sec` and `max_depth`.
+  - **What is kept:** `require_structured`, only pages that publish schema.org JSON-LD.
+  - **The rules every source already follows still apply:** robots.txt on every request and redirect hop, per-host
+    spacing and Crawl-delay, a terms note before it can be enabled, and noindex pages never kept.
+  - **What is read:** only what a page publishes for machines (products and offers, articles, reviews).
+  - **Price history:** a page fetched again on schedule turns a price seen twice into a history (Deals' observations).
+  - **Fields:** `type` gains `crawl` and sources gain `crawl` on `sources.source@1` and its write request. There is a
+    valid fixture.
+
 ## 0.223.0 — 2026-10-28
 
 - **Run sessions** (the Desks plan's D6; `OpenVibe_Agent_Desks_Plan_2026-10-27.md`). A session is a browser desk that
