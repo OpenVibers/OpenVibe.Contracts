@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bench.judgement.recorded.v1.json",
+  "title": "BenchJudgementRecordedPayload",
+  "description": "bench.judgement.recorded v1 (OpenVibe.Bench): a judgement was cast on a round. Envelope: source bench, subject { type: user, id: <judge> } or { type: service, id: <judge> }, visibility first-party.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["round_id", "kind_id", "judge", "method", "at"],
+  "properties": {
+    "round_id": { "type": "string" },
+    "kind_id": { "type": "string" },
+    "judge": { "type": "string" },
+    "judge_name": { "type": ["string", "null"] },
+    "method": { "type": "string" },
+    "outcome": { "type": ["string", "null"] },
+    "score": { "type": ["number", "null"] },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

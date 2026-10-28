@@ -211214,7 +211214,7 @@ export type VideoPlaylistManageResult =
       }[];
     };
 
-/** codes.task-start-request@1.0.0 (owner: codes) */
+/** codes.task-start-request@1.1.0 (owner: codes) */
 /**
  * codes.task-start-request@1: the body of POST /api/v1/tasks on OpenVibe.Codes (capability codes.task.start). A first-party service (OpenVibe.Actor) starts a coding task for a person, named with X-OV-Subject: Codes runs it on that person's own machine through OpenVibe.Run (openvibe.codes/run, plan T16), in the project of their latest task there, so the person has used openvibe.codes/run once before a service can start one for them (else 409 codes.no_project). REPO is an https git URL with no credentials; REF a branch or tag to start from (default: the repository's default branch). PROMPT is the task. AGENT names one of Codes' agents (GET /harnesses), absent for Codes' router to pick. PERMISSION: edit (default; the agents edit files) or full (they may also run commands: tests, installs). PUSH asks for the change on a new branch (GitHub, with the machine's GITHUB_TOKEN; never the branch it started from), PULL_REQUEST also opens a pull request. IDEMPOTENCY_KEY: a repeat for the same person with the same key answers the first task (200, created false).
  */
@@ -211227,6 +211227,14 @@ export interface CodesTaskStartRequest {
   push?: boolean;
   pull_request?: boolean;
   idempotency_key?: string;
+  /**
+   * The OpenVibe.Actor task id when this coding task was started from Actor.
+   */
+  actor_task_id?: string;
+  /**
+   * The OpenVibe.Actor step id when this coding task was started from Actor.
+   */
+  actor_step_id?: string;
 }
 
 /** codes.task-start-result@1.0.0 (owner: codes) */
@@ -211238,7 +211246,7 @@ export interface CodesTaskStartResult {
   created: boolean;
 }
 
-/** codes.task@1.0.0 (owner: codes) */
+/** codes.task@1.1.0 (owner: codes) */
 /**
  * codes.task@1: a coding task on OpenVibe.Codes, as GET /api/v1/tasks/:id answers it (capability codes.task.read) and POST /api/v1/tasks creates it. STATE follows the OpenVibe.Run job that carries it: queued (waiting for one of the person's machines), placed, running, then succeeded, failed, cancelled or expired (no machine of theirs took it in time). URL is the task's page on openvibe.codes, where its owner follows it live. RESULT is present once it has ended: OK says whether the agents finished, SUMMARY what they said, FILES and PATCH the change (the patch at most 256 KiB, PATCH_TRUNCATED when cut), PUSH where it went when asked, COST_USD the model use on the person's own keys, DURATION_MS the time on their machine. ERROR says why a task that never ran ended (Run refused it, or the job failed before a result).
  */
@@ -211416,6 +211424,13 @@ export interface CodesTask {
     duration_ms?: number;
     error?: string;
   };
+  /**
+   * The OpenVibe.Actor task and step that started this coding task, when it came from Actor.
+   */
+  actor_ref?: {
+    task_id?: string;
+    step_id?: string;
+  } | null;
 }
 
 /** play.title-definition@1.0.0 (owner: play) */
@@ -213410,4 +213425,158 @@ export interface VisionUiCheckResult {
     summary_text?: string;
     created_at: string;
   };
+}
+
+/** bench.kind@1.0.0 (owner: bench) */
+/**
+ * bench.kind@1: a benchmark kind on OpenVibe.Bench. ROOM is the room that owns the kind, ENTRY the shape a submitted entry takes, JUDGE the default judge (pair, rubric, automatic_grader, test_suite or game_outcome), NAME the display name, SCHEMA the entry JSON Schema, and METRICS the board metrics (elo, pareto, cost, or a room's own).
+ */
+export interface BenchKind {
+  id: string;
+  room: string;
+  entry: string;
+  judge: string;
+  name: string;
+  schema: {};
+  metrics: string[];
+  created_at: string;
+}
+
+/** bench.task@1.0.0 (owner: bench) */
+/**
+ * bench.task@1: a benchmark task on OpenVibe.Bench. KIND_ID names the kind; PROMPT is the task; TASK_CLASS is an optional classifier for grouping; PUBLIC says whether the task may appear in the open dataset.
+ */
+export interface BenchTask {
+  id: string;
+  kind_id: string;
+  prompt: string;
+  task_class?: string | null;
+  public: boolean;
+  created_by: string;
+  created_at: string;
+}
+
+/** bench.round@1.0.0 (owner: bench) */
+/**
+ * bench.round@1: a pinned, reproducible benchmark round on OpenVibe.Bench. TASK_ID names the task; OFFERS are the exact offers (provider, model, route) the round runs; STATUS follows queued, running, ready, finished or failed; SEED and RECEIPT make the round reproducible.
+ */
+export interface BenchRound {
+  id: string;
+  task_id: string;
+  kind_id: string;
+  offers: {}[];
+  status: "queued" | "running" | "ready" | "finished" | "failed";
+  seed: number;
+  pool_fallback?: boolean;
+  receipt?: string | null;
+  created_by: string;
+  created_at: string;
+}
+
+/** bench.entry@1.0.0 (owner: bench) */
+/**
+ * bench.entry@1: one submitted entry in a benchmark round on OpenVibe.Bench. PROVIDER and MODEL name the offer; ROUTE is the exact route taken; PAYLOAD is the entry's output; COST_USD, MS and TOKENS are the measured use.
+ */
+export interface BenchEntry {
+  id: string;
+  round_id: string;
+  provider: string;
+  model: string;
+  route: {};
+  payload: {};
+  cost_usd: number;
+  ms: number;
+  tokens: number;
+  error?: string | null;
+  ui_check?: {} | null;
+  run_id?: string | null;
+}
+
+/** bench.judgement@1.0.0 (owner: bench) */
+/**
+ * bench.judgement@1: a blind judgement cast on a benchmark round on OpenVibe.Bench. JUDGE names the judge (pair, rubric, automatic_grader, test_suite, game_outcome); METHOD is how the pair was decided; PAIR is the two entry ids; OUTCOME and SCORE are the result.
+ */
+export interface BenchJudgement {
+  id: string;
+  round_id: string;
+  kind_id: string;
+  judge: string;
+  judge_name?: string | null;
+  judge_version?: string | null;
+  method: string;
+  pair: {} | null;
+  outcome: string | null;
+  score: number | null;
+  at: string;
+}
+
+/** bench.rating@1.0.0 (owner: bench) */
+/**
+ * bench.rating@1: a rating on a benchmark board on OpenVibe.Bench. CATEGORY and SUBJECT identify what is rated (a model, a route or a room's own subject); ELO, GAMES, WINS, LOSSES, TIES and WIN_RATE are the score; CI_LOWER and CI_UPPER bound the estimate.
+ */
+export interface BenchRating {
+  kind_id: string;
+  category: string;
+  subject: string;
+  elo: number;
+  games: number;
+  wins: number;
+  losses: number;
+  ties: number;
+  win_rate: number;
+  ci_lower: number;
+  ci_upper: number;
+  median_cost_usd?: number | null;
+  median_ms?: number | null;
+  provisional?: boolean;
+}
+
+/** bench.round.finished@1.0.0 (owner: bench) */
+/**
+ * bench.round.finished v1 (OpenVibe.Bench): a pinned round reached finished with at least two usable entries and is ready for judgements. Envelope: source bench, subject { type: user, id: <created_by> }, visibility first-party.
+ */
+export interface BenchRoundFinishedPayload {
+  round_id: string;
+  task_id: string;
+  kind_id: string;
+  status: "finished";
+  entries: number;
+  finished_at: string;
+}
+
+/** bench.judgement.recorded@1.0.0 (owner: bench) */
+/**
+ * bench.judgement.recorded v1 (OpenVibe.Bench): a judgement was cast on a round. Envelope: source bench, subject { type: user, id: <judge> } or { type: service, id: <judge> }, visibility first-party.
+ */
+export interface BenchJudgementRecordedPayload {
+  round_id: string;
+  kind_id: string;
+  judge: string;
+  judge_name?: string | null;
+  method: string;
+  outcome?: string | null;
+  score?: number | null;
+  at: string;
+}
+
+/** bench.rating.changed@1.0.0 (owner: bench) */
+/**
+ * bench.rating.changed v1 (OpenVibe.Bench): a rating moved on a benchmark board. Envelope: source bench, subject { type: service, id: bench }, visibility first-party.
+ */
+export interface BenchRatingChangedPayload {
+  kind_id: string;
+  category: string;
+  subject: string;
+  elo: number;
+  games: number;
+  wins?: number;
+  losses?: number;
+  ties?: number;
+  win_rate: number;
+  ci_lower?: number;
+  ci_upper?: number;
+  median_cost_usd?: number | null;
+  median_ms?: number | null;
+  provisional?: boolean;
+  at: string;
 }

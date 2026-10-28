@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/kind.v1.json",
+  "title": "BenchKind",
+  "description": "bench.kind@1: a benchmark kind on OpenVibe.Bench. ROOM is the room that owns the kind, ENTRY the shape a submitted entry takes, JUDGE the default judge (pair, rubric, automatic_grader, test_suite or game_outcome), NAME the display name, SCHEMA the entry JSON Schema, and METRICS the board metrics (elo, pareto, cost, or a room's own).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "room", "entry", "judge", "name", "schema", "metrics", "created_at"],
+  "properties": {
+    "id": { "type": "string" },
+    "room": { "type": "string" },
+    "entry": { "type": "string" },
+    "judge": { "type": "string" },
+    "name": { "type": "string" },
+    "schema": { "type": "object" },
+    "metrics": { "type": "array", "items": { "type": "string" } },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

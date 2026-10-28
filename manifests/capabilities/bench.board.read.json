@@ -1,0 +1,21 @@
+{
+  "id": "bench.board.read",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a benchmark board on OpenVibe.Bench: GET /api/v1/boards/:kindId?type=elo|pareto|cost returns the rendered board for a kind.",
+  "permissions": [
+    "bench:boards:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/boards/:kindId"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.rating@1"
+}

@@ -7344,7 +7344,7 @@
     },
     {
       "id": "codes.task-start-request",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "codes",
       "schema": "codes/task-start-request.v1.json",
       "visibility": "first-party",
@@ -7362,7 +7362,7 @@
     },
     {
       "id": "codes.task",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "codes",
       "schema": "codes/task.v1.json",
       "visibility": "first-party",
@@ -7718,6 +7718,87 @@
       "version": "1.0.0",
       "owner": "vision",
       "schema": "vision/ui-check-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.kind",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/kind.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.task",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/task.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.round",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/round.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.entry",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/entry.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.judgement",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/judgement.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.rating",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/rating.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.round.finished",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "events/payloads/bench.round.finished.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.judgement.recorded",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "events/payloads/bench.judgement.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.rating.changed",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "events/payloads/bench.rating.changed.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/task.v1.json",
+  "title": "BenchTask",
+  "description": "bench.task@1: a benchmark task on OpenVibe.Bench. KIND_ID names the kind; PROMPT is the task; TASK_CLASS is an optional classifier for grouping; PUBLIC says whether the task may appear in the open dataset.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind_id", "prompt", "public", "created_by", "created_at"],
+  "properties": {
+    "id": { "type": "string" },
+    "kind_id": { "type": "string" },
+    "prompt": { "type": "string" },
+    "task_class": { "type": ["string", "null"] },
+    "public": { "type": "boolean" },
+    "created_by": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

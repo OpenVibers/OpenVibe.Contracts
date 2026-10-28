@@ -1,0 +1,13 @@
+{
+  "id": "jdg_01J8Z3Q4R5S6T7V8W9X0Y1Z2A8",
+  "round_id": "rnd_01J8Z3Q4R5S6T7V8W9X0Y1Z2A6",
+  "kind_id": "knd_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
+  "judge": "pair",
+  "judge_name": null,
+  "judge_version": null,
+  "method": "human_vote",
+  "pair": { "a": "ent_01J8Z3Q4R5S6T7V8W9X0Y1Z2A7", "b": "ent_01J8Z3Q4R5S6T7V8W9X0Y1Z2A9" },
+  "outcome": "a",
+  "score": null,
+  "at": "2026-10-28T18:05:00.000Z"
+}

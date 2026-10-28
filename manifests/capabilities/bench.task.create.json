@@ -1,0 +1,21 @@
+{
+  "id": "bench.task.create",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Create a benchmark task in a kind on OpenVibe.Bench: POST /api/v1/kinds/:kindId/tasks with { prompt, task_class?, public? }. A room or a person's own token may create a task.",
+  "permissions": [
+    "bench:tasks:create"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/kinds/:kindId/tasks"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.task@1"
+}

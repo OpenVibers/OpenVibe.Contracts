@@ -16,6 +16,13 @@
       "capabilities": 9
     },
     {
+      "service": "bench",
+      "name": "OpenVibe.Bench",
+      "origin": "https://bench.openvibe.services",
+      "operations": 12,
+      "capabilities": 9
+    },
+    {
       "service": "billing",
       "name": "OpenVibe.Billing",
       "origin": "https://billing.openvibe.network",

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/judgement.v1.json",
+  "title": "BenchJudgement",
+  "description": "bench.judgement@1: a blind judgement cast on a benchmark round on OpenVibe.Bench. JUDGE names the judge (pair, rubric, automatic_grader, test_suite, game_outcome); METHOD is how the pair was decided; PAIR is the two entry ids; OUTCOME and SCORE are the result.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "round_id", "kind_id", "judge", "method", "pair", "outcome", "score", "at"],
+  "properties": {
+    "id": { "type": "string" },
+    "round_id": { "type": "string" },
+    "kind_id": { "type": "string" },
+    "judge": { "type": "string" },
+    "judge_name": { "type": ["string", "null"] },
+    "judge_version": { "type": ["string", "null"] },
+    "method": { "type": "string" },
+    "pair": { "type": ["object", "null"] },
+    "outcome": { "type": ["string", "null"] },
+    "score": { "type": ["number", "null"] },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

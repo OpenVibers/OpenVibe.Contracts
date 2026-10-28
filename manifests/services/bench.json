@@ -1,0 +1,105 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.238.0 <1.0.0"
+  },
+  "id": "bench",
+  "name": "OpenVibe.Bench",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Bench",
+  "domains": [
+    "bench.openvibe.services"
+  ],
+  "publicOrigin": "https://bench.openvibe.services",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5230",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "the public home, /docs and the bench.* API at bench.openvibe.services since 2026-10-28; services on the host call 127.0.0.1:5230"
+  },
+  "capabilities": [
+    "bench.kind.read",
+    "bench.task.create",
+    "bench.round.create",
+    "bench.round.read",
+    "bench.entry.create",
+    "bench.judgement.cast",
+    "bench.board.read",
+    "bench.dataset.read",
+    "bench.eval.manage"
+  ],
+  "eventsProduced": [
+    "bench.round.finished",
+    "bench.judgement.recorded",
+    "bench.rating.changed"
+  ],
+  "eventsConsumed": [
+    "network.account.export_requested",
+    "network.account.deleted"
+  ],
+  "namespacesOwned": [
+    "bench.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the database and dependencies are what ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "timers cleared",
+        "JWKS key refresher stopped",
+        "round and private-eval jobs stopped",
+        "outbox publisher stopped (its send in progress awaited; unsent rows stay for the next start)",
+        "telemetry buffer flushed and its retention timer stopped",
+        "open HTTP connections closed, then the server",
+        "database pool closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "rounds and private eval runs left queued or running are marked failed at boot; the caller retries them"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent bench.round.finished, bench.judgement.recorded and bench.rating.changed events in the outbox go to OpenVibe.Events once the publisher starts"
+        },
+        {
+          "kind": "consumer",
+          "what": "OpenVibe.Events redelivers network.account.export_requested and network.account.deleted that were pending during the stop; account_data_events applies each once"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+      }
+    },
+    "contracts": {
+      "range": ">=0.238.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process owns its PostgreSQL database (ov_bench); a round is taken with a compare-and-set on its status (queued → running)"
+    }
+  },
+  "notes": "Port 5230, unit openvibe-bench.service, database ov_bench. The shared AI benchmark and comparison engine (plan 2026-10-28 §4.12): kinds, pinned rounds, entries, blind judgements, ratings, boards, the open dataset and private evals. AI stays the run authority, Report the analytics authority. Bench answers account export and deletion (ADR-033) and subscribes to the two account Events topics. It calls AI's run API (ai.run.create, namespace ai.generate) for generation and publishes bench.* events through its outbox.",
+  "site": {
+    "name": "Bench",
+    "icon": "bench",
+    "tagline": "One AI benchmark and comparison engine for every room.",
+    "what": "The shared AI benchmark and comparison engine: kinds, pinned rounds, blind judgements, elo/pareto/cost boards, an open dataset per kind and private evals.",
+    "legalProfile": "tools",
+    "position": 47
+  }
+}

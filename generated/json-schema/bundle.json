@@ -83027,7 +83027,7 @@
       }
     },
     "codes.task-start-request": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "codes",
       "status": "active",
       "schema": {
@@ -83080,6 +83080,18 @@
             "minLength": 8,
             "maxLength": 128,
             "pattern": "^[A-Za-z0-9_.:-]+$"
+          },
+          "actor_task_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "The OpenVibe.Actor task id when this coding task was started from Actor."
+          },
+          "actor_step_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "The OpenVibe.Actor step id when this coding task was started from Actor."
           }
         }
       }
@@ -83110,7 +83122,7 @@
       }
     },
     "codes.task": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "codes",
       "status": "active",
       "schema": {
@@ -83289,6 +83301,26 @@
                 "maxLength": 1000
               }
             }
+          },
+          "actor_ref": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "step_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "description": "The OpenVibe.Actor task and step that started this coding task, when it came from Actor."
           }
         }
       }
@@ -86959,6 +86991,573 @@
                 "format": "date-time"
               }
             }
+          }
+        }
+      }
+    },
+    "bench.kind": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/kind.v1.json",
+        "title": "BenchKind",
+        "description": "bench.kind@1: a benchmark kind on OpenVibe.Bench. ROOM is the room that owns the kind, ENTRY the shape a submitted entry takes, JUDGE the default judge (pair, rubric, automatic_grader, test_suite or game_outcome), NAME the display name, SCHEMA the entry JSON Schema, and METRICS the board metrics (elo, pareto, cost, or a room's own).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "room",
+          "entry",
+          "judge",
+          "name",
+          "schema",
+          "metrics",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "room": {
+            "type": "string"
+          },
+          "entry": {
+            "type": "string"
+          },
+          "judge": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "object"
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bench.task": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/task.v1.json",
+        "title": "BenchTask",
+        "description": "bench.task@1: a benchmark task on OpenVibe.Bench. KIND_ID names the kind; PROMPT is the task; TASK_CLASS is an optional classifier for grouping; PUBLIC says whether the task may appear in the open dataset.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind_id",
+          "prompt",
+          "public",
+          "created_by",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind_id": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "task_class": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bench.round": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/round.v1.json",
+        "title": "BenchRound",
+        "description": "bench.round@1: a pinned, reproducible benchmark round on OpenVibe.Bench. TASK_ID names the task; OFFERS are the exact offers (provider, model, route) the round runs; STATUS follows queued, running, ready, finished or failed; SEED and RECEIPT make the round reproducible.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "task_id",
+          "kind_id",
+          "offers",
+          "status",
+          "seed",
+          "created_by",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "kind_id": {
+            "type": "string"
+          },
+          "offers": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "ready",
+              "finished",
+              "failed"
+            ]
+          },
+          "seed": {
+            "type": "integer"
+          },
+          "pool_fallback": {
+            "type": "boolean"
+          },
+          "receipt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bench.entry": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/entry.v1.json",
+        "title": "BenchEntry",
+        "description": "bench.entry@1: one submitted entry in a benchmark round on OpenVibe.Bench. PROVIDER and MODEL name the offer; ROUTE is the exact route taken; PAYLOAD is the entry's output; COST_USD, MS and TOKENS are the measured use.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "round_id",
+          "provider",
+          "model",
+          "route",
+          "payload",
+          "cost_usd",
+          "ms",
+          "tokens"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "round_id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "route": {
+            "type": "object"
+          },
+          "payload": {
+            "type": "object"
+          },
+          "cost_usd": {
+            "type": "number"
+          },
+          "ms": {
+            "type": "number"
+          },
+          "tokens": {
+            "type": "number"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ui_check": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "run_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "bench.judgement": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/judgement.v1.json",
+        "title": "BenchJudgement",
+        "description": "bench.judgement@1: a blind judgement cast on a benchmark round on OpenVibe.Bench. JUDGE names the judge (pair, rubric, automatic_grader, test_suite, game_outcome); METHOD is how the pair was decided; PAIR is the two entry ids; OUTCOME and SCORE are the result.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "round_id",
+          "kind_id",
+          "judge",
+          "method",
+          "pair",
+          "outcome",
+          "score",
+          "at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "round_id": {
+            "type": "string"
+          },
+          "kind_id": {
+            "type": "string"
+          },
+          "judge": {
+            "type": "string"
+          },
+          "judge_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "judge_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "method": {
+            "type": "string"
+          },
+          "pair": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "outcome": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bench.rating": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/rating.v1.json",
+        "title": "BenchRating",
+        "description": "bench.rating@1: a rating on a benchmark board on OpenVibe.Bench. CATEGORY and SUBJECT identify what is rated (a model, a route or a room's own subject); ELO, GAMES, WINS, LOSSES, TIES and WIN_RATE are the score; CI_LOWER and CI_UPPER bound the estimate.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind_id",
+          "category",
+          "subject",
+          "elo",
+          "games",
+          "wins",
+          "losses",
+          "ties",
+          "win_rate",
+          "ci_lower",
+          "ci_upper"
+        ],
+        "properties": {
+          "kind_id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "elo": {
+            "type": "number"
+          },
+          "games": {
+            "type": "number"
+          },
+          "wins": {
+            "type": "number"
+          },
+          "losses": {
+            "type": "number"
+          },
+          "ties": {
+            "type": "number"
+          },
+          "win_rate": {
+            "type": "number"
+          },
+          "ci_lower": {
+            "type": "number"
+          },
+          "ci_upper": {
+            "type": "number"
+          },
+          "median_cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "median_ms": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "provisional": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "bench.round.finished": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/bench.round.finished.v1.json",
+        "title": "BenchRoundFinishedPayload",
+        "description": "bench.round.finished v1 (OpenVibe.Bench): a pinned round reached finished with at least two usable entries and is ready for judgements. Envelope: source bench, subject { type: user, id: <created_by> }, visibility first-party.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "round_id",
+          "task_id",
+          "kind_id",
+          "status",
+          "entries",
+          "finished_at"
+        ],
+        "properties": {
+          "round_id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "kind_id": {
+            "type": "string"
+          },
+          "status": {
+            "const": "finished"
+          },
+          "entries": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bench.judgement.recorded": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/bench.judgement.recorded.v1.json",
+        "title": "BenchJudgementRecordedPayload",
+        "description": "bench.judgement.recorded v1 (OpenVibe.Bench): a judgement was cast on a round. Envelope: source bench, subject { type: user, id: <judge> } or { type: service, id: <judge> }, visibility first-party.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "round_id",
+          "kind_id",
+          "judge",
+          "method",
+          "at"
+        ],
+        "properties": {
+          "round_id": {
+            "type": "string"
+          },
+          "kind_id": {
+            "type": "string"
+          },
+          "judge": {
+            "type": "string"
+          },
+          "judge_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "method": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bench.rating.changed": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/bench.rating.changed.v1.json",
+        "title": "BenchRatingChangedPayload",
+        "description": "bench.rating.changed v1 (OpenVibe.Bench): a rating moved on a benchmark board. Envelope: source bench, subject { type: service, id: bench }, visibility first-party.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind_id",
+          "category",
+          "subject",
+          "elo",
+          "games",
+          "win_rate",
+          "at"
+        ],
+        "properties": {
+          "kind_id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "elo": {
+            "type": "number"
+          },
+          "games": {
+            "type": "number"
+          },
+          "wins": {
+            "type": "number"
+          },
+          "losses": {
+            "type": "number"
+          },
+          "ties": {
+            "type": "number"
+          },
+          "win_rate": {
+            "type": "number"
+          },
+          "ci_lower": {
+            "type": "number"
+          },
+          "ci_upper": {
+            "type": "number"
+          },
+          "median_cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "median_ms": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "provisional": {
+            "type": "boolean"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

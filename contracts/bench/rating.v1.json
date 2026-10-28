@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/rating.v1.json",
+  "title": "BenchRating",
+  "description": "bench.rating@1: a rating on a benchmark board on OpenVibe.Bench. CATEGORY and SUBJECT identify what is rated (a model, a route or a room's own subject); ELO, GAMES, WINS, LOSSES, TIES and WIN_RATE are the score; CI_LOWER and CI_UPPER bound the estimate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind_id", "category", "subject", "elo", "games", "wins", "losses", "ties", "win_rate", "ci_lower", "ci_upper"],
+  "properties": {
+    "kind_id": { "type": "string" },
+    "category": { "type": "string" },
+    "subject": { "type": "string" },
+    "elo": { "type": "number" },
+    "games": { "type": "number" },
+    "wins": { "type": "number" },
+    "losses": { "type": "number" },
+    "ties": { "type": "number" },
+    "win_rate": { "type": "number" },
+    "ci_lower": { "type": "number" },
+    "ci_upper": { "type": "number" },
+    "median_cost_usd": { "type": ["number", "null"] },
+    "median_ms": { "type": ["number", "null"] },
+    "provisional": { "type": "boolean" }
+  }
+}

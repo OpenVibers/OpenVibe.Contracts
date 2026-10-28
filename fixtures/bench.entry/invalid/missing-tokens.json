@@ -1,0 +1,10 @@
+{
+  "id": "ent_01J8Z3Q4R5S6T7V8W9X0Y1Z2A7",
+  "round_id": "rnd_01J8Z3Q4R5S6T7V8W9X0Y1Z2A6",
+  "provider": "openai",
+  "model": "gpt-4o",
+  "route": { "provider": "openai", "model": "gpt-4o" },
+  "payload": { "text": "It is a page about benchmarks." },
+  "cost_usd": 0.01,
+  "ms": 1200
+}

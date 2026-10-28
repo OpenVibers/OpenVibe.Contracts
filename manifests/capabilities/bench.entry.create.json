@@ -1,0 +1,21 @@
+{
+  "id": "bench.entry.create",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Submit an outside entry to a benchmark round on OpenVibe.Bench: POST /api/v1/rounds/:id/entries with a service token. A room submits a game match, a test-suite run or another room's result.",
+  "permissions": [
+    "bench:entries:create"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/rounds/:id/entries"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.entry@1"
+}
