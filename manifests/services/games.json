@@ -39,7 +39,8 @@
         "question": "Is my progress saved?",
         "answer": "Yes. Leaderboards, achievements and cloud saves come from OpenVibe.Play, so your progress follows your account."
       }
-    ]
+    ],
+    "neighbourhood": "games"
   },
   "capabilities": [
     "games.mod.manage",

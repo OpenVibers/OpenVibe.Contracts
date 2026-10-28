@@ -108,6 +108,7 @@
         "question": "How is AI paid for?",
         "answer": "At cost: each project has quotas and budgets, and every run records its model, usage and cost."
       }
-    ]
+    ],
+    "neighbourhood": "build"
   }
 }

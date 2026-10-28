@@ -61,7 +61,8 @@
         "question": "Can I share my space?",
         "answer": "A space runs in your editor with a live preview, and OpenVibe staff publish spaces at their own addresses. Publishing for everyone opens once the network's abuse handling and its designated DMCA agent are in place."
       }
-    ]
+    ],
+    "neighbourhood": "make"
   },
   "capabilities": [
     "space.site.manage",

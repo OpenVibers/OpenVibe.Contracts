@@ -89,7 +89,7 @@
     },
     {
       "id": "registry.service-manifest",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "network",
       "schema": "registry/service-manifest.v1.json",
       "visibility": "public",
@@ -7800,6 +7800,24 @@
       "owner": "bench",
       "schema": "events/payloads/bench.rating.changed.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "graph.link",
+      "version": "1.0.0",
+      "owner": "graph",
+      "schema": "graph/link.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.metric",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/metric.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     }

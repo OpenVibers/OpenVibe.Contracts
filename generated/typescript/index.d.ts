@@ -234,7 +234,7 @@ export interface Problem {
   [k: string]: unknown | undefined;
 }
 
-/** registry.service-manifest@1.1.0 (owner: network) */
+/** registry.service-manifest@1.2.0 (owner: network) */
 /**
  * What a service is, where it lives and what it offers. The ecosystem registry is built from these, not from hard-coded route maps.
  */
@@ -2033,6 +2033,10 @@ export interface ServiceManifest {
        */
       statusApi?: string;
     };
+    /**
+     * The room's launcher group in OpenVibe.Shared rooms.js and OpenVibe.Network frame/sites.js; optional so older manifests retain their meaning.
+     */
+    neighbourhood?: "streams" | "games" | "answers" | "make" | "shop" | "people" | "build";
   };
   capabilities: string[];
   eventsProduced: string[];
@@ -213580,3 +213584,33 @@ export interface BenchRatingChangedPayload {
   provisional?: boolean;
   at: string;
 }
+
+/** graph.link@1.0.0 (owner: graph) */
+/**
+ * graph.link@1: a directed, typed relation between canonical OpenVibe object names (plan 2026-10-28 section 4.1). The owning service supplies the OVRNs and relation; no graph producer is live yet.
+ */
+export interface GraphLink {
+  from: string;
+  /**
+   * Typed relation, for example derivedFrom, on, soldBy or cites.
+   */
+  rel: string;
+  to: string;
+}
+
+/** report.metric@1.0.0 (owner: report) */
+/**
+ * report.metric@1: one count computed or ingested by Report, with a UTC day or a window. Money values come from Billing's API; Report does not derive them. Mirrors OpenVibe.Report docs/report.metric.v1.json on origin/main.
+ */
+export type ReportMetric = {
+  metric: string;
+  scope: "network" | "site" | "channel" | "stream";
+  scope_id: string;
+  day?: string;
+  window_days?: 7 | 30 | 90;
+  value: number;
+  unit: "count" | "seconds" | "minutes" | "bits" | "cents" | "milliseconds" | "percent";
+  source: string;
+} & {
+  [k: string]: unknown | undefined;
+};

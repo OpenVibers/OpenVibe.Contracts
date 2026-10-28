@@ -88,6 +88,7 @@
     "tagline": "What should we eat?",
     "what": "Find food banks and budget grocers near you, plan a week of meals for your household and budget, get recipe ideas from what is in your cupboard, and search every delivery app at once.",
     "legalProfile": "tools",
-    "position": 24
+    "position": 24,
+    "neighbourhood": "shop"
   }
 }

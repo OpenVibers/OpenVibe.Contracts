@@ -83,6 +83,7 @@
     "tagline": "Something to do, alone, together, or live",
     "what": "IRL quest boards on Live, a local guide from OpenStreetMap and group plans the group votes on; add the winner to your own Today.",
     "legalProfile": "ugc",
-    "position": 45
+    "position": 45,
+    "neighbourhood": "games"
   }
 }

@@ -79,7 +79,8 @@
         "question": "What happens when a plan changes?",
         "answer": "A change publishes a new version. Members keep the version they joined while their membership lasts, and every version stays public in the plan’s terms history."
       }
-    ]
+    ],
+    "neighbourhood": "people"
   },
   "capabilities": [
     "vip.plan.create",

@@ -78,7 +78,8 @@
           "note": "Deal discovery is the sibling room."
         }
       ]
-    }
+    },
+    "neighbourhood": "shop"
   },
   "capabilities": [
     "trade.instrument.resolve",

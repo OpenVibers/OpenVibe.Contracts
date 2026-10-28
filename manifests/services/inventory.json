@@ -114,6 +114,7 @@
         "question": "Can I buy, sell or trade items?",
         "answer": "No. Items are never bought, sold, traded or turned into money."
       }
-    ]
+    ],
+    "neighbourhood": "people"
   }
 }

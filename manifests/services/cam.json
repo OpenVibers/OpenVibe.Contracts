@@ -78,6 +78,7 @@
     "tagline": "Your camera, your cameras, and Live's cam button",
     "what": "The camera app with a timer, burst, grid and on-device filter; a private wall for the cameras you own, shared through revocable viewer grants; and the stills Live's cam button takes, every photo saved to Pics.",
     "legalProfile": "ugc",
-    "position": 46
+    "position": 46,
+    "neighbourhood": "streams"
   }
 }

@@ -75,7 +75,8 @@
         "question": "Are comments on other sites hosted here?",
         "answer": "Yes. Comments on Live recordings and clips, blog posts and hosting plans are OpenVibe.Community threads, so one account and one moderation team cover them all."
       }
-    ]
+    ],
+    "neighbourhood": "people"
   },
   "lifecycle": {
     "liveness": {

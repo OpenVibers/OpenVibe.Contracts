@@ -38,7 +38,8 @@
         "question": "Can I follow a blog without an account?",
         "answer": "Yes. Every blog has RSS, Atom and JSON feeds."
       }
-    ]
+    ],
+    "neighbourhood": "answers"
   },
   "capabilities": [
     "blog.blog.create",

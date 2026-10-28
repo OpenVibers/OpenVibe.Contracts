@@ -38,7 +38,8 @@
         "question": "Where is the code?",
         "answer": "On GitHub under OpenVibers, open source like the rest of OpenVibe, with read mirrors on OpenVibe Git at git.openvibe.codes."
       }
-    ]
+    ],
+    "neighbourhood": "make"
   },
   "capabilities": [
     "codes.task.start",

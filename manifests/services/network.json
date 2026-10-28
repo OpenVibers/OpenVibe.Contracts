@@ -43,7 +43,8 @@
         "question": "Can I link my other accounts?",
         "answer": "Yes. Link platforms like Twitch, YouTube or Kick to your OpenVibe account, and unlink them whenever you like."
       }
-    ]
+    ],
+    "neighbourhood": "people"
   },
   "capabilities": [
     "identity.subject.resolve",

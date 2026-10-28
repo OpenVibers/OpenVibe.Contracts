@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.239.0 — 2026-10-28
+
+- Added `graph.link@1` (`from`, `rel`, `to` OVRN relation) for the planned object graph. The `graph.link.created` event waits for a producing service.
+- Added `report.metric@1` from OpenVibe.Report's `docs/report.metric.v1.json` proposal, including exclusive UTC day and 7/30/90-day window forms. Report v1 currently reads upstream numbers and does not publish metric rows.
+- Added the optional `site.neighbourhood` field to `registry.service-manifest@1` (1.2.0), last in each of the 48 service site blocks. The seven ids match OpenVibe.Shared `rooms.js` and Network's neighbourhood menu.
+- Today already had all three live `today.event.*` outbox payloads and fixtures. Today, Report, Design, Domains and Vision already have manifests; Website is served by Space, so no duplicate service manifest was added.
+
 ## 0.238.0 — 2026-10-28
 
 - **OpenVibe.Bench** (`bench`, live at bench.openvibe.services, port 5230, database `ov_bench`): the shared AI

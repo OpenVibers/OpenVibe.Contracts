@@ -91,6 +91,7 @@
     "tagline": "Build on OpenVibe",
     "what": "The developer platform: projects, apps, keys, grants and usage; API, contract, SDK and event docs; OAuth and webhook tools, playgrounds and app releases.",
     "legalProfile": "ugc",
-    "position": 7
+    "position": 7,
+    "neighbourhood": "build"
   }
 }

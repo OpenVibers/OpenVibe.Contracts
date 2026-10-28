@@ -187,6 +187,10 @@
         },
         "relationships": {
           "$ref": "product.v1.json#/$defs/relationships"
+        },
+        "neighbourhood": {
+          "enum": ["streams", "games", "answers", "make", "shop", "people", "build"],
+          "description": "The room's launcher group in OpenVibe.Shared rooms.js and OpenVibe.Network frame/sites.js; optional so older manifests retain their meaning."
         }
       }
     },

@@ -38,7 +38,8 @@
         "question": "What kinds of tools are there?",
         "answer": "Hundreds: video, audio and image converters, document tools, developer utilities and more, each with its own page on openvibe.tools or a tool subdomain."
       }
-    ]
+    ],
+    "neighbourhood": "make"
   },
   "capabilities": [
     "tools.analytics.read",

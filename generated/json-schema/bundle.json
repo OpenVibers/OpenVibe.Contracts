@@ -708,7 +708,7 @@
       }
     },
     "registry.service-manifest": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -900,6 +900,18 @@
               },
               "relationships": {
                 "$ref": "product.v1.json#/$defs/relationships"
+              },
+              "neighbourhood": {
+                "enum": [
+                  "streams",
+                  "games",
+                  "answers",
+                  "make",
+                  "shop",
+                  "people",
+                  "build"
+                ],
+                "description": "The room's launcher group in OpenVibe.Shared rooms.js and OpenVibe.Network frame/sites.js; optional so older manifests retain their meaning."
               }
             }
           },
@@ -87560,6 +87572,134 @@
             "format": "date-time"
           }
         }
+      }
+    },
+    "graph.link": {
+      "version": "1.0.0",
+      "owner": "graph",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/graph/link.v1.json",
+        "title": "GraphLink",
+        "description": "graph.link@1: a directed, typed relation between canonical OpenVibe object names (plan 2026-10-28 section 4.1). The owning service supplies the OVRNs and relation; no graph producer is live yet.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from",
+          "rel",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^ovrn:[a-z][a-z0-9-]*:.+$",
+            "maxLength": 512
+          },
+          "rel": {
+            "type": "string",
+            "pattern": "^[a-z][A-Za-z0-9]{0,63}$",
+            "description": "Typed relation, for example derivedFrom, on, soldBy or cites."
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^ovrn:[a-z][a-z0-9-]*:.+$",
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "report.metric": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/metric.v1.json",
+        "title": "ReportMetric",
+        "description": "report.metric@1: one count computed or ingested by Report, with a UTC day or a window. Money values come from Billing's API; Report does not derive them. Mirrors OpenVibe.Report docs/report.metric.v1.json on origin/main.",
+        "type": "object",
+        "required": [
+          "metric",
+          "scope",
+          "scope_id",
+          "value",
+          "unit",
+          "source"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "metric": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,60}$"
+          },
+          "scope": {
+            "enum": [
+              "network",
+              "site",
+              "channel",
+              "stream"
+            ]
+          },
+          "scope_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "day": {
+            "type": "string",
+            "format": "date"
+          },
+          "window_days": {
+            "type": "integer",
+            "enum": [
+              7,
+              30,
+              90
+            ]
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "enum": [
+              "count",
+              "seconds",
+              "minutes",
+              "bits",
+              "cents",
+              "milliseconds",
+              "percent"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "day"
+            ],
+            "not": {
+              "required": [
+                "window_days"
+              ]
+            }
+          },
+          {
+            "required": [
+              "window_days"
+            ],
+            "not": {
+              "required": [
+                "day"
+              ]
+            }
+          }
+        ]
       }
     }
   }

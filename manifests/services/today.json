@@ -87,6 +87,7 @@
     "tagline": "Everything happening for you, today",
     "what": "Stream schedules, reminders that find you on any OpenVibe site, calendar feeds for your own calendar app, and a morning brief, all in one place.",
     "legalProfile": "account",
-    "position": 40
+    "position": 40,
+    "neighbourhood": "answers"
   }
 }
