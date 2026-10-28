@@ -4,6 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.227.0 — 2026-10-28
+
+- **OpenVibe.Report** (`report`, live at openvibe.report, port 5080; plan 2026-10-28 §5.4, the Report room). v1 is a
+  stateless front over OpenVibe.Network's open stats and OpenVibe.Live's Rundown and after-show reports. It has:
+  - the network's numbers, open to everyone, each with its window and definition;
+  - The Rundown: topics, takes, episodes and voices;
+  - each stream's after-show report: viewers minute by minute, chat, the moments with links into the recording, and
+    the AI write-up, labelled;
+  - an open JSON API.
+
+  The site block (Report, icon `report`, position 38, legal profile `info`) puts it in the menu's News & answers
+  neighbourhood. `report.*` is its namespace: v2 makes it the analytics authority.
+
 ## 0.226.0 — 2026-10-28
 
 - **OpenVibe.Domains** (`domains`, live at openvibe.domains, port 5070; plan 2026-10-28 §5.1, the Domains room). v1 is
