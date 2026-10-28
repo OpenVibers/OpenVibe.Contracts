@@ -4,6 +4,22 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.234.0 — 2026-10-28
+
+- **OpenVibe.Meme** (`meme`, live at openvibe.meme, port 5120, database `ov_meme`): the open meme database, rebuilt
+  with AI. Entries cite the chat line or VOD second they came from, follow later uses on a timeline and keep a
+  status; candidates stay hidden until a staff person publishes them; a daily job re-verifies every citation; people
+  vote once an ISO week for meme of the week and captions are plain text over a template. Every public entry is one
+  `search.index-document@1` queued in `meme_outbox`. The manifest names `meme.*`, no capabilities or events of its
+  own, and the site block (Meme, icon `meme`, position 42, legal profile `ugc`) puts it in Games & laughs.
+- **Search's hybrid ranking** (additive): `search.fabric-result@1`'s `route.explain` entries gain optional `ranking`
+  (`hybrid` or `keyword`) and `reason` (`no_vectors`, `ai_unavailable`, `short_query`), and its results gain optional
+  `ranks` (the 1-based keyword and vector positions, null when absent from that list). `search.query-result@1` gains
+  the same per-hit `ranks` and an optional `explain` object. Keyword-only answers stay valid.
+
+- `domains.proposal@1`: a change may be `type: "NS"` (a domain's nameservers at the registrar, update only), with
+  `before`/`after` as the list of nameservers (additive; OpenVibe.Domains' Porkbun connection).
+
 ## 0.233.0 — 2026-10-28
 
 - **OpenVibe.Domains' control panel** (plan 2026-10-28 §5.1, DOM-2):

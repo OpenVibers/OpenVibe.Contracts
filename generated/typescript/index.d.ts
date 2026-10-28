@@ -6122,6 +6122,13 @@ export interface SearchQueryResult {
      * Escaped text with <mark> around the matches; nothing else.
      */
     snippet_html?: string | null;
+    /**
+     * 1-based position in the keyword and vector top-100 lists; null when absent from that list.
+     */
+    ranks?: {
+      keyword: number | null;
+      vector: number | null;
+    };
   }[];
   next_cursor: string | null;
   facets?: {
@@ -6131,6 +6138,13 @@ export interface SearchQueryResult {
           count: number;
         }[]
       | undefined;
+  };
+  /**
+   * How this page was ranked; reason is present only when ranking is keyword.
+   */
+  explain?: {
+    ranking: "hybrid" | "keyword";
+    reason?: "no_vectors" | "ai_unavailable" | "short_query";
   };
 }
 
@@ -6292,6 +6306,13 @@ export interface SearchFabricResult {
      * Rank within its scope (higher first); not comparable across scopes.
      */
     score?: number | null;
+    /**
+     * 1-based position in the keyword and vector top-100 lists; null when absent from that list.
+     */
+    ranks?: {
+      keyword: number | null;
+      vector: number | null;
+    };
   }[];
   /**
    * How many results each scope gave on this page.
@@ -7976,6 +7997,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -7994,6 +8017,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8010,6 +8035,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8028,6 +8055,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8044,6 +8073,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8060,6 +8091,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8078,6 +8111,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8094,6 +8129,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8110,6 +8147,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8126,6 +8165,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8144,6 +8185,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8160,6 +8203,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8176,6 +8221,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8192,6 +8239,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8208,6 +8257,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8226,6 +8277,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8242,6 +8295,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8258,6 +8313,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8274,6 +8331,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8290,6 +8349,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8306,6 +8367,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8324,6 +8387,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8340,6 +8405,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8356,6 +8423,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8372,6 +8441,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8388,6 +8459,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8404,6 +8477,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8420,6 +8495,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8438,6 +8515,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8454,6 +8533,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8470,6 +8551,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8486,6 +8569,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8502,6 +8587,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8518,6 +8605,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8534,6 +8623,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8550,6 +8641,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8568,6 +8661,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8584,6 +8679,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8600,6 +8697,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8616,6 +8715,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8632,6 +8733,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8648,6 +8751,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8664,6 +8769,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8680,6 +8787,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8696,6 +8805,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8714,6 +8825,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8730,6 +8843,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8746,6 +8861,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8762,6 +8879,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8778,6 +8897,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8794,6 +8915,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8810,6 +8933,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8826,6 +8951,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8842,6 +8969,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8858,6 +8987,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -8876,6 +9007,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8892,6 +9025,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8908,6 +9043,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8924,6 +9061,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8940,6 +9079,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8956,6 +9097,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8972,6 +9115,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -8988,6 +9133,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9004,6 +9151,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9020,6 +9169,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9036,6 +9187,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -9054,6 +9207,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9070,6 +9225,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9086,6 +9243,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9102,6 +9261,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9118,6 +9279,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9134,6 +9297,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9150,6 +9315,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9166,6 +9333,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9182,6 +9351,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9198,6 +9369,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9214,6 +9387,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9230,6 +9405,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -9248,6 +9425,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9264,6 +9443,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9280,6 +9461,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9296,6 +9479,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9312,6 +9497,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9328,6 +9515,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9344,6 +9533,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9360,6 +9551,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9376,6 +9569,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9392,6 +9587,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9408,6 +9605,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9424,6 +9623,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9440,6 +9641,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -9458,6 +9661,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9474,6 +9679,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9490,6 +9697,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9506,6 +9715,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9522,6 +9733,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9538,6 +9751,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9554,6 +9769,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9570,6 +9787,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9586,6 +9805,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9602,6 +9823,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9618,6 +9841,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9634,6 +9859,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9650,6 +9877,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9666,6 +9895,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -9684,6 +9915,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9700,6 +9933,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9716,6 +9951,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9732,6 +9969,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9748,6 +9987,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9764,6 +10005,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9780,6 +10023,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9796,6 +10041,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9812,6 +10059,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9828,6 +10077,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9844,6 +10095,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9860,6 +10113,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9876,6 +10131,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9892,6 +10149,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9908,6 +10167,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -9926,6 +10187,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9942,6 +10205,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9958,6 +10223,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9974,6 +10241,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -9990,6 +10259,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10006,6 +10277,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10022,6 +10295,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10038,6 +10313,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10054,6 +10331,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10070,6 +10349,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10086,6 +10367,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10102,6 +10385,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10118,6 +10403,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10134,6 +10421,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10150,6 +10439,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10166,6 +10457,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -10184,6 +10477,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10200,6 +10495,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10216,6 +10513,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10232,6 +10531,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10248,6 +10549,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10264,6 +10567,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10280,6 +10585,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10296,6 +10603,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10312,6 +10621,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10328,6 +10639,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10344,6 +10657,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10360,6 +10675,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10376,6 +10693,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10392,6 +10711,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10408,6 +10729,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10424,6 +10747,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10440,6 +10765,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -10458,6 +10785,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10474,6 +10803,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10490,6 +10821,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10506,6 +10839,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10522,6 +10857,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10538,6 +10875,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10554,6 +10893,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10570,6 +10911,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10586,6 +10929,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10602,6 +10947,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10618,6 +10965,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10634,6 +10983,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10650,6 +11001,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10666,6 +11019,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10682,6 +11037,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10698,6 +11055,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10714,6 +11073,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10730,6 +11091,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -10748,6 +11111,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10764,6 +11129,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10780,6 +11147,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10796,6 +11165,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10812,6 +11183,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10828,6 +11201,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10844,6 +11219,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10860,6 +11237,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10876,6 +11255,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10892,6 +11273,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10908,6 +11291,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10924,6 +11309,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10940,6 +11327,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10956,6 +11345,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10972,6 +11363,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -10988,6 +11381,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11004,6 +11399,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11020,6 +11417,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11036,6 +11435,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ]
       | [
@@ -11054,6 +11455,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11070,6 +11473,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11086,6 +11491,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11102,6 +11509,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11118,6 +11527,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11134,6 +11545,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11150,6 +11563,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11166,6 +11581,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11182,6 +11599,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11198,6 +11617,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11214,6 +11635,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11230,6 +11653,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11246,6 +11671,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11262,6 +11689,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11278,6 +11707,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11294,6 +11725,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11310,6 +11743,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11326,6 +11761,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11342,6 +11779,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           },
           {
             scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
@@ -11358,6 +11797,8 @@ export interface SearchFabricResult {
              * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
              */
             skipped?: string | null;
+            ranking?: "hybrid" | "keyword";
+            reason?: "no_vectors" | "ai_unavailable" | "short_query";
           }
         ];
     /**
@@ -212756,48 +213197,72 @@ export interface DomainsProposal {
        * The provider's record id (update, delete; a create's after it is applied).
        */
       record_id?: string | null;
-      before?: {
-        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
-        /**
-         * The full record name (example.com, www.example.com).
-         */
-        name: string;
-        content: string;
-        /**
-         * Seconds; 1 is the provider's automatic TTL.
-         */
-        ttl?: number;
-        /**
-         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
-         */
-        proxied?: boolean | null;
-        /**
-         * MX and SRV only.
-         */
-        priority?: number | null;
-        comment?: string | null;
-      } | null;
-      after?: {
-        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
-        /**
-         * The full record name (example.com, www.example.com).
-         */
-        name: string;
-        content: string;
-        /**
-         * Seconds; 1 is the provider's automatic TTL.
-         */
-        ttl?: number;
-        /**
-         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
-         */
-        proxied?: boolean | null;
-        /**
-         * MX and SRV only.
-         */
-        priority?: number | null;
-        comment?: string | null;
-      } | null;
+      before?:
+        | {
+            type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+            /**
+             * The full record name (example.com, www.example.com).
+             */
+            name: string;
+            content: string;
+            /**
+             * Seconds; 1 is the provider's automatic TTL.
+             */
+            ttl?: number;
+            /**
+             * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+             */
+            proxied?: boolean | null;
+            /**
+             * MX and SRV only.
+             */
+            priority?: number | null;
+            comment?: string | null;
+          }
+        | null
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string];
+      after?:
+        | {
+            type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+            /**
+             * The full record name (example.com, www.example.com).
+             */
+            name: string;
+            content: string;
+            /**
+             * Seconds; 1 is the provider's automatic TTL.
+             */
+            ttl?: number;
+            /**
+             * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+             */
+            proxied?: boolean | null;
+            /**
+             * MX and SRV only.
+             */
+            priority?: number | null;
+            comment?: string | null;
+          }
+        | null
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string];
+      /**
+       * A registrar change: the domain's nameservers at the registry. op is update only; before and after are the lists.
+       */
+      type?: "NS";
     },
     ...{
       op: "create" | "update" | "delete";
@@ -212805,48 +213270,72 @@ export interface DomainsProposal {
        * The provider's record id (update, delete; a create's after it is applied).
        */
       record_id?: string | null;
-      before?: {
-        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
-        /**
-         * The full record name (example.com, www.example.com).
-         */
-        name: string;
-        content: string;
-        /**
-         * Seconds; 1 is the provider's automatic TTL.
-         */
-        ttl?: number;
-        /**
-         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
-         */
-        proxied?: boolean | null;
-        /**
-         * MX and SRV only.
-         */
-        priority?: number | null;
-        comment?: string | null;
-      } | null;
-      after?: {
-        type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
-        /**
-         * The full record name (example.com, www.example.com).
-         */
-        name: string;
-        content: string;
-        /**
-         * Seconds; 1 is the provider's automatic TTL.
-         */
-        ttl?: number;
-        /**
-         * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
-         */
-        proxied?: boolean | null;
-        /**
-         * MX and SRV only.
-         */
-        priority?: number | null;
-        comment?: string | null;
-      } | null;
+      before?:
+        | {
+            type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+            /**
+             * The full record name (example.com, www.example.com).
+             */
+            name: string;
+            content: string;
+            /**
+             * Seconds; 1 is the provider's automatic TTL.
+             */
+            ttl?: number;
+            /**
+             * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+             */
+            proxied?: boolean | null;
+            /**
+             * MX and SRV only.
+             */
+            priority?: number | null;
+            comment?: string | null;
+          }
+        | null
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string];
+      after?:
+        | {
+            type: "A" | "AAAA" | "CNAME" | "TXT" | "MX" | "NS" | "CAA" | "SRV" | "DS";
+            /**
+             * The full record name (example.com, www.example.com).
+             */
+            name: string;
+            content: string;
+            /**
+             * Seconds; 1 is the provider's automatic TTL.
+             */
+            ttl?: number;
+            /**
+             * Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere.
+             */
+            proxied?: boolean | null;
+            /**
+             * MX and SRV only.
+             */
+            priority?: number | null;
+            comment?: string | null;
+          }
+        | null
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string];
+      /**
+       * A registrar change: the domain's nameservers at the registry. op is update only; before and after are the lists.
+       */
+      type?: "NS";
     }[]
   ];
   created_by: string;
