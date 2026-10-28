@@ -1,0 +1,21 @@
+{
+  "id": "codes.actions.read",
+  "version": "1.0",
+  "owner": "codes",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read one person's Action Center items from OpenVibe.Codes (plan 2026-10-28 §3.10): coding tasks run through OpenVibe.Run (queued, placed, running, done, failed), as common.action-list-result@1. GET /api/v1/actions?subject=usr_… with a service token; granted to OpenVibe.Network's aggregator only. Never another person's items, and only the fields of common.action-item@1.",
+  "permissions": [
+    "codes:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/actions"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.action-list-result@1"
+}

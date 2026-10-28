@@ -1,0 +1,21 @@
+{
+  "service": "actor",
+  "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "kind": "agent_task",
+  "title": "Find three cheap flights to Lisbon",
+  "summary": "Read 4 pages; comparing prices",
+  "bucket": "running",
+  "state": "running",
+  "agent": "deepseek-flash",
+  "cost_usd": 0.004,
+  "steps": 6,
+  "error": null,
+  "created_at": "2026-10-28T14:00:00Z",
+  "updated_at": "2026-10-28T14:02:10Z",
+  "next_run_at": null,
+  "href": "http://openvibe.actor/tasks/x",
+  "actions": [
+    "open",
+    "cancel"
+  ]
+}

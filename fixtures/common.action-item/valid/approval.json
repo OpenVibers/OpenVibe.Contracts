@@ -1,0 +1,17 @@
+{
+  "service": "network",
+  "id": "cnf_01JAB2C3D4E5F6G7H8J9K0MNPR",
+  "kind": "approval",
+  "title": "Send an email to the venue",
+  "summary": "Your agent asks to send one email from your account",
+  "bucket": "waiting",
+  "state": "pending",
+  "created_at": "2026-10-28T14:00:00Z",
+  "updated_at": "2026-10-28T14:00:00Z",
+  "href": "https://openvibe.network/my#approvals",
+  "actions": [
+    "approve",
+    "decline",
+    "open"
+  ]
+}

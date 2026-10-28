@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.229.0 — 2026-10-28
+
+- **The Action Center** (plan 2026-10-28 §3.10, NOTIF-5): one list of a person's agent work on every site.
+  - `common.action-item@1`: one item (an agent task, a coding task, an AI run, an approval), with its bucket
+    (running, waiting, scheduled, done, failed), state, cost in USD, steps, error, page and the actions it allows.
+  - `common.action-list-result@1`: one authority's items for a person. Served by Actor, Codes and AI at
+    `GET /api/v1/actions?subject=usr_…` under the new first-party capabilities `actor.actions.read`,
+    `codes.actions.read` and `ai.actions.read`, which are granted to Network only.
+  - `actor.approval.decide`: Network approves or declines an Actor approval for its person.
+  - `network.actions.read` and `network.me-actions-result@1`: `GET /api/v1/me/actions` merges them with Network's
+    own confirmations into the five buckets, and `POST /api/v1/me/actions/:service/:id/:action` acts on one.
+
 ## 0.228.0 — 2026-10-28
 
 - **OpenVibe.Design** (`design`, live at openvibe.design, port 5090; plan 2026-10-28 §5.2, the Design room). v1 is the

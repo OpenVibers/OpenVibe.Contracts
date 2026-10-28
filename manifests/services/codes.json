@@ -43,7 +43,8 @@
   "capabilities": [
     "codes.task.start",
     "codes.task.read",
-    "codes.task.cancel"
+    "codes.task.cancel",
+    "codes.actions.read"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],

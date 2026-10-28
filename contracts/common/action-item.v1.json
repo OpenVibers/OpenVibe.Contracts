@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/action-item.v1.json",
+  "title": "ActionItem",
+  "description": "One piece of a person's agent work in the Action Center (plan 2026-10-28 §3.10): an agent task, a coding task, an AI run, or an approval waiting on them. Each authority answers its own items in this shape (common.action-list-result@1); OpenVibe.Network merges them into buckets (network.me-actions-result@1). Text is plain (no markup); a cost is what the person was charged in USD, null when unknown or free; href is a page on the authority's own public site.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "service",
+    "id",
+    "kind",
+    "title",
+    "bucket",
+    "state",
+    "created_at",
+    "updated_at",
+    "href",
+    "actions"
+  ],
+  "properties": {
+    "service": {
+      "enum": [
+        "actor",
+        "codes",
+        "ai",
+        "network",
+        "run"
+      ],
+      "description": "The authority that owns the item."
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "The authority's own id (tsk_…, a Codes task id, run_…, a confirmation id)."
+    },
+    "kind": {
+      "enum": [
+        "agent_task",
+        "code_task",
+        "ai_run",
+        "approval",
+        "desk_session"
+      ],
+      "description": "What the item is."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "A short plain-text name: the start of the task text, the workflow, or what the approval is for."
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 400,
+      "description": "The last step, the outcome, or what will happen on approval."
+    },
+    "bucket": {
+      "enum": [
+        "running",
+        "waiting",
+        "scheduled",
+        "done",
+        "failed"
+      ],
+      "description": "Where the Action Center shows it: running (queued or working), waiting (needs the person), scheduled (will run later), done, failed (failed, cancelled or expired)."
+    },
+    "state": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "description": "The authority's own state word (queued, running, needs_you, succeeded, failed, cancelled, pending…)."
+    },
+    "agent": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80,
+      "description": "The agent, model or workflow doing it, when known."
+    },
+    "cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "What it cost the person, in US dollars; null when unknown or free."
+    },
+    "steps": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Tool calls or steps so far, when counted."
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 400,
+      "description": "Why it failed, in words a person can act on."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_run_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When a scheduled item runs next."
+    },
+    "href": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "maxLength": 2048,
+      "description": "The item's page: its live steps, receipt or approval."
+    },
+    "actions": {
+      "type": "array",
+      "maxItems": 4,
+      "description": "What the person can do from the list. approve/decline/cancel/retry go through OpenVibe.Network (POST /api/v1/me/actions/:service/:id/:action); open is a link.",
+      "items": {
+        "enum": [
+          "open",
+          "approve",
+          "decline",
+          "cancel",
+          "retry"
+        ]
+      }
+    }
+  }
+}

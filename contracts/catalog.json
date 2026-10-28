@@ -7595,6 +7595,33 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-043"
+    },
+    {
+      "id": "common.action-item",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/action-item.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "common.action-list-result",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/action-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.me-actions-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/me-actions-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
