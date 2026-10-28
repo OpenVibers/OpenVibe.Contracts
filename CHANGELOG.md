@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.230.0 — 2026-10-28
+
+- **OpenVibe.Today** (`today`, live at openvibe.today, port 5100, database `ov_today`; plan 2026-10-28 §5.3, the Today
+  room). v1 is the network's calendar authority:
+  - stream and event schedules;
+  - reminders sent as Network notifications;
+  - calendar feeds: a channel's public one and a person's private one (RFC 5545);
+  - the daily brief.
+
+  It publishes `today.event.scheduled`, `today.event.updated` and `today.event.cancelled` (new payload contracts,
+  first-party) from an outbox. It consumes `live.stream.started` and `live.stream.ended` to move a stream live and
+  then ended. The site block (Today, icon `today`, position 40, legal profile `account`) puts it in News & answers.
+  `today.*` is its namespace.
+
 ## 0.229.0 — 2026-10-28
 
 - **The Action Center** (plan 2026-10-28 §3.10, NOTIF-5): one list of a person's agent work on every site.

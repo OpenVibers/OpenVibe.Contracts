@@ -85580,6 +85580,300 @@
           }
         }
       }
+    },
+    "today.event.scheduled": {
+      "version": "1.0.0",
+      "owner": "today",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/today.event.scheduled.v1.json",
+        "title": "TodayEventScheduledPayload",
+        "description": "today.event.scheduled v1 (OpenVibe.Today server/events/store.js, written to its outbox in the same transaction as the change and published once per evt_ id). A person put a stream or an event on OpenVibe.Today's calendar (POST /api/v1/events or the schedule form). Envelope: source today, subject and actor { type: user, id: <owner usr_> }, visibility internal, priority important. OpenVibe.Network tells a streamer's followers about a scheduled public or followers-only stream (STREAM_SCHEDULED) and clears those notices on cancel (server/notifications/events-consumer.js).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "kind",
+          "channel",
+          "title",
+          "starts_at",
+          "ends_at",
+          "tz",
+          "status",
+          "visibility",
+          "url",
+          "seq"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "pattern": "^tev_[0-9A-HJKMNP-TV-Z]{20}$",
+            "description": "Today's id for the calendar entry (not the envelope's evt_ id)."
+          },
+          "kind": {
+            "enum": [
+              "stream",
+              "event"
+            ]
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "The owner's Live username for a stream; null for an event."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "tz": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The IANA zone it was scheduled in."
+          },
+          "status": {
+            "enum": [
+              "scheduled",
+              "live",
+              "done",
+              "cancelled"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "followers"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "Where it happens (a stream: its Live channel page)."
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The calendar SEQUENCE: up by one with every change."
+          }
+        }
+      }
+    },
+    "today.event.updated": {
+      "version": "1.0.0",
+      "owner": "today",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/today.event.updated.v1.json",
+        "title": "TodayEventUpdatedPayload",
+        "description": "today.event.updated v1 (OpenVibe.Today server/events/store.js, written to its outbox in the same transaction as the change and published once per evt_ id). Its title, times, zone, description or visibility changed (seq went up), or it went live or ended (live.stream.started / ended). Envelope: source today, subject and actor { type: user, id: <owner usr_> }, visibility internal, priority important. OpenVibe.Network tells a streamer's followers about a scheduled public or followers-only stream (STREAM_SCHEDULED) and clears those notices on cancel (server/notifications/events-consumer.js).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "kind",
+          "channel",
+          "title",
+          "starts_at",
+          "ends_at",
+          "tz",
+          "status",
+          "visibility",
+          "url",
+          "seq"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "pattern": "^tev_[0-9A-HJKMNP-TV-Z]{20}$",
+            "description": "Today's id for the calendar entry (not the envelope's evt_ id)."
+          },
+          "kind": {
+            "enum": [
+              "stream",
+              "event"
+            ]
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "The owner's Live username for a stream; null for an event."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "tz": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The IANA zone it was scheduled in."
+          },
+          "status": {
+            "enum": [
+              "scheduled",
+              "live",
+              "done",
+              "cancelled"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "followers"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "Where it happens (a stream: its Live channel page)."
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The calendar SEQUENCE: up by one with every change."
+          }
+        }
+      }
+    },
+    "today.event.cancelled": {
+      "version": "1.0.0",
+      "owner": "today",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/today.event.cancelled.v1.json",
+        "title": "TodayEventCancelledPayload",
+        "description": "today.event.cancelled v1 (OpenVibe.Today server/events/store.js, written to its outbox in the same transaction as the change and published once per evt_ id). Its owner cancelled it: calendars that subscribe drop it (STATUS:CANCELLED), and OpenVibe.Network clears the followers' notices. Envelope: source today, subject and actor { type: user, id: <owner usr_> }, visibility internal, priority important. OpenVibe.Network tells a streamer's followers about a scheduled public or followers-only stream (STREAM_SCHEDULED) and clears those notices on cancel (server/notifications/events-consumer.js).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "kind",
+          "channel",
+          "title",
+          "starts_at",
+          "ends_at",
+          "tz",
+          "status",
+          "visibility",
+          "url",
+          "seq"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "pattern": "^tev_[0-9A-HJKMNP-TV-Z]{20}$",
+            "description": "Today's id for the calendar entry (not the envelope's evt_ id)."
+          },
+          "kind": {
+            "enum": [
+              "stream",
+              "event"
+            ]
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "The owner's Live username for a stream; null for an event."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "tz": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The IANA zone it was scheduled in."
+          },
+          "status": {
+            "enum": [
+              "scheduled",
+              "live",
+              "done",
+              "cancelled"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "followers"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "Where it happens (a stream: its Live channel page)."
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The calendar SEQUENCE: up by one with every change."
+          }
+        }
+      }
     }
   }
 }

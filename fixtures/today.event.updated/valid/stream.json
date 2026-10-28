@@ -1,0 +1,13 @@
+{
+  "event_id": "tev_01JAB2C3D4E5F6G7H8J9",
+  "kind": "stream",
+  "channel": "carol",
+  "title": "Robot build, part 2",
+  "starts_at": "2026-10-30T03:00:00.000Z",
+  "ends_at": "2026-10-30T05:00:00.000Z",
+  "tz": "America/Los_Angeles",
+  "status": "scheduled",
+  "visibility": "public",
+  "url": "https://openvibe.live/@carol",
+  "seq": 1
+}
