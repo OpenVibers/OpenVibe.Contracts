@@ -1,0 +1,73 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.225.0 <1.0.0"
+  },
+  "id": "domains",
+  "name": "OpenVibe.Domains",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Domains",
+  "domains": [
+    "openvibe.domains"
+  ],
+  "publicOrigin": "https://openvibe.domains",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "domains.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "nothing to rebuild: v1 reads prices from OpenVibe.Host and history from OpenVibe.Tools on demand; a restart only empties the minutes-long in-memory cache, refilled on the next request"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "v1 has no database and no migrations"
+      }
+    },
+    "contracts": {
+      "range": ">=0.225.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 5070, unit openvibe-domains.service. The Domains room (plan 2026-10-28 \u00a75.1): one box prices a name across every ending and registrar with 1-, 3- and 5-year totals and the renewal trap flagged; a page per ending with its price history; a page per domain with its public history. v1 is a stateless front over OpenVibe.Host's price catalog (catalog_tld_prices, fed by Sources) and OpenVibe.Tools' domain history; v2 adds the control panel (registrar connections as Network project secrets, the portfolio and change proposals), which is the domains.* authority.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5070",
+  "site": {
+    "name": "Domains",
+    "icon": "domains",
+    "tagline": "Name it, price it, run it",
+    "what": "Every ending and every registrar for a name, with what you will really pay over 1, 3 and 5 years, the renewal traps flagged, and each domain's public history.",
+    "legalProfile": "info",
+    "position": 37
+  }
+}

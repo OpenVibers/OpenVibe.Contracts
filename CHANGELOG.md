@@ -4,6 +4,19 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.226.0 — 2026-10-28
+
+- **OpenVibe.Domains** (`domains`, live at openvibe.domains, port 5070; plan 2026-10-28 §5.1, the Domains room). v1 is
+  a stateless front over OpenVibe.Host's price catalog and OpenVibe.Tools' domain history:
+  - one box prices a name across every ending, with 1-, 3- and 5-year totals and renewal traps flagged;
+  - a page per ending lists every registrar;
+  - a page per domain gives its public record;
+  - an open JSON API.
+
+  The site block (Domains, icon `domains`, position 37, legal profile `info`) puts it in the menu's Make & build
+  neighbourhood. `domains.*` is its namespace: the v2 control panel (registrar connections, portfolio, proposals) is
+  that authority.
+
 ## 0.225.0 — 2026-10-28
 
 - **The Search Fabric** (plan 2026-10-28 §4.5; the owner, 10-28: "a shared sdk/api enabled multi purpose search system
