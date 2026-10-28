@@ -6155,7 +6155,7 @@ export interface SearchWriteResult {
 export interface Source {
   key: string;
   name: string;
-  type: "rss" | "atom" | "sitemap" | "jsonld" | "api" | "manual";
+  type: "rss" | "atom" | "sitemap" | "jsonld" | "api" | "crawl" | "manual";
   category:
     | "news"
     | "blog"
@@ -75515,6 +75515,315 @@ export interface Source {
           };
         }
       ];
+  /**
+   * type crawl only: how the crawler walks one site from its endpoints (the seeds). Every request still passes the site's robots.txt (RFC 9309) and the per-host spacing, a page that says noindex is not kept, and only what a page publishes for machines is read (schema.org JSON-LD: products and offers for deals, articles, reviews). A crawl adds pages to its frontier from the site's own sitemaps and, if asked, its links; each run fetches the pages that are due and schedules them again after recrawl_sec, so a price seen twice becomes a history.
+   */
+  crawl?: {
+    /**
+     * Find pages from the site's sitemaps: the Sitemap lines of its robots.txt, else /sitemap.xml, following sitemap indexes (default true).
+     */
+    sitemaps?: boolean;
+    /**
+     * Also follow links on crawled pages to pages of the same host that match include (default false).
+     */
+    follow_links?: boolean;
+    /**
+     * Regular expressions over a URL's path and query; a page must match one (none given: every page of the host).
+     *
+     * @maxItems 20
+     */
+    include?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * Regular expressions over a URL's path and query; a page matching one is never fetched.
+     *
+     * @maxItems 20
+     */
+    exclude?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * The most pages the frontier holds for this site (default 5000).
+     */
+    max_pages?: number;
+    /**
+     * Pages fetched in one run (default 100); the host spacing still applies between them.
+     */
+    pages_per_run?: number;
+    /**
+     * How long after a fetch a page is due again (default 86400, a day).
+     */
+    recrawl_sec?: number;
+    /**
+     * With follow_links, how many links away from a seed or sitemap page a page may be (default 2).
+     */
+    max_depth?: number;
+    /**
+     * Keep only pages that publish schema.org JSON-LD the adapter reads (default true); a page without it is fetched once and dropped from the frontier.
+     */
+    require_structured?: boolean;
+  } | null;
   auth: {
     mode: "none" | "header" | "bearer" | "query";
     /**
@@ -78600,7 +78909,7 @@ export type SourcesSourceWriteRequest =
   | {
       key?: string;
       name?: string;
-      type?: "rss" | "atom" | "sitemap" | "jsonld" | "api" | "manual";
+      type?: "rss" | "atom" | "sitemap" | "jsonld" | "api" | "crawl" | "manual";
       category?:
         | "news"
         | "blog"
@@ -141028,6 +141337,345 @@ export type SourcesSourceWriteRequest =
                 }
             )
           ];
+      /**
+       * type crawl only: how the crawler walks one site from its endpoints (the seeds). Every request still passes the site's robots.txt (RFC 9309) and the per-host spacing, a page that says noindex is not kept, and only what a page publishes for machines is read (schema.org JSON-LD: products and offers for deals, articles, reviews). A crawl adds pages to its frontier from the site's own sitemaps and, if asked, its links; each run fetches the pages that are due and schedules them again after recrawl_sec, so a price seen twice becomes a history.
+       */
+      crawl?: {
+        /**
+         * Find pages from the site's sitemaps: the Sitemap lines of its robots.txt, else /sitemap.xml, following sitemap indexes (default true).
+         */
+        sitemaps?: boolean;
+        /**
+         * Also follow links on crawled pages to pages of the same host that match include (default false).
+         */
+        follow_links?: boolean;
+        /**
+         * Regular expressions over a URL's path and query; a page must match one (none given: every page of the host).
+         *
+         * @maxItems 20
+         */
+        include?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+        /**
+         * Regular expressions over a URL's path and query; a page matching one is never fetched.
+         *
+         * @maxItems 20
+         */
+        exclude?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+        /**
+         * The most pages the frontier holds for this site (default 5000).
+         */
+        max_pages?: number;
+        /**
+         * Pages fetched in one run (default 100); the host spacing still applies between them.
+         */
+        pages_per_run?: number;
+        /**
+         * How long after a fetch a page is due again (default 86400, a day).
+         */
+        recrawl_sec?: number;
+        /**
+         * With follow_links, how many links away from a seed or sitemap page a page may be (default 2).
+         */
+        max_depth?: number;
+        /**
+         * Keep only pages that publish schema.org JSON-LD the adapter reads (default true); a page without it is fetched once and dropped from the frontier.
+         */
+        require_structured?: boolean;
+      } | null;
       auth?: {
         mode: "none" | "header" | "bearer" | "query";
         /**

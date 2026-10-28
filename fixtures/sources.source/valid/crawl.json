@@ -1,0 +1,42 @@
+{
+  "key": "shop-example-products",
+  "name": "Example Shop products",
+  "type": "crawl",
+  "category": "deals",
+  "homepage_url": "https://shop.example/",
+  "endpoints": [
+    {
+      "url": "https://shop.example/"
+    }
+  ],
+  "crawl": {
+    "sitemaps": true,
+    "follow_links": false,
+    "include": [
+      "^/products/"
+    ],
+    "exclude": [
+      "/cart",
+      "/account"
+    ],
+    "max_pages": 5000,
+    "pages_per_run": 100,
+    "recrawl_sec": 86400,
+    "max_depth": 2,
+    "require_structured": true
+  },
+  "auth": {
+    "mode": "none"
+  },
+  "robots_note": "robots.txt allows /products/ for every agent; Crawl-delay honoured.",
+  "terms_note": "Public product pages; only the schema.org Product/Offer JSON-LD the shop publishes for search engines is read.",
+  "license_note": null,
+  "min_interval_ms": 60000,
+  "poll_interval_sec": 3600,
+  "stale_after_sec": 172800,
+  "max_items": 200,
+  "enabled": false,
+  "review_required": true,
+  "sensitivity": "none",
+  "default_indexability": "noindex"
+}
