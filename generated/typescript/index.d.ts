@@ -6134,6 +6134,5275 @@ export interface SearchQueryResult {
   };
 }
 
+/** search.fabric-request@1.0.0 (owner: search) */
+/**
+ * search.fabric-request@1: the body of POST /api/v1/query (or the query string of GET /api/v1/query, scopes comma-separated), capability search.fabric.query. One search over several scopes, routed the cheapest way that answers (plan 2026-10-28 §4.5). network: Search's own index, permission-aware exactly as search.query.run; mine: the caller's own private documents (a signed-in person, or a service with X-OV-Subject); web: OpenVibe's open index first, then paid providers in a ladder, each result keeping its provider, date and URL. Providers never receive an account identifier. A scope the caller may not use (mine without a person; web's paid providers for an anonymous caller, who gets cached and open-index results only) is reported in route.explain, never an error. The other scopes are facets of the same indexes and are accepted for forward compatibility; v1 answers them as network results filtered by kind.
+ */
+export interface SearchFabricRequest {
+  /**
+   * What to find.
+   */
+  q: string;
+  /**
+   * Where to look; results are grouped by scope. Default: network.
+   *
+   * @minItems 1
+   * @maxItems 10
+   */
+  scopes?:
+    | ["network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ]
+    | [
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+        "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code"
+      ];
+  /**
+   * Narrow the network and mine scopes (never widen what the caller may see).
+   */
+  filters?: {
+    owner?: string;
+    type?: string;
+    lang?: string;
+    /**
+     * web: results from this host only.
+     */
+    site?: string;
+  };
+  /**
+   * How recent results must be, where the source dates them.
+   */
+  freshness?: "any" | "day" | "week" | "month" | "year";
+  /**
+   * quick: indexes and caches only (no paid provider); standard: the ladder until a step answers; deep: every step, merged.
+   */
+  depth?: "quick" | "standard" | "deep";
+  /**
+   * Ask for a short cited answer written by AI from the results. Never without citations; labelled AI. A deployment may decline (answer: null, with the reason in route.explain).
+   */
+  answer?: boolean;
+  limit?: number;
+  /**
+   * next_cursor of the previous page (network and mine only).
+   */
+  cursor?: string;
+}
+
+/** search.fabric-result@1.0.0 (owner: search) */
+/**
+ * search.fabric-result@1: the answer of search.fabric.query. results come grouped by scope order (the room's own first when the caller asked for it); every web result keeps its provider, URL and date; route.explain says, step by step, what was asked, what answered, from cache or not, and what it cost. The query is never echoed: a page renders results without writing the query into its HTML (the ?q= rule).
+ */
+export interface SearchFabricResult {
+  /**
+   * @maxItems 100
+   */
+  results: {
+    scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+    /**
+     * document: in Search's index (owner, type, id set); page: a web page (provider set).
+     */
+    kind: "document" | "page";
+    title: string;
+    url: string;
+    /**
+     * Plain text; never HTML.
+     */
+    snippet?: string | null;
+    site?: string | null;
+    image?: string | null;
+    published_at?: string | null;
+    /**
+     * When a web page was read (by the provider or the open index).
+     */
+    retrieved_at?: string | null;
+    /**
+     * page: who found it (open_index, deepseek, wikipedia, brave, …).
+     */
+    provider?: string | null;
+    owner?: string | null;
+    type?: string | null;
+    id?: string | null;
+    /**
+     * Rank within its scope (higher first); not comparable across scopes.
+     */
+    score?: number | null;
+  }[];
+  /**
+   * How many results each scope gave on this page.
+   */
+  groups: {
+    [k: string]: number | undefined;
+  };
+  answer?: {
+    text: string;
+    /**
+     * @minItems 1
+     * @maxItems 20
+     */
+    citations:
+      | [number]
+      | [number, number]
+      | [number, number, number]
+      | [number, number, number, number]
+      | [number, number, number, number, number]
+      | [number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number, number, number, number, number, number, number]
+      | [number, number, number, number, number, number, number, number, number, number, number, number, number, number]
+      | [
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number
+        ]
+      | [
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number
+        ]
+      | [
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number
+        ]
+      | [
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number
+        ]
+      | [
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number
+        ]
+      | [
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number
+        ];
+    label: "Written by AI from these sources";
+  } | null;
+  /**
+   * @maxItems 20
+   */
+  citations?:
+    | []
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ]
+    | [
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        },
+        {
+          n: number;
+          url: string;
+          title: string;
+          provider?: string | null;
+          retrieved_at?: string | null;
+        }
+      ];
+  route: {
+    /**
+     * @maxItems 20
+     */
+    explain:
+      | []
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ]
+      | [
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          },
+          {
+            scope: "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code";
+            /**
+             * index, open_index, cache, deepseek, wikipedia, …
+             */
+            step: string;
+            ok: boolean;
+            count?: number;
+            ms?: number;
+            cached?: boolean;
+            cost_usd?: number;
+            /**
+             * Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down).
+             */
+            skipped?: string | null;
+          }
+        ];
+    /**
+     * What this query cost OpenVibe (paid provider calls; cached answers cost 0).
+     */
+    cost_usd: number;
+  };
+  next_cursor: string | null;
+}
+
+/** search.provider-offer@1.0.0 (owner: search) */
+/**
+ * search.provider-offer@1: one web search provider as the Search Fabric's ladder and Route see it (GET /api/v1/query/providers, capability search.fabric.query): what it covers, what it costs, whether it is usable now and how it has answered. Prices are the vendor's published ones as of checked_at; nothing here is a secret.
+ */
+export interface SearchProviderOffer {
+  provider: string;
+  name?: string;
+  /**
+   * @minItems 1
+   */
+  scopes: [
+    "network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code",
+    ...("network" | "mine" | "web" | "news" | "images" | "video" | "products" | "people" | "places" | "code")[]
+  ];
+  price_usd_per_call: number;
+  /**
+   * Searches its own crawl rather than reselling another engine's.
+   */
+  independent_index?: boolean;
+  /**
+   * Configured and not standing down (balance, key, rate limit, daily cap).
+   */
+  available: boolean;
+  reason?: string | null;
+  daily_cap?: number | null;
+  used_today?: number | null;
+  latency_ms_p50?: number | null;
+  /**
+   * Share of calls in the last day that returned at least one result.
+   */
+  answered_rate?: number | null;
+  terms_url?: string | null;
+  checked_at: string;
+}
+
 /** search.write-result@1.0.0 (owner: search) */
 /**
  * search.write-result@1: the answer of PUT /api/v1/documents/:owner/:type/:id (search.document.write). applied: stored (or a tombstone recorded); unchanged: the same revision with the same content. A revision older than the stored one is a 409 problem search.stale_revision; the same revision with different content is 409 search.revision_conflict.

@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/fabric-request.v1.json",
+  "title": "SearchFabricRequest",
+  "description": "search.fabric-request@1: the body of POST /api/v1/query (or the query string of GET /api/v1/query, scopes comma-separated), capability search.fabric.query. One search over several scopes, routed the cheapest way that answers (plan 2026-10-28 \u00a74.5). network: Search's own index, permission-aware exactly as search.query.run; mine: the caller's own private documents (a signed-in person, or a service with X-OV-Subject); web: OpenVibe's open index first, then paid providers in a ladder, each result keeping its provider, date and URL. Providers never receive an account identifier. A scope the caller may not use (mine without a person; web's paid providers for an anonymous caller, who gets cached and open-index results only) is reported in route.explain, never an error. The other scopes are facets of the same indexes and are accepted for forward compatibility; v1 answers them as network results filtered by kind.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "q"
+  ],
+  "properties": {
+    "q": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "What to find."
+    },
+    "scopes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "network",
+          "mine",
+          "web",
+          "news",
+          "images",
+          "video",
+          "products",
+          "people",
+          "places",
+          "code"
+        ]
+      },
+      "default": [
+        "network"
+      ],
+      "description": "Where to look; results are grouped by scope. Default: network."
+    },
+    "filters": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Narrow the network and mine scopes (never widen what the caller may see).",
+      "properties": {
+        "owner": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+        },
+        "lang": {
+          "type": "string",
+          "pattern": "^[a-zA-Z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+        },
+        "site": {
+          "type": "string",
+          "maxLength": 253,
+          "pattern": "^[a-z0-9.-]+$",
+          "description": "web: results from this host only."
+        }
+      }
+    },
+    "freshness": {
+      "enum": [
+        "any",
+        "day",
+        "week",
+        "month",
+        "year"
+      ],
+      "default": "any",
+      "description": "How recent results must be, where the source dates them."
+    },
+    "depth": {
+      "enum": [
+        "quick",
+        "standard",
+        "deep"
+      ],
+      "default": "standard",
+      "description": "quick: indexes and caches only (no paid provider); standard: the ladder until a step answers; deep: every step, merged."
+    },
+    "answer": {
+      "type": "boolean",
+      "default": false,
+      "description": "Ask for a short cited answer written by AI from the results. Never without citations; labelled AI. A deployment may decline (answer: null, with the reason in route.explain)."
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 20
+    },
+    "cursor": {
+      "type": "string",
+      "maxLength": 512,
+      "description": "next_cursor of the previous page (network and mine only)."
+    }
+  }
+}

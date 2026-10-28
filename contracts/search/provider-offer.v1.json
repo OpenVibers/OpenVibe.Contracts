@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/search/provider-offer.v1.json",
+  "title": "SearchProviderOffer",
+  "description": "search.provider-offer@1: one web search provider as the Search Fabric's ladder and Route see it (GET /api/v1/query/providers, capability search.fabric.query): what it covers, what it costs, whether it is usable now and how it has answered. Prices are the vendor's published ones as of checked_at; nothing here is a secret.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provider",
+    "scopes",
+    "price_usd_per_call",
+    "available",
+    "checked_at"
+  ],
+  "properties": {
+    "provider": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,39}$"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "scopes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "network",
+          "mine",
+          "web",
+          "news",
+          "images",
+          "video",
+          "products",
+          "people",
+          "places",
+          "code"
+        ]
+      }
+    },
+    "price_usd_per_call": {
+      "type": "number",
+      "minimum": 0
+    },
+    "independent_index": {
+      "type": "boolean",
+      "description": "Searches its own crawl rather than reselling another engine's."
+    },
+    "available": {
+      "type": "boolean",
+      "description": "Configured and not standing down (balance, key, rate limit, daily cap)."
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160
+    },
+    "daily_cap": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "used_today": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "latency_ms_p50": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "answered_rate": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Share of calls in the last day that returned at least one result."
+    },
+    "terms_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2048
+    },
+    "checked_at": {
+      "type": "string",
+      "maxLength": 40
+    }
+  }
+}

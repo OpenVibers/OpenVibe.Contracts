@@ -1,0 +1,88 @@
+{
+  "results": [
+    {
+      "scope": "network",
+      "kind": "document",
+      "title": "surf_utopia in 1:02.4",
+      "url": "https://openvibe.live/clips/482",
+      "snippet": "A clean line through every stage.",
+      "site": "openvibe.live",
+      "image": null,
+      "published_at": "2026-10-27T21:04:00Z",
+      "retrieved_at": null,
+      "provider": null,
+      "owner": "media-hub",
+      "type": "clip",
+      "id": "482",
+      "score": 0.82
+    },
+    {
+      "scope": "web",
+      "kind": "page",
+      "title": "Surf (Counter-Strike) - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Surf_(video_game_mode)",
+      "snippet": "Surfing is a game mode in Counter-Strike\u2026",
+      "site": "en.wikipedia.org",
+      "image": null,
+      "published_at": null,
+      "retrieved_at": "2026-10-28T11:20:00Z",
+      "provider": "wikipedia",
+      "owner": null,
+      "type": null,
+      "id": null,
+      "score": 0.61
+    }
+  ],
+  "groups": {
+    "network": 1,
+    "web": 1
+  },
+  "answer": null,
+  "citations": [
+    {
+      "n": 1,
+      "url": "https://en.wikipedia.org/wiki/Surf_(video_game_mode)",
+      "title": "Surf (Counter-Strike) - Wikipedia",
+      "provider": "wikipedia",
+      "retrieved_at": "2026-10-28T11:20:00Z"
+    }
+  ],
+  "route": {
+    "explain": [
+      {
+        "scope": "network",
+        "step": "index",
+        "ok": true,
+        "count": 1,
+        "ms": 18,
+        "cached": false,
+        "cost_usd": 0
+      },
+      {
+        "scope": "web",
+        "step": "open_index",
+        "ok": true,
+        "count": 0,
+        "ms": 9,
+        "cost_usd": 0
+      },
+      {
+        "scope": "web",
+        "step": "deepseek",
+        "ok": true,
+        "count": 1,
+        "ms": 1420,
+        "cached": true,
+        "cost_usd": 0
+      },
+      {
+        "scope": "web",
+        "step": "brave",
+        "ok": false,
+        "skipped": "an earlier step answered"
+      }
+    ],
+    "cost_usd": 0
+  },
+  "next_cursor": null
+}

@@ -267,6 +267,33 @@
       "status": "active"
     },
     {
+      "id": "search.fabric-request",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/fabric-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "search.fabric-result",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/fabric-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "search.provider-offer",
+      "version": "1.0.0",
+      "owner": "search",
+      "schema": "search/provider-offer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "search.write-result",
       "version": "1.0.0",
       "owner": "search",
