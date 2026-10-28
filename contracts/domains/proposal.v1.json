@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/domains/proposal.v1.json",
+  "title": "DomainsProposal",
+  "description": "A change to a person's DNS on OpenVibe.Domains (plan 2026-10-28 §5.1): nothing an agent, a bulk edit or the person's own edit asks for touches DNS until the person approves it. A proposal holds the record diff, why, what could break, and its rollback; approving it applies the changes in order through the provider's API with the person's connected credential (a Network project secret, ADR-056, never part of this document). A change whose record moved since the proposal was made is refused as stale; rolling back applies the inverse changes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "domain",
+    "provider",
+    "connection_id",
+    "title",
+    "status",
+    "changes",
+    "created_by",
+    "created_at",
+    "href"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^dpr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 253
+    },
+    "provider": {
+      "enum": [
+        "cloudflare",
+        "porkbun",
+        "namecheap",
+        "spaceship"
+      ]
+    },
+    "connection_id": {
+      "type": "string",
+      "pattern": "^dcn_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "why": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "risk": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000,
+      "description": "What could break, in plain words."
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "applying",
+        "applied",
+        "declined",
+        "failed",
+        "rolled_back",
+        "expired"
+      ]
+    },
+    "changes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "op"
+        ],
+        "properties": {
+          "op": {
+            "enum": [
+              "create",
+              "update",
+              "delete"
+            ]
+          },
+          "record_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "The provider's record id (update, delete; a create's after it is applied)."
+          },
+          "before": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "name",
+                  "content"
+                ],
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "A",
+                      "AAAA",
+                      "CNAME",
+                      "TXT",
+                      "MX",
+                      "NS",
+                      "CAA",
+                      "SRV",
+                      "DS"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 253,
+                    "description": "The full record name (example.com, www.example.com)."
+                  },
+                  "content": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "ttl": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 86400,
+                    "description": "Seconds; 1 is the provider's automatic TTL."
+                  },
+                  "proxied": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
+                    "description": "Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere."
+                  },
+                  "priority": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 65535,
+                    "description": "MX and SRV only."
+                  },
+                  "comment": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 100
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "after": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "name",
+                  "content"
+                ],
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "A",
+                      "AAAA",
+                      "CNAME",
+                      "TXT",
+                      "MX",
+                      "NS",
+                      "CAA",
+                      "SRV",
+                      "DS"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 253,
+                    "description": "The full record name (example.com, www.example.com)."
+                  },
+                  "content": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "ttl": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 86400,
+                    "description": "Seconds; 1 is the provider's automatic TTL."
+                  },
+                  "proxied": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
+                    "description": "Cloudflare's proxy, for A, AAAA and CNAME; null elsewhere."
+                  },
+                  "priority": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 65535,
+                    "description": "MX and SRV only."
+                  },
+                  "comment": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 100
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "created_by": {
+      "type": "string",
+      "pattern": "^(user|agent|service):",
+      "maxLength": 120
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decided_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "applied_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "rolled_back_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 400
+    },
+    "href": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    }
+  }
+}

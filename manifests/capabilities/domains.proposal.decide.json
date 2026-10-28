@@ -1,0 +1,21 @@
+{
+  "id": "domains.proposal.decide",
+  "version": "1.0",
+  "owner": "domains",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Approve or decline a pending OpenVibe.Domains proposal for its person (plan 2026-10-28 §5.1: no change touches DNS until its person approves it): POST /api/v1/proposals/:id/decide { decision: approve | decline } with a service token and X-OV-Subject naming the proposal's owner, the same decision the person makes on the proposal's page. Approving applies the change through the provider's API with the person's connected credential; the proposal keeps its rollback. Granted to OpenVibe.Network, which acts from the Action Center for the signed-in person.",
+  "permissions": [
+    "domains:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/proposals/:id/decide"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.action-item@1"
+}

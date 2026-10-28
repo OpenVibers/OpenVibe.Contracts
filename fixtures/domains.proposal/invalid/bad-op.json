@@ -1,0 +1,26 @@
+{
+  "id": "dpr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
+  "domain": "example.com",
+  "provider": "cloudflare",
+  "connection_id": "dcn_01J8Z3Q4R5S6T7V8W9X0Y1Z2A4",
+  "title": "Add the TXT record that proves example.com is yours",
+  "why": "Your mail provider asks for it.",
+  "risk": "None: a TXT record changes no traffic.",
+  "status": "pending",
+  "changes": [
+    {
+      "op": "replace_all",
+      "record_id": null,
+      "before": null,
+      "after": null
+    }
+  ],
+  "created_by": "user:usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A5",
+  "created_at": "2026-10-28T18:00:00.000Z",
+  "decided_at": null,
+  "applied_at": null,
+  "rolled_back_at": null,
+  "expires_at": "2026-11-04T18:00:00.000Z",
+  "error": null,
+  "href": "https://openvibe.domains/panel/proposals/dpr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3"
+}

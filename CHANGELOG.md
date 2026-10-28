@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.233.0 — 2026-10-28
+
+- **OpenVibe.Domains' control panel** (plan 2026-10-28 §5.1, DOM-2):
+  - **`domains.proposal@1`** (new, public): a DNS change waiting for its person. It holds the record diff (create,
+    update, delete), why, the risk, its status (pending, applying, applied, declined, failed, rolled_back, expired) and
+    who asked. The credential is never part of it.
+  - **`domains.actions.read`** and **`domains.proposal.decide`** (new, first-party, for OpenVibe.Network): Domains'
+    proposals in the Action Center, approved or declined there.
+  - `common.action-item@1`'s `service` and `network.me-actions-result@1`'s `sources` gain `domains` (additive).
+  - The Domains manifest names both capabilities and its database (`ov_domains`). The provider credential is a Network
+    project secret (ADR-056), granted to `domains` for reveal to the provider's origin only.
+
 ## 0.232.0 — 2026-10-28
 
 - **codes.task.queued|running|succeeded|failed|cancelled** (new payload contracts, first-party, owner `codes`; plan

@@ -96,6 +96,7 @@
           "actor",
           "codes",
           "ai",
+          "domains",
           "network",
           "run"
         ]
