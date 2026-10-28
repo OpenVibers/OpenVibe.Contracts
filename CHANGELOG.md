@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.231.0 — 2026-10-28
+
+- **OpenVibe.Surf** (`surf`, live at openvibe.surf, port 5110; plan 2026-10-28 §5.6, the Surf room). One room, three
+  surfs:
+  - Ride: OpenVibe.Games' CS-style surf maps in the browser, with a millisecond timer and Play time boards;
+  - Web (Surf with Vibe): one OpenVibe.Actor task, made with the person's own Network token, browses on a private desk
+    and reports with its sources;
+  - Watch: a lean-back TV over OpenVibe.Live's live streams, clips and AI moments.
+
+  v1 is a stateless front and an OAuth client of OpenVibe.Network (`surf`); it stores nothing. The site block (Surf,
+  icon `surf`, position 41, legal profile `account`) puts it in Games. `surf.*` is its namespace.
+
 ## 0.230.0 — 2026-10-28
 
 - **OpenVibe.Today** (`today`, live at openvibe.today, port 5100, database `ov_today`; plan 2026-10-28 §5.3, the Today

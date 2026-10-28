@@ -1,0 +1,73 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.230.0 <1.0.0"
+  },
+  "id": "surf",
+  "name": "OpenVibe.Surf",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Surf",
+  "domains": [
+    "openvibe.surf"
+  ],
+  "publicOrigin": "https://openvibe.surf",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "surf.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "nothing to rebuild: maps and boards live in OpenVibe.Games, the Watch feed in OpenVibe.Live and the person's web tasks in OpenVibe.Actor; a restart only empties the 30-second feed and 60-second map caches, and sign-in sessions live in the person's cookies"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "v1 has no database and no migrations"
+      }
+    },
+    "contracts": {
+      "range": ">=0.230.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 5110, unit openvibe-surf.service. The Surf room (plan 2026-10-28 §5.6): one room, three surfs. Ride lists OpenVibe.Games' surf maps (CS-style surf in the browser with a millisecond timer and Play time boards) and embeds the game. Watch is a lean-back TV over OpenVibe.Live: live streams by viewers, then clips and the week's AI moments, each saying why it is on; clips and moments play in the page over HLS from OpenVibe.Media, live streams open on their channel. Web (Surf with Vibe) creates one OpenVibe.Actor task with the person's own Network token, and the agent browses on a private desk and reports with its sources. v1 is a stateless front and an OAuth client of OpenVibe.Network (`surf`); it stores nothing.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5110",
+  "site": {
+    "name": "Surf",
+    "icon": "surf",
+    "tagline": "Ride, browse, watch",
+    "what": "Ride Counter-Strike-style surf maps in the browser against the clock, let an agent surf the web for you and report back with its sources, or lean back and surf what is on across OpenVibe.",
+    "legalProfile": "account",
+    "position": 41
+  }
+}
