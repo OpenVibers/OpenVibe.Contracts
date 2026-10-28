@@ -1,0 +1,28 @@
+{
+  "id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+  "owner": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "via": null,
+  "kind": "browser",
+  "state": "placing",
+  "size": {
+    "width": 1280,
+    "height": 800
+  },
+  "ttl_s": 3600,
+  "idle_s": 900,
+  "placement": null,
+  "timings": {
+    "created_at": "2026-10-28T10:00:00Z",
+    "started_at": null,
+    "last_used_at": null,
+    "ended_at": null
+  },
+  "end": null,
+  "usage": {
+    "desk_seconds": 0
+  },
+  "idempotency_key": "actor:tsk_01JD2C3D4E5F6G7H8J9K0MNPQR"
+}

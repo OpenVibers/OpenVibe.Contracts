@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/desk-lease.v1.json",
+  "title": "BotDeskLease",
+  "description": "bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe.Node runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "machine_id",
+    "desk",
+    "session",
+    "owner",
+    "kind",
+    "width",
+    "height",
+    "shared",
+    "created_at"
+  ],
+  "properties": {
+    "machine_id": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "desk": {
+      "type": "string",
+      "pattern": "^desk-[a-z0-9][a-z0-9-]{0,23}$"
+    },
+    "session": {
+      "$ref": "../run/session.v1.json#/$defs/session_id"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^user:usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The session's person, the only one whose commands reach the desk."
+    },
+    "kind": {
+      "const": "browser"
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 640,
+      "maximum": 3840
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 480,
+      "maximum": 2160
+    },
+    "shared": {
+      "type": "boolean",
+      "description": "true on a desk host that serves other people (the desk runs in its own sandbox there); false on the person's own machine."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "run.session.create",
+  "version": "1.0",
+  "owner": "run",
+  "status": "active",
+  "visibility": "public",
+  "description": "Open a browser session for yourself (the Desks plan's D6): POST /api/v1/sessions with run.session-create-request@1. Run places a browser desk on one of your own machines (when you name it or your requirements name user-owned) or on a desk host that serves other people, where every desk runs in its own sandbox, and answers run.session@1. A first-party service acting for a person (X-OV-Subject) opens it for them and is recorded as via. Desk time is metered in desk-seconds.",
+  "inputSchema": "run.session-create-request@1",
+  "outputSchema": "run.session@1",
+  "permissions": [
+    "run:session:create"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "run-write",
+  "events": [
+    "run.session.started",
+    "run.session.ended"
+  ],
+  "implementedBy": [
+    "POST /api/v1/sessions"
+  ]
+}

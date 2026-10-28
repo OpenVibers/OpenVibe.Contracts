@@ -1,0 +1,24 @@
+{
+  "id": "run.session.control",
+  "version": "1.0",
+  "owner": "run",
+  "status": "active",
+  "visibility": "public",
+  "description": "Use and end your own browser session: POST /api/v1/sessions/:id/commands with run.session-control-request@1 (screen, input and browser on the session's desk only, answered by run.session-control-result@1) and POST /api/v1/sessions/:id/end (run.session@1, ended). Nothing else on the machine it runs on is reachable.",
+  "inputSchema": "run.session-control-request@1",
+  "outputSchema": "run.session-control-result@1",
+  "permissions": [
+    "run:session:control"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "run-write",
+  "events": [
+    "run.session.ended"
+  ],
+  "implementedBy": [
+    "POST /api/v1/sessions/:id/commands",
+    "POST /api/v1/sessions/:id/end"
+  ]
+}

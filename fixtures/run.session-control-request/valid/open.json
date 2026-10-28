@@ -1,0 +1,7 @@
+{
+  "kind": "browser",
+  "value": {
+    "action": "open",
+    "url": "https://example.org/"
+  }
+}
