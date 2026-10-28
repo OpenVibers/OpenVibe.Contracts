@@ -127,6 +127,31 @@
               "null"
             ],
             "description": "Rank within its scope (higher first); not comparable across scopes."
+          },
+          "ranks": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "keyword",
+              "vector"
+            ],
+            "properties": {
+              "keyword": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "vector": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              }
+            },
+            "description": "1-based position in the keyword and vector top-100 lists; null when absent from that list."
           }
         }
       }
@@ -274,6 +299,19 @@
                 ],
                 "maxLength": 160,
                 "description": "Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down)."
+              },
+              "ranking": {
+                "enum": [
+                  "hybrid",
+                  "keyword"
+                ]
+              },
+              "reason": {
+                "enum": [
+                  "no_vectors",
+                  "ai_unavailable",
+                  "short_query"
+                ]
               }
             }
           }

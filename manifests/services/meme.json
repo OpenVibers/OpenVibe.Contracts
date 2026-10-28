@@ -1,0 +1,80 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.229.0 <1.0.0"
+  },
+  "id": "meme",
+  "name": "OpenVibe.Meme",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Meme",
+  "domains": [
+    "openvibe.meme"
+  ],
+  "publicOrigin": "https://openvibe.meme",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "meme.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the PostgreSQL database, Valkey, Network's JWKS and the OAuth client are what /api/ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped, then the importer and re-verifier timers cleared",
+        "telemetry flushed and its retention timer stopped",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "outbox",
+          "what": "meme_outbox rows committed with an entry change survive a stop under their fixed evt_ ids; v1 has no relay yet, so unpublished rows wait for Search's document writer rather than being sent at boot"
+        },
+        {
+          "kind": "jobs",
+          "what": "the importer makes its first pass 30 s after boot and the citation re-verifier 60 s after; each pass is whole and idempotent, so a stop mid-pass leaves the next one to finish"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Meme's own tables (entries, citations, status events, votes, templates, captions, reports, outbox, account-data, telemetry); an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.229.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5120, unit openvibe-meme.service, PostgreSQL database ov_meme. The Meme room: the open meme database, rebuilt with AI. The importer reads only public Chat, Live and Video APIs and proposes a candidate when a phrase recurs in at least two uses on two different days; the candidate is born hidden with a verbatim citation for every use and a staff person publishes it. A daily job re-verifies every citation: a 404/410 marks it gone, a 401/403 hidden, and an entry whose origin is gone is hidden. People vote once per ISO week for meme of the week, captions are plain text over a template, and every public entry is one search.index-document@1 queued in meme_outbox (a tombstone when it stops being public). OAuth client `meme`; answers account export and deletion (ADR-033) and subscribes to those Events topics.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5120",
+  "site": {
+    "name": "Meme",
+    "icon": "meme",
+    "tagline": "The internet's meme database",
+    "what": "Every entry in the open meme database cites the chat line or VOD second it came from, follows the later uses on a timeline, and keeps a status. Vote for meme of the week, caption a template, and report what needs fixing.",
+    "legalProfile": "ugc",
+    "position": 42
+  }
+}

@@ -30,11 +30,31 @@
           "published_at": { "type": ["string", "null"] },
           "updated_at": { "type": ["string", "null"] },
           "indexable": { "type": "boolean", "description": "false for a noindex document the caller may still see." },
-          "snippet_html": { "type": ["string", "null"], "description": "Escaped text with <mark> around the matches; nothing else." }
+          "snippet_html": { "type": ["string", "null"], "description": "Escaped text with <mark> around the matches; nothing else." },
+          "ranks": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["keyword", "vector"],
+            "properties": {
+              "keyword": { "type": ["integer", "null"], "minimum": 1 },
+              "vector": { "type": ["integer", "null"], "minimum": 1 }
+            },
+            "description": "1-based position in the keyword and vector top-100 lists; null when absent from that list."
+          }
         }
       }
     },
     "next_cursor": { "type": ["string", "null"] },
-    "facets": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "object", "required": ["value", "count"], "properties": { "value": { "type": "string" }, "count": { "type": "integer", "minimum": 0 } } } } }
+    "facets": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "object", "required": ["value", "count"], "properties": { "value": { "type": "string" }, "count": { "type": "integer", "minimum": 0 } } } } },
+    "explain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ranking"],
+      "properties": {
+        "ranking": { "enum": ["hybrid", "keyword"] },
+        "reason": { "enum": ["no_vectors", "ai_unavailable", "short_query"] }
+      },
+      "description": "How this page was ranked; reason is present only when ranking is keyword."
+    }
   }
 }
