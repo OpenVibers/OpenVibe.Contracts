@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.236.0 — 2026-10-28
+
+- **OpenVibe.Design** gets the Design Arena and its database `ov_design`: rounds, outputs, votes and Elo ratings.
+  Migration 0001 only creates the Arena's own tables, so a rollback has no blocker. Design calls `ai.run.create`
+  (namespace `ai.generate`) to pin three of AI's generate offers. The contracts range is now `>=0.236.0`.
+- **OpenVibe.Fun** (`fun`, live at openvibe.fun, port 5140, database `ov_fun`): IRL quest boards on a streamer's
+  public Live channel, a deterministic local guide from OpenStreetMap (Ticketmaster only when a key is configured)
+  and group plans the group votes on, with the winner added to the viewer's own Today using the viewer's token.
+  Public quests and plans are `search.index-document@1` rows queued in `fun_outbox` with tombstones; Live and Chat
+  are public reads, never writes. The manifest names `fun.*`, the two account events it consumes, and the site
+  block (Fun, icon `fun`, position 45, legal profile `ugc`) in Games & laughs. No route needs a service token, so it
+  registers no capability of its own; the account export/deletion pair, Events subscriptions and Search relay are
+  Network grants, and the Search relay waits for its writer.
+
 ## 0.235.0 — 2026-10-28
 
 - **OpenVibe.Vision** (`vision`, live at openvibe.vision, port 5130, database `ov_vision`; plan 2026-10-28 §5.8): ask
