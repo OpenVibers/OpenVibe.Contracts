@@ -212416,3 +212416,121 @@ export interface BotDeskLeaseCreateRequest {
    */
   height?: number;
 }
+
+/** common.action-item@1.0.0 (owner: contracts) */
+/**
+ * One piece of a person's agent work in the Action Center (plan 2026-10-28 §3.10): an agent task, a coding task, an AI run, or an approval waiting on them. Each authority answers its own items in this shape (common.action-list-result@1); OpenVibe.Network merges them into buckets (network.me-actions-result@1). Text is plain (no markup); a cost is what the person was charged in USD, null when unknown or free; href is a page on the authority's own public site.
+ */
+export interface ActionItem {
+  /**
+   * The authority that owns the item.
+   */
+  service: "actor" | "codes" | "ai" | "network" | "run";
+  /**
+   * The authority's own id (tsk_…, a Codes task id, run_…, a confirmation id).
+   */
+  id: string;
+  /**
+   * What the item is.
+   */
+  kind: "agent_task" | "code_task" | "ai_run" | "approval" | "desk_session";
+  /**
+   * A short plain-text name: the start of the task text, the workflow, or what the approval is for.
+   */
+  title: string;
+  /**
+   * The last step, the outcome, or what will happen on approval.
+   */
+  summary?: string | null;
+  /**
+   * Where the Action Center shows it: running (queued or working), waiting (needs the person), scheduled (will run later), done, failed (failed, cancelled or expired).
+   */
+  bucket: "running" | "waiting" | "scheduled" | "done" | "failed";
+  /**
+   * The authority's own state word (queued, running, needs_you, succeeded, failed, cancelled, pending…).
+   */
+  state: string;
+  /**
+   * The agent, model or workflow doing it, when known.
+   */
+  agent?: string | null;
+  /**
+   * What it cost the person, in US dollars; null when unknown or free.
+   */
+  cost_usd?: number | null;
+  /**
+   * Tool calls or steps so far, when counted.
+   */
+  steps?: number | null;
+  /**
+   * Why it failed, in words a person can act on.
+   */
+  error?: string | null;
+  created_at: string;
+  updated_at: string;
+  /**
+   * When a scheduled item runs next.
+   */
+  next_run_at?: string | null;
+  /**
+   * The item's page: its live steps, receipt or approval.
+   */
+  href: string;
+  /**
+   * What the person can do from the list. approve/decline/cancel/retry go through OpenVibe.Network (POST /api/v1/me/actions/:service/:id/:action); open is a link.
+   *
+   * @maxItems 4
+   */
+  actions:
+    | []
+    | ["open" | "approve" | "decline" | "cancel" | "retry"]
+    | ["open" | "approve" | "decline" | "cancel" | "retry", "open" | "approve" | "decline" | "cancel" | "retry"]
+    | [
+        "open" | "approve" | "decline" | "cancel" | "retry",
+        "open" | "approve" | "decline" | "cancel" | "retry",
+        "open" | "approve" | "decline" | "cancel" | "retry"
+      ]
+    | [
+        "open" | "approve" | "decline" | "cancel" | "retry",
+        "open" | "approve" | "decline" | "cancel" | "retry",
+        "open" | "approve" | "decline" | "cancel" | "retry",
+        "open" | "approve" | "decline" | "cancel" | "retry"
+      ];
+}
+
+/** common.action-list-result@1.0.0 (owner: contracts) */
+/**
+ * One authority's Action Center items for a person (capabilities actor.actions.read, codes.actions.read, ai.actions.read): GET /api/v1/actions?subject=usr_… with the caller's service token. Everything running, waiting or scheduled, then done and failed items from the last 30 days, newest first, at most 50.
+ */
+export interface ActionListResult {
+  /**
+   * @maxItems 50
+   */
+  items: ActionItem[];
+}
+
+/** network.me-actions-result@1.0.0 (owner: network) */
+/**
+ * The Action Center for the signed-in person (capability network.actions.read, GET /api/v1/me/actions): every authority's items merged into five buckets, newest first in each. sources says how each authority answered; a slow or failing one is left out (partial true), never fails the answer.
+ */
+export interface MeActionsResult {
+  buckets: {
+    running: ActionItem[];
+    waiting: ActionItem[];
+    scheduled: ActionItem[];
+    done: ActionItem[];
+    failed: ActionItem[];
+  };
+  counts: {
+    running: number;
+    waiting: number;
+    scheduled: number;
+    done: number;
+    failed: number;
+  };
+  sources: {
+    [k: string]: ("ok" | "unavailable" | "timeout" | "not_connected") | undefined;
+  };
+  partial: boolean;
+  generated_at: string;
+}

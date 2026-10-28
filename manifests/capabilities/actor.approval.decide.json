@@ -1,0 +1,21 @@
+{
+  "id": "actor.approval.decide",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Approve or decline a pending OpenVibe.Actor approval for its person (plan 2026-10-28 §3.10): POST /api/v1/approvals/:id/decide { decision: approve | decline } with a service token and X-OV-Subject naming the approval's owner, the same decision the person makes on /me/approvals. Granted to OpenVibe.Network, which acts from the Action Center for the signed-in person.",
+  "permissions": [
+    "actor:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/approvals/:id/decide"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.action-item@1"
+}

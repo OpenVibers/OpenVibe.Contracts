@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/me-actions-result.v1.json",
+  "title": "MeActionsResult",
+  "description": "The Action Center for the signed-in person (capability network.actions.read, GET /api/v1/me/actions): every authority's items merged into five buckets, newest first in each. sources says how each authority answered; a slow or failing one is left out (partial true), never fails the answer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "buckets",
+    "counts",
+    "sources",
+    "partial",
+    "generated_at"
+  ],
+  "properties": {
+    "buckets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "running",
+        "waiting",
+        "scheduled",
+        "done",
+        "failed"
+      ],
+      "properties": {
+        "running": {
+          "type": "array",
+          "items": {
+            "$ref": "../common/action-item.v1.json"
+          }
+        },
+        "waiting": {
+          "type": "array",
+          "items": {
+            "$ref": "../common/action-item.v1.json"
+          }
+        },
+        "scheduled": {
+          "type": "array",
+          "items": {
+            "$ref": "../common/action-item.v1.json"
+          }
+        },
+        "done": {
+          "type": "array",
+          "items": {
+            "$ref": "../common/action-item.v1.json"
+          }
+        },
+        "failed": {
+          "type": "array",
+          "items": {
+            "$ref": "../common/action-item.v1.json"
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "running",
+        "waiting",
+        "scheduled",
+        "done",
+        "failed"
+      ],
+      "properties": {
+        "running": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "waiting": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scheduled": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "done": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "propertyNames": {
+        "enum": [
+          "actor",
+          "codes",
+          "ai",
+          "network",
+          "run"
+        ]
+      },
+      "additionalProperties": {
+        "enum": [
+          "ok",
+          "unavailable",
+          "timeout",
+          "not_connected"
+        ]
+      }
+    },
+    "partial": {
+      "type": "boolean"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

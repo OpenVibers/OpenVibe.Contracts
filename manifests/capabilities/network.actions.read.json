@@ -1,0 +1,23 @@
+{
+  "id": "network.actions.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "public",
+  "description": "The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and failed (network.me-actions-result@1); POST /api/v1/me/actions/:service/:id/:action approves, declines or cancels through the owning authority. Readable from every OpenVibe site with the person's Network token, like the bell.",
+  "permissions": [
+    "network:read",
+    "network:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/me/actions",
+    "POST /api/v1/me/actions/:service/:id/:action"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.me-actions-result@1"
+}

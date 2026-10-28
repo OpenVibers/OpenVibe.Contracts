@@ -76,7 +76,8 @@
     "network.resource.report",
     "network.secret.use",
     "network.staff.read",
-    "network.status.incident"
+    "network.status.incident",
+    "network.actions.read"
   ],
   "eventsProduced": [
     "network.account.deleted",

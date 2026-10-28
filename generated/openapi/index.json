@@ -5,15 +5,15 @@
       "service": "actor",
       "name": "OpenVibe.Actor",
       "origin": "https://openvibe.actor",
-      "operations": 24,
-      "capabilities": 8
+      "operations": 26,
+      "capabilities": 10
     },
     {
       "service": "ai",
       "name": "OpenVibe.AI",
       "origin": "https://ai.openvibe.services",
-      "operations": 43,
-      "capabilities": 8
+      "operations": 44,
+      "capabilities": 9
     },
     {
       "service": "billing",
@@ -47,8 +47,8 @@
       "service": "codes",
       "name": "OpenVibe.Codes",
       "origin": "https://openvibe.codes",
-      "operations": 3,
-      "capabilities": 3
+      "operations": 4,
+      "capabilities": 4
     },
     {
       "service": "community",
@@ -131,8 +131,8 @@
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
-      "operations": 41,
-      "capabilities": 29
+      "operations": 43,
+      "capabilities": 30
     },
     {
       "service": "news",

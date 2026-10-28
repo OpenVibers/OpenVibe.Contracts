@@ -27,7 +27,8 @@
     "ai.run.create",
     "ai.run.read",
     "ai.usage.read",
-    "ai.workflow.manage"
+    "ai.workflow.manage",
+    "ai.actions.read"
   ],
   "eventsProduced": [
     "ai.run.queued",

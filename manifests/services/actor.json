@@ -23,7 +23,9 @@
     "actor.resource.read",
     "actor.resource.control",
     "actor.agent.manage",
-    "actor.agent.run"
+    "actor.agent.run",
+    "actor.actions.read",
+    "actor.approval.decide"
   ],
   "eventsProduced": [],
   "eventsConsumed": [
