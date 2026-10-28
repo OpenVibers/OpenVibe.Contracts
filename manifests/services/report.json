@@ -1,0 +1,73 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.225.0 <1.0.0"
+  },
+  "id": "report",
+  "name": "OpenVibe.Report",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Report",
+  "domains": [
+    "openvibe.report"
+  ],
+  "publicOrigin": "https://openvibe.report",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "report.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "nothing to rebuild: v1 reads Network's open stats and Live's Rundown and recaps on demand; a restart only empties the minutes-long in-memory cache"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "v1 has no database and no migrations"
+      }
+    },
+    "contracts": {
+      "range": ">=0.225.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "notes": "Port 5080, unit openvibe-report.service. The Report room (plan 2026-10-28 \u00a75.4): the network's open numbers, The Rundown (what streamers talked about) and each stream's after-show report, in one place. v1 is a stateless front over OpenVibe.Network's open stats (/api/v1/stats) and OpenVibe.Live's Rundown and recap APIs; v2 makes Report the analytics authority (Network's analytics move here, Live's recap and Rundown jobs move here, the external SDK).",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5080",
+  "site": {
+    "name": "Report",
+    "icon": "report",
+    "tagline": "Every number on OpenVibe, honest",
+    "what": "The network's numbers open to everyone, what streamers talked about in The Rundown, and every stream's after-show report, each number with its definition and its date.",
+    "legalProfile": "info",
+    "position": 38
+  }
+}
