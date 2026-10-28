@@ -1,0 +1,9 @@
+{
+  "kind": "browser",
+  "width": 1440,
+  "height": 900,
+  "ttl_s": 1800,
+  "idle_s": 600,
+  "machine": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+  "idempotency_key": "actor:tsk_01JD2C3D4E5F6G7H8J9K0MNPQR"
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/session-list-result.v1.json",
+  "title": "RunSessionListResult",
+  "description": "run.session-list-result@1 (the Desks plan's D6): GET /api/v1/sessions on OpenVibe.Run (capability run.session.read): the caller's own sessions, newest first, running ones by default (?state=ended or ?state=all for others), at most limit (default 20, at most 100) per page; next_cursor continues the list and is null on the last page.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sessions",
+    "next_cursor"
+  ],
+  "properties": {
+    "sessions": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "session.v1.json"
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    }
+  }
+}

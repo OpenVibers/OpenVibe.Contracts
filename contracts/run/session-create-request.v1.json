@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/session-create-request.v1.json",
+  "title": "RunSessionCreateRequest",
+  "description": "run.session-create-request@1 (the Desks plan's D6): the body of POST /api/v1/sessions on OpenVibe.Run (capability run.session.create), answered 201 with run.session@1 (state placing). The session is the caller's own: a person's token, or a first-party service acting for a person (X-OV-Subject; the service is recorded as via). MACHINE names one of the person's own machines (an OpenVibe.Bot device they own and let agents use): the session goes there or ends unplaceable, never elsewhere. Without it Run places the desk: on the person's own machines when REQUIREMENTS name user-owned (and only theirs), else on desk hosts that serve other people (first-party, then community, unless REQUIREMENTS narrow it), each of whose desks runs in its own sandbox. Absent REQUIREMENTS mean { kind: run.browser, mobility: session, latency_class: interactive, objective: balanced }. TTL_S (default 3600) and IDLE_S (default 900) bound its life. IDEMPOTENCY_KEY: a repeat from the same person within 24 h with an identical body answers the first session (200); with a different body 409 run.idempotency.conflict.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind"
+  ],
+  "properties": {
+    "kind": {
+      "const": "browser"
+    },
+    "width": {
+      "$ref": "session.v1.json#/$defs/size/properties/width",
+      "description": "Default 1280."
+    },
+    "height": {
+      "$ref": "session.v1.json#/$defs/size/properties/height",
+      "description": "Default 800."
+    },
+    "ttl_s": {
+      "$ref": "session.v1.json#/properties/ttl_s",
+      "description": "Default 3600."
+    },
+    "idle_s": {
+      "$ref": "session.v1.json#/properties/idle_s",
+      "description": "Default 900."
+    },
+    "machine": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere."
+    },
+    "requirements": {
+      "$ref": "../platform/workload-requirements.v1.json"
+    },
+    "idempotency_key": {
+      "$ref": "session.v1.json#/$defs/idempotency_key"
+    }
+  },
+  "examples": [
+    {
+      "kind": "browser"
+    },
+    {
+      "kind": "browser",
+      "width": 1440,
+      "height": 900,
+      "ttl_s": 1800,
+      "machine": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+      "idempotency_key": "actor:tsk_01JD2C3D4E5F6G7H8J9K0MNPQR"
+    }
+  ]
+}

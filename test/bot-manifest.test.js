@@ -11,7 +11,8 @@ const c = require('..');
 // the computer kinds).
 // bot.resource.control: an owner stops or resumes their robot from OpenVibe.Services (0.176.0, ADR-048 step 8 phase 2).
 // bot.machine.ai: a model on the person's own machine, for that person (0.219.0, the AI-on-your-machines plan).
-const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
+// bot.desk.session: Run's sessions lease one desk each (0.223.0, the Desks plan's D6).
+const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.desk.session', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
 
 const bot = c.services.get('bot');

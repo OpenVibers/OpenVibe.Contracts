@@ -1,0 +1,14 @@
+{
+  "session_id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+  "id": "c-7",
+  "result": "ack",
+  "code": null,
+  "reason": null,
+  "data": {
+    "format": "jpeg",
+    "width": 1024,
+    "height": 640,
+    "content_b64": "/9j/"
+  },
+  "state": "running"
+}

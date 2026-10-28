@@ -1,0 +1,12 @@
+{
+  "kind": "browser",
+  "requirements": {
+    "kind": "run.browser",
+    "mobility": "session",
+    "latency_class": "interactive",
+    "objective": "cheapest",
+    "trust": [
+      "community"
+    ]
+  }
+}

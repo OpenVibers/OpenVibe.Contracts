@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/session-control-result.v1.json",
+  "title": "RunSessionControlResult",
+  "description": "run.session-control-result@1 (the Desks plan's D6): the answer to run.session-control-request@1. RESULT is bot.command-result@1's: ack (the desk did it; DATA is its answer, a page as text and refs, a picture, a receipt), nack (the desk refused; CODE is its fault code and REASON says why), refused (OpenVibe.Bot's gate refused it; CODE is Bot's refusal code) or expired (no answer in time). Every answer also says how the session stands now, so a caller sees it end (idle, ttl, host_lost) without asking again.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "session_id",
+    "id",
+    "result",
+    "state"
+  ],
+  "properties": {
+    "session_id": {
+      "$ref": "session.v1.json#/$defs/session_id"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "result": {
+      "enum": [
+        "ack",
+        "nack",
+        "refused",
+        "expired"
+      ]
+    },
+    "code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "data": {
+      "type": "object",
+      "description": "The desk's answer on an ack (bot.command-result@1 data)."
+    },
+    "state": {
+      "$ref": "session.v1.json#/properties/state"
+    }
+  },
+  "examples": [
+    {
+      "session_id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+      "id": "c-7",
+      "result": "ack",
+      "code": null,
+      "reason": null,
+      "data": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 640,
+        "content_b64": "/9j/"
+      },
+      "state": "running"
+    }
+  ]
+}

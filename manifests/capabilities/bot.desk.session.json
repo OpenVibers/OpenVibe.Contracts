@@ -1,0 +1,27 @@
+{
+  "id": "bot.desk.session",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Node sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.",
+  "inputSchema": "bot.desk-lease-create-request@1",
+  "outputSchema": "bot.desk-lease@1",
+  "permissions": [
+    "bot:desk:session"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "bot-control",
+  "events": [
+    "bot.command.refused"
+  ],
+  "implementedBy": [
+    "POST /api/v1/machines/:id/desk-leases",
+    "GET /api/v1/machines/:id/desk-leases/:desk",
+    "POST /api/v1/machines/:id/desk-leases/:desk/commands (bot.command@1, answered by bot.command-result@1)",
+    "DELETE /api/v1/machines/:id/desk-leases/:desk"
+  ]
+}

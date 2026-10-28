@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/session.v1.json",
+  "title": "RunSession",
+  "description": "run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe.Node runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "via",
+    "kind",
+    "state",
+    "size",
+    "ttl_s",
+    "idle_s",
+    "placement",
+    "timings",
+    "end",
+    "usage",
+    "idempotency_key"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/session_id"
+    },
+    "owner": {
+      "$ref": "../identity/subject-ref.v1.json",
+      "description": "The person the session is for: only they (or a first-party service acting for them) read, act on or end it."
+    },
+    "via": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^service:[a-z][a-z0-9-]{0,40}$",
+      "description": "The first-party service that asked for the person (service:actor), or null when they asked themselves."
+    },
+    "kind": {
+      "const": "browser",
+      "description": "A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1."
+    },
+    "state": {
+      "enum": [
+        "placing",
+        "starting",
+        "running",
+        "ended"
+      ]
+    },
+    "size": {
+      "$ref": "#/$defs/size"
+    },
+    "ttl_s": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 14400,
+      "description": "The most the session lives, from created_at."
+    },
+    "idle_s": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 3600,
+      "description": "A session no command used this long ends (end.reason idle)."
+    },
+    "placement": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/placement"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timings": {
+      "$ref": "#/$defs/timings"
+    },
+    "end": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/end"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "usage": {
+      "$ref": "#/$defs/usage"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/idempotency_key"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "const": "ended"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "end": {
+            "type": "object"
+          },
+          "timings": {
+            "type": "object",
+            "properties": {
+              "ended_at": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "end": {
+            "type": "null"
+          },
+          "timings": {
+            "type": "object",
+            "properties": {
+              "ended_at": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "enum": [
+              "starting",
+              "running"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "placement": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "session_id": {
+      "type": "string",
+      "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 640,
+          "maximum": 3840
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 480,
+          "maximum": 2160
+        }
+      },
+      "description": "The desk's page size (bot.command@1 kind desk width and height)."
+    },
+    "placement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "machine",
+        "desk",
+        "trust",
+        "offer_id",
+        "region",
+        "reasons"
+      ],
+      "properties": {
+        "machine": {
+          "type": "string",
+          "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "The machine (OpenVibe.Bot device) the desk runs on."
+        },
+        "desk": {
+          "type": "string",
+          "pattern": "^desk-[a-z0-9][a-z0-9-]{0,23}$",
+          "description": "The desk's name there (bot.command@1 desk), leased to this session alone."
+        },
+        "trust": {
+          "enum": [
+            "user-owned",
+            "first-party",
+            "partner",
+            "community"
+          ],
+          "description": "The offer's trust class (platform.resource-offer@1): user-owned is always the owner's own machine."
+        },
+        "offer_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 128,
+          "description": "The platform.resource-offer@1 it was placed on; null when the request named the person's own machine."
+        },
+        "region": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 64
+        },
+        "reasons": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": "Why this machine, in a few words each (the placer's reasons)."
+        }
+      }
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "timings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "started_at",
+        "last_used_at",
+        "ended_at"
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "started_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the desk first answered (state running)."
+        },
+        "last_used_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The last command, for idle_s."
+        },
+        "ended_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "desk_seconds"
+      ],
+      "properties": {
+        "desk_seconds": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Seconds the desk ran (started_at to ended_at, or to now while running); 0 when it never started."
+        }
+      }
+    },
+    "end": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "detail"
+      ],
+      "properties": {
+        "reason": {
+          "enum": [
+            "ended",
+            "ttl",
+            "idle",
+            "host_lost",
+            "unplaceable",
+            "failed"
+          ]
+        },
+        "detail": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+      "owner": {
+        "type": "user",
+        "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+      },
+      "via": "service:actor",
+      "kind": "browser",
+      "state": "running",
+      "size": {
+        "width": 1280,
+        "height": 800
+      },
+      "ttl_s": 3600,
+      "idle_s": 900,
+      "placement": {
+        "machine": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+        "desk": "desk-s0mnpqr",
+        "trust": "community",
+        "offer_id": "desk:dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+        "region": "eu",
+        "reasons": [
+          "a shared desk host with room"
+        ]
+      },
+      "timings": {
+        "created_at": "2026-10-28T10:00:00Z",
+        "started_at": "2026-10-28T10:00:04Z",
+        "last_used_at": "2026-10-28T10:05:00Z",
+        "ended_at": null
+      },
+      "end": null,
+      "usage": {
+        "desk_seconds": 296
+      },
+      "idempotency_key": null
+    }
+  ]
+}

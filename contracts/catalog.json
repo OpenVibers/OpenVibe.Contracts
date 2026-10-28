@@ -7485,6 +7485,89 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "run.session",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/session.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.session-create-request",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/session-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.session-control-request",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/session-control-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.session-control-result",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/session-control-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.session-list-result",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/session-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.session.started",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.session.started.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.session.ended",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "events/payloads/run.session.ended.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.desk-lease",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/desk-lease.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
+      "id": "bot.desk-lease-create-request",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/desk-lease-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
     }
   ]
 }

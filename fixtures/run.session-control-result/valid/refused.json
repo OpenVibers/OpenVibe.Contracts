@@ -1,0 +1,8 @@
+{
+  "session_id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+  "id": "c-8",
+  "result": "refused",
+  "code": "bot.device_offline",
+  "reason": "the machine is offline",
+  "state": "running"
+}

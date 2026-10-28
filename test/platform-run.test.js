@@ -134,4 +134,34 @@ checks++;
 const sandboxDispatch = contracts.capabilities.get('sandbox_provider.job.dispatch');
 ok(sandboxDispatch && sandboxDispatch.owner === 'run' && sandboxDispatch.status === 'planned' && sandboxDispatch.visibility === 'internal' && sandboxDispatch.sensitive === true && sandboxDispatch.implementedBy.length === 0 && sandboxDispatch.inputSchema === 'sandbox-provider.job-create-request@1' && sandboxDispatch.outputSchema === 'sandbox-provider.job-create-result@1' && !run.capabilities.includes('sandbox_provider.job.dispatch'), 'sandbox_provider.job.dispatch is a planned internal sensitive capability of Run naming the two contracts');
 
-console.log(`platform run: ${checks} job, frame and metering checks passed`);
+// Run sessions (the Desks plan's D6): a session is a browser desk that Bot leases to it. The ids, the desk names and the
+// size bounds are the same on both sides, a session's desk is always a named desk (never main or private), and its
+// command is bot.command@1's for the kinds that act on a page, never on the machine.
+const session = contracts.schema('run.session');
+const lease = contracts.schema('bot.desk-lease');
+ok(lease.properties.session.$ref === '../run/session.v1.json#/$defs/session_id', 'a lease names its session by run.session@1 id');
+const deskPatterns = [];
+(function walk(node) {
+    if (!node || typeof node !== 'object') return;
+    if (node.desk && typeof node.desk.pattern === 'string' && node.desk.pattern.includes('desk-')) deskPatterns.push(new RegExp(node.desk.pattern));
+    Object.values(node).forEach(walk);
+})(contracts.schema('bot.command'));
+ok(deskPatterns.length > 0, 'bot.command@1 names desks');
+const named = ['desk-s0mnpqr', 'desk-a'];
+ok(named.every((d) => new RegExp(session.$defs.placement.properties.desk.pattern).test(d) && new RegExp(lease.properties.desk.pattern).test(d) && deskPatterns.every((re) => re.test(d))),
+    'a session desk is a bot.command@1 desk');
+ok(!['main', 'private'].some((d) => new RegExp(lease.properties.desk.pattern).test(d)), 'a session never leases main or private');
+assert.deepStrictEqual([lease.properties.width.minimum, lease.properties.width.maximum, lease.properties.height.minimum, lease.properties.height.maximum],
+    [session.$defs.size.properties.width.minimum, session.$defs.size.properties.width.maximum, session.$defs.size.properties.height.minimum, session.$defs.size.properties.height.maximum]);
+checks++;
+assert.deepStrictEqual(contracts.schema('run.session-control-request').properties.kind.enum, ['screen', 'input', 'browser']);
+checks++;
+ok(['run.session.create', 'run.session.read', 'run.session.control'].every((id) => run.capabilities.includes(id) && contracts.capabilities.get(id).owner === 'run'), 'Run serves the three session capabilities');
+const deskSession = contracts.capabilities.get('bot.desk.session');
+ok(deskSession && deskSession.owner === 'bot' && deskSession.visibility === 'first-party' && deskSession.sensitive === true, 'bot.desk.session is a first-party sensitive capability of Bot');
+// The usage a session meters: one reading per minute of desk time, keyed by session and minute (Billing replays, never 409s).
+const deskReading = { id: 'run:ses_01JD2C3D4E5F6G7H8J9K0MNPQR:0', idempotency_key: 'run:ses_01JD2C3D4E5F6G7H8J9K0MNPQR:0', service: 'run', subject: 'user:usr_01JAB2C3D4E5F6G7H8J9K0MNPQ',
+    resource: 'desk-seconds', node: 'dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X', operation: 'browser.desk', quantity: 60, unit: 's', at: '2026-10-28T10:01:04Z', source: 'openvibe-run.session' };
+ok(contracts.validate('platform.usage-sample', deskReading).valid, 'a minute of desk time is a valid usage reading');
+
+console.log(`platform run: ${checks} job, frame, session and metering checks passed`);

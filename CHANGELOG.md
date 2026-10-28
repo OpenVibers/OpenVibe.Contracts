@@ -4,6 +4,25 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.223.0 — 2026-10-28
+
+- **Run sessions** (the Desks plan's D6; `OpenVibe_Agent_Desks_Plan_2026-10-27.md`). A session is a browser desk that
+  OpenVibe.Run places for one person and OpenVibe.Bot leases to it:
+  - `run.session@1` (states placing, starting, running, ended; where it runs and with what trust; desk-seconds),
+    `run.session-create-request@1` (`POST /api/v1/sessions`: the person's own named machine, or placement over desk
+    hosts, `ttl_s`, `idle_s`, requirements, an idempotency key), `run.session-control-request@1` and
+    `run.session-control-result@1` (`POST /api/v1/sessions/:id/commands`: screen, input and browser on the session's
+    desk only), `run.session-list-result@1`, and the events `run.session.started` and `run.session.ended`.
+  - Capabilities `run.session.create`, `run.session.read` and `run.session.control` (public, the caller's own sessions).
+  - Desk time is metered as one `platform.usage-sample@1` a minute (service `run`, operation `browser.desk`, unit `s`,
+    idempotency key `run:<session>:<minute>`).
+- **Desk leases on Bot**: `bot.desk-lease@1` and `bot.desk-lease-create-request@1`, with the capability
+  **`bot.desk.session`** (first-party, sensitive): Run leases one named desk for one session on the person's own machine
+  (where they let agents use it) or on a desk host whose owner offers it to other people and whose OpenVibe.Node runs
+  every desk in its own sandbox (Node v0.32.0, `desk_isolation: sandbox`); only that session's commands reach the desk,
+  never the machine itself.
+- Fixtures for each, and `test/platform-run.test.js` holds the two sides together (ids, desk names, sizes, kinds).
+
 ## 0.222.0 — 2026-10-27
 
 - **Site names say their domain** (owner, 2026-10-27: "it says memberships … couldn't it say VIP memberships since the

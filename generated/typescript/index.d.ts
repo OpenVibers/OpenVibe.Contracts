@@ -206118,3 +206118,384 @@ export interface ChatInboxConversationsResult {
   message?: {};
   replies?: {}[];
 }
+
+/** run.session@1.0.0 (owner: run) */
+/**
+ * run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe.Node runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).
+ */
+export type RunSession = {
+  [k: string]: unknown | undefined;
+} & {
+  id: string;
+  owner: SubjectRef;
+  /**
+   * The first-party service that asked for the person (service:actor), or null when they asked themselves.
+   */
+  via: string | null;
+  /**
+   * A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1.
+   */
+  kind: "browser";
+  state: "placing" | "starting" | "running" | "ended";
+  /**
+   * The desk's page size (bot.command@1 kind desk width and height).
+   */
+  size: {
+    width: number;
+    height: number;
+  };
+  /**
+   * The most the session lives, from created_at.
+   */
+  ttl_s: number;
+  /**
+   * A session no command used this long ends (end.reason idle).
+   */
+  idle_s: number;
+  placement: {
+    /**
+     * The machine (OpenVibe.Bot device) the desk runs on.
+     */
+    machine: string;
+    /**
+     * The desk's name there (bot.command@1 desk), leased to this session alone.
+     */
+    desk: string;
+    /**
+     * The offer's trust class (platform.resource-offer@1): user-owned is always the owner's own machine.
+     */
+    trust: "user-owned" | "first-party" | "partner" | "community";
+    /**
+     * The platform.resource-offer@1 it was placed on; null when the request named the person's own machine.
+     */
+    offer_id: string | null;
+    region: string | null;
+    /**
+     * Why this machine, in a few words each (the placer's reasons).
+     *
+     * @maxItems 8
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string];
+  } | null;
+  timings: {
+    created_at: string;
+    /**
+     * When the desk first answered (state running).
+     */
+    started_at: string | null;
+    /**
+     * The last command, for idle_s.
+     */
+    last_used_at: string | null;
+    ended_at: string | null;
+  };
+  end: {
+    reason: "ended" | "ttl" | "idle" | "host_lost" | "unplaceable" | "failed";
+    detail: string | null;
+  } | null;
+  usage: {
+    /**
+     * Seconds the desk ran (started_at to ended_at, or to now while running); 0 when it never started.
+     */
+    desk_seconds: number;
+  };
+  idempotency_key: string | null;
+};
+
+/** run.session-create-request@1.0.0 (owner: run) */
+/**
+ * run.session-create-request@1 (the Desks plan's D6): the body of POST /api/v1/sessions on OpenVibe.Run (capability run.session.create), answered 201 with run.session@1 (state placing). The session is the caller's own: a person's token, or a first-party service acting for a person (X-OV-Subject; the service is recorded as via). MACHINE names one of the person's own machines (an OpenVibe.Bot device they own and let agents use): the session goes there or ends unplaceable, never elsewhere. Without it Run places the desk: on the person's own machines when REQUIREMENTS name user-owned (and only theirs), else on desk hosts that serve other people (first-party, then community, unless REQUIREMENTS narrow it), each of whose desks runs in its own sandbox. Absent REQUIREMENTS mean { kind: run.browser, mobility: session, latency_class: interactive, objective: balanced }. TTL_S (default 3600) and IDLE_S (default 900) bound its life. IDEMPOTENCY_KEY: a repeat from the same person within 24 h with an identical body answers the first session (200); with a different body 409 run.idempotency.conflict.
+ */
+export interface RunSessionCreateRequest {
+  kind: "browser";
+  /**
+   * Default 1280.
+   */
+  width?: number;
+  /**
+   * Default 800.
+   */
+  height?: number;
+  /**
+   * Default 3600.
+   */
+  ttl_s?: number;
+  /**
+   * Default 900.
+   */
+  idle_s?: number;
+  /**
+   * One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere.
+   */
+  machine?: string;
+  requirements?: WorkloadRequirements;
+  idempotency_key?: string;
+}
+
+/** run.session-control-request@1.0.0 (owner: run) */
+/**
+ * run.session-control-request@1 (the Desks plan's D6): one command on a session's desk, the body of POST /api/v1/sessions/{id}/commands on OpenVibe.Run (capability run.session.control), answered with run.session-control-result@1. KIND and VALUE are bot.command@1's for that kind (screen: a picture of the page; input: the mouse, wheel and keys on the page; browser: open, click, fill, press, back, read, screenshot) without desk, which is always the session's own: Run carries the command to OpenVibe.Bot on the session's lease (bot.desk-lease@1) and nothing on the machine other than that desk is reachable. A command on a session that is not running is refused 409 run.session.not_running. ID makes a retry safe: the same id within the session answers the first result.
+ */
+export interface RunSessionControlRequest {
+  id?: string;
+  kind: "screen" | "input" | "browser";
+  /**
+   * bot.command@1's value for that kind, without desk (refused 422 if it names another desk).
+   */
+  value: {};
+}
+
+/** run.session-control-result@1.0.0 (owner: run) */
+/**
+ * run.session-control-result@1 (the Desks plan's D6): the answer to run.session-control-request@1. RESULT is bot.command-result@1's: ack (the desk did it; DATA is its answer, a page as text and refs, a picture, a receipt), nack (the desk refused; CODE is its fault code and REASON says why), refused (OpenVibe.Bot's gate refused it; CODE is Bot's refusal code) or expired (no answer in time). Every answer also says how the session stands now, so a caller sees it end (idle, ttl, host_lost) without asking again.
+ */
+export interface RunSessionControlResult {
+  session_id: string;
+  id: string;
+  result: "ack" | "nack" | "refused" | "expired";
+  code?: string | null;
+  reason?: string | null;
+  /**
+   * The desk's answer on an ack (bot.command-result@1 data).
+   */
+  data?: {};
+  state: "placing" | "starting" | "running" | "ended";
+}
+
+/** run.session-list-result@1.0.0 (owner: run) */
+/**
+ * run.session-list-result@1 (the Desks plan's D6): GET /api/v1/sessions on OpenVibe.Run (capability run.session.read): the caller's own sessions, newest first, running ones by default (?state=ended or ?state=all for others), at most limit (default 20, at most 100) per page; next_cursor continues the list and is null on the last page.
+ */
+export interface RunSessionListResult {
+  /**
+   * @maxItems 100
+   */
+  sessions: RunSession[];
+  next_cursor: string | null;
+}
+
+/** run.session.started@1.0.0 (owner: run) */
+/**
+ * run.session.started v1 (OpenVibe.Run; the Desks plan's D6). A session's desk answered for the first time: it runs on its machine, and desk_seconds count from timings.started_at. The session as run.session@1 has it. Envelope: subject { type: session, id: <session id> }, visibility internal, priority low, actor service:run.
+ */
+export interface RunSessionStartedPayload {
+  id: string;
+  owner: SubjectRef;
+  /**
+   * The first-party service that asked for the person (service:actor), or null when they asked themselves.
+   */
+  via: string | null;
+  /**
+   * A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1.
+   */
+  kind: "browser";
+  state: "running";
+  /**
+   * The desk's page size (bot.command@1 kind desk width and height).
+   */
+  size: {
+    width: number;
+    height: number;
+  };
+  /**
+   * The most the session lives, from created_at.
+   */
+  ttl_s: number;
+  /**
+   * A session no command used this long ends (end.reason idle).
+   */
+  idle_s: number;
+  placement: {
+    /**
+     * The machine (OpenVibe.Bot device) the desk runs on.
+     */
+    machine: string;
+    /**
+     * The desk's name there (bot.command@1 desk), leased to this session alone.
+     */
+    desk: string;
+    /**
+     * The offer's trust class (platform.resource-offer@1): user-owned is always the owner's own machine.
+     */
+    trust: "user-owned" | "first-party" | "partner" | "community";
+    /**
+     * The platform.resource-offer@1 it was placed on; null when the request named the person's own machine.
+     */
+    offer_id: string | null;
+    region: string | null;
+    /**
+     * Why this machine, in a few words each (the placer's reasons).
+     *
+     * @maxItems 8
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string];
+  };
+  timings: {
+    created_at: string;
+    /**
+     * When the desk first answered (state running).
+     */
+    started_at: string | null;
+    /**
+     * The last command, for idle_s.
+     */
+    last_used_at: string | null;
+    ended_at: string | null;
+  };
+  end: null;
+  usage: {
+    /**
+     * Seconds the desk ran (started_at to ended_at, or to now while running); 0 when it never started.
+     */
+    desk_seconds: number;
+  };
+  idempotency_key: string | null;
+}
+
+/** run.session.ended@1.0.0 (owner: run) */
+/**
+ * run.session.ended v1 (OpenVibe.Run; the Desks plan's D6). A session ended (end.reason ended, ttl, idle, host_lost, unplaceable or failed), its desk stopped and its lease given back; usage.desk_seconds is final. The session as run.session@1 has it. Envelope: subject { type: session, id: <session id> }, visibility internal, priority low, actor service:run.
+ */
+export interface RunSessionEndedPayload {
+  id: string;
+  owner: SubjectRef;
+  /**
+   * The first-party service that asked for the person (service:actor), or null when they asked themselves.
+   */
+  via: string | null;
+  /**
+   * A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1.
+   */
+  kind: "browser";
+  state: "ended";
+  /**
+   * The desk's page size (bot.command@1 kind desk width and height).
+   */
+  size: {
+    width: number;
+    height: number;
+  };
+  /**
+   * The most the session lives, from created_at.
+   */
+  ttl_s: number;
+  /**
+   * A session no command used this long ends (end.reason idle).
+   */
+  idle_s: number;
+  placement: {
+    /**
+     * The machine (OpenVibe.Bot device) the desk runs on.
+     */
+    machine: string;
+    /**
+     * The desk's name there (bot.command@1 desk), leased to this session alone.
+     */
+    desk: string;
+    /**
+     * The offer's trust class (platform.resource-offer@1): user-owned is always the owner's own machine.
+     */
+    trust: "user-owned" | "first-party" | "partner" | "community";
+    /**
+     * The platform.resource-offer@1 it was placed on; null when the request named the person's own machine.
+     */
+    offer_id: string | null;
+    region: string | null;
+    /**
+     * Why this machine, in a few words each (the placer's reasons).
+     *
+     * @maxItems 8
+     */
+    reasons:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string];
+  } | null;
+  timings: {
+    created_at: string;
+    /**
+     * When the desk first answered (state running).
+     */
+    started_at: string | null;
+    /**
+     * The last command, for idle_s.
+     */
+    last_used_at: string | null;
+    ended_at: string | null;
+  };
+  end: {
+    reason: "ended" | "ttl" | "idle" | "host_lost" | "unplaceable" | "failed";
+    detail: string | null;
+  };
+  usage: {
+    /**
+     * Seconds the desk ran (started_at to ended_at, or to now while running); 0 when it never started.
+     */
+    desk_seconds: number;
+  };
+  idempotency_key: string | null;
+}
+
+/** bot.desk-lease@1.0.0 (owner: bot) */
+/**
+ * bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe.Node runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).
+ */
+export interface BotDeskLease {
+  machine_id: string;
+  desk: string;
+  session: string;
+  /**
+   * The session's person, the only one whose commands reach the desk.
+   */
+  owner: string;
+  kind: "browser";
+  width: number;
+  height: number;
+  /**
+   * true on a desk host that serves other people (the desk runs in its own sandbox there); false on the person's own machine.
+   */
+  shared: boolean;
+  created_at: string;
+}
+
+/** bot.desk-lease-create-request@1.0.0 (owner: bot) */
+/**
+ * bot.desk-lease-create-request@1 (the Desks plan's D6): the body of POST /api/v1/machines/{id}/desk-leases on OpenVibe.Bot (capability bot.desk.session), answered 201 with bot.desk-lease@1. DESK is the name Run chose for the session (unique per session); a desk already leased to another session, or running for the machine's owner, is refused 409 bot.desk_busy, and a repeat for the same session answers its lease (200). A machine with no room (its max_desks) is refused 409 bot.machine_busy, one that is offline 409 bot.device_offline, and one the person may not use 404 bot.device_not_found.
+ */
+export interface BotDeskLeaseCreateRequest {
+  session: string;
+  desk: string;
+  kind: "browser";
+  /**
+   * Default 1280.
+   */
+  width?: number;
+  /**
+   * Default 800.
+   */
+  height?: number;
+}

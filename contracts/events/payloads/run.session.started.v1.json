@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/run.session.started.v1.json",
+  "title": "RunSessionStartedPayload",
+  "description": "run.session.started v1 (OpenVibe.Run; the Desks plan's D6). A session's desk answered for the first time: it runs on its machine, and desk_seconds count from timings.started_at. The session as run.session@1 has it. Envelope: subject { type: session, id: <session id> }, visibility internal, priority low, actor service:run.",
+  "type": "object",
+  "required": [
+    "id",
+    "owner",
+    "via",
+    "kind",
+    "state",
+    "size",
+    "ttl_s",
+    "idle_s",
+    "placement",
+    "timings",
+    "end",
+    "usage",
+    "idempotency_key"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "$ref": "../../run/session.v1.json#/$defs/session_id"
+    },
+    "owner": {
+      "$ref": "../../identity/subject-ref.v1.json"
+    },
+    "via": {
+      "$ref": "../../run/session.v1.json#/properties/via"
+    },
+    "kind": {
+      "$ref": "../../run/session.v1.json#/properties/kind"
+    },
+    "state": {
+      "const": "running"
+    },
+    "size": {
+      "$ref": "../../run/session.v1.json#/$defs/size"
+    },
+    "ttl_s": {
+      "$ref": "../../run/session.v1.json#/properties/ttl_s"
+    },
+    "idle_s": {
+      "$ref": "../../run/session.v1.json#/properties/idle_s"
+    },
+    "placement": {
+      "$ref": "../../run/session.v1.json#/$defs/placement"
+    },
+    "timings": {
+      "$ref": "../../run/session.v1.json#/$defs/timings"
+    },
+    "end": {
+      "type": "null"
+    },
+    "usage": {
+      "$ref": "../../run/session.v1.json#/$defs/usage"
+    },
+    "idempotency_key": {
+      "$ref": "../../run/session.v1.json#/properties/idempotency_key"
+    }
+  }
+}

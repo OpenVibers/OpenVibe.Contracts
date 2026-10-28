@@ -83773,6 +83773,859 @@
           }
         }
       }
+    },
+    "run.session": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/session.v1.json",
+        "title": "RunSession",
+        "description": "run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe.Node runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner",
+          "via",
+          "kind",
+          "state",
+          "size",
+          "ttl_s",
+          "idle_s",
+          "placement",
+          "timings",
+          "end",
+          "usage",
+          "idempotency_key"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/session_id"
+          },
+          "owner": {
+            "$ref": "../identity/subject-ref.v1.json",
+            "description": "The person the session is for: only they (or a first-party service acting for them) read, act on or end it."
+          },
+          "via": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^service:[a-z][a-z0-9-]{0,40}$",
+            "description": "The first-party service that asked for the person (service:actor), or null when they asked themselves."
+          },
+          "kind": {
+            "const": "browser",
+            "description": "A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1."
+          },
+          "state": {
+            "enum": [
+              "placing",
+              "starting",
+              "running",
+              "ended"
+            ]
+          },
+          "size": {
+            "$ref": "#/$defs/size"
+          },
+          "ttl_s": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 14400,
+            "description": "The most the session lives, from created_at."
+          },
+          "idle_s": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 3600,
+            "description": "A session no command used this long ends (end.reason idle)."
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/placement"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "timings": {
+            "$ref": "#/$defs/timings"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/end"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage": {
+            "$ref": "#/$defs/usage"
+          },
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/idempotency_key"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "ended"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "end": {
+                  "type": "object"
+                },
+                "timings": {
+                  "type": "object",
+                  "properties": {
+                    "ended_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "end": {
+                  "type": "null"
+                },
+                "timings": {
+                  "type": "object",
+                  "properties": {
+                    "ended_at": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "enum": [
+                    "starting",
+                    "running"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "placement": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ],
+        "$defs": {
+          "session_id": {
+            "type": "string",
+            "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "size": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "width",
+              "height"
+            ],
+            "properties": {
+              "width": {
+                "type": "integer",
+                "minimum": 640,
+                "maximum": 3840
+              },
+              "height": {
+                "type": "integer",
+                "minimum": 480,
+                "maximum": 2160
+              }
+            },
+            "description": "The desk's page size (bot.command@1 kind desk width and height)."
+          },
+          "placement": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "machine",
+              "desk",
+              "trust",
+              "offer_id",
+              "region",
+              "reasons"
+            ],
+            "properties": {
+              "machine": {
+                "type": "string",
+                "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The machine (OpenVibe.Bot device) the desk runs on."
+              },
+              "desk": {
+                "type": "string",
+                "pattern": "^desk-[a-z0-9][a-z0-9-]{0,23}$",
+                "description": "The desk's name there (bot.command@1 desk), leased to this session alone."
+              },
+              "trust": {
+                "enum": [
+                  "user-owned",
+                  "first-party",
+                  "partner",
+                  "community"
+                ],
+                "description": "The offer's trust class (platform.resource-offer@1): user-owned is always the owner's own machine."
+              },
+              "offer_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 128,
+                "description": "The platform.resource-offer@1 it was placed on; null when the request named the person's own machine."
+              },
+              "region": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 64
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "description": "Why this machine, in a few words each (the placer's reasons)."
+              }
+            }
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "timings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created_at",
+              "started_at",
+              "last_used_at",
+              "ended_at"
+            ],
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "When the desk first answered (state running)."
+              },
+              "last_used_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "The last command, for idle_s."
+              },
+              "ended_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "desk_seconds"
+            ],
+            "properties": {
+              "desk_seconds": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Seconds the desk ran (started_at to ended_at, or to now while running); 0 when it never started."
+              }
+            }
+          },
+          "end": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "detail"
+            ],
+            "properties": {
+              "reason": {
+                "enum": [
+                  "ended",
+                  "ttl",
+                  "idle",
+                  "host_lost",
+                  "unplaceable",
+                  "failed"
+                ]
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 500
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+            "owner": {
+              "type": "user",
+              "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+            },
+            "via": "service:actor",
+            "kind": "browser",
+            "state": "running",
+            "size": {
+              "width": 1280,
+              "height": 800
+            },
+            "ttl_s": 3600,
+            "idle_s": 900,
+            "placement": {
+              "machine": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+              "desk": "desk-s0mnpqr",
+              "trust": "community",
+              "offer_id": "desk:dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+              "region": "eu",
+              "reasons": [
+                "a shared desk host with room"
+              ]
+            },
+            "timings": {
+              "created_at": "2026-10-28T10:00:00Z",
+              "started_at": "2026-10-28T10:00:04Z",
+              "last_used_at": "2026-10-28T10:05:00Z",
+              "ended_at": null
+            },
+            "end": null,
+            "usage": {
+              "desk_seconds": 296
+            },
+            "idempotency_key": null
+          }
+        ]
+      }
+    },
+    "run.session-create-request": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/session-create-request.v1.json",
+        "title": "RunSessionCreateRequest",
+        "description": "run.session-create-request@1 (the Desks plan's D6): the body of POST /api/v1/sessions on OpenVibe.Run (capability run.session.create), answered 201 with run.session@1 (state placing). The session is the caller's own: a person's token, or a first-party service acting for a person (X-OV-Subject; the service is recorded as via). MACHINE names one of the person's own machines (an OpenVibe.Bot device they own and let agents use): the session goes there or ends unplaceable, never elsewhere. Without it Run places the desk: on the person's own machines when REQUIREMENTS name user-owned (and only theirs), else on desk hosts that serve other people (first-party, then community, unless REQUIREMENTS narrow it), each of whose desks runs in its own sandbox. Absent REQUIREMENTS mean { kind: run.browser, mobility: session, latency_class: interactive, objective: balanced }. TTL_S (default 3600) and IDLE_S (default 900) bound its life. IDEMPOTENCY_KEY: a repeat from the same person within 24 h with an identical body answers the first session (200); with a different body 409 run.idempotency.conflict.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "const": "browser"
+          },
+          "width": {
+            "$ref": "session.v1.json#/$defs/size/properties/width",
+            "description": "Default 1280."
+          },
+          "height": {
+            "$ref": "session.v1.json#/$defs/size/properties/height",
+            "description": "Default 800."
+          },
+          "ttl_s": {
+            "$ref": "session.v1.json#/properties/ttl_s",
+            "description": "Default 3600."
+          },
+          "idle_s": {
+            "$ref": "session.v1.json#/properties/idle_s",
+            "description": "Default 900."
+          },
+          "machine": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere."
+          },
+          "requirements": {
+            "$ref": "../platform/workload-requirements.v1.json"
+          },
+          "idempotency_key": {
+            "$ref": "session.v1.json#/$defs/idempotency_key"
+          }
+        },
+        "examples": [
+          {
+            "kind": "browser"
+          },
+          {
+            "kind": "browser",
+            "width": 1440,
+            "height": 900,
+            "ttl_s": 1800,
+            "machine": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+            "idempotency_key": "actor:tsk_01JD2C3D4E5F6G7H8J9K0MNPQR"
+          }
+        ]
+      }
+    },
+    "run.session-control-request": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/session-control-request.v1.json",
+        "title": "RunSessionControlRequest",
+        "description": "run.session-control-request@1 (the Desks plan's D6): one command on a session's desk, the body of POST /api/v1/sessions/{id}/commands on OpenVibe.Run (capability run.session.control), answered with run.session-control-result@1. KIND and VALUE are bot.command@1's for that kind (screen: a picture of the page; input: the mouse, wheel and keys on the page; browser: open, click, fill, press, back, read, screenshot) without desk, which is always the session's own: Run carries the command to OpenVibe.Bot on the session's lease (bot.desk-lease@1) and nothing on the machine other than that desk is reachable. A command on a session that is not running is refused 409 run.session.not_running. ID makes a retry safe: the same id within the session answers the first result.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "value"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "kind": {
+            "enum": [
+              "screen",
+              "input",
+              "browser"
+            ]
+          },
+          "value": {
+            "type": "object",
+            "description": "bot.command@1's value for that kind, without desk (refused 422 if it names another desk).",
+            "not": {
+              "required": [
+                "desk"
+              ]
+            }
+          }
+        },
+        "examples": [
+          {
+            "kind": "browser",
+            "value": {
+              "action": "open",
+              "url": "https://example.org/"
+            }
+          },
+          {
+            "id": "c-7",
+            "kind": "screen",
+            "value": {
+              "max_width": 1024
+            }
+          }
+        ]
+      }
+    },
+    "run.session-control-result": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/session-control-result.v1.json",
+        "title": "RunSessionControlResult",
+        "description": "run.session-control-result@1 (the Desks plan's D6): the answer to run.session-control-request@1. RESULT is bot.command-result@1's: ack (the desk did it; DATA is its answer, a page as text and refs, a picture, a receipt), nack (the desk refused; CODE is its fault code and REASON says why), refused (OpenVibe.Bot's gate refused it; CODE is Bot's refusal code) or expired (no answer in time). Every answer also says how the session stands now, so a caller sees it end (idle, ttl, host_lost) without asking again.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "session_id",
+          "id",
+          "result",
+          "state"
+        ],
+        "properties": {
+          "session_id": {
+            "$ref": "session.v1.json#/$defs/session_id"
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "result": {
+            "enum": [
+              "ack",
+              "nack",
+              "refused",
+              "expired"
+            ]
+          },
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000
+          },
+          "data": {
+            "type": "object",
+            "description": "The desk's answer on an ack (bot.command-result@1 data)."
+          },
+          "state": {
+            "$ref": "session.v1.json#/properties/state"
+          }
+        },
+        "examples": [
+          {
+            "session_id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+            "id": "c-7",
+            "result": "ack",
+            "code": null,
+            "reason": null,
+            "data": {
+              "format": "jpeg",
+              "width": 1024,
+              "height": 640,
+              "content_b64": "/9j/"
+            },
+            "state": "running"
+          }
+        ]
+      }
+    },
+    "run.session-list-result": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/session-list-result.v1.json",
+        "title": "RunSessionListResult",
+        "description": "run.session-list-result@1 (the Desks plan's D6): GET /api/v1/sessions on OpenVibe.Run (capability run.session.read): the caller's own sessions, newest first, running ones by default (?state=ended or ?state=all for others), at most limit (default 20, at most 100) per page; next_cursor continues the list and is null on the last page.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sessions",
+          "next_cursor"
+        ],
+        "properties": {
+          "sessions": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "session.v1.json"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          }
+        }
+      }
+    },
+    "run.session.started": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.session.started.v1.json",
+        "title": "RunSessionStartedPayload",
+        "description": "run.session.started v1 (OpenVibe.Run; the Desks plan's D6). A session's desk answered for the first time: it runs on its machine, and desk_seconds count from timings.started_at. The session as run.session@1 has it. Envelope: subject { type: session, id: <session id> }, visibility internal, priority low, actor service:run.",
+        "type": "object",
+        "required": [
+          "id",
+          "owner",
+          "via",
+          "kind",
+          "state",
+          "size",
+          "ttl_s",
+          "idle_s",
+          "placement",
+          "timings",
+          "end",
+          "usage",
+          "idempotency_key"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "../../run/session.v1.json#/$defs/session_id"
+          },
+          "owner": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "via": {
+            "$ref": "../../run/session.v1.json#/properties/via"
+          },
+          "kind": {
+            "$ref": "../../run/session.v1.json#/properties/kind"
+          },
+          "state": {
+            "const": "running"
+          },
+          "size": {
+            "$ref": "../../run/session.v1.json#/$defs/size"
+          },
+          "ttl_s": {
+            "$ref": "../../run/session.v1.json#/properties/ttl_s"
+          },
+          "idle_s": {
+            "$ref": "../../run/session.v1.json#/properties/idle_s"
+          },
+          "placement": {
+            "$ref": "../../run/session.v1.json#/$defs/placement"
+          },
+          "timings": {
+            "$ref": "../../run/session.v1.json#/$defs/timings"
+          },
+          "end": {
+            "type": "null"
+          },
+          "usage": {
+            "$ref": "../../run/session.v1.json#/$defs/usage"
+          },
+          "idempotency_key": {
+            "$ref": "../../run/session.v1.json#/properties/idempotency_key"
+          }
+        }
+      }
+    },
+    "run.session.ended": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/run.session.ended.v1.json",
+        "title": "RunSessionEndedPayload",
+        "description": "run.session.ended v1 (OpenVibe.Run; the Desks plan's D6). A session ended (end.reason ended, ttl, idle, host_lost, unplaceable or failed), its desk stopped and its lease given back; usage.desk_seconds is final. The session as run.session@1 has it. Envelope: subject { type: session, id: <session id> }, visibility internal, priority low, actor service:run.",
+        "type": "object",
+        "required": [
+          "id",
+          "owner",
+          "via",
+          "kind",
+          "state",
+          "size",
+          "ttl_s",
+          "idle_s",
+          "placement",
+          "timings",
+          "end",
+          "usage",
+          "idempotency_key"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "../../run/session.v1.json#/$defs/session_id"
+          },
+          "owner": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "via": {
+            "$ref": "../../run/session.v1.json#/properties/via"
+          },
+          "kind": {
+            "$ref": "../../run/session.v1.json#/properties/kind"
+          },
+          "state": {
+            "const": "ended"
+          },
+          "size": {
+            "$ref": "../../run/session.v1.json#/$defs/size"
+          },
+          "ttl_s": {
+            "$ref": "../../run/session.v1.json#/properties/ttl_s"
+          },
+          "idle_s": {
+            "$ref": "../../run/session.v1.json#/properties/idle_s"
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "$ref": "../../run/session.v1.json#/$defs/placement"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "timings": {
+            "$ref": "../../run/session.v1.json#/$defs/timings"
+          },
+          "end": {
+            "$ref": "../../run/session.v1.json#/$defs/end"
+          },
+          "usage": {
+            "$ref": "../../run/session.v1.json#/$defs/usage"
+          },
+          "idempotency_key": {
+            "$ref": "../../run/session.v1.json#/properties/idempotency_key"
+          }
+        }
+      }
+    },
+    "bot.desk-lease": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/desk-lease.v1.json",
+        "title": "BotDeskLease",
+        "description": "bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe.Node runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "machine_id",
+          "desk",
+          "session",
+          "owner",
+          "kind",
+          "width",
+          "height",
+          "shared",
+          "created_at"
+        ],
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "desk": {
+            "type": "string",
+            "pattern": "^desk-[a-z0-9][a-z0-9-]{0,23}$"
+          },
+          "session": {
+            "$ref": "../run/session.v1.json#/$defs/session_id"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^user:usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The session's person, the only one whose commands reach the desk."
+          },
+          "kind": {
+            "const": "browser"
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 640,
+            "maximum": 3840
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 480,
+            "maximum": 2160
+          },
+          "shared": {
+            "type": "boolean",
+            "description": "true on a desk host that serves other people (the desk runs in its own sandbox there); false on the person's own machine."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bot.desk-lease-create-request": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/desk-lease-create-request.v1.json",
+        "title": "BotDeskLeaseCreateRequest",
+        "description": "bot.desk-lease-create-request@1 (the Desks plan's D6): the body of POST /api/v1/machines/{id}/desk-leases on OpenVibe.Bot (capability bot.desk.session), answered 201 with bot.desk-lease@1. DESK is the name Run chose for the session (unique per session); a desk already leased to another session, or running for the machine's owner, is refused 409 bot.desk_busy, and a repeat for the same session answers its lease (200). A machine with no room (its max_desks) is refused 409 bot.machine_busy, one that is offline 409 bot.device_offline, and one the person may not use 404 bot.device_not_found.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "session",
+          "desk",
+          "kind"
+        ],
+        "properties": {
+          "session": {
+            "$ref": "../run/session.v1.json#/$defs/session_id"
+          },
+          "desk": {
+            "$ref": "desk-lease.v1.json#/properties/desk"
+          },
+          "kind": {
+            "const": "browser"
+          },
+          "width": {
+            "$ref": "desk-lease.v1.json#/properties/width",
+            "description": "Default 1280."
+          },
+          "height": {
+            "$ref": "desk-lease.v1.json#/properties/height",
+            "description": "Default 800."
+          }
+        }
+      }
     }
   }
 }

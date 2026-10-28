@@ -35,7 +35,8 @@
     "bot.device.connect",
     "bot.job.dispatch",
     "bot.resource.read",
-    "bot.resource.control"
+    "bot.resource.control",
+    "bot.desk.session"
   ],
   "eventsProduced": [
     "bot.robot.online",
