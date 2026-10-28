@@ -1,0 +1,10 @@
+{
+  "q": "surf_utopia world record",
+  "scopes": [
+    "network",
+    "web"
+  ],
+  "freshness": "month",
+  "depth": "standard",
+  "limit": 10
+}

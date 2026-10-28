@@ -1,0 +1,18 @@
+{
+  "provider": "deepseek",
+  "name": "DeepSeek Search",
+  "scopes": [
+    "web",
+    "news"
+  ],
+  "price_usd_per_call": 0.00075,
+  "independent_index": false,
+  "available": true,
+  "reason": null,
+  "daily_cap": 1500,
+  "used_today": 212,
+  "latency_ms_p50": 1380,
+  "answered_rate": 0.97,
+  "terms_url": "https://api-docs.deepseek.com/guides/search",
+  "checked_at": "2026-10-28T11:00:00Z"
+}

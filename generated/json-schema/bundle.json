@@ -3664,6 +3664,524 @@
         }
       }
     },
+    "search.fabric-request": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/fabric-request.v1.json",
+        "title": "SearchFabricRequest",
+        "description": "search.fabric-request@1: the body of POST /api/v1/query (or the query string of GET /api/v1/query, scopes comma-separated), capability search.fabric.query. One search over several scopes, routed the cheapest way that answers (plan 2026-10-28 §4.5). network: Search's own index, permission-aware exactly as search.query.run; mine: the caller's own private documents (a signed-in person, or a service with X-OV-Subject); web: OpenVibe's open index first, then paid providers in a ladder, each result keeping its provider, date and URL. Providers never receive an account identifier. A scope the caller may not use (mine without a person; web's paid providers for an anonymous caller, who gets cached and open-index results only) is reported in route.explain, never an error. The other scopes are facets of the same indexes and are accepted for forward compatibility; v1 answers them as network results filtered by kind.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "q"
+        ],
+        "properties": {
+          "q": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "What to find."
+          },
+          "scopes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "network",
+                "mine",
+                "web",
+                "news",
+                "images",
+                "video",
+                "products",
+                "people",
+                "places",
+                "code"
+              ]
+            },
+            "default": [
+              "network"
+            ],
+            "description": "Where to look; results are grouped by scope. Default: network."
+          },
+          "filters": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Narrow the network and mine scopes (never widen what the caller may see).",
+            "properties": {
+              "owner": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+              },
+              "type": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+              },
+              "lang": {
+                "type": "string",
+                "pattern": "^[a-zA-Z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+              },
+              "site": {
+                "type": "string",
+                "maxLength": 253,
+                "pattern": "^[a-z0-9.-]+$",
+                "description": "web: results from this host only."
+              }
+            }
+          },
+          "freshness": {
+            "enum": [
+              "any",
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "default": "any",
+            "description": "How recent results must be, where the source dates them."
+          },
+          "depth": {
+            "enum": [
+              "quick",
+              "standard",
+              "deep"
+            ],
+            "default": "standard",
+            "description": "quick: indexes and caches only (no paid provider); standard: the ladder until a step answers; deep: every step, merged."
+          },
+          "answer": {
+            "type": "boolean",
+            "default": false,
+            "description": "Ask for a short cited answer written by AI from the results. Never without citations; labelled AI. A deployment may decline (answer: null, with the reason in route.explain)."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 20
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "next_cursor of the previous page (network and mine only)."
+          }
+        }
+      }
+    },
+    "search.fabric-result": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/fabric-result.v1.json",
+        "title": "SearchFabricResult",
+        "description": "search.fabric-result@1: the answer of search.fabric.query. results come grouped by scope order (the room's own first when the caller asked for it); every web result keeps its provider, URL and date; route.explain says, step by step, what was asked, what answered, from cache or not, and what it cost. The query is never echoed: a page renders results without writing the query into its HTML (the ?q= rule).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "results",
+          "groups",
+          "route",
+          "next_cursor"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "scope",
+                "kind",
+                "title",
+                "url"
+              ],
+              "properties": {
+                "scope": {
+                  "enum": [
+                    "network",
+                    "mine",
+                    "web",
+                    "news",
+                    "images",
+                    "video",
+                    "products",
+                    "people",
+                    "places",
+                    "code"
+                  ]
+                },
+                "kind": {
+                  "enum": [
+                    "document",
+                    "page"
+                  ],
+                  "description": "document: in Search's index (owner, type, id set); page: a web page (provider set)."
+                },
+                "title": {
+                  "type": "string",
+                  "maxLength": 300
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                },
+                "snippet": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 600,
+                  "description": "Plain text; never HTML."
+                },
+                "site": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 253
+                },
+                "image": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2048
+                },
+                "published_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "retrieved_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40,
+                  "description": "When a web page was read (by the provider or the open index)."
+                },
+                "provider": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40,
+                  "description": "page: who found it (open_index, deepseek, wikipedia, brave, …)."
+                },
+                "owner": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 32
+                },
+                "type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 32
+                },
+                "id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "score": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Rank within its scope (higher first); not comparable across scopes."
+                }
+              }
+            }
+          },
+          "groups": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "How many results each scope gave on this page."
+          },
+          "answer": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "text",
+              "citations",
+              "label"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "maxLength": 2000
+              },
+              "citations": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 20,
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "label": {
+                "const": "Written by AI from these sources"
+              }
+            }
+          },
+          "citations": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "n",
+                "url",
+                "title"
+              ],
+              "properties": {
+                "n": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048
+                },
+                "title": {
+                  "type": "string",
+                  "maxLength": 300
+                },
+                "provider": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "retrieved_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                }
+              }
+            }
+          },
+          "route": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "explain",
+              "cost_usd"
+            ],
+            "properties": {
+              "explain": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "scope",
+                    "step",
+                    "ok"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "enum": [
+                        "network",
+                        "mine",
+                        "web",
+                        "news",
+                        "images",
+                        "video",
+                        "products",
+                        "people",
+                        "places",
+                        "code"
+                      ]
+                    },
+                    "step": {
+                      "type": "string",
+                      "maxLength": 40,
+                      "description": "index, open_index, cache, deepseek, wikipedia, …"
+                    },
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "ms": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "cached": {
+                      "type": "boolean"
+                    },
+                    "cost_usd": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "skipped": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 160,
+                      "description": "Why the step did not run (not allowed for this caller, quick depth, an earlier step answered, provider standing down)."
+                    }
+                  }
+                }
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "What this query cost OpenVibe (paid provider calls; cached answers cost 0)."
+              }
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "search.provider-offer": {
+      "version": "1.0.0",
+      "owner": "search",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/search/provider-offer.v1.json",
+        "title": "SearchProviderOffer",
+        "description": "search.provider-offer@1: one web search provider as the Search Fabric's ladder and Route see it (GET /api/v1/query/providers, capability search.fabric.query): what it covers, what it costs, whether it is usable now and how it has answered. Prices are the vendor's published ones as of checked_at; nothing here is a secret.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "provider",
+          "scopes",
+          "price_usd_per_call",
+          "available",
+          "checked_at"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "scopes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "network",
+                "mine",
+                "web",
+                "news",
+                "images",
+                "video",
+                "products",
+                "people",
+                "places",
+                "code"
+              ]
+            }
+          },
+          "price_usd_per_call": {
+            "type": "number",
+            "minimum": 0
+          },
+          "independent_index": {
+            "type": "boolean",
+            "description": "Searches its own crawl rather than reselling another engine's."
+          },
+          "available": {
+            "type": "boolean",
+            "description": "Configured and not standing down (balance, key, rate limit, daily cap)."
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "daily_cap": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "used_today": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "latency_ms_p50": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "answered_rate": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Share of calls in the last day that returned at least one result."
+          },
+          "terms_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048
+          },
+          "checked_at": {
+            "type": "string",
+            "maxLength": 40
+          }
+        }
+      }
+    },
     "search.write-result": {
       "version": "1.0.0",
       "owner": "search",

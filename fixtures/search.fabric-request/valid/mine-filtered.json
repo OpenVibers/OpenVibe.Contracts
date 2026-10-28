@@ -1,0 +1,12 @@
+{
+  "q": "notes",
+  "scopes": [
+    "mine"
+  ],
+  "filters": {
+    "owner": "community",
+    "type": "paste"
+  },
+  "answer": false,
+  "depth": "quick"
+}

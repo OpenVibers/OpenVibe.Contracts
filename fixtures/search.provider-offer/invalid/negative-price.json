@@ -1,0 +1,9 @@
+{
+  "provider": "x",
+  "scopes": [
+    "web"
+  ],
+  "price_usd_per_call": -1,
+  "available": true,
+  "checked_at": "2026-10-28T11:00:00Z"
+}

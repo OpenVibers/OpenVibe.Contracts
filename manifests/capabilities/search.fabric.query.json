@@ -1,0 +1,23 @@
+{
+  "id": "search.fabric.query",
+  "version": "1.0",
+  "owner": "search",
+  "status": "active",
+  "visibility": "public",
+  "description": "One search over several scopes (plan 2026-10-28 \u00a74.5, the Search Fabric): network (Search's index, permission-aware as search.query.run), mine (the person's own private documents), web (OpenVibe's open index, then paid providers in a ladder, cached), with route.explain saying what answered and what it cost. Anonymous callers get network results and web results from the open index and the cache; a signed-in person or a first-party service (X-OV-Subject for mine) also reaches paid providers within OpenVibe's daily caps. Providers never receive an account identifier. The same operation is the SDK's createSearchClient().query() and the MCP tool openvibe.search.",
+  "permissions": [
+    "search:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "search-query",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/query",
+    "GET /api/v1/query",
+    "GET /api/v1/query/providers"
+  ],
+  "inputSchema": "search.fabric-request@1",
+  "outputSchema": "search.fabric-result@1"
+}

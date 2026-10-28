@@ -180,8 +180,8 @@
       "service": "search",
       "name": "OpenVibe.Search",
       "origin": "https://search.openvibe.network",
-      "operations": 8,
-      "capabilities": 3
+      "operations": 11,
+      "capabilities": 4
     },
     {
       "service": "services",

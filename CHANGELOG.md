@@ -4,6 +4,40 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.225.0 — 2026-10-28
+
+- **The Search Fabric** (plan 2026-10-28 §4.5; the owner, 10-28: "a shared sdk/api enabled multi purpose search system
+  for OpenVibe to reuse across sites and more"): one search over several scopes, routed the cheapest way that answers.
+  - **`search.fabric.query`** (public, owned by `search`): `POST /api/v1/query` (or `GET /api/v1/query?q=&scopes=`), and
+    `GET /api/v1/query/providers`. It is the SDK's `createSearchClient().query()` and the MCP tool `openvibe.search`.
+  - **`search.fabric-request@1`:**
+    - `q` and `scopes`: `network`, `mine`, `web`, and `news`, `images`, `video`, `products`, `people`, `places`,
+      `code` (accepted now; v1 answers them as network results by kind);
+    - `filters` (owner, type, lang, site);
+    - `freshness`;
+    - `depth`: `quick` reads only the indexes and caches, `standard` climbs the provider ladder until a step
+      answers, `deep` asks every step;
+    - `answer`, `limit` and `cursor`.
+  - **`search.fabric-result@1`:**
+    - `results`, each with its scope and kind (a document in Search's index, or a web page with its provider,
+      URL, date and when it was read);
+    - `groups` (counts per scope) and `citations`;
+    - an optional `answer`. It is labelled "Written by AI from these sources" and is never without citations.
+    - `route.explain`: step by step, what was asked, what answered, from the cache or not, why a step was
+      skipped, and what it cost.
+
+    The query is never echoed (the `?q=` rule).
+  - **`search.provider-offer@1`:** a web provider as the ladder and Route see it. It gives the scopes, the price
+    per call, whether the provider has its own index, availability (balance, key, rate limit, daily cap),
+    latency, answered rate and terms.
+  - **Who may use what:**
+    - anonymous callers get network results, plus web results from the open index and the cache;
+    - a signed-in person, or a first-party service, also reaches the paid providers within OpenVibe's daily caps;
+    - `mine` needs a person;
+    - providers never receive an account identifier.
+
+  Fixtures, valid and invalid, for all three schemas.
+
 ## 0.224.0 — 2026-10-28
 
 - **A `crawl` source type for OpenVibe.Sources** (the owner, 2026-10-28: "aggregate all websites and select deals on all

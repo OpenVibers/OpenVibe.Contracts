@@ -1,0 +1,43 @@
+{
+  "results": [
+    {
+      "scope": "web",
+      "kind": "page",
+      "title": "A",
+      "url": "https://example.org/a",
+      "provider": "deepseek"
+    }
+  ],
+  "groups": {
+    "web": 1
+  },
+  "answer": {
+    "text": "Surf maps are ramps you slide along [1].",
+    "citations": [
+      1
+    ],
+    "label": "Written by AI from these sources"
+  },
+  "citations": [
+    {
+      "n": 1,
+      "url": "https://example.org/a",
+      "title": "A",
+      "provider": "deepseek",
+      "retrieved_at": "2026-10-28T11:20:00Z"
+    }
+  ],
+  "route": {
+    "explain": [
+      {
+        "scope": "web",
+        "step": "deepseek",
+        "ok": true,
+        "count": 1,
+        "cost_usd": 0.00075
+      }
+    ],
+    "cost_usd": 0.00075
+  },
+  "next_cursor": null
+}

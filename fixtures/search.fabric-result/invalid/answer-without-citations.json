@@ -1,0 +1,14 @@
+{
+  "results": [],
+  "groups": {},
+  "answer": {
+    "text": "Trust me.",
+    "citations": [],
+    "label": "Written by AI from these sources"
+  },
+  "route": {
+    "explain": [],
+    "cost_usd": 0
+  },
+  "next_cursor": null
+}
