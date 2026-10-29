@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/product-result.v1.json",
+  "title": "VisionProductResult",
+  "description": "vision.product-result@1: POST /api/v1/product answers a description of the product only (never a person), the CLIP embedding, and candidate offers from OpenVibe.Deals and open.shoes with their score, price and URL. A room must not treat a candidate as a price it verified.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "answer"
+  ],
+  "properties": {
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "embedding",
+        "offers",
+        "warnings",
+        "receipt"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "embedding": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "offers": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "title",
+              "url"
+            ],
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              },
+              "price": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engine",
+            "model",
+            "cost_usd",
+            "ms",
+            "confidence",
+            "retention"
+          ],
+          "properties": {
+            "engine": {
+              "enum": [
+                "local",
+                "routed",
+                "local+routed",
+                "local+routed description"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "retention": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

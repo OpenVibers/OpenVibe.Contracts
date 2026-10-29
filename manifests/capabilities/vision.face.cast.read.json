@@ -1,0 +1,21 @@
+{
+  "id": "vision.face.cast.read",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read your own cast tags on OpenVibe.Vision: GET /api/v1/faces/cast/tags lists the named channel and media reference for each tag the person's own cast consent produced. Revoking the consent removes them.",
+  "permissions": [
+    "vision:face:cast:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-face",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/faces/cast/tags"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vision.face-tag-list@1"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "vision.product.match",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Match a product photo to offers on OpenVibe.Vision: POST /api/v1/product describes the product only (never a person), embeds it with CLIP and returns candidate offers from OpenVibe.Deals and open.shoes with their score and URL. A candidate is not a verified price.",
+  "permissions": [
+    "vision:product"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-product",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/product"
+  ],
+  "inputSchema": "vision.product-request@1",
+  "outputSchema": "vision.product-result@1"
+}

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/watch-result.v1.json",
+  "title": "VisionWatchResult",
+  "description": "vision.watch-result@1: POST /api/v1/watch answers the requested classes found in a camera still (DETR labels, snow/delivery/package through CLIP, or a histogram scene change), each with a confidence and, for an object, a box.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "answer"
+  ],
+  "properties": {
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detections",
+        "receipt"
+      ],
+      "properties": {
+        "detections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "class",
+              "confidence"
+            ],
+            "properties": {
+              "class": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "box": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height"
+                ],
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "width": {
+                    "type": "number"
+                  },
+                  "height": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engine",
+            "model",
+            "cost_usd",
+            "ms",
+            "confidence",
+            "retention"
+          ],
+          "properties": {
+            "engine": {
+              "enum": [
+                "local",
+                "routed",
+                "local+routed",
+                "local+routed description"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "retention": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

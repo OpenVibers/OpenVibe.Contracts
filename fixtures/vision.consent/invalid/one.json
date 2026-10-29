@@ -1,0 +1,19 @@
+{
+  "id": "fco_1",
+  "subject": "ana",
+  "modality": "face",
+  "feature": "cast",
+  "scope": "live:one",
+  "purpose": "x",
+  "text_version": "v1",
+  "granted_by": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A4",
+  "granted_at": "2026-10-29T10:00:00.000Z",
+  "expires_at": null,
+  "last_used_at": "2026-10-29T10:00:00.000Z",
+  "revoked_at": null,
+  "revoked_by": null,
+  "purpose_ends_at": null,
+  "retention_until": "2029-10-29T10:00:00.000Z",
+  "status": "active",
+  "erased": false
+}

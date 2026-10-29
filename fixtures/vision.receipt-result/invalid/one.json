@@ -1,0 +1,21 @@
+{
+  "answer": {
+    "store": "Corner Market",
+    "items": [
+      {
+        "name": "Milk",
+        "qty": "two",
+        "price": 3.5
+      }
+    ],
+    "total": 7,
+    "receipt": {
+      "engine": "local",
+      "model": "Tesseract 5",
+      "cost_usd": 0,
+      "ms": 120,
+      "confidence": 0.9,
+      "retention": "not stored"
+    }
+  }
+}

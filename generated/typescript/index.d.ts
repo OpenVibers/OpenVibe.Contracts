@@ -213431,6 +213431,1406 @@ export interface VisionUiCheckResult {
   };
 }
 
+/** vision.image-request@1.0.0 (owner: vision) */
+/**
+ * vision.image-request@1: one image for OpenVibe.Vision's one-shot tools, as a data URL or a public URL. The multipart form field `image` carries the same bytes. Private tools (find, index, watch, moments) accept only uploaded bytes or a data URL, never an unverified source URL.
+ */
+export type VisionImageRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+};
+
+/** vision.ask-request@1.0.0 (owner: vision) */
+/**
+ * vision.ask-request@1: the body of POST /api/v1/ask and /api/v1/describe on OpenVibe.Vision. `task` is what the caller wants (ask, describe, identify, count, translate, ocr); `mode` is auto (local OCR first, then OpenVibe.AI), local (never a model) or ai. A read question (text, sign, receipt, label) is answered by the local OCR reader first in auto mode. `lang` is the Tesseract language and `model` is a provider:model hint AI may ignore.
+ */
+export type VisionAskRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  question?: string;
+  task?: "ask" | "describe" | "identify" | "count" | "translate" | "ocr";
+  mode?: "auto" | "local" | "ai";
+  lang?: string;
+  model?: string;
+};
+
+/** vision.ocr-request@1.0.0 (owner: vision) */
+/**
+ * vision.ocr-request@1: the body of POST /api/v1/ocr. The local Tesseract 5 reader runs on Vision's host and costs nothing; `fallback` asks OpenVibe.AI only when the local pass found no usable text, which needs a signed-in person or a service token holding vision.ocr.
+ */
+export type VisionOcrRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  lang?: string;
+  fallback?: boolean;
+  model?: string;
+};
+
+/** vision.compare-request@1.0.0 (owner: vision) */
+/**
+ * vision.compare-request@1: the body of POST /api/v1/compare. One image runs through the local reader and up to three AI hints; the requested model is a hint only, and each row reports the provider and model OpenVibe.AI says answered.
+ */
+export type VisionCompareRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  task?: "ask" | "describe" | "identify" | "count" | "translate" | "ocr";
+  question?: string;
+  /**
+   * @maxItems 3
+   */
+  models?: [] | [string] | [string, string] | [string, string, string];
+  lang?: string;
+};
+
+/** vision.find-request@1.0.0 (owner: vision) */
+/**
+ * vision.find-request@1: the body of POST /api/v1/index and of GET or POST /api/v1/find. `index` stores a scoped CLIP embedding for one of the caller's own items (`item_id`, optional `result_url`); `find` searches only the caller's own private index, by words (`q`) or by an example image. No public image index is ever built.
+ */
+export type VisionFindRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  q?: string;
+  item_id?: string;
+  result_url?: string;
+};
+
+/** vision.receipt-request@1.0.0 (owner: vision) */
+/**
+ * vision.receipt-request@1: the body of POST /api/v1/receipt. The local OCR reader extracts line items and a total; `fallback` asks OpenVibe.AI only when the local pass could not produce both.
+ */
+export type VisionReceiptRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  fallback?: boolean;
+};
+
+/** vision.product-request@1.0.0 (owner: vision) */
+/**
+ * vision.product-request@1: the body of POST /api/v1/product. The image is embedded locally with CLIP; `allow_rerank` lets one routed model reorder the candidate offers. Candidates come from OpenVibe.Deals and open.shoes; Vision never invents a price.
+ */
+export type VisionProductRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  allow_rerank?: boolean;
+};
+
+/** vision.watch-request@1.0.0 (owner: vision) */
+/**
+ * vision.watch-request@1: the body of POST /api/v1/watch (owner-granted camera alerts). `classes` names 1–20 things to look for (snow, delivery, package, a DETR label, or "scene change"); `previous_image` is required for a scene change and is compared by histogram.
+ */
+export type VisionWatchRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  /**
+   * @minItems 1
+   * @maxItems 20
+   */
+  classes:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  previous_image?: string;
+};
+
+/** vision.moments-request@1.0.0 (owner: vision) */
+/**
+ * vision.moments-request@1: the body of POST /api/v1/moments. Up to 30 timestamped frames are compared with CLIP prompt embeddings; a histogram jump marks a scene change. VOD and stream chapters come from this.
+ */
+export interface VisionMomentsRequest {
+  /**
+   * @minItems 1
+   * @maxItems 30
+   */
+  frames: [
+    (
+      | {
+          [k: string]: unknown | undefined;
+        }
+      | {
+          [k: string]: unknown | undefined;
+        }
+    ),
+    ...(
+      | {
+          [k: string]: unknown | undefined;
+        }
+      | {
+          [k: string]: unknown | undefined;
+        }
+    )[]
+  ];
+  /**
+   * @maxItems 10
+   */
+  prompts?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string];
+}
+
+/** vision.answer@1.0.0 (owner: vision) */
+/**
+ * vision.answer@1: one saved answer on OpenVibe.Vision. It names the engine, model, provider and route that actually answered (never a model hint), the reason it was chosen, the cost OpenVibe.AI reported, the measured latency and the confidence. No image bytes are stored: only a sha256 and the declared media type.
+ */
+export interface VisionAnswer {
+  id: string;
+  task: "ask" | "describe" | "identify" | "count" | "translate" | "ocr" | "compare";
+  question?: string | null;
+  mode: "auto" | "local" | "ai";
+  source: "upload" | "url" | "data";
+  source_url?: string | null;
+  image_sha256: string;
+  image_mime: string;
+  image_bytes: number;
+  text?: string | null;
+  /**
+   * Engine details, OCR words, provenance and any compare rows; never an image.
+   */
+  answer: {};
+  model?: string | null;
+  provider?: string | null;
+  route?: string | null;
+  reason?: string | null;
+  engine?: string | null;
+  confidence?: number | null;
+  cost_usd: number;
+  latency_ms: number;
+  created_at: string;
+}
+
+/** vision.answer-result@1.0.0 (owner: vision) */
+/**
+ * vision.answer-result@1: what POST /api/v1/ask, /describe and /ocr answer (`{ answer }`), and POST /api/v1/compare answers with `compare` rows and the local reader's summary added. Every AI-written text has passed noLooks: a look-naming answer is replaced, never repaired word by word.
+ */
+export interface VisionAnswerResult {
+  answer: VisionAnswer;
+  compare?: {
+    engine: "local" | "ai";
+    requested_model?: string | null;
+    model?: string | null;
+    provider?: string | null;
+    route?: string | null;
+    ok: boolean;
+    text?: string | null;
+    cost_usd: number;
+    latency_ms: number;
+    error_code?: string | null;
+  }[];
+  local?: {
+    ok: boolean;
+    model: string | null;
+    confidence: number | null;
+    error_code: string | null;
+  };
+}
+
+/** vision.alt-result@1.0.0 (owner: vision) */
+/**
+ * vision.alt-result@1: POST /api/v1/alt answers one short, editable alt-text sentence about the scene, objects and action, never about a person. The text has passed noLooks; the receipt says which engine answered and at what cost.
+ */
+export interface VisionAltResult {
+  answer: {
+    alt_text: string;
+    editable: true;
+    receipt: {
+      engine: "local" | "routed" | "local+routed" | "local+routed description";
+      model: string | null;
+      cost_usd: number;
+      ms: number;
+      confidence: number | null;
+      retention: string;
+    };
+  };
+}
+
+/** vision.find-result@1.0.0 (owner: vision) */
+/**
+ * vision.find-result@1: POST /api/v1/index and GET/POST /api/v1/find answer a scoped private search over the caller's own indexed items: `results` (item_id, result_url, score) only, no one else's rows and no public index.
+ */
+export interface VisionFindResult {
+  answer: {
+    /**
+     * @maxItems 5000
+     */
+    results: {
+      item_id: string;
+      result_url?: string | null;
+      score: number;
+    }[];
+    receipt: {
+      engine: "local" | "routed" | "local+routed" | "local+routed description";
+      model: string | null;
+      cost_usd: number;
+      ms: number;
+      confidence: number | null;
+      retention: string;
+    };
+  };
+}
+
+/** vision.receipt-result@1.0.0 (owner: vision) */
+/**
+ * vision.receipt-result@1: POST /api/v1/receipt answers the store, the line items and the total the local OCR reader read (or the routed fallback read), with `raw_text` when the local pass produced it. OpenVibe.Food decides what enters a pantry; Vision returns the reading.
+ */
+export interface VisionReceiptResult {
+  answer: {
+    store: string | null;
+    /**
+     * @maxItems 100
+     */
+    items: {
+      name: string;
+      qty: number;
+      price: number;
+    }[];
+    total: number | null;
+    raw_text?: string;
+    receipt: {
+      engine: "local" | "routed" | "local+routed" | "local+routed description";
+      model: string | null;
+      cost_usd: number;
+      ms: number;
+      confidence: number | null;
+      retention: string;
+    };
+  };
+}
+
+/** vision.product-result@1.0.0 (owner: vision) */
+/**
+ * vision.product-result@1: POST /api/v1/product answers a description of the product only (never a person), the CLIP embedding, and candidate offers from OpenVibe.Deals and open.shoes with their score, price and URL. A room must not treat a candidate as a price it verified.
+ */
+export interface VisionProductResult {
+  answer: {
+    description: string;
+    embedding: number[];
+    /**
+     * @maxItems 10
+     */
+    offers:
+      | []
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ]
+      | [
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          },
+          {
+            source: string;
+            title: string;
+            url: string;
+            price?: number | null;
+            score?: number;
+          }
+        ];
+    warnings: string[];
+    receipt: {
+      engine: "local" | "routed" | "local+routed" | "local+routed description";
+      model: string | null;
+      cost_usd: number;
+      ms: number;
+      confidence: number | null;
+      retention: string;
+    };
+  };
+}
+
+/** vision.watch-result@1.0.0 (owner: vision) */
+/**
+ * vision.watch-result@1: POST /api/v1/watch answers the requested classes found in a camera still (DETR labels, snow/delivery/package through CLIP, or a histogram scene change), each with a confidence and, for an object, a box.
+ */
+export interface VisionWatchResult {
+  answer: {
+    detections: {
+      class: string;
+      confidence: number;
+      box?: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      } | null;
+    }[];
+    receipt: {
+      engine: "local" | "routed" | "local+routed" | "local+routed description";
+      model: string | null;
+      cost_usd: number;
+      ms: number;
+      confidence: number | null;
+      retention: string;
+    };
+  };
+}
+
+/** vision.moments-result@1.0.0 (owner: vision) */
+/**
+ * vision.moments-result@1: POST /api/v1/moments answers scene changes and candidate moments (timestamp, matching prompt, score) for up to 30 frames. A moment is a suggestion: the room decides whether it becomes a clip or a chapter.
+ */
+export interface VisionMomentsResult {
+  answer: {
+    scene_changes: {
+      timestamp_ms: number;
+      kind: "scene_change";
+    }[];
+    /**
+     * @maxItems 30
+     */
+    candidate_moments: {
+      timestamp_ms: number;
+      prompt: string;
+      score: number;
+    }[];
+    receipt: {
+      engine: "local" | "routed" | "local+routed" | "local+routed description";
+      model: string | null;
+      cost_usd: number;
+      ms: number;
+      confidence: number | null;
+      retention: string;
+    };
+  };
+}
+
+/** vision.face-detection@1.0.0 (owner: vision) */
+/**
+ * vision.face-detection@1: POST /api/v1/faces/detect, an identity-free YuNet privacy tool. It counts faces and returns their boxes and scores; it stores no template, names no one and needs no consent. Anyone may use it.
+ */
+export interface VisionFaceDetection {
+  count: number;
+  boxes: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    score: number;
+  }[];
+}
+
+/** vision.face-blur@1.0.0 (owner: vision) */
+/**
+ * vision.face-blur@1: POST /api/v1/faces/blur answers a redacted PNG derivative and the number of faces blurred in X-Faces-Blur. Identity-free, no template, and the original is never stored.
+ */
+export interface VisionFaceBlur {
+  media_type: "image/png";
+  face_count: number;
+}
+
+/** vision.face-enrol-request@1.0.0 (owner: vision) */
+/**
+ * vision.face-enrol-request@1: POST /api/v1/faces/enrol/:feature. `feature` is verify (1:1 verification of yourself), find (search your own uploads) or cast (an adult tagging named streams); each needs its own signed consent first, and cast also names the channel scope.
+ */
+export type VisionFaceEnrolRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  feature: "verify" | "find" | "cast";
+  channel?: string;
+};
+
+/** vision.face-verify@1.0.0 (owner: vision) */
+/**
+ * vision.face-verify@1: POST /api/v1/faces/verify compares this person's own verification attempt with their enrolled template. It always requires that person's verify consent; without it the answer is faces.consent_required whether or not a template exists. A match alone never unlocks anything: liveness and a second factor are separate.
+ */
+export interface VisionFaceVerify {
+  score: number;
+  match: boolean;
+  threshold: number;
+  liveness: "not_checked" | "checked";
+}
+
+/** vision.face-find-result@1.0.0 (owner: vision) */
+/**
+ * vision.face-find-result@1: POST /api/v1/faces/find lists the caller's own private uploads that match their enrolled self-search template, as private links and scores. It requires find consent; without it the answer is faces.consent_required whether or not any media exists.
+ */
+export interface VisionFaceFindResult {
+  /**
+   * @maxItems 500
+   */
+  results: {
+    private_link: string;
+    score: number;
+  }[];
+}
+
+/** vision.face-cast-match-request@1.0.0 (owner: vision) */
+/**
+ * vision.face-cast-match-request@1: POST /api/v1/faces/cast/match, called by OpenVibe.Live with a service token scoped to one channel (vision.face.cast.match). It matches only that channel's opted-in adult roster; a person who has not enrolled for this channel cannot appear, and the answer does not say whether they exist.
+ */
+export type VisionFaceCastMatchRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The image as a data URL (base64).
+   */
+  image?: string;
+  /**
+   * A public image URL, fetched through Vision's private-address guard.
+   */
+  image_url?: string;
+  channel: string;
+  media_ref: string;
+};
+
+/** vision.face-cast-match@1.0.0 (owner: vision) */
+/**
+ * vision.face-cast-match@1: the matches inside one channel's consented roster, each with a score and box. No other subject is named and no non-roster face is described.
+ */
+export interface VisionFaceCastMatch {
+  channel: string;
+  matches: {
+    subject: string;
+    score: number;
+    box?: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
+  }[];
+  liveness: "not_checked" | "checked";
+}
+
+/** vision.face-tag@1.0.0 (owner: vision) */
+/**
+ * vision.face-tag@1: one cast tag on a stream: which subject, which channel, which private media reference and when. GET /api/v1/faces/cast/tags lists the caller's own tags; revoking the cast consent removes them.
+ */
+export interface VisionFaceTag {
+  id: string;
+  channel: string;
+  media_ref: string;
+  created_at: string;
+}
+
+/** vision.face-tag-list@1.0.0 (owner: vision) */
+/**
+ * vision.face-tag-list@1: GET /api/v1/faces/cast/tags answers the caller's own cast tags, newest first, as a bare array. Empty when they have not consented to cast matching.
+ */
+export type VisionFaceTagList = VisionFaceTag[];
+
+/** vision.face-library-request@1.0.0 (owner: vision) */
+/**
+ * vision.face-library-request@1: POST /api/v1/faces/library/cluster (region-gated), GET /library/groups and POST /library/correct. `action` is cluster (default), exclude, merge or split; `ids` names up to 100 of the caller's own clusters; `region` is a jurisdiction code the host allows. Unknown faces stay unlabelled.
+ */
+export interface VisionFaceLibraryRequest {
+  action: "cluster" | "exclude" | "merge" | "split";
+  region?: string;
+  /**
+   * @minItems 1
+   * @maxItems 100
+   */
+  ids?: [string, ...string[]];
+}
+
+/** vision.face-library-result@1.0.0 (owner: vision) */
+/**
+ * vision.face-library-result@1: clustering and group reads answer the caller's own private face groups as an array; a correction answers the action and how many clusters it updated.
+ */
+export type VisionFaceLibraryResult =
+  | VisionFaceLibraryGroup[]
+  | {
+      action: "exclude" | "merge" | "split";
+      updated: number;
+    };
+
+/** vision.face-library-group@1.0.0 (owner: vision) */
+/**
+ * vision.face-library-group@1: one private face cluster in a person's own Vision library: the media it came from, the group it was merged into, an optional label and whether the person excluded it. It never leaves that person's library.
+ */
+export interface VisionFaceLibraryGroup {
+  id: string;
+  media_id: string;
+  group_id: string;
+  label?: string | null;
+  excluded: boolean;
+  created_at: string;
+}
+
+/** vision.consent@1.0.0 (owner: vision) */
+/**
+ * vision.consent@1: one consent record on OpenVibe.Vision. It says whose face or voice it is (`subject`), the modality, the purpose-scoped feature and scope (a channel or a library), who signed which text version, when it was granted, when it expires, and how and when it was revoked. Face matching tools refuse without an active record for that person, with the same answer whether or not the person exists. Templates are deleted when the purpose ends and at the latest three years after the last use (BIPA); a revoked audit record is deleted one year after the purpose ends (CUBI).
+ */
+export interface VisionConsent {
+  id: string;
+  /**
+   * The person whose face or voice this consent covers.
+   */
+  subject: string;
+  modality: "face" | "voice";
+  feature: "verify" | "find" | "cast" | "library" | "voice";
+  /**
+   * Empty means the person's own account; a cast grant names one channel, a library grant the library it applies to.
+   */
+  scope: string;
+  purpose: string;
+  text_version: string;
+  /**
+   * The person who signed; the subject themself, or a guardian where the law allows.
+   */
+  granted_by: string;
+  granted_at: string;
+  /**
+   * When the consent stops applying on its own; null when it lasts until revoked.
+   */
+  expires_at: string | null;
+  last_used_at: string;
+  revoked_at: string | null;
+  /**
+   * How it was revoked: by the person, by the retention job, or with the account.
+   */
+  revoked_by: "subject" | "retention" | "account_deletion" | null;
+  purpose_ends_at: string | null;
+  /**
+   * The outer limit the record and derived data may exist: three years after last use, or one year after the purpose ended.
+   */
+  retention_until: string;
+  status: "active" | "revoked" | "expired";
+  /**
+   * True once the template and derived results this consent covered are gone.
+   */
+  erased: boolean;
+}
+
+/** vision.consent-request@1.0.0 (owner: vision) */
+/**
+ * vision.consent-request@1: POST /api/v1/faces/consents/:feature. The caller signs the current text (`text_version` must match this server's), names themself (`signed_name`), and for cast must confirm they are an adult; library grouping is refused outside the host's allowed regions. A repeat of an active consent changes nothing.
+ */
+export interface VisionConsentRequest {
+  signed_name: string;
+  text_version: string;
+  modality?: "face" | "voice";
+  /**
+   * Echo of the :feature path segment.
+   */
+  feature?: "verify" | "find" | "cast" | "library" | "voice";
+  channel?: string;
+  adult?: boolean;
+  region?: string;
+}
+
+/** vision.consent-revocation@1.0.0 (owner: vision) */
+/**
+ * vision.consent-revocation@1: DELETE /api/v1/faces/consents/:feature answers with the revoked feature and scope, when, and that the template and derived data were erased in the same transaction. Revocation removes past cast tags and cannot be undone by reusing an old text version.
+ */
+export interface VisionConsentRevocation {
+  feature: "verify" | "find" | "cast" | "library" | "voice";
+  scope: string;
+  revoked_at: string;
+  revoked_by: "subject";
+  erased: true;
+}
+
+/** vision.models@1.0.0 (owner: vision) */
+/**
+ * vision.models@1: GET /api/v1/models names the AI route's offered provider:model hints, the configured hints and the local engines present, without any subject data. OpenVibe.AI's router remains the authority: this is a menu, not a promise.
+ */
+export interface VisionModels {
+  ai: boolean;
+  configured: string[];
+  offered: {}[];
+  local: string[];
+  note: string;
+}
+
+/** vision.benchmarks@1.0.0 (owner: vision) */
+/**
+ * vision.benchmarks@1: GET /api/v1/benchmarks aggregates compare samples per task, engine, provider and model with sample counts and mean latency and cost. No subject, image or answer text is included.
+ */
+export interface VisionBenchmarks {
+  count: number;
+  benchmarks: {
+    task: string;
+    engine: "local" | "ai";
+    provider: string | null;
+    model: string | null;
+    samples: number;
+    avg_latency_ms: number;
+    avg_cost_usd: number;
+    min_cost_usd: number;
+    max_latency_ms: number;
+  }[];
+}
+
+/** vision.result.ready@1.0.0 (owner: vision) */
+/**
+ * vision.result.ready v1 (OpenVibe.Vision): a visual result is ready for its owner or caller. Envelope: source vision, subject { type: user, id: <requester> } (or { type: service, id: <caller> } when no person asked), visibility subject for a person and internal otherwise. The payload carries the identifiers, the engine and provenance, cost, latency and retention, never an image, a template or an answer text.
+ */
+export interface VisionResultReadyPayload {
+  result_id: string | null;
+  task:
+    | "ask"
+    | "describe"
+    | "identify"
+    | "count"
+    | "translate"
+    | "ocr"
+    | "compare"
+    | "alt"
+    | "find"
+    | "receipt"
+    | "product"
+    | "watch"
+    | "moments"
+    | "ui_check"
+    | "face_detect"
+    | "face_blur";
+  source: "upload" | "url" | "data" | "html" | "screenshot" | "none";
+  model: string | null;
+  provider: string | null;
+  route: string | null;
+  cost_usd: number;
+  latency_ms: number;
+  confidence: number | null;
+  retention: string;
+  consent_id: string | null;
+  created_at: string;
+}
+
+/** vision.alert@1.0.0 (owner: vision) */
+/**
+ * vision.alert v1 (OpenVibe.Vision): an owner-granted camera alert. Envelope: source vision, subject { type: user, id: <source owner> }, visibility subject. The payload names the watched source reference and the classes found with their confidence; it carries no image bytes and no person's identity.
+ */
+export interface VisionAlertPayload {
+  kind: "object" | "scene_change" | "face";
+  source_ref: string;
+  /**
+   * @minItems 1
+   * @maxItems 20
+   */
+  classes:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  confidence: number | null;
+  previous_ref?: string | null;
+  detected_at: string;
+}
+
 /** bench.kind@1.0.0 (owner: bench) */
 /**
  * bench.kind@1: a benchmark kind on OpenVibe.Bench. ROOM is the room that owns the kind, ENTRY the shape a submitted entry takes, JUDGE the default judge (pair, rubric, automatic_grader, test_suite or game_outcome), NAME the display name, SCHEMA the entry JSON Schema, and METRICS the board metrics (elo, pareto, cost, or a room's own).

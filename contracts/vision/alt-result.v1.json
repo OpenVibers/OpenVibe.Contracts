@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/alt-result.v1.json",
+  "title": "VisionAltResult",
+  "description": "vision.alt-result@1: POST /api/v1/alt answers one short, editable alt-text sentence about the scene, objects and action, never about a person. The text has passed noLooks; the receipt says which engine answered and at what cost.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "answer"
+  ],
+  "properties": {
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alt_text",
+        "editable",
+        "receipt"
+      ],
+      "properties": {
+        "alt_text": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "editable": {
+          "const": true
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engine",
+            "model",
+            "cost_usd",
+            "ms",
+            "confidence",
+            "retention"
+          ],
+          "properties": {
+            "engine": {
+              "enum": [
+                "local",
+                "routed",
+                "local+routed",
+                "local+routed description"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "retention": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-cast-match-request.v1.json",
+  "title": "VisionFaceCastMatchRequest",
+  "description": "vision.face-cast-match-request@1: POST /api/v1/faces/cast/match, called by OpenVibe.Live with a service token scoped to one channel (vision.face.cast.match). It matches only that channel's opted-in adult roster; a person who has not enrolled for this channel cannot appear, and the answer does not say whether they exist.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "channel",
+    "media_ref"
+  ],
+  "properties": {
+    "image": {
+      "type": "string",
+      "pattern": "^data:image/",
+      "description": "The image as a data URL (base64)."
+    },
+    "image_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "A public image URL, fetched through Vision's private-address guard."
+    },
+    "channel": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:_-]{1,119}$"
+    },
+    "media_ref": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:/_-]{1,159}$"
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "image"
+      ]
+    },
+    {
+      "required": [
+        "image_url"
+      ]
+    }
+  ]
+}

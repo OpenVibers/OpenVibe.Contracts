@@ -1,0 +1,24 @@
+{
+  "id": "vision.camera.watch",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Watch a camera still on OpenVibe.Vision: POST /api/v1/watch finds the requested classes (DETR labels, snow, delivery, package through CLIP, or a histogram scene change against previous_image) and returns detections with confidence and boxes. Owner-granted camera alerting only; a watched class can raise vision.alert.",
+  "permissions": [
+    "vision:watch"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-watch",
+  "events": [
+    "vision.result.ready",
+    "vision.alert"
+  ],
+  "implementedBy": [
+    "POST /api/v1/watch"
+  ],
+  "inputSchema": "vision.watch-request@1",
+  "outputSchema": "vision.watch-result@1"
+}

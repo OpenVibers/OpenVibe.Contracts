@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-cast-match.v1.json",
+  "title": "VisionFaceCastMatch",
+  "description": "vision.face-cast-match@1: the matches inside one channel's consented roster, each with a score and box. No other subject is named and no non-roster face is described.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "channel",
+    "matches",
+    "liveness"
+  ],
+  "properties": {
+    "channel": {
+      "type": "string"
+    },
+    "matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "score"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "box": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "x",
+              "y",
+              "width",
+              "height"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "width": {
+                "type": "number"
+              },
+              "height": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "liveness": {
+      "enum": [
+        "not_checked",
+        "checked"
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "vision.receipt.read",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a receipt on OpenVibe.Vision: POST /api/v1/receipt returns the store, line items and total the local OCR reader extracted; `fallback` asks OpenVibe.AI only when the local pass could not produce both. OpenVibe.Food decides what enters a pantry.",
+  "permissions": [
+    "vision:receipt"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-receipt",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/receipt"
+  ],
+  "inputSchema": "vision.receipt-request@1",
+  "outputSchema": "vision.receipt-result@1"
+}

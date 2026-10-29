@@ -1,0 +1,22 @@
+{
+  "answer": {
+    "description": "A red running shoe.",
+    "embedding": [],
+    "offers": [
+      {
+        "source": "deals",
+        "title": "Red runner",
+        "url": "http://insecure.example/x"
+      }
+    ],
+    "warnings": [],
+    "receipt": {
+      "engine": "local",
+      "model": null,
+      "cost_usd": 0,
+      "ms": 1,
+      "confidence": null,
+      "retention": "x"
+    }
+  }
+}

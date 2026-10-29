@@ -7723,6 +7723,330 @@
       "status": "active"
     },
     {
+      "id": "vision.image-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/image-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.ask-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/ask-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.ocr-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/ocr-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.compare-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/compare-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.find-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/find-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.receipt-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/receipt-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.product-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/product-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.watch-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/watch-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.moments-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/moments-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.answer",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/answer.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.answer-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/answer-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.alt-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/alt-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.find-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/find-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.receipt-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/receipt-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.product-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/product-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.watch-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/watch-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.moments-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/moments-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-detection",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-detection.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-blur",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-blur.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-enrol-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-enrol-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-verify",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-verify.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-find-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-find-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-cast-match-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-cast-match-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-cast-match",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-cast-match.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-tag",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-tag.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-tag-list",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-tag-list.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-library-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-library-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-library-result",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-library-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.face-library-group",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/face-library-group.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.consent",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/consent.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.consent-request",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/consent-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.consent-revocation",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/consent-revocation.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.models",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/models.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.benchmarks",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "vision/benchmarks.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.result.ready",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "events/payloads/vision.result.ready.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "vision.alert",
+      "version": "1.0.0",
+      "owner": "vision",
+      "schema": "events/payloads/vision.alert.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "bench.kind",
       "version": "1.0.0",
       "owner": "bench",

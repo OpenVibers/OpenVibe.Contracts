@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/find-result.v1.json",
+  "title": "VisionFindResult",
+  "description": "vision.find-result@1: POST /api/v1/index and GET/POST /api/v1/find answer a scoped private search over the caller's own indexed items: `results` (item_id, result_url, score) only, no one else's rows and no public index.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "answer"
+  ],
+  "properties": {
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "results",
+        "receipt"
+      ],
+      "properties": {
+        "results": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "item_id",
+              "score"
+            ],
+            "properties": {
+              "item_id": {
+                "type": "string"
+              },
+              "result_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "pattern": "^https://"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engine",
+            "model",
+            "cost_usd",
+            "ms",
+            "confidence",
+            "retention"
+          ],
+          "properties": {
+            "engine": {
+              "enum": [
+                "local",
+                "routed",
+                "local+routed",
+                "local+routed description"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "retention": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

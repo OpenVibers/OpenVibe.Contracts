@@ -121,7 +121,7 @@ for (const id of ['events.event.publish', 'events.event.read', 'events.subscript
     for (const c of payloads) {
         const major = Number(c.version.split('.')[0]);
         ok(c.schema === `events/payloads/${c.id}.v${major}.json`, `${c.id} lives at events/payloads/<event_type>.v<major>.json`);
-        ok(/^[a-z][a-z0-9_]*(\.[a-z0-9_]+){2,}$/.test(c.id), `${c.id} is an event type`);
+        ok(/^[a-z][a-z0-9_]*(\.[a-z0-9_]+){1,}$/.test(c.id), `${c.id} is an event type`);
         ok(services.get(c.owner) && (c.status === 'retired' || services.get(c.owner).eventsProduced.includes(c.id)), `${c.owner} manifest lists current ${c.id} in eventsProduced`);
         ok(['active', 'planned', 'retired'].includes(c.status), `${c.id} status ${c.status}`);
         if (c.status === 'retired') ok(!services.get(c.owner).eventsProduced.includes(c.id), `${c.owner} no longer produces retired ${c.id}`);

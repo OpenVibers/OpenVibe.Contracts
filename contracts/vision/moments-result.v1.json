@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/moments-result.v1.json",
+  "title": "VisionMomentsResult",
+  "description": "vision.moments-result@1: POST /api/v1/moments answers scene changes and candidate moments (timestamp, matching prompt, score) for up to 30 frames. A moment is a suggestion: the room decides whether it becomes a clip or a chapter.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "answer"
+  ],
+  "properties": {
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scene_changes",
+        "candidate_moments",
+        "receipt"
+      ],
+      "properties": {
+        "scene_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "timestamp_ms",
+              "kind"
+            ],
+            "properties": {
+              "timestamp_ms": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "const": "scene_change"
+              }
+            }
+          }
+        },
+        "candidate_moments": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "timestamp_ms",
+              "prompt",
+              "score"
+            ],
+            "properties": {
+              "timestamp_ms": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "prompt": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engine",
+            "model",
+            "cost_usd",
+            "ms",
+            "confidence",
+            "retention"
+          ],
+          "properties": {
+            "engine": {
+              "enum": [
+                "local",
+                "routed",
+                "local+routed",
+                "local+routed description"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "retention": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

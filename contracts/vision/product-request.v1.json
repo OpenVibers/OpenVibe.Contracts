@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/product-request.v1.json",
+  "title": "VisionProductRequest",
+  "description": "vision.product-request@1: the body of POST /api/v1/product. The image is embedded locally with CLIP; `allow_rerank` lets one routed model reorder the candidate offers. Candidates come from OpenVibe.Deals and open.shoes; Vision never invents a price.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "image": {
+      "type": "string",
+      "pattern": "^data:image/",
+      "description": "The image as a data URL (base64)."
+    },
+    "image_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "A public image URL, fetched through Vision's private-address guard."
+    },
+    "allow_rerank": {
+      "type": "boolean"
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "image"
+      ]
+    },
+    {
+      "required": [
+        "image_url"
+      ]
+    }
+  ]
+}

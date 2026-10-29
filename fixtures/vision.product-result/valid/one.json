@@ -1,0 +1,27 @@
+{
+  "answer": {
+    "description": "A red running shoe.",
+    "embedding": [
+      0.1,
+      0.2
+    ],
+    "offers": [
+      {
+        "source": "deals",
+        "title": "Red runner",
+        "url": "https://openvibe.deals/x",
+        "price": 79.99,
+        "score": 0.9
+      }
+    ],
+    "warnings": [],
+    "receipt": {
+      "engine": "local+routed description",
+      "model": "gpt-4o-mini",
+      "cost_usd": 0.0001,
+      "ms": 800,
+      "confidence": 0.9,
+      "retention": "not stored"
+    }
+  }
+}

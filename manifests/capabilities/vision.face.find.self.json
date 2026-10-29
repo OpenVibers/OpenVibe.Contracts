@@ -1,0 +1,25 @@
+{
+  "id": "vision.face.find.self",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Find yourself in your own private uploads on OpenVibe.Vision: POST /api/v1/faces/media, GET /api/v1/faces/media/:id and POST /api/v1/faces/find. Refused with faces.consent_required without find consent, the same answer whether or not any media exists; results are private links to the caller's own rows.",
+  "permissions": [
+    "vision:face:find"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-face",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/faces/media",
+    "GET /api/v1/faces/media/:id",
+    "POST /api/v1/faces/find"
+  ],
+  "inputSchema": "vision.find-request@1",
+  "outputSchema": "vision.face-find-result@1"
+}

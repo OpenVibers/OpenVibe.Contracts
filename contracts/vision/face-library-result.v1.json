@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-library-result.v1.json",
+  "title": "VisionFaceLibraryResult",
+  "description": "vision.face-library-result@1: clustering and group reads answer the caller's own private face groups as an array; a correction answers the action and how many clusters it updated.",
+  "oneOf": [
+    {
+      "type": "array",
+      "items": {
+        "$ref": "./face-library-group.v1.json"
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "updated"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "exclude",
+            "merge",
+            "split"
+          ]
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ]
+}

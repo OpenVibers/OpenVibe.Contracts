@@ -1,6 +1,6 @@
 {
   "event_id": "evt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
-  "event_type": "vod.ready",
+  "event_type": "vision.Alert",
   "version": 1,
   "source": "media",
   "actor": {

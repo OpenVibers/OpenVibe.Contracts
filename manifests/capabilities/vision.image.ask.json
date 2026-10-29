@@ -1,0 +1,24 @@
+{
+  "id": "vision.image.ask",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Ask or describe an image on OpenVibe.Vision: POST /api/v1/ask and /api/v1/describe take an image (multipart, data URL or public URL), a question, a task (ask, describe, identify, count, translate, ocr) and a mode (auto, local, ai). A read question is answered by the local OCR reader first; everything else goes through OpenVibe.AI, whose provenance the answer reports. In auto mode a read question also works anonymously; any other task needs a signed-in person or this capability.",
+  "permissions": [
+    "vision:ask"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-ask",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/ask",
+    "POST /api/v1/describe"
+  ],
+  "inputSchema": "vision.ask-request@1",
+  "outputSchema": "vision.answer-result@1"
+}

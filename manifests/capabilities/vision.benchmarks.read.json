@@ -1,0 +1,21 @@
+{
+  "id": "vision.benchmarks.read",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Vision's aggregate comparison results: GET /api/v1/benchmarks groups compare samples by task, engine, provider and model with sample counts, mean latency and mean cost, with no subject, image or answer text. Public.",
+  "permissions": [
+    "vision:benchmarks:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/benchmarks"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vision.benchmarks@1"
+}

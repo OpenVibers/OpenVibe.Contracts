@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/answer.v1.json",
+  "title": "VisionAnswer",
+  "description": "vision.answer@1: one saved answer on OpenVibe.Vision. It names the engine, model, provider and route that actually answered (never a model hint), the reason it was chosen, the cost OpenVibe.AI reported, the measured latency and the confidence. No image bytes are stored: only a sha256 and the declared media type.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "task",
+    "mode",
+    "source",
+    "image_sha256",
+    "image_mime",
+    "image_bytes",
+    "cost_usd",
+    "latency_ms",
+    "created_at",
+    "answer"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vis_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "task": {
+      "enum": [
+        "ask",
+        "describe",
+        "identify",
+        "count",
+        "translate",
+        "ocr",
+        "compare"
+      ]
+    },
+    "question": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000
+    },
+    "mode": {
+      "enum": [
+        "auto",
+        "local",
+        "ai"
+      ]
+    },
+    "source": {
+      "enum": [
+        "upload",
+        "url",
+        "data"
+      ]
+    },
+    "source_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "image_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "image_mime": {
+      "type": "string",
+      "pattern": "^image/[a-z0-9.+-]+$"
+    },
+    "image_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20971520
+    },
+    "text": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 20000
+    },
+    "answer": {
+      "type": "object",
+      "description": "Engine details, OCR words, provenance and any compare rows; never an image."
+    },
+    "model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "route": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "engine": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "cost_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "latency_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

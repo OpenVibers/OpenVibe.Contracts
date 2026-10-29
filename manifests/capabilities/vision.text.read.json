@@ -1,0 +1,23 @@
+{
+  "id": "vision.text.read",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read text from an image with OpenVibe.Vision's local Tesseract 5 reader: POST /api/v1/ocr returns the text, mean confidence and word boxes at zero cost, anonymously. `fallback` asks OpenVibe.AI only when the local pass found no usable text, and that fallback needs a signed-in person or this capability.",
+  "permissions": [
+    "vision:ocr"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-ocr",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/ocr"
+  ],
+  "inputSchema": "vision.ocr-request@1",
+  "outputSchema": "vision.answer-result@1"
+}

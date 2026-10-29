@@ -1,0 +1,14 @@
+{
+  "result_id": "vis_01J8Z3Q4R5S6T7V8W9X0Y1Z2A4",
+  "task": "ask",
+  "source": "upload",
+  "model": "gpt-4o-mini",
+  "provider": "openai",
+  "route": "ai.fast",
+  "cost_usd": 0.0002,
+  "latency_ms": 900,
+  "confidence": null,
+  "retention": "not stored",
+  "consent_id": null,
+  "created_at": "2026-10-29T10:00:00.000Z"
+}

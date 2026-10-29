@@ -1,0 +1,18 @@
+{
+  "answer": {
+    "detections": [
+      {
+        "class": "package",
+        "confidence": 1.5
+      }
+    ],
+    "receipt": {
+      "engine": "local",
+      "model": null,
+      "cost_usd": 0,
+      "ms": 1,
+      "confidence": null,
+      "retention": "x"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-detection.v1.json",
+  "title": "VisionFaceDetection",
+  "description": "vision.face-detection@1: POST /api/v1/faces/detect, an identity-free YuNet privacy tool. It counts faces and returns their boxes and scores; it stores no template, names no one and needs no consent. Anyone may use it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "count",
+    "boxes"
+  ],
+  "properties": {
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "boxes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height",
+          "score"
+        ],
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  }
+}

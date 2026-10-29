@@ -1,0 +1,25 @@
+{
+  "id": "vision.media.find",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Index and search a person's own images by CLIP embedding on OpenVibe.Vision: POST /api/v1/index stores one scoped embedding per item and GET/POST /api/v1/find searches only that person's own private index, by words or by an example image. No public image index is made; every read is owner-checked.",
+  "permissions": [
+    "vision:find"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-find",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/index",
+    "GET /api/v1/find",
+    "POST /api/v1/find"
+  ],
+  "inputSchema": "vision.find-request@1",
+  "outputSchema": "vision.find-result@1"
+}

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/receipt-result.v1.json",
+  "title": "VisionReceiptResult",
+  "description": "vision.receipt-result@1: POST /api/v1/receipt answers the store, the line items and the total the local OCR reader read (or the routed fallback read), with `raw_text` when the local pass produced it. OpenVibe.Food decides what enters a pantry; Vision returns the reading.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "answer"
+  ],
+  "properties": {
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "store",
+        "items",
+        "total",
+        "receipt"
+      ],
+      "properties": {
+        "store": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 150
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "qty",
+              "price"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "qty": {
+                "type": "number",
+                "minimum": 0
+              },
+              "price": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "total": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "raw_text": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engine",
+            "model",
+            "cost_usd",
+            "ms",
+            "confidence",
+            "retention"
+          ],
+          "properties": {
+            "engine": {
+              "enum": [
+                "local",
+                "routed",
+                "local+routed",
+                "local+routed description"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "retention": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

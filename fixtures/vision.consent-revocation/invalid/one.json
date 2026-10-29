@@ -1,0 +1,7 @@
+{
+  "feature": "cast",
+  "scope": "live:one",
+  "revoked_at": "2026-10-29T11:00:00.000Z",
+  "revoked_by": "admin",
+  "erased": true
+}

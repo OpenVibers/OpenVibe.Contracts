@@ -1,0 +1,23 @@
+{
+  "id": "vision.face.cast.match",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Match faces against one channel's opted-in adult cast roster for OpenVibe.Live: POST /api/v1/faces/cast/match. The caller is the Live service token scoped to that channel (its channel_id claim must equal the body's channel) and must hold this capability. A non-consented person is never matched and the answer does not say whether they exist.",
+  "permissions": [
+    "vision:face:cast:match"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-face",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/faces/cast/match"
+  ],
+  "inputSchema": "vision.face-cast-match-request@1",
+  "outputSchema": "vision.face-cast-match@1"
+}

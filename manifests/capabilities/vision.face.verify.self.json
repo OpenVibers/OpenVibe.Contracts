@@ -1,0 +1,24 @@
+{
+  "id": "vision.face.verify.self",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Verify yourself against your own enrolled template on OpenVibe.Vision: POST /api/v1/faces/enrol/verify and /api/v1/faces/verify. Refused with faces.consent_required without that person's verify consent, the same answer whether or not a template exists; a match alone unlocks nothing.",
+  "permissions": [
+    "vision:face:verify"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-face",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/faces/enrol/:feature",
+    "POST /api/v1/faces/verify"
+  ],
+  "inputSchema": "vision.face-enrol-request@1",
+  "outputSchema": "vision.face-verify@1"
+}

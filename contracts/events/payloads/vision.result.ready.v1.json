@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/vision.result.ready.v1.json",
+  "title": "VisionResultReadyPayload",
+  "description": "vision.result.ready v1 (OpenVibe.Vision): a visual result is ready for its owner or caller. Envelope: source vision, subject { type: user, id: <requester> } (or { type: service, id: <caller> } when no person asked), visibility subject for a person and internal otherwise. The payload carries the identifiers, the engine and provenance, cost, latency and retention, never an image, a template or an answer text.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_id",
+    "task",
+    "source",
+    "model",
+    "provider",
+    "route",
+    "cost_usd",
+    "latency_ms",
+    "confidence",
+    "retention",
+    "consent_id",
+    "created_at"
+  ],
+  "properties": {
+    "result_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(vis|vuc|fme|ftg|fco)_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "task": {
+      "enum": [
+        "ask",
+        "describe",
+        "identify",
+        "count",
+        "translate",
+        "ocr",
+        "compare",
+        "alt",
+        "find",
+        "receipt",
+        "product",
+        "watch",
+        "moments",
+        "ui_check",
+        "face_detect",
+        "face_blur"
+      ]
+    },
+    "source": {
+      "enum": [
+        "upload",
+        "url",
+        "data",
+        "html",
+        "screenshot",
+        "none"
+      ]
+    },
+    "model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "route": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "cost_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "latency_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "retention": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "consent_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^fco_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

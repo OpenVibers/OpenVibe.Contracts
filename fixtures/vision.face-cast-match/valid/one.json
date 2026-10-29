@@ -1,0 +1,16 @@
+{
+  "channel": "live:one",
+  "matches": [
+    {
+      "subject": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A4",
+      "score": 0.71,
+      "box": {
+        "x": 1,
+        "y": 2,
+        "width": 30,
+        "height": 40
+      }
+    }
+  ],
+  "liveness": "not_checked"
+}

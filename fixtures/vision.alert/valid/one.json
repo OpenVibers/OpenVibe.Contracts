@@ -1,0 +1,9 @@
+{
+  "kind": "object",
+  "source_ref": "cam:front-door",
+  "classes": [
+    "package"
+  ],
+  "confidence": 0.88,
+  "detected_at": "2026-10-29T10:00:00.000Z"
+}

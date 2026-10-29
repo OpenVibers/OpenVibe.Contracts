@@ -250,8 +250,8 @@
       "service": "vision",
       "name": "OpenVibe.Vision",
       "origin": "https://openvibe.vision",
-      "operations": 2,
-      "capabilities": 1
+      "operations": 32,
+      "capabilities": 20
     },
     {
       "service": "watch",
