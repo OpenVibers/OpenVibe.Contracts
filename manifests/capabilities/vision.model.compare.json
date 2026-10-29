@@ -1,0 +1,23 @@
+{
+  "id": "vision.model.compare",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Run OpenVibe.Vision's side-by-side comparison: POST /api/v1/compare runs the local reader and up to three AI model hints on the same image and returns each row with its success, text, cost and latency. The requested model is a hint; OpenVibe.AI's own provenance is what each row reports.",
+  "permissions": [
+    "vision:compare"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-compare",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/compare"
+  ],
+  "inputSchema": "vision.compare-request@1",
+  "outputSchema": "vision.answer-result@1"
+}

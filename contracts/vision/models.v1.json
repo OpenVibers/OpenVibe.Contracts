@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/models.v1.json",
+  "title": "VisionModels",
+  "description": "vision.models@1: GET /api/v1/models names the AI route's offered provider:model hints, the configured hints and the local engines present, without any subject data. OpenVibe.AI's router remains the authority: this is a menu, not a promise.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ai",
+    "configured",
+    "offered",
+    "local",
+    "note"
+  ],
+  "properties": {
+    "ai": {
+      "type": "boolean"
+    },
+    "configured": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "offered": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "local": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/consent.v1.json",
+  "title": "VisionConsent",
+  "description": "vision.consent@1: one consent record on OpenVibe.Vision. It says whose face or voice it is (`subject`), the modality, the purpose-scoped feature and scope (a channel or a library), who signed which text version, when it was granted, when it expires, and how and when it was revoked. Face matching tools refuse without an active record for that person, with the same answer whether or not the person exists. Templates are deleted when the purpose ends and at the latest three years after the last use (BIPA); a revoked audit record is deleted one year after the purpose ends (CUBI).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "subject",
+    "modality",
+    "feature",
+    "scope",
+    "purpose",
+    "text_version",
+    "granted_by",
+    "granted_at",
+    "expires_at",
+    "last_used_at",
+    "revoked_at",
+    "revoked_by",
+    "purpose_ends_at",
+    "retention_until",
+    "status",
+    "erased"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^fco_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person whose face or voice this consent covers."
+    },
+    "modality": {
+      "enum": [
+        "face",
+        "voice"
+      ]
+    },
+    "feature": {
+      "enum": [
+        "verify",
+        "find",
+        "cast",
+        "library",
+        "voice"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "maxLength": 160,
+      "description": "Empty means the person's own account; a cast grant names one channel, a library grant the library it applies to."
+    },
+    "purpose": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "text_version": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "granted_by": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person who signed; the subject themself, or a guardian where the law allows."
+    },
+    "granted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the consent stops applying on its own; null when it lasts until revoked."
+    },
+    "last_used_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "revoked_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "subject",
+        "retention",
+        "account_deletion",
+        null
+      ],
+      "description": "How it was revoked: by the person, by the retention job, or with the account."
+    },
+    "purpose_ends_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "retention_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The outer limit the record and derived data may exist: three years after last use, or one year after the purpose ended."
+    },
+    "status": {
+      "enum": [
+        "active",
+        "revoked",
+        "expired"
+      ]
+    },
+    "erased": {
+      "type": "boolean",
+      "description": "True once the template and derived results this consent covered are gone."
+    }
+  }
+}

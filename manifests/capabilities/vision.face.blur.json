@@ -1,0 +1,23 @@
+{
+  "id": "vision.face.blur",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Identity-free face blurring on OpenVibe.Vision: POST /api/v1/faces/blur returns a redacted PNG derivative and the blurred count in X-Faces-Blur. No template is stored and the original is discarded; anyone may use it.",
+  "permissions": [
+    "vision:face:blur"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-face",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/faces/blur"
+  ],
+  "inputSchema": "vision.image-request@1",
+  "outputSchema": "vision.face-blur@1"
+}

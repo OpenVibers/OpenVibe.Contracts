@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/vision.alert.v1.json",
+  "title": "VisionAlertPayload",
+  "description": "vision.alert v1 (OpenVibe.Vision): an owner-granted camera alert. Envelope: source vision, subject { type: user, id: <source owner> }, visibility subject. The payload names the watched source reference and the classes found with their confidence; it carries no image bytes and no person's identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "source_ref",
+    "classes",
+    "confidence",
+    "detected_at"
+  ],
+  "properties": {
+    "kind": {
+      "enum": [
+        "object",
+        "scene_change",
+        "face"
+      ]
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "classes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 60
+      },
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "previous_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

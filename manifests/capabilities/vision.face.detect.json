@@ -1,0 +1,23 @@
+{
+  "id": "vision.face.detect",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Identity-free face detection on OpenVibe.Vision: POST /api/v1/faces/detect counts faces and returns their boxes and scores with local YuNet. It stores no template, names no one and needs no consent; anyone may use it.",
+  "permissions": [
+    "vision:face:detect"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-face",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/faces/detect"
+  ],
+  "inputSchema": "vision.image-request@1",
+  "outputSchema": "vision.face-detection@1"
+}

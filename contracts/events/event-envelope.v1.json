@@ -9,7 +9,7 @@
   "properties": {
     "event_id": { "type": "string", "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$" },
     "trace_id": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
-    "event_type": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$" },
+    "event_type": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){1,}$" },
     "version": { "type": "integer", "minimum": 1 },
     "source": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
     "actor": { "$ref": "../identity/subject-ref.v1.json" },

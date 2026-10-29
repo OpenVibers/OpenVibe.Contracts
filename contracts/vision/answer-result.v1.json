@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/answer-result.v1.json",
+  "title": "VisionAnswerResult",
+  "description": "vision.answer-result@1: what POST /api/v1/ask, /describe and /ocr answer (`{ answer }`), and POST /api/v1/compare answers with `compare` rows and the local reader's summary added. Every AI-written text has passed noLooks: a look-naming answer is replaced, never repaired word by word.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "answer"
+  ],
+  "properties": {
+    "answer": {
+      "$ref": "./answer.v1.json"
+    },
+    "compare": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "engine",
+          "ok",
+          "cost_usd",
+          "latency_ms"
+        ],
+        "properties": {
+          "engine": {
+            "enum": [
+              "local",
+              "ai"
+            ]
+          },
+          "requested_model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "route": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "latency_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "local": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok",
+        "model",
+        "confidence",
+        "error_code"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidence": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "error_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

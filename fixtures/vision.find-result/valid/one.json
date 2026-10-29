@@ -1,0 +1,19 @@
+{
+  "answer": {
+    "results": [
+      {
+        "item_id": "media:42",
+        "result_url": "https://openvibe.media/m/42",
+        "score": 0.81
+      }
+    ],
+    "receipt": {
+      "engine": "local",
+      "model": "CLIP ViT-B/32 q8",
+      "cost_usd": 0,
+      "ms": 12,
+      "confidence": 0.81,
+      "retention": "query not stored; indexed embeddings stored"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-tag-list.v1.json",
+  "title": "VisionFaceTagList",
+  "description": "vision.face-tag-list@1: GET /api/v1/faces/cast/tags answers the caller's own cast tags, newest first, as a bare array. Empty when they have not consented to cast matching.",
+  "type": "array",
+  "items": {
+    "$ref": "./face-tag.v1.json"
+  }
+}

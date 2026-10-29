@@ -1,0 +1,14 @@
+{
+  "answer": {
+    "alt_text": "x",
+    "editable": false,
+    "receipt": {
+      "engine": "routed",
+      "model": null,
+      "cost_usd": 0,
+      "ms": 1,
+      "confidence": null,
+      "retention": "x"
+    }
+  }
+}

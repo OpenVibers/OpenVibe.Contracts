@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/compare-request.v1.json",
+  "title": "VisionCompareRequest",
+  "description": "vision.compare-request@1: the body of POST /api/v1/compare. One image runs through the local reader and up to three AI hints; the requested model is a hint only, and each row reports the provider and model OpenVibe.AI says answered.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "image": {
+      "type": "string",
+      "pattern": "^data:image/",
+      "description": "The image as a data URL (base64)."
+    },
+    "image_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "A public image URL, fetched through Vision's private-address guard."
+    },
+    "task": {
+      "enum": [
+        "ask",
+        "describe",
+        "identify",
+        "count",
+        "translate",
+        "ocr"
+      ]
+    },
+    "question": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 120
+      },
+      "maxItems": 3
+    },
+    "lang": {
+      "type": "string",
+      "maxLength": 40
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "image"
+      ]
+    },
+    {
+      "required": [
+        "image_url"
+      ]
+    }
+  ]
+}

@@ -4,6 +4,31 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.240.0 — 2026-10-29
+
+- **OpenVibe.Vision's API** (plan §5.8b): the service manifest now lists the 20 capabilities its routes serve today —
+  `vision.image.ask`, `vision.text.read`, `vision.model.compare`, `vision.ui.check`, `vision.alt.write`,
+  `vision.media.find`, `vision.receipt.read`, `vision.product.match`, `vision.camera.watch`, `vision.video.moments`,
+  `vision.face.detect`, `vision.face.blur`, `vision.face.consent.manage`, `vision.face.verify.self`,
+  `vision.face.find.self`, `vision.face.library`, `vision.face.cast.match`, `vision.face.cast.read`,
+  `vision.models.read` and `vision.benchmarks.read` — with their input and output schemas: `vision.image-request@1`,
+  `vision.ask-request@1`, `vision.ocr-request@1`, `vision.compare-request@1`, `vision.find-request@1`,
+  `vision.receipt-request@1`, `vision.product-request@1`, `vision.watch-request@1`, `vision.moments-request@1`,
+  `vision.answer@1`, `vision.answer-result@1`, `vision.alt-result@1`, `vision.find-result@1`,
+  `vision.receipt-result@1`, `vision.product-result@1`, `vision.watch-result@1`, `vision.moments-result@1`,
+  `vision.face-detection@1`, `vision.face-blur@1`, `vision.face-enrol-request@1`, `vision.face-verify@1`,
+  `vision.face-find-result@1`, `vision.face-cast-match-request@1`, `vision.face-cast-match@1`, `vision.face-tag@1`,
+  `vision.face-tag-list@1`, `vision.face-library-request@1`, `vision.face-library-result@1`,
+  `vision.face-library-group@1`, `vision.models@1` and `vision.benchmarks@1`.
+- **Consent** `vision.consent@1`: whose face or voice (subject and modality), the purpose-scoped feature and scope,
+  who signed which text version, when it expires, when and how it was revoked (subject, retention, account deletion),
+  the retention limit and whether the template and derived data were erased. `vision.consent-request@1` and
+  `vision.consent-revocation@1` are the grant and revoke bodies.
+- **Events** `vision.result.ready@1` (a result's identifiers, engine, provenance, cost, latency, retention and
+  consent id; never an image or answer text) and `vision.alert@1` (an owner-granted camera alert: source reference,
+  classes and confidence). `events.event-envelope@1` now accepts a two-segment event type (`vision.alert` is the
+  first), a backward-compatible widening; every capability id still needs three segments.
+
 ## 0.239.0 — 2026-10-28
 
 - Added `graph.link@1` (`from`, `rel`, `to` OVRN relation) for the planned object graph. The `graph.link.created` event waits for a producing service.

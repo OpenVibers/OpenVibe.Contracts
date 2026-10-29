@@ -1,0 +1,21 @@
+{
+  "id": "vision.models.read",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Vision's model menu: GET /api/v1/models returns the AI route's offered provider:model hints, the configured hints and the local engines present, with no subject data. Public; OpenVibe.AI's router is still the authority.",
+  "permissions": [
+    "vision:models:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/models"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "vision.models@1"
+}

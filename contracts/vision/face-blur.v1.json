@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-blur.v1.json",
+  "title": "VisionFaceBlur",
+  "description": "vision.face-blur@1: POST /api/v1/faces/blur answers a redacted PNG derivative and the number of faces blurred in X-Faces-Blur. Identity-free, no template, and the original is never stored.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "media_type",
+    "face_count"
+  ],
+  "properties": {
+    "media_type": {
+      "const": "image/png"
+    },
+    "face_count": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

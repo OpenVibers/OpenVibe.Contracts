@@ -1,0 +1,25 @@
+{
+  "answer": {
+    "scene_changes": [
+      {
+        "timestamp_ms": 5000,
+        "kind": "scene_change"
+      }
+    ],
+    "candidate_moments": [
+      {
+        "timestamp_ms": 5000,
+        "prompt": "a goal",
+        "score": 0.31
+      }
+    ],
+    "receipt": {
+      "engine": "local",
+      "model": "CLIP ViT-B/32 q8 + histogram",
+      "cost_usd": 0,
+      "ms": 90,
+      "confidence": 0.31,
+      "retention": "not stored"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "contractRanges": {
-    "openvibe-contracts": ">=0.229.0 <1.0.0"
+    "openvibe-contracts": ">=0.240.0 <1.0.0"
   },
   "id": "vision",
   "name": "OpenVibe.Vision",
@@ -16,9 +16,31 @@
     "publicSite": "service"
   },
   "capabilities": [
-    "vision.ui.check"
+    "vision.ui.check",
+    "vision.image.ask",
+    "vision.text.read",
+    "vision.model.compare",
+    "vision.alt.write",
+    "vision.media.find",
+    "vision.receipt.read",
+    "vision.product.match",
+    "vision.camera.watch",
+    "vision.video.moments",
+    "vision.face.detect",
+    "vision.face.blur",
+    "vision.face.consent.manage",
+    "vision.face.verify.self",
+    "vision.face.find.self",
+    "vision.face.library",
+    "vision.face.cast.match",
+    "vision.face.cast.read",
+    "vision.models.read",
+    "vision.benchmarks.read"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "vision.result.ready",
+    "vision.alert"
+  ],
   "eventsConsumed": [
     "network.account.export_requested",
     "network.account.deleted"
@@ -37,6 +59,8 @@
       "drains": [
         "HTTP server closed and in-flight requests drained",
         "JWKS refresher stopped",
+        "face retention timer stopped",
+        "outbox publisher stopped (its send in progress awaited; unsent rows stay for the next start)",
         "telemetry interval and retention stopped, then the telemetry buffer flushed",
         "PostgreSQL pool closed, then the Events subscriptions stopped"
       ]
@@ -46,6 +70,10 @@
         {
           "kind": "state",
           "what": "answers, compare samples and UI checks live in PostgreSQL; a restart reopens the pool and clears only the in-process rate limits and telemetry buffer, so saved rows stay readable by id"
+        },
+        {
+          "kind": "outbox",
+          "what": "unsent vision.result.ready and vision.alert events in the outbox table go to OpenVibe.Events once the publisher starts (at least once; Events dedupes by event_id)"
         },
         {
           "kind": "consumer",
@@ -60,17 +88,17 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "migration 0001 only creates Vision's own tables (answers, compare samples, UI checks, account-data receipts, telemetry); an earlier release reads none of them"
+        "none": "migration 0001 only creates Vision's own tables (answers, compare samples, UI checks, account-data receipts, telemetry); migration 0003 adds the face tables and 0004 adds consent expiry/revocation columns and the event outbox, all additive, so an earlier release reads none of them"
       }
     },
     "contracts": {
-      "range": ">=0.229.0 <1.0.0"
+      "range": ">=0.240.0 <1.0.0"
     },
     "leases": {
       "none": "no claims: one process serves the site and the API"
     }
   },
-  "notes": "Port 5130, unit openvibe-vision.service, database ov_vision. The Vision room (plan 2026-10-28 §5.8): ask a picture, read text with the local Tesseract 5 engine first, compare the local reader with up to three AI hints, and check HTML, a public URL or a screenshot for overflow, cut-off, low contrast, overlap and layering faults. OpenVibe.AI is the only model gateway (ai.run.create; the OpenAI-compatible POST /v1/chat/completions is workflow ai.complete); no provider key is held, no face recognition is used and no image bytes are stored. OAuth client `vision`; answers account export and deletion (ADR-033) and subscribes to the two account Events topics. v1 has no public records, so it has no Search outbox. Of Vision's four machine capabilities (vision.ask, vision.ocr, vision.compare, vision.ui_check), 0.235.0 registers only vision.ui.check, the route Design's Arena calls today; the other three are served but wait for a caller.",
+  "notes": "Port 5130, unit openvibe-vision.service, database ov_vision. The Vision room (plan 2026-10-28 §5.8b): ask a picture, read text with the local Tesseract 5 engine first, compare the local reader with up to three AI hints, check HTML, a public URL or a screenshot for UI faults, write alt text, search only your own images by CLIP, read receipts, match products to offers, watch camera stills and find VOD moments. Faces are local (YuNet/SFace): detect and blur are identity-free, and verify, find, cast and library grouping each need a separate signed consent record (vision.consent@1) with a scope, expiry and a revocation that erases the derived data. Refusal is the same whether or not the person exists. OpenVibe.AI is the only model gateway (ai.run.create); no provider key is held, no image bytes are stored for general answers and no face template enters Search, a prompt or Bench. Public AI text passes noLooks. OAuth client `vision`; MCP at POST /mcp (RFC 9728 protected-resource metadata) exposes the image tools and never enrolment, verification or face-group mutation. Answers account export and deletion (ADR-033), subscribes to the two account Events topics and publishes vision.result.ready and vision.alert through its outbox. v1 has no public records, so it has no Search outbox.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5130",

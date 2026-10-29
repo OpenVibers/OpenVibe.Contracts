@@ -1,0 +1,23 @@
+{
+  "id": "vision.alt.write",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Write editable alt text for an image on OpenVibe.Vision: POST /api/v1/alt returns one short sentence about the scene, objects and action, never about a person. The answer has passed noLooks; the receipt names the engine, cost and latency. Rooms use it for Pics, Media and Chat uploads.",
+  "permissions": [
+    "vision:alt"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "vision-alt",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/alt"
+  ],
+  "inputSchema": "vision.image-request@1",
+  "outputSchema": "vision.alt-result@1"
+}

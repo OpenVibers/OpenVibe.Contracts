@@ -1,0 +1,10 @@
+{
+  "id": "vis_short",
+  "task": "ask",
+  "mode": "auto",
+  "source": "upload",
+  "cost_usd": 0,
+  "latency_ms": 0,
+  "created_at": "2026-10-29T10:00:00.000Z",
+  "answer": {}
+}

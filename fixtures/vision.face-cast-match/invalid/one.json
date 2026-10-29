@@ -1,0 +1,10 @@
+{
+  "channel": "live:one",
+  "matches": [
+    {
+      "subject": "ana",
+      "score": 0.71
+    }
+  ],
+  "liveness": "not_checked"
+}

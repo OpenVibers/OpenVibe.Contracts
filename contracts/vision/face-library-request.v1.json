@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-library-request.v1.json",
+  "title": "VisionFaceLibraryRequest",
+  "description": "vision.face-library-request@1: POST /api/v1/faces/library/cluster (region-gated), GET /library/groups and POST /library/correct. `action` is cluster (default), exclude, merge or split; `ids` names up to 100 of the caller's own clusters; `region` is a jurisdiction code the host allows. Unknown faces stay unlabelled.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action"
+  ],
+  "properties": {
+    "action": {
+      "enum": [
+        "cluster",
+        "exclude",
+        "merge",
+        "split"
+      ]
+    },
+    "region": {
+      "type": "string",
+      "maxLength": 10
+    },
+    "ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "minItems": 1,
+      "maxItems": 100
+    }
+  }
+}

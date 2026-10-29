@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-find-result.v1.json",
+  "title": "VisionFaceFindResult",
+  "description": "vision.face-find-result@1: POST /api/v1/faces/find lists the caller's own private uploads that match their enrolled self-search template, as private links and scores. It requires find consent; without it the answer is faces.consent_required whether or not any media exists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "results"
+  ],
+  "properties": {
+    "results": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "private_link",
+          "score"
+        ],
+        "properties": {
+          "private_link": {
+            "type": "string",
+            "pattern": "^/api/v1/faces/media/"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  }
+}

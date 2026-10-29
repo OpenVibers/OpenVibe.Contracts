@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-enrol-request.v1.json",
+  "title": "VisionFaceEnrolRequest",
+  "description": "vision.face-enrol-request@1: POST /api/v1/faces/enrol/:feature. `feature` is verify (1:1 verification of yourself), find (search your own uploads) or cast (an adult tagging named streams); each needs its own signed consent first, and cast also names the channel scope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "feature"
+  ],
+  "properties": {
+    "image": {
+      "type": "string",
+      "pattern": "^data:image/",
+      "description": "The image as a data URL (base64)."
+    },
+    "image_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "A public image URL, fetched through Vision's private-address guard."
+    },
+    "feature": {
+      "enum": [
+        "verify",
+        "find",
+        "cast"
+      ]
+    },
+    "channel": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:_-]{1,119}$"
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "image"
+      ]
+    },
+    {
+      "required": [
+        "image_url"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/benchmarks.v1.json",
+  "title": "VisionBenchmarks",
+  "description": "vision.benchmarks@1: GET /api/v1/benchmarks aggregates compare samples per task, engine, provider and model with sample counts and mean latency and cost. No subject, image or answer text is included.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "count",
+    "benchmarks"
+  ],
+  "properties": {
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "benchmarks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task",
+          "engine",
+          "provider",
+          "model",
+          "samples",
+          "avg_latency_ms",
+          "avg_cost_usd",
+          "min_cost_usd",
+          "max_latency_ms"
+        ],
+        "properties": {
+          "task": {
+            "type": "string"
+          },
+          "engine": {
+            "enum": [
+              "local",
+              "ai"
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "samples": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "avg_latency_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "avg_cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "min_cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "max_latency_ms": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/ocr-request.v1.json",
+  "title": "VisionOcrRequest",
+  "description": "vision.ocr-request@1: the body of POST /api/v1/ocr. The local Tesseract 5 reader runs on Vision's host and costs nothing; `fallback` asks OpenVibe.AI only when the local pass found no usable text, which needs a signed-in person or a service token holding vision.ocr.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "image": {
+      "type": "string",
+      "pattern": "^data:image/",
+      "description": "The image as a data URL (base64)."
+    },
+    "image_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "A public image URL, fetched through Vision's private-address guard."
+    },
+    "lang": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "fallback": {
+      "type": "boolean"
+    },
+    "model": {
+      "type": "string",
+      "maxLength": 120
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "image"
+      ]
+    },
+    {
+      "required": [
+        "image_url"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "ai": true,
+  "configured": [
+    "openai:gpt-4o-mini"
+  ],
+  "offered": [
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini"
+    }
+  ],
+  "local": [
+    "tesseract",
+    "histogram"
+  ],
+  "note": "provider:model hints"
+}

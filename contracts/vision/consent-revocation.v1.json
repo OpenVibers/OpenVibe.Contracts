@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/consent-revocation.v1.json",
+  "title": "VisionConsentRevocation",
+  "description": "vision.consent-revocation@1: DELETE /api/v1/faces/consents/:feature answers with the revoked feature and scope, when, and that the template and derived data were erased in the same transaction. Revocation removes past cast tags and cannot be undone by reusing an old text version.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "feature",
+    "scope",
+    "revoked_at",
+    "revoked_by",
+    "erased"
+  ],
+  "properties": {
+    "feature": {
+      "enum": [
+        "verify",
+        "find",
+        "cast",
+        "library",
+        "voice"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "revoked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_by": {
+      "enum": [
+        "subject"
+      ]
+    },
+    "erased": {
+      "const": true
+    }
+  }
+}

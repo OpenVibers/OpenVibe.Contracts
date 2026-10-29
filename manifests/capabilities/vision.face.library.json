@@ -1,0 +1,25 @@
+{
+  "id": "vision.face.library",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Group faces in your own Vision library: POST /api/v1/faces/library/cluster (region-gated), GET /api/v1/faces/library/groups and POST /api/v1/faces/library/correct (exclude, merge, split). Requires library consent; unknown faces stay unlabelled and nothing leaves that person's library.",
+  "permissions": [
+    "vision:face:library"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-face",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/faces/library/cluster",
+    "GET /api/v1/faces/library/groups",
+    "POST /api/v1/faces/library/correct"
+  ],
+  "inputSchema": "vision.face-library-request@1",
+  "outputSchema": "vision.face-library-result@1"
+}

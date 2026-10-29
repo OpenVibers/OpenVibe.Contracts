@@ -1,0 +1,23 @@
+{
+  "id": "vision.video.moments",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Find moments in a stream or VOD on OpenVibe.Vision: POST /api/v1/moments compares up to 30 timestamped frames with CLIP prompt embeddings and a histogram scene-change pass, returning scene changes and candidate moments. A candidate is a suggestion for Live or Media to accept.",
+  "permissions": [
+    "vision:moments"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-moments",
+  "events": [
+    "vision.result.ready"
+  ],
+  "implementedBy": [
+    "POST /api/v1/moments"
+  ],
+  "inputSchema": "vision.moments-request@1",
+  "outputSchema": "vision.moments-result@1"
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-library-group.v1.json",
+  "title": "VisionFaceLibraryGroup",
+  "description": "vision.face-library-group@1: one private face cluster in a person's own Vision library: the media it came from, the group it was merged into, an optional label and whether the person excluded it. It never leaves that person's library.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "media_id",
+    "group_id",
+    "excluded",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^fcl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "media_id": {
+      "type": "string",
+      "pattern": "^fme_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "group_id": {
+      "type": "string",
+      "pattern": "^fgr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "excluded": {
+      "type": "boolean"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

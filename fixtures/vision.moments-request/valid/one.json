@@ -1,0 +1,15 @@
+{
+  "frames": [
+    {
+      "timestamp_ms": 0,
+      "image": "data:image/png;base64,iVBORw0KGgo="
+    },
+    {
+      "timestamp_ms": 5000,
+      "image_url": "https://example.com/f.jpg"
+    }
+  ],
+  "prompts": [
+    "a goal"
+  ]
+}

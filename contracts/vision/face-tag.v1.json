@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-tag.v1.json",
+  "title": "VisionFaceTag",
+  "description": "vision.face-tag@1: one cast tag on a stream: which subject, which channel, which private media reference and when. GET /api/v1/faces/cast/tags lists the caller's own tags; revoking the cast consent removes them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "channel",
+    "media_ref",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ftg_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "channel": {
+      "type": "string"
+    },
+    "media_ref": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

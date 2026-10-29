@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/face-verify.v1.json",
+  "title": "VisionFaceVerify",
+  "description": "vision.face-verify@1: POST /api/v1/faces/verify compares this person's own verification attempt with their enrolled template. It always requires that person's verify consent; without it the answer is faces.consent_required whether or not a template exists. A match alone never unlocks anything: liveness and a second factor are separate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "score",
+    "match",
+    "threshold",
+    "liveness"
+  ],
+  "properties": {
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "match": {
+      "type": "boolean"
+    },
+    "threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "liveness": {
+      "enum": [
+        "not_checked",
+        "checked"
+      ]
+    }
+  }
+}

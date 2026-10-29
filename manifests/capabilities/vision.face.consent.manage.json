@@ -1,0 +1,24 @@
+{
+  "id": "vision.face.consent.manage",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read, grant and revoke purpose-scoped face or voice consent on OpenVibe.Vision: GET /api/v1/faces/consents and /consents/text, POST /consents/:feature with the signed current text, and DELETE /consents/:feature, which revokes and erases the template and derived data in one transaction. A person manages only their own record; the record says whose face or voice, the scope, expiry and how it was revoked (vision.consent@1).",
+  "permissions": [
+    "vision:face:consent"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "vision-face",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/faces/consents",
+    "GET /api/v1/faces/consents/text",
+    "POST /api/v1/faces/consents/:feature",
+    "DELETE /api/v1/faces/consents/:feature"
+  ],
+  "inputSchema": "vision.consent-request@1",
+  "outputSchema": "vision.consent@1"
+}

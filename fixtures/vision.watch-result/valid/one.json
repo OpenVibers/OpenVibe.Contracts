@@ -1,0 +1,29 @@
+{
+  "answer": {
+    "detections": [
+      {
+        "class": "package",
+        "confidence": 0.88,
+        "box": {
+          "x": 1,
+          "y": 2,
+          "width": 30,
+          "height": 40
+        }
+      },
+      {
+        "class": "scene change",
+        "confidence": 0.4,
+        "box": null
+      }
+    ],
+    "receipt": {
+      "engine": "local",
+      "model": "DETR ResNet-50 q8 + histogram",
+      "cost_usd": 0,
+      "ms": 80,
+      "confidence": 0.88,
+      "retention": "not stored"
+    }
+  }
+}

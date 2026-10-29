@@ -1,0 +1,19 @@
+{
+  "answer": {
+    "scene_changes": [
+      {
+        "timestamp_ms": 1,
+        "kind": "cut"
+      }
+    ],
+    "candidate_moments": [],
+    "receipt": {
+      "engine": "local",
+      "model": null,
+      "cost_usd": 0,
+      "ms": 1,
+      "confidence": null,
+      "retention": "x"
+    }
+  }
+}

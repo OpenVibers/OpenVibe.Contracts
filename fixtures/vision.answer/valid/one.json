@@ -1,0 +1,21 @@
+{
+  "id": "vis_01J8Z3Q4R5S6T7V8W9X0Y1Z2A4",
+  "task": "ask",
+  "mode": "auto",
+  "source": "upload",
+  "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "image_mime": "image/png",
+  "image_bytes": 1024,
+  "text": "A desk with a keyboard and a mug.",
+  "answer": {
+    "engine": "local",
+    "route": "local.ocr"
+  },
+  "model": "tesseract",
+  "provider": "local",
+  "route": "local.ocr",
+  "reason": "the local OCR reader answered the read task; no model was called",
+  "cost_usd": 0,
+  "latency_ms": 42,
+  "created_at": "2026-10-29T10:00:00.000Z"
+}

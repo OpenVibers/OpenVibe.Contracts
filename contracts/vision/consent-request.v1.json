@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/vision/consent-request.v1.json",
+  "title": "VisionConsentRequest",
+  "description": "vision.consent-request@1: POST /api/v1/faces/consents/:feature. The caller signs the current text (`text_version` must match this server's), names themself (`signed_name`), and for cast must confirm they are an adult; library grouping is refused outside the host's allowed regions. A repeat of an active consent changes nothing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "signed_name",
+    "text_version"
+  ],
+  "properties": {
+    "signed_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "text_version": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "modality": {
+      "enum": [
+        "face",
+        "voice"
+      ]
+    },
+    "feature": {
+      "enum": [
+        "verify",
+        "find",
+        "cast",
+        "library",
+        "voice"
+      ],
+      "description": "Echo of the :feature path segment."
+    },
+    "channel": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9:_-]{1,119}$"
+    },
+    "adult": {
+      "type": "boolean"
+    },
+    "region": {
+      "type": "string",
+      "maxLength": 10
+    }
+  }
+}
