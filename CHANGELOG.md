@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.243.0 — 2026-10-30
+
+- The release cut from `main` for codes.task@2 (#250): a coding task's attempts and outcome, one id with two majors.
+  It carries 0.241.0 (the AI credential v2 release) as well. `v0.242.0` and `v0.242.1` were tagged from the PR
+  branch before it merged; pin `v0.243.0` instead (OpenVibe.Codes moves to it).
+
 ## 0.242.1 — 2026-10-30
 
 - The generated OpenAPI files carry the release's own version again: `v0.242.0` shipped them with 0.240.0's,
