@@ -151930,6 +151930,49 @@ export type AiCredentialPut = {
   budget_usd_per_day?: number;
 };
 
+/** ai.credential-put@2.0.0 (owner: ai) */
+/**
+ * ai.credential-put@2 (OpenVibe.AI; Codes C3): one person's own provider key per provider, stored by the service that holds their consent, PUT /api/v1/credentials/{subject}/{provider} with capability ai.credential.manage. It adds the provider dimension to ai.credential-put@1: a person may keep an Anthropic, OpenAI, DeepSeek, MiniMax, OpenRouter or custom key side by side, each with its own daily budget, and the route without a provider still stores the default one. `key` is the secret (v1's `api_key` stays accepted); `base_url` names the endpoint of a custom provider and is optional elsewhere. OpenVibe.AI encrypts the key at rest, bound to its owner, subject and provider, and never returns it. Provider `node` is unchanged: the person's own machine, named by `machine`, with no key.
+ */
+export type AiCredentialPutV2 = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * anthropic = Anthropic's Messages API; openai = any OpenAI-compatible endpoint; deepseek, minimax and openrouter = those providers; custom = the endpoint in base_url (a URL that speaks the OpenAI or the Anthropic format, by the route it is used on); node = the person's own machine (no key, no base_url, no cost).
+   */
+  provider: "anthropic" | "openai" | "deepseek" | "minimax" | "openrouter" | "custom" | "node";
+  /**
+   * The provider key (ai.credential-put@2's name for v1's api_key). Required the first time, and whenever provider or base_url changes (a key is never sent to a new endpoint without being entered again); otherwise the stored key is kept, and it is never returned.
+   */
+  key?: string;
+  /**
+   * The ai.credential-put@1 name for `key`, still accepted. When both are sent, `key` wins.
+   */
+  api_key?: string;
+  /**
+   * The endpoint of a custom provider (required for it): https, no credentials, query or fragment. OpenVibe.AI connects only to public addresses.
+   */
+  base_url?: string;
+  /**
+   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model, or `any` of their own.
+   */
+  machine?: string;
+  /**
+   * Model per role on this provider; `chat` is the default for the others.
+   */
+  models?: {
+    chat?: string;
+    vision?: string;
+    director?: string;
+    summary?: string;
+    legacy?: string;
+  };
+  /**
+   * The person's own daily cap on estimated spend with this provider's key; 0 or absent = no cap.
+   */
+  budget_usd_per_day?: number;
+};
+
 /** ai.credential@1.0.0 (owner: ai) */
 /**
  * ai.credential@1 (OpenVibe.AI; roadmap WS-O task 2): a stored credential as its owner service reads it (GET or PUT /api/v1/credentials/{subject}): never the key, only its last four characters.
@@ -151951,6 +151994,42 @@ export type AiCredential = {
   key_hint?: string;
   /**
    * Model per Live role; `chat` is the default for the others.
+   */
+  models?: {
+    chat?: string;
+    vision?: string;
+    director?: string;
+    summary?: string;
+    legacy?: string;
+  };
+  budget_usd_per_day?: number | null;
+  spent_usd_today?: number;
+  created_at: string;
+  updated_at: string;
+  last_used_at?: string | null;
+};
+
+/** ai.credential@2.0.0 (owner: ai) */
+/**
+ * ai.credential@2 (OpenVibe.AI; Codes C3): one stored credential as its owner service reads it (GET or PUT /api/v1/credentials/{subject} or /{subject}/{provider}): never the key, only its last four characters. It widens ai.credential@1's provider to the providers of ai.credential-put@2, so a person may keep one key per provider; `key_hint` is present for every provider except `node`, whose machine is named instead.
+ */
+export type AiCredentialV2 = {
+  [k: string]: unknown | undefined;
+} & {
+  subject: string;
+  /**
+   * The service that stored it; only it may use or change it.
+   */
+  owner: string;
+  provider: "anthropic" | "openai" | "deepseek" | "minimax" | "openrouter" | "custom" | "node";
+  /**
+   * provider node: the machine it runs on, or `any` of the person's own
+   */
+  machine?: string | null;
+  base_url?: string | null;
+  key_hint?: string;
+  /**
+   * Model per role on this provider; `chat` is the default for the others.
    */
   models?: {
     chat?: string;
