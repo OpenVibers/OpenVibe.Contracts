@@ -1,0 +1,63 @@
+{
+  "id": "claude-other",
+  "name": "Claude Code (another provider)",
+  "provider": "anthropic-compatible",
+  "capabilities": {
+    "host_access": true,
+    "mcp": true,
+    "long_autonomy": true,
+    "resume": true,
+    "edit": true,
+    "review": true,
+    "tools": true,
+    "vision": true,
+    "browser": false,
+    "computer_use": false,
+    "runtimes": [
+      "code"
+    ]
+  },
+  "address": {
+    "kind": "cli",
+    "target": "claude"
+  },
+  "price": {
+    "amount_usd": 0,
+    "unit": "hour"
+  },
+  "limits": {
+    "max_duration_seconds": 14400,
+    "max_concurrent_runs": 4,
+    "max_context_tokens": 200000
+  },
+  "task_capabilities": [
+    "edit",
+    "review",
+    "run",
+    "test"
+  ],
+  "runtime_needs": [
+    "git",
+    "node"
+  ],
+  "byo_key": true,
+  "agents": [
+    {
+      "id": "claude-other-default",
+      "harness": "claude-other",
+      "provider": "anthropic-compatible",
+      "model": "claude-other",
+      "context_limits": {
+        "input_tokens": 200000,
+        "output_tokens": 64000
+      },
+      "concurrency": 4,
+      "price_per_1k_tokens": {
+        "fresh_usd": 0,
+        "cached_usd": 0,
+        "output_usd": 0
+      },
+      "availability_windows": []
+    }
+  ]
+}

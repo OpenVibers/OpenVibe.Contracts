@@ -201624,6 +201624,10 @@ export interface HarnessOffer {
    * measured share of routed tasks that finished green
    */
   success_rate?: number;
+  /**
+   * the agents (models) this harness offers; each one is a platform.agent-offer@1 whose harness names this offer
+   */
+  agents?: AgentOffer[];
 }
 
 /** platform.runtime-class@1.0.0 (owner: network) */
