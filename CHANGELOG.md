@@ -4,6 +4,17 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.242.0 — 2026-10-29
+
+- **`codes.task@2`** (OpenVibe.Codes): a coding task's timeline. It is `codes.task@1` with the same fields, plus two
+  added ones: `attempts` (every try of the task, in order: the agent, the machine, the session, the state it ended
+  in, why, what it cost) and `outcome` (what the attempts added up to: done, unfinished with what is left, or
+  stopped). `GET /api/v1/tasks/:id` answers it — the task's own fields stay at the top level, exactly as
+  `codes.task@1` had them, and the two new fields are added to them. `codes.task@1` stays as it is.
+- **One contract id may hold more than one major** now: the catalog lists a v1 and a v2 file for the same id, the
+  bare id resolves to the newest major, and `id@N` names that major, so a v1 caller keeps resolving while a v2
+  caller names it exactly. (`ai.credential@2` is the first to use it.)
+
 ## 0.240.0 — 2026-10-29
 
 - **OpenVibe.Vision's API** (plan §5.8b): the service manifest now lists the 20 capabilities its routes serve today —

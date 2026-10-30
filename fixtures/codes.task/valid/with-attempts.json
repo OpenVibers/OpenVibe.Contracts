@@ -1,0 +1,56 @@
+{
+  "id": "tsk_01M4XEV0JT93CAYTXVD6V0QW1E",
+  "state": "succeeded",
+  "repo": "https://github.com/octocat/Hello-World",
+  "ref": null,
+  "agent": "claude-code",
+  "url": "https://openvibe.codes/run/tasks/tsk_01M4XEV0JT93CAYTXVD6V0QW1E",
+  "created_at": "2026-10-29T15:00:00.000Z",
+  "updated_at": "2026-10-29T15:04:12.000Z",
+  "attempts": [
+    {
+      "id": "att_01M4XEV0JT93CAYTXVD6V0QW1F",
+      "n": 1,
+      "agent": "claude-code",
+      "model": "claude-sonnet-4",
+      "machine": "node-01",
+      "job_id": "job_01M4XEV0JT93CAYTXVD6V0QW1G",
+      "session": "sess-42",
+      "state": "failed",
+      "reason": "limit",
+      "why": "the first try, with claude-code",
+      "kind": "first",
+      "cost_usd": 0.12,
+      "tokens": 45000,
+      "steps": 18,
+      "started_at": "2026-10-29T15:00:02.000Z",
+      "finished_at": "2026-10-29T15:02:40.000Z",
+      "created_at": "2026-10-29T15:00:01.000Z",
+      "end_why": "the usage limit was reached"
+    },
+    {
+      "id": "att_01M4XEV0JT93CAYTXVD6V0QW1H",
+      "n": 2,
+      "agent": "codex",
+      "model": "gpt-5-codex",
+      "machine": "node-01",
+      "job_id": "job_01M4XEV0JT93CAYTXVD6V0QW1J",
+      "session": null,
+      "state": "done",
+      "reason": null,
+      "why": "took over: the usage limit was reached",
+      "kind": "switch",
+      "cost_usd": 0.31,
+      "tokens": 61000,
+      "steps": 22,
+      "started_at": "2026-10-29T15:02:41.000Z",
+      "finished_at": "2026-10-29T15:04:10.000Z",
+      "created_at": "2026-10-29T15:02:41.000Z",
+      "end_why": null
+    }
+  ],
+  "outcome": {
+    "state": "done",
+    "note": null
+  }
+}
