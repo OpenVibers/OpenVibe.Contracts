@@ -1,0 +1,24 @@
+{
+  "id": "bench.benchmark.write",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Create, edit, freeze and fork a benchmark on OpenVibe.Bench: POST /api/v1/benchmarks, PUT /api/v1/benchmarks/:id, POST /api/v1/benchmarks/:id/versions (freeze) and POST /api/v1/benchmarks/:id/fork. A version is immutable once a run names it; a fork records its parent.",
+  "permissions": [
+    "bench:benchmarks:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/benchmarks",
+    "PUT /api/v1/benchmarks/:id",
+    "POST /api/v1/benchmarks/:id/versions",
+    "POST /api/v1/benchmarks/:id/fork"
+  ],
+  "inputSchema": "bench.benchmark@1",
+  "outputSchema": "bench.benchmark@1"
+}

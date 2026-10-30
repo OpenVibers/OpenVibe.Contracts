@@ -1,0 +1,21 @@
+{
+  "id": "bench.run.publish",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Publish a run of a benchmark on OpenVibe.Bench: POST /api/v1/runs with the per-task scores, cost, time and tokens. A service token (openvibe.codes, Run) makes a verified run; a person's token makes a submitted run, which is badged and kept out of the default rankings. A caller with this capability sees a benchmark's holdout tasks.",
+  "permissions": [
+    "bench:runs:publish"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/runs"
+  ],
+  "inputSchema": "bench.run@1",
+  "outputSchema": "bench.run@1"
+}

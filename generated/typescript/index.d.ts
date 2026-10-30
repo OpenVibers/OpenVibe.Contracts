@@ -215095,3 +215095,3614 @@ export type ReportMetric = {
 } & {
   [k: string]: unknown | undefined;
 };
+
+/** bench.benchmark@1.0.0 (owner: bench) */
+/**
+ * bench.benchmark@1: a versioned, forkable benchmark on OpenVibe.Bench (spec 2026-10-30, stage B1). It holds the tasks, the judges, how they combine into one score, the limits a run may not pass, the default model and harness matrix, and the visibility of the set. A version is immutable once a run names it; a fork records its parent. Holdout tasks are hidden from everyone but the executor.
+ */
+export interface BenchBenchmark {
+  /**
+   * The benchmark id; the same id carries every version.
+   */
+  id: string;
+  /**
+   * Who owns the set: a person (usr_…), a project (prj_…) or a service.
+   */
+  owner: string;
+  title: string;
+  description: string;
+  /**
+   * One of Bench's kinds; the kind sets the renderer.
+   */
+  kind: string;
+  /**
+   * @maxItems 32
+   */
+  tags: string[];
+  /**
+   * public appears in the registry; unlisted is reachable by id only.
+   */
+  visibility: "public" | "unlisted";
+  /**
+   * The version number this document is.
+   */
+  version: number;
+  /**
+   * The benchmark id@version this one was forked from, or null.
+   */
+  parent: string | null;
+  /**
+   * @maxItems 200
+   */
+  tasks: {
+    id: string;
+    prompt: string;
+    /**
+     * @maxItems 20
+     */
+    files?:
+      | []
+      | [
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          },
+          {
+            [k: string]: unknown | undefined;
+          }
+        ];
+    /**
+     * What a correct answer looks like; the judge reads it.
+     */
+    expected?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    /**
+     * A hidden task: it is withheld from everyone but the executor, against tuning to the set.
+     */
+    holdout: boolean;
+  }[];
+  /**
+   * @maxItems 20
+   */
+  judges:
+    | []
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        },
+        {
+          /**
+           * human_pairwise | rubric | automatic_grader | test_suite | game_outcome
+           */
+          type: string;
+          /**
+           * The pinned judge version; a run names the judge it used.
+           */
+          version: string;
+          config: {
+            [k: string]: unknown | undefined;
+          };
+        }
+      ];
+  scoring: {
+    method: "mean" | "weighted" | "pass_rate" | "sum";
+    /**
+     * The score scale; 0-100 for Bench.
+     */
+    scale: {
+      min: number;
+      max: number;
+    };
+    weights?: {
+      [k: string]: number | undefined;
+    };
+    aggregate?: string;
+  };
+  limits: {
+    /**
+     * The time one task may take.
+     */
+    ms?: number;
+    tokens?: number;
+    /**
+     * The money one run may spend.
+     */
+    usd?: number;
+  };
+  matrix: {
+    /**
+     * @maxItems 50
+     */
+    models?: string[];
+    /**
+     * @maxItems 50
+     */
+    harnesses?: string[];
+  };
+  created_at: string;
+}
+
+/** bench.run@1.0.0 (owner: bench) */
+/**
+ * bench.run@1: one result on OpenVibe.Bench (spec 2026-10-30, stage B1): a benchmark version × a model × a harness × settings × who ran it. It records the environment, the per-task scores, cost, time and tokens, the rendered artifacts, and the provenance: verified (executed by openvibe.codes or a Run worker) or submitted (posted through the API with no executor). Submitted runs are badged and kept out of the default rankings.
+ */
+export interface BenchRun {
+  id: string;
+  /**
+   * The benchmark id@version the run names. The version is immutable once a run names it.
+   */
+  benchmark: string;
+  model: string;
+  /**
+   * The route that produced the run.
+   */
+  route: {
+    [k: string]: unknown | undefined;
+  };
+  provider: string;
+  harness: {
+    name: string;
+    version: string;
+  };
+  settings: {
+    temperature?: number | null;
+    effort?: string | null;
+  };
+  executor: {
+    /**
+     * codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it.
+     */
+    kind: "codes" | "run" | "node" | "submitted";
+    id: string;
+  };
+  /**
+   * The machine for a local model: GPU, CPU, RAM, quantization.
+   */
+  hardware?: {
+    [k: string]: unknown | undefined;
+  } | null;
+  /**
+   * @maxItems 200
+   */
+  tasks: {
+    task_id: string;
+    score: number;
+    cost_usd: number;
+    ms: number;
+    tokens: number;
+    /**
+     * @maxItems 40
+     */
+    artifacts: {
+      kind: string;
+      url: string;
+    }[];
+    transcript_url?: string | null;
+  }[];
+  /**
+   * The benchmark's one score for this run, 0-100.
+   */
+  score: number;
+  cost_usd: number;
+  ms: number;
+  tokens: number;
+  /**
+   * verified: an executor ran it. submitted: posted with no executor, badged and out of the default rankings.
+   */
+  provenance: "verified" | "submitted";
+  created_at: string;
+}
