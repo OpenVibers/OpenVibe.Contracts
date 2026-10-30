@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/memory-item.v1.json",
+  "title": "AiMemoryItem",
+  "description": "ai.memory-item@1 (OpenVibe.AI; Memory M2): one memory item as the person's own API reads it. Tenant is the owner (`user:usr_…`); the text is decrypted only inside AI's process and never logged, never in an error, a span or an event. `source_ref` is the file path relative to the scanned root and the heading, when the item came from a file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "scope",
+    "kind",
+    "text",
+    "source",
+    "status",
+    "confidence",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^mem_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^user:usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "scope": {
+      "type": "string",
+      "pattern": "^(user|project:[a-z0-9][a-z0-9._-]{0,63})$",
+      "description": "`user` for the person's own notes, or `project:<slug>` for a repo or folder they chose. Never an absolute path."
+    },
+    "kind": {
+      "enum": [
+        "preference",
+        "fact",
+        "project_rule",
+        "procedure",
+        "decision",
+        "lesson"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000,
+      "description": "The item text after the server-side redaction. Only the person's own routes and a granted agent search see it."
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "The adapter id (claude-code, cursor, …) or the service (actor, vibe, know, person)."
+    },
+    "source_ref": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "heading": {
+          "type": "string",
+          "maxLength": 300
+        }
+      },
+      "description": "The path relative to the scanned root and the heading, when the item came from a file."
+    },
+    "status": {
+      "enum": [
+        "active",
+        "suggested",
+        "archived",
+        "conflict"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "machine": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "The Node machine id it came from, when it came from one."
+    },
+    "no_looks": {
+      "type": "boolean",
+      "description": "True when the item was produced by an AI: the server ran noLooks on it (Memory M2 rule 5)."
+    }
+  }
+}

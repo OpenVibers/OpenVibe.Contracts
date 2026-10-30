@@ -1,0 +1,19 @@
+{
+  "id": "mem_01JZ0000000000000000000001",
+  "owner": "user:usr_01JZ0000000000000000000AAA",
+  "scope": "project:openvibe-node",
+  "kind": "project_rule",
+  "text": "Run the Go tests with go test ./... before a commit.",
+  "source": "claude-code",
+  "source_ref": {
+    "path": ".claude/CLAUDE.md",
+    "heading": "Testing"
+  },
+  "status": "active",
+  "confidence": 1,
+  "seen_at": "2026-10-30T09:00:00.000Z",
+  "created_at": "2026-10-30T09:00:00.000Z",
+  "updated_at": "2026-10-30T09:00:00.000Z",
+  "machine": "dev_01JZ0000000000000000000N01",
+  "no_looks": false
+}

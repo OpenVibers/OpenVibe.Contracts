@@ -8236,6 +8236,33 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "ai.memory-item",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/memory-item.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.memory-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/memory-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.memory-write-request",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/memory-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/memory-result.v1.json",
+  "title": "AiMemoryResult",
+  "description": "ai.memory-result@1 (OpenVibe.AI; Memory M2): what the memory API answers: a list of items (GET /items, the batch import), one item (GET or PATCH /items/{id}), the cached profile (GET /profile), a count of deleted rows (DELETE) or the agent search's items (GET /search, at most 8, active only). The text is the person's own and is never logged.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "memory-item.v1.json"
+      }
+    },
+    "item": {
+      "$ref": "memory-item.v1.json"
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "text",
+        "items_hash",
+        "built_at"
+      ],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "pattern": "^(user|project:[a-z0-9][a-z0-9._-]{0,63})$"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "The cached summary of the person's own notes for this scope. It passed noLooks before it was stored."
+        },
+        "items_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "sha256 of the sorted item MACs the profile was built from."
+        },
+        "built_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "deleted": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

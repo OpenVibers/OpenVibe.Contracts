@@ -267867,3 +267867,121 @@ export interface BenchRunV2 {
   provenance: "verified" | "submitted";
   created_at: string;
 }
+
+/** ai.memory-item@1.0.0 (owner: ai) */
+/**
+ * ai.memory-item@1 (OpenVibe.AI; Memory M2): one memory item as the person's own API reads it. Tenant is the owner (`user:usr_…`); the text is decrypted only inside AI's process and never logged, never in an error, a span or an event. `source_ref` is the file path relative to the scanned root and the heading, when the item came from a file.
+ */
+export interface AiMemoryItem {
+  id: string;
+  owner: string;
+  /**
+   * `user` for the person's own notes, or `project:<slug>` for a repo or folder they chose. Never an absolute path.
+   */
+  scope: string;
+  kind: "preference" | "fact" | "project_rule" | "procedure" | "decision" | "lesson";
+  /**
+   * The item text after the server-side redaction. Only the person's own routes and a granted agent search see it.
+   */
+  text: string;
+  /**
+   * The adapter id (claude-code, cursor, …) or the service (actor, vibe, know, person).
+   */
+  source: string;
+  /**
+   * The path relative to the scanned root and the heading, when the item came from a file.
+   */
+  source_ref?: {
+    path?: string;
+    heading?: string;
+  } | null;
+  status: "active" | "suggested" | "archived" | "conflict";
+  confidence: number;
+  seen_at?: string;
+  created_at: string;
+  updated_at: string;
+  /**
+   * The Node machine id it came from, when it came from one.
+   */
+  machine?: string | null;
+  /**
+   * True when the item was produced by an AI: the server ran noLooks on it (Memory M2 rule 5).
+   */
+  no_looks?: boolean;
+}
+
+/** ai.memory-result@1.0.0 (owner: ai) */
+/**
+ * ai.memory-result@1 (OpenVibe.AI; Memory M2): what the memory API answers: a list of items (GET /items, the batch import), one item (GET or PATCH /items/{id}), the cached profile (GET /profile), a count of deleted rows (DELETE) or the agent search's items (GET /search, at most 8, active only). The text is the person's own and is never logged.
+ */
+export interface AiMemoryResult {
+  /**
+   * @maxItems 200
+   */
+  items?: AiMemoryItem[];
+  item?: AiMemoryItem;
+  profile?: {
+    scope: string;
+    /**
+     * The cached summary of the person's own notes for this scope. It passed noLooks before it was stored.
+     */
+    text: string;
+    /**
+     * sha256 of the sorted item MACs the profile was built from.
+     */
+    items_hash: string;
+    built_at: string;
+  };
+  deleted?: number;
+  count?: number;
+}
+
+/** ai.memory-write-request@1.0.0 (owner: ai) */
+/**
+ * ai.memory-write-request@1 (OpenVibe.AI; Memory M2): the body of POST /api/v1/memory/items:batch (up to 200 items), PATCH /api/v1/memory/items/{id} (text, kind, scope or status) and DELETE /api/v1/memory/items?source= (the source to delete). Secret shapes are redacted again on the server, and an item that is only a secret is refused. AI-produced items are suggestions until the person accepts them.
+ */
+export interface AiMemoryWriteRequest {
+  /**
+   * @minItems 1
+   * @maxItems 200
+   */
+  items?: [
+    {
+      id?: string;
+      text: string;
+      kind?: "preference" | "fact" | "project_rule" | "procedure" | "decision" | "lesson";
+      scope?: string;
+      source?: string;
+      source_ref?: {
+        path?: string;
+        heading?: string;
+      } | null;
+      status?: "active" | "suggested" | "archived" | "conflict";
+      confidence?: number;
+      machine?: string | null;
+      no_looks?: boolean;
+      seen_at?: string;
+    },
+    ...{
+      id?: string;
+      text: string;
+      kind?: "preference" | "fact" | "project_rule" | "procedure" | "decision" | "lesson";
+      scope?: string;
+      source?: string;
+      source_ref?: {
+        path?: string;
+        heading?: string;
+      } | null;
+      status?: "active" | "suggested" | "archived" | "conflict";
+      confidence?: number;
+      machine?: string | null;
+      no_looks?: boolean;
+      seen_at?: string;
+    }[]
+  ];
+  text?: string;
+  kind?: "preference" | "fact" | "project_rule" | "procedure" | "decision" | "lesson";
+  scope?: string;
+  status?: "active" | "suggested" | "archived" | "conflict";
+  source?: string;
+}
