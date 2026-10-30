@@ -4,6 +4,14 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.247.0 — 2026-10-30
+
+- Add `bench.run@2`, allowing a null run or task score while human judges have not scored verified outputs. `bench.run@1` stays unchanged.
+
+## 0.247.0 — 2026-10-30
+
+- `bench.run@1` allows a null run or task score while human judges have not scored the published output yet.
+
 ## 0.246.1 — 2026-10-30
 
 - The `claude-other` harness offer names its provider `custom`: Claude Code on another provider is the person's own
