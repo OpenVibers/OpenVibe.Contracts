@@ -1,0 +1,23 @@
+{
+  "id": "actor.a2a.task",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Give OpenVibe.Actor one A2A (agent-to-agent) task: POST /a2a/v1/tasks with a message (text parts) and an optional skill. The caller is a Network service token with this capability acting for a person (X-OV-Subject); the task runs under that person's allowance, budget and allow-list, exactly like a task they started, and answers with the A2A task (actor.a2a-task-result@1). The agent card is /.well-known/agent.json. Anonymous callers are refused (401) and a token without this capability is refused (403).",
+  "inputSchema": "actor.a2a-task-request@1",
+  "outputSchema": "actor.a2a-task-result@1",
+  "permissions": [
+    "actor:tasks:create"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "actor-task",
+  "events": [],
+  "implementedBy": [
+    "POST /a2a/v1/tasks",
+    "GET /a2a/v1/tasks/:id"
+  ]
+}

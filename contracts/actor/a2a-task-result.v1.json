@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/a2a-task-result.v1.json",
+  "title": "ActorA2ATaskResult",
+  "description": "actor.a2a-task-result@1: the A2A task OpenVibe.Actor accepted or answered: its id, its state (submitted, working, completed, failed), the text answer when it has one and the id of the Actor task behind it. Never a credential.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "state"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "working",
+        "completed",
+        "failed"
+      ]
+    },
+    "answer": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "taskId": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "error": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

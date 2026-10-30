@@ -1,0 +1,11 @@
+{
+  "message": {
+    "role": "user",
+    "parts": [
+      {
+        "type": "image",
+        "text": "x"
+      }
+    ]
+  }
+}

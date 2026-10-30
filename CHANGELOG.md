@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.253.0 — 2026-10-30
+
+- **A2A for OpenVibe.Actor** (Actor v2 stage V2-11). New capability `actor.a2a.task` (owner `actor`, active,
+  first-party, sensitive): a Network service token with it may hand Actor one agent-to-agent task
+  (`POST /a2a/v1/tasks`, the A2A message shape: text parts, an optional skill). The task runs under the person's
+  allowance, budget and allow-list, exactly like a task they started; anonymous callers get 401 and a token
+  without the capability 403. The agent card is `/.well-known/agent.json`.
+- **Two additive v1 contracts** (new files, no existing schema changed): `actor.a2a-task-request@1` and
+  `actor.a2a-task-result@1`.
 ## 0.252.0 — 2026-10-30
 
 - **Memory M2 capabilities and contracts** (OpenVibe.AI; plan `OpenVibe_Memory_Plan_2026-10-30.md`, spec
