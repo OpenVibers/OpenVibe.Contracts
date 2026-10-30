@@ -7388,6 +7388,15 @@
       "status": "active"
     },
     {
+      "id": "codes.task",
+      "version": "2.0.0",
+      "owner": "codes",
+      "schema": "codes/task.v2.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "play.title-definition",
       "version": "1.0.0",
       "owner": "play",

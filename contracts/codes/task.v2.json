@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/task.v2.json",
+  "title": "CodesTask",
+  "description": "codes.task@2: a coding task on OpenVibe.Codes, as GET /api/v1/tasks/:id answers it (capability codes.task.read) and POST /api/v1/tasks creates it. It is codes.task@1 with two added fields: ATTEMPTS, the task's timeline (each try of the task, with the state it ended in and why), and OUTCOME, what the task's attempts added up to (done, unfinished with what is left, or stopped). STATE follows the OpenVibe.Run job that carries it: queued (waiting for one of the person's machines), placed, running, then succeeded, failed, cancelled or expired (no machine of theirs took it in time). URL is the task's page on openvibe.codes, where its owner follows it live. RESULT is present once it has ended: OK says whether the agents finished, SUMMARY what they said, FILES and PATCH the change (the patch at most 256 KiB, PATCH_TRUNCATED when cut), PUSH where it went when asked, COST_USD the model use on the person's own keys, DURATION_MS the time on their machine. ERROR says why a task that never ran ended (Run refused it, or the job failed before a result).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "state",
+    "repo",
+    "url",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Codes task id (tsk_ + ULID)."
+    },
+    "state": {
+      "enum": [
+        "queued",
+        "placed",
+        "running",
+        "succeeded",
+        "failed",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "repo": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "agent": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 41
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "agents": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "maxLength": 41
+          }
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "files": {
+          "type": "array",
+          "maxItems": 2000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "added": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "removed": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "patch": {
+          "type": "string",
+          "maxLength": 262144
+        },
+        "patch_truncated": {
+          "type": "boolean"
+        },
+        "push": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pushed"
+          ],
+          "properties": {
+            "pushed": {
+              "type": "boolean"
+            },
+            "branch": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "branch_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "pull_request": {
+              "type": "string",
+              "format": "uri"
+            },
+            "pull_request_error": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "reason": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      }
+    },
+    "actor_ref": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "step_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      },
+      "description": "The OpenVibe.Actor task and step that started this coding task, when it came from Actor."
+    },
+    "attempts": {
+      "type": "array",
+      "maxItems": 50,
+      "description": "The task's timeline: every try of it, in order. The first is the task itself; the others are what the agents did after it (the same conversation carried on, another agent taking over, a last turn before a limit).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "n",
+          "state"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^att_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The attempt id (att_ + ULID)."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The attempt's number, 1 for the first try."
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 41
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "machine": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100,
+            "description": "The node that ran the attempt, or sandbox when it ran in a sandbox."
+          },
+          "job_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64
+          },
+          "session": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The harness session, so a following attempt can carry on in the same conversation."
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "done",
+              "failed",
+              "stopped",
+              "budget-stopped",
+              "interrupted"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "limit",
+              "auth",
+              "capacity",
+              "refused",
+              "error",
+              "budget",
+              "stopped",
+              "hung",
+              "context",
+              null
+            ]
+          },
+          "why": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "description": "One plain sentence: why this attempt happened, or how it ended."
+          },
+          "kind": {
+            "enum": [
+              "first",
+              "continue",
+              "switch",
+              "wrap-up",
+              "restart",
+              "manual"
+            ]
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "tokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "steps": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_why": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "description": "How the attempt ended, in plain words."
+          }
+        }
+      }
+    },
+    "outcome": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "What the task's attempts added up to: done, unfinished (with what is left), or stopped. Null while the task still runs.",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "done",
+            "unfinished",
+            "stopped",
+            null
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000
+        }
+      }
+    }
+  }
+}
