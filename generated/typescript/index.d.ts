@@ -207109,6 +207109,8 @@ export type ActorTaskEvent = {
   is_error?: boolean;
 };
 
+/** actor.task-event@2.0.0 (owner: actor) */
+
 /** actor.task-list-result@1.0.0 (owner: actor) */
 /**
  * actor.task-list-result@1: GET /api/v1/tasks (capability actor.task.list): the caller's latest tasks, newest first, and NEXT, the `before` cursor for the following page (null on the last page).

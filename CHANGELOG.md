@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.249.0 — 2026-10-30
+
+- **`actor.task-event@2`** (OpenVibe.Actor v2, stage V2-4): a `tool_result` event on a task's live stream now carries
+  `artifacts`: the files and charts that tool made, each `{ kind, name, mime, url, size }`, stored on OpenVibe.Media
+  private to the task's requester. `url` is Actor's stable link, which signs a fresh Media URL for the requester when
+  opened, never an expiring one. Every field of `@1` keeps its name, type and meaning; `@1` is deprecated with `@2` as
+  its replacement.
+- **`actor.task.read`** now implements `GET /api/v1/tasks/:id/artifacts/:mediaId`, a redirect to that fresh signed
+  Media URL (the same 404 for another person, an unknown id, or a file the task never made).
+
 ## 0.248.0 — 2026-10-30
 
 - **`actor.agent-list-result@2`** (OpenVibe.Actor v2): `GET /api/v1/agents` now lists the model each tier resolves

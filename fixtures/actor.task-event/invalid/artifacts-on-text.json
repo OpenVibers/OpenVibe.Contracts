@@ -1,0 +1,18 @@
+{
+  "task_id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "seq": 5,
+  "kind": "output",
+  "at": "2026-10-30T12:00:00.000Z",
+  "agent": "openvibe-runtime",
+  "step": "text",
+  "text": "Here is your chart.",
+  "artifacts": [
+    {
+      "kind": "chart",
+      "name": "revenue.svg",
+      "mime": "image/svg+xml",
+      "url": "https://openvibe.actor/api/v1/tasks/tsk_01JAB2C3D4E5F6G7H8J9K0MNPS/artifacts/med_01JAB2C3D4E5F6G7H8J9K0MNP",
+      "size": 1840
+    }
+  ]
+}
