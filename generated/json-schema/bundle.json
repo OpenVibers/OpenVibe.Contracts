@@ -78854,7 +78854,7 @@
         }
       }
     },
-    "actor.task-event": {
+    "actor.task-event@1": {
       "version": "1.0.0",
       "owner": "actor",
       "status": "active",
@@ -78964,6 +78964,184 @@
               "required": [
                 "state"
               ]
+            }
+          }
+        ]
+      }
+    },
+    "actor.task-event@2": {
+      "version": "2.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/task-event.v2.json",
+        "title": "ActorTaskEvent",
+        "description": "actor.task-event@2: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). Every field of actor.task-event@1 keeps its meaning and shape: KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). v2 adds ARTIFACTS to a tool_result: the files and charts that tool made, stored on OpenVibe.Media, private to the task's requester, each with a stable Actor link the task page and a shared session can open. Events are best-effort; the task record (GET /api/v1/tasks/:id) and its result (which carries every artifact of the run) are the source of truth.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "seq",
+          "kind",
+          "at"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "state",
+              "output",
+              "end"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "verifying",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "agent": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$"
+          },
+          "step": {
+            "type": "string",
+            "enum": [
+              "plan",
+              "text",
+              "tool_call",
+              "tool_result",
+              "check",
+              "handoff"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 8000
+          },
+          "tool": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "input": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "is_error": {
+            "type": "boolean"
+          },
+          "artifacts": {
+            "type": "array",
+            "maxItems": 20,
+            "description": "The files and charts this tool made, in the order it made them. They belong to the task's requester on OpenVibe.Media; URL is Actor's stable link (GET /api/v1/tasks/:id/artifacts/:mediaId), which signs a fresh Media URL for the requester when it is opened, never an expiring signed URL. A public-chat task has no requester and makes none.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name",
+                "mime",
+                "url",
+                "size"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "chart"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "mime": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "output"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "step"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "state",
+                    "end"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "state"
+              ]
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "artifacts"
+              ]
+            },
+            "then": {
+              "required": [
+                "kind",
+                "step"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "output"
+                },
+                "step": {
+                  "const": "tool_result"
+                }
+              }
             }
           }
         ]
