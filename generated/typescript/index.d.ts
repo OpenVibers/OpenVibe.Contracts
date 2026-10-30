@@ -218684,7 +218684,10 @@ export interface BenchRun {
    */
   tasks: {
     task_id: string;
-    score: number;
+    /**
+     * The task score, or null while human judges have not scored it yet.
+     */
+    score: number | null;
     cost_usd: number;
     ms: number;
     tokens: number;
@@ -218698,9 +218701,9 @@ export interface BenchRun {
     transcript_url?: string | null;
   }[];
   /**
-   * The benchmark's one score for this run, 0-100.
+   * The benchmark's one score for this run, 0-100; null while human judges have not scored it yet.
    */
-  score: number;
+  score: number | null;
   cost_usd: number;
   ms: number;
   tokens: number;
