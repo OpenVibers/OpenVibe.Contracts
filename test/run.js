@@ -42,10 +42,11 @@ const files = [];
 for (const f of files) ok(contracts.catalog.some(c => c.schema === f), `${f} is in catalog.json`);
 for (const c of contracts.catalog) {
     for (const k of ['id', 'version', 'owner', 'schema', 'visibility', 'compatibility', 'status']) ok(c[k], `${c.id} has ${k}`);
-    const s = contracts.schema(c.id);
-    ok(s.$id === BASE + c.schema, `${c.id} $id matches its path`);
-    ok(c.schema.endsWith(`.v${c.version.split('.')[0]}.json`), `${c.id} file major matches version ${c.version}`);
-    ok(s.title && s.description, `${c.id} has title and description`);
+    const ref = `${c.id}@${c.version.split('.')[0]}`;
+    const s = contracts.schema(ref);
+    ok(s.$id === BASE + c.schema, `${ref} $id matches its path`);
+    ok(c.schema.endsWith(`.v${c.version.split('.')[0]}.json`), `${ref} file major matches version ${c.version}`);
+    ok(s.title && s.description, `${ref} has title and description`);
     ok(/^\d+\.\d+\.\d+$/.test(c.version), `${c.id} semver`);
 }
 for (const d of contracts.catalog.length ? JSON.parse(fs.readFileSync(path.join(ROOT, 'compatibility/deprecations.json'), 'utf8')).deprecations : []) {
@@ -63,7 +64,9 @@ const FULL_CHECK = {
     'common.resource-name': (v) => contracts.resources.checkName(v), 'common.resource-control-request': (v) => contracts.resources.checkControlRequest(v),
     'common.resource-control-result': (v) => contracts.resources.checkControlResult(v),
 };
-for (const c of contracts.catalog) {
+// `fixtures/<id>/` is one set per contract id, checked against its newest major (a v1 file's fixtures
+// stay valid under an additive v2, and a v2-only example belongs there too).
+for (const c of [...new Map(contracts.catalog.map((e) => [e.id, e])).values()]) {
     for (const kind of ['valid', 'invalid']) {
         const dir = path.join(ROOT, 'fixtures', c.id, kind);
         const list = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => f.endsWith('.json')) : [];
@@ -76,6 +79,8 @@ for (const c of contracts.catalog) {
     }
 }
 assert.throws(() => contracts.resolve('identity.subject-ref@2'), /not @2/);
+ok(contracts.resolve('ai.credential-put@1').schema === 'ai/credential-put.v1.json' && contracts.resolve('ai.credential-put@2').schema === 'ai/credential-put.v2.json'
+    && contracts.resolve('ai.credential-put').version === '2.0.0', 'a contract with two majors resolves by id (newest) or by major');
 assert.throws(() => contracts.assertValid('identity.subject-ref', { type: 'user', id: '1' }), e => e.code === 'contract.invalid');
 
 // ── Manifests ────────────────────────────────────────────────────────────

@@ -1307,10 +1307,28 @@
       "status": "active"
     },
     {
+      "id": "ai.credential-put",
+      "version": "2.0.0",
+      "owner": "ai",
+      "schema": "ai/credential-put.v2.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.credential",
       "version": "1.0.0",
       "owner": "ai",
       "schema": "ai/credential.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.credential",
+      "version": "2.0.0",
+      "owner": "ai",
+      "schema": "ai/credential.v2.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

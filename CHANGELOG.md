@@ -4,6 +4,20 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.241.0 — 2026-10-30
+
+- **AI: one credential per provider** (Codes C3; research `research-2026-10-30/codes-c3-connections.md` items 1 and 2).
+  `ai.credential-put@2` and `ai.credential@2` are additive on `@1`: the provider enum gains `deepseek`, `minimax`,
+  `openrouter` and `custom` beside `anthropic`, `openai` and `node`, and a PUT may carry `key` (v1's `api_key` stays
+  accepted) and its own `budget_usd_per_day`. `custom` requires an https `base_url`; `node` still takes a machine and no
+  key. A person may now keep one key per provider, and the route without a provider still stores the default one.
+  `ai.credential@2` returns the same body as `@1` with the widened provider, and `key_hint` for every provider except
+  `node`.
+- **Tooling:** the registry can hold more than one major of one contract id — the bare id resolves to the newest listed
+  and `id@N` to that major — so `ai.credential-put@1` keeps resolving while `@2` is the one callers name. The bundle
+  keys a multi-major id as `id@N`, the catalog check looks each entry up by its own major, and a fixture set is checked
+  against the newest major of its id. `ai.credential-put@2` is the first contract to use this.
+
 ## 0.240.0 — 2026-10-29
 
 - **OpenVibe.Vision's API** (plan §5.8b): the service manifest now lists the 20 capabilities its routes serve today —
