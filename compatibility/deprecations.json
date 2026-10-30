@@ -210,6 +210,13 @@
       "since": "0.150.0",
       "removeAfter": "1.0.0",
       "reason": "the static hosting engine moved from OpenVibe.Host to OpenVibe.Space (2026-10-12, plan T20)"
+    },
+    {
+      "id": "actor.agent-list-result@1",
+      "replacement": "actor.agent-list-result@2",
+      "since": "0.248.0",
+      "removeAfter": "1.0.0",
+      "reason": "Actor v2 resolves model tiers at boot; the agent list adds tiers and models while keeping every v1 field (2026-10-30)"
     }
   ]
 }

@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/agent-list-result.v2.json",
+  "title": "ActorAgentListResult",
+  "description": "actor.agent-list-result@2: GET /api/v1/agents (capability actor.agent.read). Every field of agent-list-result@1 keeps its meaning and shape (AGENTS: the systems Actor can run a task on, with trust, capabilities, rate card and availability). v2 adds what Actor's one agent loop resolves its model tiers to: TIERS is the model behind each tier (fast: classifying and small steps; smart: the loop; best: hard tasks and best mode; check: the verifier of another family; vision: reading images and screens), and MODELS lists the models the server's keys reach. A tier always names its provider and model, so a caller never has to guess which backend a task will run on.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "agents"
+  ],
+  "properties": {
+    "agents": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "provider",
+          "trust",
+          "can",
+          "rate_card",
+          "available"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "openvibe-runtime",
+              "agent-platform",
+              "open-model",
+              "codes",
+              "node",
+              "run"
+            ]
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "trust": {
+            "type": "string",
+            "enum": [
+              "first-party",
+              "user-owned",
+              "partner",
+              "community",
+              "external"
+            ]
+          },
+          "can": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(task|tool):[a-z0-9_-]+$"
+            }
+          },
+          "rate_card": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "input_usd_per_mtok",
+              "output_usd_per_mtok",
+              "source",
+              "verified_at"
+            ],
+            "properties": {
+              "input_usd_per_mtok": {
+                "type": "number",
+                "minimum": 0
+              },
+              "output_usd_per_mtok": {
+                "type": "number",
+                "minimum": 0
+              },
+              "per_call_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "A fixed charge per tool call the platform bills (for example a web search)."
+              },
+              "source": {
+                "type": "string",
+                "format": "uri"
+              },
+              "verified_at": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          },
+          "typical_latency_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "tiers": {
+      "type": "object",
+      "description": "The model each tier resolves to on this server.",
+      "additionalProperties": false,
+      "required": [
+        "fast",
+        "smart",
+        "best",
+        "check",
+        "vision"
+      ],
+      "properties": {
+        "fast": { "$ref": "#/$defs/tier" },
+        "smart": { "$ref": "#/$defs/tier" },
+        "best": { "$ref": "#/$defs/tier" },
+        "check": { "$ref": "#/$defs/tier" },
+        "vision": { "$ref": "#/$defs/tier" }
+      }
+    },
+    "models": {
+      "type": "array",
+      "maxItems": 200,
+      "description": "The models the server's configured keys reach, as listed by the providers.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "provider",
+          "model",
+          "family"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "family": {
+            "type": "string",
+            "maxLength": 32
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "tier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "model",
+        "family",
+        "available"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": [
+            "openai",
+            "deepseek",
+            "local",
+            "runtime",
+            "compatible"
+          ]
+        },
+        "model": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "family": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 300
+        }
+      }
+    }
+  }
+}

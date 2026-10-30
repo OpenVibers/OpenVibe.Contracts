@@ -6783,6 +6783,16 @@
       "adr": "ADR-044"
     },
     {
+      "id": "actor.agent-list-result",
+      "version": "2.0.0",
+      "owner": "actor",
+      "schema": "actor/agent-list-result.v2.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
       "id": "food.pantry-request",
       "version": "1.0.0",
       "owner": "food",
