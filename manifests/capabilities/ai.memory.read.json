@@ -1,0 +1,24 @@
+{
+  "id": "ai.memory.read",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a person's memory from OpenVibe.AI (Memory M2): GET /api/v1/memory/items, /items/{id}, /profile and /search. The person's own token reads their own items; a service with ai.memory.read acting on_behalf_of a person searches only the scopes its grant names (user always; project:* only for Codes runs in that project), gets active items only, at most 8, and is audited in memory_reads with item ids and never text. Suggested, archived and conflict items never reach an agent.",
+  "permissions": [
+    "ai:memory:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "ai-memory",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/memory/items",
+    "GET /api/v1/memory/items/:id",
+    "GET /api/v1/memory/profile",
+    "GET /api/v1/memory/search"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "ai.memory-result@1"
+}

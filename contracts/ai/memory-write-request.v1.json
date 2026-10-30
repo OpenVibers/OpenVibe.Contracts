@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/memory-write-request.v1.json",
+  "title": "AiMemoryWriteRequest",
+  "description": "ai.memory-write-request@1 (OpenVibe.AI; Memory M2): the body of POST /api/v1/memory/items:batch (up to 200 items), PATCH /api/v1/memory/items/{id} (text, kind, scope or status) and DELETE /api/v1/memory/items?source= (the source to delete). Secret shapes are redacted again on the server, and an item that is only a secret is refused. AI-produced items are suggestions until the person accepts them.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mem_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8000
+          },
+          "kind": {
+            "enum": [
+              "preference",
+              "fact",
+              "project_rule",
+              "procedure",
+              "decision",
+              "lesson"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "pattern": "^(user|project:[a-z0-9][a-z0-9._-]{0,63})$"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "source_ref": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "heading": {
+                "type": "string",
+                "maxLength": 300
+              }
+            }
+          },
+          "status": {
+            "enum": [
+              "active",
+              "suggested",
+              "archived",
+              "conflict"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "machine": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "no_looks": {
+            "type": "boolean"
+          },
+          "seen_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000
+    },
+    "kind": {
+      "enum": [
+        "preference",
+        "fact",
+        "project_rule",
+        "procedure",
+        "decision",
+        "lesson"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "pattern": "^(user|project:[a-z0-9][a-z0-9._-]{0,63})$"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "suggested",
+        "archived",
+        "conflict"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    }
+  }
+}

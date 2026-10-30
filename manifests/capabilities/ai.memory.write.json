@@ -1,0 +1,24 @@
+{
+  "id": "ai.memory.write",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Store and change a person's memory in OpenVibe.AI (Memory M2): POST /api/v1/memory/items:batch imports up to 200 items, PATCH /items/{id} changes text, kind, scope or status, DELETE /items/{id} and DELETE /items?source= remove rows. The person's own token or a service acting on_behalf_of them. Redaction runs again on the server (openvibe-sdk/redact), an item that is only a secret is refused, AI-produced items are suggestions until the person accepts them, and a delete removes the row (profiles that used it are rebuilt).",
+  "permissions": [
+    "ai:memory:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "ai-memory",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/memory/items:batch",
+    "PATCH /api/v1/memory/items/:id",
+    "DELETE /api/v1/memory/items/:id",
+    "DELETE /api/v1/memory/items"
+  ],
+  "inputSchema": "ai.memory-write-request@1",
+  "outputSchema": "ai.memory-result@1"
+}

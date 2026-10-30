@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.252.0 — 2026-10-30
+
+- **Memory M2 capabilities and contracts** (OpenVibe.AI; plan `OpenVibe_Memory_Plan_2026-10-30.md`, spec
+  `research-2026-10-30/memory-m2-spec.md`).
+  - New active first-party capabilities `ai.memory.read` and `ai.memory.write`, owned by `ai`: the person's own API
+    reads and writes, and a service acting `on_behalf_of` a person with the capability (agent search is at most 8
+    active items in the scopes its grant names, audited in `memory_reads` with ids only, never text).
+  - Three additive v1 contracts: `ai.memory-item@1` (one decrypted item as its owner reads it), `ai.memory-result@1`
+    (the list, item, profile, deletion count and agent search answers) and `ai.memory-write-request@1` (the batch
+    import, the patch and the source deletion). The sealed fields (`text_enc`, `text_mac`, `source_ref_enc`) are never
+    in a response, and the text is never logged.
+
 All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) that consumers install
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).

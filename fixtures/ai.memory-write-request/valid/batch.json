@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "text": "Use the repo's formatter before a commit.",
+      "kind": "procedure",
+      "scope": "project:openvibe-node",
+      "source": "claude-code",
+      "source_ref": {
+        "path": ".claude/CLAUDE.md",
+        "heading": "Style"
+      },
+      "confidence": 1
+    }
+  ]
+}
