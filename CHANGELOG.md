@@ -4,6 +4,31 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.243.0 — 2026-10-30
+
+- The release cut from `main` for codes.task@2 (#250): a coding task's attempts and outcome, one id with two majors.
+  It carries 0.241.0 (the AI credential v2 release) as well. `v0.242.0` and `v0.242.1` were tagged from the PR
+  branch before it merged; pin `v0.243.0` instead (OpenVibe.Codes moves to it).
+
+## 0.242.1 — 2026-10-30
+
+- The generated OpenAPI files carry the release's own version again: `v0.242.0` shipped them with 0.240.0's,
+  because the version was raised after they were written. Nothing else changed; `v0.242.1` is the release to pin.
+- This release is rebased on `0.241.0` (the AI credential v2 release, merged while it was being written), so the
+  branch carries that work too; the published `v0.242.1` tarball, which OpenVibe.Codes pins, is the cut from
+  before the rebase and holds the codes.task@2 work alone. The next tag cut from `main` carries both.
+
+## 0.242.0 — 2026-10-30
+
+- **`codes.task@2`** (OpenVibe.Codes): a coding task's timeline. It is `codes.task@1` with the same fields, plus two
+  added ones: `attempts` (every try of the task, in order: the agent, the machine, the session, the state it ended
+  in, why, what it cost) and `outcome` (what the attempts added up to: done, unfinished with what is left, or
+  stopped). `GET /api/v1/tasks/:id` answers it — the task's own fields stay at the top level, exactly as
+  `codes.task@1` had them, and the two new fields are added to them. `codes.task@1` stays as it is.
+- **One contract id may hold more than one major** now: the catalog lists a v1 and a v2 file for the same id, the
+  bare id resolves to the newest major, and `id@N` names that major, so a v1 caller keeps resolving while a v2
+  caller names it exactly. (`ai.credential@2` is the first to use it.)
+
 ## 0.241.0 — 2026-10-30
 
 - **AI: one credential per provider** (Codes C3; research `research-2026-10-30/codes-c3-connections.md` items 1 and 2).
@@ -2384,7 +2409,6 @@ as `worker:` capabilities in `platform.resource-offer@1`. The names are reserved
 - `platform.resource-offer@1`: no schema change. The `capabilities` description names the harness convention:
   `task:edit`, `task:review`, `task:browse`, `task:run`, `task:test`, `task:plan`, `harness:mcp`, `harness:resume`,
   `harness:host-access`, `harness:long-autonomy`. New valid fixture `harness-task-routing`. Additive.
-
 
 **Run jobs and their metering** (plan T14 lane G, follow-up 1 of the Node gap audit):
 - New `platform.runtime-class@1`: the classes `function`, `code`, `browser`, `linux`, `desktop` and `gpu`, names

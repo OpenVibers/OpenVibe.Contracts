@@ -4,9 +4,9 @@
   "owner": "codes",
   "status": "active",
   "visibility": "first-party",
-  "description": "Read a coding task started through codes.task.start: GET /api/v1/tasks/:id on OpenVibe.Codes, as the service that started it, naming the same person in X-OV-Subject. Another service's task, or another person's, is 404.",
+  "description": "Read a coding task started through codes.task.start: GET /api/v1/tasks/:id on OpenVibe.Codes, as the service that started it, naming the same person in X-OV-Subject. Another service's task, or another person's, is 404. The answer is codes.task@2: the task itself (as codes.task@1, with the same fields at the top level) and, added to it, the task's attempts (its timeline) and its outcome.",
   "inputSchema": "common.no-body@1",
-  "outputSchema": "codes.task@1",
+  "outputSchema": "codes.task@2",
   "permissions": [
     "codes:tasks:read"
   ],
