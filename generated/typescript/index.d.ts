@@ -218684,6 +218684,77 @@ export interface BenchRun {
    */
   tasks: {
     task_id: string;
+    score: number;
+    cost_usd: number;
+    ms: number;
+    tokens: number;
+    /**
+     * @maxItems 40
+     */
+    artifacts: {
+      kind: string;
+      url: string;
+    }[];
+    transcript_url?: string | null;
+  }[];
+  /**
+   * The benchmark's one score for this run, 0-100.
+   */
+  score: number;
+  cost_usd: number;
+  ms: number;
+  tokens: number;
+  /**
+   * verified: an executor ran it. submitted: posted with no executor, badged and out of the default rankings.
+   */
+  provenance: "verified" | "submitted";
+  created_at: string;
+}
+
+/** bench.run@2.0.0 (owner: bench) */
+/**
+ * bench.run@2: scores may be null while human judges have not scored verified outputs yet.
+ */
+export interface BenchRunV2 {
+  id: string;
+  /**
+   * The benchmark id@version the run names. The version is immutable once a run names it.
+   */
+  benchmark: string;
+  model: string;
+  /**
+   * The route that produced the run.
+   */
+  route: {
+    [k: string]: unknown | undefined;
+  };
+  provider: string;
+  harness: {
+    name: string;
+    version: string;
+  };
+  settings: {
+    temperature?: number | null;
+    effort?: string | null;
+  };
+  executor: {
+    /**
+     * codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it.
+     */
+    kind: "codes" | "run" | "node" | "submitted";
+    id: string;
+  };
+  /**
+   * The machine for a local model: GPU, CPU, RAM, quantization.
+   */
+  hardware?: {
+    [k: string]: unknown | undefined;
+  } | null;
+  /**
+   * @maxItems 200
+   */
+  tasks: {
+    task_id: string;
     /**
      * The task score, or null while human judges have not scored it yet.
      */
@@ -218701,7 +218772,7 @@ export interface BenchRun {
     transcript_url?: string | null;
   }[];
   /**
-   * The benchmark's one score for this run, 0-100; null while human judges have not scored it yet.
+   * The benchmark's score for this run, or null while human judges have not scored it yet.
    */
   score: number | null;
   cost_usd: number;

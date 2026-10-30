@@ -6,6 +6,10 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.247.0 — 2026-10-30
 
+- Add `bench.run@2`, allowing a null run or task score while human judges have not scored verified outputs. `bench.run@1` stays unchanged.
+
+## 0.247.0 — 2026-10-30
+
 - `bench.run@1` allows a null run or task score while human judges have not scored the published output yet.
 
 ## 0.246.1 — 2026-10-30

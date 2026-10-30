@@ -91273,7 +91273,7 @@
         }
       }
     },
-    "bench.run": {
+    "bench.run@1": {
       "version": "1.0.0",
       "owner": "bench",
       "status": "active",
@@ -91351,13 +91351,259 @@
             }
           },
           "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "The benchmark's one score for this run, 0-100."
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tokens": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "provenance": {
+            "enum": [
+              "verified",
+              "submitted"
+            ],
+            "description": "verified: an executor ran it. submitted: posted with no executor, badged and out of the default rankings."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "harness": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "version"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          },
+          "settings": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "temperature": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 2
+              },
+              "effort": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 40
+              }
+            }
+          },
+          "executor": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "codes",
+                  "run",
+                  "node",
+                  "submitted"
+                ],
+                "description": "codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it."
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            }
+          },
+          "task": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "task_id",
+              "score",
+              "cost_usd",
+              "ms",
+              "tokens",
+              "artifacts"
+            ],
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "ms": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "artifacts": {
+                "type": "array",
+                "maxItems": 40,
+                "items": {
+                  "$ref": "#/$defs/artifact"
+                }
+              },
+              "transcript_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 500
+              }
+            }
+          },
+          "artifact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "url"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "url": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            }
+          }
+        }
+      }
+    },
+    "bench.run@2": {
+      "version": "2.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/run.v2.json",
+        "title": "BenchRunV2",
+        "description": "bench.run@2: scores may be null while human judges have not scored verified outputs yet.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "benchmark",
+          "model",
+          "route",
+          "provider",
+          "harness",
+          "settings",
+          "executor",
+          "tasks",
+          "score",
+          "cost_usd",
+          "ms",
+          "tokens",
+          "provenance",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^brn_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "benchmark": {
+            "type": "string",
+            "pattern": "^bmk_[0-9A-HJKMNP-TV-Z]{26}@[0-9]+$",
+            "description": "The benchmark id@version the run names. The version is immutable once a run names it."
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "route": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "The route that produced the run."
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "harness": {
+            "$ref": "#/$defs/harness"
+          },
+          "settings": {
+            "$ref": "#/$defs/settings"
+          },
+          "executor": {
+            "$ref": "#/$defs/executor"
+          },
+          "hardware": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true,
+            "description": "The machine for a local model: GPU, CPU, RAM, quantization."
+          },
+          "tasks": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "$ref": "#/$defs/task"
+            }
+          },
+          "score": {
             "type": [
               "number",
               "null"
             ],
             "minimum": 0,
             "maximum": 100,
-            "description": "The benchmark's one score for this run, 0-100; null while human judges have not scored it yet."
+            "description": "The benchmark's score for this run, or null while human judges have not scored it yet."
           },
           "cost_usd": {
             "type": "number",

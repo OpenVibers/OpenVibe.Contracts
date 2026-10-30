@@ -72,10 +72,10 @@
       }
     },
     "score": {
-      "type": ["number", "null"],
+      "type": "number",
       "minimum": 0,
       "maximum": 100,
-      "description": "The benchmark's one score for this run, 0-100; null while human judges have not scored it yet."
+      "description": "The benchmark's one score for this run, 0-100."
     },
     "cost_usd": {
       "type": "number",
@@ -185,10 +185,9 @@
           "maxLength": 80
         },
         "score": {
-          "type": ["number", "null"],
+          "type": "number",
           "minimum": 0,
-          "maximum": 100,
-          "description": "The task score, or null while human judges have not scored it yet."
+          "maximum": 100
         },
         "cost_usd": {
           "type": "number",

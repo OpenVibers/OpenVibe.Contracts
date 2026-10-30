@@ -8189,6 +8189,15 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "bench.run",
+      "version": "2.0.0",
+      "owner": "bench",
+      "schema": "bench/run.v2.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
