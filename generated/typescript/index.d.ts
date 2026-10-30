@@ -211299,14 +211299,14 @@ export type VideoPlaylistManageResult =
 
 /** codes.task-start-request@1.1.0 (owner: codes) */
 /**
- * codes.task-start-request@1: the body of POST /api/v1/tasks on OpenVibe.Codes (capability codes.task.start). A first-party service (OpenVibe.Actor) starts a coding task for a person, named with X-OV-Subject: Codes runs it on that person's own machine through OpenVibe.Run (openvibe.codes/run, plan T16), in the project of their latest task there, so the person has used openvibe.codes/run once before a service can start one for them (else 409 codes.no_project). REPO is an https git URL with no credentials; REF a branch or tag to start from (default: the repository's default branch). PROMPT is the task. AGENT names one of Codes' agents (GET /harnesses), absent for Codes' router to pick. PERMISSION: edit (default; the agents edit files) or full (they may also run commands: tests, installs). PUSH asks for the change on a new branch (GitHub, with the machine's GITHUB_TOKEN; never the branch it started from), PULL_REQUEST also opens a pull request. IDEMPOTENCY_KEY: a repeat for the same person with the same key answers the first task (200, created false).
+ * codes.task-start-request@1: the body of POST /api/v1/tasks on OpenVibe.Codes (capability codes.task.start). A first-party service (OpenVibe.Actor) starts a coding task for a person, named with X-OV-Subject: Codes runs it on that person's own machine through OpenVibe.Run (openvibe.codes/run, plan T16), in the project of their latest task there, so the person has used openvibe.codes/run once before a service can start one for them (else 409 codes.no_project). REPO is an https git URL with no credentials; REF a branch or tag to start from (default: the repository's default branch). PROMPT is the task. AGENT names one of Codes' agents (GET /harnesses), absent for Codes' router to pick. PERMISSION: review (read-only: research, audits, reviews; nothing is changed), edit (default; the agents edit files) or full (they may also run commands: tests, installs). PUSH asks for the change on a new branch (GitHub, with the machine's GITHUB_TOKEN; never the branch it started from), PULL_REQUEST also opens a pull request. IDEMPOTENCY_KEY: a repeat for the same person with the same key answers the first task (200, created false).
  */
 export interface CodesTaskStartRequest {
   repo: string;
   ref?: string;
   prompt: string;
   agent?: string;
-  permission?: "edit" | "full";
+  permission?: "review" | "edit" | "full";
   push?: boolean;
   pull_request?: boolean;
   idempotency_key?: string;
