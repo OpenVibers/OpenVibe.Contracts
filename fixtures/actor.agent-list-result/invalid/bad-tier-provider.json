@@ -1,0 +1,28 @@
+{
+  "agents": [
+    {
+      "id": "openvibe-runtime",
+      "name": "OpenVibe runtime",
+      "kind": "openvibe-runtime",
+      "provider": "OpenVibe",
+      "trust": "external",
+      "can": [
+        "task:answer"
+      ],
+      "rate_card": {
+        "input_usd_per_mtok": 0.25,
+        "output_usd_per_mtok": 2,
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "verified_at": "2026-10-30"
+      },
+      "available": true
+    }
+  ],
+  "tiers": {
+    "fast": { "provider": "mystery", "model": "x", "family": "x", "available": true },
+    "smart": { "provider": "openai", "model": "gpt-5.1", "family": "openai", "available": true },
+    "best": { "provider": "openai", "model": "gpt-5.1", "family": "openai", "available": true },
+    "check": { "provider": "deepseek", "model": "deepseek-reasoner", "family": "deepseek", "available": true },
+    "vision": { "provider": "openai", "model": "gpt-5.1", "family": "openai", "available": true }
+  }
+}

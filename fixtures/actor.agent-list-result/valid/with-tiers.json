@@ -1,0 +1,42 @@
+{
+  "agents": [
+    {
+      "id": "openvibe-runtime",
+      "name": "OpenVibe runtime",
+      "kind": "openvibe-runtime",
+      "provider": "OpenVibe",
+      "model": "gpt-5.1",
+      "trust": "external",
+      "can": [
+        "task:answer",
+        "task:research",
+        "task:web",
+        "task:lookup",
+        "task:robot",
+        "task:computer",
+        "tool:search_openvibe",
+        "tool:search_web",
+        "tool:run_tool"
+      ],
+      "rate_card": {
+        "input_usd_per_mtok": 0.25,
+        "output_usd_per_mtok": 2,
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "verified_at": "2026-10-30"
+      },
+      "typical_latency_ms": 25000,
+      "available": true
+    }
+  ],
+  "tiers": {
+    "fast": { "provider": "deepseek", "model": "deepseek-flash", "family": "deepseek", "available": true },
+    "smart": { "provider": "openai", "model": "gpt-5.1", "family": "openai", "available": true },
+    "best": { "provider": "openai", "model": "gpt-5.1", "family": "openai", "available": true },
+    "check": { "provider": "deepseek", "model": "deepseek-reasoner", "family": "deepseek", "available": true },
+    "vision": { "provider": "openai", "model": "gpt-5.1", "family": "openai", "available": true }
+  },
+  "models": [
+    { "provider": "openai", "model": "gpt-5.1", "family": "openai" },
+    { "provider": "deepseek", "model": "deepseek-flash", "family": "deepseek" }
+  ]
+}

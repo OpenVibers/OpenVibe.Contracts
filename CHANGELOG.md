@@ -4,6 +4,13 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.248.0 — 2026-10-30
+
+- **`actor.agent-list-result@2`** (OpenVibe.Actor v2): `GET /api/v1/agents` now lists the model each tier resolves
+  to (`tiers`: fast, smart, best, check, vision, with its provider, model, family and availability) and the models the
+  server's keys reach (`models`). Every field of `@1` keeps its name, type and meaning; `@1` is deprecated with `@2`
+  as its replacement. The `actor.agent.read` capability's output schema is `@2`.
+
 ## 0.247.0 — 2026-10-30
 
 - Add `bench.run@2`, allowing a null run or task score while human judges have not scored verified outputs. `bench.run@1` stays unchanged.

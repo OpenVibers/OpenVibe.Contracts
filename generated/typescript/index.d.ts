@@ -207164,6 +207164,8 @@ export interface ActorAgentListResult {
   }[];
 }
 
+/** actor.agent-list-result@2.0.0 (owner: actor) */
+
 /** food.pantry-request@1.0.0 (owner: food) */
 /**
  * food.pantry-request@1: PUT /api/v1/pantry on OpenVibe.Food replaces the pantry with exactly these food slugs.
