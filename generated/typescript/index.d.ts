@@ -256092,6 +256092,1126 @@ export interface ActorAgentRunRequest {
   input?: string;
 }
 
+/** actor.a2a-task-request@1.0.0 (owner: actor) */
+/**
+ * actor.a2a-task-request@1: POST /a2a/v1/tasks gives OpenVibe.Actor one A2A task (the Agent2Agent shape: a message with text parts, an optional skill and an optional id to continue). The caller is a Network service token with the capability actor.a2a.task acting for a person (X-OV-Subject); the task runs under that person's allowance and allow-list, exactly like a task they started. Answered 201 with the A2A task (actor.a2a-task-result@1).
+ */
+export interface ActorA2ATaskRequest {
+  message: {
+    role?: "user";
+    /**
+     * @minItems 1
+     * @maxItems 20
+     */
+    parts:
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          },
+          {
+            type: "text";
+            text?: string;
+            [k: string]: unknown | undefined;
+          }
+        ];
+    [k: string]: unknown | undefined;
+  };
+  skillId?: string;
+  taskId?: string;
+}
+
+/** actor.a2a-task-result@1.0.0 (owner: actor) */
+/**
+ * actor.a2a-task-result@1: the A2A task OpenVibe.Actor accepted or answered: its id, its state (submitted, working, completed, failed), the text answer when it has one and the id of the Actor task behind it. Never a credential.
+ */
+export interface ActorA2ATaskResult {
+  id: string;
+  state: "submitted" | "working" | "completed" | "failed";
+  answer?: string;
+  taskId?: string;
+  error?: string;
+}
+
 /** actor.task-event@1.0.0 (owner: actor) */
 /**
  * actor.task-event@1: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, or calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). Events are best-effort; the task record (GET /api/v1/tasks/:id) is the source of truth.

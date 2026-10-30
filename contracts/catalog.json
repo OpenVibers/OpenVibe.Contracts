@@ -6743,6 +6743,24 @@
       "status": "active"
     },
     {
+      "id": "actor.a2a-task-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/a2a-task-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.a2a-task-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/a2a-task-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "actor.task-event",
       "version": "1.0.0",
       "owner": "actor",

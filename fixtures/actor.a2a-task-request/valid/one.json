@@ -1,0 +1,12 @@
+{
+  "message": {
+    "role": "user",
+    "parts": [
+      {
+        "type": "text",
+        "text": "What is the weather in Paris?"
+      }
+    ]
+  },
+  "skillId": "answer"
+}
