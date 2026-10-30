@@ -217,6 +217,13 @@
       "since": "0.248.0",
       "removeAfter": "1.0.0",
       "reason": "Actor v2 resolves model tiers at boot; the agent list adds tiers and models while keeping every v1 field (2026-10-30)"
+    },
+    {
+      "id": "actor.task-event@1",
+      "replacement": "actor.task-event@2",
+      "since": "0.249.0",
+      "removeAfter": "1.0.0",
+      "reason": "Actor's files and charts ride on the tool result that made them; v2 adds artifacts to that event while keeping every v1 field (Actor v2 stage V2-4, 2026-10-30)"
     }
   ]
 }

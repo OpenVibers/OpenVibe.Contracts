@@ -4,7 +4,7 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
-## 0.249.0 — 2026-10-30
+## 0.250.0 — 2026-10-30
 
 - **`bot.device-message@1`'s heartbeat gains an optional `fleet`** (Codes C9c): what the machine's coding agents have
   left — each agent's id, whether it is installed and signed in, and each limit window's label, used and limit and
@@ -17,6 +17,16 @@ the notes were in the tag and commit messages (`git tag -n1`).
   job only on that machine and refuses it `409 run.job.node_offline` when it is not connected, never moving it to
   another one. Omitted (every existing caller): Run places the job wherever it fits, exactly as before. Additive: no
   field changed or removed, and a caller that never sends `node` validates unchanged.
+
+## 0.249.0 — 2026-10-30
+
+- **`actor.task-event@2`** (OpenVibe.Actor v2, stage V2-4): a `tool_result` event on a task's live stream now carries
+  `artifacts`: the files and charts that tool made, each `{ kind, name, mime, url, size }`, stored on OpenVibe.Media
+  private to the task's requester. `url` is Actor's stable link, which signs a fresh Media URL for the requester when
+  opened, never an expiring one. Every field of `@1` keeps its name, type and meaning; `@1` is deprecated with `@2` as
+  its replacement.
+- **`actor.task.read`** now implements `GET /api/v1/tasks/:id/artifacts/:mediaId`, a redirect to that fresh signed
+  Media URL (the same 404 for another person, an unknown id, or a file the task never made).
 
 ## 0.248.0 — 2026-10-30
 

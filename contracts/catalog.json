@@ -6753,6 +6753,16 @@
       "adr": "ADR-044"
     },
     {
+      "id": "actor.task-event",
+      "version": "2.0.0",
+      "owner": "actor",
+      "schema": "actor/task-event.v2.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
       "id": "actor.task-list-result",
       "version": "1.0.0",
       "owner": "actor",
