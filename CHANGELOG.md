@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.245.0 — 2026-10-30
+
+- **`codes.task-start-request@1` accepts `permission: "review"`** — a read-only coding task (research, an audit, a
+  review), which Codes runs at its `read` permission level: the agent looks and answers and changes nothing. Additive
+  to the enum (`review` beside `edit` and `full`); every existing request still validates.
+
 ## 0.244.0 — 2026-10-30
 
 - **Bench as an open benchmark platform, stage B1** (spec 2026-10-30): `bench.benchmark@1` and `bench.run@1`.
