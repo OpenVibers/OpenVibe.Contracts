@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/dock-result.v1.json",
+  "title": "NetworkDockResult",
+  "description": "network.dock-result@1 (the Dock plan 2026-10-30, K-D1): what GET /api/v1/me/dock answers on OpenVibe.Network — the person's Dock state, the counts the pill's status dot is drawn from, and whether those counts are complete.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["state", "counts", "sources_partial"],
+  "properties": {
+    "state": {
+      "$ref": "dock-state.v1.json",
+      "description": "The person's Dock state: the stored one, or the default when they have never opened the Dock."
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["running", "waiting", "unread"],
+      "properties": {
+        "running": { "type": "integer", "minimum": 0, "description": "How many of the person's agents are running." },
+        "waiting": { "type": "integer", "minimum": 0, "description": "How many need the person." },
+        "unread": { "type": "integer", "minimum": 0, "description": "How many notifications the person has not read." }
+      }
+    },
+    "sources_partial": {
+      "type": "boolean",
+      "description": "True when an authority behind the counts did not answer, so the counts are lower than the truth."
+    }
+  }
+}

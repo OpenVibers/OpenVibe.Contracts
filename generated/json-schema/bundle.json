@@ -86990,6 +86990,205 @@
         }
       }
     },
+    "network.dock-state": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/dock-state.v1.json",
+        "title": "NetworkDockState",
+        "description": "network.dock-state@1 (the Dock plan 2026-10-30, K-D1): the state of one person's Dock — the little floating surface every OpenVibe site draws. It lives in the Network, not in the browser, because localStorage is per site and the Dock follows the person across every domain. GET /api/v1/me/dock and PUT /api/v1/me/dock on OpenVibe.Network.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "open",
+          "tab",
+          "pinned",
+          "agent",
+          "chat",
+          "place",
+          "updated_at"
+        ],
+        "properties": {
+          "open": {
+            "type": "boolean",
+            "description": "Whether the Dock is open (a sheet on a phone, a floating card on a desktop) or collapsed to its pill."
+          },
+          "tab": {
+            "enum": [
+              "agent",
+              "chats",
+              "activity"
+            ],
+            "description": "Which of the Dock's three tabs shows: the agent's screen, the chats, the activity."
+          },
+          "pinned": {
+            "type": "boolean",
+            "description": "Keep the pill on screen even when nothing runs and nothing waits."
+          },
+          "agent": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "service",
+              "id"
+            ],
+            "properties": {
+              "service": {
+                "enum": [
+                  "actor",
+                  "codes",
+                  "run",
+                  "desks"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            },
+            "description": "The agent the Agent tab follows, or null when it follows none."
+          },
+          "chat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The conversation the Chats tab has open, or null."
+          },
+          "place": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "phone",
+              "desktop"
+            ],
+            "properties": {
+              "phone": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "corner"
+                ],
+                "properties": {
+                  "corner": {
+                    "enum": [
+                      "bottom-right",
+                      "bottom-left",
+                      "top-right",
+                      "top-left"
+                    ]
+                  }
+                },
+                "description": "Where the Dock sits on a phone."
+              },
+              "desktop": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "corner",
+                  "width",
+                  "height"
+                ],
+                "properties": {
+                  "corner": {
+                    "enum": [
+                      "bottom-right",
+                      "bottom-left",
+                      "top-right",
+                      "top-left"
+                    ]
+                  },
+                  "width": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 320,
+                    "maximum": 720
+                  },
+                  "height": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 360,
+                    "maximum": 900
+                  }
+                },
+                "description": "Where the Dock sits on a desktop, and how big it is (null: the site's own default size)."
+              }
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the state was last written."
+          }
+        }
+      }
+    },
+    "network.dock-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/dock-result.v1.json",
+        "title": "NetworkDockResult",
+        "description": "network.dock-result@1 (the Dock plan 2026-10-30, K-D1): what GET /api/v1/me/dock answers on OpenVibe.Network — the person's Dock state, the counts the pill's status dot is drawn from, and whether those counts are complete.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "state",
+          "counts",
+          "sources_partial"
+        ],
+        "properties": {
+          "state": {
+            "$ref": "dock-state.v1.json",
+            "description": "The person's Dock state: the stored one, or the default when they have never opened the Dock."
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "running",
+              "waiting",
+              "unread"
+            ],
+            "properties": {
+              "running": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many of the person's agents are running."
+              },
+              "waiting": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many need the person."
+              },
+              "unread": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many notifications the person has not read."
+              }
+            }
+          },
+          "sources_partial": {
+            "type": "boolean",
+            "description": "True when an authority behind the counts did not answer, so the counts are lower than the truth."
+          }
+        }
+      }
+    },
     "today.event.scheduled": {
       "version": "1.0.0",
       "owner": "today",
