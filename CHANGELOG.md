@@ -4,6 +4,11 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.242.1 — 2026-10-29
+
+- The generated OpenAPI files carry the release's own version again: `v0.242.0` shipped them with 0.240.0's,
+  because the version was raised after they were written. Nothing else changed; `v0.242.1` is the release to pin.
+
 ## 0.242.0 — 2026-10-29
 
 - **`codes.task@2`** (OpenVibe.Codes): a coding task's timeline. It is `codes.task@1` with the same fields, plus two
