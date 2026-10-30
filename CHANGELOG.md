@@ -4,6 +4,15 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.249.0 — 2026-10-30
+
+- **`run.job-create-request@1` gains an optional `node`** (Codes C9c): the device id (`dev_…`) of the job's own
+  machine in Run's placement (`platform.resource-offer@1` node_id, as OpenVibe.Bot's `GET /api/v1/machines` names it),
+  which pins the job to one machine — a conductor must run where its folder and its memory are. Run places a pinned
+  job only on that machine and refuses it `409 run.job.node_offline` when it is not connected, never moving it to
+  another one. Omitted (every existing caller): Run places the job wherever it fits, exactly as before. Additive: no
+  field changed or removed, and a caller that never sends `node` validates unchanged.
+
 ## 0.248.0 — 2026-10-30
 
 - **`actor.agent-list-result@2`** (OpenVibe.Actor v2): `GET /api/v1/agents` now lists the model each tier resolves
