@@ -1,7 +1,7 @@
 {
   "id": "claude-other",
   "name": "Claude Code (another provider)",
-  "provider": "anthropic-compatible",
+  "provider": "custom",
   "capabilities": {
     "host_access": true,
     "mcp": true,
@@ -45,7 +45,7 @@
     {
       "id": "claude-other-default",
       "harness": "claude-other",
-      "provider": "anthropic-compatible",
+      "provider": "custom",
       "model": "claude-other",
       "context_limits": {
         "input_tokens": 200000,

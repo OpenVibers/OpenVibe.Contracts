@@ -4,6 +4,12 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.246.1 — 2026-10-30
+
+- The `claude-other` harness offer names its provider `custom`: Claude Code on another provider is the person's own
+  endpoint (`base_url`, a URL that speaks the Anthropic format), and `custom` is the provider id a person's key is
+  kept under. The example and its fixture say so now; nothing else changed.
+
 ## 0.246.0 — 2026-10-30
 
 - **Two more harnesses in the catalogue** (OpenVibe.Codes): `platform.harness-offer@1` publishes MiniMax Code
