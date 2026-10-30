@@ -8171,6 +8171,24 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "bench.benchmark",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/benchmark.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.run",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/run.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

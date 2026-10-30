@@ -28,7 +28,10 @@
     "bench.judgement.cast",
     "bench.board.read",
     "bench.dataset.read",
-    "bench.eval.manage"
+    "bench.eval.manage",
+    "bench.benchmark.write",
+    "bench.run.publish",
+    "bench.run.read"
   ],
   "eventsProduced": [
     "bench.round.finished",
@@ -93,7 +96,7 @@
       "none": "no claims: one process owns its PostgreSQL database (ov_bench); a round is taken with a compare-and-set on its status (queued → running)"
     }
   },
-  "notes": "Port 5230, unit openvibe-bench.service, database ov_bench. The shared AI benchmark and comparison engine (plan 2026-10-28 §4.12): kinds, pinned rounds, entries, blind judgements, ratings, boards, the open dataset and private evals. AI stays the run authority, Report the analytics authority. Bench answers account export and deletion (ADR-033) and subscribes to the two account Events topics. It calls AI's run API (ai.run.create, namespace ai.generate) for generation and publishes bench.* events through its outbox.",
+  "notes": "Port 5230, unit openvibe-bench.service, database ov_bench. The shared AI benchmark and comparison engine (plan 2026-10-28 §4.12): kinds, pinned rounds, entries, blind judgements, ratings, boards, the open dataset and private evals. AI stays the run authority, Report the analytics authority. Bench answers account export and deletion (ADR-033) and subscribes to the two account Events topics. It calls AI's run API (ai.run.create, namespace ai.generate) for generation and publishes bench.* events through its outbox. Stage B1 (spec 2026-10-30): the registry — versioned, forkable benchmarks (bench.benchmark@1) and the results API (bench.run@1), with compare, rankings and percentiles.",
   "site": {
     "name": "Bench",
     "icon": "bench",

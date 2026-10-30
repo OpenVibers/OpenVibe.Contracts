@@ -1,0 +1,45 @@
+{
+  "id": "brn_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "benchmark": "bmk_01JAB2C3D4E5F6G7H8J9K0MNPS@1",
+  "model": "claude-opus-4",
+  "route": {
+    "provider": "anthropic",
+    "via": "router"
+  },
+  "provider": "anthropic",
+  "harness": {
+    "name": "claude-code",
+    "version": "1.2.0"
+  },
+  "settings": {
+    "temperature": 1,
+    "effort": "high"
+  },
+  "executor": {
+    "kind": "codes",
+    "id": "task_01JAB2C3D4E5F6G7H8J9K0MNPS"
+  },
+  "hardware": null,
+  "tasks": [
+    {
+      "task_id": "t1",
+      "score": 92,
+      "cost_usd": 0.031,
+      "ms": 41200,
+      "tokens": 8400,
+      "artifacts": [
+        {
+          "kind": "html",
+          "url": "https://bench.openvibe.services/render/x.html"
+        }
+      ],
+      "transcript_url": "https://bench.openvibe.services/runs/x/t1"
+    }
+  ],
+  "score": 92,
+  "cost_usd": 0.031,
+  "ms": 41200,
+  "tokens": 8400,
+  "provenance": "verified",
+  "created_at": "2026-10-30T12:05:00.000Z"
+}

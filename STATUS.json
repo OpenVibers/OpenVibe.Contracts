@@ -40,7 +40,8 @@
     "OpenVibe.Inventory goes live (inventory.openvibe.network, site position 30) with six capabilities active (ADR-054, plan T21 step 2); a definition may name the services or apps that may grant it",
     "the Workshop v1 (ADR-054 section 6): Workshop kinds, network.badge, staff review (inventory.review-request@1, inventory.definition.review active) and media_id on equipped slots",
     "News, Reviews, Trade, Coupons and OpenRestream go live on their own domains (plan T11); the product at openre.stream is OpenRestream, with OpenVibe Live on by default (live.openre.slot.bind)",
-    "ADR-055 (proposed): money and the inventory — primary sales first, gifting next; trading and a market stay closed, and chance is never paid for"
+    "ADR-055 (proposed): money and the inventory — primary sales first, gifting next; trading and a market stay closed, and chance is never paid for",
+    "bench.benchmark@1 and bench.run@1 with the capabilities bench.benchmark.write, bench.run.publish and bench.run.read: the benchmark registry and the results API (spec 2026-10-30, stage B1)"
   ],
-  "updated": "2026-10-22"
+  "updated": "2026-10-30"
 }

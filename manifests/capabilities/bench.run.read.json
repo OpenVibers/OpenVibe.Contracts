@@ -1,0 +1,24 @@
+{
+  "id": "bench.run.read",
+  "version": "1.0",
+  "owner": "bench",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read the runs of a benchmark on OpenVibe.Bench: GET /api/v1/runs/:id returns the result, GET /api/v1/compare?runs=a,b,c puts runs side by side, GET /api/v1/rankings gives the per-benchmark rankings and GET /api/v1/percentile says where a score sits among a model's runs.",
+  "permissions": [
+    "bench:runs:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/runs/:id",
+    "GET /api/v1/compare",
+    "GET /api/v1/rankings",
+    "GET /api/v1/percentile"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "bench.run@1"
+}

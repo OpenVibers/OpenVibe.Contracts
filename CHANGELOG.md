@@ -4,6 +4,18 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.244.0 — 2026-10-30
+
+- **Bench as an open benchmark platform, stage B1** (spec 2026-10-30): `bench.benchmark@1` and `bench.run@1`.
+  A benchmark is an owned, versioned and forkable set: its tasks, its judges (pinned by version), how they combine
+  into one score, the limits a run may not pass, the default model and harness matrix, and whether it is public or
+  unlisted. A run is one result: a benchmark version × a model × a harness × settings × who ran it, with the
+  per-task scores, cost, time, tokens, the artifacts, and its provenance — `verified` (an executor ran it) or
+  `submitted` (posted with no executor, badged and out of the default rankings).
+- **Three new capabilities** for Bench: `bench.benchmark.write` (create, edit, freeze and fork a benchmark),
+  `bench.run.publish` (publish a run) and `bench.run.read` (the run, the comparison, the rankings and the percentile).
+  OpenVibe.Bench's service manifest lists them.
+
 ## 0.243.0 — 2026-10-30
 
 - The release cut from `main` for codes.task@2 (#250): a coding task's attempts and outcome, one id with two majors.
