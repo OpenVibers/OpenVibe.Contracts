@@ -1,0 +1,12 @@
+{
+  "open": true,
+  "tab": "agent",
+  "pinned": true,
+  "agent": { "service": "actor", "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "chat": "cnv_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "place": {
+    "phone": { "corner": "top-left" },
+    "desktop": { "corner": "bottom-left", "width": 420, "height": 640 }
+  },
+  "updated_at": "2026-10-30T12:00:00Z"
+}

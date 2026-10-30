@@ -262087,6 +262087,82 @@ export interface MeActionsResult {
   generated_at: string;
 }
 
+/** network.dock-state@1.0.0 (owner: network) */
+/**
+ * network.dock-state@1 (the Dock plan 2026-10-30, K-D1): the state of one person's Dock — the little floating surface every OpenVibe site draws. It lives in the Network, not in the browser, because localStorage is per site and the Dock follows the person across every domain. GET /api/v1/me/dock and PUT /api/v1/me/dock on OpenVibe.Network.
+ */
+export interface NetworkDockState {
+  /**
+   * Whether the Dock is open (a sheet on a phone, a floating card on a desktop) or collapsed to its pill.
+   */
+  open: boolean;
+  /**
+   * Which of the Dock's three tabs shows: the agent's screen, the chats, the activity.
+   */
+  tab: "agent" | "chats" | "activity";
+  /**
+   * Keep the pill on screen even when nothing runs and nothing waits.
+   */
+  pinned: boolean;
+  /**
+   * The agent the Agent tab follows, or null when it follows none.
+   */
+  agent: {
+    service: "actor" | "codes" | "run" | "desks";
+    id: string;
+  } | null;
+  /**
+   * The conversation the Chats tab has open, or null.
+   */
+  chat: string | null;
+  place: {
+    /**
+     * Where the Dock sits on a phone.
+     */
+    phone: {
+      corner: "bottom-right" | "bottom-left" | "top-right" | "top-left";
+    };
+    /**
+     * Where the Dock sits on a desktop, and how big it is (null: the site's own default size).
+     */
+    desktop: {
+      corner: "bottom-right" | "bottom-left" | "top-right" | "top-left";
+      width: number | null;
+      height: number | null;
+    };
+  };
+  /**
+   * When the state was last written.
+   */
+  updated_at: string;
+}
+
+/** network.dock-result@1.0.0 (owner: network) */
+/**
+ * network.dock-result@1 (the Dock plan 2026-10-30, K-D1): what GET /api/v1/me/dock answers on OpenVibe.Network — the person's Dock state, the counts the pill's status dot is drawn from, and whether those counts are complete.
+ */
+export interface NetworkDockResult {
+  state: NetworkDockState;
+  counts: {
+    /**
+     * How many of the person's agents are running.
+     */
+    running: number;
+    /**
+     * How many need the person.
+     */
+    waiting: number;
+    /**
+     * How many notifications the person has not read.
+     */
+    unread: number;
+  };
+  /**
+   * True when an authority behind the counts did not answer, so the counts are lower than the truth.
+   */
+  sources_partial: boolean;
+}
+
 /** today.event.scheduled@1.0.0 (owner: today) */
 /**
  * today.event.scheduled v1 (OpenVibe.Today server/events/store.js, written to its outbox in the same transaction as the change and published once per evt_ id). A person put a stream or an event on OpenVibe.Today's calendar (POST /api/v1/events or the schedule form). Envelope: source today, subject and actor { type: user, id: <owner usr_> }, visibility internal, priority important. OpenVibe.Network tells a streamer's followers about a scheduled public or followers-only stream (STREAM_SCHEDULED) and clears those notices on cancel (server/notifications/events-consumer.js).

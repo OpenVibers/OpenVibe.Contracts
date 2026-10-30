@@ -1,0 +1,12 @@
+{
+  "open": false,
+  "tab": "activity",
+  "pinned": false,
+  "agent": null,
+  "chat": null,
+  "place": {
+    "phone": { "corner": "bottom-right" },
+    "desktop": { "corner": "bottom-right", "width": null, "height": null }
+  },
+  "updated_at": "2026-10-30T12:00:00Z"
+}

@@ -4,6 +4,21 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.251.0 — 2026-10-30
+
+- **`network.dock-state@1`** (the Dock plan 2026-10-30, K-D1): the state of one person's Dock — the little floating
+  surface every OpenVibe site draws. It lives in the Network, not in the browser, because `localStorage` is per site and
+  the Dock follows the person across every domain. `open` (open or collapsed to its pill), `tab`
+  (`agent` | `chats` | `activity`), `pinned` (keep the pill even when nothing runs or waits), `agent`
+  (`{ service: actor|codes|run|desks, id }` or null — the agent the Agent tab follows), `chat` (the conversation the
+  Chats tab has open, or null), `place` (where it sits per device class: a `corner` for the phone, a `corner` plus an
+  optional `width` (320..720) and `height` (360..900) for the desktop) and `updated_at`. Every object refuses extra
+  keys, so a page cannot smuggle a field into the state another page reads.
+- **`network.dock-result@1`** (the Dock plan 2026-10-30, K-D1): what `GET /api/v1/me/dock` answers on OpenVibe.Network
+  — the person's `network.dock-state@1`, the `counts` the pill's status dot is drawn from (`running`, `waiting`,
+  `unread`) and `sources_partial` (true when an authority behind the counts did not answer, so the counts are lower
+  than the truth). Additive: two new contracts, nothing changed or removed.
+
 ## 0.250.0 — 2026-10-30
 
 - **`bot.device-message@1`'s heartbeat gains an optional `fleet`** (Codes C9c): what the machine's coding agents have

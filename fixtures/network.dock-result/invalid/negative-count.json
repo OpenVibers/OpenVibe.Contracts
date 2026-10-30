@@ -1,0 +1,16 @@
+{
+  "state": {
+    "open": true,
+    "tab": "agent",
+    "pinned": true,
+    "agent": { "service": "codes", "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+    "chat": null,
+    "place": {
+      "phone": { "corner": "bottom-left" },
+      "desktop": { "corner": "bottom-left", "width": 480, "height": 720 }
+    },
+    "updated_at": "2026-10-30T12:00:00Z"
+  },
+  "counts": { "running": -1, "waiting": 0, "unread": 3 },
+  "sources_partial": false
+}
