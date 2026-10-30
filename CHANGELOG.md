@@ -6,6 +6,11 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.249.0 — 2026-10-30
 
+- **`bot.device-message@1`'s heartbeat gains an optional `fleet`** (Codes C9c): what the machine's coding agents have
+  left — each agent's id, whether it is installed and signed in, and each limit window's label, used and limit and
+  when it frees. OpenVibe.Node reads it with OpenVibe.Codes' own logins probe as the machine's user and reports labels,
+  numbers and times only (no key, token or account name); absent means no reading yet, never "nothing installed".
+  Additive: no field changed or removed, and a heartbeat without `fleet` validates unchanged.
 - **`run.job-create-request@1` gains an optional `node`** (Codes C9c): the device id (`dev_…`) of the job's own
   machine in Run's placement (`platform.resource-offer@1` node_id, as OpenVibe.Bot's `GET /api/v1/machines` names it),
   which pins the job to one machine — a conductor must run where its folder and its memory are. Run places a pinned
