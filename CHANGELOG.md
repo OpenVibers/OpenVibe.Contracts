@@ -4,6 +4,16 @@ All notable changes to `openvibe-contracts`. Releases are git tags (`vX.Y.Z`) th
 from `https://codeload.github.com/OpenVibers/OpenVibe.Contracts/tar.gz/refs/tags/<tag>`. Before v0.30.0,
 the notes were in the tag and commit messages (`git tag -n1`).
 
+## 0.246.0 — 2026-10-30
+
+- **Two more harnesses in the catalogue** (OpenVibe.Codes): `platform.harness-offer@1` publishes MiniMax Code
+  (`minimax-code`, the `mcode` CLI on the person's own MiniMax plan) and Claude Code on another provider
+  (`claude-other`, the same `claude` CLI in the cm-style environment: the person's own key, another provider's
+  model) as two of its examples, with the fields their siblings have.
+- **`platform.harness-offer@1` gains the optional `agents`** — the agents (models) a harness offers, each one a
+  `platform.agent-offer@1` whose `harness` names the offer. A catalogue row is one contract instance now: the
+  offer and the models it runs. Additive: every harness offer that leaves it out still validates.
+
 ## 0.245.0 — 2026-10-30
 
 - **`codes.task-start-request@1` accepts `permission: "review"`** — a read-only coding task (research, an audit, a

@@ -1,0 +1,63 @@
+{
+  "id": "minimax-code",
+  "name": "MiniMax Code",
+  "provider": "minimax",
+  "capabilities": {
+    "host_access": true,
+    "mcp": false,
+    "long_autonomy": true,
+    "resume": true,
+    "edit": true,
+    "review": true,
+    "tools": true,
+    "vision": false,
+    "browser": false,
+    "computer_use": false,
+    "runtimes": [
+      "code"
+    ]
+  },
+  "address": {
+    "kind": "cli",
+    "target": "mcode"
+  },
+  "price": {
+    "amount_usd": 0,
+    "unit": "hour"
+  },
+  "limits": {
+    "max_duration_seconds": 14400,
+    "max_concurrent_runs": 4,
+    "max_context_tokens": 200000
+  },
+  "task_capabilities": [
+    "edit",
+    "review",
+    "run",
+    "test"
+  ],
+  "runtime_needs": [
+    "git",
+    "node"
+  ],
+  "byo_key": false,
+  "agents": [
+    {
+      "id": "minimax-code-default",
+      "harness": "minimax-code",
+      "provider": "minimax",
+      "model": "minimax-code",
+      "context_limits": {
+        "input_tokens": 200000,
+        "output_tokens": 32000
+      },
+      "concurrency": 4,
+      "price_per_1k_tokens": {
+        "fresh_usd": 0,
+        "cached_usd": 0,
+        "output_usd": 0
+      },
+      "availability_windows": []
+    }
+  ]
+}
