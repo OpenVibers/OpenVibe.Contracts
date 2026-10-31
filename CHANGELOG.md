@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.258.0 — 2026-10-31
+## 0.261.0 — 2026-10-31
 
 - **The machines hub** (plan L34, steps M2 and M4). A person's computers are the network's: Bot stays the device
   registry underneath, and Network fronts it on openvibe.network/machines for the person and for apps the person
@@ -29,6 +29,54 @@
   - **`registry.service-manifest@1` gains `machineRoles`** (optional): the roles a product declares. The manifest
     keeps its old shape; a manifest without the field means a product with no machine role.
 
+## 0.260.0 — 2026-10-31
+
+- **One AI meter across the network** (plan L40): every AI call on the network leaves one usage record, whoever made it.
+  - **`ai.call.recorded@1`** (`contracts/events/payloads/ai.call.recorded.v1.json`): one call, and who and where it
+    happened (`subject`, `attribution`, `surface`), what ran (`system`, `provider`, `model`, `effort`), who paid
+    (`paid_by`: `own_key`, `openvibe_key`, `plan`, `own_machine`, `free_tier`, `network_allowance`, `org_key`, with
+    `paid_by_detail`), the tokens (`input` uncached, `output`, `reasoning`, `cache_read`, `cache_write` with
+    `cache_write_ttl` `5m` or `1h`, `images`, `audio_seconds`, `video_seconds`), the money in USD (`list_cost_usd`,
+    `charged_usd`, `fee_usd`, `cache_saved_usd`, with `price_source` and `price_date`), how it went (`latency_ms`,
+    `ttft_ms`, `attempts`, `outcome`) and the ids (`run_id` or `turn_id`, `at`).
+  - **No prompt and no answer text, ever.** The payload has no field for either, and the schema closes the object.
+  - **The meter belongs to OpenVibe.Report** (plan L40 and L41): OpenVibe.AI writes the records, Report keeps the ledger
+    and rolls it up.
+  - **`report.ai-usage-open-result@1`**: the public AI totals (tokens, the cache share, the own-key share, the spend by
+    week). No person, no site and no key in it.
+  - **`report.ai-usage-result@1`**: the same meter in groups (day, site, model, system, paid_by) for a service token with
+    the new **`report.ai_usage.read`** capability. A group that fewer than ten people share reads 'fewer than 10'
+    instead of counting them.
+  - **`report.ai-usage-me-result@1`**: the AI usage of one person (GET /api/v1/me/ai/usage), for the person and nobody
+    else. The route answers 501 until Report has sign-in; the shape is fixed here first.
+  - Phase 1 is OpenVibe.AI's own runs; Codes, Actor and the rest feed the same event later. Report rolls the
+    records up, and a record taken twice is stored once (idempotent by `system` and `run_id` or `turn_id`).
+
+## 0.259.0 — 2026-10-31
+
+- **`network.notification-push-request@1` addresses a person by subject as well as by user id (F1, familiar faces).**
+  Vision sends a named person a consent request and Cam sends the camera owner an event alert; both know the
+  canonical `usr_` subject from the token and never hold the numeric Network user id. `POST
+  /internal/notifications/push` accepts `{ subject }` as an alternative to `{ user_id }` (unknown subject: 404), and
+  `POST /internal/notifications/push-bulk` accepts `{ subjects }` as an alternative to `{ user_ids }` (unknown
+  subjects are skipped). The rest of the body and every other rule is unchanged; `subject` is not the actor
+  (`actor_subject` still carries the block check). Two valid fixtures prove the subject forms.
+
+## 0.258.0 — 2026-10-31
+
+- **Labels and choices** (L1, `OpenVibe_Consent_Plan_2026-10-31.md` §"Labels and choices"): light rules, not bans.
+  - **`common.content-labels@1`:** the six labels (`nudity`, `language`, `graphic`, `18+`, `flashing`, `spoilers`)
+    and the shape `{ labels, suggested }` for a stream, VOD, clip, picture or post. `labels` are in force (the
+    creator, a moderator, or three viewer suggestions); `suggested` is what the AI or a viewer proposed and nobody
+    confirmed, so a suggestion never applies itself and never takes anything down.
+  - **`network.label-prefs@1`:** one person's choice per label — `show`, `blur` (until tapped) or `hide` — in
+    Network's site prefs, so one setting covers every site. The web default is `show`; the native apps start
+    `nudity` and `18+` at hide until the person turns them on in their web settings. The home page shows nothing
+    labelled `18+` whatever the prefs say.
+  - **`labels`** is exported from the package (`LABELS`, `CHOICES`, `INFO`, `defaults()`), so a service reads the
+    one list instead of copying it. `test/content-labels.test.js` checks that every list matches and that the
+    fixtures hold the rules the schemas cannot say.
+
 ## 0.257.0 — 2026-10-31
 
 - **"Your AI": a person's own provider keys, and how their runs route** (L36 Y1/Y3/Y8; OpenVibe.AI). Five additive
@@ -49,6 +97,7 @@
 - **Two person capabilities**, `ai.me.read` and `ai.me.manage`: only the person's own Network token, or the person
   session on AI's own site behind a same-origin check, reaches them. A service token is refused, and so is any token
   carrying `on_behalf_of`, whatever capabilities it holds (the AI #204/#205 rule).
+
 
 ## 0.256.0 — 2026-10-31
 

@@ -177,6 +177,13 @@
       "capabilities": 1
     },
     {
+      "service": "report",
+      "name": "OpenVibe.Report",
+      "origin": "https://openvibe.report",
+      "operations": 1,
+      "capabilities": 1
+    },
+    {
       "service": "reviews",
       "name": "OpenVibe.Reviews",
       "origin": "https://openvibe.reviews",

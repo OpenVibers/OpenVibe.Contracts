@@ -4680,6 +4680,89 @@ export type ConfigSnapshot = {
   copied_from?: number | null;
 };
 
+/** common.content-labels@1.0.0 (owner: contracts) */
+/**
+ * common.content-labels@1 (L1, labels and choices, 2026-10-31): what a stream, VOD, clip, picture or post is labelled as, and what the AI has suggested but the creator has not confirmed. Labels are choices, never bans: a label never hides content from the person who posted it, and it never hides content from a viewer whose label preferences show it. A creator sets a label; the AI may only suggest one (a suggestion the creator confirms, never a takedown); three viewer suggestions or a moderator put one on. The label set is one list everywhere: nudity, language, graphic, 18+, flashing and spoilers.
+ */
+export interface ContentLabels {
+  /**
+   * The labels in force: set by the creator, or by a moderator, or by three viewer suggestions. A label never hides anything by itself; each viewer's prefs decide (network.label-prefs@1).
+   *
+   * @maxItems 6
+   */
+  labels:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+  /**
+   * What the AI or a viewer suggested and nobody confirmed yet. Stored as a suggestion and never applied: a label in this list changes nothing for anyone until the creator (or a moderator) puts it in labels.
+   *
+   * @maxItems 6
+   */
+  suggested:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+}
+
 /** common.moderation-action@1.0.0 (owner: network) */
 /**
  * common.moderation-action@1 (ADR-022, roadmap WS-D task 1): one staff or moderator action on someone else's content or account, as a service reports it to OpenVibe.Network's moderation audit log. The payload of every <service>.moderation.action event that has no older shape of its own (tools, games, wiki, blog, news, reviews, deals, coupons, trade, codes); modelled on community.moderation.action@1. Written to the service's outbox in the transaction that performs the action. A person acting on their own content is not moderation and is not reported. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself, a secret or an address.
@@ -152223,6 +152306,89 @@ export interface AiRun {
   finished_at: string | null;
 }
 
+/** ai.call.recorded@1.0.0 (owner: ai) */
+/**
+ * ai.call.recorded v1 (plan L40, one AI meter across the network). One AI call, wherever it happened: OpenVibe.AI's own runs, a harness turn in Codes, an Actor task, Vibe, a local model on a person's own machine. who and where: subject (the person, or null when the call is anonymous), attribution (the site or app the call came from, free text such as 'site:design'), surface (the product surface, free text such as 'design.generate' or 'codes.turn'). what ran: system (ai, harness:claude-code, harness:codex, actor, node), provider, model, effort. who paid: paid_by (own_key, openvibe_key, plan, own_machine, free_tier, network_allowance, org_key) and paid_by_detail (for example 'anthropic ...a1b2' for a person's own key, or 'claude-max' for a plan). tokens: input (the UNCACHED input tokens), output, reasoning, cache_read, cache_write (with cache_write_ttl 5m or 1h), images, audio_seconds, video_seconds. money, in USD: list_cost_usd (what the tokens cost at the human-typed list prices), charged_usd (what the payer was actually charged), fee_usd (the network's fee on top), cache_saved_usd (what the cache saved against the plain input price). price_source says where the prices came from ('models', 'pricing', 'flat', or 'no cache price' when no cache price is typed and the cache tokens are priced at the input price), price_date the day the price was checked. how it went: latency_ms, ttft_ms, attempts, outcome. ids: run_id or turn_id, and at. The record carries NO prompt and NO answer text, ever. A ledger (OpenVibe.AI) rolls the records up; a record consumed twice is stored once (idempotent by system and run_id or turn_id). Envelope: subject { type: run, id: <run_id> } or { type: user, id: <subject> }, visibility internal, priority low, actor service:ai.
+ */
+export interface AiCallRecordedPayload {
+  /**
+   * The person the call was made for, or null when the call was anonymous.
+   */
+  subject?: string | null;
+  /**
+   * The site or app the call came from, as '<type>:<id>' (for example 'site:design'), empty when nothing is known.
+   */
+  attribution?: string;
+  /**
+   * The product surface: 'design.generate', 'codes.turn', 'ai.generate'. Free text, so a new surface needs no new contract.
+   */
+  surface: string;
+  /**
+   * What ran: 'ai', 'harness:claude-code', 'harness:codex', 'actor', 'node'.
+   */
+  system: string;
+  provider?: string | null;
+  model?: string | null;
+  /**
+   * The reasoning effort the call asked for, when it asked for one.
+   */
+  effort?: string | null;
+  paid_by: "own_key" | "openvibe_key" | "plan" | "own_machine" | "free_tier" | "network_allowance" | "org_key";
+  /**
+   * Which key or plan paid, for example 'anthropic ...a1b2' or 'claude-max'. Never a whole secret.
+   */
+  paid_by_detail?: string | null;
+  /**
+   * The uncached input tokens. Cache reads and cache writes are counted on their own fields.
+   */
+  input: number;
+  output: number;
+  reasoning: number;
+  cache_read: number;
+  cache_write: number;
+  /**
+   * How long the written cache entry lives, when the provider says.
+   */
+  cache_write_ttl: "5m" | "1h" | null;
+  images: number;
+  audio_seconds: number;
+  video_seconds: number;
+  /**
+   * What the tokens cost at the human-typed list prices.
+   */
+  list_cost_usd: number;
+  /**
+   * What the payer was actually charged. A person's own key is never charged here: 0.
+   */
+  charged_usd: number;
+  /**
+   * The network's fee on top of the cost, when the OpenVibe key paid.
+   */
+  fee_usd: number;
+  /**
+   * What the cached tokens saved against the plain input price.
+   */
+  cache_saved_usd: number;
+  /**
+   * Where the prices came from: 'models' (a person's typed model row), 'pricing' (AI_PRICING_JSON), 'flat' (the flat rates), 'no cache price' (no cache price is typed, so the cache tokens are priced at the input price).
+   */
+  price_source: string;
+  /**
+   * The day the price was checked, when it was.
+   */
+  price_date: string | null;
+  latency_ms: number | null;
+  /**
+   * Time to the first token, when the call streamed and it was measured.
+   */
+  ttft_ms: number | null;
+  attempts: number;
+  outcome: "succeeded" | "failed" | "cancelled" | "cached";
+  run_id?: string | null;
+  turn_id?: string | null;
+  at: string;
+}
+
 /** ai.run.queued@1.0.0 (owner: ai) */
 /**
  * ai.run.queued v1 (OpenVibe.AI server/runs.js create). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run was stored queued (it then runs inline within ?wait or on the worker). Not published for a cache hit (ai.run.cached) or a create refused by quota or a full queue. A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low, actor service:ai.
@@ -168367,7 +168533,7 @@ export interface NetworkGithubTokenResult {
 
 /** network.notification-push-request@1.0.0 (owner: network) */
 /**
- * network.notification-push-request@1: bodies of network.notifications.push on OpenVibe.Network (a service token holding the capability, or the internal key). POST /internal/notifications/push: { user_id, type?, title?, message?, … } creates one notification (400 { error: user_id required } without user_id). POST /internal/notifications/push-bulk: { user_ids, …same fields } creates it for each recipient (400 without a non-empty user_ids, or with more than 1000). Recipients are Network user ids. Unknown fields are ignored; 503 when the notification service is not running. The other /internal/notifications/* routes (unread, mark-read, resolve-users) take the internal key only and are not part of this capability.
+ * network.notification-push-request@1: bodies of network.notifications.push on OpenVibe.Network (a service token holding the capability). POST /internal/notifications/push: { user_id | subject, type?, title?, message?, … } creates one notification (400 without user_id or subject; 404 for an unknown subject). POST /internal/notifications/push-bulk: { user_ids | subjects, …same fields } creates it for each recipient (400 without a non-empty user_ids or subjects, or with more than 1000). Recipients are Network user ids or canonical usr_ subjects; a subject resolves to its account, so a service that knows the person by subject (Vision's consent request, Cam's event alert) need not hold the numeric id. Unknown fields are ignored; 503 when the notification service is not running. The other /internal/notifications/* routes (unread, mark-read, resolve-users) take the internal key only and are not part of this capability.
  */
 export type NetworkNotificationPushRequest =
   | {
@@ -168424,6 +168590,69 @@ export type NetworkNotificationPushRequest =
        * The actor as a usr_ subject for the block check; null: no known person (no block check).
        */
       actor_subject?: string | null;
+      /**
+       * The recipient as a canonical usr_ subject, instead of user_id. It resolves to that person's Network account; an unknown subject is 404 and creates nothing.
+       */
+      subject?: string | null;
+    }
+  | {
+      /**
+       * A Network user id (already translated from the caller's own ids).
+       */
+      user_id?: number | string;
+      /**
+       * A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent.
+       */
+      type?: string;
+      /**
+       * Default: the type's title, else "Notification".
+       */
+      title?: string;
+      message?: string | null;
+      /**
+       * Default: the type's icon.
+       */
+      icon?: string;
+      /**
+       * The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing.
+       */
+      sender_id?: number | string | null;
+      sender_name?: string | null;
+      sender_avatar?: string | null;
+      /**
+       * The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied.
+       */
+      service?: string;
+      /**
+       * Where the notification leads.
+       */
+      url?: string | null;
+      /**
+       * low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal.
+       */
+      priority?: string;
+      /**
+       * Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block.
+       */
+      category?: string;
+      /**
+       * Any JSON value, stored and returned as given.
+       */
+      rich_content?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * When it may be deleted (SQLite datetime, UTC).
+       */
+      expires_at?: string | null;
+      /**
+       * The actor as a usr_ subject for the block check; null: no known person (no block check).
+       */
+      actor_subject?: string | null;
+      /**
+       * The recipient as a canonical usr_ subject, instead of user_id. It resolves to that person's Network account; an unknown subject is 404 and creates nothing.
+       */
+      subject: string | null;
     }
   | {
       /**
@@ -168480,6 +168709,76 @@ export type NetworkNotificationPushRequest =
        * The actor as a usr_ subject for the block check; null: no known person (no block check).
        */
       actor_subject?: string | null;
+      /**
+       * Recipients as canonical usr_ subjects, instead of user_ids. Unknown subjects are skipped; at least one recipient is required.
+       *
+       * @minItems 1
+       * @maxItems 1000
+       */
+      subjects?: [string, ...string[]];
+    }
+  | {
+      /**
+       * @minItems 1
+       * @maxItems 1000
+       */
+      user_ids?: [number | string, ...(number | string)[]];
+      /**
+       * A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent.
+       */
+      type?: string;
+      /**
+       * Default: the type's title, else "Notification".
+       */
+      title?: string;
+      message?: string | null;
+      /**
+       * Default: the type's icon.
+       */
+      icon?: string;
+      /**
+       * The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing.
+       */
+      sender_id?: number | string | null;
+      sender_name?: string | null;
+      sender_avatar?: string | null;
+      /**
+       * The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied.
+       */
+      service?: string;
+      /**
+       * Where the notification leads.
+       */
+      url?: string | null;
+      /**
+       * low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal.
+       */
+      priority?: string;
+      /**
+       * Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block.
+       */
+      category?: string;
+      /**
+       * Any JSON value, stored and returned as given.
+       */
+      rich_content?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * When it may be deleted (SQLite datetime, UTC).
+       */
+      expires_at?: string | null;
+      /**
+       * The actor as a usr_ subject for the block check; null: no known person (no block check).
+       */
+      actor_subject?: string | null;
+      /**
+       * Recipients as canonical usr_ subjects, instead of user_ids. Unknown subjects are skipped; at least one recipient is required.
+       *
+       * @minItems 1
+       * @maxItems 1000
+       */
+      subjects: [string, ...string[]];
     };
 
 /** network.notification-push-result@1.0.0 (owner: network) */
@@ -274698,6 +274997,42 @@ export interface NetworkConsentCheckResult {
   checked_at: string;
 }
 
+/** network.label-prefs@1.0.0 (owner: network) */
+/**
+ * network.label-prefs@1 (L1, labels and choices, 2026-10-31): what one person sees for each content label, on every OpenVibe site. One setting per label, stored in Network's site prefs, so the choice follows the account across Stream, Video, Pics and every other site. GET and PUT /api/v1/me/label-prefs; the response and the request are this shape. The web default is show for every label; the native apps hide nudity and 18+ until the person turns them on here (pinned by the app stores' user-content rules). The home page shows nothing labelled 18+ whatever the prefs say: it is the owner's one clean page.
+ */
+export interface NetworkLabelPrefs {
+  /**
+   * One choice for every label. A missing label is not a choice: a client asks Network and gets all six.
+   */
+  prefs: {
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    nudity: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    language: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    graphic: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    "18+": "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    flashing: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    spoilers: "show" | "blur" | "hide";
+  };
+}
+
 /** network.consent.changed@1.0.0 (owner: network) */
 /**
  * network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition, an AI text) checks again before it goes on. The payload names the change and never the content it covers.
@@ -276789,6 +277124,116 @@ export type ReportMetric = {
 } & {
   [k: string]: unknown | undefined;
 };
+
+/** report.ai-usage-open-result@1.0.0 (owner: report) */
+/**
+ * report.ai-usage-open-result@1: the open AI meter (plan L40/L41). What the whole network spends on AI, in public: the tokens, the share of them that came from a provider cache, the share that the own keys of people paid, and the spend by week. No person, no site and no key is in it: the rows are summed before they are answered.
+ */
+export interface ReportAiUsageOpenResult {
+  /**
+   * The AI calls behind these numbers.
+   */
+  calls: number;
+  tokens: {
+    /**
+     * The uncached input tokens.
+     */
+    input: number;
+    output: number;
+    cache_read: number;
+    cache_write: number;
+  };
+  /**
+   * The share of the prompt tokens that came from a provider cache.
+   */
+  cache_share: number;
+  cache_saved_usd: number;
+  /**
+   * The share of the tokens that the own keys of people paid.
+   */
+  own_key_share: number;
+  own_key_calls: number;
+  list_cost_usd: number;
+  charged_usd: number;
+  fee_usd: number;
+  spend_by_week: {
+    /**
+     * The Monday of the week.
+     */
+    week: string;
+    calls: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    cache_saved_usd: number;
+  }[];
+}
+
+/** report.ai-usage-result@1.0.0 (owner: report) */
+/**
+ * report.ai-usage-result@1: the AI meter in groups (plan L40/L41). GET /api/v1/ai/usage needs a service token with report.ai_usage.read; the rows are grouped by day, site, model, system or paid_by. A group that fewer than ten people share reads fewer than 10 instead of counting them.
+ */
+export interface ReportAiUsageResult {
+  group: "day" | "site" | "model" | "system" | "paid_by";
+  usage: {
+    group: "day" | "site" | "model" | "system" | "paid_by";
+    /**
+     * The name of the group: the day, the site, the model, the system or the payer.
+     */
+    key: string;
+    calls: number;
+    people: number | "fewer than 10";
+    input: number;
+    output: number;
+    reasoning: number;
+    cache_read: number;
+    cache_write: number;
+    images?: number;
+    audio_seconds?: number;
+    video_seconds?: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    fee_usd: number;
+    cache_saved_usd: number;
+  }[];
+  totals: {
+    calls: number;
+    input: number;
+    output: number;
+    reasoning: number;
+    cache_read: number;
+    cache_write: number;
+    images?: number;
+    audio_seconds?: number;
+    video_seconds?: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    fee_usd: number;
+    cache_saved_usd: number;
+  };
+}
+
+/** report.ai-usage-me-result@1.0.0 (owner: report) */
+/**
+ * report.ai-usage-me-result@1: the AI usage of one person (plan L40/L41). GET /api/v1/me/ai/usage answers for the person themselves and nobody else: their rows, grouped by day, site, model, system or paid_by. The route answers 501 until Report has sign-in: the shape is fixed here first, so the route does not have to change when it opens.
+ */
+export interface ReportAiUsageMeResult {
+  group: "day" | "site" | "model" | "system" | "paid_by";
+  usage: {
+    group: "day" | "site" | "model" | "system" | "paid_by";
+    key: string;
+    calls: number;
+    input: number;
+    output: number;
+    reasoning: number;
+    cache_read: number;
+    cache_write: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    fee_usd: number;
+    cache_saved_usd: number;
+  }[];
+  totals: {};
+}
 
 /** bench.benchmark@1.0.0 (owner: bench) */
 /**

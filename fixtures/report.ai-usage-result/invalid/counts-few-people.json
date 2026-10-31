@@ -1,0 +1,14 @@
+{
+  "group": "site",
+  "usage": [
+    {
+      "group": "site", "key": "site:design", "calls": 3, "people": 3,
+      "input": 10, "output": 5, "reasoning": 0, "cache_read": 0, "cache_write": 0,
+      "list_cost_usd": 0.01, "charged_usd": 0.01, "fee_usd": 0, "cache_saved_usd": 0
+    }
+  ],
+  "totals": {
+    "calls": 3, "input": 10, "output": 5, "reasoning": 0, "cache_read": 0, "cache_write": 0,
+    "list_cost_usd": 0.01, "charged_usd": 0.01, "fee_usd": 0, "cache_saved_usd": 0
+  }
+}

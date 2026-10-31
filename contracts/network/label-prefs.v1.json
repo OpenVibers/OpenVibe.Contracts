@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/label-prefs.v1.json",
+  "title": "NetworkLabelPrefs",
+  "description": "network.label-prefs@1 (L1, labels and choices, 2026-10-31): what one person sees for each content label, on every OpenVibe site. One setting per label, stored in Network's site prefs, so the choice follows the account across Stream, Video, Pics and every other site. GET and PUT /api/v1/me/label-prefs; the response and the request are this shape. The web default is show for every label; the native apps hide nudity and 18+ until the person turns them on here (pinned by the app stores' user-content rules). The home page shows nothing labelled 18+ whatever the prefs say: it is the owner's one clean page.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["prefs"],
+  "properties": {
+    "prefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nudity", "language", "graphic", "18+", "flashing", "spoilers"],
+      "properties": {
+        "nudity": { "$ref": "#/$defs/choice" },
+        "language": { "$ref": "#/$defs/choice" },
+        "graphic": { "$ref": "#/$defs/choice" },
+        "18+": { "$ref": "#/$defs/choice" },
+        "flashing": { "$ref": "#/$defs/choice" },
+        "spoilers": { "$ref": "#/$defs/choice" }
+      },
+      "description": "One choice for every label. A missing label is not a choice: a client asks Network and gets all six."
+    }
+  },
+  "$defs": {
+    "choice": {
+      "enum": ["show", "blur", "hide"],
+      "description": "show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them."
+    }
+  }
+}

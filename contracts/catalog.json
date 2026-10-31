@@ -210,6 +210,15 @@
       "status": "active"
     },
     {
+      "id": "common.content-labels",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/content-labels.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "common.moderation-action",
       "version": "1.0.0",
       "owner": "network",
@@ -1370,6 +1379,16 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-015"
+    },
+    {
+      "id": "ai.call.recorded",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.call.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
     },
     {
       "id": "ai.run.queued",
@@ -7888,6 +7907,15 @@
       "status": "active"
     },
     {
+      "id": "network.label-prefs",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/label-prefs.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.consent.changed",
       "version": "1.0.0",
       "owner": "network",
@@ -8414,6 +8442,33 @@
       "version": "1.0.0",
       "owner": "report",
       "schema": "report/metric.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-open-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-open-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-me-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-me-result.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
