@@ -6821,6 +6821,16 @@
       "adr": "ADR-044"
     },
     {
+      "id": "actor.wait",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/wait.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
       "id": "food.pantry-request",
       "version": "1.0.0",
       "owner": "food",

@@ -926,6 +926,8 @@ sub(path.join(__dirname, 'zones.test.js'));
 sub(path.join(__dirname, 'usage-topics.test.js'));
 sub(path.join(__dirname, 'billing-grace.test.js'));
 sub(path.join(__dirname, 'resources.test.js'));
+// The wait record (plan A2): a wait is a record, not a running loop.
+sub(path.join(__dirname, 'actor-wait.test.js'));
 // Documentation currency (roadmap WS-U task 3): a placeholder service with no repository yet is skipped, not a gap.
 sub(path.join(__dirname, 'docs-currency.test.js'));
 

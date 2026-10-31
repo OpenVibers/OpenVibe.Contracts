@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.254.0 — 2026-10-30
+
+- **`actor.wait@1`** (plan A2, Watch mode; the design note `research-2026-10-30/agent-a2-watch.md`): one wait — the
+  task and the step it belongs to, whose it is, what wakes it (`until`: an Events topic, a Watch target or a time),
+  the deadline, `on_timeout` (`ask`, `retry`, `fail`) and the short line the person reads. A wait is a record, not a
+  running loop: while a task waits no model runs, its desk is released and its budget clock stops. The event that woke
+  it is untrusted input and is never part of the record; `woken_by` names the event, never its payload.
+- **A new id prefix**: `wait` → `wai_`, the id a wait carries (`ids.newId('wait')`).
+
 ## 0.253.0 — 2026-10-30
 
 - **A2A for OpenVibe.Actor** (Actor v2 stage V2-11). New capability `actor.a2a.task` (owner `actor`, active,
