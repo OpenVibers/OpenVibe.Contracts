@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.263.1 — 2026-10-31
+
+- **openvibe.website is Space's own front door** (plan 5.9; the owner, 10-31: the new domains "just redirect"). Space
+  now answers the apex itself with OpenVibe.Website's home and its website templates, so `openvibe.website` joins
+  `space`'s `domains` (Network's CORS allow-list and Space's reserved custom domains read that field; only the exact
+  origin, never a tenant subdomain). The product manifest is no longer `kind: "moved"`: its description, pillars,
+  questions and links say what the front door is, with the room's accent.
+
 ## 0.263.0 — 2026-10-31
 
 - **`report.ai-usage-me-result@2`** (plan L41 R1, OpenVibe.Report): GET `/api/v1/me/ai/usage` as the route now
