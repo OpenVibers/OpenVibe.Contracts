@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.259.0 — 2026-10-31
+
+- **`network.notification-push-request@1` addresses a person by subject as well as by user id (F1, familiar faces).**
+  Vision sends a named person a consent request and Cam sends the camera owner an event alert; both know the
+  canonical `usr_` subject from the token and never hold the numeric Network user id. `POST
+  /internal/notifications/push` accepts `{ subject }` as an alternative to `{ user_id }` (unknown subject: 404), and
+  `POST /internal/notifications/push-bulk` accepts `{ subjects }` as an alternative to `{ user_ids }` (unknown
+  subjects are skipped). The rest of the body and every other rule is unchanged; `subject` is not the actor
+  (`actor_subject` still carries the block check). Two valid fixtures prove the subject forms.
+
 ## 0.258.0 — 2026-10-31
 
 - **Labels and choices** (L1, `OpenVibe_Consent_Plan_2026-10-31.md` §"Labels and choices"): light rules, not bans.
