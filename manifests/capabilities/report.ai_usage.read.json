@@ -1,0 +1,21 @@
+{
+  "id": "report.ai_usage.read",
+  "version": "1.0",
+  "owner": "report",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Read the AI meter across the network: the usage records and their roll-ups, in groups (day, site, model, system, paid_by). The public totals (GET /api/v1/ai/usage/open) need no token at all.",
+  "permissions": [
+    "report:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "report-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/ai/usage"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "report.ai-usage-result@1"
+}

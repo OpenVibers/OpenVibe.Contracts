@@ -1381,6 +1381,16 @@
       "adr": "ADR-015"
     },
     {
+      "id": "ai.call.recorded",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.call.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
       "id": "ai.run.queued",
       "version": "1.0.0",
       "owner": "ai",
@@ -8306,6 +8316,33 @@
       "version": "1.0.0",
       "owner": "report",
       "schema": "report/metric.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-open-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-open-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-me-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-me-result.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"

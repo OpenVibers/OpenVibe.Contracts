@@ -15,9 +15,13 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": [
+    "report.ai_usage.read"
+  ],
   "eventsProduced": [],
-  "eventsConsumed": [],
+  "eventsConsumed": [
+    "ai.call.recorded"
+  ],
   "namespacesOwned": [
     "report.*"
   ],

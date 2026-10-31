@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.260.0 — 2026-10-31
+
+- **One AI meter across the network** (plan L40): every AI call on the network leaves one usage record, whoever made it.
+  - **`ai.call.recorded@1`** (`contracts/events/payloads/ai.call.recorded.v1.json`): one call, and who and where it
+    happened (`subject`, `attribution`, `surface`), what ran (`system`, `provider`, `model`, `effort`), who paid
+    (`paid_by`: `own_key`, `openvibe_key`, `plan`, `own_machine`, `free_tier`, `network_allowance`, `org_key`, with
+    `paid_by_detail`), the tokens (`input` uncached, `output`, `reasoning`, `cache_read`, `cache_write` with
+    `cache_write_ttl` `5m` or `1h`, `images`, `audio_seconds`, `video_seconds`), the money in USD (`list_cost_usd`,
+    `charged_usd`, `fee_usd`, `cache_saved_usd`, with `price_source` and `price_date`), how it went (`latency_ms`,
+    `ttft_ms`, `attempts`, `outcome`) and the ids (`run_id` or `turn_id`, `at`).
+  - **No prompt and no answer text, ever.** The payload has no field for either, and the schema closes the object.
+  - **The meter belongs to OpenVibe.Report** (plan L40 and L41): OpenVibe.AI writes the records, Report keeps the ledger
+    and rolls it up.
+  - **`report.ai-usage-open-result@1`**: the public AI totals (tokens, the cache share, the own-key share, the spend by
+    week). No person, no site and no key in it.
+  - **`report.ai-usage-result@1`**: the same meter in groups (day, site, model, system, paid_by) for a service token with
+    the new **`report.ai_usage.read`** capability. A group that fewer than ten people share reads 'fewer than 10'
+    instead of counting them.
+  - **`report.ai-usage-me-result@1`**: the AI usage of one person (GET /api/v1/me/ai/usage), for the person and nobody
+    else. The route answers 501 until Report has sign-in; the shape is fixed here first.
+  - Phase 1 is OpenVibe.AI's own runs; Codes, Actor and the rest feed the same event later. Report rolls the
+    records up, and a record taken twice is stored once (idempotent by `system` and `run_id` or `turn_id`).
+
 ## 0.259.0 — 2026-10-31
 
 - **`network.notification-push-request@1` addresses a person by subject as well as by user id (F1, familiar faces).**
@@ -45,6 +68,7 @@
 - **Two person capabilities**, `ai.me.read` and `ai.me.manage`: only the person's own Network token, or the person
   session on AI's own site behind a same-origin check, reaches them. A service token is refused, and so is any token
   carrying `on_behalf_of`, whatever capabilities it holds (the AI #204/#205 rule).
+
 
 ## 0.256.0 — 2026-10-31
 

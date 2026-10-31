@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/report/ai-usage-me-result.v1.json",
+  "title": "ReportAiUsageMeResult",
+  "description": "report.ai-usage-me-result@1: the AI usage of one person (plan L40/L41). GET /api/v1/me/ai/usage answers for the person themselves and nobody else: their rows, grouped by day, site, model, system or paid_by. The route answers 501 until Report has sign-in: the shape is fixed here first, so the route does not have to change when it opens.",
+  "type": "object",
+  "required": ["group", "usage", "totals"],
+  "additionalProperties": false,
+  "properties": {
+    "group": { "type": "string", "enum": ["day", "site", "model", "system", "paid_by"] },
+    "usage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["group", "key", "calls", "input", "output", "reasoning", "cache_read", "cache_write", "list_cost_usd", "charged_usd", "fee_usd", "cache_saved_usd"],
+        "additionalProperties": false,
+        "properties": {
+          "group": { "type": "string", "enum": ["day", "site", "model", "system", "paid_by"] },
+          "key": { "type": "string", "maxLength": 200 },
+          "calls": { "type": "integer", "minimum": 0 },
+          "input": { "type": "integer", "minimum": 0 },
+          "output": { "type": "integer", "minimum": 0 },
+          "reasoning": { "type": "integer", "minimum": 0 },
+          "cache_read": { "type": "integer", "minimum": 0 },
+          "cache_write": { "type": "integer", "minimum": 0 },
+          "list_cost_usd": { "type": "number", "minimum": 0 },
+          "charged_usd": { "type": "number", "minimum": 0 },
+          "fee_usd": { "type": "number", "minimum": 0 },
+          "cache_saved_usd": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "totals": { "type": "object" }
+  }
+}
