@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.265.0 <1.0.0"
+  },
+  "id": "tours",
+  "name": "OpenVibe.Tours",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Tours",
+  "domains": [
+    "openvibe.tours"
+  ],
+  "publicOrigin": "https://openvibe.tours",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "tours.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the PostgreSQL database, Valkey, Network's JWKS and the OAuth client are what /api/ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped, then the job timers cleared",
+        "telemetry flushed and its retention timer stopped",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "the city, place, route, live and stay jobs make their first pass shortly after boot; each pass is whole and idempotent with a receipt in tours_job_runs, so a stop mid-pass leaves the next one to finish"
+        },
+        {
+          "kind": "consumer",
+          "what": "the account export and deletion subscriptions at OpenVibe.Events are renewed at boot; a delivery missed while stopped is redelivered and applied once (account_data_events keeps it idempotent)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001 and 0002 only create Tours' own tables (cities, places, routes, stops, live, stays, trips, job runs) plus the SDK's; an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.265.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5170, unit openvibe-tours.service, PostgreSQL database ov_tours. The Tours room (plan 5.12): cities, places and routes from Wikivoyage, Wikidata and OpenStreetMap (each item keeps its source and fetch time), IRL streams and recordings from OpenVibe.Live, stays from OpenVibe.Rent, trips a signed-in person plans and shares read-only. Flights link to the official search, with no key and no affiliate. OAuth client `tours`; answers account export and deletion (ADR-033) and subscribes to those Events topics.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5170",
+  "site": {
+    "name": "Tours",
+    "icon": "tours",
+    "tagline": "Go anywhere: fly, stay, walk, watch",
+    "what": "A hundred cities from Wikivoyage and OpenStreetMap with cited places and walking routes, live IRL streams and recordings from OpenVibe.Live, stays from OpenVibe.Rent, and trips you plan and share. Flights link out, no affiliate.",
+    "legalProfile": "ugc",
+    "position": 49,
+    "neighbourhood": "streams"
+  }
+}

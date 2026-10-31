@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.265.0 — 2026-10-31
+
+- **OpenVibe.Tours** (`manifests/services/tours.json`, plan 5.12): openvibe.tours, cities, places and walking routes
+  from Wikivoyage and OpenStreetMap, IRL streams, stays and shared trips. Port 5170, OAuth client `tours`, site
+  position 49 in the streams neighbourhood.
+- **OpenVibe.Shoes** (`manifests/services/shoes.json`, plan 5.6): open.shoes, shoe offers from Deals with price
+  history, a cited drops calendar and price alerts. Port 5180, OAuth client `shoes`, site position 50 in the shop
+  neighbourhood.
+
 ## 0.264.0 — 2026-10-31
 
 - **OpenVibe.Casino** (`manifests/services/casino.json`, plan 5.14): openvibe.casino, the Casino room. Open engines for
