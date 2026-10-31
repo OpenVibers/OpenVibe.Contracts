@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/wait.v1.json",
+  "title": "ActorWait",
+  "description": "actor.wait@1: one wait (plan A2, Watch mode): the task and the step it belongs to, whose it is, what wakes it (until), the deadline, what happens when nothing comes (on_timeout) and the short line the person reads. A wait is a record, not a running loop: while a task waits, no model runs, its desk is released and its budget clock stops. The event that woke it is untrusted input: woken_by names the event, never its payload.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "task_id",
+    "requester",
+    "kind",
+    "until",
+    "deadline_at",
+    "on_timeout",
+    "line",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^wai_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "requester": {
+      "type": "string",
+      "pattern": "^(user|app|agent|service):[a-z]+_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "event",
+        "watch",
+        "time"
+      ]
+    },
+    "until": {
+      "$ref": "#/$defs/until"
+    },
+    "filter": {
+      "type": "object",
+      "description": "The bounded matcher: a path (payload.a.b, subject.id, subject.type, actor.id, trace_id) and the value the event must carry there. At most eight clauses; a filter is a matcher, not a query.",
+      "maxProperties": 8,
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean"
+        ],
+        "maxLength": 200
+      }
+    },
+    "deadline_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "on_timeout": {
+      "type": "string",
+      "enum": [
+        "ask",
+        "retry",
+        "fail"
+      ]
+    },
+    "line": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "woken",
+        "timed_out",
+        "cancelled",
+        "failed"
+      ]
+    },
+    "woken_by": {
+      "$ref": "#/$defs/wokenBy"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "until": {
+      "description": "What wakes the wait: an Events topic (plus the earliest event it may match), a Watch target, or a time.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "topic"
+          ],
+          "properties": {
+            "topic": {
+              "type": "string",
+              "pattern": "^[a-z0-9_]+(\\.[a-z0-9_*]+)+$",
+              "maxLength": 200
+            },
+            "from": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "watch_id"
+          ],
+          "properties": {
+            "watch_id": {
+              "type": "string",
+              "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "at"
+          ],
+          "properties": {
+            "at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      ]
+    },
+    "wokenBy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "event_type",
+        "at"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "event_type": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "by": {
+          "type": "string",
+          "enum": [
+            "event",
+            "person"
+          ]
+        }
+      }
+    }
+  }
+}

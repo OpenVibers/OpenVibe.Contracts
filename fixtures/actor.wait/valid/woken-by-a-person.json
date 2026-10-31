@@ -1,0 +1,16 @@
+{
+  "id": "wai_01K6R3A1B2C3D4E5F6G7H8J9KC",
+  "task_id": "tsk_01K6R3A1B2C3D4E5F6G7H8J9KB",
+  "requester": "user:usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+  "kind": "event",
+  "until": { "topic": "run.job.succeeded" },
+  "filter": { "payload.job_id": "job_01K6R3A1B2C3D4E5F6G7H8J9KD" },
+  "deadline_at": "2026-10-30T22:00:00.000Z",
+  "on_timeout": "fail",
+  "line": "waiting for your run to finish",
+  "status": "woken",
+  "woken_by": { "event_id": "evt_01K6R3A1B2C3D4E5F6G7H8J9KE", "event_type": "run.job.succeeded", "at": "2026-10-30T16:12:00.000Z", "by": "person" },
+  "created_at": "2026-10-30T16:00:00.000Z",
+  "updated_at": "2026-10-30T16:12:00.000Z",
+  "finished_at": "2026-10-30T16:12:00.000Z"
+}

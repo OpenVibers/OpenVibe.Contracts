@@ -1,0 +1,12 @@
+{
+  "id": "wai_01K6R3A1B2C3D4E5F6G7H8J9KA",
+  "task_id": "tsk_01K6R3A1B2C3D4E5F6G7H8J9KB",
+  "requester": "user:usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+  "kind": "event",
+  "until": { "topic": "codes.task.succeeded" },
+  "deadline_at": "2026-10-30T22:00:00.000Z",
+  "on_timeout": "ask",
+  "status": "waiting",
+  "created_at": "2026-10-30T16:00:00.000Z",
+  "updated_at": "2026-10-30T16:00:00.000Z"
+}

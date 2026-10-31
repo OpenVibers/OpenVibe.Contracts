@@ -257291,6 +257291,50 @@ export interface ActorAgentListResult {
 
 /** actor.agent-list-result@2.0.0 (owner: actor) */
 
+/** actor.wait@1.0.0 (owner: actor) */
+/**
+ * actor.wait@1: one wait (plan A2, Watch mode): the task and the step it belongs to, whose it is, what wakes it (until), the deadline, what happens when nothing comes (on_timeout) and the short line the person reads. A wait is a record, not a running loop: while a task waits, no model runs, its desk is released and its budget clock stops. The event that woke it is untrusted input: woken_by names the event, never its payload.
+ */
+export interface ActorWait {
+  id: string;
+  task_id: string;
+  requester: string;
+  kind: "event" | "watch" | "time";
+  /**
+   * What wakes the wait: an Events topic (plus the earliest event it may match), a Watch target, or a time.
+   */
+  until:
+    | {
+        topic: string;
+        from?: string;
+      }
+    | {
+        watch_id: string;
+      }
+    | {
+        at: string;
+      };
+  /**
+   * The bounded matcher: a path (payload.a.b, subject.id, subject.type, actor.id, trace_id) and the value the event must carry there. At most eight clauses; a filter is a matcher, not a query.
+   */
+  filter?: {
+    [k: string]: (string | number | boolean) | undefined;
+  };
+  deadline_at: string;
+  on_timeout: "ask" | "retry" | "fail";
+  line: string;
+  status: "waiting" | "woken" | "timed_out" | "cancelled" | "failed";
+  woken_by?: {
+    event_id: string;
+    event_type: string;
+    at: string;
+    by?: "event" | "person";
+  };
+  created_at: string;
+  updated_at: string;
+  finished_at?: string;
+}
+
 /** food.pantry-request@1.0.0 (owner: food) */
 /**
  * food.pantry-request@1: PUT /api/v1/pantry on OpenVibe.Food replaces the pantry with exactly these food slugs.
