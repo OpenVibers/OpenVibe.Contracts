@@ -3,43 +3,51 @@
   "tld": "website",
   "name": "OpenVibe.Website",
   "icon": "fa-globe",
-  "accent": "#22d3ee",
-  "kind": "moved",
-  "tagline": "Websites that work, not just pages.",
-  "description": "openvibe.website opens OpenVibe.Space, the network's website and app builder: describe what you want and OpenVibe AI builds it as a space on your OpenVibe account, or start from a template, then edit and publish it, with static hosting for your own files.",
+  "accent": "#8ea0ff",
+  "tagline": "Websites that look finished.",
+  "description": "OpenVibe.Website is the network's website builder: start from a real site (a shop, a portfolio, an event page, a link page, a product launch) or describe yours to OpenVibe AI, and change anything in the editor with a live preview beside it. Sites are built and kept on OpenVibe.Space with your OpenVibe account and served at yourname.openvibe.website or your own domain; publishing at a public address opens with public hosting.",
   "pillars": [
     {
-      "title": "Generate or code",
-      "text": "Describe it, import it, fork it, or write it yourself."
+      "title": "Real sites to start from",
+      "text": "Five whole sites, each a live page you can change line by line."
     },
     {
-      "title": "Real features",
-      "text": "Sign-in, forms, bookings, media, blogs and support from the network."
+      "title": "Describe it",
+      "text": "OpenVibe AI writes a first version from a sentence; the code is all there."
     },
     {
-      "title": "Your files",
-      "text": "Every generated site is readable, editable source."
+      "title": "Built-in sign-in and lists",
+      "text": "RSVPs, guestbooks and polls keep their lists on OpenVibe."
     },
     {
-      "title": "Publish anywhere",
-      "text": "yourname.openvibe.website or your own domain, with rollback."
+      "title": "Your own address",
+      "text": "yourname.openvibe.website or your own domain, with every publish kept for rollback."
     }
   ],
   "faq": [
     {
-      "question": "Where did openvibe.website go?",
-      "answer": "It opens OpenVibe.Space, the network's builder: describe what you want and OpenVibe AI builds it as a space on your account, or start from a template, then edit and publish it, with static hosting for your own files."
+      "question": "Where do I build?",
+      "answer": "Pick a template on openvibe.website, or describe your site; it opens in the editor on OpenVibe.Space with your OpenVibe account, where your sites are kept."
+    },
+    {
+      "question": "When can I publish at my own address?",
+      "answer": "Publishing at yourname.openvibe.website or your own domain opens with public hosting, after automatic abuse checks, a designated DMCA agent and the domain's Public Suffix List entry. Until then you build, edit and preview, and OpenVibe staff publish."
     }
   ],
   "keywords": "ai website builder, open source website builder, static site builder, portfolio builder, website generator, docs site generator",
   "relationships": {
     "service": "space",
-    "linksLead": "openvibe.website opens OpenVibe.Space, where websites and apps are made; published sites get their names under openvibe.website.",
+    "linksLead": "openvibe.website is the front door: the website templates and what they become. Building, editing and hosting happen on OpenVibe.Space.",
     "links": [
+      {
+        "label": "Start a site",
+        "url": "https://openvibe.space/spaces/new",
+        "note": "Describe a site and OpenVibe AI builds it, or start from a template."
+      },
       {
         "label": "OpenVibe.Space",
         "url": "https://openvibe.space/",
-        "note": "Describe a site or an app and OpenVibe AI builds it, or start from a template; static hosting too."
+        "note": "Where sites and apps are built, kept and hosted."
       }
     ]
   }

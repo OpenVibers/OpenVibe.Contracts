@@ -8,7 +8,8 @@
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Space",
   "domains": [
-    "openvibe.space"
+    "openvibe.space",
+    "openvibe.website"
   ],
   "publicOrigin": "https://openvibe.space",
   "exposure": {
