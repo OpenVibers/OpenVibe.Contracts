@@ -263436,15 +263436,15 @@ export interface NetworkConsent {
    */
   subject: string;
   /**
-   * What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). app.data: one named app (client) may use the person's content for the purposes in options.
+   * What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). ai.looks is retired (0.256.0): the owner removed the rule that AI text never describes people (2026-10-31), so describing how someone looks needs no opt-in; it stays in the list so older readers still validate, and nothing writes it. app.data: one named app (client) may use the person's content for the purposes in options.
    */
-  purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
   /**
    * Whether the purpose is allowed now: true while the record is active (revoked_at null and expires_at not passed). A service never decides from this field alone; it asks the check.
    */
   on: boolean;
   /**
-   * Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize takes no kinds (it is about the person, not a piece of content).
+   * Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize and ai.looks take no kinds (they are about the person, not a piece of content).
    *
    * @maxItems 8
    */
@@ -263505,7 +263505,7 @@ export interface NetworkConsent {
    */
   client: string | null;
   /**
-   * What the purpose needs beyond on and kinds. An empty object for ai.train.
+   * What the purpose needs beyond on and kinds. An empty object for ai.train and ai.looks.
    */
   options: {
     /**
@@ -263539,18 +263539,21 @@ export interface NetworkConsent {
      */
     purposes?:
       | []
-      | ["ai.train" | "data.public" | "face.recognize"]
-      | ["ai.train" | "data.public" | "face.recognize", "ai.train" | "data.public" | "face.recognize"]
+      | ["ai.train" | "data.public" | "face.recognize" | "ai.looks"]
       | [
-          "ai.train" | "data.public" | "face.recognize",
-          "ai.train" | "data.public" | "face.recognize",
-          "ai.train" | "data.public" | "face.recognize"
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks"
         ]
       | [
-          "ai.train" | "data.public" | "face.recognize",
-          "ai.train" | "data.public" | "face.recognize",
-          "ai.train" | "data.public" | "face.recognize",
-          "ai.train" | "data.public" | "face.recognize"
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks"
+        ]
+      | [
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks"
         ];
   };
   /**
@@ -263662,7 +263665,7 @@ export interface NetworkConsentChoice {
    */
   text_version?: string;
   /**
-   * The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public.
+   * The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public.
    */
   adult?: boolean;
 }
@@ -263679,7 +263682,7 @@ export interface NetworkMeConsentResult {
     | []
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -263759,7 +263762,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -263837,243 +263840,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        }
-      ]
-    | [
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264153,7 +263920,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264231,7 +263998,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264309,85 +264076,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264467,7 +264156,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264545,7 +264234,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264623,7 +264312,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264701,85 +264390,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264859,7 +264470,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -264937,7 +264548,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265015,7 +264626,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265093,7 +264704,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265171,85 +264782,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265329,7 +264862,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265407,7 +264940,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265485,7 +265018,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265563,7 +265096,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265641,7 +265174,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265719,85 +265252,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265877,7 +265332,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -265955,7 +265410,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266033,7 +265488,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266111,7 +265566,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266189,7 +265644,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266267,7 +265722,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266345,85 +265800,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266503,7 +265880,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266581,7 +265958,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266659,7 +266036,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266737,7 +266114,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266815,7 +266192,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266893,7 +266270,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -266971,7 +266348,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267049,85 +266426,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267207,7 +266506,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267285,7 +266584,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267363,7 +266662,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267441,7 +266740,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267519,7 +266818,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267597,7 +266896,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267675,7 +266974,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267753,7 +267052,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267831,85 +267130,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -267989,7 +267210,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268067,7 +267288,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268145,7 +267366,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268223,7 +267444,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268301,7 +267522,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268379,7 +267600,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268457,7 +267678,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268535,7 +267756,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268613,7 +267834,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268691,85 +267912,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268849,7 +267992,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -268927,7 +268070,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269005,7 +268148,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269083,7 +268226,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269161,7 +268304,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269239,7 +268382,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269317,7 +268460,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269395,7 +268538,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269473,7 +268616,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269551,7 +268694,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269629,85 +268772,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269787,7 +268852,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269865,7 +268930,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -269943,7 +269008,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270021,7 +269086,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270099,7 +269164,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270177,7 +269242,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270255,7 +269320,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270333,7 +269398,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270411,7 +269476,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270489,7 +269554,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270567,7 +269632,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270645,85 +269710,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270803,7 +269790,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270881,7 +269868,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -270959,7 +269946,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271037,7 +270024,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271115,7 +270102,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271193,7 +270180,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271271,7 +270258,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271349,7 +270336,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271427,7 +270414,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271505,7 +270492,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271583,7 +270570,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271661,7 +270648,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271739,85 +270726,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271897,7 +270806,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -271975,7 +270884,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272053,7 +270962,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272131,7 +271040,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272209,7 +271118,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272287,7 +271196,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272365,7 +271274,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272443,7 +271352,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272521,7 +271430,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272599,7 +271508,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272677,7 +271586,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272755,7 +271664,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272833,7 +271742,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -272911,85 +271820,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
-          title: string;
-          /**
-           * What turning it on allows, in one plain line.
-           */
-          allows: string;
-          /**
-           * What turning it off does.
-           */
-          off: string;
-          /**
-           * What turning it off cannot undo (empty when nothing).
-           */
-          cannot_undo: string;
-          /**
-           * Turning it on asks the person to confirm they are 18 or older.
-           */
-          adults_only: boolean;
-          /**
-           * The kinds of content the person may narrow it to (empty: the purpose takes none).
-           *
-           * @maxItems 8
-           */
-          kinds:
-            | []
-            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ]
-            | [
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
-                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
-              ];
-          text_version: string;
-        },
-        {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273069,7 +271900,7 @@ export interface NetworkMeConsentResult {
       ]
     | [
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273147,7 +271978,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273225,7 +272056,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273303,7 +272134,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273381,7 +272212,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273459,7 +272290,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273537,7 +272368,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273615,7 +272446,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273693,7 +272524,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273771,7 +272602,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273849,7 +272680,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -273927,7 +272758,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -274005,7 +272836,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -274083,7 +272914,7 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -274161,7 +272992,87 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -274239,7 +273150,1099 @@ export interface NetworkMeConsentResult {
           text_version: string;
         },
         {
-          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
           title: string;
           /**
            * What turning it on allows, in one plain line.
@@ -274330,7 +274333,7 @@ export interface NetworkMeConsentResult {
    */
   history: {
     consent_id: string;
-    purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+    purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
     client?: string | null;
     action: "granted" | "revoked" | "expired";
     at: string;
@@ -274350,7 +274353,7 @@ export interface NetworkConsentCheckRequest {
   /**
    * The purpose to check (network.consent@1).
    */
-  purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
   /**
    * The kind of content the use is about. A choice limited to other kinds answers false.
    */
@@ -274377,7 +274380,7 @@ export interface NetworkConsentCheckRequest {
  * network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.
  */
 export interface NetworkConsentCheckResult {
-  purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
   kind?: "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code";
   client?: string;
   feature?: "verify" | "find" | "cast" | "library";
@@ -274398,12 +274401,12 @@ export interface NetworkConsentCheckResult {
 
 /** network.consent.changed@1.0.0 (owner: network) */
 /**
- * network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition) checks again before it goes on. The payload names the change and never the content it covers.
+ * network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition, an AI text) checks again before it goes on. The payload names the change and never the content it covers.
  */
 export interface NetworkConsentChangedPayload {
   consent_id: string;
   subject: string;
-  purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
   client: string | null;
   /**
    * Whether the purpose is allowed after the change.

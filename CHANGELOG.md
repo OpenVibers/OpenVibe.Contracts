@@ -2,9 +2,9 @@
 
 ## 0.256.0 — 2026-10-31
 
-- **`ai.looks` is no longer a consent purpose** (`network.consent@1` and its family). The owner removed the rule that
-  AI text never describes people (2026-10-31), so describing how someone looks needs no opt-in. Nothing read or wrote
-  the purpose yet (0.255.0 was released the same day).
+- **`ai.looks` is retired** (`network.consent@1`). The owner removed the rule that AI text never describes people
+  (2026-10-31), so describing how someone looks needs no opt-in. The value stays in the family's lists so readers of
+  0.255.0 still validate (removing it is a breaking change); nothing writes it, and Network offers it on no page.
 
 ## 0.255.0 — 2026-10-31
 

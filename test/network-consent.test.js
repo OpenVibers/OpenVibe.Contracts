@@ -12,7 +12,7 @@ const ROOT = path.join(__dirname, '..');
 const schema = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', f), 'utf8'));
 const fx = (id, kind, f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', id, kind, f), 'utf8'));
 
-const PURPOSES = ['ai.train', 'data.public', 'face.recognize', 'app.data'];
+const PURPOSES = ['ai.train', 'data.public', 'face.recognize', 'ai.looks', 'app.data'];
 const KINDS = ['streams', 'vods', 'clips', 'voice', 'chat', 'posts', 'pictures', 'code'];
 
 const consent = schema('network/consent.v1.json');
@@ -36,6 +36,9 @@ for (const [name, list] of [
     ['result.kind', result.properties.kind.enum],
     ['changed.kinds', changed.properties.kinds.items.enum],
 ]) assert.deepStrictEqual(list, KINDS, `${name} lists the same kinds`);
+
+// ai.looks is retired (0.256.0): kept for compatibility, said so, and written by nothing.
+assert.match(consent.properties.purpose.description, /ai\.looks is retired/);
 
 // Selling is not a purpose: it would need its own contract and a yes for each deal.
 assert.ok(!PURPOSES.some((p) => /sell|licen[cs]e|sale/.test(p)), 'no purpose sells data');

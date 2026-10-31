@@ -8,7 +8,7 @@
   "required": ["purpose", "subjects"],
   "properties": {
     "purpose": {
-      "enum": ["ai.train", "data.public", "face.recognize", "app.data"],
+      "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"],
       "description": "The purpose to check (network.consent@1)."
     },
     "kind": {

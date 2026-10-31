@@ -8,7 +8,7 @@
   "required": ["purpose", "allowed", "checked_at"],
   "properties": {
     "purpose": {
-      "enum": ["ai.train", "data.public", "face.recognize", "app.data"]
+      "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"]
     },
     "kind": {
       "enum": ["streams", "vods", "clips", "voice", "chat", "posts", "pictures", "code"]

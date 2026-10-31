@@ -15,7 +15,7 @@
         "additionalProperties": false,
         "required": ["id", "title", "allows", "off", "cannot_undo", "adults_only", "kinds", "text_version"],
         "properties": {
-          "id": { "enum": ["ai.train", "data.public", "face.recognize", "app.data"] },
+          "id": { "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"] },
           "title": { "type": "string", "minLength": 1, "maxLength": 80 },
           "allows": { "type": "string", "minLength": 1, "maxLength": 300, "description": "What turning it on allows, in one plain line." },
           "off": { "type": "string", "minLength": 1, "maxLength": 300, "description": "What turning it off does." },
@@ -47,7 +47,7 @@
         "required": ["consent_id", "purpose", "action", "at", "by", "text_version"],
         "properties": {
           "consent_id": { "type": "string", "pattern": "^cns_[0-9A-HJKMNP-TV-Z]{26}$" },
-          "purpose": { "enum": ["ai.train", "data.public", "face.recognize", "app.data"] },
+          "purpose": { "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"] },
           "client": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$" },
           "action": { "enum": ["granted", "revoked", "expired"] },
           "at": { "type": "string", "format": "date-time" },

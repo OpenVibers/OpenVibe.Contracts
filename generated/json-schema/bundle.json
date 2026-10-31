@@ -87543,9 +87543,10 @@
               "ai.train",
               "data.public",
               "face.recognize",
+              "ai.looks",
               "app.data"
             ],
-            "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). app.data: one named app (client) may use the person's content for the purposes in options."
+            "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). ai.looks is retired (0.256.0): the owner removed the rule that AI text never describes people (2026-10-31), so describing how someone looks needs no opt-in; it stays in the list so older readers still validate, and nothing writes it. app.data: one named app (client) may use the person's content for the purposes in options."
           },
           "on": {
             "type": "boolean",
@@ -87567,7 +87568,7 @@
                 "code"
               ]
             },
-            "description": "Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize takes no kinds (it is about the person, not a piece of content)."
+            "description": "Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize and ai.looks take no kinds (they are about the person, not a piece of content)."
           },
           "client": {
             "type": [
@@ -87610,13 +87611,14 @@
                   "enum": [
                     "ai.train",
                     "data.public",
-                    "face.recognize"
+                    "face.recognize",
+                    "ai.looks"
                   ]
                 },
                 "description": "app.data only: what the app may do with the person's content, as the consent screen showed it."
               }
             },
-            "description": "What the purpose needs beyond on and kinds. An empty object for ai.train."
+            "description": "What the purpose needs beyond on and kinds. An empty object for ai.train and ai.looks."
           },
           "text_version": {
             "type": "string",
@@ -87723,7 +87725,7 @@
           },
           "adult": {
             "type": "boolean",
-            "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public."
+            "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public."
           }
         }
       }
@@ -87767,6 +87769,7 @@
                     "ai.train",
                     "data.public",
                     "face.recognize",
+                    "ai.looks",
                     "app.data"
                   ]
                 },
@@ -87853,6 +87856,7 @@
                     "ai.train",
                     "data.public",
                     "face.recognize",
+                    "ai.looks",
                     "app.data"
                   ]
                 },
@@ -87916,6 +87920,7 @@
               "ai.train",
               "data.public",
               "face.recognize",
+              "ai.looks",
               "app.data"
             ],
             "description": "The purpose to check (network.consent@1)."
@@ -87983,6 +87988,7 @@
               "ai.train",
               "data.public",
               "face.recognize",
+              "ai.looks",
               "app.data"
             ]
           },
@@ -88050,7 +88056,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/network.consent.changed.v1.json",
         "title": "NetworkConsentChangedPayload",
-        "description": "network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition) checks again before it goes on. The payload names the change and never the content it covers.",
+        "description": "network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition, an AI text) checks again before it goes on. The payload names the change and never the content it covers.",
         "type": "object",
         "required": [
           "consent_id",
@@ -88077,6 +88083,7 @@
               "ai.train",
               "data.public",
               "face.recognize",
+              "ai.looks",
               "app.data"
             ]
           },

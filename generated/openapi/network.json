@@ -357,9 +357,9 @@
       "required": false,
       "schema": {
        "type": "boolean",
-       "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public."
+       "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public."
       },
-      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public."
+      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public."
      }
     ],
     "responses": {
@@ -571,9 +571,9 @@
       "required": false,
       "schema": {
        "type": "boolean",
-       "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public."
+       "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public."
       },
-      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public."
+      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public."
      }
     ],
     "responses": {
@@ -1343,8 +1343,8 @@
   "/internal/consent/check": {
    "post": {
     "operationId": "post_internal_consent_check",
-    "summary": "Ask whether a purpose (ai.train, data.public, face.recognize, app.data) may be used for up to 500 people (L24, data and AI by consent).",
-    "description": "**network.consent.read** (first-party): Ask whether a purpose (ai.train, data.public, face.recognize, app.data) may be used for up to 500 people (L24, data and AI by consent). A service asks before every use of a person's content or likeness for one of those purposes; an answer is cached at most 60 s and dropped on network.consent.changed, and a service that cannot reach Network treats every purpose as off.",
+    "summary": "Ask whether a purpose (ai.train, data.public, face.recognize, ai.looks, app.data) may be used for up to 500 people (L24, data and AI by consent).",
+    "description": "**network.consent.read** (first-party): Ask whether a purpose (ai.train, data.public, face.recognize, ai.looks, app.data) may be used for up to 500 people (L24, data and AI by consent). A service asks before every use of a person's content or likeness for one of those purposes; an answer is cached at most 60 s and dropped on network.consent.changed, and a service that cannot reach Network treats every purpose as off.",
     "tags": [
      "network.consent"
     ],
@@ -3977,6 +3977,7 @@
        "ai.train",
        "data.public",
        "face.recognize",
+       "ai.looks",
        "app.data"
       ],
       "description": "The purpose to check (network.consent@1)."
@@ -4037,6 +4038,7 @@
        "ai.train",
        "data.public",
        "face.recognize",
+       "ai.looks",
        "app.data"
       ]
      },
@@ -4156,7 +4158,7 @@
      },
      "adult": {
       "type": "boolean",
-      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public."
+      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public."
      }
     }
    },
@@ -4195,9 +4197,10 @@
        "ai.train",
        "data.public",
        "face.recognize",
+       "ai.looks",
        "app.data"
       ],
-      "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). app.data: one named app (client) may use the person's content for the purposes in options."
+      "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). ai.looks is retired (0.256.0): the owner removed the rule that AI text never describes people (2026-10-31), so describing how someone looks needs no opt-in; it stays in the list so older readers still validate, and nothing writes it. app.data: one named app (client) may use the person's content for the purposes in options."
      },
      "on": {
       "type": "boolean",
@@ -4219,7 +4222,7 @@
         "code"
        ]
       },
-      "description": "Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize takes no kinds (it is about the person, not a piece of content)."
+      "description": "Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize and ai.looks take no kinds (they are about the person, not a piece of content)."
      },
      "client": {
       "type": [
@@ -4262,13 +4265,14 @@
          "enum": [
           "ai.train",
           "data.public",
-          "face.recognize"
+          "face.recognize",
+          "ai.looks"
          ]
         },
         "description": "app.data only: what the app may do with the person's content, as the consent screen showed it."
        }
       },
-      "description": "What the purpose needs beyond on and kinds. An empty object for ai.train."
+      "description": "What the purpose needs beyond on and kinds. An empty object for ai.train and ai.looks."
      },
      "text_version": {
       "type": "string",
@@ -4756,6 +4760,7 @@
           "ai.train",
           "data.public",
           "face.recognize",
+          "ai.looks",
           "app.data"
          ]
         },
@@ -4842,6 +4847,7 @@
           "ai.train",
           "data.public",
           "face.recognize",
+          "ai.looks",
           "app.data"
          ]
         },
