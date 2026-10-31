@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/ai.usage.recorded.v1.json",
+  "title": "AiUsageRecordedPayload",
+  "description": "ai.usage.recorded v1 (plan L40, one AI meter across the network). One AI call, wherever it happened: OpenVibe.AI's own runs, a harness turn in Codes, an Actor task, Vibe, a local model on a person's own machine. who and where: subject (the person, or null when the call is anonymous), attribution (the site or app the call came from, free text such as 'site:design'), surface (the product surface, free text such as 'design.generate' or 'codes.turn'). what ran: system (ai, harness:claude-code, harness:codex, actor, node), provider, model, effort. who paid: paid_by (own_key, openvibe_key, plan, own_machine, free_tier, network_allowance, org_key) and paid_by_detail (for example 'anthropic ...a1b2' for a person's own key, or 'claude-max' for a plan). tokens: input (the UNCACHED input tokens), output, reasoning, cache_read, cache_write (with cache_write_ttl 5m or 1h), images, audio_seconds, video_seconds. money, in USD: list_cost_usd (what the tokens cost at the human-typed list prices), charged_usd (what the payer was actually charged), fee_usd (the network's fee on top), cache_saved_usd (what the cache saved against the plain input price). price_source says where the prices came from ('models', 'pricing', 'flat', or 'no cache price' when no cache price is typed and the cache tokens are priced at the input price), price_date the day the price was checked. how it went: latency_ms, ttft_ms, attempts, outcome. ids: run_id or turn_id, and at. The record carries NO prompt and NO answer text, ever. A ledger (OpenVibe.AI) rolls the records up; a record consumed twice is stored once (idempotent by system and run_id or turn_id). Envelope: subject { type: run, id: <run_id> } or { type: user, id: <subject> }, visibility internal, priority low, actor service:ai.",
+  "type": "object",
+  "required": [
+    "system",
+    "surface",
+    "paid_by",
+    "input",
+    "output",
+    "reasoning",
+    "cache_read",
+    "cache_write",
+    "cache_write_ttl",
+    "images",
+    "audio_seconds",
+    "video_seconds",
+    "list_cost_usd",
+    "charged_usd",
+    "fee_usd",
+    "cache_saved_usd",
+    "price_source",
+    "price_date",
+    "latency_ms",
+    "ttft_ms",
+    "attempts",
+    "outcome",
+    "at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": ["string", "null"],
+      "maxLength": 128,
+      "description": "The person the call was made for, or null when the call was anonymous."
+    },
+    "attribution": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "The site or app the call came from, as '<type>:<id>' (for example 'site:design'), empty when nothing is known."
+    },
+    "surface": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "The product surface: 'design.generate', 'codes.turn', 'ai.generate'. Free text, so a new surface needs no new contract."
+    },
+    "system": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "What ran: 'ai', 'harness:claude-code', 'harness:codex', 'actor', 'node'."
+    },
+    "provider": { "type": ["string", "null"], "maxLength": 128 },
+    "model": { "type": ["string", "null"], "maxLength": 200 },
+    "effort": { "type": ["string", "null"], "maxLength": 64, "description": "The reasoning effort the call asked for, when it asked for one." },
+    "paid_by": {
+      "type": "string",
+      "enum": ["own_key", "openvibe_key", "plan", "own_machine", "free_tier", "network_allowance", "org_key"]
+    },
+    "paid_by_detail": {
+      "type": ["string", "null"],
+      "maxLength": 200,
+      "description": "Which key or plan paid, for example 'anthropic ...a1b2' or 'claude-max'. Never a whole secret."
+    },
+    "input": { "type": "integer", "minimum": 0, "description": "The uncached input tokens. Cache reads and cache writes are counted on their own fields." },
+    "output": { "type": "integer", "minimum": 0 },
+    "reasoning": { "type": "integer", "minimum": 0 },
+    "cache_read": { "type": "integer", "minimum": 0 },
+    "cache_write": { "type": "integer", "minimum": 0 },
+    "cache_write_ttl": {
+      "type": ["string", "null"],
+      "enum": ["5m", "1h", null],
+      "description": "How long the written cache entry lives, when the provider says."
+    },
+    "images": { "type": "integer", "minimum": 0 },
+    "audio_seconds": { "type": "number", "minimum": 0 },
+    "video_seconds": { "type": "number", "minimum": 0 },
+    "list_cost_usd": { "type": "number", "minimum": 0, "description": "What the tokens cost at the human-typed list prices." },
+    "charged_usd": { "type": "number", "minimum": 0, "description": "What the payer was actually charged. A person's own key is never charged here: 0." },
+    "fee_usd": { "type": "number", "minimum": 0, "description": "The network's fee on top of the cost, when the OpenVibe key paid." },
+    "cache_saved_usd": { "type": "number", "minimum": 0, "description": "What the cached tokens saved against the plain input price." },
+    "price_source": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Where the prices came from: 'models' (a person's typed model row), 'pricing' (AI_PRICING_JSON), 'flat' (the flat rates), 'no cache price' (no cache price is typed, so the cache tokens are priced at the input price)."
+    },
+    "price_date": { "type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", "description": "The day the price was checked, when it was." },
+    "latency_ms": { "type": ["integer", "null"], "minimum": 0 },
+    "ttft_ms": { "type": ["integer", "null"], "minimum": 0, "description": "Time to the first token, when the call streamed and it was measured." },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "outcome": {
+      "type": "string",
+      "enum": ["succeeded", "failed", "cancelled", "cached"]
+    },
+    "run_id": { "type": ["string", "null"], "maxLength": 100 },
+    "turn_id": { "type": ["string", "null"], "maxLength": 100 },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

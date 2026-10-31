@@ -1372,6 +1372,16 @@
       "adr": "ADR-015"
     },
     {
+      "id": "ai.usage.recorded",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.usage.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
+    },
+    {
       "id": "ai.run.queued",
       "version": "1.0.0",
       "owner": "ai",

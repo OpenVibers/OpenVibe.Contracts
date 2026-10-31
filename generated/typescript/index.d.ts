@@ -152217,6 +152217,89 @@ export interface AiRun {
   finished_at: string | null;
 }
 
+/** ai.usage.recorded@1.0.0 (owner: ai) */
+/**
+ * ai.usage.recorded v1 (plan L40, one AI meter across the network). One AI call, wherever it happened: OpenVibe.AI's own runs, a harness turn in Codes, an Actor task, Vibe, a local model on a person's own machine. who and where: subject (the person, or null when the call is anonymous), attribution (the site or app the call came from, free text such as 'site:design'), surface (the product surface, free text such as 'design.generate' or 'codes.turn'). what ran: system (ai, harness:claude-code, harness:codex, actor, node), provider, model, effort. who paid: paid_by (own_key, openvibe_key, plan, own_machine, free_tier, network_allowance, org_key) and paid_by_detail (for example 'anthropic ...a1b2' for a person's own key, or 'claude-max' for a plan). tokens: input (the UNCACHED input tokens), output, reasoning, cache_read, cache_write (with cache_write_ttl 5m or 1h), images, audio_seconds, video_seconds. money, in USD: list_cost_usd (what the tokens cost at the human-typed list prices), charged_usd (what the payer was actually charged), fee_usd (the network's fee on top), cache_saved_usd (what the cache saved against the plain input price). price_source says where the prices came from ('models', 'pricing', 'flat', or 'no cache price' when no cache price is typed and the cache tokens are priced at the input price), price_date the day the price was checked. how it went: latency_ms, ttft_ms, attempts, outcome. ids: run_id or turn_id, and at. The record carries NO prompt and NO answer text, ever. A ledger (OpenVibe.AI) rolls the records up; a record consumed twice is stored once (idempotent by system and run_id or turn_id). Envelope: subject { type: run, id: <run_id> } or { type: user, id: <subject> }, visibility internal, priority low, actor service:ai.
+ */
+export interface AiUsageRecordedPayload {
+  /**
+   * The person the call was made for, or null when the call was anonymous.
+   */
+  subject?: string | null;
+  /**
+   * The site or app the call came from, as '<type>:<id>' (for example 'site:design'), empty when nothing is known.
+   */
+  attribution?: string;
+  /**
+   * The product surface: 'design.generate', 'codes.turn', 'ai.generate'. Free text, so a new surface needs no new contract.
+   */
+  surface: string;
+  /**
+   * What ran: 'ai', 'harness:claude-code', 'harness:codex', 'actor', 'node'.
+   */
+  system: string;
+  provider?: string | null;
+  model?: string | null;
+  /**
+   * The reasoning effort the call asked for, when it asked for one.
+   */
+  effort?: string | null;
+  paid_by: "own_key" | "openvibe_key" | "plan" | "own_machine" | "free_tier" | "network_allowance" | "org_key";
+  /**
+   * Which key or plan paid, for example 'anthropic ...a1b2' or 'claude-max'. Never a whole secret.
+   */
+  paid_by_detail?: string | null;
+  /**
+   * The uncached input tokens. Cache reads and cache writes are counted on their own fields.
+   */
+  input: number;
+  output: number;
+  reasoning: number;
+  cache_read: number;
+  cache_write: number;
+  /**
+   * How long the written cache entry lives, when the provider says.
+   */
+  cache_write_ttl: "5m" | "1h" | null;
+  images: number;
+  audio_seconds: number;
+  video_seconds: number;
+  /**
+   * What the tokens cost at the human-typed list prices.
+   */
+  list_cost_usd: number;
+  /**
+   * What the payer was actually charged. A person's own key is never charged here: 0.
+   */
+  charged_usd: number;
+  /**
+   * The network's fee on top of the cost, when the OpenVibe key paid.
+   */
+  fee_usd: number;
+  /**
+   * What the cached tokens saved against the plain input price.
+   */
+  cache_saved_usd: number;
+  /**
+   * Where the prices came from: 'models' (a person's typed model row), 'pricing' (AI_PRICING_JSON), 'flat' (the flat rates), 'no cache price' (no cache price is typed, so the cache tokens are priced at the input price).
+   */
+  price_source: string;
+  /**
+   * The day the price was checked, when it was.
+   */
+  price_date: string | null;
+  latency_ms: number | null;
+  /**
+   * Time to the first token, when the call streamed and it was measured.
+   */
+  ttft_ms: number | null;
+  attempts: number;
+  outcome: "succeeded" | "failed" | "cancelled" | "cached";
+  run_id?: string | null;
+  turn_id?: string | null;
+  at: string;
+}
+
 /** ai.run.queued@1.0.0 (owner: ai) */
 /**
  * ai.run.queued v1 (OpenVibe.AI server/runs.js create). PLANNED: AI does not publish run events yet (its manifest notes list ai.run.queued|succeeded|failed|cached once the Events client is wired in); this is the shape it is to send. A run was stored queued (it then runs inline within ?wait or on the worker). Not published for a cache hit (ai.run.cached) or a create refused by quota or a full queue. A projection of ai.run@1 without input or output (ADR-015: request metadata, never raw prompts). requester is the token principal that created the run (service, app or mod). Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low, actor service:ai.

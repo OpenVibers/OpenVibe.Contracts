@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.258.0 — 2026-10-31
+
+- **One AI meter across the network** (plan L40): every AI call on the network leaves one usage record, whoever made it.
+  - **`ai.usage.recorded@1`** (`contracts/events/payloads/ai.usage.recorded.v1.json`): one call, and who and where it
+    happened (`subject`, `attribution`, `surface`), what ran (`system`, `provider`, `model`, `effort`), who paid
+    (`paid_by`: `own_key`, `openvibe_key`, `plan`, `own_machine`, `free_tier`, `network_allowance`, `org_key`, with
+    `paid_by_detail`), the tokens (`input` uncached, `output`, `reasoning`, `cache_read`, `cache_write` with
+    `cache_write_ttl` `5m` or `1h`, `images`, `audio_seconds`, `video_seconds`), the money in USD (`list_cost_usd`,
+    `charged_usd`, `fee_usd`, `cache_saved_usd`, with `price_source` and `price_date`), how it went (`latency_ms`,
+    `ttft_ms`, `attempts`, `outcome`) and the ids (`run_id` or `turn_id`, `at`).
+  - **No prompt and no answer text, ever.** The payload has no field for either, and the schema closes the object.
+  - Phase 1 is OpenVibe.AI's own runs; Codes, Actor and the rest feed the same event later. A ledger in AI rolls the
+    records up, and a record taken twice is stored once (idempotent by `system` and `run_id` or `turn_id`).
+
 ## 0.257.0 — 2026-10-31
 
 - **"Your AI": a person's own provider keys, and how their runs route** (L36 Y1/Y3/Y8; OpenVibe.AI). Five additive
@@ -20,6 +34,7 @@
 - **Two person capabilities**, `ai.me.read` and `ai.me.manage`: only the person's own Network token, or the person
   session on AI's own site behind a same-origin check, reaches them. A service token is refused, and so is any token
   carrying `on_behalf_of`, whatever capabilities it holds (the AI #204/#205 rule).
+
 
 ## 0.256.0 — 2026-10-31
 
