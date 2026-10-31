@@ -139,5 +139,13 @@
     ],
     "keywords": "openvibe run, job runner, run jobs on nodes, sandbox api, per-second metering",
     "neighbourhood": "build"
-  }
+  },
+  "machineRoles": [
+    {
+      "id": "desks.host",
+      "name": "Desk host",
+      "installs": "the desk sandbox (a private browser desk for every session)",
+      "shows": "Hosts desks for agents, yours and other people's."
+    }
+  ]
 }

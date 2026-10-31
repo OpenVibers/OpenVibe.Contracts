@@ -80,7 +80,9 @@
     "network.status.incident",
     "network.actions.read",
     "network.consent.read",
-    "network.consent.manage"
+    "network.consent.manage",
+    "network.machines.read",
+    "network.machines.manage"
   ],
   "eventsProduced": [
     "network.account.deleted",
@@ -102,7 +104,12 @@
     "network.subject.merged",
     "network.user.token_valid_after",
     "network.user.updated",
-    "network.consent.changed"
+    "network.consent.changed",
+    "network.machine.online",
+    "network.machine.offline",
+    "network.machine.paired",
+    "network.machine.roles_changed",
+    "network.machine.revoked"
   ],
   "eventsConsumed": [
     "billing.staff.action",

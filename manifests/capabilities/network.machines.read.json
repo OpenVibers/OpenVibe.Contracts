@@ -1,0 +1,23 @@
+{
+  "id": "network.machines.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read a person's own machines: the list, one machine, and the catalogue of roles. A person reads their own with their own token; an app needs the person's consent for this scope (it is a public capability, so it can be granted to an app, and the app then acts only on behalf of the person who consented).",
+  "permissions": [
+    "machines:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "network-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/machines",
+    "GET /api/v1/machines/:id",
+    "GET /api/v1/machines/roles"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.machine-list-result@1"
+}

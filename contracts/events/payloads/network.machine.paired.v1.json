@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.machine.paired.v1.json",
+  "title": "NetworkMachinePairedPayload",
+  "description": "network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <nod_…> }, visibility internal, actor service:network.",
+  "type": "object",
+  "required": ["principal_id", "owner", "at"],
+  "additionalProperties": false,
+  "properties": {
+    "machine_id": { "type": "string", "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The machine's device id in Bot's registry, when Bot already knows the device." },
+    "node_id": { "type": "string", "pattern": "^n-[a-z0-9]{26}$", "description": "The machine's node id (platform_node_principals.node_id)." },
+    "principal_id": { "type": "string", "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The node principal the pairing created. Also the envelope subject id." },
+    "owner": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The person the machine belongs to." },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

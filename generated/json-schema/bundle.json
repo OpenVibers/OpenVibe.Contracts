@@ -939,6 +939,37 @@
               "type": "string"
             }
           },
+          "machineRoles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "installs",
+                "shows"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 60
+                },
+                "installs": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "shows": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              }
+            }
+          },
           "contractRanges": {
             "type": "object",
             "additionalProperties": {
@@ -66743,6 +66774,566 @@
         }
       }
     },
+    "network.machine": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine.v1.json",
+        "title": "NetworkMachine",
+        "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "online",
+          "roles",
+          "running"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's device id in Bot's registry (dev_…)."
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network (nod_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "The name the owner gave it. Absent when they gave none."
+          },
+          "kind": {
+            "enum": [
+              "onboard",
+              "bridge",
+              "server"
+            ],
+            "description": "What the machine is, as Bot's device record says: onboard (the robot's own machine), bridge (a machine that drives a robot over the robot's own link), server (a machine that runs its owner's jobs)."
+          },
+          "os": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in."
+          },
+          "online": {
+            "type": "boolean",
+            "description": "Whether the machine is connected to Bot right now."
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the machine was last seen. Absent before its first check-in."
+          },
+          "node_version": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "The OpenVibe Node version the machine reports. Absent until it has checked in."
+          },
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "What the machine does for the network: the ids from the catalogue (network.machine-roles@1). The owner sets these; the machine applies them at its next check-in."
+          },
+          "running": {
+            "type": "array",
+            "description": "What the machine is doing right now, as a short list: its Codes jobs, its desks, the local models it serves and the robots it drives.",
+            "items": {
+              "type": "object",
+              "required": [
+                "kind",
+                "count"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "codes.jobs",
+                    "desks",
+                    "models",
+                    "robots"
+                  ]
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 120,
+                  "description": "A short, plain description for the owner (the desk's name, the model's name)."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "network.machine-list-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-list-result.v1.json",
+        "title": "NetworkMachineListResult",
+        "description": "network.machine-list-result@1: a person's machines, as the network's hub lists them (plan L34, step M2: GET /api/v1/machines). Only the caller's own machines are ever in it.",
+        "type": "object",
+        "required": [
+          "machines"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machines": {
+            "type": "array",
+            "items": {
+              "$ref": "machine.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "network.machine-manage-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-manage-result.v1.json",
+        "title": "NetworkMachineManageResult",
+        "description": "network.machine-manage-result@1: the machine as it is after a change (plan L34, step M2: PATCH /api/v1/machines/:id, PUT /api/v1/machines/:id/roles, POST /api/v1/machines/:id/revoke). The pairing route answers network.machine-pairing@1 instead, because a pairing is a code and not a machine.",
+        "type": "object",
+        "required": [
+          "machine"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine": {
+            "$ref": "machine.v1.json"
+          }
+        }
+      }
+    },
+    "bot.machine-manage-request": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/machine-manage-request.v1.json",
+        "title": "BotMachineManageRequest",
+        "description": "bot.machine-manage-request@1: what a caller changes on a machine (plan L34, step M2). A rename gives a name; a roles change gives the whole set of roles (network.machine-roles-put@1's shape). The same body is what the network's hub sends to Bot, so both sides speak one shape.",
+        "type": "object",
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "required": [
+              "roles"
+            ]
+          }
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The name the owner gives the machine. Absent when the call changes something else."
+          },
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine's roles after the change. Absent when the call changes something else."
+          }
+        }
+      }
+    },
+    "bot.machine-manage-result": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/machine-manage-result.v1.json",
+        "title": "BotMachineManageResult",
+        "description": "bot.machine-manage-result@1: the machine as it is after the change (plan L34, step M2). Bot is the registry underneath: it answers with its own device record, never with a credential.",
+        "type": "object",
+        "required": [
+          "machine"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine": {
+            "$ref": "device.v1.json"
+          }
+        }
+      }
+    },
+    "network.machine-role": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-role.v1.json",
+        "title": "NetworkMachineRole",
+        "description": "network.machine-role@1: one role a machine can have (plan L34, step M4). A role is what the machine does for the network: a name for the owner, what it installs on the machine and what the hub shows. The catalogue is network.machine-roles@1; a role outside it is refused.",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "installs",
+          "shows"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$",
+            "description": "The role's id: the product that owns it, then what it is (codes.worker, desks.host, ai.host, bot.robot)."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "The role's name, in the owner's words."
+          },
+          "installs": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "What the role puts on the machine (the job runner, the desk sandbox, the local model server)."
+          },
+          "shows": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "What the hub shows for a machine with this role."
+          }
+        }
+      }
+    },
+    "network.machine-roles": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-roles.v1.json",
+        "title": "NetworkMachineRoles",
+        "description": "network.machine-roles@1: the catalogue of machine roles (plan L34, step M4). A product declares a role — a name, what it installs on the machine and what the hub shows — and the Node turns it on at its next check-in. The first roles are Codes' worker, Desks' host, AI's local models and Bot's robot. A role outside this catalogue is refused (network.machine-roles-put@1).",
+        "type": "object",
+        "required": [
+          "roles"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "machine-role.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "network.machine-roles-put": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-roles-put.v1.json",
+        "title": "NetworkMachineRolesPut",
+        "description": "network.machine-roles-put@1: the roles the owner gives a machine (PUT /api/v1/machines/:id/roles, capability machines.manage). The whole set, not a change: what is not named is turned off. Every id must be in the catalogue (network.machine-roles@1); an unknown role is refused and nothing is changed.",
+        "type": "object",
+        "required": [
+          "roles"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine's roles after the change. An empty array turns every role off."
+          }
+        }
+      }
+    },
+    "network.machine-pairing": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-pairing.v1.json",
+        "title": "NetworkMachinePairing",
+        "description": "network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.bot/install). The code is never stored in the clear and never returned again.",
+        "type": "object",
+        "required": [
+          "code",
+          "expires_at",
+          "installer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$",
+            "description": "The one-time pairing code, eight Crockford base32 characters in two groups (XXXX-XXXX)."
+          },
+          "pairing_id": {
+            "type": "string",
+            "pattern": "^pair_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The pairing's id, as the install command carries it. Absent when the authority behind it does not name one."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the code stops working."
+          },
+          "installer": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "The command the owner runs on the machine (openvibe.bot/install, with the network, the pairing id and the code)."
+          }
+        }
+      }
+    },
+    "network.machine.online": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.online.v1.json",
+        "title": "NetworkMachineOnlinePayload",
+        "description": "network.machine.online v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person (a Bot device of kind machine) came online: it checked in and is connected to Bot. Network republishes Bot's change (Bot reports it to Network, which writes this event), so a consumer of the network's events hears about a machine once, in one place. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network, when it has one."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.offline": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.offline.v1.json",
+        "title": "NetworkMachineOfflinePayload",
+        "description": "network.machine.offline v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person went offline: it is no longer connected to Bot. Network republishes Bot's change, so a consumer of the network's events hears about a machine once, in one place. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network, when it has one."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.paired": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.paired.v1.json",
+        "title": "NetworkMachinePairedPayload",
+        "description": "network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <nod_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "principal_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's device id in Bot's registry, when Bot already knows the device."
+          },
+          "node_id": {
+            "type": "string",
+            "pattern": "^n-[a-z0-9]{26}$",
+            "description": "The machine's node id (platform_node_principals.node_id)."
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The node principal the pairing created. Also the envelope subject id."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.roles_changed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.roles_changed.v1.json",
+        "title": "NetworkMachineRolesChangedPayload",
+        "description": "network.machine.roles_changed v1 (OpenVibe.Network, plan L34, step M4). A machine's roles changed: the whole set after the change, from the catalogue (network.machine-roles@1). The machine applies them at its next check-in, so this event says what was asked for, not what the machine has already done. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "roles",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine's roles after the change."
+          },
+          "changed_by": {
+            "type": "string",
+            "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|app:[a-z0-9-]+)$",
+            "description": "Who asked for the change: the person, or an app acting with their consent."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.revoked": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.revoked.v1.json",
+        "title": "NetworkMachineRevokedPayload",
+        "description": "network.machine.revoked v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person was revoked: it is no longer theirs and its credential is dead. The machine's credential and its hash are never carried. A second revoke changes nothing and emits nothing. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network, when it had one."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belonged to."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Why it was revoked, when the caller gave one. Absent otherwise."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "network.avatar-write-request": {
       "version": "1.0.0",
       "owner": "network",
@@ -72050,6 +72641,21 @@
           },
           "online": {
             "type": "boolean"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine roles the owner set (plan L34: the catalogue is network.machine-roles@1). Absent on a device that has none."
+          },
+          "os": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The operating system the device reported."
           }
         }
       }

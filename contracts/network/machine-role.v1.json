@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/machine-role.v1.json",
+  "title": "NetworkMachineRole",
+  "description": "network.machine-role@1: one role a machine can have (plan L34, step M4). A role is what the machine does for the network: a name for the owner, what it installs on the machine and what the hub shows. The catalogue is network.machine-roles@1; a role outside it is refused.",
+  "type": "object",
+  "required": ["id", "name", "installs", "shows"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$",
+      "description": "The role's id: the product that owns it, then what it is (codes.worker, desks.host, ai.host, bot.robot)."
+    },
+    "name": { "type": "string", "maxLength": 60, "description": "The role's name, in the owner's words." },
+    "installs": { "type": "string", "maxLength": 200, "description": "What the role puts on the machine (the job runner, the desk sandbox, the local model server)." },
+    "shows": { "type": "string", "maxLength": 200, "description": "What the hub shows for a machine with this role." }
+  }
+}

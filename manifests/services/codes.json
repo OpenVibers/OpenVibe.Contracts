@@ -109,5 +109,13 @@
       "none": "no claims: one process owns the ov_codes PostgreSQL database; writes are transactions there"
     }
   },
-  "notes": "Port 4900, unit openvibe-codes.service. The open coding-agent harness (owner 2026-10-08): the harness catalog and router (GET /api/v1/harnesses, POST /api/v1/harnesses/route), the way to improve OpenVibe (contributing, code of conduct, the contributor ladder) and permanent redirects from the former developer-portal paths to openvibe.services, where the portal moved (manifests, releases, trust, playgrounds, docs, OAuth and webhook tools). Coding tasks on the person's own machine (plan T16) are Run jobs: their sessions are kept line by line in codes_session_lines as the stream arrives (back-filled from the machine's final log; GET /run/tasks/:id/session.json replays them), run.job.* events from OpenVibe.Run finalize a task without polling, and every state change is published as codes.task.queued|running|succeeded|failed|cancelled from a transactional outbox."
+  "notes": "Port 4900, unit openvibe-codes.service. The open coding-agent harness (owner 2026-10-08): the harness catalog and router (GET /api/v1/harnesses, POST /api/v1/harnesses/route), the way to improve OpenVibe (contributing, code of conduct, the contributor ladder) and permanent redirects from the former developer-portal paths to openvibe.services, where the portal moved (manifests, releases, trust, playgrounds, docs, OAuth and webhook tools). Coding tasks on the person's own machine (plan T16) are Run jobs: their sessions are kept line by line in codes_session_lines as the stream arrives (back-filled from the machine's final log; GET /run/tasks/:id/session.json replays them), run.job.* events from OpenVibe.Run finalize a task without polling, and every state change is published as codes.task.queued|running|succeeded|failed|cancelled from a transactional outbox.",
+  "machineRoles": [
+    {
+      "id": "codes.worker",
+      "name": "Codes worker",
+      "installs": "the Codes job runner (the coding agent and the job sandbox)",
+      "shows": "Runs your coding jobs, such as a task you start on openvibe.codes."
+    }
+  ]
 }

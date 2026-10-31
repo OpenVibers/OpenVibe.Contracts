@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/machine-manage-result.v1.json",
+  "title": "NetworkMachineManageResult",
+  "description": "network.machine-manage-result@1: the machine as it is after a change (plan L34, step M2: PATCH /api/v1/machines/:id, PUT /api/v1/machines/:id/roles, POST /api/v1/machines/:id/revoke). The pairing route answers network.machine-pairing@1 instead, because a pairing is a code and not a machine.",
+  "type": "object",
+  "required": ["machine"],
+  "additionalProperties": false,
+  "properties": {
+    "machine": { "$ref": "machine.v1.json" }
+  }
+}

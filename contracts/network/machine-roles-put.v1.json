@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/machine-roles-put.v1.json",
+  "title": "NetworkMachineRolesPut",
+  "description": "network.machine-roles-put@1: the roles the owner gives a machine (PUT /api/v1/machines/:id/roles, capability machines.manage). The whole set, not a change: what is not named is turned off. Every id must be in the catalogue (network.machine-roles@1); an unknown role is refused and nothing is changed.",
+  "type": "object",
+  "required": ["roles"],
+  "additionalProperties": false,
+  "properties": {
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 8,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$" },
+      "description": "The machine's roles after the change. An empty array turns every role off."
+    }
+  }
+}
