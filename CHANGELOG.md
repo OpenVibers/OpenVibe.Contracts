@@ -11,7 +11,16 @@
     `charged_usd`, `fee_usd`, `cache_saved_usd`, with `price_source` and `price_date`), how it went (`latency_ms`,
     `ttft_ms`, `attempts`, `outcome`) and the ids (`run_id` or `turn_id`, `at`).
   - **No prompt and no answer text, ever.** The payload has no field for either, and the schema closes the object.
-  - Phase 1 is OpenVibe.AI's own runs; Codes, Actor and the rest feed the same event later. A ledger in AI rolls the
+  - **The meter belongs to OpenVibe.Report** (plan L40 and L41): OpenVibe.AI writes the records, Report keeps the ledger
+    and rolls it up.
+  - **`report.ai-usage-open-result@1`**: the public AI totals (tokens, the cache share, the own-key share, the spend by
+    week). No person, no site and no key in it.
+  - **`report.ai-usage-result@1`**: the same meter in groups (day, site, model, system, paid_by) for a service token with
+    the new **`report.ai_usage.read`** capability. A group that fewer than ten people share reads 'fewer than 10'
+    instead of counting them.
+  - **`report.ai-usage-me-result@1`**: the AI usage of one person (GET /api/v1/me/ai/usage), for the person and nobody
+    else. The route answers 501 until Report has sign-in; the shape is fixed here first.
+  - Phase 1 is OpenVibe.AI's own runs; Codes, Actor and the rest feed the same event later. Report rolls the
     records up, and a record taken twice is stored once (idempotent by `system` and `run_id` or `turn_id`).
 
 ## 0.257.0 — 2026-10-31

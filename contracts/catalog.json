@@ -8303,6 +8303,33 @@
       "status": "active"
     },
     {
+      "id": "report.ai-usage-open-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-open-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-me-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-me-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "bench.benchmark",
       "version": "1.0.0",
       "owner": "bench",

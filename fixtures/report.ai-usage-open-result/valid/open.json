@@ -1,0 +1,14 @@
+{
+  "calls": 120,
+  "tokens": { "input": 1000, "output": 200, "cache_read": 800, "cache_write": 150 },
+  "cache_share": 0.41,
+  "cache_saved_usd": 0.12,
+  "own_key_share": 0.25,
+  "own_key_calls": 30,
+  "list_cost_usd": 1.23,
+  "charged_usd": 0.9,
+  "fee_usd": 0.02,
+  "spend_by_week": [
+    { "week": "2026-10-27", "calls": 30, "list_cost_usd": 0.4, "charged_usd": 0.3, "cache_saved_usd": 0.05 }
+  ]
+}

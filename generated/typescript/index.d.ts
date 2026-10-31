@@ -276574,6 +276574,116 @@ export type ReportMetric = {
   [k: string]: unknown | undefined;
 };
 
+/** report.ai-usage-open-result@1.0.0 (owner: report) */
+/**
+ * report.ai-usage-open-result@1: the open AI meter (plan L40/L41). What the whole network spends on AI, in public: the tokens, the share of them that came from a provider cache, the share that the own keys of people paid, and the spend by week. No person, no site and no key is in it: the rows are summed before they are answered.
+ */
+export interface ReportAiUsageOpenResult {
+  /**
+   * The AI calls behind these numbers.
+   */
+  calls: number;
+  tokens: {
+    /**
+     * The uncached input tokens.
+     */
+    input: number;
+    output: number;
+    cache_read: number;
+    cache_write: number;
+  };
+  /**
+   * The share of the prompt tokens that came from a provider cache.
+   */
+  cache_share: number;
+  cache_saved_usd: number;
+  /**
+   * The share of the tokens that the own keys of people paid.
+   */
+  own_key_share: number;
+  own_key_calls: number;
+  list_cost_usd: number;
+  charged_usd: number;
+  fee_usd: number;
+  spend_by_week: {
+    /**
+     * The Monday of the week.
+     */
+    week: string;
+    calls: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    cache_saved_usd: number;
+  }[];
+}
+
+/** report.ai-usage-result@1.0.0 (owner: report) */
+/**
+ * report.ai-usage-result@1: the AI meter in groups (plan L40/L41). GET /api/v1/ai/usage needs a service token with report.ai_usage.read; the rows are grouped by day, site, model, system or paid_by. A group that fewer than ten people share reads fewer than 10 instead of counting them.
+ */
+export interface ReportAiUsageResult {
+  group: "day" | "site" | "model" | "system" | "paid_by";
+  usage: {
+    group: "day" | "site" | "model" | "system" | "paid_by";
+    /**
+     * The name of the group: the day, the site, the model, the system or the payer.
+     */
+    key: string;
+    calls: number;
+    people: number | "fewer than 10";
+    input: number;
+    output: number;
+    reasoning: number;
+    cache_read: number;
+    cache_write: number;
+    images?: number;
+    audio_seconds?: number;
+    video_seconds?: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    fee_usd: number;
+    cache_saved_usd: number;
+  }[];
+  totals: {
+    calls: number;
+    input: number;
+    output: number;
+    reasoning: number;
+    cache_read: number;
+    cache_write: number;
+    images?: number;
+    audio_seconds?: number;
+    video_seconds?: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    fee_usd: number;
+    cache_saved_usd: number;
+  };
+}
+
+/** report.ai-usage-me-result@1.0.0 (owner: report) */
+/**
+ * report.ai-usage-me-result@1: the AI usage of one person (plan L40/L41). GET /api/v1/me/ai/usage answers for the person themselves and nobody else: their rows, grouped by day, site, model, system or paid_by. The route answers 501 until Report has sign-in: the shape is fixed here first, so the route does not have to change when it opens.
+ */
+export interface ReportAiUsageMeResult {
+  group: "day" | "site" | "model" | "system" | "paid_by";
+  usage: {
+    group: "day" | "site" | "model" | "system" | "paid_by";
+    key: string;
+    calls: number;
+    input: number;
+    output: number;
+    reasoning: number;
+    cache_read: number;
+    cache_write: number;
+    list_cost_usd: number;
+    charged_usd: number;
+    fee_usd: number;
+    cache_saved_usd: number;
+  }[];
+  totals: {};
+}
+
 /** bench.benchmark@1.0.0 (owner: bench) */
 /**
  * bench.benchmark@1: a versioned, forkable benchmark on OpenVibe.Bench (spec 2026-10-30, stage B1). It holds the tasks, the judges, how they combine into one score, the limits a run may not pass, the default model and harness matrix, and the visibility of the set. A version is immutable once a run names it; a fork records its parent. Holdout tasks are hidden from everyone but the executor.

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/report/ai-usage-open-result.v1.json",
+  "title": "ReportAiUsageOpenResult",
+  "description": "report.ai-usage-open-result@1: the open AI meter (plan L40/L41). What the whole network spends on AI, in public: the tokens, the share of them that came from a provider cache, the share that the own keys of people paid, and the spend by week. No person, no site and no key is in it: the rows are summed before they are answered.",
+  "type": "object",
+  "required": ["calls", "tokens", "cache_share", "cache_saved_usd", "own_key_share", "own_key_calls", "list_cost_usd", "charged_usd", "fee_usd", "spend_by_week"],
+  "additionalProperties": false,
+  "properties": {
+    "calls": { "type": "integer", "minimum": 0, "description": "The AI calls behind these numbers." },
+    "tokens": {
+      "type": "object",
+      "required": ["input", "output", "cache_read", "cache_write"],
+      "additionalProperties": false,
+      "properties": {
+        "input": { "type": "integer", "minimum": 0, "description": "The uncached input tokens." },
+        "output": { "type": "integer", "minimum": 0 },
+        "cache_read": { "type": "integer", "minimum": 0 },
+        "cache_write": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "cache_share": { "type": "number", "minimum": 0, "maximum": 1, "description": "The share of the prompt tokens that came from a provider cache." },
+    "cache_saved_usd": { "type": "number", "minimum": 0 },
+    "own_key_share": { "type": "number", "minimum": 0, "maximum": 1, "description": "The share of the tokens that the own keys of people paid." },
+    "own_key_calls": { "type": "integer", "minimum": 0 },
+    "list_cost_usd": { "type": "number", "minimum": 0 },
+    "charged_usd": { "type": "number", "minimum": 0 },
+    "fee_usd": { "type": "number", "minimum": 0 },
+    "spend_by_week": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["week", "calls", "list_cost_usd", "charged_usd", "cache_saved_usd"],
+        "additionalProperties": false,
+        "properties": {
+          "week": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", "description": "The Monday of the week." },
+          "calls": { "type": "integer", "minimum": 0 },
+          "list_cost_usd": { "type": "number", "minimum": 0 },
+          "charged_usd": { "type": "number", "minimum": 0 },
+          "cache_saved_usd": { "type": "number", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

@@ -92828,6 +92828,450 @@
         ]
       }
     },
+    "report.ai-usage-open-result": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-usage-open-result.v1.json",
+        "title": "ReportAiUsageOpenResult",
+        "description": "report.ai-usage-open-result@1: the open AI meter (plan L40/L41). What the whole network spends on AI, in public: the tokens, the share of them that came from a provider cache, the share that the own keys of people paid, and the spend by week. No person, no site and no key is in it: the rows are summed before they are answered.",
+        "type": "object",
+        "required": [
+          "calls",
+          "tokens",
+          "cache_share",
+          "cache_saved_usd",
+          "own_key_share",
+          "own_key_calls",
+          "list_cost_usd",
+          "charged_usd",
+          "fee_usd",
+          "spend_by_week"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "calls": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The AI calls behind these numbers."
+          },
+          "tokens": {
+            "type": "object",
+            "required": [
+              "input",
+              "output",
+              "cache_read",
+              "cache_write"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "input": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "The uncached input tokens."
+              },
+              "output": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_read": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "cache_share": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "The share of the prompt tokens that came from a provider cache."
+          },
+          "cache_saved_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "own_key_share": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "The share of the tokens that the own keys of people paid."
+          },
+          "own_key_calls": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "list_cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "charged_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "fee_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "spend_by_week": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "week",
+                "calls",
+                "list_cost_usd",
+                "charged_usd",
+                "cache_saved_usd"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "week": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                  "description": "The Monday of the week."
+                },
+                "calls": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "list_cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "charged_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cache_saved_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "report.ai-usage-result": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-usage-result.v1.json",
+        "title": "ReportAiUsageResult",
+        "description": "report.ai-usage-result@1: the AI meter in groups (plan L40/L41). GET /api/v1/ai/usage needs a service token with report.ai_usage.read; the rows are grouped by day, site, model, system or paid_by. A group that fewer than ten people share reads fewer than 10 instead of counting them.",
+        "type": "object",
+        "required": [
+          "group",
+          "usage",
+          "totals"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "group": {
+            "type": "string",
+            "enum": [
+              "day",
+              "site",
+              "model",
+              "system",
+              "paid_by"
+            ]
+          },
+          "usage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "group",
+                "key",
+                "calls",
+                "people",
+                "input",
+                "output",
+                "reasoning",
+                "cache_read",
+                "cache_write",
+                "list_cost_usd",
+                "charged_usd",
+                "fee_usd",
+                "cache_saved_usd"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "group": {
+                  "type": "string",
+                  "enum": [
+                    "day",
+                    "site",
+                    "model",
+                    "system",
+                    "paid_by"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "maxLength": 200,
+                  "description": "The name of the group: the day, the site, the model, the system or the payer."
+                },
+                "calls": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "people": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 10,
+                      "description": "How many people the group holds, when there are ten or more."
+                    },
+                    {
+                      "const": "fewer than 10",
+                      "description": "Fewer than ten people: the count is not given."
+                    }
+                  ]
+                },
+                "input": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "output": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "reasoning": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_read": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_write": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "images": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "audio_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "video_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "list_cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "charged_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "fee_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cache_saved_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "totals": {
+            "type": "object",
+            "required": [
+              "calls",
+              "input",
+              "output",
+              "reasoning",
+              "cache_read",
+              "cache_write",
+              "list_cost_usd",
+              "charged_usd",
+              "fee_usd",
+              "cache_saved_usd"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "calls": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "input": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reasoning": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_read": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "images": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "audio_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "video_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "list_cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "charged_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "fee_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "cache_saved_usd": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "report.ai-usage-me-result": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-usage-me-result.v1.json",
+        "title": "ReportAiUsageMeResult",
+        "description": "report.ai-usage-me-result@1: the AI usage of one person (plan L40/L41). GET /api/v1/me/ai/usage answers for the person themselves and nobody else: their rows, grouped by day, site, model, system or paid_by. The route answers 501 until Report has sign-in: the shape is fixed here first, so the route does not have to change when it opens.",
+        "type": "object",
+        "required": [
+          "group",
+          "usage",
+          "totals"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "group": {
+            "type": "string",
+            "enum": [
+              "day",
+              "site",
+              "model",
+              "system",
+              "paid_by"
+            ]
+          },
+          "usage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "group",
+                "key",
+                "calls",
+                "input",
+                "output",
+                "reasoning",
+                "cache_read",
+                "cache_write",
+                "list_cost_usd",
+                "charged_usd",
+                "fee_usd",
+                "cache_saved_usd"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "group": {
+                  "type": "string",
+                  "enum": [
+                    "day",
+                    "site",
+                    "model",
+                    "system",
+                    "paid_by"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "calls": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "input": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "output": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "reasoning": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_read": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_write": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "list_cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "charged_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "fee_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cache_saved_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "totals": {
+            "type": "object"
+          }
+        }
+      }
+    },
     "bench.benchmark": {
       "version": "1.0.0",
       "owner": "bench",
