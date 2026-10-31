@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.265.0 <1.0.0"
+  },
+  "id": "shoes",
+  "name": "OpenVibe.Shoes",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Shoes",
+  "domains": [
+    "open.shoes"
+  ],
+  "publicOrigin": "https://open.shoes",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "shoes.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the PostgreSQL database, Valkey, Network's JWKS and the OAuth client are what /api/ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped, then the job timers cleared",
+        "telemetry flushed and its retention timer stopped",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "jobs",
+          "what": "the offers and drops jobs make their first pass shortly after boot; each run is whole and idempotent with a receipt in shoe_job_runs, so a stop mid-run leaves the next one to finish"
+        },
+        {
+          "kind": "consumer",
+          "what": "the account export and deletion subscriptions at OpenVibe.Events are renewed at boot; a delivery missed while stopped is redelivered and applied once (account_data_events keeps it idempotent)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Shoes' own tables (models, offers, snapshots, drops, watches, job runs) plus the SDK's; an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.265.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5180, unit openvibe-shoes.service, PostgreSQL database ov_shoes, served at open.shoes. The Shoes room (plan 5.6): shoe offers classified from OpenVibe.Deals' public API, one page per model with every store's price, daily snapshots and a stale flag; official drops with their sources; price-at-size and pasted-link watches through OpenVibe.Watch (off without its token) and drop reminders onto OpenVibe.Today with the person's own token. No affiliate links, no Marketplace scraping, no raffle automation. OAuth client `shoes`; answers account export and deletion (ADR-033) and subscribes to those Events topics.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5180",
+  "site": {
+    "name": "Shoes",
+    "icon": "shoes",
+    "tagline": "Every shoe, every market, the right price",
+    "what": "Shoe offers from OpenVibe.Deals, one page per model with every store, price history and the time each price was checked, a cited drops calendar, and price alerts through OpenVibe.Watch. No affiliate links, no raffle bots.",
+    "legalProfile": "ugc",
+    "position": 50,
+    "neighbourhood": "shop"
+  }
+}
