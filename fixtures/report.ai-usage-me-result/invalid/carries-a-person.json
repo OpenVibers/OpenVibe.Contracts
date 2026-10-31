@@ -1,6 +1,19 @@
 {
   "group": "day",
-  "usage": [],
-  "totals": { "calls": 0 },
+  "rows": [],
+  "totals": {
+    "calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "cost_usd": 0,
+    "fee_usd": 0,
+    "charged_usd": 0,
+    "saved_usd": 0
+  },
+  "by_paid_by": {},
+  "insights": ["No AI calls in this window."],
+  "source": "raw",
   "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
 }

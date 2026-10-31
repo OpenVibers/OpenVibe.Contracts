@@ -8474,6 +8474,15 @@
       "status": "active"
     },
     {
+      "id": "report.ai-usage-me-result",
+      "version": "2.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-me-result.v2.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "bench.benchmark",
       "version": "1.0.0",
       "owner": "bench",

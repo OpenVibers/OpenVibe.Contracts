@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.263.0 — 2026-10-31
+
+- **`report.ai-usage-me-result@2`** (plan L41 R1, OpenVibe.Report): GET `/api/v1/me/ai/usage` as the route now
+  answers it. The body is `{ group, rows, totals, by_paid_by, insights, source }`: `rows` are one bucket each
+  (`day`, `week`, `month`, `provider`, `model`, `surface` or `paid_by`) with `key`, `calls`, `input_tokens`,
+  `output_tokens`, `cached_tokens`, `cache_write_tokens`, `cost_usd`, `fee_usd`, `charged_usd` and `saved_usd`;
+  `totals` repeats those measures for the window; `by_paid_by` holds the same measures for each payer
+  (`own_key`, `openvibe_key`, `plan`, `own_machine`, `free_tier`, `network_allowance`, `org_key`); `insights` are
+  two or three plain lines worked out from the numbers; and `source` is `raw`, `rollups` or `raw+rollups`.
+- **Breaking shape:** v1's `usage` array and its `input`/`output`/`reasoning`/`cache_read`/`cache_write`/
+  `list_cost_usd`/`cache_saved_usd` field names are gone, so v1 is deprecated in favour of `@2` and stays
+  loadable until 1.0.0. The v2 TypeScript type is `ReportAiUsageMeResultV2`.
+
 ## 0.262.0 — 2026-10-31
 
 - **The task-aware router's explain** (L33 P3 "the router picks for the task", L36 Y7 "a smarter router";

@@ -277599,6 +277599,271 @@ export interface ReportAiUsageMeResult {
   totals: {};
 }
 
+/** report.ai-usage-me-result@2.0.0 (owner: report) */
+/**
+ * report.ai-usage-me-result@2: the AI usage of one person (plan L41 R1). GET /api/v1/me/ai/usage answers for the person their session names and nobody else: the rows of one group (day, week, month, provider, model, surface or paid_by), the totals, what each way of paying cost, two or three plain lines worked out from the numbers, and the source that answered (raw records, the roll-ups, or both). v2 replaces v1's `usage` array and its `input`/`output`/`reasoning`/`cache_read`/`cache_write`/`list_cost_usd`/`cache_saved_usd` names with `rows` and the names the route answers: `input_tokens`, `output_tokens`, `cached_tokens`, `cache_write_tokens`, `cost_usd` and `saved_usd`. The route answers 401 signed out; the subject is the session's, never the query.
+ */
+export interface ReportAiUsageMeResultV2 {
+  /**
+   * The bucket the rows are grouped by; a person may ask for any of the seven.
+   */
+  group: "day" | "week" | "month" | "provider" | "model" | "surface" | "paid_by";
+  /**
+   * One row per bucket, sorted by key. Empty when the window has no calls.
+   */
+  rows: {
+    /**
+     * The bucket's key: a day (YYYY-MM-DD), a week (its Monday), a month (YYYY-MM), a provider, a model, a surface or a payer; 'unknown' when the record has no such value.
+     */
+    key: string;
+    calls: number;
+    /**
+     * The uncached input tokens.
+     */
+    input_tokens: number;
+    output_tokens: number;
+    /**
+     * The input tokens read from a provider cache.
+     */
+    cached_tokens: number;
+    /**
+     * The input tokens written to a provider cache.
+     */
+    cache_write_tokens: number;
+    /**
+     * What the tokens cost at list prices.
+     */
+    cost_usd: number;
+    fee_usd: number;
+    charged_usd: number;
+    /**
+     * What the cache saved against the plain input price.
+     */
+    saved_usd: number;
+  }[];
+  totals: {
+    calls: number;
+    /**
+     * The uncached input tokens.
+     */
+    input_tokens: number;
+    output_tokens: number;
+    /**
+     * The input tokens read from a provider cache.
+     */
+    cached_tokens: number;
+    /**
+     * The input tokens written to a provider cache.
+     */
+    cache_write_tokens: number;
+    /**
+     * What the tokens cost at list prices.
+     */
+    cost_usd: number;
+    fee_usd: number;
+    charged_usd: number;
+    /**
+     * What the cache saved against the plain input price.
+     */
+    saved_usd: number;
+  };
+  /**
+   * What each way of paying cost over the same window; a payer with no calls is absent.
+   */
+  by_paid_by: {
+    own_key?: {
+      calls: number;
+      /**
+       * The uncached input tokens.
+       */
+      input_tokens: number;
+      output_tokens: number;
+      /**
+       * The input tokens read from a provider cache.
+       */
+      cached_tokens: number;
+      /**
+       * The input tokens written to a provider cache.
+       */
+      cache_write_tokens: number;
+      /**
+       * What the tokens cost at list prices.
+       */
+      cost_usd: number;
+      fee_usd: number;
+      charged_usd: number;
+      /**
+       * What the cache saved against the plain input price.
+       */
+      saved_usd: number;
+    };
+    openvibe_key?: {
+      calls: number;
+      /**
+       * The uncached input tokens.
+       */
+      input_tokens: number;
+      output_tokens: number;
+      /**
+       * The input tokens read from a provider cache.
+       */
+      cached_tokens: number;
+      /**
+       * The input tokens written to a provider cache.
+       */
+      cache_write_tokens: number;
+      /**
+       * What the tokens cost at list prices.
+       */
+      cost_usd: number;
+      fee_usd: number;
+      charged_usd: number;
+      /**
+       * What the cache saved against the plain input price.
+       */
+      saved_usd: number;
+    };
+    plan?: {
+      calls: number;
+      /**
+       * The uncached input tokens.
+       */
+      input_tokens: number;
+      output_tokens: number;
+      /**
+       * The input tokens read from a provider cache.
+       */
+      cached_tokens: number;
+      /**
+       * The input tokens written to a provider cache.
+       */
+      cache_write_tokens: number;
+      /**
+       * What the tokens cost at list prices.
+       */
+      cost_usd: number;
+      fee_usd: number;
+      charged_usd: number;
+      /**
+       * What the cache saved against the plain input price.
+       */
+      saved_usd: number;
+    };
+    own_machine?: {
+      calls: number;
+      /**
+       * The uncached input tokens.
+       */
+      input_tokens: number;
+      output_tokens: number;
+      /**
+       * The input tokens read from a provider cache.
+       */
+      cached_tokens: number;
+      /**
+       * The input tokens written to a provider cache.
+       */
+      cache_write_tokens: number;
+      /**
+       * What the tokens cost at list prices.
+       */
+      cost_usd: number;
+      fee_usd: number;
+      charged_usd: number;
+      /**
+       * What the cache saved against the plain input price.
+       */
+      saved_usd: number;
+    };
+    free_tier?: {
+      calls: number;
+      /**
+       * The uncached input tokens.
+       */
+      input_tokens: number;
+      output_tokens: number;
+      /**
+       * The input tokens read from a provider cache.
+       */
+      cached_tokens: number;
+      /**
+       * The input tokens written to a provider cache.
+       */
+      cache_write_tokens: number;
+      /**
+       * What the tokens cost at list prices.
+       */
+      cost_usd: number;
+      fee_usd: number;
+      charged_usd: number;
+      /**
+       * What the cache saved against the plain input price.
+       */
+      saved_usd: number;
+    };
+    network_allowance?: {
+      calls: number;
+      /**
+       * The uncached input tokens.
+       */
+      input_tokens: number;
+      output_tokens: number;
+      /**
+       * The input tokens read from a provider cache.
+       */
+      cached_tokens: number;
+      /**
+       * The input tokens written to a provider cache.
+       */
+      cache_write_tokens: number;
+      /**
+       * What the tokens cost at list prices.
+       */
+      cost_usd: number;
+      fee_usd: number;
+      charged_usd: number;
+      /**
+       * What the cache saved against the plain input price.
+       */
+      saved_usd: number;
+    };
+    org_key?: {
+      calls: number;
+      /**
+       * The uncached input tokens.
+       */
+      input_tokens: number;
+      output_tokens: number;
+      /**
+       * The input tokens read from a provider cache.
+       */
+      cached_tokens: number;
+      /**
+       * The input tokens written to a provider cache.
+       */
+      cache_write_tokens: number;
+      /**
+       * What the tokens cost at list prices.
+       */
+      cost_usd: number;
+      fee_usd: number;
+      charged_usd: number;
+      /**
+       * What the cache saved against the plain input price.
+       */
+      saved_usd: number;
+    };
+  };
+  /**
+   * Two or three plain lines worked out from the numbers, one when the window has no calls; never an AI call.
+   */
+  insights: string[];
+  /**
+   * Which tables answered: raw records inside the 90-day retention, the roll-ups beyond it, or both.
+   */
+  source: "raw" | "rollups" | "raw+rollups";
+}
+
 /** bench.benchmark@1.0.0 (owner: bench) */
 /**
  * bench.benchmark@1: a versioned, forkable benchmark on OpenVibe.Bench (spec 2026-10-30, stage B1). It holds the tasks, the judges, how they combine into one score, the limits a run may not pass, the default model and harness matrix, and the visibility of the set. A version is immutable once a run names it; a fork records its parent. Holdout tasks are hidden from everyone but the executor.

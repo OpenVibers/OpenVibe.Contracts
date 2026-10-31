@@ -94349,7 +94349,7 @@
         }
       }
     },
-    "report.ai-usage-me-result": {
+    "report.ai-usage-me-result@1": {
       "version": "1.0.0",
       "owner": "report",
       "status": "active",
@@ -94455,6 +94455,217 @@
           },
           "totals": {
             "type": "object"
+          }
+        }
+      }
+    },
+    "report.ai-usage-me-result@2": {
+      "version": "2.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-usage-me-result.v2.json",
+        "title": "ReportAiUsageMeResultV2",
+        "description": "report.ai-usage-me-result@2: the AI usage of one person (plan L41 R1). GET /api/v1/me/ai/usage answers for the person their session names and nobody else: the rows of one group (day, week, month, provider, model, surface or paid_by), the totals, what each way of paying cost, two or three plain lines worked out from the numbers, and the source that answered (raw records, the roll-ups, or both). v2 replaces v1's `usage` array and its `input`/`output`/`reasoning`/`cache_read`/`cache_write`/`list_cost_usd`/`cache_saved_usd` names with `rows` and the names the route answers: `input_tokens`, `output_tokens`, `cached_tokens`, `cache_write_tokens`, `cost_usd` and `saved_usd`. The route answers 401 signed out; the subject is the session's, never the query.",
+        "type": "object",
+        "required": [
+          "group",
+          "rows",
+          "totals",
+          "by_paid_by",
+          "insights",
+          "source"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "group": {
+            "type": "string",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "provider",
+              "model",
+              "surface",
+              "paid_by"
+            ],
+            "description": "The bucket the rows are grouped by; a person may ask for any of the seven."
+          },
+          "rows": {
+            "type": "array",
+            "description": "One row per bucket, sorted by key. Empty when the window has no calls.",
+            "items": {
+              "type": "object",
+              "required": [
+                "key",
+                "calls",
+                "input_tokens",
+                "output_tokens",
+                "cached_tokens",
+                "cache_write_tokens",
+                "cost_usd",
+                "fee_usd",
+                "charged_usd",
+                "saved_usd"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "maxLength": 200,
+                  "description": "The bucket's key: a day (YYYY-MM-DD), a week (its Monday), a month (YYYY-MM), a provider, a model, a surface or a payer; 'unknown' when the record has no such value."
+                },
+                "calls": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "input_tokens": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "The uncached input tokens."
+                },
+                "output_tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cached_tokens": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "The input tokens read from a provider cache."
+                },
+                "cache_write_tokens": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "The input tokens written to a provider cache."
+                },
+                "cost_usd": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "What the tokens cost at list prices."
+                },
+                "fee_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "charged_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "saved_usd": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "What the cache saved against the plain input price."
+                }
+              }
+            }
+          },
+          "totals": {
+            "$ref": "#/$defs/measure"
+          },
+          "by_paid_by": {
+            "type": "object",
+            "description": "What each way of paying cost over the same window; a payer with no calls is absent.",
+            "additionalProperties": false,
+            "properties": {
+              "own_key": {
+                "$ref": "#/$defs/measure"
+              },
+              "openvibe_key": {
+                "$ref": "#/$defs/measure"
+              },
+              "plan": {
+                "$ref": "#/$defs/measure"
+              },
+              "own_machine": {
+                "$ref": "#/$defs/measure"
+              },
+              "free_tier": {
+                "$ref": "#/$defs/measure"
+              },
+              "network_allowance": {
+                "$ref": "#/$defs/measure"
+              },
+              "org_key": {
+                "$ref": "#/$defs/measure"
+              }
+            }
+          },
+          "insights": {
+            "type": "array",
+            "description": "Two or three plain lines worked out from the numbers, one when the window has no calls; never an AI call.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "raw",
+              "rollups",
+              "raw+rollups"
+            ],
+            "description": "Which tables answered: raw records inside the 90-day retention, the roll-ups beyond it, or both."
+          }
+        },
+        "$defs": {
+          "measure": {
+            "type": "object",
+            "required": [
+              "calls",
+              "input_tokens",
+              "output_tokens",
+              "cached_tokens",
+              "cache_write_tokens",
+              "cost_usd",
+              "fee_usd",
+              "charged_usd",
+              "saved_usd"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "calls": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "The uncached input tokens."
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cached_tokens": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "The input tokens read from a provider cache."
+              },
+              "cache_write_tokens": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "The input tokens written to a provider cache."
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "What the tokens cost at list prices."
+              },
+              "fee_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "charged_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "saved_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "What the cache saved against the plain input price."
+              }
+            }
           }
         }
       }

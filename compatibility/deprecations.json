@@ -224,6 +224,13 @@
       "since": "0.249.0",
       "removeAfter": "1.0.0",
       "reason": "Actor's files and charts ride on the tool result that made them; v2 adds artifacts to that event while keeping every v1 field (Actor v2 stage V2-4, 2026-10-30)"
+    },
+    {
+      "id": "report.ai-usage-me-result@1",
+      "replacement": "report.ai-usage-me-result@2",
+      "since": "0.263.0",
+      "removeAfter": "1.0.0",
+      "reason": "Report's personal AI usage answers rows, totals, by_paid_by, insights and source (plan L41 R1); v1's usage array and its field names never matched the route, so the shape moved to a new major (2026-10-31)"
     }
   ]
 }

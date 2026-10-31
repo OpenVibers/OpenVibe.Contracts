@@ -1,11 +1,70 @@
 {
-  "group": "day",
-  "usage": [
+  "group": "paid_by",
+  "rows": [
     {
-      "group": "day", "key": "2026-10-31", "calls": 2,
-      "input": 200, "output": 80, "reasoning": 0, "cache_read": 800, "cache_write": 0,
-      "list_cost_usd": 0.0021, "charged_usd": 0, "fee_usd": 0, "cache_saved_usd": 0
+      "key": "openvibe_key",
+      "calls": 1,
+      "input_tokens": 1000,
+      "output_tokens": 500,
+      "cached_tokens": 0,
+      "cache_write_tokens": 100,
+      "cost_usd": 0.05,
+      "fee_usd": 0.01,
+      "charged_usd": 0.06,
+      "saved_usd": 0
+    },
+    {
+      "key": "own_key",
+      "calls": 2,
+      "input_tokens": 250,
+      "output_tokens": 90,
+      "cached_tokens": 800,
+      "cache_write_tokens": 0,
+      "cost_usd": 0.0031,
+      "fee_usd": 0,
+      "charged_usd": 0,
+      "saved_usd": 0.0017
     }
   ],
-  "totals": { "calls": 2, "input": 200, "output": 80 }
+  "totals": {
+    "calls": 3,
+    "input_tokens": 1250,
+    "output_tokens": 590,
+    "cached_tokens": 800,
+    "cache_write_tokens": 100,
+    "cost_usd": 0.0531,
+    "fee_usd": 0.01,
+    "charged_usd": 0.06,
+    "saved_usd": 0.0017
+  },
+  "by_paid_by": {
+    "openvibe_key": {
+      "calls": 1,
+      "input_tokens": 1000,
+      "output_tokens": 500,
+      "cached_tokens": 0,
+      "cache_write_tokens": 100,
+      "cost_usd": 0.05,
+      "fee_usd": 0.01,
+      "charged_usd": 0.06,
+      "saved_usd": 0
+    },
+    "own_key": {
+      "calls": 2,
+      "input_tokens": 250,
+      "output_tokens": 90,
+      "cached_tokens": 800,
+      "cache_write_tokens": 0,
+      "cost_usd": 0.0031,
+      "fee_usd": 0,
+      "charged_usd": 0,
+      "saved_usd": 0.0017
+    }
+  },
+  "insights": [
+    "67% of your calls ran on your own keys, so no fee on those.",
+    "The cache saved you less than $0.01 this month.",
+    "Your calls cost $0.06, including $0.01 in fees."
+  ],
+  "source": "raw"
 }
