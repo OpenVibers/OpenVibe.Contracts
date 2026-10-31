@@ -87546,7 +87546,7 @@
               "ai.looks",
               "app.data"
             ],
-            "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). ai.looks: AI text about the person may describe how they look (it lifts the no-looks rule for that person only, never for anyone else in frame). app.data: one named app (client) may use the person's content for the purposes in options."
+            "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). ai.looks is retired (0.256.0): the owner removed the rule that AI text never describes people (2026-10-31), so describing how someone looks needs no opt-in; it stays in the list so older readers still validate, and nothing writes it. app.data: one named app (client) may use the person's content for the purposes in options."
           },
           "on": {
             "type": "boolean",

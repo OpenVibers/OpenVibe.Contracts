@@ -37,6 +37,9 @@ for (const [name, list] of [
     ['changed.kinds', changed.properties.kinds.items.enum],
 ]) assert.deepStrictEqual(list, KINDS, `${name} lists the same kinds`);
 
+// ai.looks is retired (0.256.0): kept for compatibility, said so, and written by nothing.
+assert.match(consent.properties.purpose.description, /ai\.looks is retired/);
+
 // Selling is not a purpose: it would need its own contract and a yes for each deal.
 assert.ok(!PURPOSES.some((p) => /sell|licen[cs]e|sale/.test(p)), 'no purpose sells data');
 assert.strictEqual(c.validate('network.consent@1', { ...fx('network.consent', 'valid', 'ai-train-streams.json'), purpose: 'data.sell' }).valid, false);
