@@ -4674,6 +4674,89 @@ export type ConfigSnapshot = {
   copied_from?: number | null;
 };
 
+/** common.content-labels@1.0.0 (owner: contracts) */
+/**
+ * common.content-labels@1 (L1, labels and choices, 2026-10-31): what a stream, VOD, clip, picture or post is labelled as, and what the AI has suggested but the creator has not confirmed. Labels are choices, never bans: a label never hides content from the person who posted it, and it never hides content from a viewer whose label preferences show it. A creator sets a label; the AI may only suggest one (a suggestion the creator confirms, never a takedown); three viewer suggestions or a moderator put one on. The label set is one list everywhere: nudity, language, graphic, 18+, flashing and spoilers.
+ */
+export interface ContentLabels {
+  /**
+   * The labels in force: set by the creator, or by a moderator, or by three viewer suggestions. A label never hides anything by itself; each viewer's prefs decide (network.label-prefs@1).
+   *
+   * @maxItems 6
+   */
+  labels:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+  /**
+   * What the AI or a viewer suggested and nobody confirmed yet. Stored as a suggestion and never applied: a label in this list changes nothing for anyone until the creator (or a moderator) puts it in labels.
+   *
+   * @maxItems 6
+   */
+  suggested:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+}
+
 /** common.moderation-action@1.0.0 (owner: network) */
 /**
  * common.moderation-action@1 (ADR-022, roadmap WS-D task 1): one staff or moderator action on someone else's content or account, as a service reports it to OpenVibe.Network's moderation audit log. The payload of every <service>.moderation.action event that has no older shape of its own (tools, games, wiki, blog, news, reviews, deals, coupons, trade, codes); modelled on community.moderation.action@1. Written to the service's outbox in the transaction that performs the action. A person acting on their own content is not moderation and is not reported. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself, a secret or an address.
@@ -274397,6 +274480,42 @@ export interface NetworkConsentCheckResult {
     [k: string]: ("cc-by-4.0" | "cc0-1.0") | undefined;
   };
   checked_at: string;
+}
+
+/** network.label-prefs@1.0.0 (owner: network) */
+/**
+ * network.label-prefs@1 (L1, labels and choices, 2026-10-31): what one person sees for each content label, on every OpenVibe site. One setting per label, stored in Network's site prefs, so the choice follows the account across Stream, Video, Pics and every other site. GET and PUT /api/v1/me/label-prefs; the response and the request are this shape. The web default is show for every label; the native apps hide nudity and 18+ until the person turns them on here (pinned by the app stores' user-content rules). The home page shows nothing labelled 18+ whatever the prefs say: it is the owner's one clean page.
+ */
+export interface NetworkLabelPrefs {
+  /**
+   * One choice for every label. A missing label is not a choice: a client asks Network and gets all six.
+   */
+  prefs: {
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    nudity: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    language: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    graphic: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    "18+": "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    flashing: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    spoilers: "show" | "blur" | "hide";
+  };
 }
 
 /** network.consent.changed@1.0.0 (owner: network) */

@@ -1,0 +1,10 @@
+{
+  "prefs": {
+    "nudity": "hide",
+    "language": "show",
+    "graphic": "blur",
+    "18+": "hide",
+    "flashing": "blur",
+    "spoilers": "blur"
+  }
+}
