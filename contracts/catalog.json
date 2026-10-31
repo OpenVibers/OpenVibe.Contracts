@@ -1372,7 +1372,7 @@
     },
     {
       "id": "ai.run",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "schema": "ai/run.v1.json",
       "visibility": "first-party",

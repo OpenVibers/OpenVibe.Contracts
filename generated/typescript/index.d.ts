@@ -152213,9 +152213,9 @@ export interface AiRunRequest {
   };
 }
 
-/** ai.run@1.0.0 (owner: ai) */
+/** ai.run@1.1.0 (owner: ai) */
 /**
- * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted.
+ * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.
  */
 export interface AiRun {
   id: string;
@@ -152304,6 +152304,370 @@ export interface AiRun {
   created_at: string;
   started_at: string | null;
   finished_at: string | null;
+  /**
+   * Why the run answered as it did: the task-aware router's explain (L33 P3, L36 Y7). task is the requirement set it read from the request, ranked the candidates it considered and why, attempts every provider it tried with why it was chosen and why it failed, and the placement view it ranked from (objective, reasons, selected, candidates). A run that never reached a provider has no explain.
+   */
+  explain?: {
+    /**
+     * The objective the pool planned with (cheapest, balanced, correctness, own-keys, own-machine), or null for a pinned route.
+     */
+    objective: string | null;
+    /**
+     * Why the router chose what it chose, in words.
+     */
+    reasons: string[];
+    /**
+     * The provider that answered (provider, or provider/model, or the machine that answered), or null when nothing answered.
+     */
+    selected: string | {} | null;
+    /**
+     * Every candidate the pool considered, with why it was excluded when it was.
+     */
+    candidates: {
+      provider: string;
+      model?: string | null;
+      eligible?: boolean;
+      excluded_reason?: string | null;
+      cost?: number | null;
+      latency?: number | null;
+      [k: string]: unknown | undefined;
+    }[];
+    /**
+     * Who paid for the run: the network, the person's own key, their own machine, or a project's own provider.
+     */
+    paid_by?: string | null;
+    /**
+     * The requirement set the router read off the request, with no model call.
+     */
+    task?: {
+      /**
+       * The request carried a picture.
+       */
+      vision: boolean;
+      /**
+       * The request carried tools.
+       */
+      tools: boolean;
+      /**
+       * The request asked for JSON out.
+       */
+      json: boolean;
+      /**
+       * The context window the request needs, in tokens.
+       */
+      min_context: number;
+      /**
+       * How much thinking the request asked for.
+       */
+      reasoning: "none" | "some" | "deep";
+      /**
+       * What the request wants out.
+       */
+      output: "text" | "image" | "audio" | "video";
+      /**
+       * How heavy the work is.
+       */
+      weight: "light" | "standard" | "heavy";
+    };
+    /**
+     * The candidates the router ranked for this task, best first, each with its reason.
+     *
+     * @maxItems 5
+     */
+    ranked?:
+      | []
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ];
+    /**
+     * Every attempt, in order: why it was chosen, and what went wrong when it failed.
+     */
+    attempts?: {
+      /**
+       * Which key or wallet paid for the attempt; never a key.
+       */
+      key?: string;
+      provider: string;
+      model?: string | null;
+      /**
+       * Why this provider was tried.
+       */
+      why?: string;
+      status: "ok" | "failed" | "timeout" | "skipped";
+      error?: string | null;
+      [k: string]: unknown | undefined;
+    }[];
+    /**
+     * The Bench evidence the route used, when it opted in.
+     */
+    bench?: {} | null;
+    /**
+     * The billing readings of the run, when it has any.
+     */
+    usage_readings?: {}[];
+  } | null;
 }
 
 /** ai.call.recorded@1.0.0 (owner: ai) */
