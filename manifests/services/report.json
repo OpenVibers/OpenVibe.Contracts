@@ -20,7 +20,7 @@
   ],
   "eventsProduced": [],
   "eventsConsumed": [
-    "ai.usage.recorded"
+    "ai.call.recorded"
   ],
   "namespacesOwned": [
     "report.*"

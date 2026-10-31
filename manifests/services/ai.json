@@ -35,7 +35,7 @@
     "ai.me.manage"
   ],
   "eventsProduced": [
-    "ai.usage.recorded",
+    "ai.call.recorded",
     "ai.run.queued",
     "ai.run.succeeded",
     "ai.run.failed",

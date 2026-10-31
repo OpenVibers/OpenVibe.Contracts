@@ -1372,10 +1372,10 @@
       "adr": "ADR-015"
     },
     {
-      "id": "ai.usage.recorded",
+      "id": "ai.call.recorded",
       "version": "1.0.0",
       "owner": "ai",
-      "schema": "events/payloads/ai.usage.recorded.v1.json",
+      "schema": "events/payloads/ai.call.recorded.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active",

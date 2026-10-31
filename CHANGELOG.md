@@ -3,7 +3,7 @@
 ## 0.258.0 — 2026-10-31
 
 - **One AI meter across the network** (plan L40): every AI call on the network leaves one usage record, whoever made it.
-  - **`ai.usage.recorded@1`** (`contracts/events/payloads/ai.usage.recorded.v1.json`): one call, and who and where it
+  - **`ai.call.recorded@1`** (`contracts/events/payloads/ai.call.recorded.v1.json`): one call, and who and where it
     happened (`subject`, `attribution`, `surface`), what ran (`system`, `provider`, `model`, `effort`), who paid
     (`paid_by`: `own_key`, `openvibe_key`, `plan`, `own_machine`, `free_tier`, `network_allowance`, `org_key`, with
     `paid_by_detail`), the tokens (`input` uncached, `output`, `reasoning`, `cache_read`, `cache_write` with
