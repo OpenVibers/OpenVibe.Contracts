@@ -34,7 +34,7 @@
     },
     "adult": {
       "type": "boolean",
-      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public."
+      "description": "The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.train or data.public."
     }
   }
 }

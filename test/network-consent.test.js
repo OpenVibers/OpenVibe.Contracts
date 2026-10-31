@@ -12,7 +12,7 @@ const ROOT = path.join(__dirname, '..');
 const schema = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', f), 'utf8'));
 const fx = (id, kind, f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', id, kind, f), 'utf8'));
 
-const PURPOSES = ['ai.train', 'data.public', 'face.recognize', 'ai.looks', 'app.data'];
+const PURPOSES = ['ai.train', 'data.public', 'face.recognize', 'app.data'];
 const KINDS = ['streams', 'vods', 'clips', 'voice', 'chat', 'posts', 'pictures', 'code'];
 
 const consent = schema('network/consent.v1.json');

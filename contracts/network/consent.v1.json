@@ -18,8 +18,8 @@
       "description": "Whose choice it is. Only that person (or an account merge or deletion) changes it."
     },
     "purpose": {
-      "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"],
-      "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). ai.looks: AI text about the person may describe how they look (it lifts the no-looks rule for that person only, never for anyone else in frame). app.data: one named app (client) may use the person's content for the purposes in options."
+      "enum": ["ai.train", "data.public", "face.recognize", "app.data"],
+      "description": "What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). app.data: one named app (client) may use the person's content for the purposes in options."
     },
     "on": {
       "type": "boolean",
@@ -30,7 +30,7 @@
       "maxItems": 8,
       "uniqueItems": true,
       "items": { "enum": ["streams", "vods", "clips", "voice", "chat", "posts", "pictures", "code"] },
-      "description": "Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize and ai.looks take no kinds (they are about the person, not a piece of content)."
+      "description": "Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize takes no kinds (it is about the person, not a piece of content)."
     },
     "client": {
       "type": ["string", "null"],
@@ -56,11 +56,11 @@
           "type": "array",
           "maxItems": 4,
           "uniqueItems": true,
-          "items": { "enum": ["ai.train", "data.public", "face.recognize", "ai.looks"] },
+          "items": { "enum": ["ai.train", "data.public", "face.recognize"] },
           "description": "app.data only: what the app may do with the person's content, as the consent screen showed it."
         }
       },
-      "description": "What the purpose needs beyond on and kinds. An empty object for ai.train and ai.looks."
+      "description": "What the purpose needs beyond on and kinds. An empty object for ai.train."
     },
     "text_version": {
       "type": "string",

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/network.consent.changed.v1.json",
   "title": "NetworkConsentChangedPayload",
-  "description": "network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition, an AI text) checks again before it goes on. The payload names the change and never the content it covers.",
+  "description": "network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition) checks again before it goes on. The payload names the change and never the content it covers.",
   "type": "object",
   "required": ["consent_id", "subject", "purpose", "client", "on", "kinds", "text_version", "changed_at"],
   "additionalProperties": false,
@@ -16,7 +16,7 @@
       "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
     },
     "purpose": {
-      "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"]
+      "enum": ["ai.train", "data.public", "face.recognize", "app.data"]
     },
     "client": {
       "type": ["string", "null"],

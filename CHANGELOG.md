@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.256.0 — 2026-10-31
+
+- **`ai.looks` is no longer a consent purpose** (`network.consent@1` and its family). The owner removed the rule that
+  AI text never describes people (2026-10-31), so describing how someone looks needs no opt-in. Nothing read or wrote
+  the purpose yet (0.255.0 was released the same day).
+
 ## 0.255.0 — 2026-10-31
 
 - **Data and AI by consent** (L24, the consent plan `OpenVibe_Consent_Plan_2026-10-31.md`): nothing a person makes is
