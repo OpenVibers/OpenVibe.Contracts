@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.machine.roles_changed.v1.json",
+  "title": "NetworkMachineRolesChangedPayload",
+  "description": "network.machine.roles_changed v1 (OpenVibe.Network, plan L34, step M4). A machine's roles changed: the whole set after the change, from the catalogue (network.machine-roles@1). The machine applies them at its next check-in, so this event says what was asked for, not what the machine has already done. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+  "type": "object",
+  "required": ["machine_id", "owner", "roles", "at"],
+  "additionalProperties": false,
+  "properties": {
+    "machine_id": { "type": "string", "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "owner": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The person the machine belongs to." },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$" },
+      "description": "The machine's roles after the change."
+    },
+    "changed_by": {
+      "type": "string",
+      "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|app:[a-z0-9-]+)$",
+      "description": "Who asked for the change: the person, or an app acting with their consent."
+    },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

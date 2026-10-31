@@ -1,0 +1,29 @@
+{
+  "machines": [
+    {
+      "id": "dev_01JAB2C3D4E5F6G7H8J9K0MNPS",
+      "name": "Kitchen server",
+      "kind": "server",
+      "os": "linux",
+      "online": true,
+      "last_seen_at": "2026-10-31T09:00:00.000Z",
+      "node_version": "0.15.0",
+      "roles": [
+        "codes.worker"
+      ],
+      "running": [
+        {
+          "kind": "codes.jobs",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "dev_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "kind": "onboard",
+      "online": false,
+      "roles": [],
+      "running": []
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "roles": [
+    {
+      "id": "codes.worker",
+      "name": "Codes worker",
+      "installs": "Codes worker on the machine",
+      "shows": "Runs codes worker for you"
+    },
+    {
+      "id": "desks.host",
+      "name": "Desk host",
+      "installs": "Desk host on the machine",
+      "shows": "Runs desk host for you"
+    },
+    {
+      "id": "ai.host",
+      "name": "AI host",
+      "installs": "AI host on the machine",
+      "shows": "Runs ai host for you"
+    },
+    {
+      "id": "bot.robot",
+      "name": "Robot",
+      "installs": "Robot on the machine",
+      "shows": "Runs robot for you"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "network.machines.manage",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Pair, rename, give roles to and revoke a person's own machines. Bot stays the registry underneath: Network asks Bot as the person, and Bot checks that the machine is theirs. An app needs the person's consent for this scope, and may then do only what the person could.",
+  "permissions": [
+    "machines:pair",
+    "machines:rename",
+    "machines:roles",
+    "machines:revoke"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "network-write",
+  "events": [
+    "network.machine.paired",
+    "network.machine.roles_changed",
+    "network.machine.revoked"
+  ],
+  "implementedBy": [
+    "POST /api/v1/machines/pairings",
+    "PATCH /api/v1/machines/:id",
+    "PUT /api/v1/machines/:id/roles",
+    "POST /api/v1/machines/:id/revoke"
+  ],
+  "inputSchema": "bot.machine-manage-request@1",
+  "outputSchema": "network.machine-manage-result@1"
+}

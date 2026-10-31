@@ -68,6 +68,21 @@
     },
     "online": {
       "type": "boolean"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+      },
+      "description": "The machine roles the owner set (plan L34: the catalogue is network.machine-roles@1). Absent on a device that has none."
+    },
+    "os": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The operating system the device reported."
     }
   }
 }

@@ -1,0 +1,5 @@
+{
+  "id": "codes.worker",
+  "name": "Codes worker",
+  "installs": "the Codes job runner"
+}

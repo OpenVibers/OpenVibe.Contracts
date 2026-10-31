@@ -1,0 +1,6 @@
+{
+  "code": "ABCD-1234",
+  "pairing_id": "pair_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "expires_at": "2026-10-31T09:00:00.000Z",
+  "installer": "curl -fsSL https://openvibe.bot/install | sh -s -- --network https://openvibe.network --pairing pair_01JAB2C3D4E5F6G7H8J9K0MNPS --code ABCD-1234"
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/machine-manage-result.v1.json",
+  "title": "BotMachineManageResult",
+  "description": "bot.machine-manage-result@1: the machine as it is after the change (plan L34, step M2). Bot is the registry underneath: it answers with its own device record, never with a credential.",
+  "type": "object",
+  "required": ["machine"],
+  "additionalProperties": false,
+  "properties": {
+    "machine": { "$ref": "device.v1.json" }
+  }
+}

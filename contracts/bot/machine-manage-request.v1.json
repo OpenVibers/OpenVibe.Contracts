@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/machine-manage-request.v1.json",
+  "title": "BotMachineManageRequest",
+  "description": "bot.machine-manage-request@1: what a caller changes on a machine (plan L34, step M2). A rename gives a name; a roles change gives the whole set of roles (network.machine-roles-put@1's shape). The same body is what the network's hub sends to Bot, so both sides speak one shape.",
+  "type": "object",
+  "additionalProperties": false,
+  "anyOf": [
+    { "required": ["name"] },
+    { "required": ["roles"] }
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "The name the owner gives the machine. Absent when the call changes something else."
+    },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 8,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$" },
+      "description": "The machine's roles after the change. Absent when the call changes something else."
+    }
+  }
+}

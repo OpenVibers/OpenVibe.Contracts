@@ -40,8 +40,8 @@
       "service": "bot",
       "name": "OpenVibe.Bot",
       "origin": "https://openvibe.bot",
-      "operations": 25,
-      "capabilities": 9
+      "operations": 30,
+      "capabilities": 10
     },
     {
       "service": "chat",
@@ -145,8 +145,8 @@
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
-      "operations": 47,
-      "capabilities": 32
+      "operations": 54,
+      "capabilities": 34
     },
     {
       "service": "news",

@@ -2042,6 +2042,12 @@ export interface ServiceManifest {
   eventsProduced: string[];
   eventsConsumed: string[];
   namespacesOwned: string[];
+  machineRoles?: {
+    id: string;
+    name: string;
+    installs: string;
+    shows: string;
+  }[];
   contractRanges?: {
     [k: string]: string | undefined;
   };
@@ -201099,6 +201105,291 @@ export interface NetworkNodeListResult {
   generated_at: string;
 }
 
+/** network.machine@1.0.0 (owner: network) */
+/**
+ * network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.
+ */
+export interface NetworkMachine {
+  /**
+   * The machine's device id in Bot's registry (dev_…).
+   */
+  id: string;
+  /**
+   * The machine's node principal on Network (nod_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for.
+   */
+  principal_id?: string;
+  /**
+   * The name the owner gave it. Absent when they gave none.
+   */
+  name?: string;
+  /**
+   * What the machine is, as Bot's device record says: onboard (the robot's own machine), bridge (a machine that drives a robot over the robot's own link), server (a machine that runs its owner's jobs).
+   */
+  kind: "onboard" | "bridge" | "server";
+  /**
+   * The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in.
+   */
+  os?: string;
+  /**
+   * Whether the machine is connected to Bot right now.
+   */
+  online: boolean;
+  /**
+   * When the machine was last seen. Absent before its first check-in.
+   */
+  last_seen_at?: string;
+  /**
+   * The OpenVibe Node version the machine reports. Absent until it has checked in.
+   */
+  node_version?: string;
+  /**
+   * What the machine does for the network: the ids from the catalogue (network.machine-roles@1). The owner sets these; the machine applies them at its next check-in.
+   */
+  roles: string[];
+  /**
+   * What the machine is doing right now, as a short list: its Codes jobs, its desks, the local models it serves and the robots it drives.
+   */
+  running: {
+    kind: "codes.jobs" | "desks" | "models" | "robots";
+    count: number;
+    /**
+     * A short, plain description for the owner (the desk's name, the model's name).
+     */
+    label?: string;
+  }[];
+}
+
+/** network.machine-list-result@1.0.0 (owner: network) */
+/**
+ * network.machine-list-result@1: a person's machines, as the network's hub lists them (plan L34, step M2: GET /api/v1/machines). Only the caller's own machines are ever in it.
+ */
+export interface NetworkMachineListResult {
+  machines: NetworkMachine[];
+}
+
+/** network.machine-manage-result@1.0.0 (owner: network) */
+/**
+ * network.machine-manage-result@1: the machine as it is after a change (plan L34, step M2: PATCH /api/v1/machines/:id, PUT /api/v1/machines/:id/roles, POST /api/v1/machines/:id/revoke). The pairing route answers network.machine-pairing@1 instead, because a pairing is a code and not a machine.
+ */
+export interface NetworkMachineManageResult {
+  machine: NetworkMachine;
+}
+
+/** bot.machine-manage-request@1.0.0 (owner: bot) */
+/**
+ * bot.machine-manage-request@1: what a caller changes on a machine (plan L34, step M2). A rename gives a name; a roles change gives the whole set of roles (network.machine-roles-put@1's shape). The same body is what the network's hub sends to Bot, so both sides speak one shape.
+ */
+export type BotMachineManageRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The name the owner gives the machine. Absent when the call changes something else.
+   */
+  name?: string;
+  /**
+   * The machine's roles after the change. Absent when the call changes something else.
+   *
+   * @maxItems 8
+   */
+  roles?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+};
+
+/** bot.machine-manage-result@1.0.0 (owner: bot) */
+/**
+ * bot.machine-manage-result@1: the machine as it is after the change (plan L34, step M2). Bot is the registry underneath: it answers with its own device record, never with a credential.
+ */
+export interface BotMachineManageResult {
+  machine: BotDevice;
+}
+
+/** network.machine-role@1.0.0 (owner: network) */
+/**
+ * network.machine-role@1: one role a machine can have (plan L34, step M4). A role is what the machine does for the network: a name for the owner, what it installs on the machine and what the hub shows. The catalogue is network.machine-roles@1; a role outside it is refused.
+ */
+export interface NetworkMachineRole {
+  /**
+   * The role's id: the product that owns it, then what it is (codes.worker, desks.host, ai.host, bot.robot).
+   */
+  id: string;
+  /**
+   * The role's name, in the owner's words.
+   */
+  name: string;
+  /**
+   * What the role puts on the machine (the job runner, the desk sandbox, the local model server).
+   */
+  installs: string;
+  /**
+   * What the hub shows for a machine with this role.
+   */
+  shows: string;
+}
+
+/** network.machine-roles@1.0.0 (owner: network) */
+/**
+ * network.machine-roles@1: the catalogue of machine roles (plan L34, step M4). A product declares a role — a name, what it installs on the machine and what the hub shows — and the Node turns it on at its next check-in. The first roles are Codes' worker, Desks' host, AI's local models and Bot's robot. A role outside this catalogue is refused (network.machine-roles-put@1).
+ */
+export interface NetworkMachineRoles {
+  /**
+   * @minItems 1
+   */
+  roles: [NetworkMachineRole, ...NetworkMachineRole[]];
+}
+
+/** network.machine-roles-put@1.0.0 (owner: network) */
+/**
+ * network.machine-roles-put@1: the roles the owner gives a machine (PUT /api/v1/machines/:id/roles, capability machines.manage). The whole set, not a change: what is not named is turned off. Every id must be in the catalogue (network.machine-roles@1); an unknown role is refused and nothing is changed.
+ */
+export interface NetworkMachineRolesPut {
+  /**
+   * The machine's roles after the change. An empty array turns every role off.
+   *
+   * @maxItems 8
+   */
+  roles:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+}
+
+/** network.machine-pairing@1.0.0 (owner: network) */
+/**
+ * network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.bot/install). The code is never stored in the clear and never returned again.
+ */
+export interface NetworkMachinePairing {
+  /**
+   * The one-time pairing code, eight Crockford base32 characters in two groups (XXXX-XXXX).
+   */
+  code: string;
+  /**
+   * The pairing's id, as the install command carries it. Absent when the authority behind it does not name one.
+   */
+  pairing_id?: string;
+  /**
+   * When the code stops working.
+   */
+  expires_at: string;
+  /**
+   * The command the owner runs on the machine (openvibe.bot/install, with the network, the pairing id and the code).
+   */
+  installer: string;
+}
+
+/** network.machine.online@1.0.0 (owner: network) */
+/**
+ * network.machine.online v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person (a Bot device of kind machine) came online: it checked in and is connected to Bot. Network republishes Bot's change (Bot reports it to Network, which writes this event), so a consumer of the network's events hears about a machine once, in one place. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.
+ */
+export interface NetworkMachineOnlinePayload {
+  machine_id: string;
+  /**
+   * The machine's node principal on Network, when it has one.
+   */
+  principal_id?: string;
+  /**
+   * The person the machine belongs to.
+   */
+  owner: string;
+  at: string;
+}
+
+/** network.machine.offline@1.0.0 (owner: network) */
+/**
+ * network.machine.offline v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person went offline: it is no longer connected to Bot. Network republishes Bot's change, so a consumer of the network's events hears about a machine once, in one place. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.
+ */
+export interface NetworkMachineOfflinePayload {
+  machine_id: string;
+  /**
+   * The machine's node principal on Network, when it has one.
+   */
+  principal_id?: string;
+  /**
+   * The person the machine belongs to.
+   */
+  owner: string;
+  at: string;
+}
+
+/** network.machine.paired@1.0.0 (owner: network) */
+/**
+ * network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <nod_…> }, visibility internal, actor service:network.
+ */
+export interface NetworkMachinePairedPayload {
+  /**
+   * The machine's device id in Bot's registry, when Bot already knows the device.
+   */
+  machine_id?: string;
+  /**
+   * The machine's node id (platform_node_principals.node_id).
+   */
+  node_id?: string;
+  /**
+   * The node principal the pairing created. Also the envelope subject id.
+   */
+  principal_id: string;
+  /**
+   * The person the machine belongs to.
+   */
+  owner: string;
+  at: string;
+}
+
+/** network.machine.roles_changed@1.0.0 (owner: network) */
+/**
+ * network.machine.roles_changed v1 (OpenVibe.Network, plan L34, step M4). A machine's roles changed: the whole set after the change, from the catalogue (network.machine-roles@1). The machine applies them at its next check-in, so this event says what was asked for, not what the machine has already done. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.
+ */
+export interface NetworkMachineRolesChangedPayload {
+  machine_id: string;
+  /**
+   * The person the machine belongs to.
+   */
+  owner: string;
+  /**
+   * The machine's roles after the change.
+   */
+  roles: string[];
+  /**
+   * Who asked for the change: the person, or an app acting with their consent.
+   */
+  changed_by?: string;
+  at: string;
+}
+
+/** network.machine.revoked@1.0.0 (owner: network) */
+/**
+ * network.machine.revoked v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person was revoked: it is no longer theirs and its credential is dead. The machine's credential and its hash are never carried. A second revoke changes nothing and emits nothing. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.
+ */
+export interface NetworkMachineRevokedPayload {
+  machine_id: string;
+  /**
+   * The machine's node principal on Network, when it had one.
+   */
+  principal_id?: string;
+  /**
+   * The person the machine belonged to.
+   */
+  owner: string;
+  /**
+   * Why it was revoked, when the caller gave one. Absent otherwise.
+   */
+  reason?: string;
+  at: string;
+}
+
 /** network.avatar-write-request@1.0.0 (owner: network) */
 /**
  * network.avatar-write-request@1: the body of POST /internal/user-avatar on OpenVibe.Network (capability network.avatar.write, held by the site a person picked the avatar on; Live posts here through its notify helper). Adopts the picture as the account's avatar and fans it out to the other sites. Only an openvibe.media address is accepted, so an avatar can never be a tracking pixel or a third-party file. Refusals are { error }: 400 without a user_id, 404 for an unknown user, 422 for anything but an openvibe.media address, 503 while the avatar service is down.
@@ -203351,6 +203642,14 @@ export interface BotDevice {
   created_at: string;
   updated_at: string;
   online?: boolean;
+  /**
+   * The machine roles the owner set (plan L34: the catalogue is network.machine-roles@1). Absent on a device that has none.
+   */
+  roles?: string[];
+  /**
+   * The operating system the device reported.
+   */
+  os?: string | null;
 }
 
 /** bot.robot-read-result@1.0.0 (owner: bot) */

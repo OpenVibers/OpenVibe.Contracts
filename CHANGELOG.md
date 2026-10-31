@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.261.0 — 2026-10-31
+
+- **The machines hub** (plan L34, steps M2 and M4). A person's computers are the network's: Bot stays the device
+  registry underneath, and Network fronts it on openvibe.network/machines for the person and for apps the person
+  consented to.
+  - **`network.machine@1`:** one machine as the hub shows it — its id (Bot's `dev_…`), name, kind, os, whether it is
+    online, when it was last seen, its `roles` and what it does right now (`running`: its Codes jobs, its desks, its
+    local models, its robots).
+  - **`network.machine-roles@1` and `network.machine-role@1`:** the catalogue of roles. Each role has a name, what it
+    installs on the machine and what the hub shows. A product declares its roles in its own service manifest
+    (`machineRoles`), so the catalogue is the union of what the products declare: `codes.worker` (Codes), `desks.host`
+    (Run), `ai.host` (AI) and `bot.robot` (Bot) are the first four.
+  - **`network.machine-roles-put@1`:** the roles a machine has after a change — the whole set, not a diff.
+  - **`network.machine-pairing@1`:** a one-time pairing code, its expiry and the command to run on the machine.
+  - **`network.machine-list-result@1` and `network.machine-manage-result@1`:** what the hub answers with.
+  - **`bot.machine-manage-request@1` and `bot.machine-manage-result@1`:** what Bot's machines API takes and answers
+    with. `bot.device@1` gains `roles` and `os` (both optional; the old shape still holds).
+  - **The capabilities:** `network.machines.read` and `network.machines.manage` (owner `network`, public: an app may
+    hold them with the person's consent, and may then do only what the person could) and `bot.machine.manage` (owner
+    `bot`, first-party: Network holds it for the hub, so Bot stays the authority and checks the machine is the named
+    person's own).
+  - **The events:** `network.machine.online`, `network.machine.offline`, `network.machine.paired`,
+    `network.machine.roles_changed` and `network.machine.revoked` — Network publishes them through OpenVibe.Events.
+  - **Presence policy:** `network.machine.online` and `network.machine.offline` are a machine's connectivity (the
+    machines hub, plan L34), not a person's presence, and are allowed like `bot.robot.online` and `bot.robot.offline`
+    (ADR-043). Any other `.online`, `.offline` or presence event type is still refused.
+  - **`registry.service-manifest@1` gains `machineRoles`** (optional): the roles a product declares. The manifest
+    keeps its old shape; a manifest without the field means a product with no machine role.
+
 ## 0.260.0 — 2026-10-31
 
 - **One AI meter across the network** (plan L40): every AI call on the network leaves one usage record, whoever made it.
