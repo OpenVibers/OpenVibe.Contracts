@@ -152228,16 +152228,16 @@ export interface AiRun {
      */
     reasons: string[];
     /**
-     * The provider that answered (provider, or provider/model), or null when nothing answered.
+     * The provider that answered (provider, or provider/model, or the machine that answered), or null when nothing answered.
      */
-    selected: string | null;
+    selected: string | {} | null;
     /**
      * Every candidate the pool considered, with why it was excluded when it was.
      */
     candidates: {
       provider: string;
       model?: string | null;
-      eligible: boolean;
+      eligible?: boolean;
       excluded_reason?: string | null;
       cost?: number | null;
       latency?: number | null;

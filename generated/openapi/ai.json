@@ -6502,9 +6502,10 @@
        "selected": {
         "type": [
          "string",
+         "object",
          "null"
         ],
-        "description": "The provider that answered (provider, or provider/model), or null when nothing answered."
+        "description": "The provider that answered (provider, or provider/model, or the machine that answered), or null when nothing answered."
        },
        "candidates": {
         "type": "array",
@@ -6512,8 +6513,7 @@
         "items": {
          "type": "object",
          "required": [
-          "provider",
-          "eligible"
+          "provider"
          ],
          "additionalProperties": true,
          "properties": {
