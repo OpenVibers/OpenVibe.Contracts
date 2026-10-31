@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.258.0 — 2026-10-31
+
+- **The task-aware router's explain** (L33 P3 "the router picks for the task", L36 Y7 "a smarter router";
+  OpenVibe.AI). `ai.run@1` (1.1.0) gains an optional `explain`: why the run answered as it did.
+  - `task`: the requirement set the router read off the request with no model call — `vision`, `tools`, `json`,
+    `min_context` (tokens), `reasoning` (none, some, deep), `output` (text, image, audio, video) and `weight`
+    (light, standard, heavy).
+  - `ranked`: the candidates the router ranked for that task, best first (at most five), each with its reason
+    (the cheapest with vision, the strong tier, warm cache), its price and its catalogue tier.
+  - `attempts`: every provider that was tried, why it was chosen and what went wrong when it failed.
+  - `objective`, `reasons`, `selected`, `candidates` and `paid_by`: the placement view the ranking came from and
+    who paid. `bench` and `usage_readings` stay the optional projections they are.
+  - Nothing else changed: the release is additive, the contract's own id and major stay, and no tag is cut yet.
+
 ## 0.257.0 — 2026-10-31
 
 - **"Your AI": a person's own provider keys, and how their runs route** (L36 Y1/Y3/Y8; OpenVibe.AI). Five additive
