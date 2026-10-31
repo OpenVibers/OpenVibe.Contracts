@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.255.0 — 2026-10-31
+
+- **Data and AI by consent** (L24, the consent plan `OpenVibe_Consent_Plan_2026-10-31.md`): nothing a person makes is
+  off-limits to AI or data use by design; each use is off until that person turns it on.
+  - **`network.consent@1`:** one person's choice for one purpose (`ai.train`, `data.public`, `face.recognize`,
+    `ai.looks`, `app.data`), narrowed by kinds of content, an app and options (a licence, face features). It records
+    the wording seen (`text_version`), where it was made, and `granted_at`, `revoked_at` and `expires_at`. A choice is
+    turned off by revoking it, never by deleting it. The id prefix is `cns_`.
+  - **`network.consent-choice@1` and `network.me-consent-result@1`:** "Your data choices" (`GET` and `PUT
+    /api/v1/me/consent`, capability `network.consent.manage`).
+  - **`network.consent-check-request@1` and `network.consent-check-result@1`:** a service asks before each use, for up
+    to 500 people (`POST /internal/consent/check`, capability `network.consent.read`, first-party). An unknown person is
+    false, like one who never chose. Network unreachable means off.
+  - **`network.consent.changed`:** drops cached answers. It names the change, never the content.
+  - **No purpose sells data.** That needs its own contract and a yes for each deal.
+
 ## 0.254.0 — 2026-10-30
 
 - **`actor.wait@1`** (plan A2, Watch mode; the design note `research-2026-10-30/agent-a2-watch.md`): one wait — the

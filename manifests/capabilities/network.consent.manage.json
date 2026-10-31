@@ -1,0 +1,26 @@
+{
+  "id": "network.consent.manage",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "public",
+  "description": "\"Your data choices\" for the signed-in person (L24): GET /api/v1/me/consent lists every purpose with its wording, the person's choices and their history; PUT /api/v1/me/consent/:purpose turns one on or off (network.consent-choice@1); DELETE /api/v1/me/consent/:purpose/:client revokes one app. Off is the default for every purpose. Only the person's own session or token reaches it.",
+  "inputSchema": "network.consent-choice@1",
+  "outputSchema": "network.me-consent-result@1",
+  "permissions": [
+    "network:read",
+    "network:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [
+    "network.consent.changed"
+  ],
+  "implementedBy": [
+    "GET /api/v1/me/consent",
+    "PUT /api/v1/me/consent/:purpose",
+    "DELETE /api/v1/me/consent/:purpose/:client"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "purpose": "data.public",
+  "kind": "pictures",
+  "allowed": {
+    "usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4": true,
+    "usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z5": false
+  },
+  "licence": {
+    "usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4": "cc-by-4.0"
+  },
+  "checked_at": "2026-10-31T05:00:01.000Z"
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/consent-check-result.v1.json",
+  "title": "NetworkConsentCheckResult",
+  "description": "network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["purpose", "allowed", "checked_at"],
+  "properties": {
+    "purpose": {
+      "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"]
+    },
+    "kind": {
+      "enum": ["streams", "vods", "clips", "voice", "chat", "posts", "pictures", "code"]
+    },
+    "client": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$"
+    },
+    "feature": {
+      "enum": ["verify", "find", "cast", "library"]
+    },
+    "allowed": {
+      "type": "object",
+      "maxProperties": 500,
+      "propertyNames": { "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+      "additionalProperties": { "type": "boolean" },
+      "description": "Each subject asked about, and whether the use is allowed for them."
+    },
+    "licence": {
+      "type": "object",
+      "maxProperties": 500,
+      "propertyNames": { "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+      "additionalProperties": { "enum": ["cc-by-4.0", "cc0-1.0"] },
+      "description": "data.public only: the licence each allowed subject chose."
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

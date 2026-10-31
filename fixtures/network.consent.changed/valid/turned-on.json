@@ -1,0 +1,12 @@
+{
+  "consent_id": "cns_01K6R3A1B2C3D4E5F6G7H8J9KA",
+  "subject": "usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+  "purpose": "ai.train",
+  "client": null,
+  "on": true,
+  "kinds": [
+    "streams"
+  ],
+  "text_version": "2026-10-31.1",
+  "changed_at": "2026-10-31T05:00:00.000Z"
+}
