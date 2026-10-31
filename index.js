@@ -30,5 +30,6 @@ module.exports = {
     usage: require('./lib/usage'),
     resources: require('./lib/resources'),
     staff: require('./lib/staff'),
+    labels: require('./lib/labels'),
     openapi: require('./lib/openapi'),
 };

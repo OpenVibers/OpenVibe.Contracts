@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.257.0 — 2026-10-31
+## 0.259.0 — 2026-10-31
 
 - **`network.notification-push-request@1` addresses a person by subject as well as by user id (F1, familiar faces).**
   Vision sends a named person a consent request and Cam sends the camera owner an event alert; both know the
@@ -9,6 +9,42 @@
   `POST /internal/notifications/push-bulk` accepts `{ subjects }` as an alternative to `{ user_ids }` (unknown
   subjects are skipped). The rest of the body and every other rule is unchanged; `subject` is not the actor
   (`actor_subject` still carries the block check). Two valid fixtures prove the subject forms.
+
+## 0.258.0 — 2026-10-31
+
+- **Labels and choices** (L1, `OpenVibe_Consent_Plan_2026-10-31.md` §"Labels and choices"): light rules, not bans.
+  - **`common.content-labels@1`:** the six labels (`nudity`, `language`, `graphic`, `18+`, `flashing`, `spoilers`)
+    and the shape `{ labels, suggested }` for a stream, VOD, clip, picture or post. `labels` are in force (the
+    creator, a moderator, or three viewer suggestions); `suggested` is what the AI or a viewer proposed and nobody
+    confirmed, so a suggestion never applies itself and never takes anything down.
+  - **`network.label-prefs@1`:** one person's choice per label — `show`, `blur` (until tapped) or `hide` — in
+    Network's site prefs, so one setting covers every site. The web default is `show`; the native apps start
+    `nudity` and `18+` at hide until the person turns them on in their web settings. The home page shows nothing
+    labelled `18+` whatever the prefs say.
+  - **`labels`** is exported from the package (`LABELS`, `CHOICES`, `INFO`, `defaults()`), so a service reads the
+    one list instead of copying it. `test/content-labels.test.js` checks that every list matches and that the
+    fixtures hold the rules the schemas cannot say.
+
+## 0.257.0 — 2026-10-31
+
+- **"Your AI": a person's own provider keys, and how their runs route** (L36 Y1/Y3/Y8; OpenVibe.AI). Five additive
+  v1 contracts and one event:
+  - **`ai.me-credential@1`:** one key as its owner reads it — provider, a four-character hint, base_url, daily budget,
+    status (`ok`, `failing` or `untested`), checked_at, a redacted last_error, models_count and created_at. Never the
+    key.
+  - **`ai.me-credential-put@1`:** `PUT /api/v1/me/credentials/{provider}` for the providers the console knows
+    (Anthropic, OpenAI, Gemini, DeepSeek, Mistral, xAI, Groq, Cerebras, Together, Fireworks, OpenRouter, MiniMax and
+    a custom endpoint). A key is required the first time and when the endpoint changes, and is tested on save.
+  - **`ai.me-credential-test@1`:** the model list (up to five samples) or a one-token request, the balance when the
+    provider reports one, and a redacted error that never carries the key.
+  - **`ai.me-credential-list@1`:** `GET /api/v1/me/credentials`, every key without any key.
+  - **`ai.me-preferences@1`:** `GET/PUT /api/v1/me/ai/preferences` — only_my_keys, free_first, a price ceiling and a
+    default model (or `auto`) per kind of work.
+  - **`ai.credential.failed@1`:** a provider refused a person's key with 401/403 during a run; its status becomes
+    failing and the event says so, never the key.
+- **Two person capabilities**, `ai.me.read` and `ai.me.manage`: only the person's own Network token, or the person
+  session on AI's own site behind a same-origin check, reaches them. A service token is refused, and so is any token
+  carrying `on_behalf_of`, whatever capabilities it holds (the AI #204/#205 rule).
 
 ## 0.256.0 — 2026-10-31
 

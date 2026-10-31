@@ -1,0 +1,22 @@
+{
+  "id": "ai.me.read",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "public",
+  "description": "The person's own AI settings (L36 Y1): GET /api/v1/me/credentials lists the provider keys they hold themselves, never a key (a four-character hint only), and GET /api/v1/me/ai/preferences reads how their runs route. Only the person may call it — their Network user token, or the person session on AI's own site behind a same-origin check. A service token is refused, and so is any token carrying on_behalf_of, whatever capabilities it holds.",
+  "permissions": [
+    "ai:me:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "ai-credentials",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/me/credentials",
+    "GET /api/v1/me/ai/preferences"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "ai.me-credential-list@1"
+}

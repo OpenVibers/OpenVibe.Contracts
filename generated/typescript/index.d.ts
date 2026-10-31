@@ -4674,6 +4674,89 @@ export type ConfigSnapshot = {
   copied_from?: number | null;
 };
 
+/** common.content-labels@1.0.0 (owner: contracts) */
+/**
+ * common.content-labels@1 (L1, labels and choices, 2026-10-31): what a stream, VOD, clip, picture or post is labelled as, and what the AI has suggested but the creator has not confirmed. Labels are choices, never bans: a label never hides content from the person who posted it, and it never hides content from a viewer whose label preferences show it. A creator sets a label; the AI may only suggest one (a suggestion the creator confirms, never a takedown); three viewer suggestions or a moderator put one on. The label set is one list everywhere: nudity, language, graphic, 18+, flashing and spoilers.
+ */
+export interface ContentLabels {
+  /**
+   * The labels in force: set by the creator, or by a moderator, or by three viewer suggestions. A label never hides anything by itself; each viewer's prefs decide (network.label-prefs@1).
+   *
+   * @maxItems 6
+   */
+  labels:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+  /**
+   * What the AI or a viewer suggested and nobody confirmed yet. Stored as a suggestion and never applied: a label in this list changes nothing for anyone until the creator (or a moderator) puts it in labels.
+   *
+   * @maxItems 6
+   */
+  suggested:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+}
+
 /** common.moderation-action@1.0.0 (owner: network) */
 /**
  * common.moderation-action@1 (ADR-022, roadmap WS-D task 1): one staff or moderator action on someone else's content or account, as a service reports it to OpenVibe.Network's moderation audit log. The payload of every <service>.moderation.action event that has no older shape of its own (tools, games, wiki, blog, news, reviews, deals, coupons, trade, codes); modelled on community.moderation.action@1. Written to the service's outbox in the transaction that performs the action. A person acting on their own content is not moderation and is not reported. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself, a secret or an address.
@@ -274532,6 +274615,42 @@ export interface NetworkConsentCheckResult {
   checked_at: string;
 }
 
+/** network.label-prefs@1.0.0 (owner: network) */
+/**
+ * network.label-prefs@1 (L1, labels and choices, 2026-10-31): what one person sees for each content label, on every OpenVibe site. One setting per label, stored in Network's site prefs, so the choice follows the account across Stream, Video, Pics and every other site. GET and PUT /api/v1/me/label-prefs; the response and the request are this shape. The web default is show for every label; the native apps hide nudity and 18+ until the person turns them on here (pinned by the app stores' user-content rules). The home page shows nothing labelled 18+ whatever the prefs say: it is the owner's one clean page.
+ */
+export interface NetworkLabelPrefs {
+  /**
+   * One choice for every label. A missing label is not a choice: a client asks Network and gets all six.
+   */
+  prefs: {
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    nudity: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    language: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    graphic: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    "18+": "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    flashing: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    spoilers: "show" | "blur" | "hide";
+  };
+}
+
 /** network.consent.changed@1.0.0 (owner: network) */
 /**
  * network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition, an AI text) checks again before it goes on. The payload names the change and never the content it covers.
@@ -280425,4 +280544,189 @@ export interface AiMemoryWriteRequest {
   scope?: string;
   status?: "active" | "suggested" | "archived" | "conflict";
   source?: string;
+}
+
+/** ai.me-credential@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential@1 (OpenVibe.AI; L36 Y1): one of the person's own provider keys as the person reads it from GET /api/v1/me/credentials. It is never the key: `hint` is the last four characters, and `last_error` is a redacted line that never carries the key. `status` is what the last save-time or run-time check found: ok, failing or untested. `models_count` is how many models the provider listed when it was last tested. Own keys are free to their owner: no fee, no cap and no network budget.
+ */
+export interface AiMeCredentialV1 {
+  provider:
+    | "anthropic"
+    | "openai"
+    | "gemini"
+    | "deepseek"
+    | "mistral"
+    | "xai"
+    | "groq"
+    | "cerebras"
+    | "together"
+    | "fireworks"
+    | "openrouter"
+    | "minimax"
+    | "custom";
+  /**
+   * The key's last four characters, so the person can tell two keys apart. Never more.
+   */
+  hint: string;
+  /**
+   * The endpoint the person chose, or null for the provider's own (taken from the console presets).
+   */
+  base_url: string | null;
+  /**
+   * The person's own daily cap on this key; null or 0 means no cap. The network's budgets never apply to their own key.
+   */
+  budget_usd_per_day: number | null;
+  status: "ok" | "failing" | "untested";
+  checked_at: string | null;
+  /**
+   * Why the key last failed, with the key and any other secret redacted. Never the key itself.
+   */
+  last_error: string | null;
+  models_count: number;
+  created_at: string;
+  updated_at?: string;
+}
+
+/** ai.me-credential-put@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential-put@1 (OpenVibe.AI; L36 Y1): the person stores or replaces their own provider key at PUT /api/v1/me/credentials/{provider}. Only the person's own Network token or their AI site session may send it. `key` is required the first time and whenever `base_url` changes; a later save may leave it out to keep the stored key. The key is sealed at rest, tested on save and never returned, logged or put in an error.
+ */
+export type AiMeCredentialPutV1 = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The provider. The route names it too; when both are present they must agree. A custom provider must name its endpoint in base_url.
+   */
+  provider:
+    | "anthropic"
+    | "openai"
+    | "gemini"
+    | "deepseek"
+    | "mistral"
+    | "xai"
+    | "groq"
+    | "cerebras"
+    | "together"
+    | "fireworks"
+    | "openrouter"
+    | "minimax"
+    | "custom";
+  /**
+   * The provider key. Required the first time and whenever base_url changes; optional afterwards, when the stored key is kept. Never returned.
+   */
+  key?: string;
+  /**
+   * The endpoint, for a custom provider or to override the provider's own. https only, no credentials, query or fragment; reached through the guarded fetcher's egress rules.
+   */
+  base_url?: string;
+  /**
+   * The person's own daily cap on this key; 0 or absent means no cap.
+   */
+  budget_usd_per_day?: number;
+  /**
+   * The model this key should use per kind of work. `auto` is not a model: absent means the provider's default, and the person's ai.me-preferences choose between keys.
+   */
+  models?: {
+    chat?: string;
+    code?: string;
+    vision?: string;
+    image?: string;
+  };
+};
+
+/** ai.me-credential-test@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential-test@1 (OpenVibe.AI; L36 Y1/Y8): the answer to POST /api/v1/me/credentials/{provider}/test and to the test that runs on save. It lists the provider's models (up to five samples), or, when it lists none, makes a one-token request to its cheapest model. `ok` is false for a refused key, an empty endpoint or a timeout (10 s). `error` is a redacted line that never carries the key. `balance` is present only when the provider reports one.
+ */
+export interface AiMeCredentialTestV1 {
+  ok: boolean;
+  models_count: number;
+  /**
+   * @maxItems 5
+   */
+  sample_models:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string];
+  latency_ms: number;
+  balance: null | {
+    amount: number;
+    currency: string;
+  };
+  error: null | {
+    code: string;
+    message: string;
+  };
+}
+
+/** ai.me-credential-list@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential-list@1 (OpenVibe.AI; L36 Y1): GET /api/v1/me/credentials — every provider key the person holds themselves, without any key. Ordered by provider so a page can render it steadily.
+ */
+export interface AiMeCredentialListV1 {
+  /**
+   * @maxItems 32
+   */
+  credentials: AiMeCredentialV1[];
+}
+
+/** ai.me-preferences@1.0.0 (owner: ai) */
+/**
+ * ai.me-preferences@1 (OpenVibe.AI; L36 Y1/Y3): how one person's AI runs route, stored per person under GET/PUT /api/v1/me/ai/preferences. `only_my_keys` means exactly that: a failed or missing key is never quietly replaced by a paid route. `free_first` puts free tiers ahead of paid ones. `price_ceiling_usd_per_mtok` caps the network's paid fallback per million tokens; the person's own keys are never capped. Each default is a model id or `auto`.
+ */
+export interface AiMePreferencesV1 {
+  only_my_keys: boolean;
+  free_first: boolean;
+  price_ceiling_usd_per_mtok: number | null;
+  defaults: {
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    text: string;
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    code: string;
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    vision: string;
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    image: string;
+  };
+  updated_at?: string | null;
+}
+
+/** ai.credential.failed@1.0.0 (owner: ai) */
+/**
+ * ai.credential.failed v1 (OpenVibe.AI; L36 Y8): a provider refused one of a person's own keys with 401 or 403 during a run. The key's status becomes failing and this event tells the products that may show it. `error` is a redacted line that never carries the key. Envelope: on_behalf_of the person, subject { type: credential, id: <subject>:<provider> }, visibility internal, priority important, actor service:ai.
+ */
+export interface AiCredentialFailedPayload {
+  subject: string;
+  provider:
+    | "anthropic"
+    | "openai"
+    | "gemini"
+    | "deepseek"
+    | "mistral"
+    | "xai"
+    | "groq"
+    | "cerebras"
+    | "together"
+    | "fireworks"
+    | "openrouter"
+    | "minimax"
+    | "custom";
+  status: "failing";
+  checked_at: string;
+  /**
+   * The redacted reason. Never the key.
+   */
+  error: string;
 }

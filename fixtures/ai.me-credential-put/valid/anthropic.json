@@ -1,0 +1,1 @@
+{"provider":"anthropic","key":"sk-ant-test-0123456789","budget_usd_per_day":2,"models":{"chat":"claude-haiku-5-5","vision":"claude-sonnet-5-5"}}
