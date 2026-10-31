@@ -257315,10 +257315,105 @@ export interface ActorWait {
         at: string;
       };
   /**
-   * The bounded matcher: a path (payload.a.b, subject.id, subject.type, actor.id, trace_id) and the value the event must carry there. At most eight clauses; a filter is a matcher, not a query.
+   * The bounded matcher: a path (payload.a.b, subject.id, subject.type, actor.id, trace_id) and the value (or one of the values) the event must carry there. At most eight clauses; a filter is a matcher, not a query.
    */
   filter?: {
-    [k: string]: (string | number | boolean) | undefined;
+    [k: string]:
+      | (
+          | string
+          | number
+          | boolean
+          | []
+          | [string | number | boolean]
+          | [string | number | boolean, string | number | boolean]
+          | [string | number | boolean, string | number | boolean, string | number | boolean]
+          | [string | number | boolean, string | number | boolean, string | number | boolean, string | number | boolean]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+          | [
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean,
+              string | number | boolean
+            ]
+        )
+      | undefined;
   };
   deadline_at: string;
   on_timeout: "ask" | "retry" | "fail";

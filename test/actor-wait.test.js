@@ -31,6 +31,8 @@ for (let i = 0; i < 9; i++) nine['payload.k' + i] = 'v';
 assert.ok(!c.validate('actor.wait@1', { ...wait, filter: nine }).valid, 'at most eight filter clauses');
 assert.ok(c.validate('actor.wait@1', { ...wait, filter: { 'payload.repo': 'OpenVibers/OpenVibe.Actor' } }).valid, 'one clause is fine');
 assert.ok(!c.validate('actor.wait@1', { ...wait, filter: { 'payload.repo': { nested: true } } }).valid, 'a clause is a plain value');
+assert.ok(c.validate('actor.wait@1', { ...wait, filter: { 'payload.state': ['succeeded', 'failed', 'cancelled'] } }).valid, 'a list of values means one of them');
+assert.ok(!c.validate('actor.wait@1', { ...wait, filter: { 'payload.state': ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'] } }).valid, 'a list of values is bounded too');
 
 // The person reads the line: it is there, and it is short.
 assert.ok(!c.validate('actor.wait@1', { ...wait, line: '' }).valid, 'an empty line is refused');

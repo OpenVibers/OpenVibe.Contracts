@@ -44,15 +44,32 @@
     },
     "filter": {
       "type": "object",
-      "description": "The bounded matcher: a path (payload.a.b, subject.id, subject.type, actor.id, trace_id) and the value the event must carry there. At most eight clauses; a filter is a matcher, not a query.",
+      "description": "The bounded matcher: a path (payload.a.b, subject.id, subject.type, actor.id, trace_id) and the value (or one of the values) the event must carry there. At most eight clauses; a filter is a matcher, not a query.",
       "maxProperties": 8,
       "additionalProperties": {
-        "type": [
-          "string",
-          "number",
-          "boolean"
-        ],
-        "maxLength": 200
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 200
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
+          }
+        ]
       }
     },
     "deadline_at": {
