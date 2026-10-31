@@ -210,6 +210,15 @@
       "status": "active"
     },
     {
+      "id": "common.content-labels",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/content-labels.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "common.moderation-action",
       "version": "1.0.0",
       "owner": "network",
@@ -7768,6 +7777,15 @@
       "owner": "network",
       "schema": "network/consent-check-result.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.label-prefs",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/label-prefs.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },

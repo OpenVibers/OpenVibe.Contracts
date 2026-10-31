@@ -4674,6 +4674,89 @@ export type ConfigSnapshot = {
   copied_from?: number | null;
 };
 
+/** common.content-labels@1.0.0 (owner: contracts) */
+/**
+ * common.content-labels@1 (L1, labels and choices, 2026-10-31): what a stream, VOD, clip, picture or post is labelled as, and what the AI has suggested but the creator has not confirmed. Labels are choices, never bans: a label never hides content from the person who posted it, and it never hides content from a viewer whose label preferences show it. A creator sets a label; the AI may only suggest one (a suggestion the creator confirms, never a takedown); three viewer suggestions or a moderator put one on. The label set is one list everywhere: nudity, language, graphic, 18+, flashing and spoilers.
+ */
+export interface ContentLabels {
+  /**
+   * The labels in force: set by the creator, or by a moderator, or by three viewer suggestions. A label never hides anything by itself; each viewer's prefs decide (network.label-prefs@1).
+   *
+   * @maxItems 6
+   */
+  labels:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+  /**
+   * What the AI or a viewer suggested and nobody confirmed yet. Stored as a suggestion and never applied: a label in this list changes nothing for anyone until the creator (or a moderator) puts it in labels.
+   *
+   * @maxItems 6
+   */
+  suggested:
+    | []
+    | ["nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ]
+    | [
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers",
+        "nudity" | "language" | "graphic" | "18+" | "flashing" | "spoilers"
+      ];
+}
+
 /** common.moderation-action@1.0.0 (owner: network) */
 /**
  * common.moderation-action@1 (ADR-022, roadmap WS-D task 1): one staff or moderator action on someone else's content or account, as a service reports it to OpenVibe.Network's moderation audit log. The payload of every <service>.moderation.action event that has no older shape of its own (tools, games, wiki, blog, news, reviews, deals, coupons, trade, codes); modelled on community.moderation.action@1. Written to the service's outbox in the transaction that performs the action. A person acting on their own content is not moderation and is not reported. Envelope: subject { type: moderation_action, id: <target type>:<target id> }, visibility internal, actor the staff member. Never carries the content itself, a secret or an address.
@@ -168444,7 +168527,7 @@ export interface NetworkGithubTokenResult {
 
 /** network.notification-push-request@1.0.0 (owner: network) */
 /**
- * network.notification-push-request@1: bodies of network.notifications.push on OpenVibe.Network (a service token holding the capability, or the internal key). POST /internal/notifications/push: { user_id, type?, title?, message?, … } creates one notification (400 { error: user_id required } without user_id). POST /internal/notifications/push-bulk: { user_ids, …same fields } creates it for each recipient (400 without a non-empty user_ids, or with more than 1000). Recipients are Network user ids. Unknown fields are ignored; 503 when the notification service is not running. The other /internal/notifications/* routes (unread, mark-read, resolve-users) take the internal key only and are not part of this capability.
+ * network.notification-push-request@1: bodies of network.notifications.push on OpenVibe.Network (a service token holding the capability). POST /internal/notifications/push: { user_id | subject, type?, title?, message?, … } creates one notification (400 without user_id or subject; 404 for an unknown subject). POST /internal/notifications/push-bulk: { user_ids | subjects, …same fields } creates it for each recipient (400 without a non-empty user_ids or subjects, or with more than 1000). Recipients are Network user ids or canonical usr_ subjects; a subject resolves to its account, so a service that knows the person by subject (Vision's consent request, Cam's event alert) need not hold the numeric id. Unknown fields are ignored; 503 when the notification service is not running. The other /internal/notifications/* routes (unread, mark-read, resolve-users) take the internal key only and are not part of this capability.
  */
 export type NetworkNotificationPushRequest =
   | {
@@ -168501,6 +168584,69 @@ export type NetworkNotificationPushRequest =
        * The actor as a usr_ subject for the block check; null: no known person (no block check).
        */
       actor_subject?: string | null;
+      /**
+       * The recipient as a canonical usr_ subject, instead of user_id. It resolves to that person's Network account; an unknown subject is 404 and creates nothing.
+       */
+      subject?: string | null;
+    }
+  | {
+      /**
+       * A Network user id (already translated from the caller's own ids).
+       */
+      user_id?: number | string;
+      /**
+       * A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent.
+       */
+      type?: string;
+      /**
+       * Default: the type's title, else "Notification".
+       */
+      title?: string;
+      message?: string | null;
+      /**
+       * Default: the type's icon.
+       */
+      icon?: string;
+      /**
+       * The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing.
+       */
+      sender_id?: number | string | null;
+      sender_name?: string | null;
+      sender_avatar?: string | null;
+      /**
+       * The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied.
+       */
+      service?: string;
+      /**
+       * Where the notification leads.
+       */
+      url?: string | null;
+      /**
+       * low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal.
+       */
+      priority?: string;
+      /**
+       * Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block.
+       */
+      category?: string;
+      /**
+       * Any JSON value, stored and returned as given.
+       */
+      rich_content?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * When it may be deleted (SQLite datetime, UTC).
+       */
+      expires_at?: string | null;
+      /**
+       * The actor as a usr_ subject for the block check; null: no known person (no block check).
+       */
+      actor_subject?: string | null;
+      /**
+       * The recipient as a canonical usr_ subject, instead of user_id. It resolves to that person's Network account; an unknown subject is 404 and creates nothing.
+       */
+      subject: string | null;
     }
   | {
       /**
@@ -168557,6 +168703,76 @@ export type NetworkNotificationPushRequest =
        * The actor as a usr_ subject for the block check; null: no known person (no block check).
        */
       actor_subject?: string | null;
+      /**
+       * Recipients as canonical usr_ subjects, instead of user_ids. Unknown subjects are skipped; at least one recipient is required.
+       *
+       * @minItems 1
+       * @maxItems 1000
+       */
+      subjects?: [string, ...string[]];
+    }
+  | {
+      /**
+       * @minItems 1
+       * @maxItems 1000
+       */
+      user_ids?: [number | string, ...(number | string)[]];
+      /**
+       * A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent.
+       */
+      type?: string;
+      /**
+       * Default: the type's title, else "Notification".
+       */
+      title?: string;
+      message?: string | null;
+      /**
+       * Default: the type's icon.
+       */
+      icon?: string;
+      /**
+       * The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing.
+       */
+      sender_id?: number | string | null;
+      sender_name?: string | null;
+      sender_avatar?: string | null;
+      /**
+       * The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied.
+       */
+      service?: string;
+      /**
+       * Where the notification leads.
+       */
+      url?: string | null;
+      /**
+       * low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal.
+       */
+      priority?: string;
+      /**
+       * Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block.
+       */
+      category?: string;
+      /**
+       * Any JSON value, stored and returned as given.
+       */
+      rich_content?: {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * When it may be deleted (SQLite datetime, UTC).
+       */
+      expires_at?: string | null;
+      /**
+       * The actor as a usr_ subject for the block check; null: no known person (no block check).
+       */
+      actor_subject?: string | null;
+      /**
+       * Recipients as canonical usr_ subjects, instead of user_ids. Unknown subjects are skipped; at least one recipient is required.
+       *
+       * @minItems 1
+       * @maxItems 1000
+       */
+      subjects: [string, ...string[]];
     };
 
 /** network.notification-push-result@1.0.0 (owner: network) */
@@ -274480,6 +274696,42 @@ export interface NetworkConsentCheckResult {
     [k: string]: ("cc-by-4.0" | "cc0-1.0") | undefined;
   };
   checked_at: string;
+}
+
+/** network.label-prefs@1.0.0 (owner: network) */
+/**
+ * network.label-prefs@1 (L1, labels and choices, 2026-10-31): what one person sees for each content label, on every OpenVibe site. One setting per label, stored in Network's site prefs, so the choice follows the account across Stream, Video, Pics and every other site. GET and PUT /api/v1/me/label-prefs; the response and the request are this shape. The web default is show for every label; the native apps hide nudity and 18+ until the person turns them on here (pinned by the app stores' user-content rules). The home page shows nothing labelled 18+ whatever the prefs say: it is the owner's one clean page.
+ */
+export interface NetworkLabelPrefs {
+  /**
+   * One choice for every label. A missing label is not a choice: a client asks Network and gets all six.
+   */
+  prefs: {
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    nudity: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    language: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    graphic: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    "18+": "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    flashing: "show" | "blur" | "hide";
+    /**
+     * show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them.
+     */
+    spoilers: "show" | "blur" | "hide";
+  };
 }
 
 /** network.consent.changed@1.0.0 (owner: network) */
