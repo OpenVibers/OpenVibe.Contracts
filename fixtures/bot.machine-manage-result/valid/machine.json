@@ -1,0 +1,20 @@
+{
+  "machine": {
+    "id": "dev_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "robot_ids": [],
+    "kind": "server",
+    "name": "Kitchen server",
+    "agent_version": "0.15.0",
+    "drivers": [],
+    "capabilities": {},
+    "last_seen": "2026-10-31T09:00:00.000Z",
+    "revoked_at": null,
+    "created_at": "2026-10-31T09:00:00.000Z",
+    "updated_at": "2026-10-31T09:00:00.000Z",
+    "online": true,
+    "roles": [
+      "codes.worker"
+    ],
+    "os": "linux"
+  }
+}

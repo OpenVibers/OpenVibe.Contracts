@@ -1,0 +1,29 @@
+{
+  "id": "bot.machine.manage",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.network/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
+  "permissions": [
+    "bot:machine:read",
+    "bot:machine:rename",
+    "bot:machine:roles",
+    "bot:machine:revoke"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "bot-machine",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/machines",
+    "GET /api/v1/machines/:id",
+    "PATCH /api/v1/machines/:id",
+    "PUT /api/v1/machines/:id/roles",
+    "POST /api/v1/machines/:id/revoke"
+  ],
+  "inputSchema": "bot.machine-manage-request@1",
+  "outputSchema": "bot.machine-manage-result@1"
+}

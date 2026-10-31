@@ -210,6 +210,15 @@
       "status": "active"
     },
     {
+      "id": "common.content-labels",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/content-labels.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "common.moderation-action",
       "version": "1.0.0",
       "owner": "network",
@@ -1370,6 +1379,16 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-015"
+    },
+    {
+      "id": "ai.call.recorded",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.call.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-033"
     },
     {
       "id": "ai.run.queued",
@@ -5869,6 +5888,132 @@
       "adr": "ADR-034"
     },
     {
+      "id": "network.machine",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/machine.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine-list-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/machine-list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine-manage-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/machine-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.machine-manage-request",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/machine-manage-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.machine-manage-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/machine-manage-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine-role",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/machine-role.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine-roles",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/machine-roles.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine-roles-put",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/machine-roles-put.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine-pairing",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/machine-pairing.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine.online",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.machine.online.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine.offline",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.machine.offline.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine.paired",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.machine.paired.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine.roles_changed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.machine.roles_changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.machine.revoked",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.machine.revoked.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.avatar-write-request",
       "version": "1.0.0",
       "owner": "network",
@@ -7762,6 +7907,15 @@
       "status": "active"
     },
     {
+      "id": "network.label-prefs",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/label-prefs.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.consent.changed",
       "version": "1.0.0",
       "owner": "network",
@@ -8288,6 +8442,33 @@
       "version": "1.0.0",
       "owner": "report",
       "schema": "report/metric.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-open-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-open-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-usage-me-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-usage-me-result.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"

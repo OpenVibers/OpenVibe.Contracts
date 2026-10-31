@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/machine.v1.json",
+  "title": "NetworkMachine",
+  "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
+  "type": "object",
+  "required": ["id", "kind", "online", "roles", "running"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The machine's device id in Bot's registry (dev_…)."
+    },
+    "principal_id": {
+      "type": "string",
+      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The machine's node principal on Network (nod_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for."
+    },
+    "name": { "type": "string", "maxLength": 80, "description": "The name the owner gave it. Absent when they gave none." },
+    "kind": {
+      "enum": ["onboard", "bridge", "server"],
+      "description": "What the machine is, as Bot's device record says: onboard (the robot's own machine), bridge (a machine that drives a robot over the robot's own link), server (a machine that runs its owner's jobs)."
+    },
+    "os": { "type": "string", "maxLength": 40, "description": "The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in." },
+    "online": { "type": "boolean", "description": "Whether the machine is connected to Bot right now." },
+    "last_seen_at": { "type": "string", "format": "date-time", "description": "When the machine was last seen. Absent before its first check-in." },
+    "node_version": { "type": "string", "maxLength": 40, "description": "The OpenVibe Node version the machine reports. Absent until it has checked in." },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$" },
+      "description": "What the machine does for the network: the ids from the catalogue (network.machine-roles@1). The owner sets these; the machine applies them at its next check-in."
+    },
+    "running": {
+      "type": "array",
+      "description": "What the machine is doing right now, as a short list: its Codes jobs, its desks, the local models it serves and the robots it drives.",
+      "items": {
+        "type": "object",
+        "required": ["kind", "count"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["codes.jobs", "desks", "models", "robots"] },
+          "count": { "type": "integer", "minimum": 0 },
+          "label": { "type": "string", "maxLength": 120, "description": "A short, plain description for the owner (the desk's name, the model's name)." }
+        }
+      }
+    }
+  }
+}

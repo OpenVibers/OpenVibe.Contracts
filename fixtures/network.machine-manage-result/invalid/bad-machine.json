@@ -1,0 +1,9 @@
+{
+  "machine": {
+    "id": "x",
+    "kind": "server",
+    "online": false,
+    "roles": [],
+    "running": []
+  }
+}

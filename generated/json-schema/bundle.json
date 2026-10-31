@@ -939,6 +939,37 @@
               "type": "string"
             }
           },
+          "machineRoles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "installs",
+                "shows"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 60
+                },
+                "installs": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "shows": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              }
+            }
+          },
           "contractRanges": {
             "type": "object",
             "additionalProperties": {
@@ -2929,6 +2960,56 @@
             }
           }
         ]
+      }
+    },
+    "common.content-labels": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/content-labels.v1.json",
+        "title": "ContentLabels",
+        "description": "common.content-labels@1 (L1, labels and choices, 2026-10-31): what a stream, VOD, clip, picture or post is labelled as, and what the AI has suggested but the creator has not confirmed. Labels are choices, never bans: a label never hides content from the person who posted it, and it never hides content from a viewer whose label preferences show it. A creator sets a label; the AI may only suggest one (a suggestion the creator confirms, never a takedown); three viewer suggestions or a moderator put one on. The label set is one list everywhere: nudity, language, graphic, 18+, flashing and spoilers.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "labels",
+          "suggested"
+        ],
+        "properties": {
+          "labels": {
+            "type": "array",
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/label"
+            },
+            "description": "The labels in force: set by the creator, or by a moderator, or by three viewer suggestions. A label never hides anything by itself; each viewer's prefs decide (network.label-prefs@1)."
+          },
+          "suggested": {
+            "type": "array",
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/label"
+            },
+            "description": "What the AI or a viewer suggested and nobody confirmed yet. Stored as a suggestion and never applied: a label in this list changes nothing for anyone until the creator (or a moderator) puts it in labels."
+          }
+        },
+        "$defs": {
+          "label": {
+            "enum": [
+              "nudity",
+              "language",
+              "graphic",
+              "18+",
+              "flashing",
+              "spoilers"
+            ],
+            "description": "nudity: nudity or sexual content; language: strong language; graphic: graphic violence or injury; 18+: adults only; flashing: flashing lights or rapid motion; spoilers: spoils a story."
+          }
+        }
       }
     },
     "common.moderation-action": {
@@ -15193,6 +15274,235 @@
                 "description": "The billing readings of the run, when it has any."
               }
             }
+          }
+        }
+      }
+    },
+    "ai.call.recorded": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/ai.call.recorded.v1.json",
+        "title": "AiCallRecordedPayload",
+        "description": "ai.call.recorded v1 (plan L40, one AI meter across the network). One AI call, wherever it happened: OpenVibe.AI's own runs, a harness turn in Codes, an Actor task, Vibe, a local model on a person's own machine. who and where: subject (the person, or null when the call is anonymous), attribution (the site or app the call came from, free text such as 'site:design'), surface (the product surface, free text such as 'design.generate' or 'codes.turn'). what ran: system (ai, harness:claude-code, harness:codex, actor, node), provider, model, effort. who paid: paid_by (own_key, openvibe_key, plan, own_machine, free_tier, network_allowance, org_key) and paid_by_detail (for example 'anthropic ...a1b2' for a person's own key, or 'claude-max' for a plan). tokens: input (the UNCACHED input tokens), output, reasoning, cache_read, cache_write (with cache_write_ttl 5m or 1h), images, audio_seconds, video_seconds. money, in USD: list_cost_usd (what the tokens cost at the human-typed list prices), charged_usd (what the payer was actually charged), fee_usd (the network's fee on top), cache_saved_usd (what the cache saved against the plain input price). price_source says where the prices came from ('models', 'pricing', 'flat', or 'no cache price' when no cache price is typed and the cache tokens are priced at the input price), price_date the day the price was checked. how it went: latency_ms, ttft_ms, attempts, outcome. ids: run_id or turn_id, and at. The record carries NO prompt and NO answer text, ever. A ledger (OpenVibe.AI) rolls the records up; a record consumed twice is stored once (idempotent by system and run_id or turn_id). Envelope: subject { type: run, id: <run_id> } or { type: user, id: <subject> }, visibility internal, priority low, actor service:ai.",
+        "type": "object",
+        "required": [
+          "system",
+          "surface",
+          "paid_by",
+          "input",
+          "output",
+          "reasoning",
+          "cache_read",
+          "cache_write",
+          "cache_write_ttl",
+          "images",
+          "audio_seconds",
+          "video_seconds",
+          "list_cost_usd",
+          "charged_usd",
+          "fee_usd",
+          "cache_saved_usd",
+          "price_source",
+          "price_date",
+          "latency_ms",
+          "ttft_ms",
+          "attempts",
+          "outcome",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "description": "The person the call was made for, or null when the call was anonymous."
+          },
+          "attribution": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "The site or app the call came from, as '<type>:<id>' (for example 'site:design'), empty when nothing is known."
+          },
+          "surface": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "The product surface: 'design.generate', 'codes.turn', 'ai.generate'. Free text, so a new surface needs no new contract."
+          },
+          "system": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "What ran: 'ai', 'harness:claude-code', 'harness:codex', 'actor', 'node'."
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "effort": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "The reasoning effort the call asked for, when it asked for one."
+          },
+          "paid_by": {
+            "type": "string",
+            "enum": [
+              "own_key",
+              "openvibe_key",
+              "plan",
+              "own_machine",
+              "free_tier",
+              "network_allowance",
+              "org_key"
+            ]
+          },
+          "paid_by_detail": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "Which key or plan paid, for example 'anthropic ...a1b2' or 'claude-max'. Never a whole secret."
+          },
+          "input": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The uncached input tokens. Cache reads and cache writes are counted on their own fields."
+          },
+          "output": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reasoning": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cache_read": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cache_write": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cache_write_ttl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "5m",
+              "1h",
+              null
+            ],
+            "description": "How long the written cache entry lives, when the provider says."
+          },
+          "images": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "audio_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "video_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "list_cost_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What the tokens cost at the human-typed list prices."
+          },
+          "charged_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What the payer was actually charged. A person's own key is never charged here: 0."
+          },
+          "fee_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The network's fee on top of the cost, when the OpenVibe key paid."
+          },
+          "cache_saved_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What the cached tokens saved against the plain input price."
+          },
+          "price_source": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Where the prices came from: 'models' (a person's typed model row), 'pricing' (AI_PRICING_JSON), 'flat' (the flat rates), 'no cache price' (no cache price is typed, so the cache tokens are priced at the input price)."
+          },
+          "price_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "description": "The day the price was checked, when it was."
+          },
+          "latency_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "ttft_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Time to the first token, when the call streamed and it was measured."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "succeeded",
+              "failed",
+              "cancelled",
+              "cached"
+            ]
+          },
+          "run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "turn_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
@@ -30366,13 +30676,10 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/network/notification-push-request.v1.json",
         "title": "NetworkNotificationPushRequest",
-        "description": "network.notification-push-request@1: bodies of network.notifications.push on OpenVibe.Network (a service token holding the capability, or the internal key). POST /internal/notifications/push: { user_id, type?, title?, message?, … } creates one notification (400 { error: user_id required } without user_id). POST /internal/notifications/push-bulk: { user_ids, …same fields } creates it for each recipient (400 without a non-empty user_ids, or with more than 1000). Recipients are Network user ids. Unknown fields are ignored; 503 when the notification service is not running. The other /internal/notifications/* routes (unread, mark-read, resolve-users) take the internal key only and are not part of this capability.",
+        "description": "network.notification-push-request@1: bodies of network.notifications.push on OpenVibe.Network (a service token holding the capability). POST /internal/notifications/push: { user_id | subject, type?, title?, message?, … } creates one notification (400 without user_id or subject; 404 for an unknown subject). POST /internal/notifications/push-bulk: { user_ids | subjects, …same fields } creates it for each recipient (400 without a non-empty user_ids or subjects, or with more than 1000). Recipients are Network user ids or canonical usr_ subjects; a subject resolves to its account, so a service that knows the person by subject (Vision's consent request, Cam's event alert) need not hold the numeric id. Unknown fields are ignored; 503 when the notification service is not running. The other /internal/notifications/* routes (unread, mark-read, resolve-users) take the internal key only and are not part of this capability.",
         "anyOf": [
           {
             "type": "object",
-            "required": [
-              "user_id"
-            ],
             "properties": {
               "user_id": {
                 "type": [
@@ -30455,14 +30762,120 @@
                 ],
                 "pattern": "^usr_",
                 "description": "The actor as a usr_ subject for the block check; null: no known person (no block check)."
+              },
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The recipient as a canonical usr_ subject, instead of user_id. It resolves to that person's Network account; an unknown subject is 404 and creates nothing."
               }
-            }
+            },
+            "required": [
+              "user_id"
+            ]
           },
           {
             "type": "object",
+            "properties": {
+              "user_id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "A Network user id (already translated from the caller's own ids)."
+              },
+              "type": {
+                "type": "string",
+                "description": "A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent."
+              },
+              "title": {
+                "type": "string",
+                "description": "Default: the type's title, else \"Notification\"."
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "icon": {
+                "type": "string",
+                "description": "Default: the type's icon."
+              },
+              "sender_id": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ],
+                "description": "The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing."
+              },
+              "sender_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sender_avatar": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service": {
+                "type": "string",
+                "description": "The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied."
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Where the notification leads."
+              },
+              "priority": {
+                "type": "string",
+                "description": "low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal."
+              },
+              "category": {
+                "type": "string",
+                "description": "Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block."
+              },
+              "rich_content": {
+                "description": "Any JSON value, stored and returned as given."
+              },
+              "expires_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "When it may be deleted (SQLite datetime, UTC)."
+              },
+              "actor_subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^usr_",
+                "description": "The actor as a usr_ subject for the block check; null: no known person (no block check)."
+              },
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The recipient as a canonical usr_ subject, instead of user_id. It resolves to that person's Network account; an unknown subject is 404 and creates nothing."
+              }
+            },
             "required": [
-              "user_ids"
-            ],
+              "subject"
+            ]
+          },
+          {
+            "type": "object",
             "properties": {
               "user_ids": {
                 "type": "array",
@@ -30550,8 +30963,128 @@
                 ],
                 "pattern": "^usr_",
                 "description": "The actor as a usr_ subject for the block check; null: no known person (no block check)."
+              },
+              "subjects": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1000,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "description": "Recipients as canonical usr_ subjects, instead of user_ids. Unknown subjects are skipped; at least one recipient is required."
               }
-            }
+            },
+            "required": [
+              "user_ids"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "user_ids": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1000,
+                "items": {
+                  "type": [
+                    "integer",
+                    "string"
+                  ],
+                  "description": "A Network user id (already translated from the caller's own ids)."
+                }
+              },
+              "type": {
+                "type": "string",
+                "description": "A notification type from openvibe-shared/notifications (STREAM_LIVE, FOLLOW, MENTION, …); it supplies the default category, priority, icon and title. Stored as GENERIC when absent."
+              },
+              "title": {
+                "type": "string",
+                "description": "Default: the type's title, else \"Notification\"."
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "icon": {
+                "type": "string",
+                "description": "Default: the type's icon."
+              },
+              "sender_id": {
+                "type": [
+                  "integer",
+                  "string",
+                  "null"
+                ],
+                "description": "The actor's Network user id; with no actor_subject, a recipient who blocked this person gets nothing."
+              },
+              "sender_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sender_avatar": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service": {
+                "type": "string",
+                "description": "The sending service. A service token may only name its own (svc:live → live); anything else is 403 capability.owner_denied."
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Where the notification leads."
+              },
+              "priority": {
+                "type": "string",
+                "description": "low, normal, high or critical (openvibe-shared PRIORITY); default the type's, else normal."
+              },
+              "category": {
+                "type": "string",
+                "description": "Default: the type's category, else system. A recipient who switched the category off gets nothing; moderation, system and admin notices are never hidden by a block."
+              },
+              "rich_content": {
+                "description": "Any JSON value, stored and returned as given."
+              },
+              "expires_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "When it may be deleted (SQLite datetime, UTC)."
+              },
+              "actor_subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^usr_",
+                "description": "The actor as a usr_ subject for the block check; null: no known person (no block check)."
+              },
+              "subjects": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1000,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "description": "Recipients as canonical usr_ subjects, instead of user_ids. Unknown subjects are skipped; at least one recipient is required."
+              }
+            },
+            "required": [
+              "subjects"
+            ]
           }
         ]
       }
@@ -66990,6 +67523,566 @@
         }
       }
     },
+    "network.machine": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine.v1.json",
+        "title": "NetworkMachine",
+        "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "online",
+          "roles",
+          "running"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's device id in Bot's registry (dev_…)."
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network (nod_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "The name the owner gave it. Absent when they gave none."
+          },
+          "kind": {
+            "enum": [
+              "onboard",
+              "bridge",
+              "server"
+            ],
+            "description": "What the machine is, as Bot's device record says: onboard (the robot's own machine), bridge (a machine that drives a robot over the robot's own link), server (a machine that runs its owner's jobs)."
+          },
+          "os": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in."
+          },
+          "online": {
+            "type": "boolean",
+            "description": "Whether the machine is connected to Bot right now."
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the machine was last seen. Absent before its first check-in."
+          },
+          "node_version": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "The OpenVibe Node version the machine reports. Absent until it has checked in."
+          },
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "What the machine does for the network: the ids from the catalogue (network.machine-roles@1). The owner sets these; the machine applies them at its next check-in."
+          },
+          "running": {
+            "type": "array",
+            "description": "What the machine is doing right now, as a short list: its Codes jobs, its desks, the local models it serves and the robots it drives.",
+            "items": {
+              "type": "object",
+              "required": [
+                "kind",
+                "count"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "codes.jobs",
+                    "desks",
+                    "models",
+                    "robots"
+                  ]
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 120,
+                  "description": "A short, plain description for the owner (the desk's name, the model's name)."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "network.machine-list-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-list-result.v1.json",
+        "title": "NetworkMachineListResult",
+        "description": "network.machine-list-result@1: a person's machines, as the network's hub lists them (plan L34, step M2: GET /api/v1/machines). Only the caller's own machines are ever in it.",
+        "type": "object",
+        "required": [
+          "machines"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machines": {
+            "type": "array",
+            "items": {
+              "$ref": "machine.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "network.machine-manage-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-manage-result.v1.json",
+        "title": "NetworkMachineManageResult",
+        "description": "network.machine-manage-result@1: the machine as it is after a change (plan L34, step M2: PATCH /api/v1/machines/:id, PUT /api/v1/machines/:id/roles, POST /api/v1/machines/:id/revoke). The pairing route answers network.machine-pairing@1 instead, because a pairing is a code and not a machine.",
+        "type": "object",
+        "required": [
+          "machine"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine": {
+            "$ref": "machine.v1.json"
+          }
+        }
+      }
+    },
+    "bot.machine-manage-request": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/machine-manage-request.v1.json",
+        "title": "BotMachineManageRequest",
+        "description": "bot.machine-manage-request@1: what a caller changes on a machine (plan L34, step M2). A rename gives a name; a roles change gives the whole set of roles (network.machine-roles-put@1's shape). The same body is what the network's hub sends to Bot, so both sides speak one shape.",
+        "type": "object",
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "required": [
+              "roles"
+            ]
+          }
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The name the owner gives the machine. Absent when the call changes something else."
+          },
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine's roles after the change. Absent when the call changes something else."
+          }
+        }
+      }
+    },
+    "bot.machine-manage-result": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/machine-manage-result.v1.json",
+        "title": "BotMachineManageResult",
+        "description": "bot.machine-manage-result@1: the machine as it is after the change (plan L34, step M2). Bot is the registry underneath: it answers with its own device record, never with a credential.",
+        "type": "object",
+        "required": [
+          "machine"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine": {
+            "$ref": "device.v1.json"
+          }
+        }
+      }
+    },
+    "network.machine-role": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-role.v1.json",
+        "title": "NetworkMachineRole",
+        "description": "network.machine-role@1: one role a machine can have (plan L34, step M4). A role is what the machine does for the network: a name for the owner, what it installs on the machine and what the hub shows. The catalogue is network.machine-roles@1; a role outside it is refused.",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "installs",
+          "shows"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$",
+            "description": "The role's id: the product that owns it, then what it is (codes.worker, desks.host, ai.host, bot.robot)."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "The role's name, in the owner's words."
+          },
+          "installs": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "What the role puts on the machine (the job runner, the desk sandbox, the local model server)."
+          },
+          "shows": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "What the hub shows for a machine with this role."
+          }
+        }
+      }
+    },
+    "network.machine-roles": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-roles.v1.json",
+        "title": "NetworkMachineRoles",
+        "description": "network.machine-roles@1: the catalogue of machine roles (plan L34, step M4). A product declares a role — a name, what it installs on the machine and what the hub shows — and the Node turns it on at its next check-in. The first roles are Codes' worker, Desks' host, AI's local models and Bot's robot. A role outside this catalogue is refused (network.machine-roles-put@1).",
+        "type": "object",
+        "required": [
+          "roles"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "machine-role.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "network.machine-roles-put": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-roles-put.v1.json",
+        "title": "NetworkMachineRolesPut",
+        "description": "network.machine-roles-put@1: the roles the owner gives a machine (PUT /api/v1/machines/:id/roles, capability machines.manage). The whole set, not a change: what is not named is turned off. Every id must be in the catalogue (network.machine-roles@1); an unknown role is refused and nothing is changed.",
+        "type": "object",
+        "required": [
+          "roles"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine's roles after the change. An empty array turns every role off."
+          }
+        }
+      }
+    },
+    "network.machine-pairing": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/machine-pairing.v1.json",
+        "title": "NetworkMachinePairing",
+        "description": "network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.bot/install). The code is never stored in the clear and never returned again.",
+        "type": "object",
+        "required": [
+          "code",
+          "expires_at",
+          "installer"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$",
+            "description": "The one-time pairing code, eight Crockford base32 characters in two groups (XXXX-XXXX)."
+          },
+          "pairing_id": {
+            "type": "string",
+            "pattern": "^pair_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The pairing's id, as the install command carries it. Absent when the authority behind it does not name one."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the code stops working."
+          },
+          "installer": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "The command the owner runs on the machine (openvibe.bot/install, with the network, the pairing id and the code)."
+          }
+        }
+      }
+    },
+    "network.machine.online": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.online.v1.json",
+        "title": "NetworkMachineOnlinePayload",
+        "description": "network.machine.online v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person (a Bot device of kind machine) came online: it checked in and is connected to Bot. Network republishes Bot's change (Bot reports it to Network, which writes this event), so a consumer of the network's events hears about a machine once, in one place. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network, when it has one."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.offline": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.offline.v1.json",
+        "title": "NetworkMachineOfflinePayload",
+        "description": "network.machine.offline v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person went offline: it is no longer connected to Bot. Network republishes Bot's change, so a consumer of the network's events hears about a machine once, in one place. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network, when it has one."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.paired": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.paired.v1.json",
+        "title": "NetworkMachinePairedPayload",
+        "description": "network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <nod_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "principal_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's device id in Bot's registry, when Bot already knows the device."
+          },
+          "node_id": {
+            "type": "string",
+            "pattern": "^n-[a-z0-9]{26}$",
+            "description": "The machine's node id (platform_node_principals.node_id)."
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The node principal the pairing created. Also the envelope subject id."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.roles_changed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.roles_changed.v1.json",
+        "title": "NetworkMachineRolesChangedPayload",
+        "description": "network.machine.roles_changed v1 (OpenVibe.Network, plan L34, step M4). A machine's roles changed: the whole set after the change, from the catalogue (network.machine-roles@1). The machine applies them at its next check-in, so this event says what was asked for, not what the machine has already done. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "roles",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belongs to."
+          },
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine's roles after the change."
+          },
+          "changed_by": {
+            "type": "string",
+            "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|app:[a-z0-9-]+)$",
+            "description": "Who asked for the change: the person, or an app acting with their consent."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.machine.revoked": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.machine.revoked.v1.json",
+        "title": "NetworkMachineRevokedPayload",
+        "description": "network.machine.revoked v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person was revoked: it is no longer theirs and its credential is dead. The machine's credential and its hash are never carried. A second revoke changes nothing and emits nothing. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+        "type": "object",
+        "required": [
+          "machine_id",
+          "owner",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "principal_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network, when it had one."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the machine belonged to."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Why it was revoked, when the caller gave one. Absent otherwise."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "network.avatar-write-request": {
       "version": "1.0.0",
       "owner": "network",
@@ -72297,6 +73390,21 @@
           },
           "online": {
             "type": "boolean"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "description": "The machine roles the owner set (plan L34: the catalogue is network.machine-roles@1). Absent on a device that has none."
+          },
+          "os": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The operating system the device reported."
           }
         }
       }
@@ -88295,6 +89403,67 @@
         }
       }
     },
+    "network.label-prefs": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/label-prefs.v1.json",
+        "title": "NetworkLabelPrefs",
+        "description": "network.label-prefs@1 (L1, labels and choices, 2026-10-31): what one person sees for each content label, on every OpenVibe site. One setting per label, stored in Network's site prefs, so the choice follows the account across Stream, Video, Pics and every other site. GET and PUT /api/v1/me/label-prefs; the response and the request are this shape. The web default is show for every label; the native apps hide nudity and 18+ until the person turns them on here (pinned by the app stores' user-content rules). The home page shows nothing labelled 18+ whatever the prefs say: it is the owner's one clean page.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "prefs"
+        ],
+        "properties": {
+          "prefs": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "nudity",
+              "language",
+              "graphic",
+              "18+",
+              "flashing",
+              "spoilers"
+            ],
+            "properties": {
+              "nudity": {
+                "$ref": "#/$defs/choice"
+              },
+              "language": {
+                "$ref": "#/$defs/choice"
+              },
+              "graphic": {
+                "$ref": "#/$defs/choice"
+              },
+              "18+": {
+                "$ref": "#/$defs/choice"
+              },
+              "flashing": {
+                "$ref": "#/$defs/choice"
+              },
+              "spoilers": {
+                "$ref": "#/$defs/choice"
+              }
+            },
+            "description": "One choice for every label. A missing label is not a choice: a client asks Network and gets all six."
+          }
+        },
+        "$defs": {
+          "choice": {
+            "enum": [
+              "show",
+              "blur",
+              "hide"
+            ],
+            "description": "show: as it is; blur: covered until the person taps Show; hide: not shown, and not in search results for that person. A label the person posted is always shown to them."
+          }
+        }
+      }
+    },
     "network.consent.changed": {
       "version": "1.0.0",
       "owner": "network",
@@ -92844,6 +94013,450 @@
             }
           }
         ]
+      }
+    },
+    "report.ai-usage-open-result": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-usage-open-result.v1.json",
+        "title": "ReportAiUsageOpenResult",
+        "description": "report.ai-usage-open-result@1: the open AI meter (plan L40/L41). What the whole network spends on AI, in public: the tokens, the share of them that came from a provider cache, the share that the own keys of people paid, and the spend by week. No person, no site and no key is in it: the rows are summed before they are answered.",
+        "type": "object",
+        "required": [
+          "calls",
+          "tokens",
+          "cache_share",
+          "cache_saved_usd",
+          "own_key_share",
+          "own_key_calls",
+          "list_cost_usd",
+          "charged_usd",
+          "fee_usd",
+          "spend_by_week"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "calls": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The AI calls behind these numbers."
+          },
+          "tokens": {
+            "type": "object",
+            "required": [
+              "input",
+              "output",
+              "cache_read",
+              "cache_write"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "input": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "The uncached input tokens."
+              },
+              "output": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_read": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "cache_share": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "The share of the prompt tokens that came from a provider cache."
+          },
+          "cache_saved_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "own_key_share": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "The share of the tokens that the own keys of people paid."
+          },
+          "own_key_calls": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "list_cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "charged_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "fee_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "spend_by_week": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "week",
+                "calls",
+                "list_cost_usd",
+                "charged_usd",
+                "cache_saved_usd"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "week": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                  "description": "The Monday of the week."
+                },
+                "calls": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "list_cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "charged_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cache_saved_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "report.ai-usage-result": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-usage-result.v1.json",
+        "title": "ReportAiUsageResult",
+        "description": "report.ai-usage-result@1: the AI meter in groups (plan L40/L41). GET /api/v1/ai/usage needs a service token with report.ai_usage.read; the rows are grouped by day, site, model, system or paid_by. A group that fewer than ten people share reads fewer than 10 instead of counting them.",
+        "type": "object",
+        "required": [
+          "group",
+          "usage",
+          "totals"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "group": {
+            "type": "string",
+            "enum": [
+              "day",
+              "site",
+              "model",
+              "system",
+              "paid_by"
+            ]
+          },
+          "usage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "group",
+                "key",
+                "calls",
+                "people",
+                "input",
+                "output",
+                "reasoning",
+                "cache_read",
+                "cache_write",
+                "list_cost_usd",
+                "charged_usd",
+                "fee_usd",
+                "cache_saved_usd"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "group": {
+                  "type": "string",
+                  "enum": [
+                    "day",
+                    "site",
+                    "model",
+                    "system",
+                    "paid_by"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "maxLength": 200,
+                  "description": "The name of the group: the day, the site, the model, the system or the payer."
+                },
+                "calls": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "people": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 10,
+                      "description": "How many people the group holds, when there are ten or more."
+                    },
+                    {
+                      "const": "fewer than 10",
+                      "description": "Fewer than ten people: the count is not given."
+                    }
+                  ]
+                },
+                "input": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "output": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "reasoning": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_read": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_write": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "images": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "audio_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "video_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "list_cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "charged_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "fee_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cache_saved_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "totals": {
+            "type": "object",
+            "required": [
+              "calls",
+              "input",
+              "output",
+              "reasoning",
+              "cache_read",
+              "cache_write",
+              "list_cost_usd",
+              "charged_usd",
+              "fee_usd",
+              "cache_saved_usd"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "calls": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "input": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reasoning": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_read": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "images": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "audio_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "video_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "list_cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "charged_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "fee_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "cache_saved_usd": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "report.ai-usage-me-result": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-usage-me-result.v1.json",
+        "title": "ReportAiUsageMeResult",
+        "description": "report.ai-usage-me-result@1: the AI usage of one person (plan L40/L41). GET /api/v1/me/ai/usage answers for the person themselves and nobody else: their rows, grouped by day, site, model, system or paid_by. The route answers 501 until Report has sign-in: the shape is fixed here first, so the route does not have to change when it opens.",
+        "type": "object",
+        "required": [
+          "group",
+          "usage",
+          "totals"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "group": {
+            "type": "string",
+            "enum": [
+              "day",
+              "site",
+              "model",
+              "system",
+              "paid_by"
+            ]
+          },
+          "usage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "group",
+                "key",
+                "calls",
+                "input",
+                "output",
+                "reasoning",
+                "cache_read",
+                "cache_write",
+                "list_cost_usd",
+                "charged_usd",
+                "fee_usd",
+                "cache_saved_usd"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "group": {
+                  "type": "string",
+                  "enum": [
+                    "day",
+                    "site",
+                    "model",
+                    "system",
+                    "paid_by"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "calls": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "input": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "output": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "reasoning": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_read": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cache_write": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "list_cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "charged_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "fee_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cache_saved_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "totals": {
+            "type": "object"
+          }
+        }
       }
     },
     "bench.benchmark": {

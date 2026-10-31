@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.machine.offline.v1.json",
+  "title": "NetworkMachineOfflinePayload",
+  "description": "network.machine.offline v1 (OpenVibe.Network, plan L34: the machines hub). A machine of a person went offline: it is no longer connected to Bot. Network republishes Bot's change, so a consumer of the network's events hears about a machine once, in one place. Envelope: subject { type: machine, id: <dev_…> }, visibility internal, actor service:network.",
+  "type": "object",
+  "required": ["machine_id", "owner", "at"],
+  "additionalProperties": false,
+  "properties": {
+    "machine_id": { "type": "string", "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "principal_id": { "type": "string", "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The machine's node principal on Network, when it has one." },
+    "owner": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The person the machine belongs to." },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

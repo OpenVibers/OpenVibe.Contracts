@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/machine-list-result.v1.json",
+  "title": "NetworkMachineListResult",
+  "description": "network.machine-list-result@1: a person's machines, as the network's hub lists them (plan L34, step M2: GET /api/v1/machines). Only the caller's own machines are ever in it.",
+  "type": "object",
+  "required": ["machines"],
+  "additionalProperties": false,
+  "properties": {
+    "machines": {
+      "type": "array",
+      "items": { "$ref": "machine.v1.json" }
+    }
+  }
+}

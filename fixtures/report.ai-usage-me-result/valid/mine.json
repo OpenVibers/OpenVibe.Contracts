@@ -1,0 +1,11 @@
+{
+  "group": "day",
+  "usage": [
+    {
+      "group": "day", "key": "2026-10-31", "calls": 2,
+      "input": 200, "output": 80, "reasoning": 0, "cache_read": 800, "cache_write": 0,
+      "list_cost_usd": 0.0021, "charged_usd": 0, "fee_usd": 0, "cache_saved_usd": 0
+    }
+  ],
+  "totals": { "calls": 2, "input": 200, "output": 80 }
+}

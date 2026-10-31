@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/machine-pairing.v1.json",
+  "title": "NetworkMachinePairing",
+  "description": "network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.bot/install). The code is never stored in the clear and never returned again.",
+  "type": "object",
+  "required": ["code", "expires_at", "installer"],
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$",
+      "description": "The one-time pairing code, eight Crockford base32 characters in two groups (XXXX-XXXX)."
+    },
+    "pairing_id": {
+      "type": "string",
+      "pattern": "^pair_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The pairing's id, as the install command carries it. Absent when the authority behind it does not name one."
+    },
+    "expires_at": { "type": "string", "format": "date-time", "description": "When the code stops working." },
+    "installer": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "The command the owner runs on the machine (openvibe.bot/install, with the network, the pairing id and the code)."
+    }
+  }
+}
