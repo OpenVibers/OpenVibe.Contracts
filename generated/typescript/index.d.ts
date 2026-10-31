@@ -262318,6 +262318,29 @@ export interface SpaceDeployActivatedPayload {
   rollback: boolean;
 }
 
+/** space.app.claimed@1.0.0 (owner: space) */
+/**
+ * space.app.claimed v1 (OpenVibe.Space, subject space spc_…, visibility internal): a guest draft (a space with no owner, edited with a secret link) was claimed by a signed-in person. The draft is that person's space now and its secret is gone. No secret, no file contents.
+ */
+export interface SpaceAppClaimedPayload {
+  /**
+   * the space that was claimed
+   */
+  space_id: string;
+  /**
+   * the address it now has (one DNS label; the space is served at <slug>.openvibe.website once it is published)
+   */
+  slug: string;
+  /**
+   * the space's name
+   */
+  name: string;
+  /**
+   * the template it started from, when it started from one
+   */
+  template?: string;
+}
+
 /** space.deploy.created@1.0.0 (owner: space) */
 /**
  * space.deploy.created v1 (OpenVibe.Space, subject deploy dpl_…, visibility internal): an upload or a Git ingest became an immutable, content-addressed deploy in the ready state. It is not yet serving: space.deploy.activated follows when it is made active. No file contents or paths.

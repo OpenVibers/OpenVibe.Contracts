@@ -77,7 +77,8 @@
     "space.deploy.created",
     "space.deploy.activated",
     "space.deploy.failed",
-    "space.domain.verified"
+    "space.domain.verified",
+    "space.app.claimed"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

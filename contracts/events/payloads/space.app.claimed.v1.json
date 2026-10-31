@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/space.app.claimed.v1.json",
+  "title": "SpaceAppClaimedPayload",
+  "description": "space.app.claimed v1 (OpenVibe.Space, subject space spc_…, visibility internal): a guest draft (a space with no owner, edited with a secret link) was claimed by a signed-in person. The draft is that person's space now and its secret is gone. No secret, no file contents.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "space_id",
+    "slug",
+    "name"
+  ],
+  "properties": {
+    "space_id": {
+      "type": "string",
+      "pattern": "^spc_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "the space that was claimed"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){2,39}$",
+      "description": "the address it now has (one DNS label; the space is served at <slug>.openvibe.website once it is published)"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "description": "the space's name"
+    },
+    "template": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "the template it started from, when it started from one"
+    }
+  }
+}

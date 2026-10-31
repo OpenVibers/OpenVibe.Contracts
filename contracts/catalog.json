@@ -7479,6 +7479,16 @@
       "adr": "ADR-004"
     },
     {
+      "id": "space.app.claimed",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "events/payloads/space.app.claimed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
       "id": "space.deploy.created",
       "version": "1.0.0",
       "owner": "space",
