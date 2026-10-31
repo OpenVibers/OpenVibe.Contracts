@@ -8471,6 +8471,60 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "ai.me-credential",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/me-credential.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.me-credential-put",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/me-credential-put.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.me-credential-test",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/me-credential-test.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.me-credential-list",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/me-credential-list.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.me-preferences",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/me-preferences.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.credential.failed",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.credential.failed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

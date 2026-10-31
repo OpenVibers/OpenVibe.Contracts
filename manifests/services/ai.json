@@ -30,13 +30,16 @@
     "ai.workflow.manage",
     "ai.actions.read",
     "ai.memory.read",
-    "ai.memory.write"
+    "ai.memory.write",
+    "ai.me.read",
+    "ai.me.manage"
   ],
   "eventsProduced": [
     "ai.run.queued",
     "ai.run.succeeded",
     "ai.run.failed",
-    "ai.run.cached"
+    "ai.run.cached",
+    "ai.credential.failed"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [
