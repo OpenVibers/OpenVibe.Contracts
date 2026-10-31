@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.264.0 — 2026-10-31
+
+- **OpenVibe.Casino** (`manifests/services/casino.json`, plan 5.14): openvibe.casino, the Casino room. Open engines for
+  blackjack, roulette, baccarat, craps and slots with their house edges checked against the published figures, tables
+  with free play chips worth nothing, Learn and a simulator. No real money, no operators, no affiliate links. Port 5210,
+  OAuth client `casino`, namespaces `casino.*`, site position 48 in the games neighbourhood, legal profile `games`.
+
 ## 0.263.1 — 2026-10-31
 
 - **openvibe.website is Space's own front door** (plan 5.9; the owner, 10-31: the new domains "just redirect"). Space

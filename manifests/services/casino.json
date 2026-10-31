@@ -1,0 +1,77 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.264.0 <1.0.0"
+  },
+  "id": "casino",
+  "name": "OpenVibe.Casino",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Casino",
+  "domains": [
+    "openvibe.casino"
+  ],
+  "publicOrigin": "https://openvibe.casino",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "casino.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else (the PostgreSQL database, Valkey, Network's JWKS and the OAuth client are what /api/ready checks)"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "JWKS refresher stopped",
+        "telemetry flushed and its retention timer stopped",
+        "PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "consumer",
+          "what": "the account export and deletion subscriptions at OpenVibe.Events are renewed at boot; a delivery missed while stopped is redelivered and applied once (account_data_events keeps it idempotent)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Casino's own table (casino_sims) plus the SDK's account-data and telemetry tables; an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.264.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site and the API"
+    }
+  },
+  "notes": "Port 5210, unit openvibe-casino.service, PostgreSQL database ov_casino. The Casino room (plan 5.14): learn it, play it, never pay it. Open engines for blackjack, roulette, baccarat, craps and slots, deterministic from a seed and served to the browser as they are; every house edge is computed (exactly, or simulated for blackjack strategies) and checked against the published figure. Tables play with free daily play chips kept in the browser and worth nothing; an 18+ gate and a play-safe line on every page. Simulations run in the visitor's browser; POST /api/v1/simulate runs a bounded one and can keep it as a shared run (casino_sims, no person column). No real money, no operators and no affiliate links. OAuth client `casino`; answers account export and deletion (ADR-033) with nothing to erase, and subscribes to those Events topics.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5210",
+  "site": {
+    "name": "Casino",
+    "icon": "casino",
+    "tagline": "Learn it, play it, never pay it",
+    "what": "Every casino game with its insides showing: the rules, the exact odds and what each bet costs. Play with chips worth nothing, and watch a million rounds in your browser. Never real money.",
+    "legalProfile": "games",
+    "position": 48,
+    "neighbourhood": "games"
+  }
+}
