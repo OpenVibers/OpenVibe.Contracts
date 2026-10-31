@@ -1,0 +1,26 @@
+{
+  "id": "ai.me.manage",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "public",
+  "description": "The person stores, tests and deletes their own provider keys and chooses how their runs route (L36 Y1/Y3): PUT/DELETE /api/v1/me/credentials/{provider}, POST /api/v1/me/credentials/{provider}/test and PUT /api/v1/me/ai/preferences. A key is tested on save (models, or a one-token request), sealed at rest and never returned, logged or put in an error. Only the person may call it — a service token or any token carrying on_behalf_of is refused, whatever capabilities it holds.",
+  "permissions": [
+    "ai:me:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "ai-credentials",
+  "events": [
+    "ai.credential.failed"
+  ],
+  "implementedBy": [
+    "PUT /api/v1/me/credentials/:provider",
+    "DELETE /api/v1/me/credentials/:provider",
+    "POST /api/v1/me/credentials/:provider/test",
+    "PUT /api/v1/me/ai/preferences"
+  ],
+  "inputSchema": "ai.me-credential-put@1",
+  "outputSchema": "ai.me-credential@1"
+}
