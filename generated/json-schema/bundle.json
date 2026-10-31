@@ -93792,6 +93792,453 @@
           }
         }
       }
+    },
+    "ai.me-credential": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/me-credential.v1.json",
+        "title": "AiMeCredentialV1",
+        "description": "ai.me-credential@1 (OpenVibe.AI; L36 Y1): one of the person's own provider keys as the person reads it from GET /api/v1/me/credentials. It is never the key: `hint` is the last four characters, and `last_error` is a redacted line that never carries the key. `status` is what the last save-time or run-time check found: ok, failing or untested. `models_count` is how many models the provider listed when it was last tested. Own keys are free to their owner: no fee, no cap and no network budget.",
+        "type": "object",
+        "required": [
+          "provider",
+          "hint",
+          "base_url",
+          "budget_usd_per_day",
+          "status",
+          "checked_at",
+          "last_error",
+          "models_count",
+          "created_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "enum": [
+              "anthropic",
+              "openai",
+              "gemini",
+              "deepseek",
+              "mistral",
+              "xai",
+              "groq",
+              "cerebras",
+              "together",
+              "fireworks",
+              "openrouter",
+              "minimax",
+              "custom"
+            ]
+          },
+          "hint": {
+            "type": "string",
+            "pattern": "^[\\s\\S]{4}$",
+            "description": "The key's last four characters, so the person can tell two keys apart. Never more."
+          },
+          "base_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300,
+            "description": "The endpoint the person chose, or null for the provider's own (taken from the console presets)."
+          },
+          "budget_usd_per_day": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "The person's own daily cap on this key; null or 0 means no cap. The network's budgets never apply to their own key."
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "failing",
+              "untested"
+            ]
+          },
+          "checked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500,
+            "description": "Why the key last failed, with the key and any other secret redacted. Never the key itself."
+          },
+          "models_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai.me-credential-put": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/me-credential-put.v1.json",
+        "title": "AiMeCredentialPutV1",
+        "description": "ai.me-credential-put@1 (OpenVibe.AI; L36 Y1): the person stores or replaces their own provider key at PUT /api/v1/me/credentials/{provider}. Only the person's own Network token or their AI site session may send it. `key` is required the first time and whenever `base_url` changes; a later save may leave it out to keep the stored key. The key is sealed at rest, tested on save and never returned, logged or put in an error.",
+        "type": "object",
+        "required": [
+          "provider"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "enum": [
+              "anthropic",
+              "openai",
+              "gemini",
+              "deepseek",
+              "mistral",
+              "xai",
+              "groq",
+              "cerebras",
+              "together",
+              "fireworks",
+              "openrouter",
+              "minimax",
+              "custom"
+            ],
+            "description": "The provider. The route names it too; when both are present they must agree. A custom provider must name its endpoint in base_url."
+          },
+          "key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 400,
+            "description": "The provider key. Required the first time and whenever base_url changes; optional afterwards, when the stored key is kept. Never returned."
+          },
+          "base_url": {
+            "type": "string",
+            "maxLength": 300,
+            "pattern": "^https://[^\\s/?#@]+(/[^\\s?#]*)?$",
+            "description": "The endpoint, for a custom provider or to override the provider's own. https only, no credentials, query or fragment; reached through the guarded fetcher's egress rules."
+          },
+          "budget_usd_per_day": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000,
+            "description": "The person's own daily cap on this key; 0 or absent means no cap."
+          },
+          "models": {
+            "type": "object",
+            "additionalProperties": false,
+            "maxProperties": 4,
+            "properties": {
+              "chat": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "vision": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "image": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "description": "The model this key should use per kind of work. `auto` is not a model: absent means the provider's default, and the person's ai.me-preferences choose between keys."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "provider": {
+                  "const": "custom"
+                }
+              },
+              "required": [
+                "provider"
+              ]
+            },
+            "then": {
+              "required": [
+                "base_url"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "ai.me-credential-test": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/me-credential-test.v1.json",
+        "title": "AiMeCredentialTestV1",
+        "description": "ai.me-credential-test@1 (OpenVibe.AI; L36 Y1/Y8): the answer to POST /api/v1/me/credentials/{provider}/test and to the test that runs on save. It lists the provider's models (up to five samples), or, when it lists none, makes a one-token request to its cheapest model. `ok` is false for a refused key, an empty endpoint or a timeout (10 s). `error` is a redacted line that never carries the key. `balance` is present only when the provider reports one.",
+        "type": "object",
+        "required": [
+          "ok",
+          "models_count",
+          "sample_models",
+          "latency_ms",
+          "balance",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "models_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sample_models": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          "latency_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "balance": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "currency"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  }
+                }
+              }
+            ]
+          },
+          "error": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "code",
+                  "message"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_.-]{1,63}$"
+                  },
+                  "message": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ai.me-credential-list": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/me-credential-list.v1.json",
+        "title": "AiMeCredentialListV1",
+        "description": "ai.me-credential-list@1 (OpenVibe.AI; L36 Y1): GET /api/v1/me/credentials — every provider key the person holds themselves, without any key. Ordered by provider so a page can render it steadily.",
+        "type": "object",
+        "required": [
+          "credentials"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "credentials": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "$ref": "me-credential.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "ai.me-preferences": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/me-preferences.v1.json",
+        "title": "AiMePreferencesV1",
+        "description": "ai.me-preferences@1 (OpenVibe.AI; L36 Y1/Y3): how one person's AI runs route, stored per person under GET/PUT /api/v1/me/ai/preferences. `only_my_keys` means exactly that: a failed or missing key is never quietly replaced by a paid route. `free_first` puts free tiers ahead of paid ones. `price_ceiling_usd_per_mtok` caps the network's paid fallback per million tokens; the person's own keys are never capped. Each default is a model id or `auto`.",
+        "type": "object",
+        "required": [
+          "only_my_keys",
+          "free_first",
+          "price_ceiling_usd_per_mtok",
+          "defaults"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "only_my_keys": {
+            "type": "boolean"
+          },
+          "free_first": {
+            "type": "boolean"
+          },
+          "price_ceiling_usd_per_mtok": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "defaults": {
+            "type": "object",
+            "required": [
+              "text",
+              "code",
+              "vision",
+              "image"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "$ref": "#/$defs/modelChoice"
+              },
+              "code": {
+                "$ref": "#/$defs/modelChoice"
+              },
+              "vision": {
+                "$ref": "#/$defs/modelChoice"
+              },
+              "image": {
+                "$ref": "#/$defs/modelChoice"
+              }
+            }
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "modelChoice": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "A model id, or `auto` to let placement choose."
+          }
+        }
+      }
+    },
+    "ai.credential.failed": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/ai.credential.failed.v1.json",
+        "title": "AiCredentialFailedPayload",
+        "description": "ai.credential.failed v1 (OpenVibe.AI; L36 Y8): a provider refused one of a person's own keys with 401 or 403 during a run. The key's status becomes failing and this event tells the products that may show it. `error` is a redacted line that never carries the key. Envelope: on_behalf_of the person, subject { type: credential, id: <subject>:<provider> }, visibility internal, priority important, actor service:ai.",
+        "type": "object",
+        "required": [
+          "subject",
+          "provider",
+          "status",
+          "checked_at",
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "provider": {
+            "enum": [
+              "anthropic",
+              "openai",
+              "gemini",
+              "deepseek",
+              "mistral",
+              "xai",
+              "groq",
+              "cerebras",
+              "together",
+              "fireworks",
+              "openrouter",
+              "minimax",
+              "custom"
+            ]
+          },
+          "status": {
+            "const": "failing"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "The redacted reason. Never the key."
+          }
+        }
+      }
     }
   }
 }

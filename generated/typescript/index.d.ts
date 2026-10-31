@@ -280412,3 +280412,188 @@ export interface AiMemoryWriteRequest {
   status?: "active" | "suggested" | "archived" | "conflict";
   source?: string;
 }
+
+/** ai.me-credential@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential@1 (OpenVibe.AI; L36 Y1): one of the person's own provider keys as the person reads it from GET /api/v1/me/credentials. It is never the key: `hint` is the last four characters, and `last_error` is a redacted line that never carries the key. `status` is what the last save-time or run-time check found: ok, failing or untested. `models_count` is how many models the provider listed when it was last tested. Own keys are free to their owner: no fee, no cap and no network budget.
+ */
+export interface AiMeCredentialV1 {
+  provider:
+    | "anthropic"
+    | "openai"
+    | "gemini"
+    | "deepseek"
+    | "mistral"
+    | "xai"
+    | "groq"
+    | "cerebras"
+    | "together"
+    | "fireworks"
+    | "openrouter"
+    | "minimax"
+    | "custom";
+  /**
+   * The key's last four characters, so the person can tell two keys apart. Never more.
+   */
+  hint: string;
+  /**
+   * The endpoint the person chose, or null for the provider's own (taken from the console presets).
+   */
+  base_url: string | null;
+  /**
+   * The person's own daily cap on this key; null or 0 means no cap. The network's budgets never apply to their own key.
+   */
+  budget_usd_per_day: number | null;
+  status: "ok" | "failing" | "untested";
+  checked_at: string | null;
+  /**
+   * Why the key last failed, with the key and any other secret redacted. Never the key itself.
+   */
+  last_error: string | null;
+  models_count: number;
+  created_at: string;
+  updated_at?: string;
+}
+
+/** ai.me-credential-put@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential-put@1 (OpenVibe.AI; L36 Y1): the person stores or replaces their own provider key at PUT /api/v1/me/credentials/{provider}. Only the person's own Network token or their AI site session may send it. `key` is required the first time and whenever `base_url` changes; a later save may leave it out to keep the stored key. The key is sealed at rest, tested on save and never returned, logged or put in an error.
+ */
+export type AiMeCredentialPutV1 = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The provider. The route names it too; when both are present they must agree. A custom provider must name its endpoint in base_url.
+   */
+  provider:
+    | "anthropic"
+    | "openai"
+    | "gemini"
+    | "deepseek"
+    | "mistral"
+    | "xai"
+    | "groq"
+    | "cerebras"
+    | "together"
+    | "fireworks"
+    | "openrouter"
+    | "minimax"
+    | "custom";
+  /**
+   * The provider key. Required the first time and whenever base_url changes; optional afterwards, when the stored key is kept. Never returned.
+   */
+  key?: string;
+  /**
+   * The endpoint, for a custom provider or to override the provider's own. https only, no credentials, query or fragment; reached through the guarded fetcher's egress rules.
+   */
+  base_url?: string;
+  /**
+   * The person's own daily cap on this key; 0 or absent means no cap.
+   */
+  budget_usd_per_day?: number;
+  /**
+   * The model this key should use per kind of work. `auto` is not a model: absent means the provider's default, and the person's ai.me-preferences choose between keys.
+   */
+  models?: {
+    chat?: string;
+    code?: string;
+    vision?: string;
+    image?: string;
+  };
+};
+
+/** ai.me-credential-test@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential-test@1 (OpenVibe.AI; L36 Y1/Y8): the answer to POST /api/v1/me/credentials/{provider}/test and to the test that runs on save. It lists the provider's models (up to five samples), or, when it lists none, makes a one-token request to its cheapest model. `ok` is false for a refused key, an empty endpoint or a timeout (10 s). `error` is a redacted line that never carries the key. `balance` is present only when the provider reports one.
+ */
+export interface AiMeCredentialTestV1 {
+  ok: boolean;
+  models_count: number;
+  /**
+   * @maxItems 5
+   */
+  sample_models:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string];
+  latency_ms: number;
+  balance: null | {
+    amount: number;
+    currency: string;
+  };
+  error: null | {
+    code: string;
+    message: string;
+  };
+}
+
+/** ai.me-credential-list@1.0.0 (owner: ai) */
+/**
+ * ai.me-credential-list@1 (OpenVibe.AI; L36 Y1): GET /api/v1/me/credentials — every provider key the person holds themselves, without any key. Ordered by provider so a page can render it steadily.
+ */
+export interface AiMeCredentialListV1 {
+  /**
+   * @maxItems 32
+   */
+  credentials: AiMeCredentialV1[];
+}
+
+/** ai.me-preferences@1.0.0 (owner: ai) */
+/**
+ * ai.me-preferences@1 (OpenVibe.AI; L36 Y1/Y3): how one person's AI runs route, stored per person under GET/PUT /api/v1/me/ai/preferences. `only_my_keys` means exactly that: a failed or missing key is never quietly replaced by a paid route. `free_first` puts free tiers ahead of paid ones. `price_ceiling_usd_per_mtok` caps the network's paid fallback per million tokens; the person's own keys are never capped. Each default is a model id or `auto`.
+ */
+export interface AiMePreferencesV1 {
+  only_my_keys: boolean;
+  free_first: boolean;
+  price_ceiling_usd_per_mtok: number | null;
+  defaults: {
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    text: string;
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    code: string;
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    vision: string;
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    image: string;
+  };
+  updated_at?: string | null;
+}
+
+/** ai.credential.failed@1.0.0 (owner: ai) */
+/**
+ * ai.credential.failed v1 (OpenVibe.AI; L36 Y8): a provider refused one of a person's own keys with 401 or 403 during a run. The key's status becomes failing and this event tells the products that may show it. `error` is a redacted line that never carries the key. Envelope: on_behalf_of the person, subject { type: credential, id: <subject>:<provider> }, visibility internal, priority important, actor service:ai.
+ */
+export interface AiCredentialFailedPayload {
+  subject: string;
+  provider:
+    | "anthropic"
+    | "openai"
+    | "gemini"
+    | "deepseek"
+    | "mistral"
+    | "xai"
+    | "groq"
+    | "cerebras"
+    | "together"
+    | "fireworks"
+    | "openrouter"
+    | "minimax"
+    | "custom";
+  status: "failing";
+  checked_at: string;
+  /**
+   * The redacted reason. Never the key.
+   */
+  error: string;
+}

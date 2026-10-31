@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/me-preferences.v1.json",
+  "title": "AiMePreferencesV1",
+  "description": "ai.me-preferences@1 (OpenVibe.AI; L36 Y1/Y3): how one person's AI runs route, stored per person under GET/PUT /api/v1/me/ai/preferences. `only_my_keys` means exactly that: a failed or missing key is never quietly replaced by a paid route. `free_first` puts free tiers ahead of paid ones. `price_ceiling_usd_per_mtok` caps the network's paid fallback per million tokens; the person's own keys are never capped. Each default is a model id or `auto`.",
+  "type": "object",
+  "required": [
+    "only_my_keys",
+    "free_first",
+    "price_ceiling_usd_per_mtok",
+    "defaults"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "only_my_keys": {
+      "type": "boolean"
+    },
+    "free_first": {
+      "type": "boolean"
+    },
+    "price_ceiling_usd_per_mtok": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "defaults": {
+      "type": "object",
+      "required": [
+        "text",
+        "code",
+        "vision",
+        "image"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/modelChoice"
+        },
+        "code": {
+          "$ref": "#/$defs/modelChoice"
+        },
+        "vision": {
+          "$ref": "#/$defs/modelChoice"
+        },
+        "image": {
+          "$ref": "#/$defs/modelChoice"
+        }
+      }
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "modelChoice": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "A model id, or `auto` to let placement choose."
+    }
+  }
+}
