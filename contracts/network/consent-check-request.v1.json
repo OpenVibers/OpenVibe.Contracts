@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/consent-check-request.v1.json",
+  "title": "NetworkConsentCheckRequest",
+  "description": "network.consent-check-request@1 (L24): may this purpose be used for these people? POST /internal/consent/check on OpenVibe.Network with a service token holding network.consent.read. One purpose per call, up to 500 subjects (a dataset build or a chat log checks its authors in batches).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["purpose", "subjects"],
+  "properties": {
+    "purpose": {
+      "enum": ["ai.train", "data.public", "face.recognize", "ai.looks", "app.data"],
+      "description": "The purpose to check (network.consent@1)."
+    },
+    "kind": {
+      "enum": ["streams", "vods", "clips", "voice", "chat", "posts", "pictures", "code"],
+      "description": "The kind of content the use is about. A choice limited to other kinds answers false."
+    },
+    "client": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$",
+      "description": "app.data only: the app asking. Required for app.data."
+    },
+    "feature": {
+      "enum": ["verify", "find", "cast", "library"],
+      "description": "face.recognize only: the recognition about to run."
+    },
+    "subjects": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+      "description": "The people the use would be about."
+    }
+  }
+}

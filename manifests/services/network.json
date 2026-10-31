@@ -78,7 +78,9 @@
     "network.secret.use",
     "network.staff.read",
     "network.status.incident",
-    "network.actions.read"
+    "network.actions.read",
+    "network.consent.read",
+    "network.consent.manage"
   ],
   "eventsProduced": [
     "network.account.deleted",
@@ -99,7 +101,8 @@
     "network.principal_grant.changed",
     "network.subject.merged",
     "network.user.token_valid_after",
-    "network.user.updated"
+    "network.user.updated",
+    "network.consent.changed"
   ],
   "eventsConsumed": [
     "billing.staff.action",

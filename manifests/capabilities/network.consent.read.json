@@ -1,0 +1,23 @@
+{
+  "id": "network.consent.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Ask whether a purpose (ai.train, data.public, face.recognize, ai.looks, app.data) may be used for up to 500 people (L24, data and AI by consent). A service asks before every use of a person's content or likeness for one of those purposes; an answer is cached at most 60 s and dropped on network.consent.changed, and a service that cannot reach Network treats every purpose as off.",
+  "inputSchema": "network.consent-check-request@1",
+  "outputSchema": "network.consent-check-result@1",
+  "permissions": [
+    "network:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "identity-read",
+  "events": [
+    "network.consent.changed"
+  ],
+  "implementedBy": [
+    "POST /internal/consent/check"
+  ]
+}

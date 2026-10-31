@@ -7717,6 +7717,60 @@
       "status": "active"
     },
     {
+      "id": "network.consent",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/consent.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.consent-choice",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/consent-choice.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.me-consent-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/me-consent-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.consent-check-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/consent-check-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.consent-check-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/consent-check-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.consent.changed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.consent.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "today.event.scheduled",
       "version": "1.0.0",
       "owner": "today",

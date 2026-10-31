@@ -263422,6 +263422,11055 @@ export interface NetworkDockResult {
   sources_partial: boolean;
 }
 
+/** network.consent@1.0.0 (owner: network) */
+/**
+ * network.consent@1 (L24, data and AI by consent, 2026-10-31): one person's choice for one purpose. Nothing a person makes is off-limits to AI or data use by design; each use is off until that person turns it on, here. The record is the proof of what was allowed, by whom, under which wording and when: a choice is turned off by setting revoked_at, never by deleting the row. Stored by OpenVibe.Network (consents, with every change in consent_events), read by a person at GET /api/v1/me/consent and by services through POST /internal/consent/check (capability network.consent.read). A service that cannot reach Network treats every purpose as off.
+ */
+export interface NetworkConsent {
+  /**
+   * The choice's own id (cns_<ULID>). A choice changed later (other kinds, another licence) is a new record; the old one is revoked.
+   */
+  id: string;
+  /**
+   * Whose choice it is. Only that person (or an account merge or deletion) changes it.
+   */
+  subject: string;
+  /**
+   * What turning it on allows. ai.train: OpenVibe trains or fine-tunes models on the person's content. data.public: the person's content goes into OpenVibe's open dataset under the licence in options. face.recognize: the person's face is recognised (the features in options; OpenVibe.Vision keeps the encrypted templates). ai.looks: AI text about the person may describe how they look (it lifts the no-looks rule for that person only, never for anyone else in frame). app.data: one named app (client) may use the person's content for the purposes in options.
+   */
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+  /**
+   * Whether the purpose is allowed now: true while the record is active (revoked_at null and expires_at not passed). A service never decides from this field alone; it asks the check.
+   */
+  on: boolean;
+  /**
+   * Which of the person's content it covers. Empty means every kind the purpose applies to. face.recognize and ai.looks take no kinds (they are about the person, not a piece of content).
+   *
+   * @maxItems 8
+   */
+  kinds:
+    | []
+    | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ];
+  /**
+   * The app the choice is for: null means OpenVibe itself; otherwise the OAuth client id of an app the person granted (required for app.data, and only there).
+   */
+  client: string | null;
+  /**
+   * What the purpose needs beyond on and kinds. An empty object for ai.train and ai.looks.
+   */
+  options: {
+    /**
+     * data.public only: the licence the person's content is published under.
+     */
+    licence?: "cc-by-4.0" | "cc0-1.0";
+    /**
+     * face.recognize only: which recognition the person allows (OpenVibe.Vision's features). Empty means none yet.
+     *
+     * @maxItems 4
+     */
+    features?:
+      | []
+      | ["verify" | "find" | "cast" | "library"]
+      | ["verify" | "find" | "cast" | "library", "verify" | "find" | "cast" | "library"]
+      | [
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library"
+        ]
+      | [
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library"
+        ];
+    /**
+     * app.data only: what the app may do with the person's content, as the consent screen showed it.
+     *
+     * @maxItems 4
+     */
+    purposes?:
+      | []
+      | ["ai.train" | "data.public" | "face.recognize" | "ai.looks"]
+      | [
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks"
+        ]
+      | [
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks"
+        ]
+      | [
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks",
+          "ai.train" | "data.public" | "face.recognize" | "ai.looks"
+        ];
+  };
+  /**
+   * The exact wording the person saw when choosing (YYYY-MM-DD.n). A new wording never turns an existing choice on; it may only ask again.
+   */
+  text_version: string;
+  /**
+   * Where the choice was made: the account page, an app's consent screen, the person's own API call, or OpenVibe.Vision's older face consents moved into Network.
+   */
+  source: "account" | "oauth" | "api" | "import:vision";
+  /**
+   * When the person turned it on.
+   */
+  granted_at: string;
+  /**
+   * When it was turned off (by the person, by revoking the app, by a merge or by deleting the account), or null while it holds. Use stops on the next check; a model already trained keeps what it learned, and the next dataset release leaves the person's content out.
+   */
+  revoked_at: string | null;
+  /**
+   * When the choice ends by itself (a time-limited grant, or the end of a face purpose), or null for no end.
+   */
+  expires_at: string | null;
+}
+
+/** network.consent-choice@1.0.0 (owner: network) */
+/**
+ * network.consent-choice@1 (L24): the body of PUT /api/v1/me/consent/:purpose on OpenVibe.Network — the signed-in person turns a purpose on or off. Turning on records the wording they saw (text_version, which must be the current one) and, for the adults-only purposes, that they confirmed they are 18 or older. Turning off revokes the active choice. An app's choice (app.data) is made on its consent screen, not here.
+ */
+export interface NetworkConsentChoice {
+  on: boolean;
+  /**
+   * @maxItems 8
+   */
+  kinds?:
+    | []
+    | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ];
+  options?: {
+    licence?: "cc-by-4.0" | "cc0-1.0";
+    /**
+     * @maxItems 4
+     */
+    features?:
+      | []
+      | ["verify" | "find" | "cast" | "library"]
+      | ["verify" | "find" | "cast" | "library", "verify" | "find" | "cast" | "library"]
+      | [
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library"
+        ]
+      | [
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library",
+          "verify" | "find" | "cast" | "library"
+        ];
+  };
+  /**
+   * The wording the page showed. Required to turn on; a stale one is refused (consent.stale_text) so the page shows the new words first.
+   */
+  text_version?: string;
+  /**
+   * The person confirmed they are 18 or older. Required (true) to turn on face.recognize, ai.looks, ai.train or data.public.
+   */
+  adult?: boolean;
+}
+
+/** network.me-consent-result@1.0.0 (owner: network) */
+/**
+ * network.me-consent-result@1 (L24): "Your data choices" for the signed-in person. GET /api/v1/me/consent (and the answer to PUT /api/v1/me/consent/:purpose and DELETE /api/v1/me/consent/:purpose/:client) on OpenVibe.Network. Every purpose is listed with the words the account page shows, whether the person has turned it on, and the history of their changes. Off is the default for every purpose.
+ */
+export interface NetworkMeConsentResult {
+  /**
+   * @maxItems 16
+   */
+  purposes:
+    | []
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+          title: string;
+          /**
+           * What turning it on allows, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off does.
+           */
+          off: string;
+          /**
+           * What turning it off cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Turning it on asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          /**
+           * The kinds of content the person may narrow it to (empty: the purpose takes none).
+           *
+           * @maxItems 8
+           */
+          kinds:
+            | []
+            | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ]
+            | [
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+                "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+              ];
+          text_version: string;
+        }
+      ];
+  /**
+   * The person's active choices (network.consent@1), one per purpose and app.
+   *
+   * @maxItems 200
+   */
+  consents: NetworkConsent[];
+  /**
+   * The newest changes first.
+   *
+   * @maxItems 200
+   */
+  history: {
+    consent_id: string;
+    purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+    client?: string | null;
+    action: "granted" | "revoked" | "expired";
+    at: string;
+    /**
+     * Who made the change: the person, the app being revoked, an account merge, an account deletion, or the move of an older record.
+     */
+    by: "person" | "app_revoked" | "merge" | "deletion" | "import";
+    text_version: string;
+  }[];
+}
+
+/** network.consent-check-request@1.0.0 (owner: network) */
+/**
+ * network.consent-check-request@1 (L24): may this purpose be used for these people? POST /internal/consent/check on OpenVibe.Network with a service token holding network.consent.read. One purpose per call, up to 500 subjects (a dataset build or a chat log checks its authors in batches).
+ */
+export interface NetworkConsentCheckRequest {
+  /**
+   * The purpose to check (network.consent@1).
+   */
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+  /**
+   * The kind of content the use is about. A choice limited to other kinds answers false.
+   */
+  kind?: "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code";
+  /**
+   * app.data only: the app asking. Required for app.data.
+   */
+  client?: string;
+  /**
+   * face.recognize only: the recognition about to run.
+   */
+  feature?: "verify" | "find" | "cast" | "library";
+  /**
+   * The people the use would be about.
+   *
+   * @minItems 1
+   * @maxItems 500
+   */
+  subjects: [string, ...string[]];
+}
+
+/** network.consent-check-result@1.0.0 (owner: network) */
+/**
+ * network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.
+ */
+export interface NetworkConsentCheckResult {
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+  kind?: "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code";
+  client?: string;
+  feature?: "verify" | "find" | "cast" | "library";
+  /**
+   * Each subject asked about, and whether the use is allowed for them.
+   */
+  allowed: {
+    [k: string]: boolean | undefined;
+  };
+  /**
+   * data.public only: the licence each allowed subject chose.
+   */
+  licence?: {
+    [k: string]: ("cc-by-4.0" | "cc0-1.0") | undefined;
+  };
+  checked_at: string;
+}
+
+/** network.consent.changed@1.0.0 (owner: network) */
+/**
+ * network.consent.changed v1 (OpenVibe.Network, L24): a person turned a purpose on or off, an app's grant was revoked, or a choice expired. A service that caches consent answers drops that subject's answers for the purpose at once; one that is running a use for the subject (a dataset build, a recognition, an AI text) checks again before it goes on. The payload names the change and never the content it covers.
+ */
+export interface NetworkConsentChangedPayload {
+  consent_id: string;
+  subject: string;
+  purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
+  client: string | null;
+  /**
+   * Whether the purpose is allowed after the change.
+   */
+  on: boolean;
+  /**
+   * @maxItems 8
+   */
+  kinds:
+    | []
+    | ["streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ]
+    | [
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code",
+        "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
+      ];
+  text_version: string;
+  changed_at: string;
+}
+
 /** today.event.scheduled@1.0.0 (owner: today) */
 /**
  * today.event.scheduled v1 (OpenVibe.Today server/events/store.js, written to its outbox in the same transaction as the change and published once per evt_ id). A person put a stream or an event on OpenVibe.Today's calendar (POST /api/v1/events or the schedule form). Envelope: source today, subject and actor { type: user, id: <owner usr_> }, visibility internal, priority important. OpenVibe.Network tells a streamer's followers about a scheduled public or followers-only stream (STREAM_SCHEDULED) and clears those notices on cancel (server/notifications/events-consumer.js).

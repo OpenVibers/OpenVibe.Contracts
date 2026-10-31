@@ -1,0 +1,53 @@
+{
+  "purposes": [
+    {
+      "id": "ai.train",
+      "title": "Train AI on my content",
+      "allows": "OpenVibe may train or fine-tune its models on the content you pick.",
+      "off": "Off: nothing new of yours is used for training.",
+      "cannot_undo": "A model already trained keeps what it learned.",
+      "adults_only": true,
+      "kinds": [
+        "streams",
+        "vods",
+        "clips",
+        "voice",
+        "chat",
+        "posts",
+        "pictures",
+        "code"
+      ],
+      "text_version": "2026-10-31.1"
+    }
+  ],
+  "consents": [
+    {
+      "id": "cns_01K6R3A1B2C3D4E5F6G7H8J9KA",
+      "subject": "usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+      "purpose": "ai.train",
+      "on": true,
+      "kinds": [
+        "streams",
+        "vods"
+      ],
+      "client": null,
+      "options": {},
+      "text_version": "2026-10-31.1",
+      "source": "account",
+      "granted_at": "2026-10-31T05:00:00.000Z",
+      "revoked_at": null,
+      "expires_at": null
+    }
+  ],
+  "history": [
+    {
+      "consent_id": "cns_01K6R3A1B2C3D4E5F6G7H8J9KA",
+      "purpose": "ai.train",
+      "client": null,
+      "action": "granted",
+      "at": "2026-10-31T05:00:00.000Z",
+      "by": "person",
+      "text_version": "2026-10-31.1"
+    }
+  ]
+}
