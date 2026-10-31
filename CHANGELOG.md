@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.266.0 — 2026-10-31
+
+- **`space.app.claimed`** (plan 5.9, OpenVibe.Space): a guest draft (a space with no owner, edited with a secret
+  link, made on openvibe.space without an account) was claimed by a signed-in person. The draft is that person's
+  space now, with an address from its name, and the secret is gone. The payload holds the space's id, its new slug,
+  its name and the template it started from — never the secret, never file contents. Visibility internal, owner
+  `space`, ADR-004 (Space's events).
+
 ## 0.265.0 — 2026-10-31
 
 - **OpenVibe.Tours** (`manifests/services/tours.json`, plan 5.12): openvibe.tours, cities, places and walking routes
