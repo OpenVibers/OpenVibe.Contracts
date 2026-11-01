@@ -35,6 +35,27 @@
       "maxLength": 80,
       "description": "The conversation the Chats tab has open, or null."
     },
+    "timer": {
+      "description": "The person's timer (plan L48 R2): it counts down in the Dock's pill on every site and rings at its end. Absent or null: none. A focus timer of rounds alternates focus and break by itself.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "started_at", "ends_at"],
+          "properties": {
+            "kind": { "enum": ["timer", "focus", "break"], "description": "A plain timer, a focus block, or the break after one." },
+            "label": { "type": "string", "maxLength": 60, "description": "What it is for, in the person's words." },
+            "started_at": { "type": "string", "format": "date-time" },
+            "ends_at": { "type": "string", "format": "date-time" },
+            "round": { "type": "integer", "minimum": 1, "maximum": 12, "description": "Which focus round this is." },
+            "rounds": { "type": "integer", "minimum": 1, "maximum": 12, "description": "How many focus rounds in all." },
+            "focus_min": { "type": "integer", "minimum": 1, "maximum": 180, "description": "A focus round's length, in minutes." },
+            "break_min": { "type": "integer", "minimum": 1, "maximum": 60, "description": "A break's length, in minutes." }
+          }
+        }
+      ]
+    },
     "place": {
       "type": "object",
       "additionalProperties": false,

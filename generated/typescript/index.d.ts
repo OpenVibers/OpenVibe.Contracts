@@ -264458,6 +264458,37 @@ export interface NetworkDockState {
    * The conversation the Chats tab has open, or null.
    */
   chat: string | null;
+  /**
+   * The person's timer (plan L48 R2): it counts down in the Dock's pill on every site and rings at its end. Absent or null: none. A focus timer of rounds alternates focus and break by itself.
+   */
+  timer?: null | {
+    /**
+     * A plain timer, a focus block, or the break after one.
+     */
+    kind: "timer" | "focus" | "break";
+    /**
+     * What it is for, in the person's words.
+     */
+    label?: string;
+    started_at: string;
+    ends_at: string;
+    /**
+     * Which focus round this is.
+     */
+    round?: number;
+    /**
+     * How many focus rounds in all.
+     */
+    rounds?: number;
+    /**
+     * A focus round's length, in minutes.
+     */
+    focus_min?: number;
+    /**
+     * A break's length, in minutes.
+     */
+    break_min?: number;
+  };
   place: {
     /**
      * Where the Dock sits on a phone.
