@@ -233,6 +233,13 @@
       "capabilities": 19
     },
     {
+      "service": "today",
+      "name": "OpenVibe.Today",
+      "origin": "https://openvibe.today",
+      "operations": 6,
+      "capabilities": 1
+    },
+    {
       "service": "tools",
       "name": "OpenVibe.Tools",
       "origin": "https://openvibe.tools",

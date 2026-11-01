@@ -15,7 +15,9 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": [
+    "today.reminder.write"
+  ],
   "eventsProduced": [
     "today.event.scheduled",
     "today.event.updated",

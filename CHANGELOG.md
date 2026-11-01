@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.267.0 — 2026-11-01
+
+- `today.reminder.write` (active, first-party; plan L48): a first-party service sets, lists, snoozes, stops and removes a
+  person's own reminders on OpenVibe.Today for that person, named with X-OV-Subject (`POST /api/v1/reminders/parse`,
+  `GET|POST /api/v1/reminders`, `POST /api/v1/reminders/:id/done|snooze`, `DELETE /api/v1/reminders/:id`). The first
+  holder is OpenVibe.Chat, for Vibe's "remind me…".
+
 ## 0.266.0 — 2026-10-31
 
 - **`space.app.claimed`** (plan 5.9, OpenVibe.Space): a guest draft (a space with no owner, edited with a secret
