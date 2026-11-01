@@ -7827,6 +7827,24 @@
       "adr": "ADR-043"
     },
     {
+      "id": "bot.watch-link-request",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/watch-link-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.watch-link-result",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/watch-link-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "common.action-item",
       "version": "1.0.0",
       "owner": "contracts",

@@ -14,7 +14,8 @@ const c = require('..');
 // bot.desk.session: Run's sessions lease one desk each (0.223.0, the Desks plan's D6).
 // bot.machine.manage: the machines hub (0.258.0, plan L34): Network fronts Bot for a person and for the apps that
 // person consented to; Bot stays the authority and checks the machine is that person's own.
-const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.machine.manage', 'bot.desk.session', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
+// bot.machine.watch_link: the owner's agent asks for a link that shows the desk it works on, inside a chat (plan L55).
+const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.machine.manage', 'bot.machine.watch_link', 'bot.desk.session', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
 const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
 
 const bot = c.services.get('bot');
