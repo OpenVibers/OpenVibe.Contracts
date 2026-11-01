@@ -3,7 +3,8 @@
 ## 0.268.0 — 2026-11-01
 
 - **`bot.machine.watch_link`** (active, first-party, sensitive; plan L55): the owner's agent (OpenVibe.Actor) asks Bot
-  for a link that shows the desk it works on, live, inside a chat turn. `POST /api/v1/machines/:id/watch-links`
+  for a link that shows the desk it works on (the private desk or its own `desk-<name>`, never the owner's own screen),
+  live, inside a chat turn. `POST /api/v1/machines/:id/watch-links`
   (`bot.watch-link-request@1`, answered by `bot.watch-link-result@1`) makes one for the machine the named person owns —
   never another person's — and it lives for 5 to 240 minutes. The page needs no sign-in (the token is the credential),
   may sit in a frame on openvibe.chat or openvibe.actor, and carries the mouse and keyboard only when the caller asks

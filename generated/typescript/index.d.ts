@@ -264215,13 +264215,13 @@ export interface BotDeskLeaseCreateRequest {
 
 /** bot.watch-link-request@1.0.0 (owner: bot) */
 /**
- * bot.watch-link-request@1: the watch link an agent asks for on a person's own machine (plan L55). The desk is any desk the machine has — its own screen, the private desk, or the desk an agent task works on (desk-<name>) — and the link lives for minutes, not days.
+ * bot.watch-link-request@1: the watch link an agent asks for on a person's own machine (plan L55). The desk is one an agent works on — the private desk or an agent task's own desk (desk-<name>), never the owner's own screen — and the link lives for minutes, not days.
  */
 export interface BotWatchLinkRequest {
   /**
-   * The desk the link shows. Absent: the machine's own screen.
+   * The desk the link shows: private, or the agent task's desk-<name>. The owner's own screen (main) is never an agent's to link.
    */
-  desk?: string;
+  desk: string;
   /**
    * true: the holders may use the mouse and keyboard too, at the level the owner set on the machine. Absent: they may only watch.
    */
