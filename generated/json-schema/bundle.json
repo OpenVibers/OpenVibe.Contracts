@@ -88917,11 +88917,12 @@
           },
           "tab": {
             "enum": [
+              "vibe",
               "agent",
               "chats",
               "activity"
             ],
-            "description": "Which of the Dock's three tabs shows: the agent's screen, the chats, the activity."
+            "description": "Which of the Dock's tabs shows: Vibe (the person's AI, plan L48 V2), the agents, the chats, the activity."
           },
           "pinned": {
             "type": "boolean",

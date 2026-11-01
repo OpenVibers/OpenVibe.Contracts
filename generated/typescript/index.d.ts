@@ -264440,9 +264440,9 @@ export interface NetworkDockState {
    */
   open: boolean;
   /**
-   * Which of the Dock's three tabs shows: the agent's screen, the chats, the activity.
+   * Which of the Dock's tabs shows: Vibe (the person's AI, plan L48 V2), the agents, the chats, the activity.
    */
-  tab: "agent" | "chats" | "activity";
+  tab: "vibe" | "agent" | "chats" | "activity";
   /**
    * Keep the pill on screen even when nothing runs and nothing waits.
    */
