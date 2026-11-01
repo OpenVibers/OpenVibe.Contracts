@@ -59,6 +59,7 @@
     "network.coins.read",
     "network.coins.transfer",
     "network.confirmation.manage",
+    "network.dock.timer.write",
     "network.follows.read",
     "network.follows.write",
     "network.integration.github.read",

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.272.0 — 2026-11-01
+
+- **`network.dock.timer.write`** (active, first-party; plan L48 R2): a first-party service sets or clears ONE
+  person's Dock timer in the Network, so Vibe can start a focus timer where the person is
+  ("Vibe, start a 25-minute focus timer"). `PUT /api/v1/people/:subject/dock/timer` takes
+  `network.dock-timer-request@1` (the minutes, or `clear: true`) and answers `network.dock-result@1`. The
+  service names the person and writes the timer and nothing else. The first holder is OpenVibe.Chat.
+
 ## 0.271.0 — 2026-11-01
 
 - **`network.dock-state@1`** gains an optional `timer` (plan L48 R2): a timer, a focus block or the break after one,
