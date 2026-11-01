@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.270.0 — 2026-11-01
+
+- **`network.dock-state@1`**: the Dock's tab may be `vibe` too (plan L48 V2: the person's Vibe in the Dock on every
+  site, openvibe-shared 4.74.0). Additive: the three tabs before it are unchanged.
+
 ## 0.269.0 — 2026-11-01
 
 - **`actor.model.manage`** (active, first-party, sensitive; plan L55 C3): a person chooses the model their OpenVibe.Actor
