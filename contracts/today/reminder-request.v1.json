@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/today/reminder-request.v1.json",
+  "title": "TodayReminderRequest",
+  "description": "today.reminder-request@1: the body of POST /api/v1/reminders and POST /api/v1/reminders/parse on OpenVibe.Today (today.reminder.write; the acting person). The reminder is plain words, parsed by Today into a rule in the person's time zone (\"stretch every 2 hours from 9 to 5\", \"take my meds every day at 9 am and 9 pm\", \"pay rent on the 1st of every month\"). POST /api/v1/reminders/:id/snooze takes { minutes } alone.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": { "type": "string", "minLength": 1, "maxLength": 500, "description": "What to remind the person of, and when, in their own words." },
+    "tz": { "type": "string", "maxLength": 64, "description": "The person's IANA time zone (America/Chicago); an unknown zone is read as UTC." },
+    "url": { "type": ["string", "null"], "maxLength": 2000, "description": "Where the reminder came from: an https link kept on it and opened from the notification. Anything else is dropped." },
+    "source": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,30}$", "description": "The site that set it (vibe, live, work…), shown to the person." },
+    "minutes": { "type": "integer", "minimum": 5, "maximum": 10080, "description": "Snooze only: how long, from now." }
+  }
+}

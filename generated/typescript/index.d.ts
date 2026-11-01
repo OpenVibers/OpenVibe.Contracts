@@ -281874,3 +281874,64 @@ export interface AiCredentialFailedPayload {
    */
   error: string;
 }
+
+/** today.reminder-request@1.0.0 (owner: today) */
+/**
+ * today.reminder-request@1: the body of POST /api/v1/reminders and POST /api/v1/reminders/parse on OpenVibe.Today (today.reminder.write; the acting person). The reminder is plain words, parsed by Today into a rule in the person's time zone ("stretch every 2 hours from 9 to 5", "take my meds every day at 9 am and 9 pm", "pay rent on the 1st of every month"). POST /api/v1/reminders/:id/snooze takes { minutes } alone.
+ */
+export interface TodayReminderRequest {
+  /**
+   * What to remind the person of, and when, in their own words.
+   */
+  text?: string;
+  /**
+   * The person's IANA time zone (America/Chicago); an unknown zone is read as UTC.
+   */
+  tz?: string;
+  /**
+   * Where the reminder came from: an https link kept on it and opened from the notification. Anything else is dropped.
+   */
+  url?: string | null;
+  /**
+   * The site that set it (vibe, live, work…), shown to the person.
+   */
+  source?: string;
+  /**
+   * Snooze only: how long, from now.
+   */
+  minutes?: number;
+}
+
+/** today.reminder-result@1.0.0 (owner: today) */
+/**
+ * today.reminder-result@1: answers of the reminder routes on OpenVibe.Today. POST /api/v1/reminders/parse → a preview (title, rule, tz, next_at, summary); POST /api/v1/reminders, /:id/done and /:id/snooze → one reminder; GET /api/v1/reminders → { reminders }. A refusal is 422 { error } in words the person can act on ("Say when: …").
+ */
+export interface TodayReminderResult {
+  reminders?: {
+    id: string;
+    title: string;
+    said?: string;
+    /**
+     * once { at } | daily { times, days? } | interval { minutes, from?, to?, days?, start? } | monthly { day, time }
+     */
+    rule?: {};
+    tz?: string;
+    url?: string | null;
+    source?: string;
+    status: "active" | "done";
+    next_at: string | null;
+    last_sent_at?: string | null;
+    sent_count?: number;
+    summary: string;
+    repeats: boolean;
+    created_at?: string | null;
+  }[];
+  id?: string;
+  title?: string;
+  /**
+   * The rule in words: "Every 2 hours, 9 am–5 pm".
+   */
+  summary?: string;
+  next_at?: string | null;
+  error?: string;
+}

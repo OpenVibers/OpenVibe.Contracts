@@ -1,0 +1,26 @@
+{
+  "id": "today.reminder.write",
+  "version": "1.0",
+  "owner": "today",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Set, list, snooze, stop and remove a person's own reminders on OpenVibe.Today, for that person (plan L48): a first-party service such as OpenVibe.Chat's Vibe names the person with X-OV-Subject, and every route answers only that person's reminders. A reminder is plain words parsed by Today (\"stretch every 2 hours from 9 to 5\") and keeps the https link and the source site that set it.",
+  "permissions": [
+    "today:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "today-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/reminders/parse",
+    "GET /api/v1/reminders",
+    "POST /api/v1/reminders",
+    "POST /api/v1/reminders/:id/done",
+    "POST /api/v1/reminders/:id/snooze",
+    "DELETE /api/v1/reminders/:id"
+  ],
+  "inputSchema": "today.reminder-request@1",
+  "outputSchema": "today.reminder-result@1"
+}

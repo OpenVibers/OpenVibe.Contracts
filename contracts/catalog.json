@@ -8599,6 +8599,24 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "today.reminder-request",
+      "version": "1.0.0",
+      "owner": "today",
+      "schema": "today/reminder-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "today.reminder-result",
+      "version": "1.0.0",
+      "owner": "today",
+      "schema": "today/reminder-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

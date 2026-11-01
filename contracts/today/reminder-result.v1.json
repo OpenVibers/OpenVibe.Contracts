@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/today/reminder-result.v1.json",
+  "title": "TodayReminderResult",
+  "description": "today.reminder-result@1: answers of the reminder routes on OpenVibe.Today. POST /api/v1/reminders/parse → a preview (title, rule, tz, next_at, summary); POST /api/v1/reminders, /:id/done and /:id/snooze → one reminder; GET /api/v1/reminders → { reminders }. A refusal is 422 { error } in words the person can act on (\"Say when: …\").",
+  "type": "object",
+  "properties": {
+    "reminders": { "type": "array", "items": { "$ref": "#/$defs/reminder" } },
+    "id": { "type": "string", "pattern": "^rem_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "title": { "type": "string" },
+    "summary": { "type": "string", "description": "The rule in words: \"Every 2 hours, 9 am–5 pm\"." },
+    "next_at": { "type": ["string", "null"], "format": "date-time" },
+    "error": { "type": "string" }
+  },
+  "$defs": {
+    "reminder": {
+      "type": "object",
+      "required": ["id", "title", "summary", "status", "next_at", "repeats"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^rem_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "title": { "type": "string" },
+        "said": { "type": "string" },
+        "rule": { "type": "object", "description": "once { at } | daily { times, days? } | interval { minutes, from?, to?, days?, start? } | monthly { day, time }" },
+        "tz": { "type": "string" },
+        "url": { "type": ["string", "null"] },
+        "source": { "type": "string" },
+        "status": { "enum": ["active", "done"] },
+        "next_at": { "type": ["string", "null"], "format": "date-time" },
+        "last_sent_at": { "type": ["string", "null"], "format": "date-time" },
+        "sent_count": { "type": "integer", "minimum": 0 },
+        "summary": { "type": "string" },
+        "repeats": { "type": "boolean" },
+        "created_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    }
+  }
+}

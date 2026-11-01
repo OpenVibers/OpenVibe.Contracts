@@ -96240,6 +96240,170 @@
           }
         }
       }
+    },
+    "today.reminder-request": {
+      "version": "1.0.0",
+      "owner": "today",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/today/reminder-request.v1.json",
+        "title": "TodayReminderRequest",
+        "description": "today.reminder-request@1: the body of POST /api/v1/reminders and POST /api/v1/reminders/parse on OpenVibe.Today (today.reminder.write; the acting person). The reminder is plain words, parsed by Today into a rule in the person's time zone (\"stretch every 2 hours from 9 to 5\", \"take my meds every day at 9 am and 9 pm\", \"pay rent on the 1st of every month\"). POST /api/v1/reminders/:id/snooze takes { minutes } alone.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "What to remind the person of, and when, in their own words."
+          },
+          "tz": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "The person's IANA time zone (America/Chicago); an unknown zone is read as UTC."
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000,
+            "description": "Where the reminder came from: an https link kept on it and opened from the notification. Anything else is dropped."
+          },
+          "source": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,30}$",
+            "description": "The site that set it (vibe, live, work…), shown to the person."
+          },
+          "minutes": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 10080,
+            "description": "Snooze only: how long, from now."
+          }
+        }
+      }
+    },
+    "today.reminder-result": {
+      "version": "1.0.0",
+      "owner": "today",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/today/reminder-result.v1.json",
+        "title": "TodayReminderResult",
+        "description": "today.reminder-result@1: answers of the reminder routes on OpenVibe.Today. POST /api/v1/reminders/parse → a preview (title, rule, tz, next_at, summary); POST /api/v1/reminders, /:id/done and /:id/snooze → one reminder; GET /api/v1/reminders → { reminders }. A refusal is 422 { error } in words the person can act on (\"Say when: …\").",
+        "type": "object",
+        "properties": {
+          "reminders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/reminder"
+            }
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^rem_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string",
+            "description": "The rule in words: \"Every 2 hours, 9 am–5 pm\"."
+          },
+          "next_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "$defs": {
+          "reminder": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "summary",
+              "status",
+              "next_at",
+              "repeats"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^rem_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "title": {
+                "type": "string"
+              },
+              "said": {
+                "type": "string"
+              },
+              "rule": {
+                "type": "object",
+                "description": "once { at } | daily { times, days? } | interval { minutes, from?, to?, days?, start? } | monthly { day, time }"
+              },
+              "tz": {
+                "type": "string"
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "active",
+                  "done"
+                ]
+              },
+              "next_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_sent_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "sent_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "summary": {
+                "type": "string"
+              },
+              "repeats": {
+                "type": "boolean"
+              },
+              "created_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
