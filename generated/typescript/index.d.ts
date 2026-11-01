@@ -264213,6 +264213,56 @@ export interface BotDeskLeaseCreateRequest {
   height?: number;
 }
 
+/** bot.watch-link-request@1.0.0 (owner: bot) */
+/**
+ * bot.watch-link-request@1: the watch link an agent asks for on a person's own machine (plan L55). The desk is one an agent works on — the private desk or an agent task's own desk (desk-<name>), never the owner's own screen — and the link lives for minutes, not days.
+ */
+export interface BotWatchLinkRequest {
+  /**
+   * The desk the link shows: private, or the agent task's desk-<name>. The owner's own screen (main) is never an agent's to link.
+   */
+  desk: string;
+  /**
+   * true: the holders may use the mouse and keyboard too, at the level the owner set on the machine. Absent: they may only watch.
+   */
+  control?: boolean;
+  /**
+   * How long the link lives. Absent: 60 minutes.
+   */
+  minutes?: number;
+  /**
+   * Where the owner put the link ("the chat").
+   */
+  label?: string;
+}
+
+/** bot.watch-link-result@1.0.0 (owner: bot) */
+/**
+ * bot.watch-link-result@1: the watch link itself (plan L55): the page that shows the desk, and when it ends. The link is the machine owner's own, so the page needs no sign-in.
+ */
+export interface BotWatchLinkResult {
+  /**
+   * The page that shows the desk: https://openvibe.bot/screen/<token>.
+   */
+  url: string;
+  /**
+   * When the link ends.
+   */
+  expires_at: string;
+  /**
+   * The desk the link shows.
+   */
+  desk?: string;
+  /**
+   * true: the holders may use the mouse and keyboard too.
+   */
+  control?: boolean;
+  /**
+   * Bot's id for the link.
+   */
+  share_id?: string;
+}
+
 /** common.action-item@1.0.0 (owner: contracts) */
 /**
  * One piece of a person's agent work in the Action Center (plan 2026-10-28 §3.10): an agent task, a coding task, an AI run, or an approval waiting on them. Each authority answers its own items in this shape (common.action-list-result@1); OpenVibe.Network merges them into buckets (network.me-actions-result@1). Text is plain (no markup); a cost is what the person was charged in USD, null when unknown or free; href is a page on the authority's own public site.

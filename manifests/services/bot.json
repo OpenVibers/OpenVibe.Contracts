@@ -38,7 +38,8 @@
     "bot.resource.read",
     "bot.resource.control",
     "bot.desk.session",
-    "bot.machine.manage"
+    "bot.machine.manage",
+    "bot.machine.watch_link"
   ],
   "eventsProduced": [
     "bot.robot.online",

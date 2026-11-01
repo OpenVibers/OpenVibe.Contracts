@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bot/watch-link-result.v1.json",
+  "title": "BotWatchLinkResult",
+  "description": "bot.watch-link-result@1: the watch link itself (plan L55): the page that shows the desk, and when it ends. The link is the machine owner's own, so the page needs no sign-in.",
+  "type": "object",
+  "required": [
+    "url",
+    "expires_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The page that shows the desk: https://openvibe.bot/screen/<token>."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the link ends."
+    },
+    "desk": {
+      "type": "string",
+      "description": "The desk the link shows."
+    },
+    "control": {
+      "type": "boolean",
+      "description": "true: the holders may use the mouse and keyboard too."
+    },
+    "share_id": {
+      "type": "string",
+      "description": "Bot's id for the link."
+    }
+  }
+}
