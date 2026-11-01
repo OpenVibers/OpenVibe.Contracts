@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.269.0 — 2026-11-01
+
+- **`actor.model.manage`** (active, first-party, sensitive; plan L55 C3): a person chooses the model their OpenVibe.Actor
+  tasks run on — OpenVibe's own keys, or their own provider key (which stays sealed in OpenVibe.AI and never reaches
+  Actor). `GET /api/v1/me/model` reads the choice, `PUT /api/v1/me/model` sets it (`actor.model-manage-request@1`,
+  answered by `actor.model-manage-result@1`). The person's choice alone: another person's is 404.
+
 ## 0.268.0 — 2026-11-01
 
 - **`bot.machine.watch_link`** (active, first-party, sensitive; plan L55): the owner's agent (OpenVibe.Actor) asks Bot

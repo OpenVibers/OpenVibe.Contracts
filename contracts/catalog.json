@@ -6879,6 +6879,24 @@
       "status": "active"
     },
     {
+      "id": "actor.model-manage-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/model-manage-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.model-manage-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/model-manage-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "actor.agent-run-request",
       "version": "1.0.0",
       "owner": "actor",

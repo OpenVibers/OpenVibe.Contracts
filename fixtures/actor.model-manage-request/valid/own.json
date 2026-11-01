@@ -1,0 +1,4 @@
+{
+  "choice": "own:openai",
+  "model": "gpt-5.1"
+}
