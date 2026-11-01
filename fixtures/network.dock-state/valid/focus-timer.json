@@ -1,0 +1,28 @@
+{
+  "open": false,
+  "tab": "activity",
+  "pinned": false,
+  "agent": null,
+  "chat": null,
+  "place": {
+    "phone": {
+      "corner": "bottom-right"
+    },
+    "desktop": {
+      "corner": "bottom-right",
+      "width": null,
+      "height": null
+    }
+  },
+  "updated_at": "2026-10-30T12:00:00Z",
+  "timer": {
+    "kind": "focus",
+    "label": "Write the post",
+    "started_at": "2026-11-01T09:00:00Z",
+    "ends_at": "2026-11-01T09:25:00Z",
+    "round": 1,
+    "rounds": 4,
+    "focus_min": 25,
+    "break_min": 5
+  }
+}
