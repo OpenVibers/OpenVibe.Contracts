@@ -1,0 +1,10 @@
+{
+  "choice": "own:openai",
+  "provider": "openai",
+  "model": "gpt-5.1",
+  "updated_at": "2026-11-01T00:00:00.000Z",
+  "keys": [
+    "openai",
+    "anthropic"
+  ]
+}

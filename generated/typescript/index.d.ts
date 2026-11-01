@@ -257046,6 +257046,55 @@ export type ActorAgentManageResult =
       updated_at?: string;
     };
 
+/** actor.model-manage-request@1.0.0 (owner: actor) */
+/**
+ * actor.model-manage-request@1: the body of PUT /api/v1/me/model on OpenVibe.Actor: { choice, model? }. choice is 'auto' (Actor decides, as before), 'openvibe' (OpenVibe's own keys, through OpenVibe.AI) or 'own:<provider>' (your own key for that provider: openai, anthropic, deepseek, google, openrouter or mistral). model is the model id you picked for it, or nothing: OpenVibe.AI then routes the call. The key itself never reaches Actor: it stays sealed in OpenVibe.AI. An unknown provider or a model id that is not one is 422 actor.model.invalid.
+ */
+export interface ActorModelManageRequest {
+  /**
+   * Which model your tasks run on.
+   */
+  choice?:
+    | "auto"
+    | "openvibe"
+    | "own:openai"
+    | "own:anthropic"
+    | "own:deepseek"
+    | "own:google"
+    | "own:openrouter"
+    | "own:mistral";
+  /**
+   * The model id you picked, or nothing: OpenVibe.AI routes the call.
+   */
+  model?: string | null;
+}
+
+/** actor.model-manage-result@1.0.0 (owner: actor) */
+/**
+ * actor.model-manage-result@1: what GET /api/v1/me/model answers, and what PUT /api/v1/me/model answers: { choice, provider, model, updated_at, keys }. choice is what you chose; provider is the provider your own key is for (or nothing); model is the model id you picked (or nothing); updated_at is when you last changed it; keys are the providers you hold a key for in OpenVibe.AI (names only, never key material), or null when OpenVibe.AI does not tell a service.
+ */
+export interface ActorModelManageResult {
+  choice:
+    | "auto"
+    | "openvibe"
+    | "own:openai"
+    | "own:anthropic"
+    | "own:deepseek"
+    | "own:google"
+    | "own:openrouter"
+    | "own:mistral";
+  provider: "openai" | "anthropic" | "deepseek" | "google" | "openrouter" | "mistral" | null;
+  model: string | null;
+  /**
+   * ISO 8601, or nothing when you never changed it.
+   */
+  updated_at: string | null;
+  /**
+   * The providers you hold a key for, names only. Null when OpenVibe.AI does not tell a service.
+   */
+  keys: string[] | null;
+}
+
 /** actor.agent-run-request@1.0.0 (owner: actor) */
 /**
  * actor.agent-run-request@1: POST /api/v1/me/agents/:id/run { input? } runs the agent now as an ordinary Actor task (its instructions, then its memory, then the input), under the same free tier, budget and daily limits as the person's own tasks, plus the agent's daily_runs_max (429 actor.agent.limit). Answered 201 with the task (platform.task@1). GET /api/v1/me/agents/:id/runs lists its tasks, newest first.

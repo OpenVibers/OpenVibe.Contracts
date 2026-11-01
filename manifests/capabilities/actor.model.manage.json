@@ -1,0 +1,23 @@
+{
+  "id": "actor.model.manage",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Choose the model your OpenVibe.Actor tasks run on: OpenVibe's own keys, or your own provider key (which stays sealed in OpenVibe.AI and never reaches Actor). Your choice is yours alone; another person's is 404.",
+  "inputSchema": "actor.model-manage-request@1",
+  "outputSchema": "actor.model-manage-result@1",
+  "permissions": [
+    "actor:model:manage"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "actor-task",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/me/model",
+    "PUT /api/v1/me/model"
+  ]
+}

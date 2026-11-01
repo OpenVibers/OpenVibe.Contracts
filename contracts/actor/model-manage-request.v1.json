@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/model-manage-request.v1.json",
+  "title": "ActorModelManageRequest",
+  "description": "actor.model-manage-request@1: the body of PUT /api/v1/me/model on OpenVibe.Actor: { choice, model? }. choice is 'auto' (Actor decides, as before), 'openvibe' (OpenVibe's own keys, through OpenVibe.AI) or 'own:<provider>' (your own key for that provider: openai, anthropic, deepseek, google, openrouter or mistral). model is the model id you picked for it, or nothing: OpenVibe.AI then routes the call. The key itself never reaches Actor: it stays sealed in OpenVibe.AI. An unknown provider or a model id that is not one is 422 actor.model.invalid.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "choice": {
+      "enum": [
+        "auto",
+        "openvibe",
+        "own:openai",
+        "own:anthropic",
+        "own:deepseek",
+        "own:google",
+        "own:openrouter",
+        "own:mistral"
+      ],
+      "default": "auto",
+      "description": "Which model your tasks run on."
+    },
+    "model": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,119}$",
+      "description": "The model id you picked, or nothing: OpenVibe.AI routes the call."
+    }
+  }
+}

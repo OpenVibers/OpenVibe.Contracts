@@ -26,6 +26,7 @@
     "actor.agent.run",
     "actor.actions.read",
     "actor.approval.decide",
+    "actor.model.manage",
     "actor.a2a.task"
   ],
   "eventsProduced": [],

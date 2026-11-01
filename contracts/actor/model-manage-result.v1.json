@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/model-manage-result.v1.json",
+  "title": "ActorModelManageResult",
+  "description": "actor.model-manage-result@1: what GET /api/v1/me/model answers, and what PUT /api/v1/me/model answers: { choice, provider, model, updated_at, keys }. choice is what you chose; provider is the provider your own key is for (or nothing); model is the model id you picked (or nothing); updated_at is when you last changed it; keys are the providers you hold a key for in OpenVibe.AI (names only, never key material), or null when OpenVibe.AI does not tell a service.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "choice",
+    "provider",
+    "model",
+    "updated_at",
+    "keys"
+  ],
+  "properties": {
+    "choice": {
+      "enum": [
+        "auto",
+        "openvibe",
+        "own:openai",
+        "own:anthropic",
+        "own:deepseek",
+        "own:google",
+        "own:openrouter",
+        "own:mistral"
+      ]
+    },
+    "provider": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "openai",
+        "anthropic",
+        "deepseek",
+        "google",
+        "openrouter",
+        "mistral",
+        null
+      ]
+    },
+    "model": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "ISO 8601, or nothing when you never changed it."
+    },
+    "keys": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string",
+        "maxLength": 40
+      },
+      "description": "The providers you hold a key for, names only. Null when OpenVibe.AI does not tell a service."
+    }
+  }
+}

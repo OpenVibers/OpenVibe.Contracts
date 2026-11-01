@@ -5,8 +5,8 @@
       "service": "actor",
       "name": "OpenVibe.Actor",
       "origin": "https://openvibe.actor",
-      "operations": 29,
-      "capabilities": 11
+      "operations": 31,
+      "capabilities": 12
     },
     {
       "service": "ai",
