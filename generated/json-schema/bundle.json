@@ -89154,6 +89154,66 @@
         }
       }
     },
+    "network.dock-timer-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/dock-timer-request.v1.json",
+        "title": "NetworkDockTimerRequest",
+        "description": "network.dock-timer-request@1: the body of PUT /api/v1/people/:subject/dock/timer on OpenVibe.Network (network.dock.timer.write): a first-party service sets or clears ONE person's Dock timer. { minutes } starts one (1 to 180 minutes), { clear: true } stops it. The service writes the timer and nothing else: the rest of the person's Dock state is never touched.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "minutes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 180,
+            "description": "How long the timer runs, in minutes."
+          },
+          "kind": {
+            "enum": [
+              "timer",
+              "focus"
+            ],
+            "description": "A plain timer (the default), or a focus block, which alternates a focus round and a break by itself."
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "What it is for, in the person's own words."
+          },
+          "rounds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "How many focus rounds in all (a focus timer only; 4 by default)."
+          },
+          "clear": {
+            "type": "boolean",
+            "description": "true stops the timer: there is none afterwards."
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "minutes"
+            ]
+          },
+          {
+            "required": [
+              "clear"
+            ],
+            "properties": {
+              "clear": {
+                "const": true
+              }
+            }
+          }
+        ]
+      }
+    },
     "network.consent": {
       "version": "1.0.0",
       "owner": "network",

@@ -7908,6 +7908,15 @@
       "status": "active"
     },
     {
+      "id": "network.dock-timer-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/dock-timer-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.consent",
       "version": "1.0.0",
       "owner": "network",

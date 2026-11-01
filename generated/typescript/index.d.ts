@@ -264537,6 +264537,40 @@ export interface NetworkDockResult {
   sources_partial: boolean;
 }
 
+/** network.dock-timer-request@1.0.0 (owner: network) */
+/**
+ * network.dock-timer-request@1: the body of PUT /api/v1/people/:subject/dock/timer on OpenVibe.Network (network.dock.timer.write): a first-party service sets or clears ONE person's Dock timer. { minutes } starts one (1 to 180 minutes), { clear: true } stops it. The service writes the timer and nothing else: the rest of the person's Dock state is never touched.
+ */
+export type NetworkDockTimerRequest = {
+  /**
+   * How long the timer runs, in minutes.
+   */
+  minutes?: number;
+  /**
+   * A plain timer (the default), or a focus block, which alternates a focus round and a break by itself.
+   */
+  kind?: "timer" | "focus";
+  /**
+   * What it is for, in the person's own words.
+   */
+  label?: string;
+  /**
+   * How many focus rounds in all (a focus timer only; 4 by default).
+   */
+  rounds?: number;
+  /**
+   * true stops the timer: there is none afterwards.
+   */
+  clear?: boolean;
+} & (
+  | {
+      [k: string]: unknown | undefined;
+    }
+  | {
+      clear: true;
+    }
+);
+
 /** network.consent@1.0.0 (owner: network) */
 /**
  * network.consent@1 (L24, data and AI by consent, 2026-10-31): one person's choice for one purpose. Nothing a person makes is off-limits to AI or data use by design; each use is off until that person turns it on, here. The record is the proof of what was allowed, by whom, under which wording and when: a choice is turned off by setting revoked_at, never by deleting the row. Stored by OpenVibe.Network (consents, with every change in consent_events), read by a person at GET /api/v1/me/consent and by services through POST /internal/consent/check (capability network.consent.read). A service that cannot reach Network treats every purpose as off.

@@ -1,0 +1,21 @@
+{
+  "id": "network.dock.timer.write",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Set or clear one person's Dock timer in the Network (plan L48 R2): a first-party service such as OpenVibe.Chat's Vibe starts the person's focus timer where they are, and it counts down in the Dock's pill on every OpenVibe site. The service names the person (the path) and writes the timer and nothing else: the rest of their Dock state is never touched.",
+  "permissions": [
+    "network:dock"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "network-dock-write",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/people/:subject/dock/timer"
+  ],
+  "inputSchema": "network.dock-timer-request@1",
+  "outputSchema": "network.dock-result@1"
+}
