@@ -1,0 +1,23 @@
+{
+  "owner": "live",
+  "type": "doc",
+  "id": "Go Live!",
+  "revision": 3,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://openvibe.live/docs/go-live-in-your-browser",
+  "title": "Go live in your browser",
+  "summary": "Go live from a browser tab: no OBS, no download and no follower minimum.",
+  "body": "Open openvibe.live, press Go live, allow the camera and microphone, and you are live.",
+  "language": "en",
+  "authorship": "human",
+  "publication_state": "published",
+  "published_at": "2026-09-01T10:00:00.000Z",
+  "updated_at": "2026-09-25T19:00:00.000Z",
+  "indexability": {
+    "decision": "index"
+  },
+  "facets": {
+    "kind": "guide"
+  }
+}

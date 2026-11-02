@@ -150727,13 +150727,10 @@ export interface WikiSpace {
 
 /** live.index_document.upserted@1.0.0 (owner: live) */
 /**
- * live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of one of Live's canonical pages: a streamer's channel (type channel, openvibe.live/@username: its name, bio, what it streams and whether it is live), or a public VOD or clip of a Live stream (types vod and clip, openvibe.live/vod/<id> and /clip/<id>: title, channel, AI overview and transcript; the id is the Media id; AI clips are noindex). Sent whenever what Search should hold changed; a banned channel, or a VOD or clip that is deleted, made private or failed, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.
+ * live.index_document.upserted v1 (OpenVibe.Live server/events/search-documents.js; roadmap WS-O task 10). The OpenVibe.Search document of one of Live's canonical pages: a streamer's channel (type channel, openvibe.live/@username: its name, bio, what it streams and whether it is live), or a public VOD or clip of a Live stream (types vod and clip, openvibe.live/vod/<id> and /clip/<id>: title, channel, AI overview and transcript; the id is the Media id; AI clips are noindex), or one of Live's guides (type doc since 0.278.0, openvibe.live/docs/<name>: its title, first paragraph and text; the id is the guide's name, for instance go-live-in-your-browser). Sent whenever what Search should hold changed; a banned channel, or a VOD or clip that is deleted, made private or failed, gets a tombstone. The revision grows with every change. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision: <document revision> }, visibility internal, actor service:live.
  */
 export type LiveIndexDocumentUpsertedPayload = IndexDocument & {
-  owner: "live";
-  type: "channel" | "vod" | "clip";
-  id?: string;
-  deleted: false;
+  [k: string]: unknown | undefined;
 };
 
 /** live.index_document.deleted@1.0.0 (owner: live) */
