@@ -8815,6 +8815,24 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "today.agenda-request",
+      "version": "1.0.0",
+      "owner": "today",
+      "schema": "today/agenda-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "today.agenda",
+      "version": "1.0.0",
+      "owner": "today",
+      "schema": "today/agenda.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -16,7 +16,8 @@
     "publicSite": "service"
   },
   "capabilities": [
-    "today.reminder.write"
+    "today.reminder.write",
+    "today.agenda.read"
   ],
   "eventsProduced": [
     "today.event.scheduled",

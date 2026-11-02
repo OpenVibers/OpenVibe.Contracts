@@ -1,0 +1,22 @@
+{
+  "from": "2026-11-02T08:00:00.000Z",
+  "to": "2026-11-03T10:00:00.000Z",
+  "days": 1,
+  "follows_unavailable": false,
+  "events": [
+    {
+      "id": "evt_01JABCDEFGHJKMNPQRSTVWXYZ0",
+      "kind": "stream",
+      "channel": "japaneseoldguy",
+      "title": "Tokyo walk",
+      "starts_at": "2026-11-02T12:00:00.000Z",
+      "ends_at": null,
+      "tz": "Asia/Tokyo",
+      "status": "scheduled",
+      "visibility": "public",
+      "url": "https://openvibe.live/@japaneseoldguy",
+      "own": false,
+      "reminded": true
+    }
+  ]
+}

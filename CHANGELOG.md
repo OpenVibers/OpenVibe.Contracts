@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.280.0 — 2026-11-02
+
+- **`today.agenda.read`** (first-party, owner today; plan L48 V3, "plan my day"): a first-party service names a
+  person with X-OV-Subject and reads that person's own agenda (`GET /api/v1/me/agenda`), the same one they see at
+  openvibe.today/me. Read-only. OpenVibe.Chat's Vibe reads the day before suggesting a plan, and sets nothing until
+  the person says yes. Schemas `today.agenda-request@1` (the `days` query) and `today.agenda@1` (from, to, days,
+  events, follows_unavailable), with fixtures.
+
 ## 0.279.0 — 2026-11-02
 
 - **Website Connect v0: OpenVibe Connect is live** (CON-1 landed with the OQ-13 review; ADR-057 accepted). The nine

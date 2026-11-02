@@ -284473,3 +284473,50 @@ export interface EventsHookDelivery {
   replay_of?: string | null;
   created_at: string;
 }
+
+/** today.agenda-request@1.0.0 (owner: today) */
+/**
+ * today.agenda-request@1: the query of GET /api/v1/me/agenda on OpenVibe.Today (the person, or a first-party service holding today.agenda.read that names the person with X-OV-Subject).
+ */
+export interface TodayAgendaRequest {
+  /**
+   * How many days ahead, from two hours ago (default 14).
+   */
+  days?: number;
+}
+
+/** today.agenda@1.0.0 (owner: today) */
+/**
+ * today.agenda@1: a person's agenda on OpenVibe.Today (GET /api/v1/me/agenda): their own events, the events they set a reminder on, and the public or followers-only events of the channels they follow, from two hours ago to `days` ahead. follows_unavailable says the followed part could not be read (Network down, or a service asking with no fresh follows for the person).
+ */
+export interface TodayAgenda {
+  from: string;
+  to: string;
+  days: number;
+  /**
+   * @maxItems 2000
+   */
+  events: {
+    id: string;
+    kind?: string;
+    channel?: string | null;
+    title: string;
+    description?: string | null;
+    starts_at: string;
+    ends_at?: string | null;
+    tz?: string | null;
+    status?: string;
+    visibility?: string;
+    url?: string | null;
+    /**
+     * The person made it.
+     */
+    own?: boolean;
+    /**
+     * The person set a reminder on it.
+     */
+    reminded?: boolean;
+    [k: string]: unknown | undefined;
+  }[];
+  follows_unavailable: boolean;
+}
