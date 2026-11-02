@@ -1,0 +1,25 @@
+{
+  "id": "website.share.connect",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, node principal): a Node opens one share's tunnel with POST /api/v1/shares/:id/tunnel and a website.share-connect-request@1. The edge checks the Network node token (client credentials, subject node:nod_…, audience openvibe.website) and the short-lived, single-use tunnel token minted by Connect; neither alone opens the route. The node token's subject must equal node:<node_id> from the request, and a mismatch is refused and audited. Not delegated to user or app tokens.",
+  "permissions": [
+    "website:tunnels:connect"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-tunnel",
+  "events": [
+    "website.share.activated"
+  ],
+  "implementedBy": [
+    "POST /api/v1/shares/:id/tunnel"
+  ],
+  "inputSchema": "website.share-connect-request@1",
+  "outputSchema": "website.share@1"
+}

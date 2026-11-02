@@ -1,0 +1,22 @@
+{
+  "id": "website.share.inspect",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or granted app): read the request inspector for a share (GET /api/v1/shares/:id/requests), a bounded ring buffer of the last N requests as website.audit-entry@1 rows plus captured metadata. Bodies, headers and cookies are captured only when the owner opted in, under a separate redaction pass; query strings and tokens are stripped, and this read never returns a secret. The buffer is 24 hours on free and 7 days on paid plans.",
+  "permissions": [
+    "website:inspector:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-inspect",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/shares/:id/requests"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "website.audit-entry@1"
+}

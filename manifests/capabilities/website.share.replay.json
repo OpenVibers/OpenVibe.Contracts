@@ -1,0 +1,23 @@
+{
+  "id": "website.share.replay",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or granted app): replay one captured request through the same share (POST /api/v1/shares/:id/requests/:rid/replay). Replay is allowed only while the share and its tunnel are active and only to that share's own local target; it never becomes a general proxy and never changes the share's policy. The replay is audited as a new request with its own request_id.",
+  "permissions": [
+    "website:inspector:replay"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-inspect",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/shares/:id/requests/:rid/replay"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.no-body@1"
+}

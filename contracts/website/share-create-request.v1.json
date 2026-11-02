@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/website/share-create-request.v1.json",
+  "title": "WebsiteShareCreateRequest",
+  "description": "website.share-create-request@1: the body of website.share.create (POST /api/v1/shares). The caller names one DNS label, the protocol, the local target and the policy; the project scope comes from the token, never from this body. Connect returns only website.share@1; CON-5 defines a separate authenticated exchange for the one-time tunnel token.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "protocol",
+    "local_target",
+    "policy"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$",
+      "description": "The requested single label under openvibe.website. A taken or reserved label is refused; the UI may suggest name-2 rather than changing it silently."
+    },
+    "protocol": {
+      "enum": [
+        "http",
+        "https",
+        "tcp",
+        "udp"
+      ]
+    },
+    "local_target": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 300,
+      "description": "The local port the Node exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host."
+    },
+    "policy": {
+      "allOf": [
+        {
+          "$ref": "policy.v1.json"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "owner": false,
+            "project_id": false,
+            "version": false,
+            "created_at": false,
+            "updated_at": false,
+            "password_set": false
+          }
+        }
+      ],
+      "description": "The policy to enforce. An id binds an existing owner-checked policy; without one, Connect creates it. Server-owned fields are refused in this caller body. Credential and link secrets are configured separately."
+    },
+    "node_id": {
+      "type": "string",
+      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Optional: bind the share to this Node principal now. Omit to bind it when the first tunnel connects."
+    },
+    "region": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "Optional preferred edge region; placement may ignore it when capacity or policy requires."
+    }
+  }
+}

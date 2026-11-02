@@ -1,0 +1,25 @@
+{
+  "id": "connect.device.manage",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): approve a pending device, change its name, tags, routes or exit-node setting, or remove it (POST /api/v1/devices/:id/approve, PATCH /api/v1/devices/:id, DELETE /api/v1/devices/:id) as connect.device@1. Removal revokes the mesh key at the control plane at once; an approval never admits a device to another tenant. Pre-auth keys and WireGuard keys are never returned or logged.",
+  "permissions": [
+    "connect:devices:manage"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "connect-device",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/devices/:id/approve",
+    "PATCH /api/v1/devices/:id",
+    "DELETE /api/v1/devices/:id"
+  ],
+  "inputSchema": "connect.device@1",
+  "outputSchema": "connect.device@1"
+}

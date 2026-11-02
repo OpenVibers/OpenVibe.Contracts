@@ -1,6 +1,7 @@
 'use strict';
 // ADR-005 amendment 1: people's presence is ephemeral, in Chat's delivery plane.
-// ADR-043 records robot connectivity in Events; it is not a person's presence.
+// ADR-043 records robot connectivity in Events; ADR-057 records Connect device connectivity;
+// neither is a person's presence.
 // The machines hub (plan L34) records the same for a person's machines: a machine coming online is the
 // device changing state, never the person being present. Any other `.online`, `.offline` or presence event
 // type is still refused.

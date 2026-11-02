@@ -1,0 +1,23 @@
+{
+  "id": "events.hook.read",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): read a hook and its delivery log (GET /api/v1/hooks/:id and GET /api/v1/hooks/:id/deliveries) as events.hook@1 and events.hook-delivery@1. The delivery log says attempt, status, response code, latency, size and payload hash; it never returns the payload, its headers, the signature or the hook's secret. Replay is a write and needs events.hook.manage.",
+  "permissions": [
+    "events:hooks:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-hook",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/hooks/:id",
+    "GET /api/v1/hooks/:id/deliveries"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "events.hook-delivery@1"
+}

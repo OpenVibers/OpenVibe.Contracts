@@ -1,0 +1,9 @@
+{
+  "name": "agents-alice",
+  "protocol": "http",
+  "local_target": "127.0.0.1:3000",
+  "policy": {
+    "mode": "signin"
+  },
+  "project_id": "prj_01J8Z3Q4R5S6T7V8W9X0Y1Z2A7"
+}

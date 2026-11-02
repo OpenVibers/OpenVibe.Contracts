@@ -1,0 +1,15 @@
+{
+  "name": "-ab",
+  "protocol": "http",
+  "local_target": "127.0.0.1:3000",
+  "node_id": "nod_01J8Z3Q4R5S6T7V8W9X0Y1Z2A5",
+  "policy": {
+    "mode": "signin",
+    "allowed_projects": [
+      "prj_01J8Z3Q4R5S6T7V8W9X0Y1Z2A7"
+    ],
+    "rate_limits": {
+      "per_ip_per_minute": 120
+    }
+  }
+}

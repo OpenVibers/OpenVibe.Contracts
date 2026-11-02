@@ -1,0 +1,22 @@
+{
+  "id": "website.policy.read",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): read one share policy by id (GET /api/v1/policies/:id) as website.policy@1. The answer says which mode is enforced, its allowances and limits, and the signed version the edge caches; it never includes a password hash or any secret. Another owner's policy is 404.",
+  "permissions": [
+    "website:policies:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-policy",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/policies/:id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "website.policy@1"
+}

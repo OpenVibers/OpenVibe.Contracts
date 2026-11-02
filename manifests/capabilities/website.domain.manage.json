@@ -1,0 +1,23 @@
+{
+  "id": "website.domain.manage",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): attach, verify or remove a custom domain for a share with POST /api/v1/domains from a domains.proposal@1. Connect delegates the DNS change to OpenVibe.Domains — the owner approves it in the Action Center, Domains writes the TXT/CNAME and answers with the applied proposal — and Connect never writes DNS itself or asks for the provider credential. Apex CNAME flattening, Cloudflare for SaaS and the certificate path are CON-2 decisions; the first proof uses a single-label openvibe.website host only.",
+  "permissions": [
+    "website:domains:manage"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-domain",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/domains"
+  ],
+  "inputSchema": "domains.proposal@1",
+  "outputSchema": "domains.proposal@1"
+}

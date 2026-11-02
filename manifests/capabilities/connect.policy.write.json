@@ -1,0 +1,23 @@
+{
+  "id": "connect.policy.write",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): write one tenant's mesh grants, routes and exit-node setting (PUT /api/v1/connect/policies/:id) from a connect.policy@1. The tenant in the body must be the caller's tenant; a rule or route naming another tenant's device is refused. Exit-node traffic is opened only to this tenant's devices and never to a public share. A write bumps the policy version the devices apply.",
+  "permissions": [
+    "connect:policies:write"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "connect-policy",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/connect/policies/:id"
+  ],
+  "inputSchema": "connect.policy@1",
+  "outputSchema": "connect.policy@1"
+}

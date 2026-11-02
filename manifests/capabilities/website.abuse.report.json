@@ -1,0 +1,19 @@
+{
+  "id": "website.abuse.report",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, any signed-in caller): report a share (POST /api/v1/shares/:id/report) with a short reason and, optionally, a public evidence URL; a report never carries a password, cookie or private message. Reports go to the moderation queue with the share's captured evidence and the reporter's subject. The request and answer bodies are added with CON-5's abuse contracts; the capability is registered here so the queue and the grant exist before code.",
+  "permissions": [
+    "website:abuse:report"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "website-abuse",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/shares/:id/report"
+  ]
+}

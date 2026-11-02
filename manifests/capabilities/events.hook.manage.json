@@ -1,0 +1,25 @@
+{
+  "id": "events.hook.manage",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): create, change, pause, resume, rotate the secret of or revoke a durable hook (POST /api/v1/hooks, PATCH /api/v1/hooks/:id, DELETE /api/v1/hooks/:id) as events.hook@1. The signing secret is shown once in the create or rotate answer and stored by Events; it is never in a read, a delivery record, an event or an audit entry. The delivery endpoint is fixed to the hook's own share host, so a hook cannot be pointed at another host.",
+  "permissions": [
+    "events:hooks:manage"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-hook",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/hooks",
+    "PATCH /api/v1/hooks/:id",
+    "DELETE /api/v1/hooks/:id"
+  ],
+  "inputSchema": "events.hook@1",
+  "outputSchema": "events.hook@1"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "connect.device.read",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): list the devices in the caller's private mesh and read one by id (GET /api/v1/devices and GET /api/v1/devices/:id) as connect.device@1. Every device belongs to exactly one tenant, so a read never crosses a tenant boundary; a device in another tenant is 404. Posture is the self-reported signal last checked, never a claim the service verifies.",
+  "permissions": [
+    "connect:devices:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "connect-device",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/devices",
+    "GET /api/v1/devices/:id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "connect.device@1"
+}

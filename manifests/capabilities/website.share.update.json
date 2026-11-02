@@ -1,0 +1,23 @@
+{
+  "id": "website.share.update",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): rename a share, retarget its local port or change its policy with PATCH /api/v1/shares/:id. A policy change bumps website.share.policy_version so the edge's signed cache is stale at once; changing the public label needs the name registry, and a taken or reserved label is refused. Project scope comes from the token, never the body.",
+  "permissions": [
+    "website:shares:update"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-share",
+  "events": [],
+  "implementedBy": [
+    "PATCH /api/v1/shares/:id"
+  ],
+  "inputSchema": "website.share@1",
+  "outputSchema": "website.share@1"
+}

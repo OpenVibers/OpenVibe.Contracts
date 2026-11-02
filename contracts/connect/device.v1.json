@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/connect/device.v1.json",
+  "title": "ConnectDevice",
+  "description": "connect.device@1: one device in a private Connect mesh, as its owner sees it. A device belongs to exactly one tenant (the person's own network or a project's), is identified by a Network node principal, and carries only self-reported posture. The mesh control-plane's internal node id, pre-auth key and WireGuard keys are not part of this document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "tenant",
+    "name",
+    "status",
+    "os",
+    "version",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "allOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ],
+      "description": "The person who owns the device."
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The project whose mesh the device joins; null for a personal mesh."
+    },
+    "tenant": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "const": "user"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "description": "A person's own private network."
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "const": "project"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "description": "A project's private network."
+        }
+      ],
+      "description": "The isolation boundary: one headscale tenant per workspace in v1, never one shared tailnet for all consumer devices."
+    },
+    "node_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Network node principal the device presents; null for an agent or server that joins through a pre-auth key."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$",
+      "description": "One DNS label in the mesh, shown as name.owner (e.g. pc.alice); never a public hostname."
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "online",
+        "offline",
+        "removed"
+      ],
+      "description": "pending waits for the owner's approval of a pre-auth join; removed is terminal and its keys are revoked."
+    },
+    "os": {
+      "enum": [
+        "linux",
+        "macos",
+        "windows",
+        "ios",
+        "android",
+        "other"
+      ]
+    },
+    "arch": {
+      "enum": [
+        "amd64",
+        "arm64",
+        "386",
+        "arm",
+        "other"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "description": "The Node release running on the device."
+    },
+    "addresses": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 64
+      },
+      "description": "The device's private mesh addresses; never a public address."
+    },
+    "tags": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]{0,62}$"
+      }
+    },
+    "posture": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Self-reported posture, a signal not a guarantee; checked_at says when it was read.",
+      "properties": {
+        "node_current": {
+          "type": "boolean"
+        },
+        "os_patched": {
+          "type": "boolean"
+        },
+        "firewall_on": {
+          "type": "boolean"
+        },
+        "disk_encryption": {
+          "type": "boolean"
+        },
+        "risky_ports": {
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          }
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "node_current",
+        "os_patched",
+        "firewall_on",
+        "disk_encryption",
+        "risky_ports",
+        "checked_at"
+      ]
+    },
+    "routes": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 64
+      },
+      "description": "Subnet routes the device advertises, e.g. 192.168.1.0/24; empty for none."
+    },
+    "exit_node": {
+      "type": "boolean",
+      "description": "Whether the owner allows the device to act as an exit node for this tenant only; never a public proxy."
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "approved_by": {
+      "allOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ],
+      "description": "The person who approved the join; null while pending."
+    },
+    "last_seen_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When an unapproved or temporary device stops being valid; null for no expiry."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}
