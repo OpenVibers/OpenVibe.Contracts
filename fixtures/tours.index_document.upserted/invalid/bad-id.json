@@ -1,0 +1,26 @@
+{
+  "owner": "tours",
+  "visibility": "public",
+  "authorship": "imported",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-31T12:00:00.000Z",
+  "updated_at": "2026-11-02T08:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  },
+  "deleted": false,
+  "revision": 1,
+  "type": "place",
+  "id": "Hongya Cave",
+  "canonical_url": "https://openvibe.tours/place/plc_00XKTK1QC3YQG6T8HQ6VVGESWT",
+  "title": "Hongya Cave",
+  "summary": "An attraction in Chongqing, China. Free to visit; step-free.",
+  "body": "Hongya Cave\nAttraction in Chongqing, China",
+  "facets": {
+    "city": "chongqing",
+    "country": "China",
+    "kind": "attraction"
+  }
+}

@@ -7334,6 +7334,24 @@
       "status": "active"
     },
     {
+      "id": "tours.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "tours",
+      "schema": "events/payloads/tours.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "tours.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "tours",
+      "schema": "events/payloads/tours.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "work.application",
       "version": "1.0.0",
       "owner": "work",

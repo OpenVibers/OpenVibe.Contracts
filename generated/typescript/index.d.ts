@@ -260514,6 +260514,30 @@ export interface ShoesIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** tours.index_document.upserted@1.0.0 (owner: tours) */
+/**
+ * tours.index_document.upserted v1 (OpenVibe.Tours server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a Tours page: a place to see (type place, /place/<plc_ id>, from OpenStreetMap with its kind, city and access facts), a city (type city, /city/<slug>: its Wikivoyage summary and how many places and walks it has) or a self-guided walk (type route, /routes/<rte_ id>: its stops, distance and time). Sent by the sweep at boot and on a timer; a page that left the catalogue becomes a tombstone. The sequencer (tours_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: city, country, kind (place), stops/distance_m/duration_min (route), places/routes (city). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:tours.
+ */
+export type ToursIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "tours";
+  type: "place" | "city" | "route";
+  id?: string;
+  deleted: false;
+};
+
+/** tours.index_document.deleted@1.0.0 (owner: tours) */
+/**
+ * tours.index_document.deleted v1 (OpenVibe.Tours server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a Tours page (a place, a city or a walk) that is no longer listed or whose row is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:tours.
+ */
+export interface ToursIndexDocumentDeletedPayload {
+  type: "place" | "city" | "route";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
 /** work.application@1.0.0 (owner: work) */
 /**
  * work.application@1: a person's tracked job application on OpenVibe.Work (server/applications.js toWire), as GET/POST/PATCH /api/v1/me/applications[/:id] answer it. GET of one application adds its append-only status changes as `events`.

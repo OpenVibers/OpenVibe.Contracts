@@ -16,7 +16,10 @@
     "publicSite": "service"
   },
   "capabilities": [],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "tours.index_document.deleted",
+    "tours.index_document.upserted"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [
     "tours.*"

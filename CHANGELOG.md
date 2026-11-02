@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.274.0 — 2026-11-02
+
+- **`tours.index_document.upserted` / `.deleted` v1** (active, first-party; plan T9): OpenVibe.Tours' pages as
+  OpenVibe.Search documents. A place to see (type `place`, `/place/<plc_ id>`, from OpenStreetMap: its kind, city and
+  access facts), a city (type `city`, `/city/<slug>`: its Wikivoyage summary, how many places and walks) and a
+  self-guided walk (type `route`, `/routes/<rte_ id>`: stops, distance and time). Sent through
+  `openvibe-publishing/search-feed`; the Tours manifest lists them in `eventsProduced`; the catalog has their entries
+  and fixtures. 2,754 places, 100 cities and 170 walks were on no network search.
+
 ## 0.273.0 — 2026-11-02
 
 - **`shoes.index_document.upserted` / `.deleted` v1** (active, first-party; plan T9 "Search: real documents from every

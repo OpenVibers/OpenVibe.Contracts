@@ -1,0 +1,28 @@
+{
+  "owner": "tours",
+  "visibility": "public",
+  "authorship": "imported",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-31T12:00:00.000Z",
+  "updated_at": "2026-11-02T08:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  },
+  "deleted": false,
+  "revision": 1,
+  "type": "route",
+  "id": "rte_0455T19CTMDG65FASMDB1QGYC0",
+  "canonical_url": "https://openvibe.tours/routes/rte_0455T19CTMDG65FASMDB1QGYC0",
+  "title": "Old town walk",
+  "summary": "A self-guided walk in Chongqing: 6 stops, 3.2 km, about 90 minutes.",
+  "body": "Old town walk\nChongqing",
+  "facets": {
+    "city": "chongqing",
+    "country": "China",
+    "stops": 6,
+    "distance_m": 3200,
+    "duration_min": 90
+  }
+}

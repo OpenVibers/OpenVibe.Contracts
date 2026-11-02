@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/tours.index_document.upserted.v1.json",
+  "title": "ToursIndexDocumentUpsertedPayload",
+  "description": "tours.index_document.upserted v1 (OpenVibe.Tours server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a Tours page: a place to see (type place, /place/<plc_ id>, from OpenStreetMap with its kind, city and access facts), a city (type city, /city/<slug>: its Wikivoyage summary and how many places and walks it has) or a self-guided walk (type route, /routes/<rte_ id>: its stops, distance and time). Sent by the sweep at boot and on a timer; a page that left the catalogue becomes a tombstone. The sequencer (tours_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: city, country, kind (place), stops/distance_m/duration_min (route), places/routes (city). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:tours.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "tours"
+        },
+        "type": {
+          "enum": [
+            "place",
+            "city",
+            "route"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^((plc|rte)_[0-9A-HJKMNP-TV-Z]{26}|[a-z0-9][a-z0-9-]{0,89})$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}
