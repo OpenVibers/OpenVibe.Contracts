@@ -260490,6 +260490,30 @@ export interface QuestIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** shoes.index_document.upserted@1.0.0 (owner: shoes) */
+/**
+ * shoes.index_document.upserted v1 (OpenVibe.Shoes server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a shoe model's page (type shoe, /shoe/<slug>): its name and brand, the lowest price seen today and how many stores sell it, and the next drop when one is dated. Models are Shoes' own catalogue, so they are sent by the sweep at boot and on a timer; a model that left the catalogue (or has no live offer) becomes a tombstone. The sequencer (shoes_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: brand, stores, lowest_price. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: shoe, id, revision: <document revision> }, visibility internal, actor service:shoes.
+ */
+export type ShoesIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "shoes";
+  type: "shoe";
+  id?: string;
+  deleted: false;
+};
+
+/** shoes.index_document.deleted@1.0.0 (owner: shoes) */
+/**
+ * shoes.index_document.deleted v1 (OpenVibe.Shoes server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a shoe model's page (/shoe/<slug>) that is no longer listed or whose model is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: shoe, id, revision }, visibility internal, actor service:shoes.
+ */
+export interface ShoesIndexDocumentDeletedPayload {
+  type: "shoe";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
 /** work.application@1.0.0 (owner: work) */
 /**
  * work.application@1: a person's tracked job application on OpenVibe.Work (server/applications.js toWire), as GET/POST/PATCH /api/v1/me/applications[/:id] answer it. GET of one application adds its append-only status changes as `events`.

@@ -1,0 +1,28 @@
+{
+  "owner": "shoes",
+  "type": "shoe",
+  "id": "brand-new-model-x1y2z",
+  "revision": 2,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://open.shoes/shoe/brand-new-model-x1y2z",
+  "title": "Brand New Model",
+  "summary": "Nike Air Max 90 from $98 at 3 stores today. Prices, history and size curves on open.shoes.",
+  "body": "Nike Air Max 90\nNike\nFrom $98 at 3 stores today.",
+  "facets": {
+    "brand": "Nike",
+    "stores": 3,
+    "lowest_price": 98
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-31T12:00:00.000Z",
+  "updated_at": "2026-11-02T08:00:00.000Z",
+  "indexability": {
+    "decision": "noindex",
+    "reasons": [
+      "thin_content"
+    ]
+  }
+}

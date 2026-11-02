@@ -1,0 +1,26 @@
+{
+  "owner": "deals",
+  "type": "shoe",
+  "id": "nike-air-max-90-3k7d2",
+  "revision": 2,
+  "deleted": false,
+  "visibility": "public",
+  "canonical_url": "https://open.shoes/shoe/nike-air-max-90-3k7d2",
+  "title": "Nike Air Max 90",
+  "summary": "Nike Air Max 90 from $98 at 3 stores today. Prices, history and size curves on open.shoes.",
+  "body": "Nike Air Max 90\nNike\nFrom $98 at 3 stores today.",
+  "facets": {
+    "brand": "Nike",
+    "stores": 3,
+    "lowest_price": 98
+  },
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-31T12:00:00.000Z",
+  "updated_at": "2026-11-02T08:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  }
+}

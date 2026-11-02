@@ -83168,6 +83168,78 @@
         }
       }
     },
+    "shoes.index_document.upserted": {
+      "version": "1.0.0",
+      "owner": "shoes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/shoes.index_document.upserted.v1.json",
+        "title": "ShoesIndexDocumentUpsertedPayload",
+        "description": "shoes.index_document.upserted v1 (OpenVibe.Shoes server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a shoe model's page (type shoe, /shoe/<slug>): its name and brand, the lowest price seen today and how many stores sell it, and the next drop when one is dated. Models are Shoes' own catalogue, so they are sent by the sweep at boot and on a timer; a model that left the catalogue (or has no live offer) becomes a tombstone. The sequencer (shoes_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: brand, stores, lowest_price. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: shoe, id, revision: <document revision> }, visibility internal, actor service:shoes.",
+        "allOf": [
+          {
+            "$ref": "../../search/index-document.v1.json"
+          },
+          {
+            "type": "object",
+            "required": [
+              "owner",
+              "type",
+              "deleted"
+            ],
+            "properties": {
+              "owner": {
+                "const": "shoes"
+              },
+              "type": {
+                "const": "shoe"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,79}$"
+              },
+              "deleted": {
+                "const": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "shoes.index_document.deleted": {
+      "version": "1.0.0",
+      "owner": "shoes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/shoes.index_document.deleted.v1.json",
+        "title": "ShoesIndexDocumentDeletedPayload",
+        "description": "shoes.index_document.deleted v1 (OpenVibe.Shoes server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a shoe model's page (/shoe/<slug>) that is no longer listed or whose model is gone. Only sent for a page Search was sent before, and only when the tombstone's revision moved. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type: shoe, id, revision }, visibility internal, actor service:shoes.",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "shoe"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,79}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+          }
+        }
+      }
+    },
     "work.application": {
       "version": "1.0.0",
       "owner": "work",

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.273.0 — 2026-11-02
+
+- **`shoes.index_document.upserted` / `.deleted` v1** (active, first-party; plan T9 "Search: real documents from every
+  product"): a shoe model's page on open.shoes (type `shoe`, `/shoe/<slug>`, the slug as the id) as an OpenVibe.Search
+  document: its name and brand, the lowest price seen today and how many stores sell it. Sent by OpenVibe.Shoes through
+  `openvibe-publishing/search-feed` (a boot sweep and a timer; a model with no live offer is a `thin_content` noindex
+  document, one that left the catalogue a tombstone). The Shoes manifest lists them in `eventsProduced`; the catalog
+  has their entries and fixtures. Network searches for a shoe ("nike air max 90") found deals and coupons but never the
+  model's own page with every store's price.
+
 ## 0.272.0 — 2026-11-01
 
 - **`network.dock.timer.write`** (active, first-party; plan L48 R2): a first-party service sets or clears ONE

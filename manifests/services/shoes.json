@@ -16,7 +16,10 @@
     "publicSite": "service"
   },
   "capabilities": [],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "shoes.index_document.deleted",
+    "shoes.index_document.upserted"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [
     "shoes.*"
