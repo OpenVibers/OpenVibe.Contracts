@@ -4,7 +4,7 @@
   "name": "OpenVibe.Zone",
   "icon": "fa-box-archive",
   "accent": "#2dd4bf",
-  "tagline": "Your data, in zones.",
+  "tagline": "Your data, in zones",
   "description": "OpenVibe.Zone keeps your data and files in zones: private S3-style buckets for your projects, with keys you scope and signed links, usable from any S3 tool and offered to developers through OpenVibe.Services. Part of the OpenVibe network, with one account for every site.",
   "pillars": [
     {

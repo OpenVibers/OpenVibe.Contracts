@@ -4,7 +4,7 @@
   "name": "OpenVibe.Video",
   "icon": "fa-film",
   "accent": "#f87171",
-  "tagline": "Watch, upload and record.",
+  "tagline": "Watch, upload and record",
   "description": "OpenVibe.Video is the video site of the OpenVibe network: stream recordings and clips from OpenVibe.Live, your own uploads and recordings made in the browser (camera or screen), each with a player, AI captions, chapters and a summary, its OpenVibe.Community thread, and a page per channel. The files stay on OpenVibe.Media.",
   "pillars": [
     {

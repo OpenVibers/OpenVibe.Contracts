@@ -4,7 +4,7 @@
   "name": "OpenVibe.Quest",
   "icon": "fa-map",
   "accent": "#fbbf24",
-  "tagline": "Quests across the whole network.",
+  "tagline": "Quests across the whole network",
   "description": "OpenVibe.Quest is the network's shared quest log: real things you do on OpenVibe sites — going live, following someone, starting a thread, chatting, playing, improving a wiki page — complete quests that pay badges and OpenCoins (loyalty points, never money). Quest counts only the events the sites already report. OpenVibe.Games counts too: joining a world and publishing your own.",
   "pillars": [
     {

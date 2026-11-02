@@ -4,7 +4,7 @@
   "name": "admin.openvibe.network",
   "icon": "fa-shield-halved",
   "accent": "#f59e0b",
-  "tagline": "One operator console for every service.",
+  "tagline": "One operator console for every service",
   "legalProfile": "account",
   "description": "admin.openvibe.network redirects to openvibe.network/admin, the staff console (users, roles, bans, registry and policy).",
   "pillars": [

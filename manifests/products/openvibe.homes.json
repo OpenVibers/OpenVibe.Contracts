@@ -4,7 +4,7 @@
   "name": "OpenVibe.Homes",
   "icon": "fa-house",
   "accent": "#a3e635",
-  "tagline": "Homes to own, every site at once.",
+  "tagline": "Homes to own, every site at once",
   "description": "OpenVibe.Homes is the owning side of OpenVibe.Rent: one search opens homes for sale on Zillow, Realtor.com, Redfin, Homes.com, Trulia and Craigslist for a place, with government and bank homes (HUD, HomePath, auctions), land and commercial listings, the county's property records, local home prices from the FHFA index and a mortgage calculator. Listings stay on the sites that hold them.",
   "pillars": [
     {

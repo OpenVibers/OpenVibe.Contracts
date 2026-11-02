@@ -4,7 +4,7 @@
   "name": "OpenVibe.Watch",
   "icon": "fa-eye",
   "accent": "#facc15",
-  "tagline": "Watch anything. Hear about what matters.",
+  "tagline": "Watch anything. Hear about what matters",
   "description": "OpenVibe.Watch checks a web page, a price, an RSS or Atom feed or a JSON API on the cadence you pick, waits for an OpenVibe event or a webhook without polling, or has your own computer check a device on your network. It pulls out the value you care about and tells you when it changes or crosses the line you set, or starts one of your Actor agents or a coding task. It is polite: it asks sites whether anything changed before reading them, spaces its requests per site and waits when a site asks. Next: checks in a real browser and AI summaries of what changed.",
   "pillars": [
     {

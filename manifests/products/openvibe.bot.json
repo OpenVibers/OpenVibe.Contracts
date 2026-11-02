@@ -4,7 +4,7 @@
   "name": "OpenVibe.Bot",
   "icon": "fa-robot",
   "accent": "#f472b6",
-  "tagline": "Get your robot online in minutes.",
+  "tagline": "Get your robot online in minutes",
   "description": "OpenVibe.Bot is an open control panel for robots. Add a robot, pair it with one command on the robot (or a QR code for a phone), and drive it from any browser with live video, real controls and a stop button that always works. It runs a Raspberry Pi robot such as the Adeept 4WD kit, a ROS 2 robot, a Cozmo, a LOOI or a phone, and anything else through the generic relay and your own script. Share control, automate it, hand it to your AI agent, and show it on OpenVibe.Live or openre.stream when you want to.",
   "pillars": [
     {

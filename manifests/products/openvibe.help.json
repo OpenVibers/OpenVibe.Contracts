@@ -4,7 +4,7 @@
   "name": "OpenVibe.Help",
   "icon": "fa-life-ring",
   "accent": "#4ade80",
-  "tagline": "Answers, support and a way to reach people.",
+  "tagline": "Answers, support and a way to reach people",
   "description": "OpenVibe.Help is the help centre for every OpenVibe site: what each site does and whether it is live, the common questions each one answers about itself, search across all of them, and a support ticket that stays one conversation with the people who run OpenVibe. Next: answers from the docs, wiki and status pages, and a Report Problem button on every site.",
   "pillars": [
     {

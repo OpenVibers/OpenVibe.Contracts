@@ -4,7 +4,7 @@
   "name": "OpenVibe.Website",
   "icon": "fa-globe",
   "accent": "#8ea0ff",
-  "tagline": "Websites that look finished.",
+  "tagline": "Websites that look finished",
   "description": "OpenVibe.Website is the network's website builder: start from a real site (a shop, a portfolio, an event page, a link page, a product launch) or describe yours to OpenVibe AI, and change anything in the editor with a live preview beside it. Sites are built and kept on OpenVibe.Space with your OpenVibe account and served at yourname.openvibe.website or your own domain; publishing at a public address opens with public hosting.",
   "pillars": [
     {

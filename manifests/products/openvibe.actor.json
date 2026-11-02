@@ -4,7 +4,7 @@
   "name": "OpenVibe.Actor",
   "icon": "fa-user-astronaut",
   "accent": "#a78bfa",
-  "tagline": "Every AI agent, every device, one command console.",
+  "tagline": "Every AI agent, every device, one command console",
   "description": "OpenVibe.Actor sends each task to the best agent for it, across hosted agent platforms, open-source runtimes, coding agents and OpenVibe's own, balanced live on price, speed and success. Install the OpenVibe Node on your computers, servers, Raspberry Pis and robots, and your agents can work on them for real, at the control level you choose, with a kill switch you hold. Run everything from one console, or host the whole thing yourself.",
   "pillars": [
     {

@@ -4,7 +4,7 @@
   "name": "api.openvibe.network",
   "icon": "fa-plug",
   "accent": "#22d3ee",
-  "tagline": "The network, machine-readable.",
+  "tagline": "The network, machine-readable",
   "legalProfile": "info",
   "description": "api.openvibe.network redirects to the network's public APIs, which answer on openvibe.network: the ecosystem registry (services, capabilities, event topics, namespaces and releases, backed by the OpenVibe contracts) and service discovery. Its front page goes to OpenVibe.Services, the developer console and docs.",
   "pillars": [

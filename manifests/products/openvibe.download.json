@@ -4,7 +4,7 @@
   "name": "OpenVibe.Download",
   "icon": "fa-cloud-arrow-down",
   "accent": "#34d399",
-  "tagline": "Upload anything. Share it anywhere.",
+  "tagline": "Upload anything. Share it anywhere",
   "description": "OpenVibe.Download is the file home of the OpenVibe network, in the spirit of MediaFire and MEGA: a 25 GB drive with folders and files up to 2 GB, share links that are public or for signed-in people, and folder backups from your computer with the openvibe-download command. Built on OpenVibe.Media and open through the API.",
   "pillars": [
     {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.276.0 — 2026-11-02
+
+- **Taglines end without a full stop, every one.** 29 service and product manifests' `tagline` ended with one and
+  the other ~45 did not, so the site switcher (Shared's `icons/sites.json`, built from these) and the share cards
+  mixed both. A tagline with two sentences keeps the one in the middle ("Upload anything. Share it anywhere"). No
+  schema or field changes.
+
 ## 0.275.0 — 2026-11-02
 
 - **`report.index_document.upserted` / `.deleted` v1** (active, first-party; plan T9): OpenVibe.Report's Rundown

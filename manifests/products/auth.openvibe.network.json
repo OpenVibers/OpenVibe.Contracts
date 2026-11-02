@@ -4,7 +4,7 @@
   "name": "auth.openvibe.network",
   "icon": "fa-key",
   "accent": "#60a5fa",
-  "tagline": "Sign in, once, for the whole network.",
+  "tagline": "Sign in, once, for the whole network",
   "legalProfile": "account",
   "description": "auth.openvibe.network redirects to openvibe.network, which runs OpenVibe identity: sign-in, registration, OAuth 2.0 / OpenID Connect for apps, sessions and linked accounts.",
   "pillars": [

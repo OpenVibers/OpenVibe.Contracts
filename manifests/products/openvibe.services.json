@@ -4,7 +4,7 @@
   "name": "OpenVibe.Services",
   "icon": "fa-server",
   "accent": "#38bdf8",
-  "tagline": "Build with the whole network.",
+  "tagline": "Build with the whole network",
   "description": "OpenVibe.Services is the way into everything programmable on OpenVibe: projects, apps, keys, grants and usage over Network's developer API; generated API, contract, SDK, capability and event docs; OAuth and webhook tools; playgrounds; app and mod releases; and one resource index over every service, with each service keeping its own data.",
   "pillars": [
     {
