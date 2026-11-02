@@ -1,0 +1,27 @@
+{
+  "owner": "tours",
+  "visibility": "public",
+  "authorship": "imported",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-31T12:00:00.000Z",
+  "updated_at": "2026-11-02T08:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  },
+  "deleted": false,
+  "revision": 1,
+  "type": "city",
+  "id": "chongqing",
+  "canonical_url": "https://openvibe.tours/city/chongqing",
+  "title": "Chongqing, China",
+  "summary": "A city on the Yangtze. 24 places to see and 2 self-guided walks on OpenVibe.Tours.",
+  "body": "Chongqing\nChina",
+  "facets": {
+    "city": "chongqing",
+    "country": "China",
+    "places": 24,
+    "routes": 2
+  }
+}
