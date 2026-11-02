@@ -1,0 +1,21 @@
+{
+  "v": 1,
+  "seq": 92,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-92",
+  "kind": "ai",
+  "value": {
+    "model": "qwen3:8b",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "tool",
+        "content": "orphan result"
+      }
+    ]
+  }
+}

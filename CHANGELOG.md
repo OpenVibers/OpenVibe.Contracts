@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.277.0 — 2026-11-02
+
+- **`bot.command@1` kind `ai` carries tool calls** (expand only; plan L55 C3, "a local model on your Node"). The value
+  may add `tools` (up to 64 OpenAI Chat Completions function definitions) and `tool_choice` (`auto` | `none`);
+  messages may be `role: tool` with `tool_call_id`, and an assistant message may carry the `tool_calls` the model
+  asked for in an earlier answer. The answer's data adds `message.tool_calls` and `finish_reason`. The machine passes
+  the tools to its model server and hands back the calls; it never runs one. A machine whose Node can pass them says
+  `ai.tools: true` in its capabilities (Node v0.36.0), so a caller sends tools only to such a machine. Older commands
+  validate as before. Fixtures: `ai-chat-tools` (valid), `ai-tool-without-call-id` and `ai-tool-bad-name` (invalid).
+
 ## 0.276.0 — 2026-11-02
 
 - **Taglines end without a full stop, every one.** 29 service and product manifests' `tagline` ended with one and
