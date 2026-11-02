@@ -236,8 +236,8 @@
       "service": "today",
       "name": "OpenVibe.Today",
       "origin": "https://openvibe.today",
-      "operations": 6,
-      "capabilities": 1
+      "operations": 7,
+      "capabilities": 2
     },
     {
       "service": "tools",

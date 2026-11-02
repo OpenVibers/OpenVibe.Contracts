@@ -1,0 +1,21 @@
+{
+  "id": "today.agenda.read",
+  "version": "1.0",
+  "owner": "today",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a person's own agenda on OpenVibe.Today, for that person (plan L48 V3, \"plan my day\"): a first-party service such as OpenVibe.Chat's Vibe names the person with X-OV-Subject and gets the same agenda the person sees at openvibe.today/me (their reminders at their times, their events and saved events, imported calendars, and the streams of people they follow when Today knows them). Read-only: nothing is set, changed or kept by reading it.",
+  "permissions": [
+    "today:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "today-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/me/agenda"
+  ],
+  "inputSchema": "today.agenda-request@1",
+  "outputSchema": "today.agenda@1"
+}

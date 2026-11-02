@@ -98719,6 +98719,147 @@
           }
         }
       }
+    },
+    "today.agenda-request": {
+      "version": "1.0.0",
+      "owner": "today",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/today/agenda-request.v1.json",
+        "title": "TodayAgendaRequest",
+        "description": "today.agenda-request@1: the query of GET /api/v1/me/agenda on OpenVibe.Today (the person, or a first-party service holding today.agenda.read that names the person with X-OV-Subject).",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 60,
+            "description": "How many days ahead, from two hours ago (default 14)."
+          }
+        }
+      }
+    },
+    "today.agenda": {
+      "version": "1.0.0",
+      "owner": "today",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/today/agenda.v1.json",
+        "title": "TodayAgenda",
+        "description": "today.agenda@1: a person's agenda on OpenVibe.Today (GET /api/v1/me/agenda): their own events, the events they set a reminder on, and the public or followers-only events of the channels they follow, from two hours ago to `days` ahead. follows_unavailable says the followed part could not be read (Network down, or a service asking with no fresh follows for the person).",
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "days",
+          "events",
+          "follows_unavailable"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 60
+          },
+          "events": {
+            "type": "array",
+            "maxItems": 2000,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "starts_at"
+              ],
+              "additionalProperties": true,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "kind": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "channel": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 64
+                },
+                "title": {
+                  "type": "string",
+                  "maxLength": 300
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "starts_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "ends_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "tz": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 64
+                },
+                "status": {
+                  "type": "string",
+                  "maxLength": 20
+                },
+                "visibility": {
+                  "type": "string",
+                  "maxLength": 20
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2000
+                },
+                "own": {
+                  "type": "boolean",
+                  "description": "The person made it."
+                },
+                "reminded": {
+                  "type": "boolean",
+                  "description": "The person set a reminder on it."
+                }
+              }
+            }
+          },
+          "follows_unavailable": {
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }
