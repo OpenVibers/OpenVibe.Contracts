@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.275.0 — 2026-11-02
+
+- **`report.index_document.upserted` / `.deleted` v1** (active, first-party; plan T9): OpenVibe.Report's Rundown
+  topic pages (type `topic`, `/rundown/t/<slug>`) as OpenVibe.Search documents: the title, headline and summary of
+  what streamers said. Live's own topic pages are noindex; Report's are the public copy. 60 topics were on no network
+  search.
+- **`design.index_document.upserted` / `.deleted` v1** (active, first-party): OpenVibe.Design's icon pages (type
+  `icon`, `/icons/<name>`) and theme pages (type `theme`, `/t/<slug>`). 280 icons and 50 themes were on no network
+  search.
+- Both are sent through `openvibe-publishing/search-feed`; the Report and Design manifests list them in
+  `eventsProduced`; the catalog has their entries and fixtures.
+
 ## 0.274.0 — 2026-11-02
 
 - **`tours.index_document.upserted` / `.deleted` v1** (active, first-party; plan T9): OpenVibe.Tours' pages as
