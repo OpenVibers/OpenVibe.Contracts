@@ -1,0 +1,62 @@
+{
+  "v": 1,
+  "seq": 91,
+  "ts": 1759600000000,
+  "type": "command",
+  "id": "op-91",
+  "kind": "ai",
+  "value": {
+    "model": "qwen3:8b",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Use the tools when a fact needs checking."
+      },
+      {
+        "role": "user",
+        "content": "What is the weather in Lisbon?"
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "call_1",
+            "type": "function",
+            "function": {
+              "name": "web_search",
+              "arguments": "{\"query\":\"Lisbon weather\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_1",
+        "content": "Lisbon: 19 C, sunny."
+      }
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "web_search",
+          "description": "Search the web",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ]
+          }
+        }
+      }
+    ],
+    "tool_choice": "auto",
+    "max_tokens": 800
+  }
+}

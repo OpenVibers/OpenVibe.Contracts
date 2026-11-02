@@ -686,7 +686,7 @@
               "messages"
             ],
             "additionalProperties": false,
-            "description": "one chat completion on the person's own machine (OpenVibe.Node v0.27.0's ai plugin, relayed to a local OpenAI-compatible model server: Ollama, llama.cpp, LM Studio); the answer's data is { model, message: { role, content }, usage? }. It reads nothing on the machine and changes nothing there",
+            "description": "one chat completion on the person's own machine (OpenVibe.Node v0.27.0's ai plugin, relayed to a local OpenAI-compatible model server: Ollama, llama.cpp, LM Studio); the answer's data is { model, message: { role, content, tool_calls? }, finish_reason?, usage? }. It reads nothing on the machine and changes nothing there. TOOLS (since 0.277.0, Node v0.36.0's ai plugin; a machine that can pass them says so with ai.tools: true in its capabilities) are the functions the model may ask for: the machine passes them to its model server and hands back the calls the model asked for in message.tool_calls; it never runs one. The caller runs them and sends the next command with the assistant's message (its tool_calls) and one tool message per call (TOOL_CALL_ID)",
             "properties": {
               "model": {
                 "type": "string",
@@ -710,14 +710,131 @@
                       "enum": [
                         "system",
                         "user",
-                        "assistant"
+                        "assistant",
+                        "tool"
                       ]
                     },
                     "content": {
                       "type": "string",
-                      "maxLength": 65536
+                      "maxLength": 65536,
+                      "description": "the message's text; an assistant message that only asks for tools has \"\""
+                    },
+                    "tool_calls": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 32,
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "type",
+                          "function"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "type": {
+                            "const": "function"
+                          },
+                          "function": {
+                            "type": "object",
+                            "required": [
+                              "name",
+                              "arguments"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_.-]{1,64}$"
+                              },
+                              "arguments": {
+                                "type": "string",
+                                "maxLength": 65536,
+                                "description": "the arguments as the model wrote them: JSON text"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "description": "assistant only: the tools the model asked for in an earlier answer"
+                    },
+                    "tool_call_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "description": "tool only: the id of the call this message answers"
                     }
-                  }
+                  },
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "role": {
+                            "const": "tool"
+                          }
+                        },
+                        "required": [
+                          "role"
+                        ]
+                      },
+                      "then": {
+                        "required": [
+                          "tool_call_id"
+                        ]
+                      }
+                    },
+                    {
+                      "if": {
+                        "properties": {
+                          "role": {
+                            "enum": [
+                              "system",
+                              "user",
+                              "tool"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "role"
+                        ]
+                      },
+                      "then": {
+                        "not": {
+                          "required": [
+                            "tool_calls"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "if": {
+                        "properties": {
+                          "role": {
+                            "enum": [
+                              "system",
+                              "user",
+                              "assistant"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "role"
+                        ]
+                      },
+                      "then": {
+                        "not": {
+                          "required": [
+                            "tool_call_id"
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               },
               "max_tokens": {
@@ -729,6 +846,53 @@
                 "type": "number",
                 "minimum": 0,
                 "maximum": 2
+              },
+              "tools": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 64,
+                "description": "the functions the model may ask for (OpenAI Chat Completions tools); the machine passes them on and never runs one",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "function"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "function"
+                    },
+                    "function": {
+                      "type": "object",
+                      "required": [
+                        "name"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9_.-]{1,64}$"
+                        },
+                        "description": {
+                          "type": "string",
+                          "maxLength": 4096
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "description": "a JSON Schema for the arguments"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "tool_choice": {
+                "enum": [
+                  "auto",
+                  "none"
+                ],
+                "description": "with tools: whether the model may ask for one (auto, the default) or must answer in words (none)"
               }
             }
           }
