@@ -1,0 +1,25 @@
+{
+  "id": "website.admin.manage",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "internal",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, staff or operations only): act on a share from the operator view (POST /api/v1/admin/shares/:id/:action) — pause it, revoke it, release an abuse hold or override a quota — as a website.share@1 action. Every action writes website.share.paused or website.share.revoked and an audit row naming the operator; it can close an edge tunnel at once. Internal, never delegated, and never a way to read a share's traffic or secrets.",
+  "permissions": [
+    "website:admin:manage"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "website-admin",
+  "events": [
+    "website.share.paused",
+    "website.share.revoked"
+  ],
+  "implementedBy": [
+    "POST /api/v1/admin/shares/:id/:action"
+  ],
+  "inputSchema": "website.share@1",
+  "outputSchema": "website.share@1"
+}

@@ -1,0 +1,82 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.279.0 <1.0.0"
+  },
+  "id": "connect",
+  "name": "OpenVibe Connect",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Connect",
+  "domains": [
+    "connect.openvibe.website"
+  ],
+  "publicOrigin": "https://connect.openvibe.website",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "website.*",
+    "connect.*"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP, with how many computers are connected; the database, Network's JWKS and the OAuth client are what /api/ready checks"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained",
+        "every tunnel closed with 1001 (the computers reconnect to the next process by themselves)",
+        "the request counters written, the one-time codes dropped",
+        "JWKS refresher stopped, telemetry flushed, PostgreSQL pool closed, then the Events subscriptions stopped"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "sessions",
+          "what": "connected computers reconnect with backoff (1 s to 30 s) and say hello again; nothing about a tunnel is kept across a restart"
+        },
+        {
+          "kind": "consumer",
+          "what": "the account export and deletion subscriptions at OpenVibe.Events are renewed at boot; a delivery missed while stopped is redelivered and applied once (account_data_events keeps it idempotent)"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migration 0001 only creates Connect's own tables (shares, share_visits) plus the SDK's; an earlier release reads none of them"
+      }
+    },
+    "contracts": {
+      "range": ">=0.279.0 <1.0.0"
+    },
+    "leases": {
+      "none": "one process holds every tunnel; a second process would need the share-to-tunnel routing CON-3 adds"
+    }
+  },
+  "notes": "Port 5240, unit openvibe-connect.service, PostgreSQL database ov_connect. Website Connect v0 (plan 2026-10-28 §5.9b; ADR-057 as reviewed 2026-11-02): a share is one port on a person's computer at https://<label>--<user>.openvibe.website behind OpenVibe sign-in, carried by a one-file client (Node 22) over one WebSocket on 443 (ovconnect-ws/1). Space site names never contain \"--\", so share hosts and Space sites never collide; nginx sends *--*.openvibe.website here and every other *.openvibe.website to Space. Modes owner, named and signin (staff-first); no public shares until CON-9 and CON-21. The share API is a person's (session or Network user token): GET/POST /api/v1/shares, GET/PATCH/DELETE /api/v1/shares/:id, POST /api/v1/shares/:id/key, GET /api/v1/shares/:id/visits. The website.*/connect.*/events.hook* capabilities stay planned until the QUIC edge, the Node plugin and the hooks land (CON-3/4/5/15). OAuth client `connect`; answers account export and deletion (ADR-033) and subscribes to those Events topics.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5240",
+  "site": {
+    "name": "Connect",
+    "icon": "connect",
+    "tagline": "Your computer, on the web, privately",
+    "what": "Share one port on your computer at its own HTTPS address on openvibe.website. Only the people you pick can open it, signed in with OpenVibe. One file and Node: no router settings, no open ports.",
+    "legalProfile": "ugc",
+    "position": 51,
+    "neighbourhood": "make"
+  }
+}

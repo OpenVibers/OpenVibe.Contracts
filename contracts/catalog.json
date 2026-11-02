@@ -8734,6 +8734,87 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "website.share",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "website/share.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "website.share-create-request",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "website/share-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "website.share-connect-request",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "website/share-connect-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "website.policy",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "website/policy.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "website.audit-entry",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "website/audit-entry.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "connect.device",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "connect/device.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "connect.policy",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "connect/policy.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.hook",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/hook.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "events.hook-delivery",
+      "version": "1.0.0",
+      "owner": "events",
+      "schema": "events/hook-delivery.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

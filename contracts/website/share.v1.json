@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/website/share.v1.json",
+  "title": "WebsiteShare",
+  "description": "website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Node tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "name",
+    "hostname",
+    "protocol",
+    "local_target",
+    "status",
+    "policy_id",
+    "policy_version",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "allOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ],
+      "description": "The person who owns the share. A project share is still owned by a person; project_id says which project it belongs to."
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The project scope when the share belongs to one; null for a personal share. The token's project scope, never a caller-supplied body field, decides access."
+    },
+    "node_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Network node principal expected to serve the tunnel; null until one is bound."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$",
+      "description": "One DNS label under openvibe.website. The first proof uses the single label agents-<owner> because Universal SSL covers one label only."
+    },
+    "hostname": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 253,
+      "description": "The fully qualified public host, lowercased; the default is name.openvibe.website, and a verified custom domain may replace it."
+    },
+    "protocol": {
+      "enum": [
+        "http",
+        "https",
+        "tcp",
+        "udp"
+      ],
+      "description": "What the share carries. http and https are HTTP/WS/SSE shares; tcp and udp are port shares."
+    },
+    "local_target": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 300,
+      "description": "The local target the Node may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally."
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "review",
+        "active",
+        "paused",
+        "revoked"
+      ],
+      "description": "review holds a public share for the abuse screen; revoked is terminal and closes the route and tunnel."
+    },
+    "policy_id": {
+      "type": "string",
+      "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "policy_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The signed policy version the edge enforces. A request is checked against this version; revocation bumps it and closes the tunnel."
+    },
+    "region": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 40,
+      "description": "The edge region the share is pinned to, e.g. eu or us-east; null before placement."
+    },
+    "edge_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80,
+      "description": "The edge instance serving the active tunnel; null while the share is offline."
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the share revokes itself; null for no expiry."
+    },
+    "last_seen_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "The last successful Node liveness check; null until the first tunnel."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "href": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    }
+  }
+}

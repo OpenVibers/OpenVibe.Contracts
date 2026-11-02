@@ -1,0 +1,29 @@
+{
+  "id": "pol_01J8Z3Q4R5S6T7V8W9X0Y1Z2A4",
+  "owner": {
+    "type": "user",
+    "id": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A6"
+  },
+  "tenant": {
+    "type": "user",
+    "id": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A6"
+  },
+  "version": 1,
+  "default_action": "deny",
+  "rules": [
+    {
+      "action": "allow",
+      "sources": [
+        "*"
+      ],
+      "destinations": [
+        "*"
+      ],
+      "ports": [
+        "http"
+      ]
+    }
+  ],
+  "created_at": "2026-10-29T08:00:00.000Z",
+  "updated_at": "2026-10-29T09:00:00.000Z"
+}

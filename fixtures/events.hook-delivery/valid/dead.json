@@ -1,0 +1,19 @@
+{
+  "id": "whd_01J8Z3Q4R5S6T7V8W9X0Y1Z2B1",
+  "hook_id": "hok_01J8Z3Q4R5S6T7V8W9X0Y1Z2A9",
+  "event_id": "evt_01J8Z3Q4R5S6T7V8W9X0Y1Z2B0",
+  "event_type": "github.push.received",
+  "attempt": 30,
+  "status": "dead",
+  "response_code": null,
+  "latency_ms": null,
+  "payload_bytes": 2048,
+  "payload_sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+  "next_attempt_at": null,
+  "attempted_at": "2026-11-05T09:00:00.000Z",
+  "completed_at": "2026-11-05T09:00:01.000Z",
+  "dead_at": "2026-11-05T09:00:01.000Z",
+  "error": "share offline",
+  "replay_of": null,
+  "created_at": "2026-10-29T09:00:00.000Z"
+}

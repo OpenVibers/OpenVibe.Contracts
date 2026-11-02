@@ -1,0 +1,45 @@
+{
+  "id": "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2A8",
+  "owner": {
+    "type": "user",
+    "id": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A6"
+  },
+  "project_id": null,
+  "tenant": {
+    "type": "user",
+    "id": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A6"
+  },
+  "node_id": "nod_01J8Z3Q4R5S6T7V8W9X0Y1Z2A5",
+  "name": "ab",
+  "status": "online",
+  "os": "linux",
+  "arch": "amd64",
+  "version": "0.42.0",
+  "addresses": [
+    "100.64.0.2"
+  ],
+  "tags": [
+    "owner",
+    "linux"
+  ],
+  "posture": {
+    "node_current": true,
+    "os_patched": true,
+    "firewall_on": true,
+    "disk_encryption": true,
+    "risky_ports": [],
+    "checked_at": "2026-10-29T09:00:00.000Z"
+  },
+  "routes": [],
+  "exit_node": false,
+  "approved_at": "2026-10-29T08:05:00.000Z",
+  "approved_by": {
+    "type": "user",
+    "id": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A6"
+  },
+  "last_seen_at": "2026-10-29T09:00:00.000Z",
+  "expires_at": null,
+  "created_at": "2026-10-29T08:00:00.000Z",
+  "updated_at": "2026-10-29T09:00:00.000Z",
+  "revoked_at": null
+}

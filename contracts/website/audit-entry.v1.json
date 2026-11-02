@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/website/audit-entry.v1.json",
+  "title": "WebsiteAuditEntry",
+  "description": "website.audit-entry@1: one decision row for a Share, as the owner or a moderator sees it. It answers who reached (or tried to reach) a share, from where, what method and path, what the policy decided and how much crossed the edge. It deliberately carries no request or response body, headers, cookies, bearer or tunnel tokens, query string, password or hook payload: query strings are stripped before this record is made and bodies are captured, if at all, by the separate opt-in inspector with its own redaction.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "share_id",
+    "request_id",
+    "decision",
+    "at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^aud_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "share_id": {
+      "type": "string",
+      "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "The edge request id, for joining a row to a captured request and a trace; never a secret."
+    },
+    "subject": {
+      "allOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ],
+      "description": "Who the policy identified; absent for an anonymous request."
+    },
+    "ip": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 45,
+      "description": "The observed client address (IPv4 or IPv6). Behind Cloudflare it is CF-Connecting-IP, trusted only from Cloudflare's ranges."
+    },
+    "country": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Z]{2}$",
+      "description": "ISO 3166-1 alpha-2 country from the edge's trusted lookup."
+    },
+    "user_agent": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 512
+    },
+    "method": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Z]{3,10}$"
+    },
+    "path": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2048,
+      "description": "Path only, with the query string removed. No body, header, cookie or token is ever stored here."
+    },
+    "status": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 100,
+      "maximum": 599
+    },
+    "decision": {
+      "enum": [
+        "allow",
+        "deny",
+        "challenge",
+        "redirect",
+        "error"
+      ],
+      "description": "The policy outcome: allow, deny, a bot challenge, an OIDC/sign-in redirect, or an edge error."
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 120,
+      "description": "A stable, short reason such as policy.denied or policy.password_required; never free-form request data."
+    },
+    "policy_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "policy_version": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "bytes_in": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "bytes_out": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "edge_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    },
+    "region": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 40
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

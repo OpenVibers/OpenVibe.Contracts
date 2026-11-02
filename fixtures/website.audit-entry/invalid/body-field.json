@@ -1,0 +1,8 @@
+{
+  "id": "aud_01J8Z3Q4R5S6T7V8W9X0Y1Z2B2",
+  "share_id": "shr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
+  "request_id": "req_01J8Z3Q4R5S6T7V8W9",
+  "decision": "allow",
+  "at": "2026-10-29T09:00:00.000Z",
+  "body": "{\"password\":\"hunter2\"}"
+}

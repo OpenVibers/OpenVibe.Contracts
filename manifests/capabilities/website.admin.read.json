@@ -1,0 +1,22 @@
+{
+  "id": "website.admin.read",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "internal",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, staff or operations only): read the operator view of shares, tunnels, hooks and quota counters (GET /api/v1/admin/shares and GET /api/v1/admin/shares/:id), beyond what the owner sees but still without tunnel tokens, hook secrets, request bodies or message content. This is the read half of the internal admin surface; a grant is never issued to user, app or agent tokens.",
+  "permissions": [
+    "website:admin:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "website-admin",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/admin/shares",
+    "GET /api/v1/admin/shares/:id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "website.share@1"
+}

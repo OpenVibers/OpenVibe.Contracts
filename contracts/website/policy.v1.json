@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/website/policy.v1.json",
+  "title": "WebsitePolicy",
+  "description": "website.policy@1: how a Share decides who may reach it and under what conditions (public, OpenVibe sign-in, named people or projects, password, one-time link, expiry), plus IP/country rules, rate limits, a bot check, a WAF preset and required device posture. mode is the only field required except that expiry also requires a non-null expires_at. id, owner and version are present when Connect returns a stored policy. Password and one-time policies stay inactive until their credential or link is configured through the CON-5 API. A password is stored as a one-way hash beside this record and is never part of this document; password_set only says one exists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "mode"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Present on a stored policy; omitted when the policy is written inline with a new share."
+    },
+    "owner": {
+      "allOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ],
+      "description": "The person who owns the policy; set from the token when a policy is created."
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The project scope, when the policy belongs to one."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "mode": {
+      "enum": [
+        "public",
+        "signin",
+        "named",
+        "password",
+        "one_time",
+        "expiry"
+      ],
+      "description": "public: anyone with the link after the abuse screen; signin: any OpenVibe account (optionally a project); named: allowed_subjects/allowed_projects only; password: a shared password; one_time: single-use links; expiry: public access only until expires_at. An expires_at may also cap any other mode."
+    },
+    "allowed_subjects": {
+      "type": "array",
+      "maxItems": 500,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "../identity/subject-ref.v1.json"
+      },
+      "description": "Explicit people or agents allowed in named mode; a project's members are allowed through allowed_projects instead."
+    },
+    "allowed_projects": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+      },
+      "description": "Projects whose members may reach a named or signin share."
+    },
+    "ip_allow": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 64
+      },
+      "description": "CIDR ranges allowed before any other rule; empty means no IP allowlist."
+    },
+    "ip_deny": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 64
+      },
+      "description": "CIDR ranges always refused; evaluated before the allowlist."
+    },
+    "country_allow": {
+      "type": "array",
+      "maxItems": 250,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]{2}$"
+      },
+      "description": "ISO 3166-1 alpha-2 country codes allowed; empty means all."
+    },
+    "country_deny": {
+      "type": "array",
+      "maxItems": 250,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]{2}$"
+      }
+    },
+    "rate_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "per_share_per_minute": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "per_ip_per_minute": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "max_connections": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "max_request_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1073741824
+        }
+      }
+    },
+    "bot_check": {
+      "enum": [
+        "none",
+        "turnstile"
+      ],
+      "default": "none"
+    },
+    "waf_preset": {
+      "enum": [
+        "none",
+        "standard",
+        "strict",
+        "api"
+      ],
+      "default": "standard",
+      "description": "Defense in depth at the edge; Cloudflare's managed rules run in front of it for HTTP/WS."
+    },
+    "posture_required": {
+      "type": "array",
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "node_current",
+          "os_patched",
+          "firewall_on",
+          "disk_encryption",
+          "no_risky_ports"
+        ]
+      },
+      "description": "Self-reported device posture a share may require; a signal, not a guarantee."
+    },
+    "password_set": {
+      "type": "boolean",
+      "description": "Read-only: true when a password hash exists. The hash itself never leaves Connect."
+    },
+    "password_hint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120,
+      "description": "An optional hint shown on the password page; never the password."
+    },
+    "one_time_max_uses": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "description": "For one_time mode; 1 unless the owner allows more."
+    },
+    "session_ttl_seconds": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 604800,
+      "description": "How long a host-only __Host-ov_session on the share host stays valid after sign-in."
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "The absolute end of the policy; required and non-null for expiry mode, optional for other modes."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The signed policy version the edge caches and checks on every request; present on a stored policy."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "if": {
+    "properties": {
+      "mode": {
+        "const": "expiry"
+      }
+    },
+    "required": [
+      "mode"
+    ],
+    "type": "object"
+  },
+  "then": {
+    "required": [
+      "expires_at"
+    ],
+    "properties": {
+      "expires_at": {
+        "type": "string"
+      }
+    },
+    "type": "object"
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/hook.v1.json",
+  "title": "EventsHook",
+  "description": "events.hook@1: one durable webhook subscription managed through OpenVibe.Website Connect, delivered by OpenVibe.Events. The hook names its share, the public ingress path, the event topics it accepts, filters/transform, the retry window and the signature version. The signing secret is shown once when the hook is created or its secret is rotated; secret_set says one exists, and no field of this document ever carries the value.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "share_id",
+    "name",
+    "endpoint",
+    "topics",
+    "status",
+    "signature",
+    "retry",
+    "secret_set",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^hok_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "share_id": {
+      "type": "string",
+      "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The share whose tunnel receives deliveries; delivery never goes to an arbitrary host."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "endpoint": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "description": "The public ingress, https://hooks.openvibe.website/h/<id>; Connect also records the on-share path https://<share host>/__ov/hook/<id>."
+    },
+    "topics": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+      },
+      "description": "Event types this hook accepts, e.g. github.push.received or stripe.invoice.paid; Event's topic patterns may be used by the delivery filter."
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "A JSONPath into the event payload."
+          },
+          "equals": {
+            "oneOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "transform": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "headers": {
+          "type": "object",
+          "maxProperties": 20,
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "description": "Headers added to the delivery; never the hook's signing secret."
+        },
+        "body_template": {
+          "type": "string",
+          "maxLength": 10000,
+          "description": "An optional template applied to the event; the raw payload is used when absent."
+        }
+      }
+    },
+    "retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "window_seconds",
+        "max_attempts"
+      ],
+      "properties": {
+        "window_seconds": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 604800,
+          "description": "How long Events keeps retrying while the share is offline; seven days is the hook default."
+        },
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "tolerance_seconds"
+      ],
+      "properties": {
+        "version": {
+          "const": "v2"
+        },
+        "tolerance_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600,
+          "description": "How far a signed timestamp may drift before the Node refuses it; 300 is the default."
+        }
+      }
+    },
+    "max_payload_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1048576,
+      "default": 1048576
+    },
+    "status": {
+      "enum": [
+        "active",
+        "paused",
+        "revoked"
+      ]
+    },
+    "secret_set": {
+      "type": "boolean",
+      "description": "True once a signing secret exists. The secret itself is returned only in the create/rotate answer and is never stored in this contract, a delivery record or an audit entry."
+    },
+    "secret_rotated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "last_delivery_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "dead_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the hook stopped receiving deliveries after its retry window; null while it is live."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "href": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    }
+  }
+}

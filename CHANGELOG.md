@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.279.0 — 2026-11-02
+
+- **Website Connect v0: OpenVibe Connect is live** (CON-1 landed with the OQ-13 review; ADR-057 accepted). The nine
+  CON-1 contracts join the catalog, all additive: `website.share@1`, `website.share-create-request@1`,
+  `website.share-connect-request@1`, `website.policy@1`, `website.audit-entry@1`, `connect.device@1`,
+  `connect.policy@1`, `events.hook@1` and `events.hook-delivery@1`, with valid and invalid fixtures. Id prefixes
+  `shr`, `dev`, `hok`, `pol` and `aud`.
+- **`manifests/services/connect.json`** (live, connect.openvibe.website, port 5240, ov_connect, site position 51 in
+  "make") replaces CON-1's placeholder `website.json`: one id, `connect`, for the repository, ovhost, the database and
+  the OAuth client. It owns `website.*` and `connect.*`; the 20 capabilities stay `planned`, now owned by `connect`,
+  and none is served or granted.
+- **ADR-057's review** decides v0: the WebSocket fallback through Cloudflare inside Connect (no UDP, no DNS-only
+  record), names `<label>--<user>.openvibe.website` (Space names never contain "--"), a share-scoped connect key until
+  the Node plugin, the gate's host-only signed cookie, modes owner/named and staff-first signin, no public shares
+  until CON-9 and CON-21.
+
 ## 0.278.0 — 2026-11-02
 
 - **`live.index_document.upserted` v1 takes type `doc`** (expand only): one of Live's guides, `openvibe.live/docs/<name>`

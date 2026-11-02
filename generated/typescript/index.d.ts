@@ -282192,3 +282192,2284 @@ export interface TodayReminderResult {
   next_at?: string | null;
   error?: string;
 }
+
+/** website.share@1.0.0 (owner: connect) */
+/**
+ * website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Node tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.
+ */
+export interface WebsiteShare {
+  id: string;
+  /**
+   * The person who owns the share. A project share is still owned by a person; project_id says which project it belongs to.
+   */
+  owner: SubjectRef;
+  /**
+   * The project scope when the share belongs to one; null for a personal share. The token's project scope, never a caller-supplied body field, decides access.
+   */
+  project_id?: string | null;
+  /**
+   * The Network node principal expected to serve the tunnel; null until one is bound.
+   */
+  node_id?: string | null;
+  /**
+   * One DNS label under openvibe.website. The first proof uses the single label agents-<owner> because Universal SSL covers one label only.
+   */
+  name: string;
+  /**
+   * The fully qualified public host, lowercased; the default is name.openvibe.website, and a verified custom domain may replace it.
+   */
+  hostname: string;
+  /**
+   * What the share carries. http and https are HTTP/WS/SSE shares; tcp and udp are port shares.
+   */
+  protocol: "http" | "https" | "tcp" | "udp";
+  /**
+   * The local target the Node may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally.
+   */
+  local_target: string;
+  /**
+   * review holds a public share for the abuse screen; revoked is terminal and closes the route and tunnel.
+   */
+  status: "draft" | "review" | "active" | "paused" | "revoked";
+  policy_id: string;
+  /**
+   * The signed policy version the edge enforces. A request is checked against this version; revocation bumps it and closes the tunnel.
+   */
+  policy_version: number;
+  /**
+   * The edge region the share is pinned to, e.g. eu or us-east; null before placement.
+   */
+  region?: string | null;
+  /**
+   * The edge instance serving the active tunnel; null while the share is offline.
+   */
+  edge_id?: string | null;
+  /**
+   * When the share revokes itself; null for no expiry.
+   */
+  expires_at?: string | null;
+  /**
+   * The last successful Node liveness check; null until the first tunnel.
+   */
+  last_seen_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  revoked_at?: string | null;
+  href?: string;
+}
+
+/** website.share-create-request@1.0.0 (owner: connect) */
+/**
+ * website.share-create-request@1: the body of website.share.create (POST /api/v1/shares). The caller names one DNS label, the protocol, the local target and the policy; the project scope comes from the token, never from this body. Connect returns only website.share@1; CON-5 defines a separate authenticated exchange for the one-time tunnel token.
+ */
+export interface WebsiteShareCreateRequest {
+  /**
+   * The requested single label under openvibe.website. A taken or reserved label is refused; the UI may suggest name-2 rather than changing it silently.
+   */
+  name: string;
+  protocol: "http" | "https" | "tcp" | "udp";
+  /**
+   * The local port the Node exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host.
+   */
+  local_target: string;
+  /**
+   * The policy to enforce. An id binds an existing owner-checked policy; without one, Connect creates it. Server-owned fields are refused in this caller body. Credential and link secrets are configured separately.
+   */
+  policy: WebsitePolicy & {
+    owner?: never;
+    project_id?: never;
+    version?: never;
+    created_at?: never;
+    updated_at?: never;
+    password_set?: never;
+  };
+  /**
+   * Optional: bind the share to this Node principal now. Omit to bind it when the first tunnel connects.
+   */
+  node_id?: string;
+  /**
+   * Optional preferred edge region; placement may ignore it when capacity or policy requires.
+   */
+  region?: string;
+}
+
+/** website.share-connect-request@1.0.0 (owner: connect) */
+/**
+ * website.share-connect-request@1: what a Node presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Node proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.
+ */
+export interface WebsiteShareConnectRequest {
+  share_id: string;
+  /**
+   * Must equal the node principal in the Network token; a mismatch is refused and audited.
+   */
+  node_id: string;
+  /**
+   * A short-lived, single-use, share-scoped token minted by Connect. Send it once over TLS; never put it in a URL, log, audit entry or event.
+   */
+  tunnel_token: string;
+  /**
+   * The data-plane transport the Node is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked.
+   */
+  transport?: "quic" | "http2-ws";
+  /**
+   * The Node release, for posture and diagnostics; never used for authorization.
+   */
+  node_version?: string;
+  /**
+   * The edge region the Node is dialing; the edge refuses a region it does not serve.
+   */
+  region?: string;
+}
+
+/** website.policy@1.0.0 (owner: connect) */
+/**
+ * website.policy@1: how a Share decides who may reach it and under what conditions (public, OpenVibe sign-in, named people or projects, password, one-time link, expiry), plus IP/country rules, rate limits, a bot check, a WAF preset and required device posture. mode is the only field required except that expiry also requires a non-null expires_at. id, owner and version are present when Connect returns a stored policy. Password and one-time policies stay inactive until their credential or link is configured through the CON-5 API. A password is stored as a one-way hash beside this record and is never part of this document; password_set only says one exists.
+ */
+export interface WebsitePolicy {
+  /**
+   * Present on a stored policy; omitted when the policy is written inline with a new share.
+   */
+  id?: string;
+  /**
+   * The person who owns the policy; set from the token when a policy is created.
+   */
+  owner?: SubjectRef;
+  /**
+   * The project scope, when the policy belongs to one.
+   */
+  project_id?: string | null;
+  name?: string;
+  /**
+   * public: anyone with the link after the abuse screen; signin: any OpenVibe account (optionally a project); named: allowed_subjects/allowed_projects only; password: a shared password; one_time: single-use links; expiry: public access only until expires_at. An expires_at may also cap any other mode.
+   */
+  mode: "public" | "signin" | "named" | "password" | "one_time" | "expiry";
+  /**
+   * Explicit people or agents allowed in named mode; a project's members are allowed through allowed_projects instead.
+   *
+   * @maxItems 500
+   */
+  allowed_subjects?: SubjectRef[];
+  /**
+   * Projects whose members may reach a named or signin share.
+   *
+   * @maxItems 100
+   */
+  allowed_projects?: string[];
+  /**
+   * CIDR ranges allowed before any other rule; empty means no IP allowlist.
+   *
+   * @maxItems 100
+   */
+  ip_allow?: string[];
+  /**
+   * CIDR ranges always refused; evaluated before the allowlist.
+   *
+   * @maxItems 100
+   */
+  ip_deny?: string[];
+  /**
+   * ISO 3166-1 alpha-2 country codes allowed; empty means all.
+   *
+   * @maxItems 250
+   */
+  country_allow?: string[];
+  /**
+   * @maxItems 250
+   */
+  country_deny?: string[];
+  rate_limits?: {
+    per_share_per_minute?: number;
+    per_ip_per_minute?: number;
+    max_connections?: number;
+    max_request_bytes?: number;
+  };
+  bot_check?: "none" | "turnstile";
+  /**
+   * Defense in depth at the edge; Cloudflare's managed rules run in front of it for HTTP/WS.
+   */
+  waf_preset?: "none" | "standard" | "strict" | "api";
+  /**
+   * Self-reported device posture a share may require; a signal, not a guarantee.
+   *
+   * @maxItems 10
+   */
+  posture_required?:
+    | []
+    | ["node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ]
+    | [
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports",
+        "node_current" | "os_patched" | "firewall_on" | "disk_encryption" | "no_risky_ports"
+      ];
+  /**
+   * Read-only: true when a password hash exists. The hash itself never leaves Connect.
+   */
+  password_set?: boolean;
+  /**
+   * An optional hint shown on the password page; never the password.
+   */
+  password_hint?: string | null;
+  /**
+   * For one_time mode; 1 unless the owner allows more.
+   */
+  one_time_max_uses?: number;
+  /**
+   * How long a host-only __Host-ov_session on the share host stays valid after sign-in.
+   */
+  session_ttl_seconds?: number;
+  /**
+   * The absolute end of the policy; required and non-null for expiry mode, optional for other modes.
+   */
+  expires_at?: string | null;
+  /**
+   * The signed policy version the edge caches and checks on every request; present on a stored policy.
+   */
+  version?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+/** website.audit-entry@1.0.0 (owner: connect) */
+/**
+ * website.audit-entry@1: one decision row for a Share, as the owner or a moderator sees it. It answers who reached (or tried to reach) a share, from where, what method and path, what the policy decided and how much crossed the edge. It deliberately carries no request or response body, headers, cookies, bearer or tunnel tokens, query string, password or hook payload: query strings are stripped before this record is made and bodies are captured, if at all, by the separate opt-in inspector with its own redaction.
+ */
+export interface WebsiteAuditEntry {
+  id: string;
+  share_id: string;
+  /**
+   * The edge request id, for joining a row to a captured request and a trace; never a secret.
+   */
+  request_id: string;
+  /**
+   * Who the policy identified; absent for an anonymous request.
+   */
+  subject?: SubjectRef;
+  /**
+   * The observed client address (IPv4 or IPv6). Behind Cloudflare it is CF-Connecting-IP, trusted only from Cloudflare's ranges.
+   */
+  ip?: string | null;
+  /**
+   * ISO 3166-1 alpha-2 country from the edge's trusted lookup.
+   */
+  country?: string | null;
+  user_agent?: string | null;
+  method?: string | null;
+  /**
+   * Path only, with the query string removed. No body, header, cookie or token is ever stored here.
+   */
+  path?: string | null;
+  status?: number | null;
+  /**
+   * The policy outcome: allow, deny, a bot challenge, an OIDC/sign-in redirect, or an edge error.
+   */
+  decision: "allow" | "deny" | "challenge" | "redirect" | "error";
+  /**
+   * A stable, short reason such as policy.denied or policy.password_required; never free-form request data.
+   */
+  reason?: string;
+  policy_id?: string | null;
+  policy_version?: number | null;
+  bytes_in?: number | null;
+  bytes_out?: number | null;
+  edge_id?: string | null;
+  region?: string | null;
+  at: string;
+}
+
+/** connect.device@1.0.0 (owner: connect) */
+/**
+ * connect.device@1: one device in a private Connect mesh, as its owner sees it. A device belongs to exactly one tenant (the person's own network or a project's), is identified by a Network node principal, and carries only self-reported posture. The mesh control-plane's internal node id, pre-auth key and WireGuard keys are not part of this document.
+ */
+export interface ConnectDevice {
+  id: string;
+  /**
+   * The person who owns the device.
+   */
+  owner: SubjectRef;
+  /**
+   * The project whose mesh the device joins; null for a personal mesh.
+   */
+  project_id?: string | null;
+  /**
+   * The isolation boundary: one headscale tenant per workspace in v1, never one shared tailnet for all consumer devices.
+   */
+  tenant:
+    | {
+        type: "user";
+        id: string;
+      }
+    | {
+        type: "project";
+        id: string;
+      };
+  /**
+   * The Network node principal the device presents; null for an agent or server that joins through a pre-auth key.
+   */
+  node_id?: string | null;
+  /**
+   * One DNS label in the mesh, shown as name.owner (e.g. pc.alice); never a public hostname.
+   */
+  name: string;
+  /**
+   * pending waits for the owner's approval of a pre-auth join; removed is terminal and its keys are revoked.
+   */
+  status: "pending" | "online" | "offline" | "removed";
+  os: "linux" | "macos" | "windows" | "ios" | "android" | "other";
+  arch?: "amd64" | "arm64" | "386" | "arm" | "other";
+  /**
+   * The Node release running on the device.
+   */
+  version: string;
+  /**
+   * The device's private mesh addresses; never a public address.
+   *
+   * @maxItems 8
+   */
+  addresses?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  /**
+   * @maxItems 50
+   */
+  tags?: string[];
+  /**
+   * Self-reported posture, a signal not a guarantee; checked_at says when it was read.
+   */
+  posture?: {
+    node_current: boolean;
+    os_patched: boolean;
+    firewall_on: boolean;
+    disk_encryption: boolean;
+    /**
+     * @maxItems 200
+     */
+    risky_ports: number[];
+    checked_at: string;
+  } | null;
+  /**
+   * Subnet routes the device advertises, e.g. 192.168.1.0/24; empty for none.
+   *
+   * @maxItems 50
+   */
+  routes?: string[];
+  /**
+   * Whether the owner allows the device to act as an exit node for this tenant only; never a public proxy.
+   */
+  exit_node?: boolean;
+  approved_at?: string | null;
+  /**
+   * The person who approved the join; null while pending.
+   */
+  approved_by?: SubjectRef;
+  last_seen_at?: string | null;
+  /**
+   * When an unapproved or temporary device stops being valid; null for no expiry.
+   */
+  expires_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  revoked_at?: string | null;
+}
+
+/** connect.policy@1.0.0 (owner: connect) */
+/**
+ * connect.policy@1: the grants, routes and exit-node settings of one private Connect tenant. It is deliberately tenant-scoped: a rule never names a device, person or tag from another tenant, and default_action is deny unless the owner opens a path. It describes intent, not the control plane's internal ACL file or keys.
+ */
+export interface ConnectPolicy {
+  id: string;
+  owner: SubjectRef;
+  project_id?: string | null;
+  /**
+   * The one tenant this policy can affect; a rule or route naming another tenant's id is invalid.
+   */
+  tenant:
+    | {
+        type: "user";
+        id: string;
+      }
+    | {
+        type: "project";
+        id: string;
+      };
+  name?: string;
+  /**
+   * Bumped on every change; a device keeps the version it last applied.
+   */
+  version: number;
+  /**
+   * deny unless the owner explicitly opens a path.
+   */
+  default_action: "allow" | "deny";
+  /**
+   * @maxItems 200
+   */
+  rules: {
+    action: "allow" | "deny";
+    /**
+     * @minItems 1
+     * @maxItems 50
+     */
+    sources: [string, ...string[]];
+    /**
+     * @minItems 1
+     * @maxItems 50
+     */
+    destinations: [string, ...string[]];
+    /**
+     * TCP/UDP ports or ranges; omit for all ports.
+     *
+     * @maxItems 50
+     */
+    ports?: string[];
+    description?: string;
+  }[];
+  /**
+   * Exit nodes are usable only by this tenant's devices; no public share may target one.
+   */
+  exit_node?: {
+    enabled: boolean;
+    /**
+     * @maxItems 20
+     */
+    device_ids:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  } | null;
+  /**
+   * @maxItems 100
+   */
+  subnet_routes?: {
+    device_id: string;
+    cidr: string;
+  }[];
+  updated_by?: SubjectRef;
+  created_at: string;
+  updated_at: string;
+}
+
+/** events.hook@1.0.0 (owner: events) */
+/**
+ * events.hook@1: one durable webhook subscription managed through OpenVibe.Website Connect, delivered by OpenVibe.Events. The hook names its share, the public ingress path, the event topics it accepts, filters/transform, the retry window and the signature version. The signing secret is shown once when the hook is created or its secret is rotated; secret_set says one exists, and no field of this document ever carries the value.
+ */
+export interface EventsHook {
+  id: string;
+  owner: SubjectRef;
+  project_id?: string | null;
+  /**
+   * The share whose tunnel receives deliveries; delivery never goes to an arbitrary host.
+   */
+  share_id: string;
+  name: string;
+  /**
+   * The public ingress, https://hooks.openvibe.website/h/<id>; Connect also records the on-share path https://<share host>/__ov/hook/<id>.
+   */
+  endpoint: string;
+  /**
+   * Event types this hook accepts, e.g. github.push.received or stripe.invoice.paid; Event's topic patterns may be used by the delivery filter.
+   *
+   * @minItems 1
+   * @maxItems 50
+   */
+  topics: [string, ...string[]];
+  /**
+   * @maxItems 20
+   */
+  filters?:
+    | []
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        },
+        {
+          /**
+           * A JSONPath into the event payload.
+           */
+          path: string;
+          equals?: string | number | boolean | null;
+        }
+      ];
+  transform?: {
+    /**
+     * Headers added to the delivery; never the hook's signing secret.
+     */
+    headers?: {
+      [k: string]: string | undefined;
+    };
+    /**
+     * An optional template applied to the event; the raw payload is used when absent.
+     */
+    body_template?: string;
+  } | null;
+  retry: {
+    /**
+     * How long Events keeps retrying while the share is offline; seven days is the hook default.
+     */
+    window_seconds: number;
+    max_attempts: number;
+  };
+  signature: {
+    version: "v2";
+    /**
+     * How far a signed timestamp may drift before the Node refuses it; 300 is the default.
+     */
+    tolerance_seconds: number;
+  };
+  max_payload_bytes?: number;
+  status: "active" | "paused" | "revoked";
+  /**
+   * True once a signing secret exists. The secret itself is returned only in the create/rotate answer and is never stored in this contract, a delivery record or an audit entry.
+   */
+  secret_set: boolean;
+  secret_rotated_at?: string | null;
+  last_delivery_at?: string | null;
+  /**
+   * When the hook stopped receiving deliveries after its retry window; null while it is live.
+   */
+  dead_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  href?: string;
+}
+
+/** events.hook-delivery@1.0.0 (owner: events) */
+/**
+ * events.hook-delivery@1: one attempt by OpenVibe.Events to deliver an event to a hook. It carries the outcome, timing, size and hash of the payload, never the payload itself, its headers, the signature or the hook's secret. A delivery is retried inside its hook's window and dead-lettered after it; replay creates a new attempt that names the one it replays.
+ */
+export interface EventsHookDelivery {
+  id: string;
+  hook_id: string;
+  event_id: string;
+  event_type: string;
+  attempt: number;
+  /**
+   * failed is a retryable attempt; dead is the last, after the hook's window. A 2xx answer marks delivered.
+   */
+  status: "queued" | "delivering" | "delivered" | "failed" | "dead";
+  /**
+   * The delivery request id, for tracing; not a secret.
+   */
+  request_id?: string | null;
+  response_code?: number | null;
+  latency_ms?: number | null;
+  payload_bytes: number;
+  /**
+   * The SHA-256 of the signed body, so a consumer can check it without the body being stored here.
+   */
+  payload_sha256: string;
+  signature_version?: "v2";
+  next_attempt_at?: string | null;
+  attempted_at?: string | null;
+  completed_at?: string | null;
+  dead_at?: string | null;
+  /**
+   * A short transport or status reason; never a response body.
+   */
+  error?: string | null;
+  /**
+   * The failed or dead attempt this one replays.
+   */
+  replay_of?: string | null;
+  created_at: string;
+}

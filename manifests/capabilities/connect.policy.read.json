@@ -1,0 +1,22 @@
+{
+  "id": "connect.policy.read",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "first-party",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): read one tenant's mesh policy (GET /api/v1/connect/policies/:id) as connect.policy@1, with its grants, default action, exit-node setting and subnet routes. A policy is readable only inside its own tenant; the answer carries no pre-auth key, WireGuard key or control-plane ACL file.",
+  "permissions": [
+    "connect:policies:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "connect-policy",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/connect/policies/:id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "connect.policy@1"
+}

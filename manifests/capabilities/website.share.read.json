@@ -1,0 +1,23 @@
+{
+  "id": "website.share.read",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): list the caller's shares and read one by id (GET /api/v1/shares and GET /api/v1/shares/:id). A user token sees only its own shares and the projects it is a member of; another owner's share is 404, never 403. The list answers website.share@1 rows without tunnel tokens or captured bodies.",
+  "permissions": [
+    "website:shares:read"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-share",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/shares",
+    "GET /api/v1/shares/:id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "website.share@1"
+}

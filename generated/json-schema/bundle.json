@@ -97221,6 +97221,1504 @@
           }
         }
       }
+    },
+    "website.share": {
+      "version": "1.0.0",
+      "owner": "connect",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/website/share.v1.json",
+        "title": "WebsiteShare",
+        "description": "website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Node tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner",
+          "name",
+          "hostname",
+          "protocol",
+          "local_target",
+          "status",
+          "policy_id",
+          "policy_version",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            ],
+            "description": "The person who owns the share. A project share is still owned by a person; project_id says which project it belongs to."
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The project scope when the share belongs to one; null for a personal share. The token's project scope, never a caller-supplied body field, decides access."
+          },
+          "node_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The Network node principal expected to serve the tunnel; null until one is bound."
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$",
+            "description": "One DNS label under openvibe.website. The first proof uses the single label agents-<owner> because Universal SSL covers one label only."
+          },
+          "hostname": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 253,
+            "description": "The fully qualified public host, lowercased; the default is name.openvibe.website, and a verified custom domain may replace it."
+          },
+          "protocol": {
+            "enum": [
+              "http",
+              "https",
+              "tcp",
+              "udp"
+            ],
+            "description": "What the share carries. http and https are HTTP/WS/SSE shares; tcp and udp are port shares."
+          },
+          "local_target": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 300,
+            "description": "The local target the Node may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally."
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "review",
+              "active",
+              "paused",
+              "revoked"
+            ],
+            "description": "review holds a public share for the abuse screen; revoked is terminal and closes the route and tunnel."
+          },
+          "policy_id": {
+            "type": "string",
+            "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "policy_version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The signed policy version the edge enforces. A request is checked against this version; revocation bumps it and closes the tunnel."
+          },
+          "region": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40,
+            "description": "The edge region the share is pinned to, e.g. eu or us-east; null before placement."
+          },
+          "edge_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80,
+            "description": "The edge instance serving the active tunnel; null while the share is offline."
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the share revokes itself; null for no expiry."
+          },
+          "last_seen_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The last successful Node liveness check; null until the first tunnel."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "href": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          }
+        }
+      }
+    },
+    "website.share-create-request": {
+      "version": "1.0.0",
+      "owner": "connect",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/website/share-create-request.v1.json",
+        "title": "WebsiteShareCreateRequest",
+        "description": "website.share-create-request@1: the body of website.share.create (POST /api/v1/shares). The caller names one DNS label, the protocol, the local target and the policy; the project scope comes from the token, never from this body. Connect returns only website.share@1; CON-5 defines a separate authenticated exchange for the one-time tunnel token.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "protocol",
+          "local_target",
+          "policy"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$",
+            "description": "The requested single label under openvibe.website. A taken or reserved label is refused; the UI may suggest name-2 rather than changing it silently."
+          },
+          "protocol": {
+            "enum": [
+              "http",
+              "https",
+              "tcp",
+              "udp"
+            ]
+          },
+          "local_target": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 300,
+            "description": "The local port the Node exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host."
+          },
+          "policy": {
+            "allOf": [
+              {
+                "$ref": "policy.v1.json"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "owner": false,
+                  "project_id": false,
+                  "version": false,
+                  "created_at": false,
+                  "updated_at": false,
+                  "password_set": false
+                }
+              }
+            ],
+            "description": "The policy to enforce. An id binds an existing owner-checked policy; without one, Connect creates it. Server-owned fields are refused in this caller body. Credential and link secrets are configured separately."
+          },
+          "node_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Optional: bind the share to this Node principal now. Omit to bind it when the first tunnel connects."
+          },
+          "region": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "Optional preferred edge region; placement may ignore it when capacity or policy requires."
+          }
+        }
+      }
+    },
+    "website.share-connect-request": {
+      "version": "1.0.0",
+      "owner": "connect",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/website/share-connect-request.v1.json",
+        "title": "WebsiteShareConnectRequest",
+        "description": "website.share-connect-request@1: what a Node presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Node proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "share_id",
+          "node_id",
+          "tunnel_token"
+        ],
+        "properties": {
+          "share_id": {
+            "type": "string",
+            "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "node_id": {
+            "type": "string",
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Must equal the node principal in the Network token; a mismatch is refused and audited."
+          },
+          "tunnel_token": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 4096,
+            "description": "A short-lived, single-use, share-scoped token minted by Connect. Send it once over TLS; never put it in a URL, log, audit entry or event."
+          },
+          "transport": {
+            "enum": [
+              "quic",
+              "http2-ws"
+            ],
+            "default": "quic",
+            "description": "The data-plane transport the Node is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked."
+          },
+          "node_version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$",
+            "description": "The Node release, for posture and diagnostics; never used for authorization."
+          },
+          "region": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "The edge region the Node is dialing; the edge refuses a region it does not serve."
+          }
+        }
+      }
+    },
+    "website.policy": {
+      "version": "1.0.0",
+      "owner": "connect",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/website/policy.v1.json",
+        "title": "WebsitePolicy",
+        "description": "website.policy@1: how a Share decides who may reach it and under what conditions (public, OpenVibe sign-in, named people or projects, password, one-time link, expiry), plus IP/country rules, rate limits, a bot check, a WAF preset and required device posture. mode is the only field required except that expiry also requires a non-null expires_at. id, owner and version are present when Connect returns a stored policy. Password and one-time policies stay inactive until their credential or link is configured through the CON-5 API. A password is stored as a one-way hash beside this record and is never part of this document; password_set only says one exists.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mode"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Present on a stored policy; omitted when the policy is written inline with a new share."
+          },
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            ],
+            "description": "The person who owns the policy; set from the token when a policy is created."
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The project scope, when the policy belongs to one."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "mode": {
+            "enum": [
+              "public",
+              "signin",
+              "named",
+              "password",
+              "one_time",
+              "expiry"
+            ],
+            "description": "public: anyone with the link after the abuse screen; signin: any OpenVibe account (optionally a project); named: allowed_subjects/allowed_projects only; password: a shared password; one_time: single-use links; expiry: public access only until expires_at. An expires_at may also cap any other mode."
+          },
+          "allowed_subjects": {
+            "type": "array",
+            "maxItems": 500,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "../identity/subject-ref.v1.json"
+            },
+            "description": "Explicit people or agents allowed in named mode; a project's members are allowed through allowed_projects instead."
+          },
+          "allowed_projects": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "description": "Projects whose members may reach a named or signin share."
+          },
+          "ip_allow": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64
+            },
+            "description": "CIDR ranges allowed before any other rule; empty means no IP allowlist."
+          },
+          "ip_deny": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64
+            },
+            "description": "CIDR ranges always refused; evaluated before the allowlist."
+          },
+          "country_allow": {
+            "type": "array",
+            "maxItems": 250,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            },
+            "description": "ISO 3166-1 alpha-2 country codes allowed; empty means all."
+          },
+          "country_deny": {
+            "type": "array",
+            "maxItems": 250,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "rate_limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "per_share_per_minute": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000
+              },
+              "per_ip_per_minute": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100000
+              },
+              "max_connections": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100000
+              },
+              "max_request_bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1073741824
+              }
+            }
+          },
+          "bot_check": {
+            "enum": [
+              "none",
+              "turnstile"
+            ],
+            "default": "none"
+          },
+          "waf_preset": {
+            "enum": [
+              "none",
+              "standard",
+              "strict",
+              "api"
+            ],
+            "default": "standard",
+            "description": "Defense in depth at the edge; Cloudflare's managed rules run in front of it for HTTP/WS."
+          },
+          "posture_required": {
+            "type": "array",
+            "maxItems": 10,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "node_current",
+                "os_patched",
+                "firewall_on",
+                "disk_encryption",
+                "no_risky_ports"
+              ]
+            },
+            "description": "Self-reported device posture a share may require; a signal, not a guarantee."
+          },
+          "password_set": {
+            "type": "boolean",
+            "description": "Read-only: true when a password hash exists. The hash itself never leaves Connect."
+          },
+          "password_hint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "description": "An optional hint shown on the password page; never the password."
+          },
+          "one_time_max_uses": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "description": "For one_time mode; 1 unless the owner allows more."
+          },
+          "session_ttl_seconds": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 604800,
+            "description": "How long a host-only __Host-ov_session on the share host stays valid after sign-in."
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The absolute end of the policy; required and non-null for expiry mode, optional for other modes."
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The signed policy version the edge caches and checks on every request; present on a stored policy."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "if": {
+          "properties": {
+            "mode": {
+              "const": "expiry"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        "then": {
+          "required": [
+            "expires_at"
+          ],
+          "properties": {
+            "expires_at": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      }
+    },
+    "website.audit-entry": {
+      "version": "1.0.0",
+      "owner": "connect",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/website/audit-entry.v1.json",
+        "title": "WebsiteAuditEntry",
+        "description": "website.audit-entry@1: one decision row for a Share, as the owner or a moderator sees it. It answers who reached (or tried to reach) a share, from where, what method and path, what the policy decided and how much crossed the edge. It deliberately carries no request or response body, headers, cookies, bearer or tunnel tokens, query string, password or hook payload: query strings are stripped before this record is made and bodies are captured, if at all, by the separate opt-in inspector with its own redaction.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "share_id",
+          "request_id",
+          "decision",
+          "at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^aud_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "share_id": {
+            "type": "string",
+            "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The edge request id, for joining a row to a captured request and a trace; never a secret."
+          },
+          "subject": {
+            "allOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            ],
+            "description": "Who the policy identified; absent for an anonymous request."
+          },
+          "ip": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 45,
+            "description": "The observed client address (IPv4 or IPv6). Behind Cloudflare it is CF-Connecting-IP, trusted only from Cloudflare's ranges."
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Z]{2}$",
+            "description": "ISO 3166-1 alpha-2 country from the edge's trusted lookup."
+          },
+          "user_agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "method": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Z]{3,10}$"
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048,
+            "description": "Path only, with the query string removed. No body, header, cookie or token is ever stored here."
+          },
+          "status": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 100,
+            "maximum": 599
+          },
+          "decision": {
+            "enum": [
+              "allow",
+              "deny",
+              "challenge",
+              "redirect",
+              "error"
+            ],
+            "description": "The policy outcome: allow, deny, a bot challenge, an OIDC/sign-in redirect, or an edge error."
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "A stable, short reason such as policy.denied or policy.password_required; never free-form request data."
+          },
+          "policy_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "policy_version": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "bytes_in": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "bytes_out": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "edge_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "region": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "connect.device": {
+      "version": "1.0.0",
+      "owner": "connect",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/connect/device.v1.json",
+        "title": "ConnectDevice",
+        "description": "connect.device@1: one device in a private Connect mesh, as its owner sees it. A device belongs to exactly one tenant (the person's own network or a project's), is identified by a Network node principal, and carries only self-reported posture. The mesh control-plane's internal node id, pre-auth key and WireGuard keys are not part of this document.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner",
+          "tenant",
+          "name",
+          "status",
+          "os",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            ],
+            "description": "The person who owns the device."
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The project whose mesh the device joins; null for a personal mesh."
+          },
+          "tenant": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "A person's own private network."
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "project"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "A project's private network."
+              }
+            ],
+            "description": "The isolation boundary: one headscale tenant per workspace in v1, never one shared tailnet for all consumer devices."
+          },
+          "node_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The Network node principal the device presents; null for an agent or server that joins through a pre-auth key."
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$",
+            "description": "One DNS label in the mesh, shown as name.owner (e.g. pc.alice); never a public hostname."
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "online",
+              "offline",
+              "removed"
+            ],
+            "description": "pending waits for the owner's approval of a pre-auth join; removed is terminal and its keys are revoked."
+          },
+          "os": {
+            "enum": [
+              "linux",
+              "macos",
+              "windows",
+              "ios",
+              "android",
+              "other"
+            ]
+          },
+          "arch": {
+            "enum": [
+              "amd64",
+              "arm64",
+              "386",
+              "arm",
+              "other"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "The Node release running on the device."
+          },
+          "addresses": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64
+            },
+            "description": "The device's private mesh addresses; never a public address."
+          },
+          "tags": {
+            "type": "array",
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,62}$"
+            }
+          },
+          "posture": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "description": "Self-reported posture, a signal not a guarantee; checked_at says when it was read.",
+            "properties": {
+              "node_current": {
+                "type": "boolean"
+              },
+              "os_patched": {
+                "type": "boolean"
+              },
+              "firewall_on": {
+                "type": "boolean"
+              },
+              "disk_encryption": {
+                "type": "boolean"
+              },
+              "risky_ports": {
+                "type": "array",
+                "maxItems": 200,
+                "uniqueItems": true,
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 65535
+                }
+              },
+              "checked_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "node_current",
+              "os_patched",
+              "firewall_on",
+              "disk_encryption",
+              "risky_ports",
+              "checked_at"
+            ]
+          },
+          "routes": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64
+            },
+            "description": "Subnet routes the device advertises, e.g. 192.168.1.0/24; empty for none."
+          },
+          "exit_node": {
+            "type": "boolean",
+            "description": "Whether the owner allows the device to act as an exit node for this tenant only; never a public proxy."
+          },
+          "approved_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "approved_by": {
+            "allOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            ],
+            "description": "The person who approved the join; null while pending."
+          },
+          "last_seen_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When an unapproved or temporary device stops being valid; null for no expiry."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "connect.policy": {
+      "version": "1.0.0",
+      "owner": "connect",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/connect/policy.v1.json",
+        "title": "ConnectPolicy",
+        "description": "connect.policy@1: the grants, routes and exit-node settings of one private Connect tenant. It is deliberately tenant-scoped: a rule never names a device, person or tag from another tenant, and default_action is deny unless the owner opens a path. It describes intent, not the control plane's internal ACL file or keys.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner",
+          "tenant",
+          "version",
+          "rules",
+          "default_action",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "tenant": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "A person's own private network."
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "project"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "A project's private network."
+              }
+            ],
+            "description": "The one tenant this policy can affect; a rule or route naming another tenant's id is invalid."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Bumped on every change; a device keeps the version it last applied."
+          },
+          "default_action": {
+            "enum": [
+              "allow",
+              "deny"
+            ],
+            "description": "deny unless the owner explicitly opens a path."
+          },
+          "rules": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "sources",
+                "destinations"
+              ],
+              "properties": {
+                "action": {
+                  "enum": [
+                    "allow",
+                    "deny"
+                  ]
+                },
+                "sources": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 50,
+                  "items": {
+                    "$ref": "#/$defs/selector"
+                  }
+                },
+                "destinations": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 50,
+                  "items": {
+                    "$ref": "#/$defs/selector"
+                  }
+                },
+                "ports": {
+                  "type": "array",
+                  "maxItems": 50,
+                  "items": {
+                    "$ref": "#/$defs/port"
+                  },
+                  "description": "TCP/UDP ports or ranges; omit for all ports."
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              }
+            }
+          },
+          "exit_node": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "device_ids": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+                }
+              }
+            },
+            "required": [
+              "enabled",
+              "device_ids"
+            ],
+            "description": "Exit nodes are usable only by this tenant's devices; no public share may target one."
+          },
+          "subnet_routes": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "device_id",
+                "cidr"
+              ],
+              "properties": {
+                "device_id": {
+                  "type": "string",
+                  "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "cidr": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 64
+                }
+              }
+            }
+          },
+          "updated_by": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "selector": {
+            "type": "string",
+            "pattern": "^(?:\\*|(?:user|device|tag|project):[A-Za-z0-9_.:-]+)$",
+            "description": "*, or user:<usr_…>, device:<dev_…>, tag:<name> or project:<prj_…>; all within this tenant."
+          },
+          "port": {
+            "type": "string",
+            "pattern": "^(?:\\*|[0-9]{1,5}(?:-[0-9]{1,5})?)$",
+            "description": "* for any port, 443, or a range such as 8000-8100."
+          }
+        }
+      }
+    },
+    "events.hook": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/hook.v1.json",
+        "title": "EventsHook",
+        "description": "events.hook@1: one durable webhook subscription managed through OpenVibe.Website Connect, delivered by OpenVibe.Events. The hook names its share, the public ingress path, the event topics it accepts, filters/transform, the retry window and the signature version. The signing secret is shown once when the hook is created or its secret is rotated; secret_set says one exists, and no field of this document ever carries the value.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner",
+          "share_id",
+          "name",
+          "endpoint",
+          "topics",
+          "status",
+          "signature",
+          "retry",
+          "secret_set",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^hok_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "share_id": {
+            "type": "string",
+            "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The share whose tunnel receives deliveries; delivery never goes to an arbitrary host."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "endpoint": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "description": "The public ingress, https://hooks.openvibe.website/h/<id>; Connect also records the on-share path https://<share host>/__ov/hook/<id>."
+          },
+          "topics": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+            },
+            "description": "Event types this hook accepts, e.g. github.push.received or stripe.invoice.paid; Event's topic patterns may be used by the delivery filter."
+          },
+          "filters": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "A JSONPath into the event payload."
+                },
+                "equals": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "transform": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "headers": {
+                "type": "object",
+                "maxProperties": 20,
+                "additionalProperties": {
+                  "type": "string",
+                  "maxLength": 500
+                },
+                "description": "Headers added to the delivery; never the hook's signing secret."
+              },
+              "body_template": {
+                "type": "string",
+                "maxLength": 10000,
+                "description": "An optional template applied to the event; the raw payload is used when absent."
+              }
+            }
+          },
+          "retry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "window_seconds",
+              "max_attempts"
+            ],
+            "properties": {
+              "window_seconds": {
+                "type": "integer",
+                "minimum": 60,
+                "maximum": 604800,
+                "description": "How long Events keeps retrying while the share is offline; seven days is the hook default."
+              },
+              "max_attempts": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              }
+            }
+          },
+          "signature": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "version",
+              "tolerance_seconds"
+            ],
+            "properties": {
+              "version": {
+                "const": "v2"
+              },
+              "tolerance_seconds": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3600,
+                "description": "How far a signed timestamp may drift before the Node refuses it; 300 is the default."
+              }
+            }
+          },
+          "max_payload_bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1048576,
+            "default": 1048576
+          },
+          "status": {
+            "enum": [
+              "active",
+              "paused",
+              "revoked"
+            ]
+          },
+          "secret_set": {
+            "type": "boolean",
+            "description": "True once a signing secret exists. The secret itself is returned only in the create/rotate answer and is never stored in this contract, a delivery record or an audit entry."
+          },
+          "secret_rotated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_delivery_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "dead_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the hook stopped receiving deliveries after its retry window; null while it is live."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "href": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          }
+        }
+      }
+    },
+    "events.hook-delivery": {
+      "version": "1.0.0",
+      "owner": "events",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/hook-delivery.v1.json",
+        "title": "EventsHookDelivery",
+        "description": "events.hook-delivery@1: one attempt by OpenVibe.Events to deliver an event to a hook. It carries the outcome, timing, size and hash of the payload, never the payload itself, its headers, the signature or the hook's secret. A delivery is retried inside its hook's window and dead-lettered after it; replay creates a new attempt that names the one it replays.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "hook_id",
+          "event_id",
+          "event_type",
+          "attempt",
+          "status",
+          "payload_bytes",
+          "payload_sha256",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^whd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "hook_id": {
+            "type": "string",
+            "pattern": "^hok_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "event_id": {
+            "type": "string",
+            "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "event_type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+){2,}$"
+          },
+          "attempt": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "delivering",
+              "delivered",
+              "failed",
+              "dead"
+            ],
+            "description": "failed is a retryable attempt; dead is the last, after the hook's window. A 2xx answer marks delivered."
+          },
+          "request_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "The delivery request id, for tracing; not a secret."
+          },
+          "response_code": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 100,
+            "maximum": 599
+          },
+          "latency_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "payload_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1048576
+          },
+          "payload_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "The SHA-256 of the signed body, so a consumer can check it without the body being stored here."
+          },
+          "signature_version": {
+            "const": "v2"
+          },
+          "next_attempt_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "attempted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "dead_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 400,
+            "description": "A short transport or status reason; never a response body."
+          },
+          "replay_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^whd_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The failed or dead attempt this one replays."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
     }
   }
 }

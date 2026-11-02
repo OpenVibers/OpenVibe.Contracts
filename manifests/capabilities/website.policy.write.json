@@ -1,0 +1,24 @@
+{
+  "id": "website.policy.write",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): create or change a share policy with POST /api/v1/policies or PATCH /api/v1/policies/:id from a website.policy@1. A password arrives in the request body, is hashed with Argon2id and is stored beside the policy, never in the policy document; a write bumps the signed version and tells the edge. The owner and project come from the token, so a body cannot move a policy to another project.",
+  "permissions": [
+    "website:policies:write"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "website-policy",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/policies",
+    "PATCH /api/v1/policies/:id"
+  ],
+  "inputSchema": "website.policy@1",
+  "outputSchema": "website.policy@1"
+}

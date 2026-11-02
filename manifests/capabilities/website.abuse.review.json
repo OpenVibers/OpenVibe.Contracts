@@ -1,0 +1,24 @@
+{
+  "id": "website.abuse.review",
+  "version": "1.0",
+  "owner": "connect",
+  "status": "planned",
+  "visibility": "internal",
+  "sensitive": true,
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, staff or moderator only): read the abuse queue and decide one report (GET /api/v1/admin/abuse, POST /api/v1/admin/abuse/:id/:action) — hold, activate, pause or takedown a share. A staff decision is audited with the moderator's subject and the evidence, not the request body; a takedown is also announced to Domains for a custom hostname. This is an internal moderation capability, never delegated to user or app tokens.",
+  "permissions": [
+    "website:abuse:review"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "website-abuse",
+  "events": [
+    "website.share.review",
+    "website.share.revoked"
+  ],
+  "implementedBy": [
+    "GET /api/v1/admin/abuse",
+    "POST /api/v1/admin/abuse/:id/:action"
+  ]
+}
