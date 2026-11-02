@@ -94,7 +94,7 @@
   "site": {
     "name": "Run",
     "icon": "run",
-    "tagline": "Run jobs on machines that can.",
+    "tagline": "Run jobs on machines that can",
     "what": "Send a job to one API with your project's token: Compute places it on a node that offers its runtime, streams its output and meters it per second.",
     "legalProfile": "hosting",
     "position": 34,

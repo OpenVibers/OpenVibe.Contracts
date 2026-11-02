@@ -4,7 +4,7 @@
   "name": "OpenVibe.Pics",
   "icon": "fa-images",
   "accent": "#f472b6",
-  "tagline": "Share pictures. Fast, open, yours.",
+  "tagline": "Share pictures. Fast, open, yours",
   "description": "OpenVibe.Pics is the picture host of the OpenVibe network, an open and ad-free alternative to Imgur: upload a picture and get a link to share or embed anywhere (the page, the direct link, Markdown, BBCode and HTML), with albums. Every picture is re-encoded with its GPS position and camera details removed, served unlisted (only people with the link see it), and anyone can report one; staff takedowns keep the same picture from coming back. Uploading takes a free OpenVibe account.",
   "pillars": [
     {
