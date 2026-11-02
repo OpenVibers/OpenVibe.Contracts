@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.278.0 — 2026-11-02
+
+- **`live.index_document.upserted` v1 takes type `doc`** (expand only): one of Live's guides, `openvibe.live/docs/<name>`
+  (for instance go-live-in-your-browser), as an OpenVibe.Search document. Its id is the guide's name
+  (`^[a-z][a-z0-9-]{1,63}$`); channel, vod and clip keep their numeric ids. Live's guides were on no network search.
+  Fixtures: `doc` (valid), `doc-bad-name` (invalid).
+
 ## 0.277.0 — 2026-11-02
 
 - **`bot.command@1` kind `ai` carries tool calls** (expand only; plan L55 C3, "a local model on your Node"). The value
