@@ -260538,6 +260538,54 @@ export interface ToursIndexDocumentDeletedPayload {
   revision: number;
 }
 
+/** design.index_document.upserted@1.0.0 (owner: design) */
+/**
+ * design.index_document.upserted v1 (OpenVibe.Design server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a Design page: an icon (type icon, /icons/<name>, the glyph name as the id: its name, the words it is found by and the formats it downloads in) or a theme (type theme, /t/<slug>: its name, mode and description, from OpenVibe.Network's theme catalog). Sent by the sweep at boot and on a timer; a page that left the catalog becomes a tombstone. The sequencer (design_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: kind (icon: solid when it has a filled form), mode (theme). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:design.
+ */
+export type DesignIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "design";
+  type: "icon" | "theme";
+  id?: string;
+  deleted: false;
+};
+
+/** design.index_document.deleted@1.0.0 (owner: design) */
+/**
+ * design.index_document.deleted v1 (OpenVibe.Design server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for an icon or theme page that left the catalog. Only sent for a page Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:design.
+ */
+export interface DesignIndexDocumentDeletedPayload {
+  type: "icon" | "theme";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
+/** report.index_document.upserted@1.0.0 (owner: report) */
+/**
+ * report.index_document.upserted v1 (OpenVibe.Report server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a Rundown topic page (type topic, /rundown/t/<slug>, the slug as the id): the topic's title, headline and summary of what streamers said about it, from OpenVibe.Live's Rundown. Live's own topic pages are noindex; Report's are the public copy. Sent by the sweep at boot and on a timer; a topic that left the Rundown becomes a tombstone. The sequencer (report_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: kind, takes. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:report.
+ */
+export type ReportIndexDocumentUpsertedPayload = IndexDocument & {
+  owner: "report";
+  type: "topic";
+  id?: string;
+  deleted: false;
+};
+
+/** report.index_document.deleted@1.0.0 (owner: report) */
+/**
+ * report.index_document.deleted v1 (OpenVibe.Report server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a Rundown topic page that left the Rundown. Only sent for a page Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:report.
+ */
+export interface ReportIndexDocumentDeletedPayload {
+  type: "topic";
+  id: string;
+  /**
+   * Index revision of the tombstone; wins over any document at the same or an older revision.
+   */
+  revision: number;
+}
+
 /** work.application@1.0.0 (owner: work) */
 /**
  * work.application@1: a person's tracked job application on OpenVibe.Work (server/applications.js toWire), as GET/POST/PATCH /api/v1/me/applications[/:id] answer it. GET of one application adds its append-only status changes as `events`.

@@ -1,0 +1,25 @@
+{
+  "visibility": "public",
+  "authorship": "human",
+  "provenance": [],
+  "publication_state": "published",
+  "published_at": "2026-10-31T12:00:00.000Z",
+  "updated_at": "2026-11-02T08:00:00.000Z",
+  "indexability": {
+    "decision": "index",
+    "reasons": []
+  },
+  "deleted": false,
+  "revision": 1,
+  "owner": "report",
+  "type": "episode",
+  "id": "taking-a-break",
+  "canonical_url": "https://openvibe.report/rundown/t/taking-a-break",
+  "title": "Taking a break",
+  "summary": "Streamers debate stepping away: fresh air, robot faces and emotional breaks.",
+  "body": "Taking a break\nStreamers debate stepping away.",
+  "facets": {
+    "kind": "life",
+    "takes": 4
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/report.index_document.deleted.v1.json",
+  "title": "ReportIndexDocumentDeletedPayload",
+  "description": "report.index_document.deleted v1 (OpenVibe.Report server/search-index.js, via openvibe-publishing/search-feed). A Search tombstone for a Rundown topic page that left the Rundown. Only sent for a page Search was sent before. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:report.",
+  "type": "object",
+  "required": [
+    "type",
+    "id",
+    "revision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "enum": [
+        "topic"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,89}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Index revision of the tombstone; wins over any document at the same or an older revision."
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/design.index_document.upserted.v1.json",
+  "title": "DesignIndexDocumentUpsertedPayload",
+  "description": "design.index_document.upserted v1 (OpenVibe.Design server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a Design page: an icon (type icon, /icons/<name>, the glyph name as the id: its name, the words it is found by and the formats it downloads in) or a theme (type theme, /t/<slug>: its name, mode and description, from OpenVibe.Network's theme catalog). Sent by the sweep at boot and on a timer; a page that left the catalog becomes a tombstone. The sequencer (design_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: kind (icon: solid when it has a filled form), mode (theme). Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:design.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "design"
+        },
+        "type": {
+          "enum": [
+            "icon",
+            "theme"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,89}$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

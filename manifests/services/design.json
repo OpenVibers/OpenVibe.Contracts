@@ -16,7 +16,10 @@
     "publicSite": "service"
   },
   "capabilities": [],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "design.index_document.deleted",
+    "design.index_document.upserted"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [
     "design.*"

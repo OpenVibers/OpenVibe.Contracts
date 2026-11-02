@@ -18,7 +18,10 @@
   "capabilities": [
     "report.ai_usage.read"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "report.index_document.deleted",
+    "report.index_document.upserted"
+  ],
   "eventsConsumed": [
     "ai.call.recorded"
   ],

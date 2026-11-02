@@ -7352,6 +7352,42 @@
       "status": "active"
     },
     {
+      "id": "design.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "events/payloads/design.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "events/payloads/design.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.index_document.upserted",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "events/payloads/report.index_document.upserted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.index_document.deleted",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "events/payloads/report.index_document.deleted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "work.application",
       "version": "1.0.0",
       "owner": "work",

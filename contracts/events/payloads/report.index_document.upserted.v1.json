@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/report.index_document.upserted.v1.json",
+  "title": "ReportIndexDocumentUpsertedPayload",
+  "description": "report.index_document.upserted v1 (OpenVibe.Report server/search-index.js, via openvibe-publishing/search-feed). The OpenVibe.Search document of a Rundown topic page (type topic, /rundown/t/<slug>, the slug as the id): the topic's title, headline and summary of what streamers said about it, from OpenVibe.Live's Rundown. Live's own topic pages are noindex; Report's are the public copy. Sent by the sweep at boot and on a timer; a topic that left the Rundown becomes a tombstone. The sequencer (report_index_revisions) gives an unchanged document its old revision and nothing is sent. Always visibility public and publication_state published. Facets: kind, takes. Consumed by OpenVibe.Search ('*.index_document.*'). Envelope: subject { type, id, revision }, visibility internal, actor service:report.",
+  "allOf": [
+    {
+      "$ref": "../../search/index-document.v1.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "owner",
+        "type",
+        "deleted"
+      ],
+      "properties": {
+        "owner": {
+          "const": "report"
+        },
+        "type": {
+          "enum": [
+            "topic"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,89}$"
+        },
+        "deleted": {
+          "const": false
+        }
+      }
+    }
+  ]
+}
