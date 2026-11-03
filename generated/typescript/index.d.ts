@@ -197813,7 +197813,7 @@ export type ChatDmBlockStateResult =
 
 /** chat.timeline-result@1.0.0 (owner: chat) */
 /**
- * chat.timeline-result@1: the answer of GET /internal/chat/timeline on OpenVibe.Chat (capability chat.analysis.read): non-deleted chat_messages of one channel (channel_user_id) or stream (stream_id) counted per bucket between since and until (epoch ms), bucket_ms wide, for OpenVibe.Live's AI moments, chat spikes and activity. Empty buckets are left out; buckets are oldest first. max_id is the highest message id in the window, null when none. A failure is chat.ingress-ack@1's error.
+ * chat.timeline-result@1: the answer of GET /internal/chat/timeline on OpenVibe.Chat (capability chat.analysis.read): non-deleted chat_messages of one channel (channel_user_id) or stream (stream_id) counted per bucket between since and until (epoch ms), bucket_ms wide, for OpenVibe.Live's AI moments, chat spikes and activity. Live's own AI viewers (source_platform ai) are not counted: they are not people reacting. Empty buckets are left out; buckets are oldest first. max_id is the highest message id in the window, null when none. A failure is chat.ingress-ack@1's error.
  */
 export type ChatTimelineResult =
   | {
@@ -197824,6 +197824,10 @@ export type ChatTimelineResult =
          */
         t: number;
         count: number;
+        /**
+         * How many different chatters wrote in the bucket (a signed-in user, an anonymous viewer or a relayed name each count once). Optional: Chat from 2026-11-03 sends it; a reader treats its absence as unknown.
+         */
+        people?: number;
       }[];
       max_id: number | null;
     }

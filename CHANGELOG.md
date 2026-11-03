@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.283.0 — 2026-11-03
+
+- **`chat.timeline-result@1` buckets may say how many people wrote** (`people`, optional): a signed-in user, an
+  anonymous viewer or a relayed name each count once. OpenVibe.Live's VOD clip cutter reads it as "a reacted room"
+  (item 151, C08: 12+ messages from 3+ people before an AI clip can be public); without it the count is unknown and the
+  clip stays unlisted. The description now says what Chat already does since Chat #338: Live's own AI viewers
+  (`source_platform` ai) are not counted. Optional, so older readers and writers are unaffected.
+
 ## 0.282.0 — 2026-11-03
 
 - **`connect.hook.received@1`** (OpenVibe Connect, CON-15, ADR-057 decision 7): a webhook reached a share's hook at
