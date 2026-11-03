@@ -144,7 +144,9 @@
             "games",
             "hosting",
             "account",
-            "info"
+            "info",
+            "public",
+            "service"
           ],
           "description": "Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal)."
         },

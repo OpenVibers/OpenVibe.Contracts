@@ -99,7 +99,7 @@
     "icon": "ai",
     "tagline": "Many models, one API. Every answer explained",
     "what": "One API for chat, generation, summaries, classification, extraction and embeddings across many models; every run says which model answered, why it was chosen and what it cost.",
-    "legalProfile": "tools",
+    "legalProfile": "service",
     "position": 32,
     "faq": [
       {

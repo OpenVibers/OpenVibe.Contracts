@@ -90,7 +90,7 @@
     "icon": "search",
     "tagline": "Search the OpenVibe network",
     "what": "One search box over what the network's services have published: streams, clips, pastes, wiki pages, news and more, from OpenVibe's own index.",
-    "legalProfile": "info",
+    "legalProfile": "public",
     "position": 33,
     "faq": [
       {

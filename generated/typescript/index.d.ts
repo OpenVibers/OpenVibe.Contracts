@@ -285,7 +285,7 @@ export interface ServiceManifest {
     /**
      * Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal).
      */
-    legalProfile: "streaming" | "tools" | "ugc" | "games" | "hosting" | "account" | "info";
+    legalProfile: "streaming" | "tools" | "ugc" | "games" | "hosting" | "account" | "info" | "public" | "service";
     /**
      * Order in site lists.
      */
@@ -2304,7 +2304,7 @@ export interface Product {
   /**
    * Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal), as in a service manifest's site.
    */
-  legalProfile?: "streaming" | "tools" | "ugc" | "games" | "hosting" | "account" | "info";
+  legalProfile?: "streaming" | "tools" | "ugc" | "games" | "hosting" | "account" | "info" | "public" | "service";
   /**
    * Absent for a product page. closed: the address was decided against and points elsewhere; moved: the product lives at another address; status: the address shows the network's status. relationships.links say where.
    */

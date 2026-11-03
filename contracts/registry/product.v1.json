@@ -15,7 +15,7 @@
     "tagline": { "type": "string", "maxLength": 120 },
     "description": { "$ref": "#/$defs/description" },
     "legalProfile": {
-      "enum": ["streaming", "tools", "ugc", "games", "hosting", "account", "info"],
+      "enum": ["streaming", "tools", "ugc", "games", "hosting", "account", "info", "public", "service"],
       "description": "Which legal wording its /terms, /privacy and /dmca use (openvibe-shared/legal), as in a service manifest's site."
     },
     "kind": {
