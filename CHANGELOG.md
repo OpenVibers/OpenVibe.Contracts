@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.281.0 — 2026-11-03
+
+- **Two legal profiles: `public` and `service`** (`registry.service-manifest@1` and `registry.product@1`
+  `legalProfile`, openvibe-shared 4.107.0). `public` is an open, read-only site with no account. `service` is a personal
+  tool or API that keeps what you make with your account. Ten sites served no `/terms`, `/privacy` or `/dmca` because
+  no profile told the truth about them (the 11-02 sweep). Their manifests move:
+  - `public`: Domains, Report and Search;
+  - `service`: AI, Bench, Design, Events, OpenRestream, Surf and Watch (and AI's product manifest).
+
 ## 0.280.0 — 2026-11-02
 
 - **`today.agenda.read`** (first-party, owner today; plan L48 V3, "plan my day"): a first-party service names a

@@ -5,7 +5,7 @@
   "icon": "fa-robot",
   "accent": "#c084fc",
   "tagline": "One AI gateway for every model you choose",
-  "legalProfile": "info",
+  "legalProfile": "service",
   "description": "OpenVibe.AI is the network's AI gateway: OpenAI-compatible providers, Anthropic, local and open models behind one API, with routing for cost, speed, quality or privacy, provider fallback, versioned prompt templates and typed workflows, durable runs, structured output, embeddings, speech to text and media analysis, budgets and your own provider keys. Its public API and developer console are live here, and OpenVibe.Live and OpenVibe.Network call it too.",
   "pillars": [
     {

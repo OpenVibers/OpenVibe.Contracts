@@ -24,7 +24,7 @@
     "icon": "stream",
     "tagline": "Go live once, stream everywhere",
     "what": "Open restreaming: one stream to Twitch, YouTube, Kick and any RTMP or SRT server at once, with OpenVibe Live on by default.",
-    "legalProfile": "streaming",
+    "legalProfile": "service",
     "position": 18,
     "tld": "stream",
     "accent": "#ef4444",

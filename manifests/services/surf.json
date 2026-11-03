@@ -67,7 +67,7 @@
     "icon": "surf",
     "tagline": "Ride, browse, watch",
     "what": "Ride Counter-Strike-style surf maps in the browser against the clock, let an agent surf the web for you and report back with its sources, or lean back and surf what is on across OpenVibe.",
-    "legalProfile": "account",
+    "legalProfile": "service",
     "position": 41,
     "neighbourhood": "games"
   }
