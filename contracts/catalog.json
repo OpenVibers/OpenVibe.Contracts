@@ -8799,6 +8799,15 @@
       "status": "active"
     },
     {
+      "id": "connect.hook.received",
+      "version": "1.0.0",
+      "owner": "connect",
+      "schema": "events/payloads/connect.hook.received.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "events.hook",
       "version": "1.0.0",
       "owner": "events",
