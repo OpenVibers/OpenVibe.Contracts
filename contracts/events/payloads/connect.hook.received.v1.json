@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/connect.hook.received.v1.json",
+  "title": "ConnectHookReceivedPayload",
+  "description": "connect.hook.received v1 (OpenVibe Connect, CON-15, ADR-057 decision 7): a webhook reached a share's hook at https://connect.openvibe.website/h/<hook_id>. Connect keeps the request's body and headers by reference (hook_bodies, 7 days) and publishes only this pointer; Events keeps the event and retries Connect's own subscription for up to seven days, so the request reaches the person's computer when it is back. No body, header or address is in the event. Envelope: subject { type: connect.hook, id: <hook_id> }, visibility internal, priority important, actor service:connect.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["hook_id", "share_id", "body_ref", "method", "size", "received_at"],
+  "properties": {
+    "hook_id": { "type": "string", "pattern": "^hk_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "share_id": { "type": "string", "pattern": "^shr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "body_ref": { "type": "string", "pattern": "^hb_[A-Za-z0-9_-]{16,64}$", "description": "Connect's own reference to the stored request; meaningless elsewhere." },
+    "method": { "enum": ["POST", "PUT", "PATCH"] },
+    "size": { "type": "integer", "minimum": 0, "maximum": 1048576 },
+    "content_type": { "type": ["string", "null"], "maxLength": 200 },
+    "received_at": { "type": "string", "format": "date-time" }
+  }
+}

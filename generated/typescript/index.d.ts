@@ -282851,6 +282851,23 @@ export interface ConnectPolicy {
   updated_at: string;
 }
 
+/** connect.hook.received@1.0.0 (owner: connect) */
+/**
+ * connect.hook.received v1 (OpenVibe Connect, CON-15, ADR-057 decision 7): a webhook reached a share's hook at https://connect.openvibe.website/h/<hook_id>. Connect keeps the request's body and headers by reference (hook_bodies, 7 days) and publishes only this pointer; Events keeps the event and retries Connect's own subscription for up to seven days, so the request reaches the person's computer when it is back. No body, header or address is in the event. Envelope: subject { type: connect.hook, id: <hook_id> }, visibility internal, priority important, actor service:connect.
+ */
+export interface ConnectHookReceivedPayload {
+  hook_id: string;
+  share_id: string;
+  /**
+   * Connect's own reference to the stored request; meaningless elsewhere.
+   */
+  body_ref: string;
+  method: "POST" | "PUT" | "PATCH";
+  size: number;
+  content_type?: string | null;
+  received_at: string;
+}
+
 /** events.hook@1.0.0 (owner: events) */
 /**
  * events.hook@1: one durable webhook subscription managed through OpenVibe.Website Connect, delivered by OpenVibe.Events. The hook names its share, the public ingress path, the event topics it accepts, filters/transform, the retry window and the signature version. The signing secret is shown once when the hook is created or its secret is rotated; secret_set says one exists, and no field of this document ever carries the value.

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.282.0 — 2026-11-03
+
+- **`connect.hook.received@1`** (OpenVibe Connect, CON-15, ADR-057 decision 7): a webhook reached a share's hook at
+  `https://connect.openvibe.website/h/<hook_id>`. Connect keeps the request (body and headers, 7 days) by reference and
+  publishes only a pointer (`body_ref`, method, size, content type), never a body, header or address. Events keeps the
+  event and retries Connect's own subscription for up to seven days, so the request reaches the person's computer once
+  it is back. Connect's manifest now produces it and consumes it, along with the account events it already handled.
+
 ## 0.281.0 — 2026-11-03
 
 - **Two legal profiles: `public` and `service`** (`registry.service-manifest@1` and `registry.product@1`
