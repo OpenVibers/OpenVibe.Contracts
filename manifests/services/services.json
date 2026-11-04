@@ -23,7 +23,7 @@
     "services.recipe.run",
     "services.usage.read",
     "services.cost.read",
-    "services.settings.manage"
+    "services.config.manage"
   ],
   "eventsProduced": [
     "services.app.published",

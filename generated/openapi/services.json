@@ -604,159 +604,96 @@
     }
    }
   },
-  "/internal/owner-settings": {
+  "/internal/config": {
    "get": {
-    "operationId": "get_internal_owner_settings",
-    "summary": "Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source ",
-    "description": "**services.settings.manage** (internal): Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source env is 409 settings.pinned_in_env); PUT /internal/owner-settings/secrets/:key sets a secret once with platform.owner-secret-put@1 (write-only) and DELETE removes it. The first set is the model explorer, the AI playground and the model catalog source. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never the value.",
+    "operationId": "get_internal_config",
+    "summary": "Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns o",
+    "description": "**services.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
-     "services.settings"
+     "services.config"
     ],
     "x-openvibe-capabilities": [
-     "services.settings.manage"
+     "services.config.manage"
     ],
     "x-openvibe-visibility": [
      "internal"
     ],
-    "x-openvibe-quota-class": "owner-settings",
+    "x-openvibe-quota-class": "config-manage",
     "security": [
      {
       "openvibeToken": [
-       "services.settings.manage"
+       "services.config.manage"
       ]
      }
     ],
     "x-openvibe-input": {
-     "$ref": "#/components/schemas/platform.owner-settings-change.v1"
+     "$ref": "#/components/schemas/common.config-change.v1"
     },
     "parameters": [
      {
-      "name": "changes",
+      "name": "values",
       "in": "query",
       "required": true,
       "schema": {
-       "type": "array",
-       "minItems": 1,
-       "maxItems": 64,
-       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-         "key",
-         "value"
-        ],
-        "properties": {
-         "key": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9_.-]{0,127}$",
-          "description": "The setting key, as platform.owner-settings@1 names it."
-         },
-         "value": {
-          "description": "The new typed value. A nano_usd value is an integer string; a float is never a value.",
-          "oneOf": [
-           {
-            "type": "boolean"
-           },
-           {
-            "type": "integer"
-           },
-           {
-            "type": "string"
-           },
-           {
-            "type": "array",
-            "maxItems": 256,
-            "items": {
-             "type": "string"
-            }
-           }
-          ]
-         }
-        }
+       "type": "object",
+       "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused.",
+       "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+       },
+       "additionalProperties": {
+        "description": "Any JSON value; a redaction marker keeps the value it stands for."
        }
-      }
-     },
-     {
-      "name": "actor",
-      "in": "query",
-      "required": true,
-      "schema": {
-       "$ref": "#/components/schemas/platform.owner-settings-change.v1/$defs/actor"
-      }
+      },
+      "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused."
      },
      {
       "name": "reason",
       "in": "query",
-      "required": false,
+      "required": true,
       "schema": {
        "type": "string",
+       "minLength": 1,
        "maxLength": 500,
-       "description": "Why the owner changed it; recorded in the service's audit line."
+       "description": "Why the change is made; it is the revision's reason in the history."
       },
-      "description": "Why the owner changed it; recorded in the service's audit line."
-     }
-    ],
-    "responses": {
-     "2XX": {
-      "description": "Success",
-      "content": {
-       "application/json": {
-        "schema": {
-         "$ref": "#/components/schemas/platform.owner-settings.v1"
-        }
-       }
-      }
+      "description": "Why the change is made; it is the revision's reason in the history."
      },
-     "default": {
-      "description": "An error (RFC 9457 problem details)",
-      "content": {
-       "application/problem+json": {
-        "schema": {
-         "$ref": "#/components/schemas/errors.problem.v1"
-        }
-       }
-      }
-     }
-    }
-   },
-   "patch": {
-    "operationId": "patch_internal_owner_settings",
-    "summary": "Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source ",
-    "description": "**services.settings.manage** (internal): Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source env is 409 settings.pinned_in_env); PUT /internal/owner-settings/secrets/:key sets a secret once with platform.owner-secret-put@1 (write-only) and DELETE removes it. The first set is the model explorer, the AI playground and the model catalog source. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never the value.",
-    "tags": [
-     "services.settings"
-    ],
-    "x-openvibe-capabilities": [
-     "services.settings.manage"
-    ],
-    "x-openvibe-visibility": [
-     "internal"
-    ],
-    "x-openvibe-quota-class": "owner-settings",
-    "security": [
      {
-      "openvibeToken": [
-       "services.settings.manage"
-      ]
+      "name": "merge",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "description": "Merge into the active values instead of replacing them."
+      },
+      "description": "Merge into the active values instead of replacing them."
+     },
+     {
+      "name": "unset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "array",
+       "maxItems": 256,
+       "uniqueItems": true,
+       "description": "Keys to remove from the new revision.",
+       "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+       }
+      },
+      "description": "Keys to remove from the new revision."
      }
     ],
-    "requestBody": {
-     "required": false,
-     "content": {
-      "application/json": {
-       "schema": {
-        "$ref": "#/components/schemas/platform.owner-settings-change.v1"
-       }
-      }
-     }
-    },
     "responses": {
      "2XX": {
       "description": "Success",
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/platform.owner-settings.v1"
+         "$ref": "#/components/schemas/common.config-namespace.v1"
         }
        }
       }
@@ -774,32 +711,219 @@
     }
    }
   },
-  "/internal/owner-settings/secrets/{key}": {
-   "delete": {
-    "operationId": "delete_internal_owner_settings_secrets_key",
-    "summary": "Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source ",
-    "description": "**services.settings.manage** (internal): Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source env is 409 settings.pinned_in_env); PUT /internal/owner-settings/secrets/:key sets a secret once with platform.owner-secret-put@1 (write-only) and DELETE removes it. The first set is the model explorer, the AI playground and the model catalog source. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never the value.",
+  "/internal/config/{namespace}": {
+   "get": {
+    "operationId": "get_internal_config_namespace",
+    "summary": "Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns o",
+    "description": "**services.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
-     "services.settings"
+     "services.config"
     ],
     "x-openvibe-capabilities": [
-     "services.settings.manage"
+     "services.config.manage"
     ],
     "x-openvibe-visibility": [
      "internal"
     ],
-    "x-openvibe-quota-class": "owner-settings",
+    "x-openvibe-quota-class": "config-manage",
     "security": [
      {
       "openvibeToken": [
-       "services.settings.manage"
+       "services.config.manage"
       ]
      }
     ],
     "x-openvibe-input": {
-     "$ref": "#/components/schemas/platform.owner-settings-change.v1"
+     "$ref": "#/components/schemas/common.config-change.v1"
     },
     "parameters": [
+     {
+      "name": "namespace",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "values",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "object",
+       "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused.",
+       "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+       },
+       "additionalProperties": {
+        "description": "Any JSON value; a redaction marker keeps the value it stands for."
+       }
+      },
+      "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused."
+     },
+     {
+      "name": "reason",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 500,
+       "description": "Why the change is made; it is the revision's reason in the history."
+      },
+      "description": "Why the change is made; it is the revision's reason in the history."
+     },
+     {
+      "name": "merge",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "description": "Merge into the active values instead of replacing them."
+      },
+      "description": "Merge into the active values instead of replacing them."
+     },
+     {
+      "name": "unset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "array",
+       "maxItems": 256,
+       "uniqueItems": true,
+       "description": "Keys to remove from the new revision.",
+       "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+       }
+      },
+      "description": "Keys to remove from the new revision."
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/common.config-namespace.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "operationId": "post_internal_config_namespace",
+    "summary": "Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns o",
+    "description": "**services.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "tags": [
+     "services.config"
+    ],
+    "x-openvibe-capabilities": [
+     "services.config.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "config-manage",
+    "security": [
+     {
+      "openvibeToken": [
+       "services.config.manage"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/common.config-change.v1"
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "namespace",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/common.config-namespace.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/config/{namespace}/secrets/{key}": {
+   "delete": {
+    "operationId": "delete_internal_config_namespace_secrets_key",
+    "summary": "Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns o",
+    "description": "**services.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "tags": [
+     "services.config"
+    ],
+    "x-openvibe-capabilities": [
+     "services.config.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "config-manage",
+    "security": [
+     {
+      "openvibeToken": [
+       "services.config.manage"
+      ]
+     }
+    ],
+    "x-openvibe-input": {
+     "$ref": "#/components/schemas/common.config-change.v1"
+    },
+    "parameters": [
+     {
+      "name": "namespace",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
      {
       "name": "key",
       "in": "path",
@@ -809,69 +933,60 @@
       }
      },
      {
-      "name": "changes",
+      "name": "values",
       "in": "query",
       "required": true,
       "schema": {
-       "type": "array",
-       "minItems": 1,
-       "maxItems": 64,
-       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-         "key",
-         "value"
-        ],
-        "properties": {
-         "key": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9_.-]{0,127}$",
-          "description": "The setting key, as platform.owner-settings@1 names it."
-         },
-         "value": {
-          "description": "The new typed value. A nano_usd value is an integer string; a float is never a value.",
-          "oneOf": [
-           {
-            "type": "boolean"
-           },
-           {
-            "type": "integer"
-           },
-           {
-            "type": "string"
-           },
-           {
-            "type": "array",
-            "maxItems": 256,
-            "items": {
-             "type": "string"
-            }
-           }
-          ]
-         }
-        }
+       "type": "object",
+       "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused.",
+       "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+       },
+       "additionalProperties": {
+        "description": "Any JSON value; a redaction marker keeps the value it stands for."
        }
-      }
-     },
-     {
-      "name": "actor",
-      "in": "query",
-      "required": true,
-      "schema": {
-       "$ref": "#/components/schemas/platform.owner-settings-change.v1/$defs/actor"
-      }
+      },
+      "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused."
      },
      {
       "name": "reason",
       "in": "query",
-      "required": false,
+      "required": true,
       "schema": {
        "type": "string",
+       "minLength": 1,
        "maxLength": 500,
-       "description": "Why the owner changed it; recorded in the service's audit line."
+       "description": "Why the change is made; it is the revision's reason in the history."
       },
-      "description": "Why the owner changed it; recorded in the service's audit line."
+      "description": "Why the change is made; it is the revision's reason in the history."
+     },
+     {
+      "name": "merge",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "description": "Merge into the active values instead of replacing them."
+      },
+      "description": "Merge into the active values instead of replacing them."
+     },
+     {
+      "name": "unset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "array",
+       "maxItems": 256,
+       "uniqueItems": true,
+       "description": "Keys to remove from the new revision.",
+       "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+       }
+      },
+      "description": "Keys to remove from the new revision."
      }
     ],
     "responses": {
@@ -880,7 +995,7 @@
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/platform.owner-settings.v1"
+         "$ref": "#/components/schemas/common.config-namespace.v1"
         }
        }
       }
@@ -898,23 +1013,23 @@
     }
    },
    "put": {
-    "operationId": "put_internal_owner_settings_secrets_key",
-    "summary": "Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source ",
-    "description": "**services.settings.manage** (internal): Manage OpenVibe.Services's owner settings (D11): GET /internal/owner-settings answers platform.owner-settings@1 and PATCH changes typed values with platform.owner-settings-change@1 (a key with source env is 409 settings.pinned_in_env); PUT /internal/owner-settings/secrets/:key sets a secret once with platform.owner-secret-put@1 (write-only) and DELETE removes it. The first set is the model explorer, the AI playground and the model catalog source. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never the value.",
+    "operationId": "put_internal_config_namespace_secrets_key",
+    "summary": "Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns o",
+    "description": "**services.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Services through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
-     "services.settings"
+     "services.config"
     ],
     "x-openvibe-capabilities": [
-     "services.settings.manage"
+     "services.config.manage"
     ],
     "x-openvibe-visibility": [
      "internal"
     ],
-    "x-openvibe-quota-class": "owner-settings",
+    "x-openvibe-quota-class": "config-manage",
     "security": [
      {
       "openvibeToken": [
-       "services.settings.manage"
+       "services.config.manage"
       ]
      }
     ],
@@ -923,12 +1038,20 @@
      "content": {
       "application/json": {
        "schema": {
-        "$ref": "#/components/schemas/platform.owner-settings-change.v1"
+        "$ref": "#/components/schemas/common.config-change.v1"
        }
       }
      }
     },
     "parameters": [
+     {
+      "name": "namespace",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
      {
       "name": "key",
       "in": "path",
@@ -944,7 +1067,7 @@
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/platform.owner-settings.v1"
+         "$ref": "#/components/schemas/common.config-namespace.v1"
         }
        }
       }
@@ -965,6 +1088,433 @@
  },
  "components": {
   "schemas": {
+   "common.config-change.v1": {
+    "title": "ConfigChange",
+    "description": "common.config-change@1 (AI Exchange D11): body of POST /internal/config/:namespace on a service's openvibe-shared/config admin routes. It proposes a new revision of the namespace and activates it (the store validates against the namespace schema, applies env pins and calls onActivate). `merge: true` starts from the active values; otherwise `values` is the whole new set. `unset` removes keys. A secret-class key's value is never sent here: it is 422 config.secret_write_only; use common.config-secret-put@1.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "values",
+     "reason"
+    ],
+    "properties": {
+     "values": {
+      "type": "object",
+      "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused.",
+      "propertyNames": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+       "description": "Any JSON value; a redaction marker keeps the value it stands for."
+      }
+     },
+     "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Why the change is made; it is the revision's reason in the history."
+     },
+     "merge": {
+      "type": "boolean",
+      "default": false,
+      "description": "Merge into the active values instead of replacing them."
+     },
+     "unset": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "description": "Keys to remove from the new revision.",
+      "items": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      }
+     }
+    }
+   },
+   "common.config-namespace.v1": {
+    "title": "ConfigNamespace",
+    "description": "common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps).",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "service",
+     "namespace",
+     "revision",
+     "values",
+     "classification",
+     "sealed",
+     "pins",
+     "schema"
+    ],
+    "properties": {
+     "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+     },
+     "namespace": {
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[a-z][a-z0-9-]{1,39}(\\.[a-z0-9_-]+)+$",
+      "description": "<service>.<name>, e.g. ai.exchange or live.site_settings."
+     },
+     "revision": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 1,
+      "description": "The active revision; null before the namespace has one."
+     },
+     "values": {
+      "type": "object",
+      "description": "The active values over the defaults, one member per key. A secret-class key's value is a marker, never the value.",
+      "propertyNames": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+       "description": "Any JSON value. An object with a redacted member is a secret marker, and nothing else.",
+       "anyOf": [
+        {
+         "type": [
+          "string",
+          "number",
+          "boolean",
+          "null",
+          "array"
+         ]
+        },
+        {
+         "type": "object",
+         "additionalProperties": true,
+         "not": {
+          "required": [
+           "redacted"
+          ]
+         }
+        },
+        {
+         "$ref": "#/components/schemas/common.config-namespace.v1/$defs/marker"
+        }
+       ]
+      }
+     },
+     "classification": {
+      "type": "object",
+      "description": "Every key of values, classified. A key the service does not classify is internal.",
+      "propertyNames": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+       "enum": [
+        "public",
+        "internal",
+        "secret"
+       ]
+      }
+     },
+     "sealed": {
+      "type": "boolean",
+      "description": "True when the service has a KEK: secret-class values are stored as envelopes and only opened for a caller that needs them. False keeps the pre-D11 plaintext-inside-values_json behaviour, and the tab shows it in red."
+     },
+     "pins": {
+      "type": "array",
+      "description": "The keys whose x-env variable is set in the service process: their effective value is the environment's, read-only, and a write answers 409 config.pinned_in_env.",
+      "uniqueItems": true,
+      "items": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      }
+     },
+     "schema": {
+      "type": [
+       "object",
+       "null"
+      ],
+      "description": "The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to) and x-unit (nano_usd, ms or bps)."
+     },
+     "active": {
+      "description": "The active revision as a snapshot (common.config-snapshot@1), or null.",
+      "oneOf": [
+       {
+        "$ref": "#/components/schemas/common.config-snapshot.v1"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "last_known_good": {
+      "description": "The last revision that activated cleanly (common.config-snapshot@1), or null.",
+      "oneOf": [
+       {
+        "$ref": "#/components/schemas/common.config-snapshot.v1"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "$defs": {
+     "marker": {
+      "type": "object",
+      "description": "A secret-class value, as the summary and the secret endpoints show it: never the value. The fingerprint is keyed, so equal fingerprints within one namespace mean the value did not change.",
+      "additionalProperties": false,
+      "required": [
+       "redacted",
+       "fingerprint"
+      ],
+      "properties": {
+       "redacted": {
+        "const": true
+       },
+       "fingerprint": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "HMAC-SHA256 (hex) of the canonical JSON of the value, keyed with the namespace's secret key."
+       },
+       "hint": {
+        "type": "string",
+        "minLength": 4,
+        "maxLength": 4,
+        "description": "The four-character hint (the value's last four characters), never more."
+       },
+       "set_at": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "set_by": {
+        "$ref": "#/components/schemas/identity.subject-ref.v1"
+       },
+       "bound_to": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "maxLength": 2048,
+        "description": "The value of the key named by x-bind when the secret was set, e.g. a provider base_url origin."
+       }
+      }
+     }
+    }
+   },
+   "common.config-snapshot.v1": {
+    "title": "ConfigSnapshot",
+    "description": "One immutable revision of one service's configuration namespace (roadmap WS-C task 7; kept by openvibe-shared/config). A revision's values never change: revisions grow by one per namespace, and a rollback is a new revision that copies an older one's values. Only the state moves: proposed -> active -> superseded or rolled_back, or proposed -> rejected when validation or activation fails, in which case the previous active revision stays or is restored. A secret-class key's value never appears here: it is { redacted: true, fingerprint }, an HMAC-SHA256 of the value under a secret key the service keeps per namespace, so equal fingerprints within one namespace mean the value did not change, while the value cannot be recovered or guessed offline without that key. checksum is the sha256 of the canonical JSON (keys sorted, no whitespace) of values exactly as they appear here, secrets as their markers, so anyone can check it, and two snapshots of one namespace with the same checksum hold the same configuration.",
+    "type": "object",
+    "required": [
+     "service",
+     "namespace",
+     "revision",
+     "previous_revision",
+     "state",
+     "values",
+     "classification",
+     "checksum",
+     "created_at",
+     "created_by"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+     },
+     "namespace": {
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[a-z][a-z0-9-]{1,39}(\\.[a-z0-9_-]+)+$",
+      "description": "<service>.<name>, e.g. live.site_settings or media.storage_tier."
+     },
+     "revision": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "previous_revision": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 1,
+      "description": "The revision that was active when this one was proposed; null for the namespace's first."
+     },
+     "state": {
+      "enum": [
+       "proposed",
+       "active",
+       "superseded",
+       "rejected",
+       "rolled_back"
+      ]
+     },
+     "values": {
+      "type": "object",
+      "description": "The configuration, one member per key. A secret-class key's value is a redaction marker.",
+      "propertyNames": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+       "description": "Any JSON value. An object with a redacted member is a redaction marker, and nothing else.",
+       "anyOf": [
+        {
+         "type": [
+          "string",
+          "number",
+          "boolean",
+          "null",
+          "array"
+         ]
+        },
+        {
+         "type": "object",
+         "additionalProperties": true,
+         "not": {
+          "required": [
+           "redacted"
+          ]
+         }
+        },
+        {
+         "type": "object",
+         "required": [
+          "redacted",
+          "fingerprint"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "redacted": {
+           "const": true
+          },
+          "fingerprint": {
+           "type": "string",
+           "pattern": "^[0-9a-f]{64}$",
+           "description": "HMAC-SHA256 (hex) of the canonical JSON of the value, keyed with the namespace's secret key: equal within one namespace when the value is unchanged, and not recoverable or guessable without the key."
+          }
+         },
+         "description": "A redacted secret-class value."
+        }
+       ]
+      }
+     },
+     "classification": {
+      "type": "object",
+      "description": "Every key of values, classified. A key the service does not classify is internal.",
+      "propertyNames": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+       "enum": [
+        "public",
+        "internal",
+        "secret"
+       ]
+      }
+     },
+     "checksum": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256 (hex) of the canonical JSON of values as they appear in this snapshot (secrets as their markers)."
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "created_by": {
+      "$ref": "#/components/schemas/identity.subject-ref.v1"
+     },
+     "activated_at": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "format": "date-time",
+      "description": "When it became active; null while proposed, and for a rejected revision."
+     },
+     "activated_by": {
+      "oneOf": [
+       {
+        "$ref": "#/components/schemas/identity.subject-ref.v1"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "reason": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "maxLength": 500
+     },
+     "error": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "maxLength": 2000,
+      "description": "Why it was rejected: the validation errors, or what activation reported. Never a secret value."
+     },
+     "copied_from": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 1,
+      "description": "A rollback's source: the revision whose values this one copies."
+     }
+    },
+    "allOf": [
+     {
+      "if": {
+       "properties": {
+        "state": {
+         "const": "rejected"
+        }
+       }
+      },
+      "then": {
+       "required": [
+        "error"
+       ],
+       "properties": {
+        "error": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      }
+     },
+     {
+      "if": {
+       "properties": {
+        "state": {
+         "enum": [
+          "active",
+          "superseded",
+          "rolled_back"
+         ]
+        }
+       }
+      },
+      "then": {
+       "required": [
+        "activated_at"
+       ],
+       "properties": {
+        "activated_at": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    ]
+   },
    "common.no-body.v1": {
     "title": "NoBody",
     "description": "common.no-body@1: the capability's request carries no body; its parameters are the path and query of the routes in implementedBy (an id, a page cursor). An input schema that says so explicitly, so every active capability names one (roadmap WS-C task 4).",
@@ -1740,589 +2290,6 @@
         }
        }
       }
-     }
-    }
-   },
-   "platform.owner-settings-change.v1": {
-    "title": "PlatformOwnerSettingsChange",
-    "description": "platform.owner-settings-change@1 (AI Exchange D11): body of PATCH /internal/owner-settings on each service that owns owner settings. It changes one or more typed values at once. A key whose setting has source env is pinned and the service answers 409 settings.pinned_in_env; a secret-type setting is never changed here (use platform.owner-secret-put@1). Each request carries the owner as actor and the service audits every change with that actor and key, never the value.",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-     "changes",
-     "actor"
-    ],
-    "properties": {
-     "changes": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 64,
-      "items": {
-       "type": "object",
-       "additionalProperties": false,
-       "required": [
-        "key",
-        "value"
-       ],
-       "properties": {
-        "key": {
-         "type": "string",
-         "pattern": "^[a-z][a-z0-9_.-]{0,127}$",
-         "description": "The setting key, as platform.owner-settings@1 names it."
-        },
-        "value": {
-         "description": "The new typed value. A nano_usd value is an integer string; a float is never a value.",
-         "oneOf": [
-          {
-           "type": "boolean"
-          },
-          {
-           "type": "integer"
-          },
-          {
-           "type": "string"
-          },
-          {
-           "type": "array",
-           "maxItems": 256,
-           "items": {
-            "type": "string"
-           }
-          }
-         ]
-        }
-       }
-      }
-     },
-     "actor": {
-      "$ref": "#/components/schemas/platform.owner-settings-change.v1/$defs/actor"
-     },
-     "reason": {
-      "type": "string",
-      "maxLength": 500,
-      "description": "Why the owner changed it; recorded in the service's audit line."
-     }
-    },
-    "$defs": {
-     "actor": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-       "type",
-       "id"
-      ],
-      "properties": {
-       "type": {
-        "const": "user",
-        "description": "The owner; a service or an app is never the actor."
-       },
-       "id": {
-        "type": "string",
-        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
-       }
-      }
-     }
-    }
-   },
-   "platform.owner-settings.v1": {
-    "title": "PlatformOwnerSettings",
-    "description": "platform.owner-settings@1 (AI Exchange D11): one service's owner settings document, answered by GET/PATCH /internal/owner-settings and by PUT/DELETE /internal/owner-settings/secrets/:key on the service that owns the settings. A setting is typed and says where its effective value comes from; `env` pins it read-only. A secret setting never carries its value (and never a default): only the write-only metadata `secret`. nano_usd values are integer strings, never numbers. Only Network's admin proxy, acting for the owner, reads or writes this document.",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-     "service",
-     "groups",
-     "settings"
-    ],
-    "properties": {
-     "service": {
-      "type": "string",
-      "pattern": "^[a-z][a-z0-9-]{0,39}$",
-      "description": "The service whose settings these are, e.g. ai."
-     },
-     "groups": {
-      "type": "array",
-      "description": "The groups the settings are shown under.",
-      "items": {
-       "$ref": "#/components/schemas/platform.owner-settings.v1/$defs/group"
-      }
-     },
-     "settings": {
-      "type": "array",
-      "description": "Every setting the service exposes to the owner.",
-      "items": {
-       "$ref": "#/components/schemas/platform.owner-settings.v1/$defs/setting"
-      }
-     }
-    },
-    "$defs": {
-     "group": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-       "id",
-       "label"
-      ],
-      "properties": {
-       "id": {
-        "type": "string",
-        "pattern": "^[a-z][a-z0-9_-]{0,63}$",
-        "description": "Stable group id; a setting names it in `group`."
-       },
-       "label": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 120
-       },
-       "description": {
-        "type": "string",
-        "maxLength": 1000
-       }
-      }
-     },
-     "nano-usd": {
-      "type": "string",
-      "pattern": "^[0-9]{1,19}$",
-      "description": "Integer nano-USD (1e-9 USD) as a decimal string (D1). Never a number or a float."
-     },
-     "https-origin": {
-      "type": "string",
-      "format": "uri",
-      "pattern": "^https://[A-Za-z0-9](?:[A-Za-z0-9.-]{0,251}[A-Za-z0-9])?(?::[0-9]{1,5})?$",
-      "description": "An https origin: scheme, host and optional port, with no path, query or fragment."
-     },
-     "secret": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-       "set"
-      ],
-      "properties": {
-       "set": {
-        "type": "boolean",
-        "description": "Whether a value is sealed in the owning service."
-       },
-       "hint": {
-        "type": [
-         "string",
-         "null"
-        ],
-        "maxLength": 16,
-        "description": "A short hint (the last four characters), never the value."
-       },
-       "fingerprint": {
-        "type": [
-         "string",
-         "null"
-        ],
-        "pattern": "^[0-9a-f]{16}$",
-        "description": "A keyed HMAC-SHA-256 fingerprint, 16 hex characters: tells whether two keys are the same without revealing either."
-       },
-       "set_at": {
-        "type": [
-         "string",
-         "null"
-        ],
-        "format": "date-time"
-       },
-       "set_by": {
-        "type": [
-         "string",
-         "null"
-        ],
-        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
-        "description": "The owner who set it."
-       },
-       "bound_to": {
-        "$ref": "#/components/schemas/platform.owner-settings.v1/$defs/https-origin",
-        "description": "The destination origin the value is sealed to; absent or null when unbound."
-       }
-      }
-     },
-     "setting": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-       "key",
-       "group",
-       "label",
-       "description",
-       "type",
-       "source",
-       "danger",
-       "restart"
-      ],
-      "properties": {
-       "key": {
-        "type": "string",
-        "pattern": "^[a-z][a-z0-9_.-]{0,127}$",
-        "description": "Stable setting key, e.g. ai.model_catalog."
-       },
-       "group": {
-        "type": "string",
-        "pattern": "^[a-z][a-z0-9_-]{0,63}$",
-        "description": "The id of the setting's group."
-       },
-       "label": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 120
-       },
-       "description": {
-        "type": "string",
-        "maxLength": 1000
-       },
-       "type": {
-        "enum": [
-         "boolean",
-         "integer",
-         "nano_usd",
-         "string",
-         "enum",
-         "list",
-         "secret"
-        ]
-       },
-       "enum": {
-        "type": "array",
-        "minItems": 1,
-        "maxItems": 256,
-        "uniqueItems": true,
-        "items": {
-         "type": "string"
-        },
-        "description": "The allowed values; present only when type is enum."
-       },
-       "min": {
-        "type": "integer",
-        "minimum": 0,
-        "description": "The smallest allowed value; present only when type is integer or nano_usd."
-       },
-       "max": {
-        "type": "integer",
-        "minimum": 0,
-        "description": "The largest allowed value; present only when type is integer or nano_usd."
-       },
-       "value": {
-        "description": "The effective typed value; absent for type secret."
-       },
-       "default": {
-        "description": "The typed default; absent for type secret."
-       },
-       "source": {
-        "enum": [
-         "env",
-         "owner",
-         "default"
-        ],
-        "description": "env pins the setting read-only and wins; owner is a value the owner set; default is the built-in default."
-       },
-       "env": {
-        "type": "string",
-        "pattern": "^[A-Z][A-Z0-9_]{0,127}$",
-        "description": "The environment variable that pins the setting; present when source is env."
-       },
-       "danger": {
-        "type": "boolean",
-        "description": "A write needs a fresh sign-in (and an operator alert)."
-       },
-       "restart": {
-        "type": "boolean",
-        "description": "A change takes effect only after the service restarts."
-       },
-       "secret": {
-        "$ref": "#/components/schemas/platform.owner-settings.v1/$defs/secret",
-        "description": "Write-only metadata; present only when type is secret."
-       },
-       "updated_at": {
-        "type": "string",
-        "format": "date-time"
-       },
-       "updated_by": {
-        "type": "string",
-        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
-       }
-      },
-      "allOf": [
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "const": "secret"
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "then": {
-         "not": {
-          "anyOf": [
-           {
-            "required": [
-             "value"
-            ]
-           },
-           {
-            "required": [
-             "default"
-            ]
-           }
-          ]
-         },
-         "properties": {
-          "secret": {
-           "$ref": "#/components/schemas/platform.owner-settings.v1/$defs/secret"
-          }
-         }
-        },
-        "else": {
-         "not": {
-          "required": [
-           "secret"
-          ]
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "const": "enum"
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "then": {
-         "required": [
-          "enum"
-         ],
-         "properties": {
-          "value": {
-           "type": "string"
-          },
-          "default": {
-           "type": "string"
-          }
-         }
-        },
-        "else": {
-         "not": {
-          "required": [
-           "enum"
-          ]
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "enum": [
-            "integer",
-            "nano_usd"
-           ]
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "else": {
-         "not": {
-          "anyOf": [
-           {
-            "required": [
-             "min"
-            ]
-           },
-           {
-            "required": [
-             "max"
-            ]
-           }
-          ]
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "const": "boolean"
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "then": {
-         "properties": {
-          "value": {
-           "type": "boolean"
-          },
-          "default": {
-           "type": "boolean"
-          }
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "const": "integer"
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "then": {
-         "properties": {
-          "value": {
-           "type": "integer"
-          },
-          "default": {
-           "type": "integer"
-          }
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "const": "nano_usd"
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "then": {
-         "properties": {
-          "value": {
-           "$ref": "#/components/schemas/platform.owner-settings.v1/$defs/nano-usd"
-          },
-          "default": {
-           "$ref": "#/components/schemas/platform.owner-settings.v1/$defs/nano-usd"
-          }
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "const": "string"
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "then": {
-         "properties": {
-          "value": {
-           "type": "string"
-          },
-          "default": {
-           "type": "string"
-          }
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "type": {
-           "const": "list"
-          }
-         },
-         "required": [
-          "type"
-         ]
-        },
-        "then": {
-         "properties": {
-          "value": {
-           "type": "array",
-           "maxItems": 256,
-           "items": {
-            "type": "string"
-           }
-          },
-          "default": {
-           "type": "array",
-           "maxItems": 256,
-           "items": {
-            "type": "string"
-           }
-          }
-         }
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "source": {
-           "const": "env"
-          }
-         },
-         "required": [
-          "source"
-         ]
-        },
-        "then": {
-         "required": [
-          "env"
-         ]
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "source": {
-           "const": "default"
-          }
-         },
-         "required": [
-          "source"
-         ]
-        },
-        "then": {
-         "required": [
-          "default"
-         ]
-        }
-       },
-       {
-        "if": {
-         "properties": {
-          "source": {
-           "const": "owner"
-          },
-          "type": {
-           "not": {
-            "const": "secret"
-           }
-          }
-         },
-         "required": [
-          "source",
-          "type"
-         ]
-        },
-        "then": {
-         "required": [
-          "value"
-         ]
-        }
-       }
-      ]
      }
     }
    },

@@ -17,7 +17,7 @@
   },
   "capabilities": [
     "report.ai_usage.read",
-    "report.settings.manage"
+    "report.config.manage"
   ],
   "eventsProduced": [
     "report.index_document.deleted",

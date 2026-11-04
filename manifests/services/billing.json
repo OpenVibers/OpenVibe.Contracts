@@ -36,7 +36,7 @@
     "billing.credit.hold.settle",
     "billing.credit.hold.release",
     "billing.credit.sandbox.grant",
-    "billing.settings.manage"
+    "billing.config.manage"
   ],
   "eventsProduced": [
     "billing.transaction.settled",

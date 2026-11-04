@@ -1,0 +1,16 @@
+{
+  "service": "live",
+  "namespace": "live.site_settings",
+  "revision": 12,
+  "values": {
+    "site_name": "OpenVibe.Live"
+  },
+  "classification": {
+    "site_name": "private"
+  },
+  "sealed": true,
+  "pins": [],
+  "schema": null,
+  "active": null,
+  "last_known_good": null
+}

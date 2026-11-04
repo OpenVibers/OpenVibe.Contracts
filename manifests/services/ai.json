@@ -34,7 +34,7 @@
     "ai.memory.write",
     "ai.me.read",
     "ai.me.manage",
-    "ai.settings.manage"
+    "ai.config.manage"
   ],
   "eventsProduced": [
     "ai.call.recorded",

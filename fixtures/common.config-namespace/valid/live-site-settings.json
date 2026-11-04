@@ -1,0 +1,152 @@
+{
+  "service": "live",
+  "namespace": "live.site_settings",
+  "revision": 12,
+  "values": {
+    "site_name": "OpenVibe.Live",
+    "registration_open": true,
+    "max_bitrate_kbps": 6000,
+    "youtube_api_key": {
+      "redacted": true,
+      "fingerprint": "c61d1b1293d59c54c56624f6d6161b8af976449db60f230ed977dcf3ba4bd31b",
+      "hint": "a1b2",
+      "set_at": "2026-11-04T18:34:00.000Z",
+      "set_by": {
+        "type": "user",
+        "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+      },
+      "bound_to": "https://www.googleapis.com"
+    },
+    "home_banner": {
+      "text": "Welcome",
+      "link": "/about"
+    }
+  },
+  "classification": {
+    "site_name": "public",
+    "registration_open": "public",
+    "max_bitrate_kbps": "internal",
+    "youtube_api_key": "secret",
+    "home_banner": "public"
+  },
+  "sealed": true,
+  "pins": ["youtube_api_key"],
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "site_name": {
+        "type": "string",
+        "title": "Site name",
+        "description": "The name shown in the page header.",
+        "x-group": "Site"
+      },
+      "registration_open": {
+        "type": "boolean",
+        "title": "Registration open",
+        "x-group": "Site"
+      },
+      "max_bitrate_kbps": {
+        "type": "integer",
+        "title": "Maximum bitrate",
+        "x-group": "Streaming",
+        "x-unit": "bps",
+        "x-danger": true
+      },
+      "youtube_api_key": {
+        "type": "string",
+        "title": "YouTube API key",
+        "x-group": "Integrations",
+        "x-env": "YOUTUBE_API_KEY",
+        "x-bind": "base_url"
+      },
+      "base_url": {
+        "type": "string",
+        "title": "Base URL",
+        "x-group": "Integrations"
+      }
+    }
+  },
+  "active": {
+    "service": "live",
+    "namespace": "live.site_settings",
+    "revision": 12,
+    "previous_revision": 11,
+    "state": "active",
+    "values": {
+      "site_name": "OpenVibe.Live",
+      "registration_open": true,
+      "max_bitrate_kbps": 6000,
+      "youtube_api_key": {
+        "redacted": true,
+        "fingerprint": "c61d1b1293d59c54c56624f6d6161b8af976449db60f230ed977dcf3ba4bd31b"
+      },
+      "home_banner": {
+        "text": "Welcome",
+        "link": "/about"
+      }
+    },
+    "classification": {
+      "site_name": "public",
+      "registration_open": "public",
+      "max_bitrate_kbps": "internal",
+      "youtube_api_key": "secret",
+      "home_banner": "public"
+    },
+    "checksum": "29cd8cc21471b306491daa584d01892c05b41e5e51d5bf83aaf5fc6f4a28ca87",
+    "created_at": "2026-09-25T18:02:11.412Z",
+    "created_by": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "activated_at": "2026-09-25T18:02:11.530Z",
+    "activated_by": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "reason": "Raise the bitrate cap for the tournament",
+    "error": null,
+    "copied_from": null
+  },
+  "last_known_good": {
+    "service": "live",
+    "namespace": "live.site_settings",
+    "revision": 12,
+    "previous_revision": 11,
+    "state": "active",
+    "values": {
+      "site_name": "OpenVibe.Live",
+      "registration_open": true,
+      "max_bitrate_kbps": 6000,
+      "youtube_api_key": {
+        "redacted": true,
+        "fingerprint": "c61d1b1293d59c54c56624f6d6161b8af976449db60f230ed977dcf3ba4bd31b"
+      },
+      "home_banner": {
+        "text": "Welcome",
+        "link": "/about"
+      }
+    },
+    "classification": {
+      "site_name": "public",
+      "registration_open": "public",
+      "max_bitrate_kbps": "internal",
+      "youtube_api_key": "secret",
+      "home_banner": "public"
+    },
+    "checksum": "29cd8cc21471b306491daa584d01892c05b41e5e51d5bf83aaf5fc6f4a28ca87",
+    "created_at": "2026-09-25T18:02:11.412Z",
+    "created_by": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "activated_at": "2026-09-25T18:02:11.530Z",
+    "activated_by": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    "reason": "Raise the bitrate cap for the tournament",
+    "error": null,
+    "copied_from": null
+  }
+}

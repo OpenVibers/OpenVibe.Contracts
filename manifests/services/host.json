@@ -96,7 +96,7 @@
   },
   "capabilities": [
     "host.catalog.manage",
-    "host.settings.manage"
+    "host.config.manage"
   ],
   "eventsProduced": [
     "host.release.published",

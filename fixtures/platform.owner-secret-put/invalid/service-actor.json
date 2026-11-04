@@ -1,8 +1,0 @@
-{
-  "value": "sk-live-not-a-real-secret",
-  "bind": "https://api.deepseek.com",
-  "actor": {
-    "type": "service",
-    "id": "network"
-  }
-}

@@ -32,7 +32,7 @@
     "bench.benchmark.write",
     "bench.run.publish",
     "bench.run.read",
-    "bench.settings.manage"
+    "bench.config.manage"
   ],
   "eventsProduced": [
     "bench.round.finished",

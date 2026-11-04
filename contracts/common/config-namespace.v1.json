@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/config-namespace.v1.json",
+  "title": "ConfigNamespace",
+  "description": "common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["service", "namespace", "revision", "values", "classification", "sealed", "pins", "schema"],
+  "properties": {
+    "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "namespace": {
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[a-z][a-z0-9-]{1,39}(\\.[a-z0-9_-]+)+$",
+      "description": "<service>.<name>, e.g. ai.exchange or live.site_settings."
+    },
+    "revision": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "description": "The active revision; null before the namespace has one."
+    },
+    "values": {
+      "type": "object",
+      "description": "The active values over the defaults, one member per key. A secret-class key's value is a marker, never the value.",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+        "description": "Any JSON value. An object with a redacted member is a secret marker, and nothing else.",
+        "anyOf": [
+          {
+            "type": ["string", "number", "boolean", "null", "array"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "not": {
+              "required": ["redacted"]
+            }
+          },
+          {
+            "$ref": "#/$defs/marker"
+          }
+        ]
+      }
+    },
+    "classification": {
+      "type": "object",
+      "description": "Every key of values, classified. A key the service does not classify is internal.",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+        "enum": ["public", "internal", "secret"]
+      }
+    },
+    "sealed": {
+      "type": "boolean",
+      "description": "True when the service has a KEK: secret-class values are stored as envelopes and only opened for a caller that needs them. False keeps the pre-D11 plaintext-inside-values_json behaviour, and the tab shows it in red."
+    },
+    "pins": {
+      "type": "array",
+      "description": "The keys whose x-env variable is set in the service process: their effective value is the environment's, read-only, and a write answers 409 config.pinned_in_env.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      }
+    },
+    "schema": {
+      "type": ["object", "null"],
+      "description": "The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to) and x-unit (nano_usd, ms or bps)."
+    },
+    "active": {
+      "description": "The active revision as a snapshot (common.config-snapshot@1), or null.",
+      "oneOf": [
+        {
+          "$ref": "config-snapshot.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "last_known_good": {
+      "description": "The last revision that activated cleanly (common.config-snapshot@1), or null.",
+      "oneOf": [
+        {
+          "$ref": "config-snapshot.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "marker": {
+      "type": "object",
+      "description": "A secret-class value, as the summary and the secret endpoints show it: never the value. The fingerprint is keyed, so equal fingerprints within one namespace mean the value did not change.",
+      "additionalProperties": false,
+      "required": ["redacted", "fingerprint"],
+      "properties": {
+        "redacted": {
+          "const": true
+        },
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "HMAC-SHA256 (hex) of the canonical JSON of the value, keyed with the namespace's secret key."
+        },
+        "hint": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 4,
+          "description": "The four-character hint (the value's last four characters), never more."
+        },
+        "set_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "set_by": {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        "bound_to": {
+          "type": ["string", "null"],
+          "maxLength": 2048,
+          "description": "The value of the key named by x-bind when the secret was set, e.g. a provider base_url origin."
+        }
+      }
+    }
+  }
+}

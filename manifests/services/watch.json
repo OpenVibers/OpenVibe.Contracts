@@ -22,7 +22,7 @@
     "watch.check.run",
     "watch.resource.read",
     "watch.resource.control",
-    "watch.settings.manage"
+    "watch.config.manage"
   ],
   "eventsProduced": [
     "watch.watch.created",

@@ -4680,6 +4680,130 @@ export type ConfigSnapshot = {
   copied_from?: number | null;
 };
 
+/** common.config-namespace@1.0.0 (owner: network) */
+/**
+ * common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps).
+ */
+export interface ConfigNamespace {
+  service: string;
+  /**
+   * <service>.<name>, e.g. ai.exchange or live.site_settings.
+   */
+  namespace: string;
+  /**
+   * The active revision; null before the namespace has one.
+   */
+  revision: number | null;
+  /**
+   * The active values over the defaults, one member per key. A secret-class key's value is a marker, never the value.
+   */
+  values: {
+    /**
+     * Any JSON value. An object with a redacted member is a secret marker, and nothing else.
+     */
+    [k: string]:
+      | (
+          | (string | number | boolean | null | unknown[])
+          | {
+              [k: string]: unknown | undefined;
+            }
+          | {
+              redacted: true;
+              /**
+               * HMAC-SHA256 (hex) of the canonical JSON of the value, keyed with the namespace's secret key.
+               */
+              fingerprint: string;
+              /**
+               * The four-character hint (the value's last four characters), never more.
+               */
+              hint?: string;
+              set_at?: string;
+              set_by?: SubjectRef;
+              /**
+               * The value of the key named by x-bind when the secret was set, e.g. a provider base_url origin.
+               */
+              bound_to?: string | null;
+            }
+        )
+      | undefined;
+  };
+  /**
+   * Every key of values, classified. A key the service does not classify is internal.
+   */
+  classification: {
+    [k: string]: ("public" | "internal" | "secret") | undefined;
+  };
+  /**
+   * True when the service has a KEK: secret-class values are stored as envelopes and only opened for a caller that needs them. False keeps the pre-D11 plaintext-inside-values_json behaviour, and the tab shows it in red.
+   */
+  sealed: boolean;
+  /**
+   * The keys whose x-env variable is set in the service process: their effective value is the environment's, read-only, and a write answers 409 config.pinned_in_env.
+   */
+  pins: string[];
+  /**
+   * The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to) and x-unit (nano_usd, ms or bps).
+   */
+  schema: {} | null;
+  /**
+   * The active revision as a snapshot (common.config-snapshot@1), or null.
+   */
+  active?: ConfigSnapshot | null;
+  /**
+   * The last revision that activated cleanly (common.config-snapshot@1), or null.
+   */
+  last_known_good?: ConfigSnapshot | null;
+}
+
+/** common.config-change@1.0.0 (owner: network) */
+/**
+ * common.config-change@1 (AI Exchange D11): body of POST /internal/config/:namespace on a service's openvibe-shared/config admin routes. It proposes a new revision of the namespace and activates it (the store validates against the namespace schema, applies env pins and calls onActivate). `merge: true` starts from the active values; otherwise `values` is the whole new set. `unset` removes keys. A secret-class key's value is never sent here: it is 422 config.secret_write_only; use common.config-secret-put@1.
+ */
+export interface ConfigChange {
+  /**
+   * The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused.
+   */
+  values: {
+    /**
+     * Any JSON value; a redaction marker keeps the value it stands for.
+     */
+    [k: string]:
+      | {
+          [k: string]: unknown | undefined;
+        }
+      | undefined;
+  };
+  /**
+   * Why the change is made; it is the revision's reason in the history.
+   */
+  reason: string;
+  /**
+   * Merge into the active values instead of replacing them.
+   */
+  merge?: boolean;
+  /**
+   * Keys to remove from the new revision.
+   *
+   * @maxItems 256
+   */
+  unset?: string[];
+}
+
+/** common.config-secret-put@1.0.0 (owner: network) */
+/**
+ * common.config-secret-put@1 (AI Exchange D11): body of PUT /internal/config/:namespace/secrets/:key on a service's openvibe-shared/config admin routes. The value is written once, sealed as an envelope under the service's KEK (or kept as today when it has none), and never returned, logged or put in values_json. Its answer is the marker: { redacted: true, fingerprint, hint (four characters), set_at, set_by, bound_to }, as common.config-namespace@1 defines it. A `x-bind` key on the namespace schema binds the secret to another key's value (a provider key to its base_url origin); a changed bind no longer opens the value until the owner enters it again.
+ */
+export interface ConfigSecretPut {
+  /**
+   * The secret, once.
+   */
+  value: string;
+  /**
+   * Why the secret is set; it is the revision's reason in the history.
+   */
+  reason: string;
+}
+
 /** common.content-labels@1.0.0 (owner: contracts) */
 /**
  * common.content-labels@1 (L1, labels and choices, 2026-10-31): what a stream, VOD, clip, picture or post is labelled as, and what the AI has suggested but the creator has not confirmed. Labels are choices, never bans: a label never hides content from the person who posted it, and it never hides content from a viewer whose label preferences show it. A creator sets a label; the AI may only suggest one (a suggestion the creator confirms, never a takedown); three viewer suggestions or a moderator put one on. The label set is one list everywhere: nudity, language, graphic, 18+, flashing and spoilers.
@@ -204384,100 +204508,6 @@ export type Task = {
    */
   webhook_secret?: string;
 };
-
-/** platform.owner-settings@1.0.0 (owner: network) */
-/**
- * platform.owner-settings@1 (AI Exchange D11): one service's owner settings document, answered by GET/PATCH /internal/owner-settings and by PUT/DELETE /internal/owner-settings/secrets/:key on the service that owns the settings. A setting is typed and says where its effective value comes from; `env` pins it read-only. A secret setting never carries its value (and never a default): only the write-only metadata `secret`. nano_usd values are integer strings, never numbers. Only Network's admin proxy, acting for the owner, reads or writes this document.
- */
-export interface PlatformOwnerSettings {
-  /**
-   * The service whose settings these are, e.g. ai.
-   */
-  service: string;
-  /**
-   * The groups the settings are shown under.
-   */
-  groups: {
-    /**
-     * Stable group id; a setting names it in `group`.
-     */
-    id: string;
-    label: string;
-    description?: string;
-  }[];
-  /**
-   * Every setting the service exposes to the owner.
-   */
-  settings: {
-    [k: string]: unknown | undefined;
-  }[];
-}
-
-/** platform.owner-settings-change@1.0.0 (owner: network) */
-/**
- * platform.owner-settings-change@1 (AI Exchange D11): body of PATCH /internal/owner-settings on each service that owns owner settings. It changes one or more typed values at once. A key whose setting has source env is pinned and the service answers 409 settings.pinned_in_env; a secret-type setting is never changed here (use platform.owner-secret-put@1). Each request carries the owner as actor and the service audits every change with that actor and key, never the value.
- */
-export interface PlatformOwnerSettingsChange {
-  /**
-   * @minItems 1
-   * @maxItems 64
-   */
-  changes: [
-    {
-      /**
-       * The setting key, as platform.owner-settings@1 names it.
-       */
-      key: string;
-      /**
-       * The new typed value. A nano_usd value is an integer string; a float is never a value.
-       */
-      value: boolean | number | string | string[];
-    },
-    ...{
-      /**
-       * The setting key, as platform.owner-settings@1 names it.
-       */
-      key: string;
-      /**
-       * The new typed value. A nano_usd value is an integer string; a float is never a value.
-       */
-      value: boolean | number | string | string[];
-    }[]
-  ];
-  actor: {
-    /**
-     * The owner; a service or an app is never the actor.
-     */
-    type: "user";
-    id: string;
-  };
-  /**
-   * Why the owner changed it; recorded in the service's audit line.
-   */
-  reason?: string;
-}
-
-/** platform.owner-secret-put@1.0.0 (owner: network) */
-/**
- * platform.owner-secret-put@1 (AI Exchange D11): body of PUT /internal/owner-settings/secrets/:key on the service that owns the secret. The value is sent once, sealed by the service, and never returned, logged or echoed. `bind` is the https origin the value is sealed to (a provider key is bound to its provider's origin); changing the destination makes the value unusable until the owner enters it again. The answer is the setting without the value. Each request carries the owner as actor and the service audits the write with that actor and key, never the value.
- */
-export interface PlatformOwnerSecretPut {
-  /**
-   * The secret, once. Never stored outside the owning service and never returned.
-   */
-  value: string;
-  /**
-   * The https origin the value is sealed to; optional.
-   */
-  bind?: string;
-  actor: {
-    /**
-     * The owner; a service or an app is never the actor.
-     */
-    type: "user";
-    id: string;
-  };
-}
 
 /** events.delivery-policy@1.0.0 (owner: events) */
 /**

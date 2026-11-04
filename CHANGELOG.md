@@ -3,26 +3,26 @@
 
 ## 0.288.0 — 2026-11-04
 
-- **Owner settings (AI Exchange D11, S1): `platform.owner-settings@1`, `platform.owner-settings-change@1` and
-  `platform.owner-secret-put@1`** (internal).
-  - `platform.owner-settings@1` is one service's settings document: `service`, `groups` (`id`, `label`) and
-    `settings` (`key`, `group`, `label`, `description`, `type`, `enum`/`min`/`max` where the type allows,
-    `value`/`default`, `source` `env|owner|default`, `env`, `danger`, `restart`, `secret` metadata, `updated_at`,
-    `updated_by`).
-  - A secret-type setting never carries `value` or a `default`; it shows only `secret` (`set`, `hint`,
-    `fingerprint`, `set_at`, `set_by`, `bound_to`), which is never the value.
-  - nano-USD values are `^[0-9]{1,19}$` strings (D1); a float or a decimal string is invalid. `enum` is only on
-    `enum`, and `min`/`max` only on `integer` and `nano_usd`.
-  - `platform.owner-settings-change@1` is the PATCH body: typed `changes[]`, the owner as `actor` and an optional
-    `reason`; a secret setting is written through the secret route, never here.
-  - `platform.owner-secret-put@1` is the PUT body: `value` once, an optional `bind` https origin and the owner as
-    `actor`; the answer is the setting without the value.
-- **Ten internal capabilities, one per service:** `ai`, `billing`, `network`, `services`, `watch`, `bench`, `report`,
-  `host`, `codes` and `actor` each gain `<svc>.settings.manage` (owner that service, active, internal, never
-  grantable to apps), implemented by `GET|PATCH /internal/owner-settings` and
-  `PUT|DELETE /internal/owner-settings/secrets/:key`. Only Network's admin proxy, acting for the owner, holds them.
+- **Configuration contracts (AI Exchange D11, S1), built on openvibe-shared/config:
+  `common.config-namespace@1`, `common.config-change@1` and `common.config-secret-put@1`** (internal).
+  - `common.config-namespace@1` is the shape `openvibe-shared/config`'s `summary()` returns (`service`, `namespace`,
+    `revision`, `values`, `classification`, `active`, `last_known_good`), plus `sealed`, `pins` and `schema`: whether
+    a KEK seals secret values, the keys pinned by their `x-env` variable, and the namespace's JSON Schema so a client
+    can draw the form. The annotations `title`, `description`, `x-group`, `x-env`, `x-danger`, `x-bind` and `x-unit`
+    (`nano_usd`, `ms`, `bps`) are allowed.
+  - A secret-class value in `values` is a marker (`redacted: true`, a keyed 64-hex `fingerprint`, and the optional
+    four-character `hint`, `set_at`, `set_by` and `bound_to`); a marker that carries `value` is invalid, so a
+    summary never carries a secret.
+  - `common.config-change@1` is `{ values, reason, merge?, unset? }`; a secret value is refused by the store
+    (`422 config.secret_write_only`) and is written only through the secret route.
+  - `common.config-secret-put@1` is `{ value, reason }`; the answer is the marker.
+- **Nine internal capabilities, one per service:** `ai`, `billing`, `services`, `watch`, `bench`, `report`, `host`,
+  `codes` and `actor` each gain `<svc>.config.manage` (owner that service, active, internal, never grantable to apps),
+  implemented by `GET /internal/config`, `GET|POST /internal/config/:namespace` and
+  `PUT|DELETE /internal/config/:namespace/secrets/:key`. Only Network's admin proxy, acting for the owner, holds them;
+  Network uses its own admin config routes.
 - Contracts keeps no default-grants list: Network's seeded default grants live in OpenVibe.Network, so granting
-  these ten to the network service is that repository's change when the proxy (S3) lands.
+  these nine to the network service is that repository's change.
 
 ## 0.287.0 — 2026-11-04
 

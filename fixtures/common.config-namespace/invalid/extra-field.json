@@ -1,0 +1,19 @@
+{
+  "service": "live",
+  "namespace": "live.site_settings",
+  "revision": 12,
+  "values": {
+    "site_name": "OpenVibe.Live"
+  },
+  "classification": {
+    "site_name": "public"
+  },
+  "sealed": true,
+  "pins": [],
+  "schema": null,
+  "active": null,
+  "last_known_good": null,
+  "secret_values": {
+    "youtube_api_key": "AIza-example-secret"
+  }
+}
