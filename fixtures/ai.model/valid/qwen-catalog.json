@@ -1,0 +1,48 @@
+{
+  "provider_key": "qwen",
+  "model_key": "qwen3-9b-abliterated",
+  "display_name": "Qwen3 9B Abliterated Q4_K_M",
+  "type": "chat",
+  "status": "active",
+  "context_window": 32768,
+  "max_output": 8192,
+  "cost": {
+    "in_per_mtok": 0.000003,
+    "out_per_mtok": 0.000015,
+    "cached_per_mtok": 0.0000003
+  },
+  "supports": {
+    "json": true,
+    "tools": true,
+    "streaming": true,
+    "vision": false
+  },
+  "id": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9",
+  "aliases": ["openvibe/economy", "openvibe/balanced"],
+  "family": "qwen3",
+  "variant": "abliterated",
+  "quant": "q4_k_m",
+  "revision": "3f2a1c9",
+  "sha256": "aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899",
+  "license": "apache-2.0",
+  "context": 32768,
+  "capabilities": {
+    "tools": true,
+    "json": true,
+    "vision": false,
+    "stream": true
+  },
+  "modalities": ["text"],
+  "retail_rate": {
+    "version": "rr-2026-11-03-001",
+    "input_nano_usd_per_m": "3000",
+    "cached_read_nano_usd_per_m": "300",
+    "cache_write_nano_usd_per_m": "3000",
+    "output_nano_usd_per_m": "15000",
+    "per_request_nano_usd": "0"
+  },
+  "availability": "available",
+  "metadata": {},
+  "created_at": "2026-11-03T00:00:00.000Z",
+  "updated_at": "2026-11-03T00:00:00.000Z"
+}

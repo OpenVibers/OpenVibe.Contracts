@@ -1,0 +1,17 @@
+{
+  "chosen": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9",
+  "rejected": [
+    { "id": "openvibe/fast", "reason": "latency ceiling exceeded" },
+    { "id": "meta-llama/llama_3.1_8b_instruct:fp16@bca2580", "reason": "higher expected cost per success" }
+  ],
+  "objective": "balanced",
+  "estimate": {
+    "charge_nano_usd": "12000",
+    "input_tokens": 800,
+    "cached_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 400
+  },
+  "policy": "balanced",
+  "fallback_reason": "first choice above latency ceiling"
+}

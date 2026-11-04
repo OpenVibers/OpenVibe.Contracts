@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/inference-deployment.v1.json",
+  "title": "AiInferenceDeployment",
+  "description": "ai.inference-deployment@1: a loaded inference deployment for a pinned artifact. Describes where it runs, its trust tier, commercial rights, health, limits and the rate card that prices its supply cost.",
+  "type": "object",
+  "required": [
+    "id",
+    "artifact_id",
+    "region",
+    "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "maxLength": 256,
+      "description": "Deployment id, unique within OpenVibe.AI."
+    },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+(:[a-zA-Z0-9._-]+)?@[a-zA-Z0-9._-]+$",
+      "maxLength": 256,
+      "description": "Exact artifact id this deployment loads."
+    },
+    "region": {
+      "type": "string",
+      "description": "Deployment region or residency label."
+    },
+    "trust_tier": {
+      "type": "string",
+      "enum": [
+        "first_party",
+        "owner_node",
+        "approved_wholesale",
+        "unverified"
+      ],
+      "description": "Who operates the deployment and what data may reach it."
+    },
+    "operator": {
+      "type": "string",
+      "description": "Operator slug or `owner:<subject_id>` for a private node."
+    },
+    "host": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Internal host identifier; never exposed to untrusted callers."
+    },
+    "endpoint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Service endpoint for this deployment (internal or partner)."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "warming",
+        "ready",
+        "full",
+        "degraded",
+        "offline"
+      ],
+      "description": "Current load/health state."
+    },
+    "loaded_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_concurrency": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "context_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "supply_rate_card_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Reference to the supply rate card (platform.rate-card@1) that prices this deployment."
+    },
+    "provider_access": {
+      "type": "string",
+      "enum": [
+        "OWN_DEPLOYMENT",
+        "AUTHORIZED_WHOLESALE",
+        "CUSTOMER_BYOK",
+        "RESTRICTED",
+        "UNVERIFIED"
+      ],
+      "description": "Commercial eligibility for paid managed routes."
+    },
+    "commercial_rights": {
+      "type": "string",
+      "enum": [
+        "OWN_DEPLOYMENT",
+        "AUTHORIZED_WHOLESALE",
+        "CUSTOMER_BYOK",
+        "RESTRICTED",
+        "UNVERIFIED"
+      ],
+      "description": "Resale authority recorded for this deployment."
+    },
+    "privacy_policy": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Retention/zero-retention policy label."
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "healthy": {
+          "type": "boolean"
+        },
+        "last_check_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

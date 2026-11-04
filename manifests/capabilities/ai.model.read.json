@@ -1,0 +1,22 @@
+{
+  "id": "ai.model.read",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read the public model catalog: GET /v1/models returns a list (ai.model-list@1) and GET /v1/models/:id returns one catalog entry (ai.model@1). Available to developer apps and anonymous callers.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "ai.model-read-result@1",
+  "permissions": [
+    "ai:catalog:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "ai-read",
+  "events": [],
+  "implementedBy": [
+    "GET /v1/models",
+    "GET /v1/models/:id"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9",
+  "family": "qwen3",
+  "variant": "abliterated",
+  "quant": "q4_k_m",
+  "revision": "3f2a1c9",
+  "license": "apache-2.0"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "ai.inference.create",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "public",
+  "description": "Create developer-app inference requests (D8): POST /v1/chat/completions and POST /v1/messages. Grantable to developer apps; the token's project_id scopes quota and spend. ai.run.create stays first-party for workflows and runs.",
+  "inputSchema": "ai.run-request@1",
+  "outputSchema": "ai.run@1",
+  "permissions": [
+    "ai:inference"
+  ],
+  "resourceConstraints": [
+    "project"
+  ],
+  "quotaClass": "ai-inference",
+  "events": [
+    "ai.run.queued",
+    "ai.run.succeeded",
+    "ai.run.failed",
+    "ai.run.cached"
+  ],
+  "implementedBy": [
+    "POST /v1/chat/completions",
+    "POST /v1/messages"
+  ]
+}

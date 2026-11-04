@@ -1,0 +1,16 @@
+{
+  "id": "rc_openai_tokens_retail_v2",
+  "provider": "openai",
+  "adapter": "openai-v1",
+  "side": "retail",
+  "version": "2026-11-03-001",
+  "metric": "tokens",
+  "unit_size": 1000000,
+  "unit_price_usd": 0.15,
+  "free_allowance": 0,
+  "reset_period": "month",
+  "effective_from": "2026-11-01",
+  "effective_to": "2026-12-01",
+  "source": "https://openai.com/api/pricing/",
+  "verified_at": "2026-11-03"
+}

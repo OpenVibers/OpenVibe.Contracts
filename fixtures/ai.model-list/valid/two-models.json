@@ -1,0 +1,60 @@
+{
+  "models": [
+    {
+      "provider_key": "qwen",
+      "model_key": "qwen3-9b-abliterated",
+      "type": "chat",
+      "status": "active",
+      "cost": { "in_per_mtok": 3, "out_per_mtok": 15, "cached_per_mtok": 0.3 },
+      "supports": { "json": true, "tools": true, "streaming": true, "vision": false },
+      "id": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9",
+      "family": "qwen3",
+      "variant": "abliterated",
+      "quant": "q4_k_m",
+      "revision": "3f2a1c9",
+      "sha256": "aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899",
+      "license": "apache-2.0",
+      "context": 32768,
+      "capabilities": { "tools": true, "json": true, "vision": false, "stream": true },
+      "modalities": ["text"],
+      "retail_rate": {
+        "version": "rr-2026-11-03-001",
+        "input_nano_usd_per_m": "3000",
+        "cached_read_nano_usd_per_m": "300",
+        "cache_write_nano_usd_per_m": "3000",
+        "output_nano_usd_per_m": "15000",
+        "per_request_nano_usd": "0"
+      },
+      "availability": "available"
+    },
+    {
+      "provider_key": "meta-llama",
+      "model_key": "llama_3.1_8b_instruct",
+      "type": "chat",
+      "status": "active",
+      "cost": { "in_per_mtok": 2, "out_per_mtok": 10, "cached_per_mtok": 0.2 },
+      "supports": { "json": true, "tools": true, "streaming": true, "vision": false },
+      "id": "meta-llama/llama_3.1_8b_instruct:fp16@bca2580",
+      "family": "llama3.1",
+      "variant": "original",
+      "quant": "fp16",
+      "revision": "bca2580",
+      "sha256": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff",
+      "license": "llama3.1",
+      "context": 131072,
+      "capabilities": { "tools": true, "json": true, "vision": false, "stream": true },
+      "modalities": ["text"],
+      "retail_rate": {
+        "version": "rr-2026-11-03-002",
+        "input_nano_usd_per_m": "2000",
+        "cached_read_nano_usd_per_m": "200",
+        "cache_write_nano_usd_per_m": "2000",
+        "output_nano_usd_per_m": "10000",
+        "per_request_nano_usd": "0"
+      },
+      "availability": "available"
+    }
+  ],
+  "count": 2,
+  "cursor": null
+}

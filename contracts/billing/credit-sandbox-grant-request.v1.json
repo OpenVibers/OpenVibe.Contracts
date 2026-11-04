@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/credit-sandbox-grant-request.v1.json",
+  "title": "BillingCreditSandboxGrantRequest",
+  "description": "billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9).",
+  "type": "object",
+  "required": [
+    "subject",
+    "project_id",
+    "amount_nano_usd"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "amount_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "provider_key": "qwen",
+  "model_key": "qwen3-9b-abliterated",
+  "type": "chat",
+  "status": "active",
+  "supports": { "json": true, "tools": true, "streaming": true, "vision": false },
+  "id": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9"
+}

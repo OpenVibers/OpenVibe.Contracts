@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/credit-sandbox-grant-result.v1.json",
+  "title": "BillingCreditSandboxGrantResult",
+  "description": "billing.credit-sandbox-grant-result@1: the grant and the balance after it.",
+  "type": "object",
+  "required": [
+    "grant_id",
+    "amount_nano_usd",
+    "balance_nano_usd"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "grant_id": {
+      "type": "string",
+      "pattern": "^igr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "amount_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    },
+    "balance_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    }
+  }
+}

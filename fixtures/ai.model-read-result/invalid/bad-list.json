@@ -1,0 +1,15 @@
+{
+  "models": [
+    {
+      "provider_key": "qwen",
+      "model_key": "qwen3-9b-abliterated",
+      "type": "chat",
+      "status": "active",
+      "cost": { "in_per_mtok": 3, "out_per_mtok": 15, "cached_per_mtok": 0.3 },
+      "supports": { "json": true, "tools": true, "streaming": true, "vision": false },
+      "retail_rate": { "input_nano_usd_per_m": 3000 }
+    }
+  ],
+  "count": 1,
+  "cursor": null
+}

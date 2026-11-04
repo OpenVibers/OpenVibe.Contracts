@@ -1450,9 +1450,54 @@
     },
     {
       "id": "ai.model",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "schema": "ai/model.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.model-artifact",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/model-artifact.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.inference-deployment",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/inference-deployment.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.route-explain",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/route-explain.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.model-list",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/model-list.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.model-read-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/model-read-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
@@ -2382,6 +2427,78 @@
       "owner": "billing",
       "schema": "billing/usage-record-result.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-hold",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-hold.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-settlement",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-settlement.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-hold-create-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-hold-create-request.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-hold-create-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-hold-create-result.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-hold-extend-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-hold-extend-request.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-hold-settle-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-hold-settle-request.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-hold-settle-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-hold-settle-result.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-hold-release-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-hold-release-result.v1.json",
+      "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
@@ -6091,7 +6208,7 @@
     },
     {
       "id": "platform.rate-card",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "platform/rate-card.v1.json",
       "visibility": "first-party",
@@ -8840,6 +8957,24 @@
       "owner": "today",
       "schema": "today/agenda.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-sandbox-grant-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-sandbox-grant-request.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-sandbox-grant-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-sandbox-grant-result.v1.json",
+      "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     }

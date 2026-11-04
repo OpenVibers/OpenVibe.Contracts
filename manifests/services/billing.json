@@ -30,7 +30,12 @@
     "billing.entitlement.check",
     "billing.stats.read",
     "billing.ledger.admin",
-    "billing.usage.record"
+    "billing.usage.record",
+    "billing.credit.hold.create",
+    "billing.credit.hold.extend",
+    "billing.credit.hold.settle",
+    "billing.credit.hold.release",
+    "billing.credit.sandbox.grant"
   ],
   "eventsProduced": [
     "billing.transaction.settled",
@@ -85,7 +90,7 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+        "none": "the schema code only adds (CREATE \u2026 IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
       }
     },
     "contracts": {

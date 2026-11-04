@@ -1,0 +1,8 @@
+{
+  "hold_id": "hld_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "held_nano_usd": "100000000.5",
+  "available_nano_usd": "75000000",
+  "lease_expires_at": "2026-11-03T01:00:00.000Z"
+}

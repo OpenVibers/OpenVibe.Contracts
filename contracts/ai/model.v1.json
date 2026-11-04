@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/ai/model.v1.json",
   "title": "AiModel",
-  "description": "ai.model@1: one model of a provider in OpenVibe.AI's registry (server/registry.js decodeModel): type, status, limits, per-million-token costs and what it supports.",
+  "description": "ai.model@1: a catalog entry for one model in OpenVibe.AI's registry. The legacy provider/model fields stay for existing readers; new catalog fields (id, family, variant, quant, revision, sha256, license, context, capabilities, modalities, retail rate and availability) are optional so older documents remain valid. Exact ids follow `<org>/<model>[:<quant>]@<revision>`; dynamic aliases such as `openvibe/auto` may be enumerated in `aliases`. Money fields are integer nano-USD per million tokens, as strings.",
   "type": "object",
   "required": [
     "provider_key",
@@ -12,6 +12,13 @@
     "cost",
     "supports"
   ],
+  "$defs": {
+    "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    }
+  },
   "properties": {
     "provider_key": {
       "type": "string"
@@ -91,6 +98,128 @@
           "type": "boolean"
         }
       }
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+(:[a-zA-Z0-9._-]+)?@[a-zA-Z0-9._-]+$",
+      "description": "Exact model id: `<org>/<model>[:<quant>]@<revision>`.",
+      "maxLength": 256
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "openvibe",
+          "openvibe/auto",
+          "openvibe/economy",
+          "openvibe/balanced",
+          "openvibe/fast",
+          "openvibe/private"
+        ]
+      },
+      "description": "Dynamic policy aliases that resolve to this model."
+    },
+    "family": {
+      "type": "string",
+      "description": "Creator and underlying model family, e.g. `qwen3`."
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "original",
+        "abliterated",
+        "finetuned",
+        "merged",
+        "lora"
+      ],
+      "description": "How the weights were produced."
+    },
+    "quant": {
+      "type": "string",
+      "description": "Quantization label, e.g. `q4_k_m`."
+    },
+    "revision": {
+      "type": "string",
+      "description": "Artifact revision or commit hash."
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the weight file or manifest."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier or custom license name."
+    },
+    "context": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Maximum context length in tokens."
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "tools": {
+          "type": "boolean"
+        },
+        "json": {
+          "type": "boolean"
+        },
+        "vision": {
+          "type": "boolean"
+        },
+        "stream": {
+          "type": "boolean"
+        }
+      }
+    },
+    "modalities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "text",
+          "image",
+          "audio",
+          "video"
+        ]
+      },
+      "description": "Input/output modalities the model supports."
+    },
+    "retail_rate": {
+      "type": "object",
+      "description": "Customer retail price, immutable rate version and nano-USD per-million-token component rates.",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "input_nano_usd_per_m": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "cached_read_nano_usd_per_m": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "cache_write_nano_usd_per_m": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "output_nano_usd_per_m": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "per_request_nano_usd": {
+          "$ref": "#/$defs/money-nano-usd"
+        }
+      }
+    },
+    "availability": {
+      "type": "string",
+      "enum": [
+        "available",
+        "limited",
+        "unavailable",
+        "deprecated"
+      ],
+      "description": "Whether the model can be chosen for new requests."
     },
     "metadata": {
       "type": "object"

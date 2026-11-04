@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/credit-hold-create-result.v1.json",
+  "title": "BillingCreditHoldCreateResult",
+  "description": "billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.",
+  "type": "object",
+  "required": [
+    "hold_id",
+    "held_nano_usd",
+    "available_nano_usd",
+    "lease_expires_at"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    }
+  },
+  "properties": {
+    "hold_id": {
+      "type": "string",
+      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "held_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "available_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "lease_expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

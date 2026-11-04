@@ -1,0 +1,7 @@
+{
+  "id": "dep-bad-access",
+  "artifact_id": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9",
+  "region": "us-east",
+  "status": "ready",
+  "provider_access": "FREE"
+}

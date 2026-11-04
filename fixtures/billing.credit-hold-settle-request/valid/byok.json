@@ -1,0 +1,30 @@
+{
+  "idempotency_key": "settle-key-002",
+  "usage": {
+    "input_tokens": 500,
+    "cached_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 200
+  },
+  "retail": {
+    "version": "rr-2026-11-03-001",
+    "nano_usd_per_m": {
+      "input": "0",
+      "cached_read": "0",
+      "cache_write": "0",
+      "output": "0"
+    },
+    "per_request_nano_usd": "0"
+  },
+  "supply_cost_nano_usd": "0",
+  "byok": true,
+  "attempts": [
+    {
+      "deployment_id": "dep-owner-byok",
+      "provider_access": "CUSTOMER_BYOK",
+      "started_at": "2026-11-03T00:00:01.000Z",
+      "ended_at": "2026-11-03T00:00:04.000Z",
+      "error_code": null
+    }
+  ]
+}

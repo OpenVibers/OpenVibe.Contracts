@@ -57,3 +57,9 @@ description = "Sample realtime tickets in network.realtime-ticket-result fixture
 condition = "AND"
 paths = ['''^fixtures/network\.realtime\-ticket\-result/(valid|invalid)/[a-z-]+\.json$''']
 regexes = ['''^eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9\.eyJ0eXAiOiJyZWFsdGltZSJ9\.c2lnbmF0dXJl$''']
+
+[[allowlists]]
+description = "Sample model_key in ai.model-list@1 fixture: a model name placeholder, not an API key"
+condition = "AND"
+paths = ['''^fixtures/ai\.model-list/valid/two-models\.json$''']
+regexes = ['''^llama_3\.1_8b_instruct$''']

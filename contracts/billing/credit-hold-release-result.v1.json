@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/credit-hold-release-result.v1.json",
+  "title": "BillingCreditHoldReleaseResult",
+  "description": "billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.",
+  "type": "object",
+  "required": [
+    "hold_id",
+    "released_nano_usd"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    }
+  },
+  "properties": {
+    "hold_id": {
+      "type": "string",
+      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "released_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    }
+  }
+}

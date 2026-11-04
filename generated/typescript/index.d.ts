@@ -153008,9 +153008,9 @@ export type AiDefinitionVersionResult =
       };
     };
 
-/** ai.model@1.0.0 (owner: ai) */
+/** ai.model@1.1.0 (owner: ai) */
 /**
- * ai.model@1: one model of a provider in OpenVibe.AI's registry (server/registry.js decodeModel): type, status, limits, per-million-token costs and what it supports.
+ * ai.model@1: a catalog entry for one model in OpenVibe.AI's registry. The legacy provider/model fields stay for existing readers; new catalog fields (id, family, variant, quant, revision, sha256, license, context, capabilities, modalities, retail rate and availability) are optional so older documents remain valid. Exact ids follow `<org>/<model>[:<quant>]@<revision>`; dynamic aliases such as `openvibe/auto` may be enumerated in `aliases`. Money fields are integer nano-USD per million tokens, as strings.
  */
 export interface AiModel {
   provider_key: string;
@@ -153031,10 +153031,278 @@ export interface AiModel {
     streaming?: boolean;
     vision?: boolean;
   };
+  /**
+   * Exact model id: `<org>/<model>[:<quant>]@<revision>`.
+   */
+  id?: string;
+  /**
+   * Dynamic policy aliases that resolve to this model.
+   */
+  aliases?: (
+    "openvibe" | "openvibe/auto" | "openvibe/economy" | "openvibe/balanced" | "openvibe/fast" | "openvibe/private"
+  )[];
+  /**
+   * Creator and underlying model family, e.g. `qwen3`.
+   */
+  family?: string;
+  /**
+   * How the weights were produced.
+   */
+  variant?: "original" | "abliterated" | "finetuned" | "merged" | "lora";
+  /**
+   * Quantization label, e.g. `q4_k_m`.
+   */
+  quant?: string;
+  /**
+   * Artifact revision or commit hash.
+   */
+  revision?: string;
+  /**
+   * SHA-256 of the weight file or manifest.
+   */
+  sha256?: string;
+  /**
+   * SPDX license identifier or custom license name.
+   */
+  license?: string;
+  /**
+   * Maximum context length in tokens.
+   */
+  context?: number;
+  capabilities?: {
+    tools?: boolean;
+    json?: boolean;
+    vision?: boolean;
+    stream?: boolean;
+  };
+  /**
+   * Input/output modalities the model supports.
+   */
+  modalities?: ("text" | "image" | "audio" | "video")[];
+  /**
+   * Customer retail price, immutable rate version and nano-USD per-million-token component rates.
+   */
+  retail_rate?: {
+    version?: string;
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    input_nano_usd_per_m?: string;
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    cached_read_nano_usd_per_m?: string;
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    cache_write_nano_usd_per_m?: string;
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    output_nano_usd_per_m?: string;
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    per_request_nano_usd?: string;
+  };
+  /**
+   * Whether the model can be chosen for new requests.
+   */
+  availability?: "available" | "limited" | "unavailable" | "deprecated";
   metadata?: {};
   created_at?: string | null;
   updated_at?: string | null;
 }
+
+/** ai.model-artifact@1.0.0 (owner: ai) */
+/**
+ * ai.model-artifact@1: one pinned revision/variant/quantization of a model family. Identified by an exact id (`<org>/<model>[:<quant>]@<revision>`), with its weight SHA-256, tokenizer revision, license and provenance.
+ */
+export interface AiModelArtifact {
+  /**
+   * Exact artifact id: `<org>/<model>[:<quant>]@<revision>`.
+   */
+  id: string;
+  /**
+   * Underlying model family, e.g. `qwen3`.
+   */
+  family: string;
+  /**
+   * How the weights were produced.
+   */
+  variant: "original" | "abliterated" | "finetuned" | "merged" | "lora";
+  /**
+   * Quantization label, e.g. `q4_k_m` or `fp16`.
+   */
+  quant: string;
+  /**
+   * Artifact revision or commit hash.
+   */
+  revision: string;
+  /**
+   * SHA-256 of the weight file or signed manifest.
+   */
+  sha256: string;
+  /**
+   * Tokenizer/chat-template revision used with this artifact.
+   */
+  tokenizer_revision?: string | null;
+  /**
+   * SPDX license identifier or custom license name.
+   */
+  license: string;
+  /**
+   * Canonical download or provenance URL.
+   */
+  source_url?: string;
+  /**
+   * Maximum context length in tokens.
+   */
+  context?: number;
+  created_at?: string;
+}
+
+/** ai.inference-deployment@1.0.0 (owner: ai) */
+/**
+ * ai.inference-deployment@1: a loaded inference deployment for a pinned artifact. Describes where it runs, its trust tier, commercial rights, health, limits and the rate card that prices its supply cost.
+ */
+export interface AiInferenceDeployment {
+  /**
+   * Deployment id, unique within OpenVibe.AI.
+   */
+  id: string;
+  /**
+   * Exact artifact id this deployment loads.
+   */
+  artifact_id: string;
+  /**
+   * Deployment region or residency label.
+   */
+  region: string;
+  /**
+   * Who operates the deployment and what data may reach it.
+   */
+  trust_tier?: "first_party" | "owner_node" | "approved_wholesale" | "unverified";
+  /**
+   * Operator slug or `owner:<subject_id>` for a private node.
+   */
+  operator?: string;
+  /**
+   * Internal host identifier; never exposed to untrusted callers.
+   */
+  host?: string | null;
+  /**
+   * Service endpoint for this deployment (internal or partner).
+   */
+  endpoint?: string | null;
+  /**
+   * Current load/health state.
+   */
+  status: "warming" | "ready" | "full" | "degraded" | "offline";
+  loaded_at?: string | null;
+  limits?: {
+    max_concurrency?: number;
+    context_tokens?: number;
+    max_output_tokens?: number;
+  };
+  /**
+   * Reference to the supply rate card (platform.rate-card@1) that prices this deployment.
+   */
+  supply_rate_card_id?: string | null;
+  /**
+   * Commercial eligibility for paid managed routes.
+   */
+  provider_access?: "OWN_DEPLOYMENT" | "AUTHORIZED_WHOLESALE" | "CUSTOMER_BYOK" | "RESTRICTED" | "UNVERIFIED";
+  /**
+   * Resale authority recorded for this deployment.
+   */
+  commercial_rights?: "OWN_DEPLOYMENT" | "AUTHORIZED_WHOLESALE" | "CUSTOMER_BYOK" | "RESTRICTED" | "UNVERIFIED";
+  /**
+   * Retention/zero-retention policy label.
+   */
+  privacy_policy?: string | null;
+  health?: {
+    healthy?: boolean;
+    last_check_at?: string | null;
+    reason?: string | null;
+  };
+  updated_at?: string;
+}
+
+/** ai.route-explain@1.0.0 (owner: ai) */
+/**
+ * ai.route-explain@1: why OpenVibe.AI chose a model/deployment for a request. Lists the chosen candidate, rejected candidates with reasons, the objective (policy), the pre-flight cost estimate and the final actual cost. Money fields are integer nano-USD, as strings.
+ */
+export interface AiRouteExplain {
+  /**
+   * Exact id of the model/deployment that answered.
+   */
+  chosen: string;
+  rejected: {
+    /**
+     * Exact id of the rejected candidate.
+     */
+    id: string;
+    /**
+     * Human-readable exclusion reason, without secrets or internal host IPs.
+     */
+    reason: string;
+  }[];
+  /**
+   * Routing policy used for this request.
+   */
+  objective: "cheapest" | "balanced" | "fastest" | "best" | "private" | "exact";
+  estimate: {
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    charge_nano_usd: string;
+    input_tokens?: number;
+    cached_read_tokens?: number;
+    cache_write_tokens?: number;
+    output_tokens?: number;
+  };
+  actual?: {
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    charge_nano_usd?: string;
+    input_tokens?: number;
+    cached_read_tokens?: number;
+    cache_write_tokens?: number;
+    output_tokens?: number;
+  };
+  /**
+   * Name of the policy/profile that produced the choice.
+   */
+  policy?: string;
+  /**
+   * If the first choice could not be used, why the chosen deployment was selected instead.
+   */
+  fallback_reason?: string | null;
+}
+
+/** ai.model-list@1.0.0 (owner: ai) */
+/**
+ * ai.model-list@1: paginated list of model catalog entries returned by GET /v1/models.
+ */
+export interface AiModelList {
+  models: AiModel[];
+  /**
+   * Number of models in this response.
+   */
+  count: number;
+  /**
+   * Opaque cursor for the next page.
+   */
+  cursor?: string | null;
+}
+
+/** ai.model-read-result@1.0.0 (owner: ai) */
+/**
+ * ai.model-read-result@1: response from GET /v1/models (a list) or GET /v1/models/:id (a single model).
+ */
+export type AiModelReadResult = AiModelList | AiModel;
 
 /** ai.provider-manage-request@1.0.0 (owner: ai) */
 /**
@@ -164319,6 +164587,253 @@ export interface BillingUsageRecordResult {
     principal: string;
     reading: UsageSample;
   };
+}
+
+/** billing.credit-hold@1.0.0 (owner: billing) */
+/**
+ * billing.credit-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.
+ */
+export interface BillingCreditHold {
+  /**
+   * ULID hold id.
+   */
+  hold_id: string;
+  subject: SubjectRef;
+  project_id: string;
+  /**
+   * Developer credential the hold is scoped to, if any.
+   */
+  credential_id?: string | null;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  held_nano_usd: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  available_nano_usd: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  max_nano_usd?: string;
+  /**
+   * Immutable retail rate-card version the hold was priced against.
+   */
+  rate_version?: string;
+  /**
+   * Opaque fingerprint used to dedupe the same idempotency key.
+   */
+  request_fingerprint?: string;
+  lease_expires_at: string;
+  status?: "active" | "extended" | "settled" | "released" | "expired";
+  created_at?: string;
+  /**
+   * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
+   */
+  service?: string;
+}
+
+/** billing.credit-settlement@1.0.0 (owner: billing) */
+/**
+ * billing.credit-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.
+ */
+export interface BillingCreditSettlement {
+  settlement_id: string;
+  hold_id: string;
+  subject: SubjectRef;
+  project_id: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  charge_nano_usd: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  released_nano_usd: string;
+  journal_id: string;
+  usage?: {
+    input_tokens: number;
+    cached_read_tokens: number;
+    cache_write_tokens: number;
+    output_tokens: number;
+  };
+  retail?: {
+    version: string;
+    nano_usd_per_m: {
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      input: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      cached_read: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      cache_write: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      output: string;
+    };
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    per_request_nano_usd: string;
+  };
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  supply_cost_nano_usd?: string;
+  /**
+   * True when the caller supplied their own provider key; retail charge is 0.
+   */
+  byok?: boolean;
+  attempts?: {
+    deployment_id: string;
+    provider_access?: "OWN_DEPLOYMENT" | "AUTHORIZED_WHOLESALE" | "CUSTOMER_BYOK" | "RESTRICTED" | "UNVERIFIED";
+    started_at: string;
+    ended_at: string;
+    error_code?: string | null;
+  }[];
+  created_at?: string;
+  /**
+   * Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1).
+   */
+  shortfall_nano_usd?: string;
+}
+
+/** billing.credit-hold-create-request@1.0.0 (owner: billing) */
+/**
+ * billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.
+ */
+export interface BillingCreditHoldCreateRequest {
+  idempotency_key: string;
+  subject: SubjectRef;
+  project_id: string;
+  credential_id?: string | null;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  max_nano_usd: string;
+  rate_version: string;
+  request_fingerprint: string;
+  /**
+   * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
+   */
+  service?: string;
+}
+
+/** billing.credit-hold-create-result@1.0.0 (owner: billing) */
+/**
+ * billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.
+ */
+export interface BillingCreditHoldCreateResult {
+  hold_id: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  held_nano_usd: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  available_nano_usd: string;
+  lease_expires_at: string;
+}
+
+/** billing.credit-hold-extend-request@1.0.0 (owner: billing) */
+/**
+ * billing.credit-hold-extend-request@1: body of POST /internal/credits/holds/:id/extend. Grows an active hold by add_nano_usd.
+ */
+export interface BillingCreditHoldExtendRequest {
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  add_nano_usd: string;
+}
+
+/** billing.credit-hold-settle-request@1.0.0 (owner: billing) */
+/**
+ * billing.credit-hold-settle-request@1: body of POST /internal/credits/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.
+ */
+export interface BillingCreditHoldSettleRequest {
+  idempotency_key: string;
+  usage: {
+    input_tokens: number;
+    cached_read_tokens: number;
+    cache_write_tokens: number;
+    output_tokens: number;
+  };
+  retail: {
+    version: string;
+    nano_usd_per_m: {
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      input: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      cached_read: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      cache_write: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a string.
+       */
+      output: string;
+    };
+    /**
+     * Integer nano-USD (1e-9 USD), stored as a string.
+     */
+    per_request_nano_usd: string;
+  };
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  supply_cost_nano_usd: string;
+  byok: boolean;
+  attempts: {
+    deployment_id: string;
+    provider_access?: "OWN_DEPLOYMENT" | "AUTHORIZED_WHOLESALE" | "CUSTOMER_BYOK" | "RESTRICTED" | "UNVERIFIED";
+    started_at: string;
+    ended_at: string;
+    error_code?: string | null;
+  }[];
+}
+
+/** billing.credit-hold-settle-result@1.0.0 (owner: billing) */
+/**
+ * billing.credit-hold-settle-result@1: response from POST /internal/credits/holds/:id/settle.
+ */
+export interface BillingCreditHoldSettleResult {
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  charge_nano_usd: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  released_nano_usd: string;
+  journal_id: string;
+  /**
+   * Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1).
+   */
+  shortfall_nano_usd?: string;
+}
+
+/** billing.credit-hold-release-result@1.0.0 (owner: billing) */
+/**
+ * billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.
+ */
+export interface BillingCreditHoldReleaseResult {
+  hold_id: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  released_nano_usd: string;
 }
 
 /** deals.watch.matched@1.0.0 (owner: deals) */
@@ -202054,14 +202569,22 @@ export interface PlacementPlan {
   signature: string;
 }
 
-/** platform.rate-card@1.0.0 (owner: network) */
+/** platform.rate-card@1.1.0 (owner: network) */
 /**
- * One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). Changed only by review; never written by an AI on its own.
+ * One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). v1.1 adds optional `side` (supply|retail), `version` and `effective_to`; existing documents stay valid. Changed only by review; never written by an AI on its own.
  */
 export interface RateCard {
   id: string;
   provider: string;
   adapter?: string;
+  /**
+   * Whether this card prices what OpenVibe pays (supply) or what the customer pays (retail).
+   */
+  side?: "supply" | "retail";
+  /**
+   * Immutable version of this card; settlements reference it so historical prices survive updates.
+   */
+  version?: string;
   /**
    * e.g. queue-operation-64kb, request, gib-delivered, message, gb-month, class-a-op
    */
@@ -202072,6 +202595,10 @@ export interface RateCard {
   reset_period: "day" | "month" | "none";
   region?: string;
   effective_from: string;
+  /**
+   * Inclusive end date; null or absent means open-ended.
+   */
+  effective_to?: string;
   effective_until?: string;
   source: string;
   verified_at: string;
@@ -284540,4 +285067,34 @@ export interface TodayAgenda {
     [k: string]: unknown | undefined;
   }[];
   follows_unavailable: boolean;
+}
+
+/** billing.credit-sandbox-grant-request@1.0.0 (owner: billing) */
+/**
+ * billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9).
+ */
+export interface BillingCreditSandboxGrantRequest {
+  subject: SubjectRef;
+  project_id: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  amount_nano_usd: string;
+  reason?: string;
+}
+
+/** billing.credit-sandbox-grant-result@1.0.0 (owner: billing) */
+/**
+ * billing.credit-sandbox-grant-result@1: the grant and the balance after it.
+ */
+export interface BillingCreditSandboxGrantResult {
+  grant_id: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  amount_nano_usd: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  balance_nano_usd: string;
 }

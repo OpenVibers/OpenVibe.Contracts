@@ -1,0 +1,9 @@
+{
+  "id": "qwen3-9b@3f2a1c9",
+  "family": "qwen3",
+  "variant": "original",
+  "quant": "q4_k_m",
+  "revision": "3f2a1c9",
+  "sha256": "aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899",
+  "license": "apache-2.0"
+}

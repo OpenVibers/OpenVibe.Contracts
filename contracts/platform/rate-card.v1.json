@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/platform/rate-card.v1.json",
   "title": "RateCard",
-  "description": "One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). Changed only by review; never written by an AI on its own.",
+  "description": "One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). v1.1 adds optional `side` (supply|retail), `version` and `effective_to`; existing documents stay valid. Changed only by review; never written by an AI on its own.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -26,6 +26,18 @@
     },
     "adapter": {
       "type": "string"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "supply",
+        "retail"
+      ],
+      "description": "Whether this card prices what OpenVibe pays (supply) or what the customer pays (retail)."
+    },
+    "version": {
+      "type": "string",
+      "description": "Immutable version of this card; settlements reference it so historical prices survive updates."
     },
     "metric": {
       "type": "string",
@@ -57,6 +69,11 @@
     "effective_from": {
       "type": "string",
       "format": "date"
+    },
+    "effective_to": {
+      "type": "string",
+      "format": "date",
+      "description": "Inclusive end date; null or absent means open-ended."
     },
     "effective_until": {
       "type": "string",

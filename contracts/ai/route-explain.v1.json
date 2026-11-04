@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/route-explain.v1.json",
+  "title": "AiRouteExplain",
+  "description": "ai.route-explain@1: why OpenVibe.AI chose a model/deployment for a request. Lists the chosen candidate, rejected candidates with reasons, the objective (policy), the pre-flight cost estimate and the final actual cost. Money fields are integer nano-USD, as strings.",
+  "type": "object",
+  "required": [
+    "chosen",
+    "rejected",
+    "objective",
+    "estimate"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    }
+  },
+  "properties": {
+    "chosen": {
+      "type": "string",
+      "description": "Exact id of the model/deployment that answered."
+    },
+    "rejected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Exact id of the rejected candidate."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Human-readable exclusion reason, without secrets or internal host IPs."
+          }
+        }
+      }
+    },
+    "objective": {
+      "type": "string",
+      "enum": [
+        "cheapest",
+        "balanced",
+        "fastest",
+        "best",
+        "private",
+        "exact"
+      ],
+      "description": "Routing policy used for this request."
+    },
+    "estimate": {
+      "type": "object",
+      "required": [
+        "charge_nano_usd"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "charge_nano_usd": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cached_read_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_write_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "actual": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "charge_nano_usd": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cached_read_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_write_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "policy": {
+      "type": "string",
+      "description": "Name of the policy/profile that produced the choice."
+    },
+    "fallback_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "If the first choice could not be used, why the chosen deployment was selected instead."
+    }
+  }
+}

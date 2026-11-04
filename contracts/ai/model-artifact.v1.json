@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/model-artifact.v1.json",
+  "title": "AiModelArtifact",
+  "description": "ai.model-artifact@1: one pinned revision/variant/quantization of a model family. Identified by an exact id (`<org>/<model>[:<quant>]@<revision>`), with its weight SHA-256, tokenizer revision, license and provenance.",
+  "type": "object",
+  "required": [
+    "id",
+    "family",
+    "variant",
+    "quant",
+    "revision",
+    "sha256",
+    "license"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+(:[a-zA-Z0-9._-]+)?@[a-zA-Z0-9._-]+$",
+      "maxLength": 256,
+      "description": "Exact artifact id: `<org>/<model>[:<quant>]@<revision>`."
+    },
+    "family": {
+      "type": "string",
+      "description": "Underlying model family, e.g. `qwen3`."
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "original",
+        "abliterated",
+        "finetuned",
+        "merged",
+        "lora"
+      ],
+      "description": "How the weights were produced."
+    },
+    "quant": {
+      "type": "string",
+      "description": "Quantization label, e.g. `q4_k_m` or `fp16`."
+    },
+    "revision": {
+      "type": "string",
+      "description": "Artifact revision or commit hash."
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the weight file or signed manifest."
+    },
+    "tokenizer_revision": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Tokenizer/chat-template revision used with this artifact."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier or custom license name."
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical download or provenance URL."
+    },
+    "context": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Maximum context length in tokens."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

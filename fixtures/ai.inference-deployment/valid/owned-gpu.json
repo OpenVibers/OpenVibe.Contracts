@@ -1,0 +1,26 @@
+{
+  "id": "dep-qwen-9b-us-east-001",
+  "artifact_id": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9",
+  "region": "us-east",
+  "trust_tier": "first_party",
+  "operator": "openvibe",
+  "host": "gpu-001.internal",
+  "endpoint": "http://127.0.0.1:4800/v1",
+  "status": "ready",
+  "loaded_at": "2026-11-03T00:00:00.000Z",
+  "limits": {
+    "max_concurrency": 16,
+    "context_tokens": 32768,
+    "max_output_tokens": 8192
+  },
+  "supply_rate_card_id": "rc-qwen-owned-001",
+  "provider_access": "OWN_DEPLOYMENT",
+  "commercial_rights": "OWN_DEPLOYMENT",
+  "privacy_policy": "zero_retention",
+  "health": {
+    "healthy": true,
+    "last_check_at": "2026-11-03T00:00:00.000Z",
+    "reason": null
+  },
+  "updated_at": "2026-11-03T00:00:00.000Z"
+}

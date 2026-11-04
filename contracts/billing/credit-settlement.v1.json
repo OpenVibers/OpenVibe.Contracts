@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/credit-settlement.v1.json",
+  "title": "BillingCreditSettlement",
+  "description": "billing.credit-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.",
+  "type": "object",
+  "required": [
+    "settlement_id",
+    "hold_id",
+    "subject",
+    "project_id",
+    "charge_nano_usd",
+    "released_nano_usd",
+    "journal_id"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    },
+    "token-usage": {
+      "type": "object",
+      "required": [
+        "input_tokens",
+        "cached_read_tokens",
+        "cache_write_tokens",
+        "output_tokens"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cached_read_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_write_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "rate-versioned": {
+      "type": "object",
+      "required": [
+        "version",
+        "nano_usd_per_m",
+        "per_request_nano_usd"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "nano_usd_per_m": {
+          "type": "object",
+          "required": [
+            "input",
+            "cached_read",
+            "cache_write",
+            "output"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "input": {
+              "$ref": "#/$defs/money-nano-usd"
+            },
+            "cached_read": {
+              "$ref": "#/$defs/money-nano-usd"
+            },
+            "cache_write": {
+              "$ref": "#/$defs/money-nano-usd"
+            },
+            "output": {
+              "$ref": "#/$defs/money-nano-usd"
+            }
+          }
+        },
+        "per_request_nano_usd": {
+          "$ref": "#/$defs/money-nano-usd"
+        }
+      }
+    }
+  },
+  "properties": {
+    "settlement_id": {
+      "type": "string",
+      "pattern": "^stl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "hold_id": {
+      "type": "string",
+      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "charge_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "released_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "journal_id": {
+      "type": "string",
+      "pattern": "^txn_"
+    },
+    "usage": {
+      "$ref": "#/$defs/token-usage"
+    },
+    "retail": {
+      "$ref": "#/$defs/rate-versioned"
+    },
+    "supply_cost_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "byok": {
+      "type": "boolean",
+      "description": "True when the caller supplied their own provider key; retail charge is 0."
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "deployment_id",
+          "started_at",
+          "ended_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "deployment_id": {
+            "type": "string"
+          },
+          "provider_access": {
+            "type": "string",
+            "enum": [
+              "OWN_DEPLOYMENT",
+              "AUTHORIZED_WHOLESALE",
+              "CUSTOMER_BYOK",
+              "RESTRICTED",
+              "UNVERIFIED"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "shortfall_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
+    }
+  }
+}
