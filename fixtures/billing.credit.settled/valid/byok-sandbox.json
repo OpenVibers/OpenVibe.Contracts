@@ -1,0 +1,21 @@
+{
+  "settlement_id": "stl_01JAB2C3D4E5F6G7H8J9K0MNP1",
+  "hold_id": "hld_01JAB2C3D4E5F6G7H8J9K0MNP2",
+  "service": "ai",
+  "settled_at": "2026-11-04T12:00:07.000Z",
+  "deployment_id": null,
+  "provider_access": null,
+  "rate_version": "rr-2026-11-03-001",
+  "usage": {
+    "input_tokens": 0,
+    "cached_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 0
+  },
+  "charge_nano_usd": "0",
+  "supply_cost_nano_usd": "0",
+  "shortfall_nano_usd": "0",
+  "released_nano_usd": "500000",
+  "byok": true,
+  "sandbox": true
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.credit.settled.v1.json",
+  "title": "BillingCreditSettledPayload",
+  "description": "billing.credit.settled v1 (OpenVibe.Billing server/ops/credits.js settleHold(); written with the settlement row in the settle transaction): a Credits hold was settled once. It is AGGREGATE-ONLY on purpose: it carries no subject, no project_id and no account id, so a consumer can count services, routes and money but cannot reconstruct a person's statement; per-person statements are read from Billing's own ledger. OpenVibe.Report consumes it for aggregate analytics. Money is integer nano-USD as decimal strings (D1: never a float). Envelope: subject { type: credit-settlement, id: stl_… }, visibility internal, priority important, actor service:billing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["settlement_id", "hold_id", "service", "settled_at", "deployment_id", "provider_access", "rate_version", "usage", "charge_nano_usd", "supply_cost_nano_usd", "shortfall_nano_usd", "released_nano_usd", "byok", "sandbox"],
+  "properties": {
+    "settlement_id": {
+      "type": "string",
+      "pattern": "^stl_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID settlement id, the same one the settle result and Billing's statement use."
+    },
+    "hold_id": {
+      "type": "string",
+      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The settled hold."
+    },
+    "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,39}$",
+      "description": "The hold's service (D9): which metered service spent the credit, e.g. ai. Read from the hold; the settle request does not carry it."
+    },
+    "settled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the settlement committed (the settlement row's created_at)."
+    },
+    "deployment_id": {
+      "type": ["string", "null"],
+      "maxLength": 256,
+      "description": "The answering attempt's deployment id, '<provider>:<model>' as sent in the settle request's attempts[].deployment_id; null when no attempt answered (a cache hit or a BYOK call with no managed attempt)."
+    },
+    "provider_access": {
+      "type": ["string", "null"],
+      "enum": ["OWN_DEPLOYMENT", "AUTHORIZED_WHOLESALE", "CUSTOMER_BYOK", "RESTRICTED", "UNVERIFIED", null],
+      "description": "The answering attempt's commercial route (D3); null when no attempt answered or its route did not state one."
+    },
+    "rate_version": {
+      "type": "string",
+      "description": "The retail rate-card version the usage was priced against (the settle request's retail.version)."
+    },
+    "usage": {
+      "type": "object",
+      "description": "The measured token counts, the same shape as billing.credit-hold-settle-request@1's usage.",
+      "required": ["input_tokens", "cached_read_tokens", "cache_write_tokens", "output_tokens"],
+      "additionalProperties": false,
+      "properties": {
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cached_read_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_write_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "charge_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "The charge the settlement recorded, integer nano-USD (D1). Usage beyond the hold and free balance is separately shortfall_nano_usd."
+    },
+    "supply_cost_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "What the route cost OpenVibe at supply, integer nano-USD (D1); 0 for BYOK."
+    },
+    "shortfall_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
+    },
+    "released_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Hold amount returned to the account, integer nano-USD (D1)."
+    },
+    "byok": {
+      "type": "boolean",
+      "description": "True when the caller supplied their own provider key; the retail charge is 0."
+    },
+    "sandbox": {
+      "type": "boolean",
+      "description": "True when the hold was funded from usd_credit_sandbox (BILLING_CREDITS_SANDBOX), never paid credit."
+    }
+  }
+}

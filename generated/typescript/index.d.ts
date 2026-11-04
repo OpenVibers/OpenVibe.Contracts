@@ -163890,6 +163890,74 @@ export interface BillingReceiptExternalPayload {
   };
 }
 
+/** billing.credit.settled@1.0.0 (owner: billing) */
+/**
+ * billing.credit.settled v1 (OpenVibe.Billing server/ops/credits.js settleHold(); written with the settlement row in the settle transaction): a Credits hold was settled once. It is AGGREGATE-ONLY on purpose: it carries no subject, no project_id and no account id, so a consumer can count services, routes and money but cannot reconstruct a person's statement; per-person statements are read from Billing's own ledger. OpenVibe.Report consumes it for aggregate analytics. Money is integer nano-USD as decimal strings (D1: never a float). Envelope: subject { type: credit-settlement, id: stl_… }, visibility internal, priority important, actor service:billing.
+ */
+export interface BillingCreditSettledPayload {
+  /**
+   * ULID settlement id, the same one the settle result and Billing's statement use.
+   */
+  settlement_id: string;
+  /**
+   * The settled hold.
+   */
+  hold_id: string;
+  /**
+   * The hold's service (D9): which metered service spent the credit, e.g. ai. Read from the hold; the settle request does not carry it.
+   */
+  service: string;
+  /**
+   * When the settlement committed (the settlement row's created_at).
+   */
+  settled_at: string;
+  /**
+   * The answering attempt's deployment id, '<provider>:<model>' as sent in the settle request's attempts[].deployment_id; null when no attempt answered (a cache hit or a BYOK call with no managed attempt).
+   */
+  deployment_id: string | null;
+  /**
+   * The answering attempt's commercial route (D3); null when no attempt answered or its route did not state one.
+   */
+  provider_access: "OWN_DEPLOYMENT" | "AUTHORIZED_WHOLESALE" | "CUSTOMER_BYOK" | "RESTRICTED" | "UNVERIFIED" | null;
+  /**
+   * The retail rate-card version the usage was priced against (the settle request's retail.version).
+   */
+  rate_version: string;
+  /**
+   * The measured token counts, the same shape as billing.credit-hold-settle-request@1's usage.
+   */
+  usage: {
+    input_tokens: number;
+    cached_read_tokens: number;
+    cache_write_tokens: number;
+    output_tokens: number;
+  };
+  /**
+   * The charge the settlement recorded, integer nano-USD (D1). Usage beyond the hold and free balance is separately shortfall_nano_usd.
+   */
+  charge_nano_usd: string;
+  /**
+   * What the route cost OpenVibe at supply, integer nano-USD (D1); 0 for BYOK.
+   */
+  supply_cost_nano_usd: string;
+  /**
+   * Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1).
+   */
+  shortfall_nano_usd: string;
+  /**
+   * Hold amount returned to the account, integer nano-USD (D1).
+   */
+  released_nano_usd: string;
+  /**
+   * True when the caller supplied their own provider key; the retail charge is 0.
+   */
+  byok: boolean;
+  /**
+   * True when the hold was funded from usd_credit_sandbox (BILLING_CREDITS_SANDBOX), never paid credit.
+   */
+  sandbox: boolean;
+}
+
 /** billing.admin-request@1.0.0 (owner: billing) */
 /**
  * billing.admin-request@1: bodies of billing.ledger.admin on OpenVibe.Billing (operators). POST /api/v1/admin/freeze: { on, reason? } (unfreezing processes the provider deliveries stored meanwhile; allowed while frozen). POST /api/v1/admin/adjustments: { from, to, amount, reason, relates_to? } moves value between two accounts of one currency. POST /api/v1/purchases/settle: { provider, provider_ref, subject?, amount_cents, bits, intent_id?, test? } books a provider receipt. POST /api/v1/admin/provider-events/:id/reprocess, POST /api/v1/admin/sweep and the GETs (freeze, reconcile, provider-events, import-holds) take no body. Adjustments and settlements need an Idempotency-Key and are refused while frozen.
@@ -164631,6 +164699,10 @@ export interface BillingCreditHold {
    * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
    */
   service?: string;
+  /**
+   * D10. A sandbox caller's hold draws on that person's sandbox credit for the project (account kind usd_credit_sandbox, owner subject:project), never on real Credits, and a real hold never draws on sandbox credit. Sandbox grants (billing.credit-sandbox-grant-request@1) land in that sandbox account. Optional; defaults to false.
+   */
+  sandbox?: boolean;
 }
 
 /** billing.credit-settlement@1.0.0 (owner: billing) */
@@ -164723,6 +164795,10 @@ export interface BillingCreditHoldCreateRequest {
    * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
    */
   service?: string;
+  /**
+   * D10. A sandbox caller's hold draws on that person's sandbox credit for the project (account kind usd_credit_sandbox, owner subject:project), never on real Credits, and a real hold never draws on sandbox credit. Sandbox grants (billing.credit-sandbox-grant-request@1) land in that sandbox account. Optional; defaults to false.
+   */
+  sandbox?: boolean;
 }
 
 /** billing.credit-hold-create-result@1.0.0 (owner: billing) */
@@ -285250,7 +285326,7 @@ export interface TodayAgenda {
 
 /** billing.credit-sandbox-grant-request@1.0.0 (owner: billing) */
 /**
- * billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9).
+ * billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9). D10: the grant lands in the subject's sandbox credit account for the project (account kind usd_credit_sandbox, owner subject:project), and only a sandbox hold (billing.credit-hold-create-request@1 sandbox: true) draws on it; real Credits are never touched.
  */
 export interface BillingCreditSandboxGrantRequest {
   subject: SubjectRef;

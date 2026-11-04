@@ -2224,6 +2224,15 @@
       "adr": "ADR-012"
     },
     {
+      "id": "billing.credit.settled",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.credit.settled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "billing.admin-request",
       "version": "1.0.0",
       "owner": "billing",
