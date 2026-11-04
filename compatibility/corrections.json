@@ -12,6 +12,12 @@
       "base": "v0.99.0",
       "fixedIn": "0.100.0",
       "reason": "0.99.0 required `selected` to be a string, but the only producer of this shape, openvibe-sdk/placement plan(), already answers `selected: null` when nothing qualifies (and the POST /api/v1/placement/explain route it describes is roadmap WS-Z9, not built). The schema never matched what is actually sent, so `selected` widens to [string, null]; nothing consumed the string-only shape."
+    },
+    {
+      "id": "billing.credit-hold",
+      "base": "v0.289.0",
+      "fixedIn": "0.289.1",
+      "reason": "0.289.0 made `project_id` optional on billing.credit-hold-create-request@1 for a personal hold, but billing.credit-hold@1 still required a string, so the answer Billing's presentHold sends for a personal hold (`project_id: null`) did not validate. The string-only rule never described a personal hold's answer; project holds still send a string, and `project_id` widens to optional [string, null]."
     }
   ]
 }

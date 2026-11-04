@@ -165076,7 +165076,10 @@ export interface BillingCreditHold {
    */
   hold_id: string;
   subject: SubjectRef;
-  project_id: string;
+  /**
+   * The project whose Balance the hold spends. Null or absent for a personal hold on the subject's own Balance (D12); an app subject's hold always names its project.
+   */
+  project_id?: string | null;
   /**
    * Developer credential the hold is scoped to, if any.
    */

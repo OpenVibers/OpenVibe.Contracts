@@ -1,0 +1,14 @@
+{
+  "hold_id": "hld_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "project_id": null,
+  "held_nano_usd": "100000000",
+  "available_nano_usd": "250000000",
+  "max_nano_usd": "100000000",
+  "rate_version": "rr-2026-11-03-001",
+  "request_fingerprint": "fp-chat-personal-001",
+  "lease_expires_at": "2026-11-04T01:00:00.000Z",
+  "status": "active",
+  "created_at": "2026-11-04T00:00:00.000Z",
+  "service": "ai"
+}
