@@ -1,0 +1,11 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "currency": "vibes-bits",
+  "credit": 1250,
+  "payable": 0,
+  "bits_per_usd": 100,
+  "balance_nano_usd": "1"
+}

@@ -1,6 +1,39 @@
 # Changelog
 
 
+## 0.289.0 — 2026-11-04
+
+- **Balance and Vibes Pay (AI Exchange D12, MONEY.md build order step 1).**
+  - **Vibes Pay schemas:** `billing.vibes-charge@1` (id `vch_<ULID>`, app, project_id, `amount` in whole Vibes,
+    a 1–140 description, the app's reference, status pending|paid|refunded|expired|cancelled, pay_url, return_url,
+    the timestamps and sandbox), `billing.vibes-charge-create-request@1` (`amount`, `description`, `reference` — the
+    app's idempotency key — and an optional `return_url`) and `billing.vibes-charge-refund-request@1` (an optional
+    `reason`; a refund is always for the whole charge).
+  - **Vibes Pay events:** `billing.vibes.charge.paid@1` and `billing.vibes.charge.refunded@1` are also the signed
+    webhook bodies (HMAC-SHA256, retried with backoff): the charge fields plus an opaque `payer_ref` that is stable
+    per app, and deliberately no person id and no email. Billing's manifest lists both in `eventsProduced`.
+  - **Balance:** `billing.balance@1` gains the D12 Balance branch — `owner` (user or project), `balance_nano_usd`,
+    `held_nano_usd`, `available_nano_usd` and an optional `sandbox`, with money as integer nano-USD decimal strings
+    (D1, never a float) — answered by `GET /api/me/balance`. The contract id is permanent, so the Vibes wallet body
+    that `billing.balance.read` already answered stays as the second branch; both branches are closed with
+    `additionalProperties: false`, and new code sends the Balance branch.
+  - **Balance requests:** `billing.balance-transfer-request@1` (`to_project_id`, positive `amount_nano_usd`,
+    `idempotency_key`) for moving a person's Balance to a project's, and
+    `billing.vibes-purchase-from-balance-request@1` (`vibes` as a whole positive integer, `idempotency_key`) for
+    Get Vibes with Balance.
+  - **Vibes read:** `billing.vibes-wallet@1` is the person's own Vibes — credit, creator payable and bits_per_usd,
+    never a Balance — answered by `GET /api/v1/vibes/me`.
+  - **Capabilities:** `billing.vibes.charge` (public, grantable to apps, a sandbox app included, which charges
+    sandbox Vibes only) implemented by `POST /api/v1/vibes/charges`, `GET /api/v1/vibes/charges/:id` and
+    `POST /api/v1/vibes/charges/:id/refund`; `billing.vibes.read` (public, a person-delegated read of their own
+    Vibes for an app they approved) implemented by `GET /api/v1/vibes/me`.
+  - **Personal holds:** `billing.credit-hold-create-request@1` no longer requires `project_id`; without it the hold
+    is personal and spends the subject's own Balance. An `app` subject must still name its project (`if`/`then`),
+    so the accepted set only grows and the compat gate stays green.
+  - Valid and invalid fixtures cover both Balance branches, whole-number Vibes, D1 decimal-string money, a personal
+    hold, an app subject without a project, a partial-refund body, and webhook payloads with a person id or an
+    email-shaped payer reference.
+
 ## 0.288.0 — 2026-11-04
 
 - **Configuration contracts (AI Exchange D11, S1), built on openvibe-shared/config:

@@ -2296,6 +2296,78 @@
       "status": "active"
     },
     {
+      "id": "billing.vibes-charge",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/vibes-charge.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.vibes-charge-create-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/vibes-charge-create-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.vibes-charge-refund-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/vibes-charge-refund-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.vibes-wallet",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/vibes-wallet.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.balance-transfer-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/balance-transfer-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.vibes-purchase-from-balance-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/vibes-purchase-from-balance-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.vibes.charge.paid",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.vibes.charge.paid.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.vibes.charge.refunded",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "events/payloads/billing.vibes.charge.refunded.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "billing.cashout-decision",
       "version": "1.0.0",
       "owner": "billing",

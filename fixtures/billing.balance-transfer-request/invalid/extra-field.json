@@ -1,0 +1,6 @@
+{
+  "to_project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "amount_nano_usd": "5000000000",
+  "idempotency_key": "transfer-key-001",
+  "to_user_id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+}

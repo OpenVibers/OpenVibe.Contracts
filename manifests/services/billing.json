@@ -36,7 +36,9 @@
     "billing.credit.hold.settle",
     "billing.credit.hold.release",
     "billing.credit.sandbox.grant",
-    "billing.config.manage"
+    "billing.config.manage",
+    "billing.vibes.charge",
+    "billing.vibes.read"
   ],
   "eventsProduced": [
     "billing.transaction.settled",
@@ -48,7 +50,9 @@
     "billing.cashout.denied",
     "billing.staff.action",
     "billing.receipt.external",
-    "billing.credit.settled"
+    "billing.credit.settled",
+    "billing.vibes.charge.paid",
+    "billing.vibes.charge.refunded"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

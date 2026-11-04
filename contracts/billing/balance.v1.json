@@ -2,16 +2,145 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/billing/balance.v1.json",
   "title": "BillingBalance",
-  "description": "billing.balance@1: a person's Vibes balances, GET /api/v1/balances/:subject on OpenVibe.Billing (also returned after a recycle). credit is spendable (bought or given back), payable is what others gave the person (the only balance that can be cashed out), pending_payouts is held for requested cashouts.",
+  "description": "billing.balance@1: a Balance account (D12), held by a person (owner user:<usr_id>) or a project (owner project:<prj_id>). GET /api/me/balance answers { personal, projects } of these. balance_nano_usd is the whole account; held_nano_usd is reserved by active holds; available_nano_usd is spendable (balance = held + available). Money is integer nano-USD as decimal strings (D1), never a float. sandbox marks a sandbox account. An id is permanent, so this contract still also describes the Vibes wallet body that billing.balance.read has answered: a person's Vibes (currency vibes-bits), not a Balance. Each branch is closed with additionalProperties: false; new code sends the Balance branch.",
   "type": "object",
-  "required": ["subject", "currency", "credit", "payable", "pending_payouts", "payable_value_cents", "bits_per_usd"],
   "properties": {
-    "subject": { "$ref": "../identity/subject-ref.v1.json" },
-    "currency": { "const": "vibes-bits" },
-    "credit": { "type": "integer" },
-    "payable": { "type": "integer" },
-    "pending_payouts": { "type": "integer" },
-    "payable_value_cents": { "type": "integer", "description": "What payable is worth in US cents at today's rate." },
-    "bits_per_usd": { "type": "number" }
-  }
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "currency": {
+      "const": "vibes-bits"
+    },
+    "credit": {
+      "type": "integer"
+    },
+    "payable": {
+      "type": "integer"
+    },
+    "pending_payouts": {
+      "type": "integer"
+    },
+    "payable_value_cents": {
+      "type": "integer",
+      "description": "What payable is worth in US cents at today's rate."
+    },
+    "bits_per_usd": {
+      "type": "number"
+    }
+  },
+  "$defs": {
+    "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a decimal string (D1), never a float."
+    },
+    "balance-owner": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "user"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "description": "A person: usd_credit owned by user:<usr_id>."
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "project"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "description": "A project: usd_credit owned by project:<prj_id>."
+        }
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "balance_nano_usd",
+        "held_nano_usd",
+        "available_nano_usd"
+      ],
+      "properties": {
+        "owner": {
+          "$ref": "#/$defs/balance-owner"
+        },
+        "balance_nano_usd": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "held_nano_usd": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "available_nano_usd": {
+          "$ref": "#/$defs/money-nano-usd"
+        },
+        "sandbox": {
+          "type": "boolean",
+          "default": false,
+          "description": "True for a sandbox account (D10): sandbox credit only, never real money."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject",
+        "currency",
+        "credit",
+        "payable",
+        "pending_payouts",
+        "payable_value_cents",
+        "bits_per_usd"
+      ],
+      "properties": {
+        "subject": {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        "currency": {
+          "const": "vibes-bits"
+        },
+        "credit": {
+          "type": "integer"
+        },
+        "payable": {
+          "type": "integer"
+        },
+        "pending_payouts": {
+          "type": "integer"
+        },
+        "payable_value_cents": {
+          "type": "integer",
+          "description": "What payable is worth in US cents at today's rate."
+        },
+        "bits_per_usd": {
+          "type": "number"
+        }
+      }
+    }
+  ]
 }

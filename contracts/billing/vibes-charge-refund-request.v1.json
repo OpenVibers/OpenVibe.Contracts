@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/vibes-charge-refund-request.v1.json",
+  "title": "BillingVibesChargeRefundRequest",
+  "description": "billing.vibes-charge-refund-request@1: the optional body of POST /api/v1/vibes/charges/:id/refund. A refund is always for the whole charge: the Vibes go back from the project's Vibes wallet to the person. reason is recorded on the refund. No amount may be given, because a partial refund is not a Vibes Pay refund.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 300,
+      "description": "Why the app refunded, for its own and the person's record."
+    }
+  }
+}

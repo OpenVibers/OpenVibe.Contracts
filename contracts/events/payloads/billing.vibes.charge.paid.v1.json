@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/billing.vibes.charge.paid.v1.json",
+  "title": "BillingVibesChargePaidPayload",
+  "description": "billing.vibes.charge.paid v1 (OpenVibe.Billing, written when a Vibes Pay charge is paid): the app's charge and the opaque payer reference. This is also the Vibes Pay webhook body (HMAC-SHA256 with the app's webhook secret, retried with backoff). It deliberately carries no person id and no email, only payer_ref, stable per app, so an app can recognise a returning payer without receiving their identity. amount is whole Vibes. Envelope: subject { type: vibes-charge, id: vch_... }, actor service:billing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "app",
+    "project_id",
+    "amount",
+    "description",
+    "reference",
+    "status",
+    "created_at",
+    "paid_at",
+    "refunded_at",
+    "expires_at",
+    "sandbox",
+    "payer_ref"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vch_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The charge; GET /api/v1/vibes/charges/:id returns its current state."
+    },
+    "app": {
+      "type": "string",
+      "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The app that created the charge."
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The app's project, whose Vibes wallet received the charge."
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The whole number of Vibes paid."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 140
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "The app's reference, as given when the charge was created."
+    },
+    "status": {
+      "const": "paid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paid_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the Vibes moved from the person to the project."
+    },
+    "refunded_at": {
+      "type": "null",
+      "description": "Null: a paid charge has not been refunded."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sandbox": {
+      "type": "boolean",
+      "description": "True for a sandbox app: sandbox Vibes only, worth nothing."
+    },
+    "payer_ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:-]+$",
+      "description": "Opaque reference for the paying person, stable per app. Never the person's id, email or any other identity; an app uses it to recognise a returning payer."
+    }
+  }
+}
