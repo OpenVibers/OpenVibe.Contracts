@@ -12,8 +12,8 @@
       "service": "ai",
       "name": "OpenVibe.AI",
       "origin": "https://ai.openvibe.services",
-      "operations": 62,
-      "capabilities": 15
+      "operations": 60,
+      "capabilities": 14
     },
     {
       "service": "bench",
