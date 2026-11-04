@@ -22,7 +22,6 @@
   "capabilities": [
     "ai.app.run",
     "ai.credential.manage",
-    "ai.inference.create",
     "ai.model.read",
     "ai.provider.manage",
     "ai.quota.attribution.manage",

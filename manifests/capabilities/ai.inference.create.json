@@ -2,9 +2,9 @@
   "id": "ai.inference.create",
   "version": "1.0",
   "owner": "ai",
-  "status": "active",
+  "status": "retired",
   "visibility": "public",
-  "description": "Create developer-app inference requests (D8): POST /v1/chat/completions and POST /v1/messages. Grantable to developer apps; the token's project_id scopes quota and spend. ai.run.create stays first-party for workflows and runs.",
+  "description": "RETIRED at 0.285.0 (AI Exchange D8\u2032): a duplicate of ai.app.run, the public capability developer apps already call OpenVibe AI with (ADR-014; POST /v1/chat/completions and POST /v1/messages, the project pays). Use ai.app.run. It was never granted or served.",
   "inputSchema": "ai.run-request@1",
   "outputSchema": "ai.run@1",
   "permissions": [

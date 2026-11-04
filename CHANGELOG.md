@@ -1,5 +1,13 @@
 # Changelog
 
+
+## 0.285.0 — 2026-11-03
+
+- **`ai.inference.create` is retired** (AI Exchange D8′).
+  - It duplicated `ai.app.run`, the public capability developer apps already use to call OpenVibe AI (ADR-014, on
+    `/v1/chat/completions` and `/v1/messages`).
+  - It was added in 0.284.0, and was never granted or served.
+
 ## 0.284.0 — 2026-11-03
 
 - **AI Exchange contract foundation (D1-D4, D8)**:
