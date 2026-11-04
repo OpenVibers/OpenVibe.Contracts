@@ -2,17 +2,45 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/billing/credit-hold-create-request.v1.json",
   "title": "BillingCreditHoldCreateRequest",
-  "description": "billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
+  "description": "billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a Balance account, priced at the given immutable rate version. With project_id the hold spends that project's Balance; without it the hold is personal and spends the subject's own Balance (D12). An app subject always names its project.",
   "type": "object",
   "required": [
     "idempotency_key",
     "subject",
-    "project_id",
     "max_nano_usd",
     "rate_version",
     "request_fingerprint"
   ],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "app"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "subject"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "project_id"
+        ]
+      }
+    }
+  ],
   "$defs": {
     "money-nano-usd": {
       "type": "string",
@@ -30,7 +58,8 @@
     },
     "project_id": {
       "type": "string",
-      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The project whose Balance the hold spends. Optional: without it the hold is personal, on the subject's own Balance. Required when the subject is an app."
     },
     "credential_id": {
       "type": [

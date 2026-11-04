@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/vibes-charge.v1.json",
+  "title": "BillingVibesCharge",
+  "description": "billing.vibes-charge@1: one Vibes Pay charge (D12). An app creates it for a person to pay with Vibes; GET /api/v1/vibes/charges/:id answers it, and a replay of the same app reference returns the same charge. amount is a whole number of Vibes (never a fraction, never nano-USD). status moves pending -> paid -> refunded, or pending -> expired|cancelled. sandbox charges use test Vibes only, worth nothing. The paid and refunded webhook/event payloads carry the same fields plus an opaque payer_ref and no person id or email.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "app",
+    "project_id",
+    "amount",
+    "description",
+    "reference",
+    "status",
+    "pay_url",
+    "return_url",
+    "created_at",
+    "paid_at",
+    "refunded_at",
+    "expires_at",
+    "sandbox"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^vch_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID charge id."
+    },
+    "app": {
+      "type": "string",
+      "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The app that created the charge (its app_ id)."
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The app's project; paid Vibes land in that project's Vibes wallet."
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Price in whole Vibes. A positive integer; Vibes have no fractions."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 140,
+      "description": "What the person is paying for."
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "The app's own reference for this charge. It is the idempotency key: a replay with the same reference returns the same charge."
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "paid",
+        "refunded",
+        "expired",
+        "cancelled"
+      ]
+    },
+    "pay_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "OpenVibe's pay sheet for this charge, e.g. https://openvibe.network/pay/vch_..."
+    },
+    "return_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Where the browser returns after paying; null when the app gave no return URL."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paid_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the Vibes moved, or null while the charge is unpaid."
+    },
+    "refunded_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the Vibes went back to the person, or null."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The pay sheet stops accepting payment after this instant."
+    },
+    "sandbox": {
+      "type": "boolean",
+      "description": "True for a sandbox app: sandbox Vibes only, worth nothing."
+    }
+  }
+}

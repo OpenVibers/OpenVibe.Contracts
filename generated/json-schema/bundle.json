@@ -26246,17 +26246,8 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/billing/balance.v1.json",
         "title": "BillingBalance",
-        "description": "billing.balance@1: a person's Vibes balances, GET /api/v1/balances/:subject on OpenVibe.Billing (also returned after a recycle). credit is spendable (bought or given back), payable is what others gave the person (the only balance that can be cashed out), pending_payouts is held for requested cashouts.",
+        "description": "billing.balance@1: a Balance account (D12), held by a person (owner user:<usr_id>) or a project (owner project:<prj_id>). GET /api/me/balance answers { personal, projects } of these. balance_nano_usd is the whole account; held_nano_usd is reserved by active holds; available_nano_usd is spendable (balance = held + available). Money is integer nano-USD as decimal strings (D1), never a float. sandbox marks a sandbox account. An id is permanent, so this contract still also describes the Vibes wallet body that billing.balance.read has answered: a person's Vibes (currency vibes-bits), not a Balance. Each branch is closed with additionalProperties: false; new code sends the Balance branch.",
         "type": "object",
-        "required": [
-          "subject",
-          "currency",
-          "credit",
-          "payable",
-          "pending_payouts",
-          "payable_value_cents",
-          "bits_per_usd"
-        ],
         "properties": {
           "subject": {
             "$ref": "../identity/subject-ref.v1.json"
@@ -26279,6 +26270,606 @@
           },
           "bits_per_usd": {
             "type": "number"
+          }
+        },
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a decimal string (D1), never a float."
+          },
+          "balance-owner": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "user"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "A person: usd_credit owned by user:<usr_id>."
+              },
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "project"
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "description": "A project: usd_credit owned by project:<prj_id>."
+              }
+            ]
+          }
+        },
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "owner",
+              "balance_nano_usd",
+              "held_nano_usd",
+              "available_nano_usd"
+            ],
+            "properties": {
+              "owner": {
+                "$ref": "#/$defs/balance-owner"
+              },
+              "balance_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "held_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "available_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "sandbox": {
+                "type": "boolean",
+                "default": false,
+                "description": "True for a sandbox account (D10): sandbox credit only, never real money."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "subject",
+              "currency",
+              "credit",
+              "payable",
+              "pending_payouts",
+              "payable_value_cents",
+              "bits_per_usd"
+            ],
+            "properties": {
+              "subject": {
+                "$ref": "../identity/subject-ref.v1.json"
+              },
+              "currency": {
+                "const": "vibes-bits"
+              },
+              "credit": {
+                "type": "integer"
+              },
+              "payable": {
+                "type": "integer"
+              },
+              "pending_payouts": {
+                "type": "integer"
+              },
+              "payable_value_cents": {
+                "type": "integer",
+                "description": "What payable is worth in US cents at today's rate."
+              },
+              "bits_per_usd": {
+                "type": "number"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "billing.vibes-charge": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/vibes-charge.v1.json",
+        "title": "BillingVibesCharge",
+        "description": "billing.vibes-charge@1: one Vibes Pay charge (D12). An app creates it for a person to pay with Vibes; GET /api/v1/vibes/charges/:id answers it, and a replay of the same app reference returns the same charge. amount is a whole number of Vibes (never a fraction, never nano-USD). status moves pending -> paid -> refunded, or pending -> expired|cancelled. sandbox charges use test Vibes only, worth nothing. The paid and refunded webhook/event payloads carry the same fields plus an opaque payer_ref and no person id or email.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "app",
+          "project_id",
+          "amount",
+          "description",
+          "reference",
+          "status",
+          "pay_url",
+          "return_url",
+          "created_at",
+          "paid_at",
+          "refunded_at",
+          "expires_at",
+          "sandbox"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^vch_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "ULID charge id."
+          },
+          "app": {
+            "type": "string",
+            "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The app that created the charge (its app_ id)."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The app's project; paid Vibes land in that project's Vibes wallet."
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Price in whole Vibes. A positive integer; Vibes have no fractions."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140,
+            "description": "What the person is paying for."
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "The app's own reference for this charge. It is the idempotency key: a replay with the same reference returns the same charge."
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "paid",
+              "refunded",
+              "expired",
+              "cancelled"
+            ]
+          },
+          "pay_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "OpenVibe's pay sheet for this charge, e.g. https://openvibe.network/pay/vch_..."
+          },
+          "return_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Where the browser returns after paying; null when the app gave no return URL."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paid_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the Vibes moved, or null while the charge is unpaid."
+          },
+          "refunded_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the Vibes went back to the person, or null."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The pay sheet stops accepting payment after this instant."
+          },
+          "sandbox": {
+            "type": "boolean",
+            "description": "True for a sandbox app: sandbox Vibes only, worth nothing."
+          }
+        }
+      }
+    },
+    "billing.vibes-charge-create-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/vibes-charge-create-request.v1.json",
+        "title": "BillingVibesChargeCreateRequest",
+        "description": "billing.vibes-charge-create-request@1: body of POST /api/v1/vibes/charges, sent from the app's server with its app token (capability billing.vibes.charge). amount is whole Vibes. reference is the app's idempotency key: a replay with the same reference and body returns the same charge. return_url is optional. The app token decides the project, the sandbox environment and the owner-set limits.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "amount",
+          "description",
+          "reference"
+        ],
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Price in whole Vibes, a positive integer; never a fraction or a nano-USD amount."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140,
+            "description": "What the person is paying for."
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "The app's own reference; it is the idempotency key."
+          },
+          "return_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Where the browser returns after paying. Optional; the app may instead poll the charge or wait for the webhook."
+          }
+        }
+      }
+    },
+    "billing.vibes-charge-refund-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/vibes-charge-refund-request.v1.json",
+        "title": "BillingVibesChargeRefundRequest",
+        "description": "billing.vibes-charge-refund-request@1: the optional body of POST /api/v1/vibes/charges/:id/refund. A refund is always for the whole charge: the Vibes go back from the project's Vibes wallet to the person. reason is recorded on the refund. No amount may be given, because a partial refund is not a Vibes Pay refund.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300,
+            "description": "Why the app refunded, for its own and the person's record."
+          }
+        }
+      }
+    },
+    "billing.vibes-wallet": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/vibes-wallet.v1.json",
+        "title": "BillingVibesWallet",
+        "description": "billing.vibes-wallet@1: a person's own Vibes, answered by GET /api/v1/vibes/me (capability billing.vibes.read) to an app the person approved. credit is Vibes to spend; payable is Vibes the person received as a creator and may cash out under the payout rules (never into Balance); bits_per_usd is today's rate. Vibes are whole integers; this is not a Balance and carries no nano-USD.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "currency",
+          "credit",
+          "payable",
+          "bits_per_usd"
+        ],
+        "properties": {
+          "subject": {
+            "type": "object",
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "user"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "description": "The person the app reads for (the approved delegation). Only a user, never an app or a service."
+          },
+          "currency": {
+            "const": "vibes-bits"
+          },
+          "credit": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Vibes to spend."
+          },
+          "payable": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Vibes received as a creator, to cash out; never Balance."
+          },
+          "bits_per_usd": {
+            "type": "number",
+            "description": "Today's Vibes per USD rate, the same one a pack is priced with."
+          }
+        }
+      }
+    },
+    "billing.balance-transfer-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/balance-transfer-request.v1.json",
+        "title": "BillingBalanceTransferRequest",
+        "description": "billing.balance-transfer-request@1: body of POST /api/me/balance/transfers (D12). Moves amount_nano_usd from the signed-in person's Balance to a project they administer, into that project's Balance. Money is positive integer nano-USD as a decimal string (D1), never a float; the transfer is refused when the Balance or the person's project role is short. idempotency_key makes the transfer exactly once: a replay with the same key and body returns the first answer and moves nothing.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "to_project_id",
+          "amount_nano_usd",
+          "idempotency_key"
+        ],
+        "properties": {
+          "to_project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The project whose Balance receives the money; the person must administer it."
+          },
+          "amount_nano_usd": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$",
+            "description": "A positive integer nano-USD (1e-9 USD) as a decimal string (D1), never a float."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{8,128}$",
+            "description": "Unique per mutation. A replay with the same key and body returns the first answer and changes nothing."
+          }
+        }
+      }
+    },
+    "billing.vibes-purchase-from-balance-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/vibes-purchase-from-balance-request.v1.json",
+        "title": "BillingVibesPurchaseFromBalanceRequest",
+        "description": "billing.vibes-purchase-from-balance-request@1: body of POST /api/me/vibes/from-balance (D12). Buys a whole number of Vibes with the signed-in person's Balance at the same Vibes price as a pack, charging exact nano-USD; Vibes -> Balance is never allowed. vibes is a whole integer (Vibes have no fractions); the money side is integer nano-USD (D1), never a float. idempotency_key makes the purchase exactly once.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vibes",
+          "idempotency_key"
+        ],
+        "properties": {
+          "vibes": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "How many whole Vibes to buy."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{8,128}$",
+            "description": "Unique per mutation. A replay with the same key and body returns the first answer and changes nothing."
+          }
+        }
+      }
+    },
+    "billing.vibes.charge.paid": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.vibes.charge.paid.v1.json",
+        "title": "BillingVibesChargePaidPayload",
+        "description": "billing.vibes.charge.paid v1 (OpenVibe.Billing, written when a Vibes Pay charge is paid): the app's charge and the opaque payer reference. This is also the Vibes Pay webhook body (HMAC-SHA256 with the app's webhook secret, retried with backoff). It deliberately carries no person id and no email, only payer_ref, stable per app, so an app can recognise a returning payer without receiving their identity. amount is whole Vibes. Envelope: subject { type: vibes-charge, id: vch_... }, actor service:billing.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "app",
+          "project_id",
+          "amount",
+          "description",
+          "reference",
+          "status",
+          "created_at",
+          "paid_at",
+          "refunded_at",
+          "expires_at",
+          "sandbox",
+          "payer_ref"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^vch_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The charge; GET /api/v1/vibes/charges/:id returns its current state."
+          },
+          "app": {
+            "type": "string",
+            "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The app that created the charge."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The app's project, whose Vibes wallet received the charge."
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The whole number of Vibes paid."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "The app's reference, as given when the charge was created."
+          },
+          "status": {
+            "const": "paid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paid_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the Vibes moved from the person to the project."
+          },
+          "refunded_at": {
+            "type": "null",
+            "description": "Null: a paid charge has not been refunded."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sandbox": {
+            "type": "boolean",
+            "description": "True for a sandbox app: sandbox Vibes only, worth nothing."
+          },
+          "payer_ref": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "description": "Opaque reference for the paying person, stable per app. Never the person's id, email or any other identity; an app uses it to recognise a returning payer."
+          }
+        }
+      }
+    },
+    "billing.vibes.charge.refunded": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/billing.vibes.charge.refunded.v1.json",
+        "title": "BillingVibesChargeRefundedPayload",
+        "description": "billing.vibes.charge.refunded v1 (OpenVibe.Billing, written when a Vibes Pay charge is refunded): the app's charge and the opaque payer reference. This is also the Vibes Pay webhook body (HMAC-SHA256 with the app's webhook secret, retried with backoff). It deliberately carries no person id and no email, only payer_ref, stable per app, so an app can recognise a returning payer without receiving their identity. amount is whole Vibes. Envelope: subject { type: vibes-charge, id: vch_... }, actor service:billing.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "app",
+          "project_id",
+          "amount",
+          "description",
+          "reference",
+          "status",
+          "created_at",
+          "paid_at",
+          "refunded_at",
+          "expires_at",
+          "sandbox",
+          "payer_ref"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^vch_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The charge; GET /api/v1/vibes/charges/:id returns its current state."
+          },
+          "app": {
+            "type": "string",
+            "pattern": "^app_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The app that created the charge."
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The app's project, whose Vibes wallet received the charge."
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The whole number of Vibes paid."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "The app's reference, as given when the charge was created."
+          },
+          "status": {
+            "const": "refunded"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paid_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the Vibes moved from the person to the project."
+          },
+          "refunded_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the Vibes went back to the person."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sandbox": {
+            "type": "boolean",
+            "description": "True for a sandbox app: sandbox Vibes only, worth nothing."
+          },
+          "payer_ref": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "description": "Opaque reference for the paying person, stable per app. Never the person's id, email or any other identity; an app uses it to recognise a returning payer."
           }
         }
       }
@@ -28052,17 +28643,45 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/billing/credit-hold-create-request.v1.json",
         "title": "BillingCreditHoldCreateRequest",
-        "description": "billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
+        "description": "billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a Balance account, priced at the given immutable rate version. With project_id the hold spends that project's Balance; without it the hold is personal and spends the subject's own Balance (D12). An app subject always names its project.",
         "type": "object",
         "required": [
           "idempotency_key",
           "subject",
-          "project_id",
           "max_nano_usd",
           "rate_version",
           "request_fingerprint"
         ],
         "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "type": "object",
+              "properties": {
+                "subject": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "app"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                }
+              },
+              "required": [
+                "subject"
+              ]
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "project_id"
+              ]
+            }
+          }
+        ],
         "$defs": {
           "money-nano-usd": {
             "type": "string",
@@ -28080,7 +28699,8 @@
           },
           "project_id": {
             "type": "string",
-            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The project whose Balance the hold spends. Optional: without it the hold is personal, on the subject's own Balance. Required when the subject is an app."
           },
           "credential_id": {
             "type": [

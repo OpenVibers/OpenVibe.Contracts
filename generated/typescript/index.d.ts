@@ -164241,22 +164241,307 @@ export type BillingBalanceReadResult =
       transaction: BillingTransaction;
       reversed_by: string[];
     };
-
 /** billing.balance@1.0.0 (owner: billing) */
 /**
- * billing.balance@1: a person's Vibes balances, GET /api/v1/balances/:subject on OpenVibe.Billing (also returned after a recycle). credit is spendable (bought or given back), payable is what others gave the person (the only balance that can be cashed out), pending_payouts is held for requested cashouts.
+ * billing.balance@1: a Balance account (D12), held by a person (owner user:<usr_id>) or a project (owner project:<prj_id>). GET /api/me/balance answers { personal, projects } of these. balance_nano_usd is the whole account; held_nano_usd is reserved by active holds; available_nano_usd is spendable (balance = held + available). Money is integer nano-USD as decimal strings (D1), never a float. sandbox marks a sandbox account. An id is permanent, so this contract still also describes the Vibes wallet body that billing.balance.read has answered: a person's Vibes (currency vibes-bits), not a Balance. Each branch is closed with additionalProperties: false; new code sends the Balance branch.
  */
-export interface BillingBalance {
-  subject: SubjectRef;
-  currency: "vibes-bits";
-  credit: number;
-  payable: number;
-  pending_payouts: number;
+export type BillingBalance = {
+  subject?: SubjectRef;
+  currency?: "vibes-bits";
+  credit?: number;
+  payable?: number;
+  pending_payouts?: number;
   /**
    * What payable is worth in US cents at today's rate.
    */
-  payable_value_cents: number;
+  payable_value_cents?: number;
+  bits_per_usd?: number;
+} & (
+  | {
+      owner:
+        | {
+            type: "user";
+            id: string;
+          }
+        | {
+            type: "project";
+            id: string;
+          };
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a decimal string (D1), never a float.
+       */
+      balance_nano_usd: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a decimal string (D1), never a float.
+       */
+      held_nano_usd: string;
+      /**
+       * Integer nano-USD (1e-9 USD), stored as a decimal string (D1), never a float.
+       */
+      available_nano_usd: string;
+      /**
+       * True for a sandbox account (D10): sandbox credit only, never real money.
+       */
+      sandbox?: boolean;
+    }
+  | {
+      subject: SubjectRef;
+      currency: "vibes-bits";
+      credit: number;
+      payable: number;
+      pending_payouts: number;
+      /**
+       * What payable is worth in US cents at today's rate.
+       */
+      payable_value_cents: number;
+      bits_per_usd: number;
+    }
+);
+
+/** billing.vibes-charge@1.0.0 (owner: billing) */
+/**
+ * billing.vibes-charge@1: one Vibes Pay charge (D12). An app creates it for a person to pay with Vibes; GET /api/v1/vibes/charges/:id answers it, and a replay of the same app reference returns the same charge. amount is a whole number of Vibes (never a fraction, never nano-USD). status moves pending -> paid -> refunded, or pending -> expired|cancelled. sandbox charges use test Vibes only, worth nothing. The paid and refunded webhook/event payloads carry the same fields plus an opaque payer_ref and no person id or email.
+ */
+export interface BillingVibesCharge {
+  /**
+   * ULID charge id.
+   */
+  id: string;
+  /**
+   * The app that created the charge (its app_ id).
+   */
+  app: string;
+  /**
+   * The app's project; paid Vibes land in that project's Vibes wallet.
+   */
+  project_id: string;
+  /**
+   * Price in whole Vibes. A positive integer; Vibes have no fractions.
+   */
+  amount: number;
+  /**
+   * What the person is paying for.
+   */
+  description: string;
+  /**
+   * The app's own reference for this charge. It is the idempotency key: a replay with the same reference returns the same charge.
+   */
+  reference: string;
+  status: "pending" | "paid" | "refunded" | "expired" | "cancelled";
+  /**
+   * OpenVibe's pay sheet for this charge, e.g. https://openvibe.network/pay/vch_...
+   */
+  pay_url: string;
+  /**
+   * Where the browser returns after paying; null when the app gave no return URL.
+   */
+  return_url: string | null;
+  created_at: string;
+  /**
+   * When the Vibes moved, or null while the charge is unpaid.
+   */
+  paid_at: string | null;
+  /**
+   * When the Vibes went back to the person, or null.
+   */
+  refunded_at: string | null;
+  /**
+   * The pay sheet stops accepting payment after this instant.
+   */
+  expires_at: string;
+  /**
+   * True for a sandbox app: sandbox Vibes only, worth nothing.
+   */
+  sandbox: boolean;
+}
+
+/** billing.vibes-charge-create-request@1.0.0 (owner: billing) */
+/**
+ * billing.vibes-charge-create-request@1: body of POST /api/v1/vibes/charges, sent from the app's server with its app token (capability billing.vibes.charge). amount is whole Vibes. reference is the app's idempotency key: a replay with the same reference and body returns the same charge. return_url is optional. The app token decides the project, the sandbox environment and the owner-set limits.
+ */
+export interface BillingVibesChargeCreateRequest {
+  /**
+   * Price in whole Vibes, a positive integer; never a fraction or a nano-USD amount.
+   */
+  amount: number;
+  /**
+   * What the person is paying for.
+   */
+  description: string;
+  /**
+   * The app's own reference; it is the idempotency key.
+   */
+  reference: string;
+  /**
+   * Where the browser returns after paying. Optional; the app may instead poll the charge or wait for the webhook.
+   */
+  return_url?: string;
+}
+
+/** billing.vibes-charge-refund-request@1.0.0 (owner: billing) */
+/**
+ * billing.vibes-charge-refund-request@1: the optional body of POST /api/v1/vibes/charges/:id/refund. A refund is always for the whole charge: the Vibes go back from the project's Vibes wallet to the person. reason is recorded on the refund. No amount may be given, because a partial refund is not a Vibes Pay refund.
+ */
+export interface BillingVibesChargeRefundRequest {
+  /**
+   * Why the app refunded, for its own and the person's record.
+   */
+  reason?: string | null;
+}
+
+/** billing.vibes-wallet@1.0.0 (owner: billing) */
+/**
+ * billing.vibes-wallet@1: a person's own Vibes, answered by GET /api/v1/vibes/me (capability billing.vibes.read) to an app the person approved. credit is Vibes to spend; payable is Vibes the person received as a creator and may cash out under the payout rules (never into Balance); bits_per_usd is today's rate. Vibes are whole integers; this is not a Balance and carries no nano-USD.
+ */
+export interface BillingVibesWallet {
+  /**
+   * The person the app reads for (the approved delegation). Only a user, never an app or a service.
+   */
+  subject: {
+    type: "user";
+    id: string;
+  };
+  currency: "vibes-bits";
+  /**
+   * Vibes to spend.
+   */
+  credit: number;
+  /**
+   * Vibes received as a creator, to cash out; never Balance.
+   */
+  payable: number;
+  /**
+   * Today's Vibes per USD rate, the same one a pack is priced with.
+   */
   bits_per_usd: number;
+}
+
+/** billing.balance-transfer-request@1.0.0 (owner: billing) */
+/**
+ * billing.balance-transfer-request@1: body of POST /api/me/balance/transfers (D12). Moves amount_nano_usd from the signed-in person's Balance to a project they administer, into that project's Balance. Money is positive integer nano-USD as a decimal string (D1), never a float; the transfer is refused when the Balance or the person's project role is short. idempotency_key makes the transfer exactly once: a replay with the same key and body returns the first answer and moves nothing.
+ */
+export interface BillingBalanceTransferRequest {
+  /**
+   * The project whose Balance receives the money; the person must administer it.
+   */
+  to_project_id: string;
+  /**
+   * A positive integer nano-USD (1e-9 USD) as a decimal string (D1), never a float.
+   */
+  amount_nano_usd: string;
+  /**
+   * Unique per mutation. A replay with the same key and body returns the first answer and changes nothing.
+   */
+  idempotency_key: string;
+}
+
+/** billing.vibes-purchase-from-balance-request@1.0.0 (owner: billing) */
+/**
+ * billing.vibes-purchase-from-balance-request@1: body of POST /api/me/vibes/from-balance (D12). Buys a whole number of Vibes with the signed-in person's Balance at the same Vibes price as a pack, charging exact nano-USD; Vibes -> Balance is never allowed. vibes is a whole integer (Vibes have no fractions); the money side is integer nano-USD (D1), never a float. idempotency_key makes the purchase exactly once.
+ */
+export interface BillingVibesPurchaseFromBalanceRequest {
+  /**
+   * How many whole Vibes to buy.
+   */
+  vibes: number;
+  /**
+   * Unique per mutation. A replay with the same key and body returns the first answer and changes nothing.
+   */
+  idempotency_key: string;
+}
+
+/** billing.vibes.charge.paid@1.0.0 (owner: billing) */
+/**
+ * billing.vibes.charge.paid v1 (OpenVibe.Billing, written when a Vibes Pay charge is paid): the app's charge and the opaque payer reference. This is also the Vibes Pay webhook body (HMAC-SHA256 with the app's webhook secret, retried with backoff). It deliberately carries no person id and no email, only payer_ref, stable per app, so an app can recognise a returning payer without receiving their identity. amount is whole Vibes. Envelope: subject { type: vibes-charge, id: vch_... }, actor service:billing.
+ */
+export interface BillingVibesChargePaidPayload {
+  /**
+   * The charge; GET /api/v1/vibes/charges/:id returns its current state.
+   */
+  id: string;
+  /**
+   * The app that created the charge.
+   */
+  app: string;
+  /**
+   * The app's project, whose Vibes wallet received the charge.
+   */
+  project_id: string;
+  /**
+   * The whole number of Vibes paid.
+   */
+  amount: number;
+  description: string;
+  /**
+   * The app's reference, as given when the charge was created.
+   */
+  reference: string;
+  status: "paid";
+  created_at: string;
+  /**
+   * When the Vibes moved from the person to the project.
+   */
+  paid_at: string;
+  /**
+   * Null: a paid charge has not been refunded.
+   */
+  refunded_at: null;
+  expires_at: string;
+  /**
+   * True for a sandbox app: sandbox Vibes only, worth nothing.
+   */
+  sandbox: boolean;
+  /**
+   * Opaque reference for the paying person, stable per app. Never the person's id, email or any other identity; an app uses it to recognise a returning payer.
+   */
+  payer_ref: string;
+}
+
+/** billing.vibes.charge.refunded@1.0.0 (owner: billing) */
+/**
+ * billing.vibes.charge.refunded v1 (OpenVibe.Billing, written when a Vibes Pay charge is refunded): the app's charge and the opaque payer reference. This is also the Vibes Pay webhook body (HMAC-SHA256 with the app's webhook secret, retried with backoff). It deliberately carries no person id and no email, only payer_ref, stable per app, so an app can recognise a returning payer without receiving their identity. amount is whole Vibes. Envelope: subject { type: vibes-charge, id: vch_... }, actor service:billing.
+ */
+export interface BillingVibesChargeRefundedPayload {
+  /**
+   * The charge; GET /api/v1/vibes/charges/:id returns its current state.
+   */
+  id: string;
+  /**
+   * The app that created the charge.
+   */
+  app: string;
+  /**
+   * The app's project, whose Vibes wallet received the charge.
+   */
+  project_id: string;
+  /**
+   * The whole number of Vibes paid.
+   */
+  amount: number;
+  description: string;
+  /**
+   * The app's reference, as given when the charge was created.
+   */
+  reference: string;
+  status: "refunded";
+  created_at: string;
+  /**
+   * When the Vibes moved from the person to the project.
+   */
+  paid_at: string;
+  /**
+   * When the Vibes went back to the person.
+   */
+  refunded_at: string;
+  expires_at: string;
+  /**
+   * True for a sandbox app: sandbox Vibes only, worth nothing.
+   */
+  sandbox: boolean;
+  /**
+   * Opaque reference for the paying person, stable per app. Never the person's id, email or any other identity; an app uses it to recognise a returning payer.
+   */
+  payer_ref: string;
 }
 
 /** billing.cashout-decision@1.0.0 (owner: billing) */
@@ -164902,12 +165187,17 @@ export interface BillingCreditSettlement {
 
 /** billing.credit-hold-create-request@1.0.0 (owner: billing) */
 /**
- * billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.
+ * billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a Balance account, priced at the given immutable rate version. With project_id the hold spends that project's Balance; without it the hold is personal and spends the subject's own Balance (D12). An app subject always names its project.
  */
-export interface BillingCreditHoldCreateRequest {
+export type BillingCreditHoldCreateRequest = {
+  [k: string]: unknown | undefined;
+} & {
   idempotency_key: string;
   subject: SubjectRef;
-  project_id: string;
+  /**
+   * The project whose Balance the hold spends. Optional: without it the hold is personal, on the subject's own Balance. Required when the subject is an app.
+   */
+  project_id?: string;
   credential_id?: string | null;
   /**
    * Integer nano-USD (1e-9 USD), stored as a string.
@@ -164923,7 +165213,7 @@ export interface BillingCreditHoldCreateRequest {
    * D10. A sandbox caller's hold draws on that person's sandbox credit for the project (account kind usd_credit_sandbox, owner subject:project), never on real Credits, and a real hold never draws on sandbox credit. Sandbox grants (billing.credit-sandbox-grant-request@1) land in that sandbox account. Optional; defaults to false.
    */
   sandbox?: boolean;
-}
+};
 
 /** billing.credit-hold-create-result@1.0.0 (owner: billing) */
 /**

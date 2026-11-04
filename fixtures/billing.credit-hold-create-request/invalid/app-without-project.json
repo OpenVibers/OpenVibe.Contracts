@@ -1,0 +1,10 @@
+{
+  "idempotency_key": "hold-key-app-001",
+  "subject": {
+    "type": "app",
+    "id": "app_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "max_nano_usd": "50000000",
+  "rate_version": "rr-2026-11-03-001",
+  "request_fingerprint": "fp-chat-app-001"
+}

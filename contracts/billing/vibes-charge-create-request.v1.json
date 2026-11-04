@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/vibes-charge-create-request.v1.json",
+  "title": "BillingVibesChargeCreateRequest",
+  "description": "billing.vibes-charge-create-request@1: body of POST /api/v1/vibes/charges, sent from the app's server with its app token (capability billing.vibes.charge). amount is whole Vibes. reference is the app's idempotency key: a replay with the same reference and body returns the same charge. return_url is optional. The app token decides the project, the sandbox environment and the owner-set limits.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "amount",
+    "description",
+    "reference"
+  ],
+  "properties": {
+    "amount": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Price in whole Vibes, a positive integer; never a fraction or a nano-USD amount."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 140,
+      "description": "What the person is paying for."
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "The app's own reference; it is the idempotency key."
+    },
+    "return_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Where the browser returns after paying. Optional; the app may instead poll the charge or wait for the webhook."
+    }
+  }
+}

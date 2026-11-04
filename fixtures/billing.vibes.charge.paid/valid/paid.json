@@ -1,0 +1,15 @@
+{
+  "id": "vch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "app": "app_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "amount": 50,
+  "description": "Sticker pack: Neon cats",
+  "reference": "order_123",
+  "status": "paid",
+  "created_at": "2026-11-04T12:00:00.000Z",
+  "paid_at": "2026-11-04T12:01:00.000Z",
+  "refunded_at": null,
+  "expires_at": "2026-11-04T12:30:00.000Z",
+  "sandbox": false,
+  "payer_ref": "payer_7f3c9a12"
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/vibes-purchase-from-balance-request.v1.json",
+  "title": "BillingVibesPurchaseFromBalanceRequest",
+  "description": "billing.vibes-purchase-from-balance-request@1: body of POST /api/me/vibes/from-balance (D12). Buys a whole number of Vibes with the signed-in person's Balance at the same Vibes price as a pack, charging exact nano-USD; Vibes -> Balance is never allowed. vibes is a whole integer (Vibes have no fractions); the money side is integer nano-USD (D1), never a float. idempotency_key makes the purchase exactly once.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "vibes",
+    "idempotency_key"
+  ],
+  "properties": {
+    "vibes": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "How many whole Vibes to buy."
+    },
+    "idempotency_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{8,128}$",
+      "description": "Unique per mutation. A replay with the same key and body returns the first answer and changes nothing."
+    }
+  }
+}

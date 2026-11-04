@@ -1,0 +1,16 @@
+{
+  "id": "vch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "app": "app_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "amount": 50,
+  "description": "Sticker pack: Neon cats",
+  "reference": "order_123",
+  "status": "expired",
+  "pay_url": "https://openvibe.network/pay/vch_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "return_url": "https://myapp.example/thanks",
+  "created_at": "2026-11-04T12:00:00.000Z",
+  "paid_at": null,
+  "refunded_at": null,
+  "expires_at": "2026-11-04T12:30:00.000Z",
+  "sandbox": false
+}

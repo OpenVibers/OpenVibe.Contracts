@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/vibes-wallet.v1.json",
+  "title": "BillingVibesWallet",
+  "description": "billing.vibes-wallet@1: a person's own Vibes, answered by GET /api/v1/vibes/me (capability billing.vibes.read) to an app the person approved. credit is Vibes to spend; payable is Vibes the person received as a creator and may cash out under the payout rules (never into Balance); bits_per_usd is today's rate. Vibes are whole integers; this is not a Balance and carries no nano-USD.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subject",
+    "currency",
+    "credit",
+    "payable",
+    "bits_per_usd"
+  ],
+  "properties": {
+    "subject": {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "user"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      },
+      "description": "The person the app reads for (the approved delegation). Only a user, never an app or a service."
+    },
+    "currency": {
+      "const": "vibes-bits"
+    },
+    "credit": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Vibes to spend."
+    },
+    "payable": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Vibes received as a creator, to cash out; never Balance."
+    },
+    "bits_per_usd": {
+      "type": "number",
+      "description": "Today's Vibes per USD rate, the same one a pack is priced with."
+    }
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "amount_nano_usd": "5000000000",
+  "idempotency_key": "transfer-key-001"
+}
