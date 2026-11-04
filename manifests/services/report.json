@@ -23,7 +23,8 @@
     "report.index_document.upserted"
   ],
   "eventsConsumed": [
-    "ai.call.recorded"
+    "ai.call.recorded",
+    "billing.credit.settled"
   ],
   "namespacesOwned": [
     "report.*"

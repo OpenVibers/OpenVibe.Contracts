@@ -1,0 +1,21 @@
+{
+  "settlement_id": "stl_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "hold_id": "hld_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "service": "ai",
+  "settled_at": "2026-11-04T12:00:05.000Z",
+  "deployment_id": "deepinfra:Qwen/Qwen3-Coder-30B-A3B-Instruct",
+  "provider_access": "AUTHORIZED_WHOLESALE",
+  "rate_version": "rr-2026-11-03-001",
+  "usage": {
+    "input_tokens": 1000,
+    "cached_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 500
+  },
+  "charge_nano_usd": 11,
+  "supply_cost_nano_usd": "9",
+  "shortfall_nano_usd": "0",
+  "released_nano_usd": "9999989",
+  "byok": false,
+  "sandbox": false
+}

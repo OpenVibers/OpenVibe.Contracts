@@ -1,6 +1,20 @@
 # Changelog
 
 
+## 0.287.0 — 2026-11-04
+
+- **`billing.credit.settled@1`** (AI Exchange money, D1 and D9).
+  - OpenVibe.Billing emits it from the settle transaction of a Credits hold (`server/ops/credits.js` `settleHold`);
+    OpenVibe.Report consumes it for aggregate analytics.
+  - It carries `settlement_id`, `hold_id`, the hold's `service`, `settled_at`, the answering attempt's
+    `deployment_id` (`<provider>:<model>`, nullable) and `provider_access` (nullable), `rate_version`, the four
+    `usage` token counts, `charge_nano_usd`, `supply_cost_nano_usd`, `shortfall_nano_usd`, `released_nano_usd`,
+    `byok` and `sandbox`.
+  - Deliberately no `subject`, no `project_id` and no account id: the event is for aggregates, while per-person
+    statements are read from Billing.
+  - Money is integer nano-USD as decimal strings (D1); a number amount and a subject field are invalid fixtures.
+  - Billing's manifest lists the event in `eventsProduced`; Report's lists it in `eventsConsumed`.
+
 ## 0.286.0 — 2026-11-04
 
 - **Provider-rate evidence events: `watch.rate.changed@1`, `watch.rate.approved@1`, `watch.rate.rejected@1`**
