@@ -1,0 +1,23 @@
+{
+  "service": "ai",
+  "groups": [
+    {
+      "id": "exchange",
+      "label": "AI Exchange"
+    }
+  ],
+  "settings": [
+    {
+      "key": "ai.default_budget_nano_usd",
+      "group": "exchange",
+      "label": "Default run budget",
+      "description": "The per-run budget in nano-USD.",
+      "type": "nano_usd",
+      "value": 0.5,
+      "default": "100000000",
+      "source": "owner",
+      "danger": false,
+      "restart": false
+    }
+  ]
+}

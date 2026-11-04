@@ -1,6 +1,29 @@
 # Changelog
 
 
+## 0.288.0 — 2026-11-04
+
+- **Owner settings (AI Exchange D11, S1): `platform.owner-settings@1`, `platform.owner-settings-change@1` and
+  `platform.owner-secret-put@1`** (internal).
+  - `platform.owner-settings@1` is one service's settings document: `service`, `groups` (`id`, `label`) and
+    `settings` (`key`, `group`, `label`, `description`, `type`, `enum`/`min`/`max` where the type allows,
+    `value`/`default`, `source` `env|owner|default`, `env`, `danger`, `restart`, `secret` metadata, `updated_at`,
+    `updated_by`).
+  - A secret-type setting never carries `value` or a `default`; it shows only `secret` (`set`, `hint`,
+    `fingerprint`, `set_at`, `set_by`, `bound_to`), which is never the value.
+  - nano-USD values are `^[0-9]{1,19}$` strings (D1); a float or a decimal string is invalid. `enum` is only on
+    `enum`, and `min`/`max` only on `integer` and `nano_usd`.
+  - `platform.owner-settings-change@1` is the PATCH body: typed `changes[]`, the owner as `actor` and an optional
+    `reason`; a secret setting is written through the secret route, never here.
+  - `platform.owner-secret-put@1` is the PUT body: `value` once, an optional `bind` https origin and the owner as
+    `actor`; the answer is the setting without the value.
+- **Ten internal capabilities, one per service:** `ai`, `billing`, `network`, `services`, `watch`, `bench`, `report`,
+  `host`, `codes` and `actor` each gain `<svc>.settings.manage` (owner that service, active, internal, never
+  grantable to apps), implemented by `GET|PATCH /internal/owner-settings` and
+  `PUT|DELETE /internal/owner-settings/secrets/:key`. Only Network's admin proxy, acting for the owner, holds them.
+- Contracts keeps no default-grants list: Network's seeded default grants live in OpenVibe.Network, so granting
+  these ten to the network service is that repository's change when the proxy (S3) lands.
+
 ## 0.287.0 — 2026-11-04
 
 - **`billing.credit.settled@1`** (AI Exchange money, D1 and D9).

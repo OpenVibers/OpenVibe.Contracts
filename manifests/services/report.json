@@ -16,7 +16,8 @@
     "publicSite": "service"
   },
   "capabilities": [
-    "report.ai_usage.read"
+    "report.ai_usage.read",
+    "report.settings.manage"
   ],
   "eventsProduced": [
     "report.index_document.deleted",

@@ -83,7 +83,8 @@
     "network.consent.read",
     "network.consent.manage",
     "network.machines.read",
-    "network.machines.manage"
+    "network.machines.manage",
+    "network.settings.manage"
   ],
   "eventsProduced": [
     "network.account.deleted",

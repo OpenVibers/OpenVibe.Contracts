@@ -1,0 +1,13 @@
+{
+  "changes": [
+    {
+      "key": "ai.model_catalog",
+      "value": true,
+      "setting_type": "boolean"
+    }
+  ],
+  "actor": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  }
+}

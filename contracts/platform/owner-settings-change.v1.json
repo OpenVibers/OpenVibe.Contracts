@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/platform/owner-settings-change.v1.json",
+  "title": "PlatformOwnerSettingsChange",
+  "description": "platform.owner-settings-change@1 (AI Exchange D11): body of PATCH /internal/owner-settings on each service that owns owner settings. It changes one or more typed values at once. A key whose setting has source env is pinned and the service answers 409 settings.pinned_in_env; a secret-type setting is never changed here (use platform.owner-secret-put@1). Each request carries the owner as actor and the service audits every change with that actor and key, never the value.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["changes", "actor"],
+  "properties": {
+    "changes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "value"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]{0,127}$",
+            "description": "The setting key, as platform.owner-settings@1 names it."
+          },
+          "value": {
+            "description": "The new typed value. A nano_usd value is an integer string; a float is never a value.",
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "maxItems": 256,
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "actor": {
+      "$ref": "#/$defs/actor"
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Why the owner changed it; recorded in the service's audit line."
+    }
+  },
+  "$defs": {
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": {
+          "const": "user",
+          "description": "The owner; a service or an app is never the actor."
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      }
+    }
+  }
+}

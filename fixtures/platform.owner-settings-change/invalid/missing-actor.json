@@ -1,0 +1,8 @@
+{
+  "changes": [
+    {
+      "key": "ai.model_catalog",
+      "value": true
+    }
+  ]
+}

@@ -204385,6 +204385,100 @@ export type Task = {
   webhook_secret?: string;
 };
 
+/** platform.owner-settings@1.0.0 (owner: network) */
+/**
+ * platform.owner-settings@1 (AI Exchange D11): one service's owner settings document, answered by GET/PATCH /internal/owner-settings and by PUT/DELETE /internal/owner-settings/secrets/:key on the service that owns the settings. A setting is typed and says where its effective value comes from; `env` pins it read-only. A secret setting never carries its value (and never a default): only the write-only metadata `secret`. nano_usd values are integer strings, never numbers. Only Network's admin proxy, acting for the owner, reads or writes this document.
+ */
+export interface PlatformOwnerSettings {
+  /**
+   * The service whose settings these are, e.g. ai.
+   */
+  service: string;
+  /**
+   * The groups the settings are shown under.
+   */
+  groups: {
+    /**
+     * Stable group id; a setting names it in `group`.
+     */
+    id: string;
+    label: string;
+    description?: string;
+  }[];
+  /**
+   * Every setting the service exposes to the owner.
+   */
+  settings: {
+    [k: string]: unknown | undefined;
+  }[];
+}
+
+/** platform.owner-settings-change@1.0.0 (owner: network) */
+/**
+ * platform.owner-settings-change@1 (AI Exchange D11): body of PATCH /internal/owner-settings on each service that owns owner settings. It changes one or more typed values at once. A key whose setting has source env is pinned and the service answers 409 settings.pinned_in_env; a secret-type setting is never changed here (use platform.owner-secret-put@1). Each request carries the owner as actor and the service audits every change with that actor and key, never the value.
+ */
+export interface PlatformOwnerSettingsChange {
+  /**
+   * @minItems 1
+   * @maxItems 64
+   */
+  changes: [
+    {
+      /**
+       * The setting key, as platform.owner-settings@1 names it.
+       */
+      key: string;
+      /**
+       * The new typed value. A nano_usd value is an integer string; a float is never a value.
+       */
+      value: boolean | number | string | string[];
+    },
+    ...{
+      /**
+       * The setting key, as platform.owner-settings@1 names it.
+       */
+      key: string;
+      /**
+       * The new typed value. A nano_usd value is an integer string; a float is never a value.
+       */
+      value: boolean | number | string | string[];
+    }[]
+  ];
+  actor: {
+    /**
+     * The owner; a service or an app is never the actor.
+     */
+    type: "user";
+    id: string;
+  };
+  /**
+   * Why the owner changed it; recorded in the service's audit line.
+   */
+  reason?: string;
+}
+
+/** platform.owner-secret-put@1.0.0 (owner: network) */
+/**
+ * platform.owner-secret-put@1 (AI Exchange D11): body of PUT /internal/owner-settings/secrets/:key on the service that owns the secret. The value is sent once, sealed by the service, and never returned, logged or echoed. `bind` is the https origin the value is sealed to (a provider key is bound to its provider's origin); changing the destination makes the value unusable until the owner enters it again. The answer is the setting without the value. Each request carries the owner as actor and the service audits the write with that actor and key, never the value.
+ */
+export interface PlatformOwnerSecretPut {
+  /**
+   * The secret, once. Never stored outside the owning service and never returned.
+   */
+  value: string;
+  /**
+   * The https origin the value is sealed to; optional.
+   */
+  bind?: string;
+  actor: {
+    /**
+     * The owner; a service or an app is never the actor.
+     */
+    type: "user";
+    id: string;
+  };
+}
+
 /** events.delivery-policy@1.0.0 (owner: events) */
 /**
  * How an event type is carried (roadmap WS-Z3 task 2): its delivery class sets the minimum semantics, which a publisher's intent may raise and never lower; ordering is per key; the route planner picks the carrier.

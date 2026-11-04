@@ -45,7 +45,8 @@
     "codes.task.start",
     "codes.task.read",
     "codes.task.cancel",
-    "codes.actions.read"
+    "codes.actions.read",
+    "codes.settings.manage"
   ],
   "eventsProduced": [
     "codes.task.queued",

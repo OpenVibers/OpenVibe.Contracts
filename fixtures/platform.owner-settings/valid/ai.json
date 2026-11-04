@@ -1,0 +1,90 @@
+{
+  "service": "ai",
+  "groups": [
+    {
+      "id": "exchange",
+      "label": "AI Exchange",
+      "description": "Models, routing and the Credits switches."
+    },
+    {
+      "id": "keys",
+      "label": "Provider keys"
+    }
+  ],
+  "settings": [
+    {
+      "key": "ai.model_catalog",
+      "group": "exchange",
+      "label": "Model catalog",
+      "description": "Serve the AI Exchange model catalog.",
+      "type": "boolean",
+      "value": true,
+      "default": false,
+      "source": "owner",
+      "danger": false,
+      "restart": false,
+      "updated_at": "2026-11-04T12:00:00.000Z",
+      "updated_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    },
+    {
+      "key": "ai.default_budget_nano_usd",
+      "group": "exchange",
+      "label": "Default run budget",
+      "description": "The per-run budget in nano-USD.",
+      "type": "nano_usd",
+      "min": 0,
+      "max": 1000000000000,
+      "value": "500000000",
+      "default": "100000000",
+      "source": "owner",
+      "danger": true,
+      "restart": false
+    },
+    {
+      "key": "ai.routing_policy",
+      "group": "exchange",
+      "label": "Routing policy",
+      "description": "How AI picks a route.",
+      "type": "enum",
+      "enum": ["balanced", "economy", "fast"],
+      "value": "balanced",
+      "default": "balanced",
+      "source": "default",
+      "danger": false,
+      "restart": false
+    },
+    {
+      "key": "ai.retry_attempts",
+      "group": "exchange",
+      "label": "Retry attempts",
+      "description": "How many times a provider call is retried.",
+      "type": "integer",
+      "min": 0,
+      "max": 10,
+      "value": 2,
+      "default": 2,
+      "source": "env",
+      "env": "AI_RETRY_ATTEMPTS",
+      "danger": false,
+      "restart": true
+    },
+    {
+      "key": "ai.deepseek_api_key",
+      "group": "keys",
+      "label": "DeepSeek API key",
+      "description": "The provider key for DeepSeek.",
+      "type": "secret",
+      "source": "owner",
+      "danger": false,
+      "restart": false,
+      "secret": {
+        "set": true,
+        "hint": "…a1b2",
+        "fingerprint": "0123456789abcdef",
+        "set_at": "2026-11-04T12:01:00.000Z",
+        "set_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+        "bound_to": "https://api.deepseek.com"
+      }
+    }
+  ]
+}

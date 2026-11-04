@@ -99,6 +99,14 @@ for (const cap of capabilities.manifests) {
     for (const k of ['inputSchema', 'outputSchema']) if (cap[k]) ok(contracts.resolve(cap[k]), `${cap.id} ${k} resolves`);
     ok(cap.status !== 'active' || cap.implementedBy.length > 0, `active ${cap.id} names the route that implements it`);
 }
+// Owner settings (AI Exchange D11, S1): one internal capability per service. Only Network's admin
+// proxy, acting for the owner, holds them; they are never grantable to apps or agents.
+for (const svc of ['ai', 'billing', 'network', 'services', 'watch', 'bench', 'report', 'host', 'codes', 'actor']) {
+    const c = capabilities.get(`${svc}.settings.manage`);
+    ok(c && c.owner === svc && c.status === 'active' && c.visibility === 'internal', `${svc}.settings.manage is an active internal capability`);
+    ok(JSON.stringify(c.implementedBy) === JSON.stringify(['GET|PATCH /internal/owner-settings', 'PUT|DELETE /internal/owner-settings/secrets/:key']), `${svc}.settings.manage names the owner-settings routes`);
+    ok(/Only Network's admin proxy, acting for the owner, holds this capability/.test(c.description) && /never grantable to apps/.test(c.description), `${svc}.settings.manage says who holds it and that an app never does`);
+}
 // Developer-app events (v0.28, ADR-014): grantable to apps, owned by Events, project-scoped. The
 // existing service-level events.* capabilities stay internal.
 for (const id of ['events.app.publish', 'events.app.read', 'events.app.subscribe']) {
