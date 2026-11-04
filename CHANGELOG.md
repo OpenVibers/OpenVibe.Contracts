@@ -1,6 +1,15 @@
 # Changelog
 
 
+## 0.289.1 — 2026-11-04
+
+- **`billing.credit-hold@1` answers a personal hold.** `project_id` is no longer required and its type is
+  `[string, null]`, so the hold Billing sends after a personal `billing.credit-hold-create-request@1` (no
+  `project_id`) validates. A project hold still carries its `prj_` id and an app subject still always names one.
+  `compatibility/corrections.json` records the change against v0.289.0 because the compat gate treats the widened
+  type as a retype; the string-only rule never described a personal hold's answer, since that case could not be
+  produced validly. Valid fixture: `fixtures/billing.credit-hold/valid/personal-hold.json`.
+
 ## 0.289.0 — 2026-11-04
 
 - **Balance and Vibes Pay (AI Exchange D12, MONEY.md build order step 1).**

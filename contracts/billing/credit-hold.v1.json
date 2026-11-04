@@ -7,7 +7,6 @@
   "required": [
     "hold_id",
     "subject",
-    "project_id",
     "held_nano_usd",
     "available_nano_usd",
     "lease_expires_at"
@@ -30,8 +29,12 @@
       "$ref": "../identity/subject-ref.v1.json"
     },
     "project_id": {
-      "type": "string",
-      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The project whose Balance the hold spends. Null or absent for a personal hold on the subject's own Balance (D12); an app subject's hold always names its project."
     },
     "credential_id": {
       "type": [
