@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openvibe.network/contracts/billing/inference-settlement.v1.json",
+  "$id": "https://openvibe.network/contracts/billing/credit-settlement.v1.json",
   "title": "BillingInferenceSettlement",
-  "description": "billing.inference-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.",
+  "description": "billing.credit-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.",
   "type": "object",
   "required": [
     "settlement_id",
@@ -173,6 +173,11 @@
     "created_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "shortfall_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
     }
   }
 }

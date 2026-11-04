@@ -31,10 +31,10 @@
     "billing.stats.read",
     "billing.ledger.admin",
     "billing.usage.record",
-    "billing.inference.hold.create",
-    "billing.inference.hold.extend",
-    "billing.inference.hold.settle",
-    "billing.inference.hold.release"
+    "billing.credit.hold.create",
+    "billing.credit.hold.extend",
+    "billing.credit.hold.settle",
+    "billing.credit.hold.release"
   ],
   "eventsProduced": [
     "billing.transaction.settled",

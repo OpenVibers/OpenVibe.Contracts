@@ -2431,73 +2431,73 @@
       "status": "active"
     },
     {
-      "id": "billing.inference-hold",
+      "id": "billing.credit-hold",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-hold.v1.json",
+      "schema": "billing/credit-hold.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
     {
-      "id": "billing.inference-settlement",
+      "id": "billing.credit-settlement",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-settlement.v1.json",
+      "schema": "billing/credit-settlement.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
     {
-      "id": "billing.inference-hold-create-request",
+      "id": "billing.credit-hold-create-request",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-hold-create-request.v1.json",
+      "schema": "billing/credit-hold-create-request.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
     {
-      "id": "billing.inference-hold-create-result",
+      "id": "billing.credit-hold-create-result",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-hold-create-result.v1.json",
+      "schema": "billing/credit-hold-create-result.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
     {
-      "id": "billing.inference-hold-extend-request",
+      "id": "billing.credit-hold-extend-request",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-hold-extend-request.v1.json",
+      "schema": "billing/credit-hold-extend-request.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
     {
-      "id": "billing.inference-hold-settle-request",
+      "id": "billing.credit-hold-settle-request",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-hold-settle-request.v1.json",
+      "schema": "billing/credit-hold-settle-request.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
     {
-      "id": "billing.inference-hold-settle-result",
+      "id": "billing.credit-hold-settle-result",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-hold-settle-result.v1.json",
+      "schema": "billing/credit-hold-settle-result.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
     },
     {
-      "id": "billing.inference-hold-release-result",
+      "id": "billing.credit-hold-release-result",
       "version": "1.0.0",
       "owner": "billing",
-      "schema": "billing/inference-hold-release-result.v1.json",
+      "schema": "billing/credit-hold-release-result.v1.json",
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"

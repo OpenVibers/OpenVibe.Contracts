@@ -5,7 +5,7 @@
 - **AI Exchange contract foundation (D1-D4, D8)**:
   - `ai.model@1` extended to a catalog entry with optional `id`, `family`, `variant`, `quant`, `revision`, `sha256`, `license`, `context`, `capabilities`, `modalities`, `retail_rate` (nano-USD per million tokens) and `availability`; existing provider-model documents stay valid.
   - New schemas: `ai.model-artifact@1`, `ai.inference-deployment@1`, `ai.route-explain@1`, `ai.model-list@1`, `ai.model-read-result@1`.
-  - New Billing inference subledger schemas: `billing.inference-hold@1`, `billing.inference-settlement@1`, plus internal route contracts for `POST /internal/inference/holds`, `/holds/:id/extend`, `/holds/:id/settle` and `/holds/:id/release`.
+  - New Billing inference subledger schemas: `billing.credit-hold@1`, `billing.credit-settlement@1`, plus internal route contracts for `POST /internal/credits/holds`, `/holds/:id/extend`, `/holds/:id/settle` and `/holds/:id/release`.
   - `platform.rate-card@1` compatibly extended with optional `side` (`supply`|`retail`), `version` and `effective_to`; existing documents stay valid.
   - New public capability `ai.inference.create` for developer-app inference on `POST /v1/chat/completions` and `POST /v1/messages`, and public capability `ai.model.read` for `GET /v1/models` and `GET /v1/models/:id`.
   - All new schemas ship valid and invalid fixtures, including wrong money type and float money value examples.

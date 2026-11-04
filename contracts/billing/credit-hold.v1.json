@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openvibe.network/contracts/billing/inference-hold.v1.json",
+  "$id": "https://openvibe.network/contracts/billing/credit-hold.v1.json",
   "title": "BillingInferenceHold",
-  "description": "billing.inference-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.",
+  "description": "billing.credit-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.",
   "type": "object",
   "required": [
     "hold_id",
@@ -76,6 +76,11 @@
     "created_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,39}$",
+      "description": "Which metered service spends the credit (D9): ai, run, ... Defaults to ai."
     }
   }
 }

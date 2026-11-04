@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openvibe.network/contracts/billing/inference-hold-release-result.v1.json",
+  "$id": "https://openvibe.network/contracts/billing/credit-hold-release-result.v1.json",
   "title": "BillingInferenceHoldReleaseResult",
-  "description": "billing.inference-hold-release-result@1: response from POST /internal/inference/holds/:id/release.",
+  "description": "billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.",
   "type": "object",
   "required": [
     "hold_id",

@@ -27367,15 +27367,15 @@
         }
       }
     },
-    "billing.inference-hold": {
+    "billing.credit-hold": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-hold.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-hold.v1.json",
         "title": "BillingInferenceHold",
-        "description": "billing.inference-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.",
+        "description": "billing.credit-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.",
         "type": "object",
         "required": [
           "hold_id",
@@ -27449,19 +27449,24 @@
           "created_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,39}$",
+            "description": "Which metered service spends the credit (D9): ai, run, ... Defaults to ai."
           }
         }
       }
     },
-    "billing.inference-settlement": {
+    "billing.credit-settlement": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-settlement.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-settlement.v1.json",
         "title": "BillingInferenceSettlement",
-        "description": "billing.inference-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.",
+        "description": "billing.credit-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.",
         "type": "object",
         "required": [
           "settlement_id",
@@ -27632,19 +27637,24 @@
           "created_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "shortfall_nano_usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
           }
         }
       }
     },
-    "billing.inference-hold-create-request": {
+    "billing.credit-hold-create-request": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-hold-create-request.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-hold-create-request.v1.json",
         "title": "BillingInferenceHoldCreateRequest",
-        "description": "billing.inference-hold-create-request@1: body of POST /internal/inference/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
+        "description": "billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
         "type": "object",
         "required": [
           "idempotency_key",
@@ -27690,19 +27700,24 @@
           "request_fingerprint": {
             "type": "string",
             "maxLength": 1024
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,39}$",
+            "description": "Which metered service spends the credit (D9): ai, run, ... Defaults to ai."
           }
         }
       }
     },
-    "billing.inference-hold-create-result": {
+    "billing.credit-hold-create-result": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-hold-create-result.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-hold-create-result.v1.json",
         "title": "BillingInferenceHoldCreateResult",
-        "description": "billing.inference-hold-create-result@1: response from POST /internal/inference/holds. Returns the created or replayed hold.",
+        "description": "billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.",
         "type": "object",
         "required": [
           "hold_id",
@@ -27736,15 +27751,15 @@
         }
       }
     },
-    "billing.inference-hold-extend-request": {
+    "billing.credit-hold-extend-request": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-hold-extend-request.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-hold-extend-request.v1.json",
         "title": "BillingInferenceHoldExtendRequest",
-        "description": "billing.inference-hold-extend-request@1: body of POST /internal/inference/holds/:id/extend. Grows an active hold by add_nano_usd.",
+        "description": "billing.credit-hold-extend-request@1: body of POST /internal/credits/holds/:id/extend. Grows an active hold by add_nano_usd.",
         "type": "object",
         "required": [
           "add_nano_usd"
@@ -27764,15 +27779,15 @@
         }
       }
     },
-    "billing.inference-hold-settle-request": {
+    "billing.credit-hold-settle-request": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-hold-settle-request.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-hold-settle-request.v1.json",
         "title": "BillingInferenceHoldSettleRequest",
-        "description": "billing.inference-hold-settle-request@1: body of POST /internal/inference/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.",
+        "description": "billing.credit-hold-settle-request@1: body of POST /internal/credits/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.",
         "type": "object",
         "required": [
           "idempotency_key",
@@ -27914,15 +27929,15 @@
         }
       }
     },
-    "billing.inference-hold-settle-result": {
+    "billing.credit-hold-settle-result": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-hold-settle-result.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-hold-settle-result.v1.json",
         "title": "BillingInferenceHoldSettleResult",
-        "description": "billing.inference-hold-settle-result@1: response from POST /internal/inference/holds/:id/settle.",
+        "description": "billing.credit-hold-settle-result@1: response from POST /internal/credits/holds/:id/settle.",
         "type": "object",
         "required": [
           "charge_nano_usd",
@@ -27947,19 +27962,24 @@
           "journal_id": {
             "type": "string",
             "pattern": "^txn_"
+          },
+          "shortfall_nano_usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
           }
         }
       }
     },
-    "billing.inference-hold-release-result": {
+    "billing.credit-hold-release-result": {
       "version": "1.0.0",
       "owner": "billing",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/billing/inference-hold-release-result.v1.json",
+        "$id": "https://openvibe.network/contracts/billing/credit-hold-release-result.v1.json",
         "title": "BillingInferenceHoldReleaseResult",
-        "description": "billing.inference-hold-release-result@1: response from POST /internal/inference/holds/:id/release.",
+        "description": "billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.",
         "type": "object",
         "required": [
           "hold_id",

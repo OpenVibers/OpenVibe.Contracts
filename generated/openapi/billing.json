@@ -1933,25 +1933,25 @@
     }
    }
   },
-  "/internal/inference/holds": {
+  "/internal/credits/holds": {
    "post": {
-    "operationId": "post_internal_inference_holds",
-    "summary": "Create an inference credit hold (D2): POST /internal/inference/holds.",
-    "description": "**billing.inference.hold.create** (internal): Create an inference credit hold (D2): POST /internal/inference/holds. Service-authenticated; reserves up to max_nano_usd against a (subject, project_id) account.",
+    "operationId": "post_internal_credits_holds",
+    "summary": "Create an inference credit hold (D2): POST /internal/credits/holds.",
+    "description": "**billing.credit.hold.create** (internal): Create an inference credit hold (D2): POST /internal/credits/holds. Service-authenticated; reserves up to max_nano_usd against a (subject, project_id) account.",
     "tags": [
-     "billing.inference"
+     "billing.credit"
     ],
     "x-openvibe-capabilities": [
-     "billing.inference.hold.create"
+     "billing.credit.hold.create"
     ],
     "x-openvibe-visibility": [
      "internal"
     ],
-    "x-openvibe-quota-class": "billing-inference",
+    "x-openvibe-quota-class": "billing-credit",
     "security": [
      {
       "openvibeToken": [
-       "billing.inference.hold.create"
+       "billing.credit.hold.create"
       ]
      }
     ],
@@ -1960,7 +1960,7 @@
      "content": {
       "application/json": {
        "schema": {
-        "$ref": "#/components/schemas/billing.inference-hold-create-request.v1"
+        "$ref": "#/components/schemas/billing.credit-hold-create-request.v1"
        }
       }
      }
@@ -1971,7 +1971,7 @@
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/billing.inference-hold-create-result.v1"
+         "$ref": "#/components/schemas/billing.credit-hold-create-result.v1"
         }
        }
       }
@@ -1989,25 +1989,25 @@
     }
    }
   },
-  "/internal/inference/holds/{id}/extend": {
+  "/internal/credits/holds/{id}/extend": {
    "post": {
-    "operationId": "post_internal_inference_holds_id_extend",
-    "summary": "Extend an active inference hold (D2): POST /internal/inference/holds/:id/extend.",
-    "description": "**billing.inference.hold.extend** (internal): Extend an active inference hold (D2): POST /internal/inference/holds/:id/extend. Grows the held amount mid-stream; returns 402 billing.insufficient_funds if the balance is short.",
+    "operationId": "post_internal_credits_holds_id_extend",
+    "summary": "Extend an active inference hold (D2): POST /internal/credits/holds/:id/extend.",
+    "description": "**billing.credit.hold.extend** (internal): Extend an active inference hold (D2): POST /internal/credits/holds/:id/extend. Grows the held amount mid-stream; returns 402 billing.insufficient_funds if the balance is short.",
     "tags": [
-     "billing.inference"
+     "billing.credit"
     ],
     "x-openvibe-capabilities": [
-     "billing.inference.hold.extend"
+     "billing.credit.hold.extend"
     ],
     "x-openvibe-visibility": [
      "internal"
     ],
-    "x-openvibe-quota-class": "billing-inference",
+    "x-openvibe-quota-class": "billing-credit",
     "security": [
      {
       "openvibeToken": [
-       "billing.inference.hold.extend"
+       "billing.credit.hold.extend"
       ]
      }
     ],
@@ -2016,129 +2016,7 @@
      "content": {
       "application/json": {
        "schema": {
-        "$ref": "#/components/schemas/billing.inference-hold-extend-request.v1"
-       }
-      }
-     }
-    },
-    "parameters": [
-     {
-      "name": "id",
-      "in": "path",
-      "required": true,
-      "schema": {
-       "type": "string"
-      }
-     }
-    ],
-    "responses": {
-     "2XX": {
-      "description": "Success",
-      "content": {
-       "application/json": {
-        "schema": {
-         "$ref": "#/components/schemas/billing.inference-hold-create-result.v1"
-        }
-       }
-      }
-     },
-     "default": {
-      "description": "An error (RFC 9457 problem details)",
-      "content": {
-       "application/problem+json": {
-        "schema": {
-         "$ref": "#/components/schemas/errors.problem.v1"
-        }
-       }
-      }
-     }
-    }
-   }
-  },
-  "/internal/inference/holds/{id}/release": {
-   "post": {
-    "operationId": "post_internal_inference_holds_id_release",
-    "summary": "Release an inference hold (D2): POST /internal/inference/holds/:id/release.",
-    "description": "**billing.inference.hold.release** (internal): Release an inference hold (D2): POST /internal/inference/holds/:id/release. Releases the remaining held amount with nothing charged.",
-    "tags": [
-     "billing.inference"
-    ],
-    "x-openvibe-capabilities": [
-     "billing.inference.hold.release"
-    ],
-    "x-openvibe-visibility": [
-     "internal"
-    ],
-    "x-openvibe-quota-class": "billing-inference",
-    "security": [
-     {
-      "openvibeToken": [
-       "billing.inference.hold.release"
-      ]
-     }
-    ],
-    "parameters": [
-     {
-      "name": "id",
-      "in": "path",
-      "required": true,
-      "schema": {
-       "type": "string"
-      }
-     }
-    ],
-    "responses": {
-     "2XX": {
-      "description": "Success",
-      "content": {
-       "application/json": {
-        "schema": {
-         "$ref": "#/components/schemas/billing.inference-hold-release-result.v1"
-        }
-       }
-      }
-     },
-     "default": {
-      "description": "An error (RFC 9457 problem details)",
-      "content": {
-       "application/problem+json": {
-        "schema": {
-         "$ref": "#/components/schemas/errors.problem.v1"
-        }
-       }
-      }
-     }
-    }
-   }
-  },
-  "/internal/inference/holds/{id}/settle": {
-   "post": {
-    "operationId": "post_internal_inference_holds_id_settle",
-    "summary": "Settle an inference hold (D2): POST /internal/inference/holds/:id/settle.",
-    "description": "**billing.inference.hold.settle** (internal): Settle an inference hold (D2): POST /internal/inference/holds/:id/settle. Records measured usage and the immutable retail rate version, charges the project account and releases the unused hold. Idempotent: replays return the same settlement.",
-    "tags": [
-     "billing.inference"
-    ],
-    "x-openvibe-capabilities": [
-     "billing.inference.hold.settle"
-    ],
-    "x-openvibe-visibility": [
-     "internal"
-    ],
-    "x-openvibe-quota-class": "billing-inference",
-    "security": [
-     {
-      "openvibeToken": [
-       "billing.inference.hold.settle"
-      ]
-     }
-    ],
-    "requestBody": {
-     "required": false,
-     "content": {
-      "application/json": {
-       "schema": {
-        "$ref": "#/components/schemas/billing.inference-hold-settle-request.v1"
+        "$ref": "#/components/schemas/billing.credit-hold-extend-request.v1"
        }
       }
      }
@@ -2159,7 +2037,129 @@
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/billing.inference-hold-settle-result.v1"
+         "$ref": "#/components/schemas/billing.credit-hold-create-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/credits/holds/{id}/release": {
+   "post": {
+    "operationId": "post_internal_credits_holds_id_release",
+    "summary": "Release an inference hold (D2): POST /internal/credits/holds/:id/release.",
+    "description": "**billing.credit.hold.release** (internal): Release an inference hold (D2): POST /internal/credits/holds/:id/release. Releases the remaining held amount with nothing charged.",
+    "tags": [
+     "billing.credit"
+    ],
+    "x-openvibe-capabilities": [
+     "billing.credit.hold.release"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "billing-credit",
+    "security": [
+     {
+      "openvibeToken": [
+       "billing.credit.hold.release"
+      ]
+     }
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/billing.credit-hold-release-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/credits/holds/{id}/settle": {
+   "post": {
+    "operationId": "post_internal_credits_holds_id_settle",
+    "summary": "Settle an inference hold (D2): POST /internal/credits/holds/:id/settle.",
+    "description": "**billing.credit.hold.settle** (internal): Settle an inference hold (D2): POST /internal/credits/holds/:id/settle. Records measured usage and the immutable retail rate version, charges the project account and releases the unused hold. Idempotent: replays return the same settlement.",
+    "tags": [
+     "billing.credit"
+    ],
+    "x-openvibe-capabilities": [
+     "billing.credit.hold.settle"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "billing-credit",
+    "security": [
+     {
+      "openvibeToken": [
+       "billing.credit.hold.settle"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/billing.credit-hold-settle-request.v1"
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/billing.credit-hold-settle-result.v1"
         }
        }
       }
@@ -2995,6 +2995,322 @@
      }
     }
    },
+   "billing.credit-hold-create-request.v1": {
+    "title": "BillingInferenceHoldCreateRequest",
+    "description": "billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
+    "type": "object",
+    "required": [
+     "idempotency_key",
+     "subject",
+     "project_id",
+     "max_nano_usd",
+     "rate_version",
+     "request_fingerprint"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+     "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     }
+    },
+    "properties": {
+     "idempotency_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{8,128}$"
+     },
+     "subject": {
+      "$ref": "#/components/schemas/identity.subject-ref.v1"
+     },
+     "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+     },
+     "credential_id": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "pattern": "^cred_[0-9A-HJKMNP-TV-Z]{26}$"
+     },
+     "max_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-create-request.v1/$defs/money-nano-usd"
+     },
+     "rate_version": {
+      "type": "string"
+     },
+     "request_fingerprint": {
+      "type": "string",
+      "maxLength": 1024
+     },
+     "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,39}$",
+      "description": "Which metered service spends the credit (D9): ai, run, ... Defaults to ai."
+     }
+    }
+   },
+   "billing.credit-hold-create-result.v1": {
+    "title": "BillingInferenceHoldCreateResult",
+    "description": "billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.",
+    "type": "object",
+    "required": [
+     "hold_id",
+     "held_nano_usd",
+     "available_nano_usd",
+     "lease_expires_at"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+     "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     }
+    },
+    "properties": {
+     "hold_id": {
+      "type": "string",
+      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+     },
+     "held_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-create-result.v1/$defs/money-nano-usd"
+     },
+     "available_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-create-result.v1/$defs/money-nano-usd"
+     },
+     "lease_expires_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "billing.credit-hold-extend-request.v1": {
+    "title": "BillingInferenceHoldExtendRequest",
+    "description": "billing.credit-hold-extend-request@1: body of POST /internal/credits/holds/:id/extend. Grows an active hold by add_nano_usd.",
+    "type": "object",
+    "required": [
+     "add_nano_usd"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+     "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     }
+    },
+    "properties": {
+     "add_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-extend-request.v1/$defs/money-nano-usd"
+     }
+    }
+   },
+   "billing.credit-hold-release-result.v1": {
+    "title": "BillingInferenceHoldReleaseResult",
+    "description": "billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.",
+    "type": "object",
+    "required": [
+     "hold_id",
+     "released_nano_usd"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+     "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     }
+    },
+    "properties": {
+     "hold_id": {
+      "type": "string",
+      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+     },
+     "released_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-release-result.v1/$defs/money-nano-usd"
+     }
+    }
+   },
+   "billing.credit-hold-settle-request.v1": {
+    "title": "BillingInferenceHoldSettleRequest",
+    "description": "billing.credit-hold-settle-request@1: body of POST /internal/credits/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.",
+    "type": "object",
+    "required": [
+     "idempotency_key",
+     "usage",
+     "retail",
+     "supply_cost_nano_usd",
+     "byok",
+     "attempts"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+     "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     }
+    },
+    "properties": {
+     "idempotency_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{8,128}$"
+     },
+     "usage": {
+      "type": "object",
+      "required": [
+       "input_tokens",
+       "cached_read_tokens",
+       "cache_write_tokens",
+       "output_tokens"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "input_tokens": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "cached_read_tokens": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "cache_write_tokens": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "output_tokens": {
+        "type": "integer",
+        "minimum": 0
+       }
+      }
+     },
+     "retail": {
+      "type": "object",
+      "required": [
+       "version",
+       "nano_usd_per_m",
+       "per_request_nano_usd"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "version": {
+        "type": "string"
+       },
+       "nano_usd_per_m": {
+        "type": "object",
+        "required": [
+         "input",
+         "cached_read",
+         "cache_write",
+         "output"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "input": {
+          "$ref": "#/components/schemas/billing.credit-hold-settle-request.v1/$defs/money-nano-usd"
+         },
+         "cached_read": {
+          "$ref": "#/components/schemas/billing.credit-hold-settle-request.v1/$defs/money-nano-usd"
+         },
+         "cache_write": {
+          "$ref": "#/components/schemas/billing.credit-hold-settle-request.v1/$defs/money-nano-usd"
+         },
+         "output": {
+          "$ref": "#/components/schemas/billing.credit-hold-settle-request.v1/$defs/money-nano-usd"
+         }
+        }
+       },
+       "per_request_nano_usd": {
+        "$ref": "#/components/schemas/billing.credit-hold-settle-request.v1/$defs/money-nano-usd"
+       }
+      }
+     },
+     "supply_cost_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-settle-request.v1/$defs/money-nano-usd"
+     },
+     "byok": {
+      "type": "boolean"
+     },
+     "attempts": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "deployment_id",
+        "started_at",
+        "ended_at"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "deployment_id": {
+         "type": "string"
+        },
+        "provider_access": {
+         "type": "string",
+         "enum": [
+          "OWN_DEPLOYMENT",
+          "AUTHORIZED_WHOLESALE",
+          "CUSTOMER_BYOK",
+          "RESTRICTED",
+          "UNVERIFIED"
+         ]
+        },
+        "started_at": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "ended_at": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "error_code": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "billing.credit-hold-settle-result.v1": {
+    "title": "BillingInferenceHoldSettleResult",
+    "description": "billing.credit-hold-settle-result@1: response from POST /internal/credits/holds/:id/settle.",
+    "type": "object",
+    "required": [
+     "charge_nano_usd",
+     "released_nano_usd",
+     "journal_id"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+     "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     }
+    },
+    "properties": {
+     "charge_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-settle-result.v1/$defs/money-nano-usd"
+     },
+     "released_nano_usd": {
+      "$ref": "#/components/schemas/billing.credit-hold-settle-result.v1/$defs/money-nano-usd"
+     },
+     "journal_id": {
+      "type": "string",
+      "pattern": "^txn_"
+     },
+     "shortfall_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
+     }
+    }
+   },
    "billing.entitlement-result.v1": {
     "title": "BillingEntitlementResult",
     "description": "billing.entitlement-result@1: answers of billing.entitlement.check on OpenVibe.Billing. GET /api/v1/entitlements/:subject?streamer= → billing.entitlement@1; without streamer → { subject, entitlements } (every active one); GET /api/v1/subscriptions → { subscriptions }; GET /api/v1/subscriptions/:id → { subscription, entitlement }.",
@@ -3117,312 +3433,6 @@
         "type": "string"
        }
       }
-     }
-    }
-   },
-   "billing.inference-hold-create-request.v1": {
-    "title": "BillingInferenceHoldCreateRequest",
-    "description": "billing.inference-hold-create-request@1: body of POST /internal/inference/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
-    "type": "object",
-    "required": [
-     "idempotency_key",
-     "subject",
-     "project_id",
-     "max_nano_usd",
-     "rate_version",
-     "request_fingerprint"
-    ],
-    "additionalProperties": false,
-    "$defs": {
-     "money-nano-usd": {
-      "type": "string",
-      "pattern": "^[0-9]{1,19}$",
-      "description": "Integer nano-USD (1e-9 USD), stored as a string."
-     }
-    },
-    "properties": {
-     "idempotency_key": {
-      "type": "string",
-      "pattern": "^[A-Za-z0-9._:-]{8,128}$"
-     },
-     "subject": {
-      "$ref": "#/components/schemas/identity.subject-ref.v1"
-     },
-     "project_id": {
-      "type": "string",
-      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
-     },
-     "credential_id": {
-      "type": [
-       "string",
-       "null"
-      ],
-      "pattern": "^cred_[0-9A-HJKMNP-TV-Z]{26}$"
-     },
-     "max_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-create-request.v1/$defs/money-nano-usd"
-     },
-     "rate_version": {
-      "type": "string"
-     },
-     "request_fingerprint": {
-      "type": "string",
-      "maxLength": 1024
-     }
-    }
-   },
-   "billing.inference-hold-create-result.v1": {
-    "title": "BillingInferenceHoldCreateResult",
-    "description": "billing.inference-hold-create-result@1: response from POST /internal/inference/holds. Returns the created or replayed hold.",
-    "type": "object",
-    "required": [
-     "hold_id",
-     "held_nano_usd",
-     "available_nano_usd",
-     "lease_expires_at"
-    ],
-    "additionalProperties": false,
-    "$defs": {
-     "money-nano-usd": {
-      "type": "string",
-      "pattern": "^[0-9]{1,19}$",
-      "description": "Integer nano-USD (1e-9 USD), stored as a string."
-     }
-    },
-    "properties": {
-     "hold_id": {
-      "type": "string",
-      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
-     },
-     "held_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-create-result.v1/$defs/money-nano-usd"
-     },
-     "available_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-create-result.v1/$defs/money-nano-usd"
-     },
-     "lease_expires_at": {
-      "type": "string",
-      "format": "date-time"
-     }
-    }
-   },
-   "billing.inference-hold-extend-request.v1": {
-    "title": "BillingInferenceHoldExtendRequest",
-    "description": "billing.inference-hold-extend-request@1: body of POST /internal/inference/holds/:id/extend. Grows an active hold by add_nano_usd.",
-    "type": "object",
-    "required": [
-     "add_nano_usd"
-    ],
-    "additionalProperties": false,
-    "$defs": {
-     "money-nano-usd": {
-      "type": "string",
-      "pattern": "^[0-9]{1,19}$",
-      "description": "Integer nano-USD (1e-9 USD), stored as a string."
-     }
-    },
-    "properties": {
-     "add_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-extend-request.v1/$defs/money-nano-usd"
-     }
-    }
-   },
-   "billing.inference-hold-release-result.v1": {
-    "title": "BillingInferenceHoldReleaseResult",
-    "description": "billing.inference-hold-release-result@1: response from POST /internal/inference/holds/:id/release.",
-    "type": "object",
-    "required": [
-     "hold_id",
-     "released_nano_usd"
-    ],
-    "additionalProperties": false,
-    "$defs": {
-     "money-nano-usd": {
-      "type": "string",
-      "pattern": "^[0-9]{1,19}$",
-      "description": "Integer nano-USD (1e-9 USD), stored as a string."
-     }
-    },
-    "properties": {
-     "hold_id": {
-      "type": "string",
-      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
-     },
-     "released_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-release-result.v1/$defs/money-nano-usd"
-     }
-    }
-   },
-   "billing.inference-hold-settle-request.v1": {
-    "title": "BillingInferenceHoldSettleRequest",
-    "description": "billing.inference-hold-settle-request@1: body of POST /internal/inference/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.",
-    "type": "object",
-    "required": [
-     "idempotency_key",
-     "usage",
-     "retail",
-     "supply_cost_nano_usd",
-     "byok",
-     "attempts"
-    ],
-    "additionalProperties": false,
-    "$defs": {
-     "money-nano-usd": {
-      "type": "string",
-      "pattern": "^[0-9]{1,19}$",
-      "description": "Integer nano-USD (1e-9 USD), stored as a string."
-     }
-    },
-    "properties": {
-     "idempotency_key": {
-      "type": "string",
-      "pattern": "^[A-Za-z0-9._:-]{8,128}$"
-     },
-     "usage": {
-      "type": "object",
-      "required": [
-       "input_tokens",
-       "cached_read_tokens",
-       "cache_write_tokens",
-       "output_tokens"
-      ],
-      "additionalProperties": false,
-      "properties": {
-       "input_tokens": {
-        "type": "integer",
-        "minimum": 0
-       },
-       "cached_read_tokens": {
-        "type": "integer",
-        "minimum": 0
-       },
-       "cache_write_tokens": {
-        "type": "integer",
-        "minimum": 0
-       },
-       "output_tokens": {
-        "type": "integer",
-        "minimum": 0
-       }
-      }
-     },
-     "retail": {
-      "type": "object",
-      "required": [
-       "version",
-       "nano_usd_per_m",
-       "per_request_nano_usd"
-      ],
-      "additionalProperties": false,
-      "properties": {
-       "version": {
-        "type": "string"
-       },
-       "nano_usd_per_m": {
-        "type": "object",
-        "required": [
-         "input",
-         "cached_read",
-         "cache_write",
-         "output"
-        ],
-        "additionalProperties": false,
-        "properties": {
-         "input": {
-          "$ref": "#/components/schemas/billing.inference-hold-settle-request.v1/$defs/money-nano-usd"
-         },
-         "cached_read": {
-          "$ref": "#/components/schemas/billing.inference-hold-settle-request.v1/$defs/money-nano-usd"
-         },
-         "cache_write": {
-          "$ref": "#/components/schemas/billing.inference-hold-settle-request.v1/$defs/money-nano-usd"
-         },
-         "output": {
-          "$ref": "#/components/schemas/billing.inference-hold-settle-request.v1/$defs/money-nano-usd"
-         }
-        }
-       },
-       "per_request_nano_usd": {
-        "$ref": "#/components/schemas/billing.inference-hold-settle-request.v1/$defs/money-nano-usd"
-       }
-      }
-     },
-     "supply_cost_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-settle-request.v1/$defs/money-nano-usd"
-     },
-     "byok": {
-      "type": "boolean"
-     },
-     "attempts": {
-      "type": "array",
-      "items": {
-       "type": "object",
-       "required": [
-        "deployment_id",
-        "started_at",
-        "ended_at"
-       ],
-       "additionalProperties": false,
-       "properties": {
-        "deployment_id": {
-         "type": "string"
-        },
-        "provider_access": {
-         "type": "string",
-         "enum": [
-          "OWN_DEPLOYMENT",
-          "AUTHORIZED_WHOLESALE",
-          "CUSTOMER_BYOK",
-          "RESTRICTED",
-          "UNVERIFIED"
-         ]
-        },
-        "started_at": {
-         "type": "string",
-         "format": "date-time"
-        },
-        "ended_at": {
-         "type": "string",
-         "format": "date-time"
-        },
-        "error_code": {
-         "type": [
-          "string",
-          "null"
-         ]
-        }
-       }
-      }
-     }
-    }
-   },
-   "billing.inference-hold-settle-result.v1": {
-    "title": "BillingInferenceHoldSettleResult",
-    "description": "billing.inference-hold-settle-result@1: response from POST /internal/inference/holds/:id/settle.",
-    "type": "object",
-    "required": [
-     "charge_nano_usd",
-     "released_nano_usd",
-     "journal_id"
-    ],
-    "additionalProperties": false,
-    "$defs": {
-     "money-nano-usd": {
-      "type": "string",
-      "pattern": "^[0-9]{1,19}$",
-      "description": "Integer nano-USD (1e-9 USD), stored as a string."
-     }
-    },
-    "properties": {
-     "charge_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-settle-result.v1/$defs/money-nano-usd"
-     },
-     "released_nano_usd": {
-      "$ref": "#/components/schemas/billing.inference-hold-settle-result.v1/$defs/money-nano-usd"
-     },
-     "journal_id": {
-      "type": "string",
-      "pattern": "^txn_"
      }
     }
    },

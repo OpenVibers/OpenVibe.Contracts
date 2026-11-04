@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openvibe.network/contracts/billing/inference-hold-create-result.v1.json",
+  "$id": "https://openvibe.network/contracts/billing/credit-hold-create-result.v1.json",
   "title": "BillingInferenceHoldCreateResult",
-  "description": "billing.inference-hold-create-result@1: response from POST /internal/inference/holds. Returns the created or replayed hold.",
+  "description": "billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.",
   "type": "object",
   "required": [
     "hold_id",

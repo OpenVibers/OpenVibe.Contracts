@@ -164589,9 +164589,9 @@ export interface BillingUsageRecordResult {
   };
 }
 
-/** billing.inference-hold@1.0.0 (owner: billing) */
+/** billing.credit-hold@1.0.0 (owner: billing) */
 /**
- * billing.inference-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.
+ * billing.credit-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.
  */
 export interface BillingInferenceHold {
   /**
@@ -164627,11 +164627,15 @@ export interface BillingInferenceHold {
   lease_expires_at: string;
   status?: "active" | "extended" | "settled" | "released" | "expired";
   created_at?: string;
+  /**
+   * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
+   */
+  service?: string;
 }
 
-/** billing.inference-settlement@1.0.0 (owner: billing) */
+/** billing.credit-settlement@1.0.0 (owner: billing) */
 /**
- * billing.inference-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.
+ * billing.credit-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.
  */
 export interface BillingInferenceSettlement {
   settlement_id: string;
@@ -164694,11 +164698,15 @@ export interface BillingInferenceSettlement {
     error_code?: string | null;
   }[];
   created_at?: string;
+  /**
+   * Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1).
+   */
+  shortfall_nano_usd?: string;
 }
 
-/** billing.inference-hold-create-request@1.0.0 (owner: billing) */
+/** billing.credit-hold-create-request@1.0.0 (owner: billing) */
 /**
- * billing.inference-hold-create-request@1: body of POST /internal/inference/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.
+ * billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.
  */
 export interface BillingInferenceHoldCreateRequest {
   idempotency_key: string;
@@ -164711,11 +164719,15 @@ export interface BillingInferenceHoldCreateRequest {
   max_nano_usd: string;
   rate_version: string;
   request_fingerprint: string;
+  /**
+   * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
+   */
+  service?: string;
 }
 
-/** billing.inference-hold-create-result@1.0.0 (owner: billing) */
+/** billing.credit-hold-create-result@1.0.0 (owner: billing) */
 /**
- * billing.inference-hold-create-result@1: response from POST /internal/inference/holds. Returns the created or replayed hold.
+ * billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.
  */
 export interface BillingInferenceHoldCreateResult {
   hold_id: string;
@@ -164730,9 +164742,9 @@ export interface BillingInferenceHoldCreateResult {
   lease_expires_at: string;
 }
 
-/** billing.inference-hold-extend-request@1.0.0 (owner: billing) */
+/** billing.credit-hold-extend-request@1.0.0 (owner: billing) */
 /**
- * billing.inference-hold-extend-request@1: body of POST /internal/inference/holds/:id/extend. Grows an active hold by add_nano_usd.
+ * billing.credit-hold-extend-request@1: body of POST /internal/credits/holds/:id/extend. Grows an active hold by add_nano_usd.
  */
 export interface BillingInferenceHoldExtendRequest {
   /**
@@ -164741,9 +164753,9 @@ export interface BillingInferenceHoldExtendRequest {
   add_nano_usd: string;
 }
 
-/** billing.inference-hold-settle-request@1.0.0 (owner: billing) */
+/** billing.credit-hold-settle-request@1.0.0 (owner: billing) */
 /**
- * billing.inference-hold-settle-request@1: body of POST /internal/inference/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.
+ * billing.credit-hold-settle-request@1: body of POST /internal/credits/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.
  */
 export interface BillingInferenceHoldSettleRequest {
   idempotency_key: string;
@@ -164792,9 +164804,9 @@ export interface BillingInferenceHoldSettleRequest {
   }[];
 }
 
-/** billing.inference-hold-settle-result@1.0.0 (owner: billing) */
+/** billing.credit-hold-settle-result@1.0.0 (owner: billing) */
 /**
- * billing.inference-hold-settle-result@1: response from POST /internal/inference/holds/:id/settle.
+ * billing.credit-hold-settle-result@1: response from POST /internal/credits/holds/:id/settle.
  */
 export interface BillingInferenceHoldSettleResult {
   /**
@@ -164806,11 +164818,15 @@ export interface BillingInferenceHoldSettleResult {
    */
   released_nano_usd: string;
   journal_id: string;
+  /**
+   * Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1).
+   */
+  shortfall_nano_usd?: string;
 }
 
-/** billing.inference-hold-release-result@1.0.0 (owner: billing) */
+/** billing.credit-hold-release-result@1.0.0 (owner: billing) */
 /**
- * billing.inference-hold-release-result@1: response from POST /internal/inference/holds/:id/release.
+ * billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.
  */
 export interface BillingInferenceHoldReleaseResult {
   hold_id: string;

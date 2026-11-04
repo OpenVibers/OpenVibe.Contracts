@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openvibe.network/contracts/billing/inference-hold-settle-result.v1.json",
+  "$id": "https://openvibe.network/contracts/billing/credit-hold-settle-result.v1.json",
   "title": "BillingInferenceHoldSettleResult",
-  "description": "billing.inference-hold-settle-result@1: response from POST /internal/inference/holds/:id/settle.",
+  "description": "billing.credit-hold-settle-result@1: response from POST /internal/credits/holds/:id/settle.",
   "type": "object",
   "required": [
     "charge_nano_usd",
@@ -27,6 +27,11 @@
     "journal_id": {
       "type": "string",
       "pattern": "^txn_"
+    },
+    "shortfall_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
     }
   }
 }
