@@ -8959,6 +8959,24 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "billing.credit-sandbox-grant-request",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-sandbox-grant-request.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.credit-sandbox-grant-result",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/credit-sandbox-grant-result.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

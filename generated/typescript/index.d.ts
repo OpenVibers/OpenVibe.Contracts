@@ -164593,7 +164593,7 @@ export interface BillingUsageRecordResult {
 /**
  * billing.credit-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.
  */
-export interface BillingInferenceHold {
+export interface BillingCreditHold {
   /**
    * ULID hold id.
    */
@@ -164637,7 +164637,7 @@ export interface BillingInferenceHold {
 /**
  * billing.credit-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.
  */
-export interface BillingInferenceSettlement {
+export interface BillingCreditSettlement {
   settlement_id: string;
   hold_id: string;
   subject: SubjectRef;
@@ -164708,7 +164708,7 @@ export interface BillingInferenceSettlement {
 /**
  * billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.
  */
-export interface BillingInferenceHoldCreateRequest {
+export interface BillingCreditHoldCreateRequest {
   idempotency_key: string;
   subject: SubjectRef;
   project_id: string;
@@ -164729,7 +164729,7 @@ export interface BillingInferenceHoldCreateRequest {
 /**
  * billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.
  */
-export interface BillingInferenceHoldCreateResult {
+export interface BillingCreditHoldCreateResult {
   hold_id: string;
   /**
    * Integer nano-USD (1e-9 USD), stored as a string.
@@ -164746,7 +164746,7 @@ export interface BillingInferenceHoldCreateResult {
 /**
  * billing.credit-hold-extend-request@1: body of POST /internal/credits/holds/:id/extend. Grows an active hold by add_nano_usd.
  */
-export interface BillingInferenceHoldExtendRequest {
+export interface BillingCreditHoldExtendRequest {
   /**
    * Integer nano-USD (1e-9 USD), stored as a string.
    */
@@ -164757,7 +164757,7 @@ export interface BillingInferenceHoldExtendRequest {
 /**
  * billing.credit-hold-settle-request@1: body of POST /internal/credits/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.
  */
-export interface BillingInferenceHoldSettleRequest {
+export interface BillingCreditHoldSettleRequest {
   idempotency_key: string;
   usage: {
     input_tokens: number;
@@ -164808,7 +164808,7 @@ export interface BillingInferenceHoldSettleRequest {
 /**
  * billing.credit-hold-settle-result@1: response from POST /internal/credits/holds/:id/settle.
  */
-export interface BillingInferenceHoldSettleResult {
+export interface BillingCreditHoldSettleResult {
   /**
    * Integer nano-USD (1e-9 USD), stored as a string.
    */
@@ -164828,7 +164828,7 @@ export interface BillingInferenceHoldSettleResult {
 /**
  * billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.
  */
-export interface BillingInferenceHoldReleaseResult {
+export interface BillingCreditHoldReleaseResult {
   hold_id: string;
   /**
    * Integer nano-USD (1e-9 USD), stored as a string.
@@ -285067,4 +285067,34 @@ export interface TodayAgenda {
     [k: string]: unknown | undefined;
   }[];
   follows_unavailable: boolean;
+}
+
+/** billing.credit-sandbox-grant-request@1.0.0 (owner: billing) */
+/**
+ * billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9).
+ */
+export interface BillingCreditSandboxGrantRequest {
+  subject: SubjectRef;
+  project_id: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  amount_nano_usd: string;
+  reason?: string;
+}
+
+/** billing.credit-sandbox-grant-result@1.0.0 (owner: billing) */
+/**
+ * billing.credit-sandbox-grant-result@1: the grant and the balance after it.
+ */
+export interface BillingCreditSandboxGrantResult {
+  grant_id: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  amount_nano_usd: string;
+  /**
+   * Integer nano-USD (1e-9 USD), stored as a string.
+   */
+  balance_nano_usd: string;
 }

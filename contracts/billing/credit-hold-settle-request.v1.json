@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/billing/credit-hold-settle-request.v1.json",
-  "title": "BillingInferenceHoldSettleRequest",
+  "title": "BillingCreditHoldSettleRequest",
   "description": "billing.credit-hold-settle-request@1: body of POST /internal/credits/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.",
   "type": "object",
   "required": [

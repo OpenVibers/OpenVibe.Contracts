@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/billing/credit-settlement.v1.json",
-  "title": "BillingInferenceSettlement",
+  "title": "BillingCreditSettlement",
   "description": "billing.credit-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.",
   "type": "object",
   "required": [

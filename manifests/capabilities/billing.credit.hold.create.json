@@ -8,7 +8,7 @@
   "inputSchema": "billing.credit-hold-create-request@1",
   "outputSchema": "billing.credit-hold-create-result@1",
   "permissions": [
-    "billing:inference:hold"
+    "billing:credit:hold"
   ],
   "resourceConstraints": [
     "none"

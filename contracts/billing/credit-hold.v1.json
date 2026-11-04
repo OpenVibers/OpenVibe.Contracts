@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/billing/credit-hold.v1.json",
-  "title": "BillingInferenceHold",
+  "title": "BillingCreditHold",
   "description": "billing.credit-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.",
   "type": "object",
   "required": [

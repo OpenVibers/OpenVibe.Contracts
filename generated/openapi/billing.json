@@ -2058,8 +2058,8 @@
   "/internal/credits/holds/{id}/release": {
    "post": {
     "operationId": "post_internal_credits_holds_id_release",
-    "summary": "Release an inference hold (D2): POST /internal/credits/holds/:id/release.",
-    "description": "**billing.credit.hold.release** (internal): Release an inference hold (D2): POST /internal/credits/holds/:id/release. Releases the remaining held amount with nothing charged.",
+    "summary": "Release a credit hold (D2): POST /internal/credits/holds/:id/release.",
+    "description": "**billing.credit.hold.release** (internal): Release a credit hold (D2): POST /internal/credits/holds/:id/release. Releases the remaining held amount with nothing charged.",
     "tags": [
      "billing.credit"
     ],
@@ -2114,8 +2114,8 @@
   "/internal/credits/holds/{id}/settle": {
    "post": {
     "operationId": "post_internal_credits_holds_id_settle",
-    "summary": "Settle an inference hold (D2): POST /internal/credits/holds/:id/settle.",
-    "description": "**billing.credit.hold.settle** (internal): Settle an inference hold (D2): POST /internal/credits/holds/:id/settle. Records measured usage and the immutable retail rate version, charges the project account and releases the unused hold. Idempotent: replays return the same settlement.",
+    "summary": "Settle a credit hold (D2): POST /internal/credits/holds/:id/settle.",
+    "description": "**billing.credit.hold.settle** (internal): Settle a credit hold (D2): POST /internal/credits/holds/:id/settle. Records measured usage and the immutable retail rate version, charges the project account and releases the unused hold. Idempotent: replays return the same settlement.",
     "tags": [
      "billing.credit"
     ],
@@ -2160,6 +2160,62 @@
        "application/json": {
         "schema": {
          "$ref": "#/components/schemas/billing.credit-hold-settle-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/credits/sandbox/grants": {
+   "post": {
+    "operationId": "post_internal_credits_sandbox_grants",
+    "summary": "Grant synthetic credit to a (subject, project) for tests and staging (D9): POST /internal/credits/sandbox/grants.",
+    "description": "**billing.credit.sandbox.grant** (internal): Grant synthetic credit to a (subject, project) for tests and staging (D9): POST /internal/credits/sandbox/grants. Refused unless BILLING_CREDITS_SANDBOX=1; a test transaction, never money.",
+    "tags": [
+     "billing.credit"
+    ],
+    "x-openvibe-capabilities": [
+     "billing.credit.sandbox.grant"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "billing-credit",
+    "security": [
+     {
+      "openvibeToken": [
+       "billing.credit.sandbox.grant"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/billing.credit-sandbox-grant-request.v1"
+       }
+      }
+     }
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/billing.credit-sandbox-grant-result.v1"
         }
        }
       }
@@ -2996,7 +3052,7 @@
     }
    },
    "billing.credit-hold-create-request.v1": {
-    "title": "BillingInferenceHoldCreateRequest",
+    "title": "BillingCreditHoldCreateRequest",
     "description": "billing.credit-hold-create-request@1: body of POST /internal/credits/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
     "type": "object",
     "required": [
@@ -3052,7 +3108,7 @@
     }
    },
    "billing.credit-hold-create-result.v1": {
-    "title": "BillingInferenceHoldCreateResult",
+    "title": "BillingCreditHoldCreateResult",
     "description": "billing.credit-hold-create-result@1: response from POST /internal/credits/holds. Returns the created or replayed hold.",
     "type": "object",
     "required": [
@@ -3087,7 +3143,7 @@
     }
    },
    "billing.credit-hold-extend-request.v1": {
-    "title": "BillingInferenceHoldExtendRequest",
+    "title": "BillingCreditHoldExtendRequest",
     "description": "billing.credit-hold-extend-request@1: body of POST /internal/credits/holds/:id/extend. Grows an active hold by add_nano_usd.",
     "type": "object",
     "required": [
@@ -3108,7 +3164,7 @@
     }
    },
    "billing.credit-hold-release-result.v1": {
-    "title": "BillingInferenceHoldReleaseResult",
+    "title": "BillingCreditHoldReleaseResult",
     "description": "billing.credit-hold-release-result@1: response from POST /internal/credits/holds/:id/release.",
     "type": "object",
     "required": [
@@ -3134,7 +3190,7 @@
     }
    },
    "billing.credit-hold-settle-request.v1": {
-    "title": "BillingInferenceHoldSettleRequest",
+    "title": "BillingCreditHoldSettleRequest",
     "description": "billing.credit-hold-settle-request@1: body of POST /internal/credits/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.",
     "type": "object",
     "required": [
@@ -3277,7 +3333,7 @@
     }
    },
    "billing.credit-hold-settle-result.v1": {
-    "title": "BillingInferenceHoldSettleResult",
+    "title": "BillingCreditHoldSettleResult",
     "description": "billing.credit-hold-settle-result@1: response from POST /internal/credits/holds/:id/settle.",
     "type": "object",
     "required": [
@@ -3308,6 +3364,62 @@
       "type": "string",
       "pattern": "^[0-9]{1,19}$",
       "description": "Usage beyond the hold and the free balance: owed, not collected (nano-USD, D1)."
+     }
+    }
+   },
+   "billing.credit-sandbox-grant-request.v1": {
+    "title": "BillingCreditSandboxGrantRequest",
+    "description": "billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9).",
+    "type": "object",
+    "required": [
+     "subject",
+     "project_id",
+     "amount_nano_usd"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "subject": {
+      "$ref": "#/components/schemas/identity.subject-ref.v1"
+     },
+     "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+     },
+     "amount_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     },
+     "reason": {
+      "type": "string",
+      "maxLength": 500
+     }
+    }
+   },
+   "billing.credit-sandbox-grant-result.v1": {
+    "title": "BillingCreditSandboxGrantResult",
+    "description": "billing.credit-sandbox-grant-result@1: the grant and the balance after it.",
+    "type": "object",
+    "required": [
+     "grant_id",
+     "amount_nano_usd",
+     "balance_nano_usd"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "grant_id": {
+      "type": "string",
+      "pattern": "^igr_[0-9A-HJKMNP-TV-Z]{26}$"
+     },
+     "amount_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+     },
+     "balance_nano_usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
      }
     }
    },
