@@ -30,7 +30,11 @@
     "billing.entitlement.check",
     "billing.stats.read",
     "billing.ledger.admin",
-    "billing.usage.record"
+    "billing.usage.record",
+    "billing.inference.hold.create",
+    "billing.inference.hold.extend",
+    "billing.inference.hold.settle",
+    "billing.inference.hold.release"
   ],
   "eventsProduced": [
     "billing.transaction.settled",

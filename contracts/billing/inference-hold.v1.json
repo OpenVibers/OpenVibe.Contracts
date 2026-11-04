@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/inference-hold.v1.json",
+  "title": "BillingInferenceHold",
+  "description": "billing.inference-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.",
+  "type": "object",
+  "required": [
+    "hold_id",
+    "subject",
+    "project_id",
+    "held_nano_usd",
+    "available_nano_usd",
+    "lease_expires_at"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "money-nano-usd": {
+      "type": "string",
+      "pattern": "^[0-9]{1,19}$",
+      "description": "Integer nano-USD (1e-9 USD), stored as a string."
+    }
+  },
+  "properties": {
+    "hold_id": {
+      "type": "string",
+      "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "ULID hold id."
+    },
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "credential_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^cred_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Developer credential the hold is scoped to, if any."
+    },
+    "held_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "available_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "max_nano_usd": {
+      "$ref": "#/$defs/money-nano-usd"
+    },
+    "rate_version": {
+      "type": "string",
+      "description": "Immutable retail rate-card version the hold was priced against."
+    },
+    "request_fingerprint": {
+      "type": "string",
+      "maxLength": 1024,
+      "description": "Opaque fingerprint used to dedupe the same idempotency key."
+    },
+    "lease_expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "extended",
+        "settled",
+        "released",
+        "expired"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

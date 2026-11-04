@@ -1,0 +1,14 @@
+{
+  "provider_key": "qwen",
+  "model_key": "qwen3-9b",
+  "type": "chat",
+  "status": "active",
+  "cost": { "in_per_mtok": 3, "out_per_mtok": 15, "cached_per_mtok": 0.3 },
+  "supports": { "json": true, "tools": true, "streaming": true, "vision": false },
+  "id": "qwen/qwen3-9b@3f2a1c9",
+  "variant": "original",
+  "retail_rate": {
+    "version": "v1",
+    "input_nano_usd_per_m": "3000.5"
+  }
+}

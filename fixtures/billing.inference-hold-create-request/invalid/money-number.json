@@ -1,0 +1,8 @@
+{
+  "idempotency_key": "hold-key-001",
+  "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "max_nano_usd": 100000000,
+  "rate_version": "rr-2026-11-03-001",
+  "request_fingerprint": "fp-chat-001"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "dep-deepinfra-llama-8b",
+  "artifact_id": "meta-llama/llama_3.1_8b_instruct:fp16@bca2580",
+  "region": "us-west",
+  "trust_tier": "approved_wholesale",
+  "operator": "deepinfra",
+  "endpoint": "https://api.deepinfra.com/v1/openai",
+  "status": "ready",
+  "loaded_at": "2026-11-03T00:00:00.000Z",
+  "limits": {
+    "max_concurrency": 100,
+    "context_tokens": 131072,
+    "max_output_tokens": 4096
+  },
+  "supply_rate_card_id": "rc-deepinfra-llama-8b-001",
+  "provider_access": "AUTHORIZED_WHOLESALE",
+  "commercial_rights": "AUTHORIZED_WHOLESALE",
+  "privacy_policy": null,
+  "health": {
+    "healthy": true,
+    "last_check_at": "2026-11-03T00:00:00.000Z",
+    "reason": null
+  },
+  "updated_at": "2026-11-03T00:00:00.000Z"
+}

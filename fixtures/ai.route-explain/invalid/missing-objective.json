@@ -1,0 +1,5 @@
+{
+  "chosen": "qwen/qwen3-9b-abliterated:q4_k_m@3f2a1c9",
+  "rejected": [],
+  "estimate": { "charge_nano_usd": "1000" }
+}

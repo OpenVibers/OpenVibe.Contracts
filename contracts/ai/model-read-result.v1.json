@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/model-read-result.v1.json",
+  "title": "AiModelReadResult",
+  "description": "ai.model-read-result@1: response from GET /v1/models (a list) or GET /v1/models/:id (a single model).",
+  "type": "object",
+  "anyOf": [
+    {
+      "$ref": "model-list.v1.json"
+    },
+    {
+      "$ref": "model.v1.json"
+    }
+  ]
+}

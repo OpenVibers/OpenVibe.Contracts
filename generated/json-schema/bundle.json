@@ -16538,14 +16538,14 @@
       }
     },
     "ai.model": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/ai/model.v1.json",
         "title": "AiModel",
-        "description": "ai.model@1: one model of a provider in OpenVibe.AI's registry (server/registry.js decodeModel): type, status, limits, per-million-token costs and what it supports.",
+        "description": "ai.model@1: a catalog entry for one model in OpenVibe.AI's registry. The legacy provider/model fields stay for existing readers; new catalog fields (id, family, variant, quant, revision, sha256, license, context, capabilities, modalities, retail rate and availability) are optional so older documents remain valid. Exact ids follow `<org>/<model>[:<quant>]@<revision>`; dynamic aliases such as `openvibe/auto` may be enumerated in `aliases`. Money fields are integer nano-USD per million tokens, as strings.",
         "type": "object",
         "required": [
           "provider_key",
@@ -16555,6 +16555,13 @@
           "cost",
           "supports"
         ],
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
         "properties": {
           "provider_key": {
             "type": "string"
@@ -16635,6 +16642,128 @@
               }
             }
           },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+(:[a-zA-Z0-9._-]+)?@[a-zA-Z0-9._-]+$",
+            "description": "Exact model id: `<org>/<model>[:<quant>]@<revision>`.",
+            "maxLength": 256
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "openvibe",
+                "openvibe/auto",
+                "openvibe/economy",
+                "openvibe/balanced",
+                "openvibe/fast",
+                "openvibe/private"
+              ]
+            },
+            "description": "Dynamic policy aliases that resolve to this model."
+          },
+          "family": {
+            "type": "string",
+            "description": "Creator and underlying model family, e.g. `qwen3`."
+          },
+          "variant": {
+            "type": "string",
+            "enum": [
+              "original",
+              "abliterated",
+              "finetuned",
+              "merged",
+              "lora"
+            ],
+            "description": "How the weights were produced."
+          },
+          "quant": {
+            "type": "string",
+            "description": "Quantization label, e.g. `q4_k_m`."
+          },
+          "revision": {
+            "type": "string",
+            "description": "Artifact revision or commit hash."
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of the weight file or manifest."
+          },
+          "license": {
+            "type": "string",
+            "description": "SPDX license identifier or custom license name."
+          },
+          "context": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum context length in tokens."
+          },
+          "capabilities": {
+            "type": "object",
+            "properties": {
+              "tools": {
+                "type": "boolean"
+              },
+              "json": {
+                "type": "boolean"
+              },
+              "vision": {
+                "type": "boolean"
+              },
+              "stream": {
+                "type": "boolean"
+              }
+            }
+          },
+          "modalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "text",
+                "image",
+                "audio",
+                "video"
+              ]
+            },
+            "description": "Input/output modalities the model supports."
+          },
+          "retail_rate": {
+            "type": "object",
+            "description": "Customer retail price, immutable rate version and nano-USD per-million-token component rates.",
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "input_nano_usd_per_m": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "cached_read_nano_usd_per_m": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "cache_write_nano_usd_per_m": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "output_nano_usd_per_m": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "per_request_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              }
+            }
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "available",
+              "limited",
+              "unavailable",
+              "deprecated"
+            ],
+            "description": "Whether the model can be chosen for new requests."
+          },
           "metadata": {
             "type": "object"
           },
@@ -16651,6 +16780,438 @@
             ]
           }
         }
+      }
+    },
+    "ai.model-artifact": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model-artifact.v1.json",
+        "title": "AiModelArtifact",
+        "description": "ai.model-artifact@1: one pinned revision/variant/quantization of a model family. Identified by an exact id (`<org>/<model>[:<quant>]@<revision>`), with its weight SHA-256, tokenizer revision, license and provenance.",
+        "type": "object",
+        "required": [
+          "id",
+          "family",
+          "variant",
+          "quant",
+          "revision",
+          "sha256",
+          "license"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+(:[a-zA-Z0-9._-]+)?@[a-zA-Z0-9._-]+$",
+            "maxLength": 256,
+            "description": "Exact artifact id: `<org>/<model>[:<quant>]@<revision>`."
+          },
+          "family": {
+            "type": "string",
+            "description": "Underlying model family, e.g. `qwen3`."
+          },
+          "variant": {
+            "type": "string",
+            "enum": [
+              "original",
+              "abliterated",
+              "finetuned",
+              "merged",
+              "lora"
+            ],
+            "description": "How the weights were produced."
+          },
+          "quant": {
+            "type": "string",
+            "description": "Quantization label, e.g. `q4_k_m` or `fp16`."
+          },
+          "revision": {
+            "type": "string",
+            "description": "Artifact revision or commit hash."
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of the weight file or signed manifest."
+          },
+          "tokenizer_revision": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Tokenizer/chat-template revision used with this artifact."
+          },
+          "license": {
+            "type": "string",
+            "description": "SPDX license identifier or custom license name."
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Canonical download or provenance URL."
+          },
+          "context": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum context length in tokens."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai.inference-deployment": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/inference-deployment.v1.json",
+        "title": "AiInferenceDeployment",
+        "description": "ai.inference-deployment@1: a loaded inference deployment for a pinned artifact. Describes where it runs, its trust tier, commercial rights, health, limits and the rate card that prices its supply cost.",
+        "type": "object",
+        "required": [
+          "id",
+          "artifact_id",
+          "region",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "Deployment id, unique within OpenVibe.AI."
+          },
+          "artifact_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+(:[a-zA-Z0-9._-]+)?@[a-zA-Z0-9._-]+$",
+            "maxLength": 256,
+            "description": "Exact artifact id this deployment loads."
+          },
+          "region": {
+            "type": "string",
+            "description": "Deployment region or residency label."
+          },
+          "trust_tier": {
+            "type": "string",
+            "enum": [
+              "first_party",
+              "owner_node",
+              "approved_wholesale",
+              "unverified"
+            ],
+            "description": "Who operates the deployment and what data may reach it."
+          },
+          "operator": {
+            "type": "string",
+            "description": "Operator slug or `owner:<subject_id>` for a private node."
+          },
+          "host": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Internal host identifier; never exposed to untrusted callers."
+          },
+          "endpoint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Service endpoint for this deployment (internal or partner)."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "warming",
+              "ready",
+              "full",
+              "degraded",
+              "offline"
+            ],
+            "description": "Current load/health state."
+          },
+          "loaded_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "max_concurrency": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "context_tokens": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_output_tokens": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "supply_rate_card_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Reference to the supply rate card (platform.rate-card@1) that prices this deployment."
+          },
+          "provider_access": {
+            "type": "string",
+            "enum": [
+              "OWN_DEPLOYMENT",
+              "AUTHORIZED_WHOLESALE",
+              "CUSTOMER_BYOK",
+              "RESTRICTED",
+              "UNVERIFIED"
+            ],
+            "description": "Commercial eligibility for paid managed routes."
+          },
+          "commercial_rights": {
+            "type": "string",
+            "enum": [
+              "OWN_DEPLOYMENT",
+              "AUTHORIZED_WHOLESALE",
+              "CUSTOMER_BYOK",
+              "RESTRICTED",
+              "UNVERIFIED"
+            ],
+            "description": "Resale authority recorded for this deployment."
+          },
+          "privacy_policy": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Retention/zero-retention policy label."
+          },
+          "health": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "healthy": {
+                "type": "boolean"
+              },
+              "last_check_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai.route-explain": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/route-explain.v1.json",
+        "title": "AiRouteExplain",
+        "description": "ai.route-explain@1: why OpenVibe.AI chose a model/deployment for a request. Lists the chosen candidate, rejected candidates with reasons, the objective (policy), the pre-flight cost estimate and the final actual cost. Money fields are integer nano-USD, as strings.",
+        "type": "object",
+        "required": [
+          "chosen",
+          "rejected",
+          "objective",
+          "estimate"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "chosen": {
+            "type": "string",
+            "description": "Exact id of the model/deployment that answered."
+          },
+          "rejected": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "reason"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Exact id of the rejected candidate."
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Human-readable exclusion reason, without secrets or internal host IPs."
+                }
+              }
+            }
+          },
+          "objective": {
+            "type": "string",
+            "enum": [
+              "cheapest",
+              "balanced",
+              "fastest",
+              "best",
+              "private",
+              "exact"
+            ],
+            "description": "Routing policy used for this request."
+          },
+          "estimate": {
+            "type": "object",
+            "required": [
+              "charge_nano_usd"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "charge_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cached_read_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "actual": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "charge_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              },
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cached_read_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "policy": {
+            "type": "string",
+            "description": "Name of the policy/profile that produced the choice."
+          },
+          "fallback_reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "If the first choice could not be used, why the chosen deployment was selected instead."
+          }
+        }
+      }
+    },
+    "ai.model-list": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model-list.v1.json",
+        "title": "AiModelList",
+        "description": "ai.model-list@1: paginated list of model catalog entries returned by GET /v1/models.",
+        "type": "object",
+        "required": [
+          "models",
+          "count"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "model.v1.json"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of models in this response."
+          },
+          "cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Opaque cursor for the next page."
+          }
+        }
+      }
+    },
+    "ai.model-read-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model-read-result.v1.json",
+        "title": "AiModelReadResult",
+        "description": "ai.model-read-result@1: response from GET /v1/models (a list) or GET /v1/models/:id (a single model).",
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "model-list.v1.json"
+          },
+          {
+            "$ref": "model.v1.json"
+          }
+        ]
       }
     },
     "ai.provider-manage-request": {
@@ -26802,6 +27363,623 @@
                 "$ref": "../platform/usage-sample.v1.json"
               }
             }
+          }
+        }
+      }
+    },
+    "billing.inference-hold": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-hold.v1.json",
+        "title": "BillingInferenceHold",
+        "description": "billing.inference-hold@1: a reservation against an account's available inference credit. Holds are created before a request runs, may be extended while streaming, and are settled or released exactly once. Money fields are integer nano-USD, as strings.",
+        "type": "object",
+        "required": [
+          "hold_id",
+          "subject",
+          "project_id",
+          "held_nano_usd",
+          "available_nano_usd",
+          "lease_expires_at"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "hold_id": {
+            "type": "string",
+            "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "ULID hold id."
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "credential_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^cred_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Developer credential the hold is scoped to, if any."
+          },
+          "held_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "available_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "max_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "rate_version": {
+            "type": "string",
+            "description": "Immutable retail rate-card version the hold was priced against."
+          },
+          "request_fingerprint": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "Opaque fingerprint used to dedupe the same idempotency key."
+          },
+          "lease_expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "extended",
+              "settled",
+              "released",
+              "expired"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "billing.inference-settlement": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-settlement.v1.json",
+        "title": "BillingInferenceSettlement",
+        "description": "billing.inference-settlement@1: the final charge for one inference hold. Carries the measured usage, the retail rate version applied, the supply-side cost, whether the route was BYOK, and any attempts/fallbacks. Money fields are integer nano-USD, as strings.",
+        "type": "object",
+        "required": [
+          "settlement_id",
+          "hold_id",
+          "subject",
+          "project_id",
+          "charge_nano_usd",
+          "released_nano_usd",
+          "journal_id"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          },
+          "token-usage": {
+            "type": "object",
+            "required": [
+              "input_tokens",
+              "cached_read_tokens",
+              "cache_write_tokens",
+              "output_tokens"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cached_read_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "rate-versioned": {
+            "type": "object",
+            "required": [
+              "version",
+              "nano_usd_per_m",
+              "per_request_nano_usd"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "nano_usd_per_m": {
+                "type": "object",
+                "required": [
+                  "input",
+                  "cached_read",
+                  "cache_write",
+                  "output"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "input": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  },
+                  "cached_read": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  },
+                  "cache_write": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  },
+                  "output": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  }
+                }
+              },
+              "per_request_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              }
+            }
+          }
+        },
+        "properties": {
+          "settlement_id": {
+            "type": "string",
+            "pattern": "^stl_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "hold_id": {
+            "type": "string",
+            "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "charge_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "released_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "journal_id": {
+            "type": "string",
+            "pattern": "^txn_"
+          },
+          "usage": {
+            "$ref": "#/$defs/token-usage"
+          },
+          "retail": {
+            "$ref": "#/$defs/rate-versioned"
+          },
+          "supply_cost_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "byok": {
+            "type": "boolean",
+            "description": "True when the caller supplied their own provider key; retail charge is 0."
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "deployment_id",
+                "started_at",
+                "ended_at"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "deployment_id": {
+                  "type": "string"
+                },
+                "provider_access": {
+                  "type": "string",
+                  "enum": [
+                    "OWN_DEPLOYMENT",
+                    "AUTHORIZED_WHOLESALE",
+                    "CUSTOMER_BYOK",
+                    "RESTRICTED",
+                    "UNVERIFIED"
+                  ]
+                },
+                "started_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "ended_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "error_code": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "billing.inference-hold-create-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-hold-create-request.v1.json",
+        "title": "BillingInferenceHoldCreateRequest",
+        "description": "billing.inference-hold-create-request@1: body of POST /internal/inference/holds. Reserves inference credit up to max_nano_usd against a (subject, project_id) account, priced at the given immutable rate version.",
+        "type": "object",
+        "required": [
+          "idempotency_key",
+          "subject",
+          "project_id",
+          "max_nano_usd",
+          "rate_version",
+          "request_fingerprint"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{8,128}$"
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "project_id": {
+            "type": "string",
+            "pattern": "^prj_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "credential_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^cred_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "max_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "rate_version": {
+            "type": "string"
+          },
+          "request_fingerprint": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        }
+      }
+    },
+    "billing.inference-hold-create-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-hold-create-result.v1.json",
+        "title": "BillingInferenceHoldCreateResult",
+        "description": "billing.inference-hold-create-result@1: response from POST /internal/inference/holds. Returns the created or replayed hold.",
+        "type": "object",
+        "required": [
+          "hold_id",
+          "held_nano_usd",
+          "available_nano_usd",
+          "lease_expires_at"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "hold_id": {
+            "type": "string",
+            "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "held_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "available_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "lease_expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "billing.inference-hold-extend-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-hold-extend-request.v1.json",
+        "title": "BillingInferenceHoldExtendRequest",
+        "description": "billing.inference-hold-extend-request@1: body of POST /internal/inference/holds/:id/extend. Grows an active hold by add_nano_usd.",
+        "type": "object",
+        "required": [
+          "add_nano_usd"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "add_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          }
+        }
+      }
+    },
+    "billing.inference-hold-settle-request": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-hold-settle-request.v1.json",
+        "title": "BillingInferenceHoldSettleRequest",
+        "description": "billing.inference-hold-settle-request@1: body of POST /internal/inference/holds/:id/settle. Idempotent: the same key and fingerprint return the same settlement.",
+        "type": "object",
+        "required": [
+          "idempotency_key",
+          "usage",
+          "retail",
+          "supply_cost_nano_usd",
+          "byok",
+          "attempts"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{8,128}$"
+          },
+          "usage": {
+            "type": "object",
+            "required": [
+              "input_tokens",
+              "cached_read_tokens",
+              "cache_write_tokens",
+              "output_tokens"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cached_read_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_write_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "retail": {
+            "type": "object",
+            "required": [
+              "version",
+              "nano_usd_per_m",
+              "per_request_nano_usd"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "nano_usd_per_m": {
+                "type": "object",
+                "required": [
+                  "input",
+                  "cached_read",
+                  "cache_write",
+                  "output"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "input": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  },
+                  "cached_read": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  },
+                  "cache_write": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  },
+                  "output": {
+                    "$ref": "#/$defs/money-nano-usd"
+                  }
+                }
+              },
+              "per_request_nano_usd": {
+                "$ref": "#/$defs/money-nano-usd"
+              }
+            }
+          },
+          "supply_cost_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "byok": {
+            "type": "boolean"
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "deployment_id",
+                "started_at",
+                "ended_at"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "deployment_id": {
+                  "type": "string"
+                },
+                "provider_access": {
+                  "type": "string",
+                  "enum": [
+                    "OWN_DEPLOYMENT",
+                    "AUTHORIZED_WHOLESALE",
+                    "CUSTOMER_BYOK",
+                    "RESTRICTED",
+                    "UNVERIFIED"
+                  ]
+                },
+                "started_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "ended_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "error_code": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "billing.inference-hold-settle-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-hold-settle-result.v1.json",
+        "title": "BillingInferenceHoldSettleResult",
+        "description": "billing.inference-hold-settle-result@1: response from POST /internal/inference/holds/:id/settle.",
+        "type": "object",
+        "required": [
+          "charge_nano_usd",
+          "released_nano_usd",
+          "journal_id"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "charge_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "released_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
+          },
+          "journal_id": {
+            "type": "string",
+            "pattern": "^txn_"
+          }
+        }
+      }
+    },
+    "billing.inference-hold-release-result": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/inference-hold-release-result.v1.json",
+        "title": "BillingInferenceHoldReleaseResult",
+        "description": "billing.inference-hold-release-result@1: response from POST /internal/inference/holds/:id/release.",
+        "type": "object",
+        "required": [
+          "hold_id",
+          "released_nano_usd"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "money-nano-usd": {
+            "type": "string",
+            "pattern": "^[0-9]{1,19}$",
+            "description": "Integer nano-USD (1e-9 USD), stored as a string."
+          }
+        },
+        "properties": {
+          "hold_id": {
+            "type": "string",
+            "pattern": "^hld_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "released_nano_usd": {
+            "$ref": "#/$defs/money-nano-usd"
           }
         }
       }
@@ -69055,14 +70233,14 @@
       }
     },
     "platform.rate-card": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/platform/rate-card.v1.json",
         "title": "RateCard",
-        "description": "One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). Changed only by review; never written by an AI on its own.",
+        "description": "One provider price with its free allowance, in the provider's real billing unit, with effective dates and where it was checked (roadmap WS-Z3 task 5). v1.1 adds optional `side` (supply|retail), `version` and `effective_to`; existing documents stay valid. Changed only by review; never written by an AI on its own.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -69086,6 +70264,18 @@
           },
           "adapter": {
             "type": "string"
+          },
+          "side": {
+            "type": "string",
+            "enum": [
+              "supply",
+              "retail"
+            ],
+            "description": "Whether this card prices what OpenVibe pays (supply) or what the customer pays (retail)."
+          },
+          "version": {
+            "type": "string",
+            "description": "Immutable version of this card; settlements reference it so historical prices survive updates."
           },
           "metric": {
             "type": "string",
@@ -69117,6 +70307,11 @@
           "effective_from": {
             "type": "string",
             "format": "date"
+          },
+          "effective_to": {
+            "type": "string",
+            "format": "date",
+            "description": "Inclusive end date; null or absent means open-ended."
           },
           "effective_until": {
             "type": "string",

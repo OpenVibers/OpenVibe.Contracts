@@ -1,0 +1,21 @@
+{
+  "id": "billing.inference.hold.settle",
+  "version": "1.0",
+  "owner": "billing",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Settle an inference hold (D2): POST /internal/inference/holds/:id/settle. Records measured usage and the immutable retail rate version, charges the project account and releases the unused hold. Idempotent: replays return the same settlement.",
+  "inputSchema": "billing.inference-hold-settle-request@1",
+  "outputSchema": "billing.inference-hold-settle-result@1",
+  "permissions": [
+    "billing:inference:settle"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "billing-inference",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/inference/holds/:id/settle"
+  ]
+}

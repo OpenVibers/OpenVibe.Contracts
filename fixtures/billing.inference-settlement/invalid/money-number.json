@@ -1,0 +1,9 @@
+{
+  "settlement_id": "stl_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "hold_id": "hld_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "project_id": "prj_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "charge_nano_usd": 18000,
+  "released_nano_usd": "82000000",
+  "journal_id": "txn_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+}

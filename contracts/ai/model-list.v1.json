@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/model-list.v1.json",
+  "title": "AiModelList",
+  "description": "ai.model-list@1: paginated list of model catalog entries returned by GET /v1/models.",
+  "type": "object",
+  "required": [
+    "models",
+    "count"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "model.v1.json"
+      }
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of models in this response."
+    },
+    "cursor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Opaque cursor for the next page."
+    }
+  }
+}
