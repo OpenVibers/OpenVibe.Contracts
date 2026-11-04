@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/watch.rate.changed.v1.json",
+  "title": "WatchRateChangedPayload",
+  "description": "watch.rate.changed v1 (OpenVibe.Watch server/provider-rates.js changeEvent(); plan P6, flag WATCH_PROVIDER_RATES off by default): a provider's published price document stated a different value for one model and token class than Watch last observed. It is EVIDENCE, not a rate card: Watch writes no billable price, and a person (never a service or an agent) must approve or reject the change; the decision is dated evidence for OpenVibe.AI's catalog operator. Money is integer nano-USD per million tokens as a decimal string (D1: never a float). Envelope: subject { type: provider-rate, id: <source_key> }, visibility internal, priority important, source and actor service:watch.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["change_id", "source_key", "provider", "model", "token_class", "from_nano_usd_per_m", "to_nano_usd_per_m", "currency", "region", "effective_date", "source_url", "fetched_at", "approval_required"],
+  "properties": {
+    "change_id": { "type": "string", "pattern": "^prc_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "source_key": { "type": "string", "description": "The source Watch fetched: the provider's key in its registry (deepinfra, featherless)." },
+    "provider": { "type": "string", "description": "The provider whose document stated the rate (deepinfra, featherless)." },
+    "model": { "type": "string", "description": "The model id exactly as the provider's document stated it." },
+    "token_class": { "type": "string", "enum": ["input", "cached_read", "cache_write", "output"], "description": "The D1 token classes." },
+    "from_nano_usd_per_m": { "type": ["string", "null"], "pattern": "^[0-9]{1,19}$", "description": "The value Watch last observed, as an integer nano-USD per million tokens string; null for a first price." },
+    "to_nano_usd_per_m": { "type": "string", "pattern": "^[0-9]{1,19}$", "description": "The value the document states now, as an integer nano-USD per million tokens string." },
+    "currency": { "type": "string", "description": "The document's currency; USD for both sources today." },
+    "region": { "type": "string", "description": "The document's scope; global for both sources today." },
+    "effective_date": { "type": "string", "format": "date", "description": "The first day this value was observed (YYYY-MM-DD); an unchanged value keeps its first date." },
+    "source_url": { "type": "string", "format": "uri", "description": "The official document fetched; never a private or authenticated URL." },
+    "fetched_at": { "type": "string", "format": "date-time" },
+    "approval_required": { "type": "boolean", "description": "true for a change: it waits for a person's decision." }
+  }
+}

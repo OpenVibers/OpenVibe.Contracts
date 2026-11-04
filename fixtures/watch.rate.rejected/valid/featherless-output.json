@@ -1,0 +1,19 @@
+{
+  "change_id": "prc_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "source_key": "featherless",
+  "provider": "featherless",
+  "model": "Qwen/Qwen3-8B",
+  "token_class": "output",
+  "from_nano_usd_per_m": "75000000",
+  "to_nano_usd_per_m": "80000000",
+  "currency": "USD",
+  "region": "global",
+  "effective_date": "2026-11-03",
+  "source_url": "https://api.featherless.ai/v1/models",
+  "fetched_at": "2026-11-03T10:00:00.000Z",
+  "approval_required": false,
+  "state": "rejected",
+  "decided_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "decided_at": "2026-11-03T12:30:00.000Z",
+  "applied": false
+}

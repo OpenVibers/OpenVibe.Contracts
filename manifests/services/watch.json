@@ -30,7 +30,10 @@
     "watch.watch.removed",
     "watch.observation.recorded",
     "watch.watch.triggered",
-    "watch.check.failed"
+    "watch.check.failed",
+    "watch.rate.changed",
+    "watch.rate.approved",
+    "watch.rate.rejected"
   ],
   "eventsConsumed": [
     "network.account.export_requested",

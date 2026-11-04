@@ -4592,6 +4592,33 @@
       "status": "planned"
     },
     {
+      "id": "watch.rate.changed",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "events/payloads/watch.rate.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "watch.rate.approved",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "events/payloads/watch.rate.approved.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "watch.rate.rejected",
+      "version": "1.0.0",
+      "owner": "watch",
+      "schema": "events/payloads/watch.rate.rejected.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "games.player.joined",
       "version": "1.0.0",
       "owner": "games",

@@ -196160,6 +196160,185 @@ export interface WatchCheckFailedPayload {
   consecutive_failures: number;
 }
 
+/** watch.rate.changed@1.0.0 (owner: watch) */
+/**
+ * watch.rate.changed v1 (OpenVibe.Watch server/provider-rates.js changeEvent(); plan P6, flag WATCH_PROVIDER_RATES off by default): a provider's published price document stated a different value for one model and token class than Watch last observed. It is EVIDENCE, not a rate card: Watch writes no billable price, and a person (never a service or an agent) must approve or reject the change; the decision is dated evidence for OpenVibe.AI's catalog operator. Money is integer nano-USD per million tokens as a decimal string (D1: never a float). Envelope: subject { type: provider-rate, id: <source_key> }, visibility internal, priority important, source and actor service:watch.
+ */
+export interface WatchRateChangedPayload {
+  change_id: string;
+  /**
+   * The source Watch fetched: the provider's key in its registry (deepinfra, featherless).
+   */
+  source_key: string;
+  /**
+   * The provider whose document stated the rate (deepinfra, featherless).
+   */
+  provider: string;
+  /**
+   * The model id exactly as the provider's document stated it.
+   */
+  model: string;
+  /**
+   * The D1 token classes.
+   */
+  token_class: "input" | "cached_read" | "cache_write" | "output";
+  /**
+   * The value Watch last observed, as an integer nano-USD per million tokens string; null for a first price.
+   */
+  from_nano_usd_per_m: string | null;
+  /**
+   * The value the document states now, as an integer nano-USD per million tokens string.
+   */
+  to_nano_usd_per_m: string;
+  /**
+   * The document's currency; USD for both sources today.
+   */
+  currency: string;
+  /**
+   * The document's scope; global for both sources today.
+   */
+  region: string;
+  /**
+   * The first day this value was observed (YYYY-MM-DD); an unchanged value keeps its first date.
+   */
+  effective_date: string;
+  /**
+   * The official document fetched; never a private or authenticated URL.
+   */
+  source_url: string;
+  fetched_at: string;
+  /**
+   * true for a change: it waits for a person's decision.
+   */
+  approval_required: boolean;
+}
+
+/** watch.rate.approved@1.0.0 (owner: watch) */
+/**
+ * watch.rate.approved v1 (OpenVibe.Watch server/provider-rates.js decide(); plan P6, flag WATCH_PROVIDER_RATES off by default): a person approved a pending provider-rate change. The payload is the change (watch.rate.changed@1) plus the decision. It is EVIDENCE, not a billable rate: Watch writes no rate card, applied is always false, and OpenVibe.AI's catalog operator alone changes the supply rate card through AI's own path. Money is integer nano-USD per million tokens as a decimal string (D1: never a float). Envelope: subject { type: provider-rate, id: <source_key> }, visibility internal, priority important, source and actor service:watch; actor is the service, and decided_by names the person.
+ */
+export interface WatchRateApprovedPayload {
+  change_id: string;
+  /**
+   * The source Watch fetched: the provider's key in its registry (deepinfra, featherless).
+   */
+  source_key: string;
+  /**
+   * The provider whose document stated the rate (deepinfra, featherless).
+   */
+  provider: string;
+  /**
+   * The model id exactly as the provider's document stated it.
+   */
+  model: string;
+  /**
+   * The D1 token classes.
+   */
+  token_class: "input" | "cached_read" | "cache_write" | "output";
+  /**
+   * The value Watch last observed, as an integer nano-USD per million tokens string; null for a first price.
+   */
+  from_nano_usd_per_m: string | null;
+  /**
+   * The value the document stated, as an integer nano-USD per million tokens string.
+   */
+  to_nano_usd_per_m: string;
+  /**
+   * The document's currency; USD for both sources today.
+   */
+  currency: string;
+  /**
+   * The document's scope; global for both sources today.
+   */
+  region: string;
+  /**
+   * The first day this value was observed (YYYY-MM-DD).
+   */
+  effective_date: string;
+  /**
+   * The official document fetched.
+   */
+  source_url: string;
+  fetched_at: string;
+  /**
+   * false: the decision is made.
+   */
+  approval_required: false;
+  state: "approved";
+  /**
+   * The person who approved it. A service or an agent may not; Watch refuses those with watch.rate_person_only.
+   */
+  decided_by: string;
+  decided_at: string;
+  /**
+   * Always false: an approval is evidence and never writes a billable rate.
+   */
+  applied: false;
+}
+
+/** watch.rate.rejected@1.0.0 (owner: watch) */
+/**
+ * watch.rate.rejected v1 (OpenVibe.Watch server/provider-rates.js decide(); plan P6, flag WATCH_PROVIDER_RATES off by default): a person rejected a pending provider-rate change. The payload is the change (watch.rate.changed@1) plus the decision. Rejecting a change writes no rate, and applied is always false. Money is integer nano-USD per million tokens as a decimal string (D1: never a float). Envelope: subject { type: provider-rate, id: <source_key> }, visibility internal, priority important, source and actor service:watch; actor is the service, and decided_by names the person.
+ */
+export interface WatchRateRejectedPayload {
+  change_id: string;
+  /**
+   * The source Watch fetched: the provider's key in its registry (deepinfra, featherless).
+   */
+  source_key: string;
+  /**
+   * The provider whose document stated the rate (deepinfra, featherless).
+   */
+  provider: string;
+  /**
+   * The model id exactly as the provider's document stated it.
+   */
+  model: string;
+  /**
+   * The D1 token classes.
+   */
+  token_class: "input" | "cached_read" | "cache_write" | "output";
+  /**
+   * The value Watch last observed, as an integer nano-USD per million tokens string; null for a first price.
+   */
+  from_nano_usd_per_m: string | null;
+  /**
+   * The value the document stated, as an integer nano-USD per million tokens string.
+   */
+  to_nano_usd_per_m: string;
+  /**
+   * The document's currency; USD for both sources today.
+   */
+  currency: string;
+  /**
+   * The document's scope; global for both sources today.
+   */
+  region: string;
+  /**
+   * The first day this value was observed (YYYY-MM-DD).
+   */
+  effective_date: string;
+  /**
+   * The official document fetched.
+   */
+  source_url: string;
+  fetched_at: string;
+  /**
+   * false: the decision is made.
+   */
+  approval_required: false;
+  state: "rejected";
+  /**
+   * The person who rejected it. A service or an agent may not; Watch refuses those with watch.rate_person_only.
+   */
+  decided_by: string;
+  decided_at: string;
+  /**
+   * Always false: a decision never writes a billable rate.
+   */
+  applied: false;
+}
+
 /** games.player.joined@1.0.0 (owner: games) */
 /**
  * games.player.joined v1 (OpenVibe.Games apps/server/src/platform/gameEvents.ts playerJoinedEvent, via GameEventRecorder.recordJoin from game/gameServer.ts handleHello). A character entered the world: written to Games' event_outbox in a transaction of its own once the session exists and the welcome was sent (a new character's row is first written by its next save). restored is true when the character already existed in the database, false for a new one. Only emitted while Events publishing is configured. No position, appearance, inventory, rank or connection data. Envelope: subject { type: player, id: <player.id> }, visibility subject when the player has a Network subject and internal otherwise, priority low, actor user:<usr_...> or guest:<gst_...> from player.subject, else service:games. No consumer yet.
