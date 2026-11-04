@@ -14,6 +14,12 @@
     statements are read from Billing.
   - Money is integer nano-USD as decimal strings (D1); a number amount and a subject field are invalid fixtures.
   - Billing's manifest lists the event in `eventsProduced`; Report's lists it in `eventsConsumed`.
+- **`sandbox` on Credits holds: `billing.credit-hold@1` and `billing.credit-hold-create-request@1`** (D10, additive).
+  - An optional boolean `sandbox` (default false) says the hold draws on that person's sandbox credit for the project
+    (account kind `usd_credit_sandbox`, owner `subject:project`), never on real Credits; a real hold never draws on
+    sandbox credit.
+  - `billing.credit-sandbox-grant-request@1` now says its grants land in that sandbox account.
+  - Valid fixtures cover `sandbox: true`; `sandbox: "yes"` is invalid.
 
 ## 0.286.0 — 2026-11-04
 

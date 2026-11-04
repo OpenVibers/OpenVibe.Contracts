@@ -53,6 +53,11 @@
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]{0,39}$",
       "description": "Which metered service spends the credit (D9): ai, run, ... Defaults to ai."
+    },
+    "sandbox": {
+      "type": "boolean",
+      "default": false,
+      "description": "D10. A sandbox caller's hold draws on that person's sandbox credit for the project (account kind usd_credit_sandbox, owner subject:project), never on real Credits, and a real hold never draws on sandbox credit. Sandbox grants (billing.credit-sandbox-grant-request@1) land in that sandbox account. Optional; defaults to false."
     }
   }
 }

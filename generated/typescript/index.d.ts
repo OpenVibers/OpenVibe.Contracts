@@ -164699,6 +164699,10 @@ export interface BillingCreditHold {
    * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
    */
   service?: string;
+  /**
+   * D10. A sandbox caller's hold draws on that person's sandbox credit for the project (account kind usd_credit_sandbox, owner subject:project), never on real Credits, and a real hold never draws on sandbox credit. Sandbox grants (billing.credit-sandbox-grant-request@1) land in that sandbox account. Optional; defaults to false.
+   */
+  sandbox?: boolean;
 }
 
 /** billing.credit-settlement@1.0.0 (owner: billing) */
@@ -164791,6 +164795,10 @@ export interface BillingCreditHoldCreateRequest {
    * Which metered service spends the credit (D9): ai, run, ... Defaults to ai.
    */
   service?: string;
+  /**
+   * D10. A sandbox caller's hold draws on that person's sandbox credit for the project (account kind usd_credit_sandbox, owner subject:project), never on real Credits, and a real hold never draws on sandbox credit. Sandbox grants (billing.credit-sandbox-grant-request@1) land in that sandbox account. Optional; defaults to false.
+   */
+  sandbox?: boolean;
 }
 
 /** billing.credit-hold-create-result@1.0.0 (owner: billing) */
@@ -285318,7 +285326,7 @@ export interface TodayAgenda {
 
 /** billing.credit-sandbox-grant-request@1.0.0 (owner: billing) */
 /**
- * billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9).
+ * billing.credit-sandbox-grant-request@1: POST /internal/credits/sandbox/grants, synthetic credit for tests and staging. Billing answers only when BILLING_CREDITS_SANDBOX=1; the grant is a test transaction (D9). D10: the grant lands in the subject's sandbox credit account for the project (account kind usd_credit_sandbox, owner subject:project), and only a sandbox hold (billing.credit-hold-create-request@1 sandbox: true) draws on it; real Credits are never touched.
  */
 export interface BillingCreditSandboxGrantRequest {
   subject: SubjectRef;
