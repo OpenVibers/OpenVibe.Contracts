@@ -1,6 +1,29 @@
 # Changelog
 
 
+## 0.288.0 — 2026-11-04
+
+- **Configuration contracts (AI Exchange D11, S1), built on openvibe-shared/config:
+  `common.config-namespace@1`, `common.config-change@1` and `common.config-secret-put@1`** (internal).
+  - `common.config-namespace@1` is the shape `openvibe-shared/config`'s `summary()` returns (`service`, `namespace`,
+    `revision`, `values`, `classification`, `active`, `last_known_good`), plus `sealed`, `pins` and `schema`: whether
+    a KEK seals secret values, the keys pinned by their `x-env` variable, and the namespace's JSON Schema so a client
+    can draw the form. The annotations `title`, `description`, `x-group`, `x-env`, `x-danger`, `x-bind` and `x-unit`
+    (`nano_usd`, `ms`, `bps`) are allowed.
+  - A secret-class value in `values` is a marker (`redacted: true`, a keyed 64-hex `fingerprint`, and the optional
+    four-character `hint`, `set_at`, `set_by` and `bound_to`); a marker that carries `value` is invalid, so a
+    summary never carries a secret.
+  - `common.config-change@1` is `{ values, reason, merge?, unset? }`; a secret value is refused by the store
+    (`422 config.secret_write_only`) and is written only through the secret route.
+  - `common.config-secret-put@1` is `{ value, reason }`; the answer is the marker.
+- **Nine internal capabilities, one per service:** `ai`, `billing`, `services`, `watch`, `bench`, `report`, `host`,
+  `codes` and `actor` each gain `<svc>.config.manage` (owner that service, active, internal, never grantable to apps),
+  implemented by `GET /internal/config`, `GET|POST /internal/config/:namespace` and
+  `PUT|DELETE /internal/config/:namespace/secrets/:key`. Only Network's admin proxy, acting for the owner, holds them;
+  Network uses its own admin config routes.
+- Contracts keeps no default-grants list: Network's seeded default grants live in OpenVibe.Network, so granting
+  these nine to the network service is that repository's change.
+
 ## 0.287.0 — 2026-11-04
 
 - **`billing.credit.settled@1`** (AI Exchange money, D1 and D9).

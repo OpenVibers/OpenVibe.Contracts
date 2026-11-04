@@ -1,0 +1,7 @@
+{
+  "values": {
+    "site_name": "OpenVibe.Live"
+  },
+  "reason": "Remove the old banner",
+  "unset": "legacy_banner"
+}

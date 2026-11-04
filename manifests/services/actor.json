@@ -27,7 +27,8 @@
     "actor.actions.read",
     "actor.approval.decide",
     "actor.model.manage",
-    "actor.a2a.task"
+    "actor.a2a.task",
+    "actor.config.manage"
   ],
   "eventsProduced": [],
   "eventsConsumed": [

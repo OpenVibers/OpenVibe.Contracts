@@ -31,7 +31,8 @@
     "bench.eval.manage",
     "bench.benchmark.write",
     "bench.run.publish",
-    "bench.run.read"
+    "bench.run.read",
+    "bench.config.manage"
   ],
   "eventsProduced": [
     "bench.round.finished",

@@ -21,7 +21,8 @@
     "watch.observation.read",
     "watch.check.run",
     "watch.resource.read",
-    "watch.resource.control"
+    "watch.resource.control",
+    "watch.config.manage"
   ],
   "eventsProduced": [
     "watch.watch.created",

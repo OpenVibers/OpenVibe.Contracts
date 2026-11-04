@@ -1,0 +1,12 @@
+{
+  "values": {
+    "max_bitrate_kbps": 7000,
+    "youtube_api_key": {
+      "redacted": true,
+      "fingerprint": "c61d1b1293d59c54c56624f6d6161b8af976449db60f230ed977dcf3ba4bd31b"
+    }
+  },
+  "reason": "Raise the bitrate cap for the tournament",
+  "merge": true,
+  "unset": ["legacy_banner"]
+}

@@ -210,6 +210,33 @@
       "status": "active"
     },
     {
+      "id": "common.config-namespace",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "common/config-namespace.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "common.config-change",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "common/config-change.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "common.config-secret-put",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "common/config-secret-put.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "common.content-labels",
       "version": "1.0.0",
       "owner": "contracts",

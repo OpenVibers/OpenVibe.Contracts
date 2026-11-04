@@ -95,7 +95,8 @@
     "neighbourhood": "make"
   },
   "capabilities": [
-    "host.catalog.manage"
+    "host.catalog.manage",
+    "host.config.manage"
   ],
   "eventsProduced": [
     "host.release.published",

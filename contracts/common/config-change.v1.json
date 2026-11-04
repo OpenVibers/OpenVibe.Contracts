@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/config-change.v1.json",
+  "title": "ConfigChange",
+  "description": "common.config-change@1 (AI Exchange D11): body of POST /internal/config/:namespace on a service's openvibe-shared/config admin routes. It proposes a new revision of the namespace and activates it (the store validates against the namespace schema, applies env pins and calls onActivate). `merge: true` starts from the active values; otherwise `values` is the whole new set. `unset` removes keys. A secret-class key's value is never sent here: it is 422 config.secret_write_only; use common.config-secret-put@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["values", "reason"],
+  "properties": {
+    "values": {
+      "type": "object",
+      "description": "The new values, one member per key. The store validates them against the namespace schema; a secret-class value here is refused.",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "additionalProperties": {
+        "description": "Any JSON value; a redaction marker keeps the value it stands for."
+      }
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Why the change is made; it is the revision's reason in the history."
+    },
+    "merge": {
+      "type": "boolean",
+      "default": false,
+      "description": "Merge into the active values instead of replacing them."
+    },
+    "unset": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "description": "Keys to remove from the new revision.",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.:-]{0,127}$"
+      }
+    }
+  }
+}

@@ -5,29 +5,29 @@
       "service": "actor",
       "name": "OpenVibe.Actor",
       "origin": "https://openvibe.actor",
-      "operations": 31,
-      "capabilities": 12
+      "operations": 36,
+      "capabilities": 13
     },
     {
       "service": "ai",
       "name": "OpenVibe.AI",
       "origin": "https://ai.openvibe.services",
-      "operations": 60,
-      "capabilities": 14
+      "operations": 65,
+      "capabilities": 15
     },
     {
       "service": "bench",
       "name": "OpenVibe.Bench",
       "origin": "https://bench.openvibe.services",
-      "operations": 21,
-      "capabilities": 12
+      "operations": 26,
+      "capabilities": 13
     },
     {
       "service": "billing",
       "name": "OpenVibe.Billing",
       "origin": "https://billing.openvibe.network",
-      "operations": 38,
-      "capabilities": 16
+      "operations": 43,
+      "capabilities": 17
     },
     {
       "service": "blog",
@@ -54,8 +54,8 @@
       "service": "codes",
       "name": "OpenVibe.Codes",
       "origin": "https://openvibe.codes",
-      "operations": 4,
-      "capabilities": 4
+      "operations": 9,
+      "capabilities": 5
     },
     {
       "service": "community",
@@ -110,8 +110,8 @@
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",
-      "operations": 6,
-      "capabilities": 1
+      "operations": 11,
+      "capabilities": 2
     },
     {
       "service": "inventory",
@@ -180,8 +180,8 @@
       "service": "report",
       "name": "OpenVibe.Report",
       "origin": "https://openvibe.report",
-      "operations": 1,
-      "capabilities": 1
+      "operations": 6,
+      "capabilities": 2
     },
     {
       "service": "reviews",
@@ -208,8 +208,8 @@
       "service": "services",
       "name": "OpenVibe.Services",
       "origin": "https://openvibe.services",
-      "operations": 10,
-      "capabilities": 4
+      "operations": 15,
+      "capabilities": 5
     },
     {
       "service": "sources",
@@ -271,8 +271,8 @@
       "service": "watch",
       "name": "OpenVibe.Watch",
       "origin": "https://openvibe.watch",
-      "operations": 13,
-      "capabilities": 6
+      "operations": 18,
+      "capabilities": 7
     },
     {
       "service": "wiki",

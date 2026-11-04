@@ -1,0 +1,12 @@
+{
+  "service": "ai",
+  "namespace": "ai.exchange",
+  "revision": null,
+  "values": {},
+  "classification": {},
+  "sealed": false,
+  "pins": [],
+  "schema": null,
+  "active": null,
+  "last_known_good": null
+}
