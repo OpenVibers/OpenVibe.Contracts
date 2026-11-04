@@ -1,0 +1,15 @@
+{
+  "change_id": "prc_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "source_key": "deepinfra",
+  "provider": "deepinfra",
+  "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+  "token_class": "input",
+  "from_nano_usd_per_m": "70000000",
+  "to_nano_usd_per_m": "90000000",
+  "currency": "USD",
+  "region": "global",
+  "effective_date": "2026-11-03",
+  "source_url": "https://api.deepinfra.com/models/list",
+  "fetched_at": "2026-11-03T09:15:00.000Z",
+  "approval_required": true
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/watch.rate.approved.v1.json",
+  "title": "WatchRateApprovedPayload",
+  "description": "watch.rate.approved v1 (OpenVibe.Watch server/provider-rates.js decide(); plan P6, flag WATCH_PROVIDER_RATES off by default): a person approved a pending provider-rate change. The payload is the change (watch.rate.changed@1) plus the decision. It is EVIDENCE, not a billable rate: Watch writes no rate card, applied is always false, and OpenVibe.AI's catalog operator alone changes the supply rate card through AI's own path. Money is integer nano-USD per million tokens as a decimal string (D1: never a float). Envelope: subject { type: provider-rate, id: <source_key> }, visibility internal, priority important, source and actor service:watch; actor is the service, and decided_by names the person.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["change_id", "source_key", "provider", "model", "token_class", "from_nano_usd_per_m", "to_nano_usd_per_m", "currency", "region", "effective_date", "source_url", "fetched_at", "approval_required", "state", "decided_by", "decided_at", "applied"],
+  "properties": {
+    "change_id": { "type": "string", "pattern": "^prc_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "source_key": { "type": "string", "description": "The source Watch fetched: the provider's key in its registry (deepinfra, featherless)." },
+    "provider": { "type": "string", "description": "The provider whose document stated the rate (deepinfra, featherless)." },
+    "model": { "type": "string", "description": "The model id exactly as the provider's document stated it." },
+    "token_class": { "type": "string", "enum": ["input", "cached_read", "cache_write", "output"], "description": "The D1 token classes." },
+    "from_nano_usd_per_m": { "type": ["string", "null"], "pattern": "^[0-9]{1,19}$", "description": "The value Watch last observed, as an integer nano-USD per million tokens string; null for a first price." },
+    "to_nano_usd_per_m": { "type": "string", "pattern": "^[0-9]{1,19}$", "description": "The value the document stated, as an integer nano-USD per million tokens string." },
+    "currency": { "type": "string", "description": "The document's currency; USD for both sources today." },
+    "region": { "type": "string", "description": "The document's scope; global for both sources today." },
+    "effective_date": { "type": "string", "format": "date", "description": "The first day this value was observed (YYYY-MM-DD)." },
+    "source_url": { "type": "string", "format": "uri", "description": "The official document fetched." },
+    "fetched_at": { "type": "string", "format": "date-time" },
+    "approval_required": { "const": false, "description": "false: the decision is made." },
+    "state": { "const": "approved" },
+    "decided_by": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The person who approved it. A service or an agent may not; Watch refuses those with watch.rate_person_only." },
+    "decided_at": { "type": "string", "format": "date-time" },
+    "applied": { "const": false, "description": "Always false: an approval is evidence and never writes a billable rate." }
+  }
+}

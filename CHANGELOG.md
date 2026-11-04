@@ -1,6 +1,22 @@
 # Changelog
 
 
+## 0.286.0 — 2026-11-04
+
+- **Provider-rate evidence events: `watch.rate.changed@1`, `watch.rate.approved@1`, `watch.rate.rejected@1`**
+  (OpenVibe.Watch #205, plan P6, flag `WATCH_PROVIDER_RATES` off by default).
+  - `watch.rate.changed` is raised when a provider's official price document states a new value for one model and
+    token class. It carries `change_id`, `source_key`, `provider`, `model`, `token_class` (`input`, `cached_read`,
+    `cache_write`, `output`), `from_nano_usd_per_m` (null for a first price), `to_nano_usd_per_m`, `currency`,
+    `region`, `effective_date`, `source_url`, `fetched_at` and `approval_required`.
+  - `watch.rate.approved` and `watch.rate.rejected` are the same change plus `state`, `decided_by` (a person's
+    `usr_` id; Watch refuses a service or an agent), `decided_at` and `applied` (always false).
+  - Money is integer nano-USD per million tokens as decimal strings (D1); all three schemas refuse numbers and floats.
+  - Evidence only: Watch writes no rate card. An approval is dated evidence for OpenVibe.AI's catalog operator, who
+    alone changes the supply rate card through AI's own path.
+  - Watch's service manifest now lists the three events in `eventsProduced`. OpenVibe.AI consumes no events yet
+    (`eventsConsumed` is empty), so it is not registered as a consumer.
+
 ## 0.285.0 — 2026-11-03
 
 - **`ai.inference.create` is retired** (AI Exchange D8′).
