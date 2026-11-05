@@ -1,6 +1,18 @@
 # Changelog
 
 
+## 0.290.0 — 2026-11-05
+
+- **A comma-separated body, and an identity from several columns** (OpenVibe.Food's USDA ERS fruit and vegetable
+  prices). An api endpoint of `sources.source@1` and `sources.source-write-request@1` may say `"format": "csv"`: a
+  comma-separated file with RFC 4180 quoting (a UTF-8 BOM, a quoted field holding commas, doubled quotes and line
+  breaks), whose first line names the columns, read as an array of records keyed by those names (`items_path` is "").
+  `"identity_fields"` names two to eight columns whose values, joined in order with " | ", are the record's identity,
+  for a table where no single column is unique (USDA ERS prices each product in several forms); it requires
+  `items_shape` array and cannot be given with `fields.identity`. Additive: the existing formats, `duplicates` and
+  `fields.identity` are unchanged, and an older reader ignores the new field. Valid fixture:
+  `fixtures/sources.source/valid/api-csv-identity-fields.json`.
+
 ## 0.289.1 — 2026-11-04
 
 - **`billing.credit-hold@1` answers a personal hold.** `project_id` is no longer required and its type is

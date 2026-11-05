@@ -1,0 +1,42 @@
+{
+  "key": "usda-ers-fruit-vegetable-prices",
+  "name": "USDA ERS average retail prices for fruits and vegetables",
+  "type": "api",
+  "category": "food",
+  "homepage_url": "https://www.ers.usda.gov/data-products/fruit-and-vegetable-prices/",
+  "endpoints": [
+    {
+      "url": "https://www.ers.usda.gov/media/6210/all-fruits-average-prices-csv-format.csv",
+      "format": "csv",
+      "items_path": "",
+      "item_kind": "price",
+      "identity_fields": [
+        "Fruit",
+        "Form"
+      ],
+      "fields": {
+        "title": "Fruit"
+      },
+      "extra": {
+        "name": "Fruit",
+        "form": "Form",
+        "price": "AverageRetailPrice",
+        "unit": "AverageRetailPriceUnitOfMeasure"
+      }
+    }
+  ],
+  "auth": {
+    "mode": "none"
+  },
+  "robots_note": "robots.txt checked 2026-11-05 from the production host: User-agent * Allow /, with /core/, /profiles/, /README.md and /web.config disallowed; the two /media/ CSV paths are allowed.",
+  "terms_note": "USDA Economic Research Service fruit and vegetable prices: ERS's own estimates from Circana scanner data, public domain in the US, cited as its documentation asks.",
+  "license_note": null,
+  "min_interval_ms": 60000,
+  "poll_interval_sec": 604800,
+  "stale_after_sec": 172800,
+  "max_items": 250,
+  "enabled": false,
+  "review_required": true,
+  "sensitivity": "none",
+  "default_indexability": "noindex"
+}
