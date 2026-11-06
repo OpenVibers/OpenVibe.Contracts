@@ -1,0 +1,11 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "usr_01JAB2C3D4E5F6G7H8J9K0MNA1",
+  "aud": [
+    "media"
+  ],
+  "act": "svc:live",
+  "jti": "as_abcdef12",
+  "iat": 1790000000,
+  "exp": 1790000060
+}

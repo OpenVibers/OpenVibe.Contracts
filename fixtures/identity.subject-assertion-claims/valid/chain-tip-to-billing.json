@@ -1,0 +1,16 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "usr_01JAB2C3D4E5F6G7H8J9K0MNA1",
+  "aud": [
+    "openvibe.tips",
+    "openvibe.billing"
+  ],
+  "act": "svc:live",
+  "for": [
+    "svc:live",
+    "svc:tips"
+  ],
+  "jti": "as_abcdef13",
+  "iat": 1790000000,
+  "exp": 1790000060
+}
