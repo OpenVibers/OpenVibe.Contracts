@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.301.0 — 2026-11-06
+
+- Add `live.agent-stream-state@2` (Agent Streams S4): the state the desk polls gains the voice (`mode` watch or narrated, the `voice`, the `personality` calm, hype, dry or roast, `muted`, `paused` with its reason), the newest `lines` to speak, and `captions_url` (the stream's WebVTT). `@1` is unchanged.
+- Add `chat.tts-speak-request@1` and `chat.tts-speak-result@1`: the body and answer of `POST /api/agent-voice/speak` on OpenVibe.Chat (one line of at most 220 characters, an optional voice or the person's own; the audio, its MIME type and rate).
+- Add the capability `chat.tts.speak`: a machine (a node token acting for its owner, `on_behalf_of`) asks Chat to speak a line in that person's chosen voice, never another person's. Chat's manifest names it.
+- Additive: nothing that exists changes. Fixtures cover a missing text, a line over 220 characters, a missing audio and a wrong MIME type.
+
 ## 0.300.0 — 2026-11-06
 
 - Add `report.session@1`: the report of one agent session, whatever ran it — a Codes task, an Actor task, a desk session or a session on a person's own machine (the Agent Streams plan, S3). It carries the id (`rps_<ULID>`), the owner (`usr_…`), the source (`codes`, `actor`, `desk` or `node`), the task (title ≤ 200 characters, the task's ref and its link back), the start and end, the worked seconds, the outcome (`done`, `stopped` or `failed`, with `stopped_because` in plain words when it did not finish), the summary (≤ 600 characters), the timeline (the steps, the same shape as `live.agent-stream-step@1`), the outputs (`pr`, `file`, `page`, `deploy`, `clip` or `vod`), the proof (the tests, the screenshots' media ids and the review's verdict), the cost and the models, up to five highlights, the agent stream it streamed on and the visibility (`private`, `unlisted` or `public`). The raw transcript, secrets and code are never in a report: the source service keeps the transcript for the owner, the house redactor runs over every text field before anything is stored, and a pull request is a link (its content shows only when the repository is public).
