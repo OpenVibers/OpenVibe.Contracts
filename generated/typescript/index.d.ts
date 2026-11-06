@@ -291650,3 +291650,201 @@ export interface BillingCreditSandboxGrantResult {
    */
   balance_nano_usd: string;
 }
+
+/** share.resource-ref@1.0.0 (owner: network) */
+/**
+ * share.resource-ref@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareResourceRef {
+  service: string;
+  kind: string;
+  id: string;
+}
+
+/** share.member@1.0.0 (owner: network) */
+/**
+ * share.member@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareMember {
+  subject: SubjectRef;
+  role: "viewer" | "editor";
+  expires_at?: string;
+  added_by: SubjectRef;
+  added_at: string;
+}
+
+/** share.member-input@1.0.0 (owner: network) */
+/**
+ * share.member-input@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export type ShareMemberInput = {
+  name?: string;
+  subject?: SubjectRef;
+  role: "viewer" | "editor";
+  expires_at?: string;
+} & {
+  [k: string]: unknown | undefined;
+};
+
+/** share.transfer@1.0.0 (owner: network) */
+/**
+ * share.transfer@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareTransfer {
+  id: string;
+  from: SubjectRef;
+  to: SubjectRef;
+  keep_access: boolean;
+  requested_at: string;
+  expires_at: string;
+  state: "pending" | "accepted" | "declined" | "cancelled" | "expired";
+}
+
+/** share.access-request@1.0.0 (owner: network) */
+/**
+ * share.access-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareAccessRequest {
+  id: string;
+  subject: SubjectRef;
+  requested_at: string;
+  state: "pending" | "granted";
+}
+
+/** share@1.0.0 (owner: network) */
+/**
+ * share@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface Share {
+  ref: ShareResourceRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  /**
+   * @maxItems 100
+   */
+  members: ShareMember[];
+  transfer?: ShareTransfer;
+}
+
+/** share.update-request@1.0.0 (owner: network) */
+/**
+ * share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareUpdateRequest {
+  audience?: "public" | "link" | "people" | "private";
+  /**
+   * @maxItems 100
+   */
+  members?: ShareMemberInput[];
+}
+
+/** share.transfer-request@1.0.0 (owner: network) */
+/**
+ * share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareTransferRequest {
+  to: string | SubjectRef;
+  keep_access?: boolean;
+}
+
+/** share.transfer-action-request@1.0.0 (owner: network) */
+/**
+ * share.transfer-action-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareTransferActionRequest {
+  transfer_id: string;
+}
+
+/** share.access-request-create@1.0.0 (owner: network) */
+/**
+ * share.access-request-create@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareAccessRequestCreate {}
+
+/** share.list-result@1.0.0 (owner: network) */
+/**
+ * share.list-result@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareListResult {
+  items: {
+    ref: ShareResourceRef;
+    owner_subject: SubjectRef;
+    audience: "public" | "link" | "people" | "private";
+    role: "viewer" | "editor";
+    shared_at: string;
+    transfer?: ShareTransfer;
+  }[];
+  next_cursor: string | null;
+}
+
+/** share.granted@1.0.0 (owner: network) */
+/**
+ * share.granted@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareGrantedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  role?: "viewer" | "editor";
+  expires_at?: string;
+}
+
+/** share.revoked@1.0.0 (owner: network) */
+/**
+ * share.revoked@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareRevokedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  role?: "viewer" | "editor";
+  expires_at?: string;
+}
+
+/** share.transfer.requested@1.0.0 (owner: network) */
+/**
+ * share.transfer.requested@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareTransferRequestedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  transfer: ShareTransfer;
+}
+
+/** share.transfer.accepted@1.0.0 (owner: network) */
+/**
+ * share.transfer.accepted@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareTransferAcceptedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  transfer: ShareTransfer;
+}
+
+/** share.transfer.declined@1.0.0 (owner: network) */
+/**
+ * share.transfer.declined@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareTransferDeclinedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  transfer: ShareTransfer;
+}

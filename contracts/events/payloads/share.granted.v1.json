@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/share.granted.v1.json",
+  "title": "ShareGrantedPayload",
+  "description": "share.granted@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ref": {
+      "$ref": "../../share/resource-ref.v1.json"
+    },
+    "actor": {
+      "$ref": "../../identity/subject-ref.v1.json"
+    },
+    "owner_subject": {
+      "$ref": "../../identity/subject-ref.v1.json"
+    },
+    "audience": {
+      "enum": [
+        "public",
+        "link",
+        "people",
+        "private"
+      ]
+    },
+    "subject": {
+      "$ref": "../../identity/subject-ref.v1.json"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "role": {
+      "enum": [
+        "viewer",
+        "editor"
+      ]
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "ref",
+    "actor",
+    "owner_subject",
+    "audience",
+    "subject",
+    "occurred_at"
+  ]
+}

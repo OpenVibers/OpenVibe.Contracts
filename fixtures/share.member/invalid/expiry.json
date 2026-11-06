@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "role": "viewer",
+  "added_by": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "added_at": "2026-11-06T00:00:00Z",
+  "expires_at": "tomorrow"
+}

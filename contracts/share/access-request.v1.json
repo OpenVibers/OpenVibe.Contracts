@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/access-request.v1.json",
+  "title": "ShareAccessRequest",
+  "description": "share.access-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "enum": [
+        "pending",
+        "granted"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "subject",
+    "requested_at",
+    "state"
+  ]
+}

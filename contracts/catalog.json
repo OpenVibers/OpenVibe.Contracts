@@ -9112,6 +9112,150 @@
       "visibility": "internal",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "share.resource-ref",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/resource-ref.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.member",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/member.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.member-input",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/member-input.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.transfer",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/transfer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.access-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/access-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/share.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.update-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/update-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.transfer-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/transfer-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.transfer-action-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/transfer-action-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.access-request-create",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/access-request-create.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.list-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/list-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.granted",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/share.granted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.revoked",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/share.revoked.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.transfer.requested",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/share.transfer.requested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.transfer.accepted",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/share.transfer.accepted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.transfer.declined",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/share.transfer.declined.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

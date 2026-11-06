@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.291.0 — 2026-11-05
+
+- Add `share@1`: resource refs, audiences, members and member inputs, transfers, access requests, uniform API requests and responses. Transfers are recipient-bound, last seven days, and default to removing the former owner's membership.
+- Add the five `share.*` event payloads with strict ids-only fields; Network owns the model, adopting services produce events using their own source. Valid and invalid fixtures cover every new contract. No existing schema changes.
+
 
 ## 0.290.0 — 2026-11-05
 

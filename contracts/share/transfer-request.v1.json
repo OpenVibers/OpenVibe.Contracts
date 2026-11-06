@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/transfer-request.v1.json",
+  "title": "ShareTransferRequest",
+  "description": "share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "to": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+        },
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ]
+    },
+    "keep_access": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "to"
+  ]
+}

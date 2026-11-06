@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/transfer-action-request.v1.json",
+  "title": "ShareTransferActionRequest",
+  "description": "share.transfer-action-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "transfer_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "transfer_id"
+  ]
+}
