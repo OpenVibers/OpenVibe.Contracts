@@ -32,6 +32,16 @@
       "adr": "ADR-003"
     },
     {
+      "id": "identity.subject-assertion-claims",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/subject-assertion-claims.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-003"
+    },
+    {
       "id": "identity.realtime-ticket-claims",
       "version": "1.0.0",
       "owner": "network",

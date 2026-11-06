@@ -362,6 +362,79 @@
         ]
       }
     },
+    "identity.subject-assertion-claims": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/subject-assertion-claims.v1.json",
+        "title": "SubjectAssertionClaims",
+        "description": "Claims of a short-lived ES256 assertion signed by OpenVibe.Network that says a person allowed one service to act for them on another service (ADR-003, amendment 2026-11-06; plan H1). Minted only from the person's own Network access token (POST /internal/subject-assertions): without that token nothing is signed. Carried on a money call in X-OV-Subject-Assertion. The signature key is published in Network's JWKS (kid ov-network-assertion-1, kty EC, alg ES256) beside the RS256 session key, so a receiver verifies it offline.",
+        "type": "object",
+        "required": [
+          "iss",
+          "sub",
+          "aud",
+          "act",
+          "jti",
+          "iat",
+          "exp"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "iss": {
+            "type": "string",
+            "format": "uri",
+            "description": "Issuer; https://openvibe.network in production. The receiver checks it against the issuer it expects."
+          },
+          "sub": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the assertion is about: their canonical subject. The receiver refuses an assertion that does not name the person the route acts for."
+          },
+          "aud": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^openvibe\\.[a-z0-9][a-z0-9.-]*$"
+            },
+            "description": "The service(s) the assertion is for. A receiver accepts it only when its own audience is in the list. A list is used when the assertion travels a chain (a tip goes from the site to Tips and on to Billing)."
+          },
+          "act": {
+            "type": "string",
+            "pattern": "^svc:[a-z][a-z0-9-]{1,39}$",
+            "description": "The service the assertion was minted for (the one that held the person's token). It is the only service that may present it, unless `for` names others."
+          },
+          "for": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^svc:[a-z][a-z0-9-]{1,39}$"
+            },
+            "description": "The services that may carry the assertion (the minting service is always in it). A receiver presented by a service that is not in this list refuses the assertion (403 assertion.actor_mismatch)."
+          },
+          "jti": {
+            "type": "string",
+            "minLength": 8,
+            "description": "Unique per assertion. A receiver remembers the jtis it has seen for the replay window and refuses a second use (403 assertion.replayed)."
+          },
+          "iat": {
+            "type": "integer",
+            "description": "Issued at (seconds since the epoch)."
+          },
+          "exp": {
+            "type": "integer",
+            "description": "Expires at (seconds since the epoch). The assertion lives 60 seconds."
+          },
+          "nbf": {
+            "type": "integer",
+            "description": "Not before (seconds since the epoch). Optional; a receiver forgives a small clock difference."
+          }
+        }
+      }
+    },
     "identity.realtime-ticket-claims": {
       "version": "1.0.0",
       "owner": "network",

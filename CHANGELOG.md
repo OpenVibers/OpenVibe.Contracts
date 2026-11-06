@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `identity.subject-assertion-claims@1`: the claims of a short-lived ES256 assertion signed by OpenVibe.Network that says a person allowed one service to act for them on another service — `sub` (the person), `aud` (the service it is for), `act` (the service it was minted for), optionally `for` (the services that may carry it), `jti`, `iat`, `exp`. Network mints one only from the person's own access token (`POST /internal/subject-assertions`), so a service that merely knows a person's id cannot say the person allowed anything; the key is published in Network's JWKS (`kid ov-network-assertion-1`). The money routes of Billing and Tips check it against the person they act for, and refuse the old "the service vouches for its person" way once `BILLING_REQUIRE_SUBJECT_ASSERTION` / `TIPS_REQUIRE_SUBJECT_ASSERTION` is on. See the ADR-003 amendment of 2026-11-06.
+
 ## 0.292.0 — 2026-11-06
 
 - Add `locker.envelope@1`: the header of a sealed item — the suite (AES-256-GCM), the chunk size (1 MiB), the padded size, the counter nonce base, the lock kind and one key slot per way in. The content key is never in the header; it is wrapped in a people slot (ECDH P-256 + HKDF-SHA-256, bound to the recipient's key by its RFC 7638 thumbprint), a password slot (PBKDF2-SHA-256, 600000 iterations, the parameters in the header so they can be raised, and bounded above at 10000000 so a hostile header cannot freeze a reader) or a link slot (empty: the key travels in the link's fragment).

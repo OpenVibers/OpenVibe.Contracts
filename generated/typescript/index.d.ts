@@ -104,6 +104,52 @@ export type ServiceTokenClaims = {
   [k: string]: unknown | undefined;
 };
 
+/** identity.subject-assertion-claims@1.0.0 (owner: network) */
+/**
+ * Claims of a short-lived ES256 assertion signed by OpenVibe.Network that says a person allowed one service to act for them on another service (ADR-003, amendment 2026-11-06; plan H1). Minted only from the person's own Network access token (POST /internal/subject-assertions): without that token nothing is signed. Carried on a money call in X-OV-Subject-Assertion. The signature key is published in Network's JWKS (kid ov-network-assertion-1, kty EC, alg ES256) beside the RS256 session key, so a receiver verifies it offline.
+ */
+export interface SubjectAssertionClaims {
+  /**
+   * Issuer; https://openvibe.network in production. The receiver checks it against the issuer it expects.
+   */
+  iss: string;
+  /**
+   * The person the assertion is about: their canonical subject. The receiver refuses an assertion that does not name the person the route acts for.
+   */
+  sub: string;
+  /**
+   * The service(s) the assertion is for. A receiver accepts it only when its own audience is in the list. A list is used when the assertion travels a chain (a tip goes from the site to Tips and on to Billing).
+   *
+   * @minItems 1
+   */
+  aud: [string, ...string[]];
+  /**
+   * The service the assertion was minted for (the one that held the person's token). It is the only service that may present it, unless `for` names others.
+   */
+  act: string;
+  /**
+   * The services that may carry the assertion (the minting service is always in it). A receiver presented by a service that is not in this list refuses the assertion (403 assertion.actor_mismatch).
+   */
+  for?: string[];
+  /**
+   * Unique per assertion. A receiver remembers the jtis it has seen for the replay window and refuses a second use (403 assertion.replayed).
+   */
+  jti: string;
+  /**
+   * Issued at (seconds since the epoch).
+   */
+  iat: number;
+  /**
+   * Expires at (seconds since the epoch). The assertion lives 60 seconds.
+   */
+  exp: number;
+  /**
+   * Not before (seconds since the epoch). Optional; a receiver forgives a small clock difference.
+   */
+  nbf?: number;
+  [k: string]: unknown | undefined;
+}
+
 /** identity.realtime-ticket-claims@1.0.0 (owner: network) */
 /**
  * Claims of a realtime ticket (ADR-005 amendment 2; roadmap WS-E task 3, WS-F task 1): a two-minute RS256 JWT that OpenVibe.Network signs for the signed-in person (POST /api/v1/realtime/ticket) so a browser on any OpenVibe site can open Events' /realtime/stream?ticket=... as that person. A browser cannot put a header on an EventSource, and the ov_token cookie of openvibe.events is third-party on every other site, so the ticket travels in the URL; that is why it is short-lived, single-purpose and single-use. It is never a session token, by three independent rules: its issuer is Network's issuer followed by /realtime (every service checks the issuer of a session token), it carries typ (services refuse a session token that has one, as for FedCM assertions), and its only audience is openvibe.events. Events accepts it only as ?ticket= on /realtime/stream, verifies the signature with Network's key, iss, aud, typ, purpose and expiry (lifetime at most 300 s), refuses a jti it has already seen while the ticket is valid, and never logs it. The connection then sees what the person's session would: public events and subject events addressed to `sub`.
