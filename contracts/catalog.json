@@ -5117,6 +5117,42 @@
       "status": "active"
     },
     {
+      "id": "media.avatar-adopt-request",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/avatar-adopt-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.avatar-adopt-result",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/avatar-adopt-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.avatar-release-request",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/avatar-release-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.avatar-release-result",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/avatar-release-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.file-read-result",
       "version": "1.0.0",
       "owner": "media",

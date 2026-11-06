@@ -203885,6 +203885,98 @@ export interface MediaAvatarIngestResult {
   bytes: number;
 }
 
+/** media.avatar-adopt-request@1.0.0 (owner: media) */
+/**
+ * media.avatar-adopt-request@1: the body of POST /internal/avatar-adopt on OpenVibe.Media (capability media.avatar.adopt). A product records that one of its profile slots points at an avatar object, so a cleanup can never delete the picture a working profile shows (incident 2026-11-06: eleven avatars were deleted with the public screenshot copies). Recording a slot releases the slot's previous reference in the same transaction. Ingest records the reference itself; this route is for a picture the product already holds. Refusals are { ok: false, error }: 400 without object_id, product or ref, 404 for an unknown object, 409 for an object that is not ready, 422 for an object that is not an avatar or belongs to someone else.
+ */
+export interface MediaAvatarAdoptRequest {
+  /**
+   * The avatar object (med_…) the slot points at.
+   */
+  object_id: string;
+  /**
+   * The product whose profile holds the picture: network (users.avatar_url) or live (its own users.avatar_url, a channel banner).
+   */
+  product: string;
+  /**
+   * The slot in that product: the person's id there, or the id and the slot (for example 42:banner).
+   */
+  ref: string;
+  /**
+   * The person (usr_…) when the product knows it; Media refuses an object owned by someone else.
+   */
+  subject?: string | null;
+}
+
+/** media.avatar-adopt-result@1.0.0 (owner: media) */
+/**
+ * media.avatar-adopt-result@1: the answer of POST /internal/avatar-adopt on OpenVibe.Media: { ok: true, ref }, the active reference the slot now holds. A reference is released, never deleted, so Media keeps the history of the objects a person's picture moved through.
+ */
+export interface MediaAvatarAdoptResult {
+  ok: true;
+  ref: {
+    id?: number | string;
+    /**
+     * The avatar object (med_…) the slot points at.
+     */
+    object_id: string;
+    /**
+     * The person (usr_…) when the product knows it; Media refuses an object owned by someone else.
+     */
+    subject?: string | null;
+    /**
+     * The product whose profile holds the picture: network (users.avatar_url) or live (its own users.avatar_url, a channel banner).
+     */
+    product: string;
+    /**
+     * The slot in that product: the person's id there, or the id and the slot (for example 42:banner).
+     */
+    ref: string;
+    /**
+     * When the slot started pointing at the object.
+     */
+    created_at: string;
+    /**
+     * Always null in this answer: the reference is the active one.
+     */
+    released_at?: string | null;
+  };
+}
+
+/** media.avatar-release-request@1.0.0 (owner: media) */
+/**
+ * media.avatar-release-request@1: the body of POST /internal/avatar-release on OpenVibe.Media (capability media.avatar.release). The product says a slot no longer points at its picture (the person removed it), or that one object or one person's references are gone (an account deletion), and the object can then be deleted like any other. It names a slot (product and ref), an object_id or a subject; with none, Media answers 400 { ok: false, error }.
+ */
+export type MediaAvatarReleaseRequest = (
+  | {
+      object_id: string;
+    }
+  | {
+      product: string;
+      ref: string;
+    }
+  | {
+      subject: string;
+    }
+) & {
+  object_id?: string | null;
+  product?: string | null;
+  ref?: string | null;
+  /**
+   * The person (usr_…) when the product knows it; Media refuses an object owned by someone else.
+   */
+  subject?: string | null;
+};
+
+/** media.avatar-release-result@1.0.0 (owner: media) */
+/**
+ * media.avatar-release-result@1: the answer of POST /internal/avatar-release on OpenVibe.Media: { ok: true, released }, how many active references were released (0 when there were none: releasing twice is not an error).
+ */
+export interface MediaAvatarReleaseResult {
+  ok: true;
+  released: number;
+}
+
 /** media.file-read-result@1.0.0 (owner: media) */
 /**
  * media.file-read-result@1: answers of media.object.read on OpenVibe.Media. GET /api/v1/:app/files/:key → media.file@1 (the file's metadata; 404 when it is not the tenant's); GET /f/:key → the bytes, with Content-Type and Range (a sandbox file only through its signed URL).

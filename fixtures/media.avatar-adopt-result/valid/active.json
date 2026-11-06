@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "ref": {
+    "id": 7,
+    "object_id": "med_01JC5Z8K2Q4X7V9B3N6M1R0T2Y",
+    "subject": null,
+    "product": "network",
+    "ref": "42",
+    "created_at": "2026-11-06 22:40:00",
+    "released_at": null
+  }
+}

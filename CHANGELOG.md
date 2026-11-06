@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.302.0 — 2026-11-06
+
+- Add the capabilities `media.avatar.adopt` and `media.avatar.release` (internal), and name both in Media's service manifest. After the 2026-11-06 incident (eleven avatars were soft-deleted with the public screenshot copies), Media records which avatar object each profile slot points at, and its delete refuses an object a working profile still shows. A product (Network for `users.avatar_url`, Live for its own copy and the channel banner) records a slot with `POST /internal/avatar-adopt` and drops it with `POST /internal/avatar-release`.
+- Add `media.avatar-adopt-request@1` / `media.avatar-adopt-result@1` (the slot: `object_id` `med_…`, `product`, `ref`, the optional `subject`; the answer is the active reference) and `media.avatar-release-request@1` / `media.avatar-release-result@1` (a slot, an object or a person; the answer counts the released references, 0 when there were none).
+- Additive: nothing that exists changes. Fixtures cover a missing ref, an object id that is not `med_…`, a release that names nothing, a product without its ref and a negative count.
+
 ## 0.301.0 — 2026-11-06
 
 - Add `live.agent-stream-state@2` (Agent Streams S4): the state the desk polls gains the voice (`mode` watch or narrated, the `voice`, the `personality` calm, hype, dry or roast, `muted`, `paused` with its reason), the newest `lines` to speak, and `captions_url` (the stream's WebVTT). `@1` is unchanged.

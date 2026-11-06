@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/avatar-adopt-request.v1.json",
+  "title": "MediaAvatarAdoptRequest",
+  "description": "media.avatar-adopt-request@1: the body of POST /internal/avatar-adopt on OpenVibe.Media (capability media.avatar.adopt). A product records that one of its profile slots points at an avatar object, so a cleanup can never delete the picture a working profile shows (incident 2026-11-06: eleven avatars were deleted with the public screenshot copies). Recording a slot releases the slot's previous reference in the same transaction. Ingest records the reference itself; this route is for a picture the product already holds. Refusals are { ok: false, error }: 400 without object_id, product or ref, 404 for an unknown object, 409 for an object that is not ready, 422 for an object that is not an avatar or belongs to someone else.",
+  "type": "object",
+  "required": [
+    "object_id",
+    "product",
+    "ref"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "object_id": {
+      "type": "string",
+      "pattern": "^med_",
+      "description": "The avatar object (med_…) the slot points at."
+    },
+    "product": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,31}$",
+      "description": "The product whose profile holds the picture: network (users.avatar_url) or live (its own users.avatar_url, a channel banner)."
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "The slot in that product: the person's id there, or the id and the slot (for example 42:banner)."
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^usr_",
+      "description": "The person (usr_…) when the product knows it; Media refuses an object owned by someone else."
+    }
+  }
+}
