@@ -2,12 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/locker/people-slot.v1.json",
   "title": "LockerPeopleSlot",
-  "description": "locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.",
+  "description": "locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the recipient's key, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "subject",
     "algorithm",
+    "recipient_key",
     "ephemeral_public_key",
     "salt",
     "nonce",
@@ -19,6 +20,11 @@
     },
     "algorithm": {
       "const": "ECDH-P256/HKDF-SHA256/AES-256-GCM"
+    },
+    "recipient_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$",
+      "description": "The RFC 7638 thumbprint of the recipient's ECDH public key: SHA-256 over the canonical JSON of the key's four members, base64url. The slot is bound to this key as well as to the subject, and the reader checks it before it derives anything."
     },
     "ephemeral_public_key": {
       "$ref": "public-key.v1.json"

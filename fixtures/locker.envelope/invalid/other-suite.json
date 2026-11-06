@@ -2,7 +2,7 @@
   "version": "locker.envelope.v1",
   "suite": "AES-128-GCM",
   "chunk_size": 1048576,
-  "padded_size": 1048576,
+  "padded_size": 256,
   "nonce_base": "YmJiYmJiYmI=",
   "lock": "link",
   "slots": {

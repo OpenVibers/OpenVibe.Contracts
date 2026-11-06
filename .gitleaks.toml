@@ -63,3 +63,9 @@ description = "Sample model_key in ai.model-list@1 fixture: a model name placeho
 condition = "AND"
 paths = ['''^fixtures/ai\.model-list/valid/two-models\.json$''']
 regexes = ['''^llama_3\.1_8b_instruct$''']
+
+[[allowlists]]
+description = "Sample recipient key thumbprint in the locker fixtures: the base64url SHA-256 of made-up bytes, showing the shape of the field, not a secret"
+condition = "AND"
+paths = ['''^fixtures/locker\..*\.json$''', '''^fixtures/share/valid/locked\.json$''']
+regexes = ['''^AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8$''']

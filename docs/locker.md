@@ -41,7 +41,9 @@ Each chunk frame is:
 +------+------+--------------------------+--------------------------+
 ```
 
-* `len` — the ciphertext length, unsigned 32-bit big endian: the chunk size plus the 16-byte GCM tag.
+* `len` — the ciphertext length, unsigned 32-bit big endian: the plaintext of the chunk plus the 16-byte GCM tag.
+  Every chunk but the last holds a whole chunk (1 MiB) of plaintext; the last holds what is left of
+  `padded_size`, which is more than zero bytes.
 * `flags` — bit 0 (`0x01`) marks the **final chunk**. Every other bit is zero in this version.
 * `nonce` — the 12-byte GCM nonce: the header's `nonce_base` (8 random bytes) followed by the chunk counter
   (unsigned 32-bit big endian). No nonce repeats inside one envelope.
@@ -53,18 +55,19 @@ Each chunk frame is:
   "version": "locker.envelope.v1",
   "suite": "AES-256-GCM",
   "chunk_size": 1048576,
-  "padded_size": 2097152,
+  "padded_size": 256,
   "nonce_base": "YmJiYmJiYmI=",
   "lock": "people",
-  "slots": { "people": [ { "subject": {}, "algorithm": "ECDH-P256/HKDF-SHA256/AES-256-GCM", "ephemeral_public_key": {}, "salt": "", "nonce": "", "wrapped_key": "" } ] }
+  "slots": { "people": [ { "subject": {}, "algorithm": "ECDH-P256/HKDF-SHA256/AES-256-GCM", "recipient_key": "", "ephemeral_public_key": {}, "salt": "", "nonce": "", "wrapped_key": "" } ] }
 }
 ```
 
 * `version` — `locker.envelope.v1`. A new format is a new file and a new catalog entry.
 * `suite` — `AES-256-GCM`. The content key is 32 bytes.
 * `chunk_size` — 1 MiB, fixed in this version.
-* `padded_size` — the size of the padded plaintext, a whole number of chunks. **The true size lives inside the
-  encrypted content**, so the server cannot read it; this is the size it may store and show.
+* `padded_size` — the size of the padded plaintext, in bytes. **The true size lives inside the encrypted
+  content**, so the server cannot read it; this is the size it may store and show. It is padded with Padmé
+  (see below) and is never below 256 bytes.
 * `nonce_base` — eight random bytes, base64: the first half of every chunk nonce.
 * `lock` — `people`, `password` or `link`. Exactly one slot kind is present, and it matches.
 * `slots` — the key slots. The content key itself is never in the header.
@@ -99,10 +102,15 @@ N bytes   the content
 rest      zero padding, up to the next chunk boundary
 ```
 
-`padded_size` counts all of it, padding included, and is always at least one chunk. The length prefix is why the
-server cannot learn the size: the content is padded to the chunk grid, and the real length is inside the encrypted
-part. A locked item therefore costs up to one chunk (1 MiB) more than its content. That is the price of hiding the
-size, and it is the same price as the file system's block size.
+`padded_size` counts all of it, padding included, and is never below 256 bytes. The length prefix is why the
+server cannot learn the size: the real length is inside the encrypted part.
+
+The padding is **Padmé** (Nikitin et al., "Reducing Metadata Leakage from Encrypted Files and Network Traffic",
+PoPETs 2019): the length is rounded up to the next size on a grid that gets finer as the length grows. The
+expansion is at most about twelve per cent (the worst case is 129 bytes padded to 144), the number of possible
+padded lengths grows like the logarithm of the content size, so the padded size leaks O(log log n) bits about the
+real one, and a short note costs 256 bytes rather than a whole megabyte. The chunk grid does not leak the size:
+only the last chunk is shorter than a chunk, and its length is `padded_size` minus the whole chunks before it.
 
 ### The slots
 
@@ -128,7 +136,8 @@ envelope's ephemeral public key.
 
 PBKDF2-SHA-256 with 600000 iterations and the slot's salt gives the wrapping key. The parameters live in the header
 so they can be raised later: the reader takes the iteration count and the salt from the header, never from its own
-defaults. The floor is 600000; the count may go up, never down.
+defaults. The floor is 600000 and the ceiling is 10000000: the count may go up, never down, and a header outside
+that range is refused before anything is derived, so a hostile header cannot make a reader work for hours.
 
 **Link slot** (`locker.link-slot@1`) — empty, on purpose. A link lock stores no key: the content key travels in the
 part of the link after `#`, which browsers never send to us.
@@ -144,11 +153,12 @@ A person's keys live on Network, opaque. The contracts are:
 | GET /api/v1/me/keys/backup | none | locker.key-backup@1 |
 
 A person has two key pairs: an **ECDH P-256** pair that receives content keys, and an **ECDSA P-256** pair that signs
-the fingerprint. The **fingerprint** is the first four bytes of SHA-256 over both public keys, read as four words
-(256 words, eight bits each): it is short enough to say out loud and compare once. The signature over both public
-keys proves the holder owns the signing key, so a key pair is self-certifying; a change of keys changes the
-fingerprint, and `locker.key-change@1` records it so a share sheet can warn before sharing with a key nobody saw
-before.
+the fingerprint. The **fingerprint** is the first eight bytes of SHA-256 over both public keys, read as eight words
+(256 words, eight bits each) in two groups of four: it is short enough to say out loud and compare once. Sixty-four
+bits, not thirty-two: a server that swapped in its own key would need about 2^32 key generations to land on the same
+four words, and 2^64 for the eight. The signature over both public keys proves the holder owns the signing key, so a
+key pair is self-certifying; a change of keys changes the fingerprint, and `locker.key-change@1` records it so a share
+sheet can warn before sharing with a key nobody saw before.
 
 The private keys are stored wrapped (`locker.key-backup@1`): PBKDF2-SHA-256 from the locker passphrase, then
 AES-256-GCM. Network holds the protected copy and cannot open it. There is no reset: if the passphrase and the

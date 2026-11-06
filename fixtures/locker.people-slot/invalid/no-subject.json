@@ -1,5 +1,6 @@
 {
   "algorithm": "ECDH-P256/HKDF-SHA256/AES-256-GCM",
+  "recipient_key": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
   "ephemeral_public_key": {
     "kty": "EC",
     "crv": "P-256",

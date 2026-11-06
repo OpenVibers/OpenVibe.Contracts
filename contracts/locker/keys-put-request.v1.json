@@ -21,7 +21,7 @@
     },
     "fingerprint": {
       "type": "string",
-      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$"
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$"
     },
     "fingerprint_signature": {
       "type": "string",

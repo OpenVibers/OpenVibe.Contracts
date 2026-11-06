@@ -27,9 +27,8 @@
     },
     "padded_size": {
       "type": "integer",
-      "minimum": 1048576,
-      "multipleOf": 1048576,
-      "description": "The size of the padded plaintext in bytes: a whole number of chunks. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show."
+      "minimum": 256,
+      "description": "The size of the padded plaintext in bytes. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show. The size is padded with Padmé (Nikitin et al., PoPETs 2019): it is the next size on a grid that gets finer as the content grows, at most twelve per cent over the real one, and never below 256 bytes. Every chunk but the last is a whole chunk; the last holds what is left of this size."
     },
     "nonce_base": {
       "type": "string",

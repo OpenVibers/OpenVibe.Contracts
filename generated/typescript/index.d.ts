@@ -291972,7 +291972,7 @@ export type LockerEnvelope = {
    */
   chunk_size: 1048576;
   /**
-   * The size of the padded plaintext in bytes: a whole number of chunks. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show.
+   * The size of the padded plaintext in bytes. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show. The size is padded with Padmé (Nikitin et al., PoPETs 2019): it is the next size on a grid that gets finer as the content grows, at most twelve per cent over the real one, and never below 256 bytes. Every chunk but the last is a whole chunk; the last holds what is left of this size.
    */
   padded_size: number;
   /**
@@ -291996,11 +291996,15 @@ export type LockerEnvelope = {
 
 /** locker.people-slot@1.0.0 (owner: network) */
 /**
- * locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.
+ * locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the recipient's key, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.
  */
 export interface LockerPeopleSlot {
   subject: SubjectRef;
   algorithm: "ECDH-P256/HKDF-SHA256/AES-256-GCM";
+  /**
+   * The RFC 7638 thumbprint of the recipient's ECDH public key: SHA-256 over the canonical JSON of the key's four members, base64url. The slot is bound to this key as well as to the subject, and the reader checks it before it derives anything.
+   */
+  recipient_key: string;
   ephemeral_public_key: LockerPublicKey;
   /**
    * Sixteen random bytes, base64: the HKDF salt for this slot.
@@ -292068,14 +292072,14 @@ export interface LockerPublicKey {
 
 /** locker.public-keys@1.0.0 (owner: network) */
 /**
- * locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the four-word fingerprint. The fingerprint is the first four bytes of SHA-256 over both public keys, and the signature proves the holder owns the signing key, so a person can compare four words out of band and a key change is visible.
+ * locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the eight-word fingerprint. The fingerprint is the first eight bytes of SHA-256 over both public keys, read as eight words in two groups of four, and the signature proves the holder owns the signing key, so a person can compare the eight words out of band and a key change is visible.
  */
 export interface LockerPublicKeys {
   subject: SubjectRef;
   ecdh: LockerPublicKey;
   signing: LockerPublicKey;
   /**
-   * Four words, lower case. Compare them out of band; a change means a changed key.
+   * Eight words, lower case, in two groups of four: sixty-four bits. Compare them out of band; a change means a changed key.
    */
   fingerprint: string;
   /**
@@ -292131,11 +292135,11 @@ export interface LockerKeyChange {
   reason: "created" | "rotated" | "restored";
   changed_at: string;
   /**
-   * The four words of the new keys.
+   * The eight words of the new keys, in two groups of four.
    */
   fingerprint: string;
   /**
-   * The four words before the change, when there were any.
+   * The eight words before the change, when there were any.
    */
   previous_fingerprint?: string;
 }

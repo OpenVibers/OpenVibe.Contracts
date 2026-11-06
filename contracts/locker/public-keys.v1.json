@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/locker/public-keys.v1.json",
   "title": "LockerPublicKeys",
-  "description": "locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the four-word fingerprint. The fingerprint is the first four bytes of SHA-256 over both public keys, and the signature proves the holder owns the signing key, so a person can compare four words out of band and a key change is visible.",
+  "description": "locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the eight-word fingerprint. The fingerprint is the first eight bytes of SHA-256 over both public keys, read as eight words in two groups of four, and the signature proves the holder owns the signing key, so a person can compare the eight words out of band and a key change is visible.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -25,8 +25,8 @@
     },
     "fingerprint": {
       "type": "string",
-      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
-      "description": "Four words, lower case. Compare them out of band; a change means a changed key."
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+      "description": "Eight words, lower case, in two groups of four: sixty-four bits. Compare them out of band; a change means a changed key."
     },
     "fingerprint_signature": {
       "type": "string",

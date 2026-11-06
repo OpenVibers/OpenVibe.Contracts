@@ -102692,9 +102692,8 @@
           },
           "padded_size": {
             "type": "integer",
-            "minimum": 1048576,
-            "multipleOf": 1048576,
-            "description": "The size of the padded plaintext in bytes: a whole number of chunks. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show."
+            "minimum": 256,
+            "description": "The size of the padded plaintext in bytes. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show. The size is padded with Padmé (Nikitin et al., PoPETs 2019): it is the next size on a grid that gets finer as the content grows, at most twelve per cent over the real one, and never below 256 bytes. Every chunk but the last is a whole chunk; the last holds what is left of this size."
           },
           "nonce_base": {
             "type": "string",
@@ -102856,12 +102855,13 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/locker/people-slot.v1.json",
         "title": "LockerPeopleSlot",
-        "description": "locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.",
+        "description": "locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the recipient's key, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.",
         "type": "object",
         "additionalProperties": false,
         "required": [
           "subject",
           "algorithm",
+          "recipient_key",
           "ephemeral_public_key",
           "salt",
           "nonce",
@@ -102873,6 +102873,11 @@
           },
           "algorithm": {
             "const": "ECDH-P256/HKDF-SHA256/AES-256-GCM"
+          },
+          "recipient_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "description": "The RFC 7638 thumbprint of the recipient's ECDH public key: SHA-256 over the canonical JSON of the key's four members, base64url. The slot is bound to this key as well as to the subject, and the reader checks it before it derives anything."
           },
           "ephemeral_public_key": {
             "$ref": "public-key.v1.json"
@@ -103017,7 +103022,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/locker/public-keys.v1.json",
         "title": "LockerPublicKeys",
-        "description": "locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the four-word fingerprint. The fingerprint is the first four bytes of SHA-256 over both public keys, and the signature proves the holder owns the signing key, so a person can compare four words out of band and a key change is visible.",
+        "description": "locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the eight-word fingerprint. The fingerprint is the first eight bytes of SHA-256 over both public keys, read as eight words in two groups of four, and the signature proves the holder owns the signing key, so a person can compare the eight words out of band and a key change is visible.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -103040,8 +103045,8 @@
           },
           "fingerprint": {
             "type": "string",
-            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
-            "description": "Four words, lower case. Compare them out of band; a change means a changed key."
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+            "description": "Eight words, lower case, in two groups of four: sixty-four bits. Compare them out of band; a change means a changed key."
           },
           "fingerprint_signature": {
             "type": "string",
@@ -103082,7 +103087,7 @@
           },
           "fingerprint": {
             "type": "string",
-            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$"
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$"
           },
           "fingerprint_signature": {
             "type": "string",
@@ -103180,13 +103185,13 @@
           },
           "fingerprint": {
             "type": "string",
-            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
-            "description": "The four words of the new keys."
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+            "description": "The eight words of the new keys, in two groups of four."
           },
           "previous_fingerprint": {
             "type": "string",
-            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
-            "description": "The four words before the change, when there were any."
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+            "description": "The eight words before the change, when there were any."
           }
         }
       }
