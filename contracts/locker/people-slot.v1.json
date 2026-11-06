@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/locker/people-slot.v1.json",
+  "title": "LockerPeopleSlot",
+  "description": "locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subject",
+    "algorithm",
+    "ephemeral_public_key",
+    "salt",
+    "nonce",
+    "wrapped_key"
+  ],
+  "properties": {
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "algorithm": {
+      "const": "ECDH-P256/HKDF-SHA256/AES-256-GCM"
+    },
+    "ephemeral_public_key": {
+      "$ref": "public-key.v1.json"
+    },
+    "salt": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{22}==$",
+      "description": "Sixteen random bytes, base64: the HKDF salt for this slot."
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{16}$",
+      "description": "Twelve random bytes, base64: the AES-GCM nonce of the wrapped content key."
+    },
+    "wrapped_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{64}$",
+      "description": "The 32-byte content key and its 16-byte tag, base64. Never the key itself."
+    }
+  }
+}

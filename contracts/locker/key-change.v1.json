@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/locker/key-change.v1.json",
+  "title": "LockerKeyChange",
+  "description": "locker.key-change@1: a record that a person's locker keys changed, so the share sheet can warn before sharing with a key that is not the one people saw before.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subject",
+    "reason",
+    "changed_at",
+    "fingerprint"
+  ],
+  "properties": {
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "reason": {
+      "enum": [
+        "created",
+        "rotated",
+        "restored"
+      ]
+    },
+    "changed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+      "description": "The four words of the new keys."
+    },
+    "previous_fingerprint": {
+      "type": "string",
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+      "description": "The four words before the change, when there were any."
+    }
+  }
+}

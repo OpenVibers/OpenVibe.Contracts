@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.292.0 — 2026-11-06
+
+- Add `locker.envelope@1`: the header of a sealed item — the suite (AES-256-GCM), the chunk size (1 MiB), the padded size, the counter nonce base, the lock kind and one key slot per way in. The content key is never in the header; it is wrapped in a people slot (ECDH P-256 + HKDF-SHA-256), a password slot (PBKDF2-SHA-256, 600000 iterations, the parameters in the header so they can be raised) or a link slot (empty: the key travels in the link's fragment).
+- Add the key directory contracts: `locker.public-key@1`, `locker.public-keys@1`, `locker.keys-put-request@1`, `locker.key-backup@1` and `locker.key-change@1`, with the four-word fingerprint and the signature that proves a person owns their signing key.
+- `share@1` and `share.update-request@1` gain `lock` (`none`, `people`, `password`, `link`), and a share member may carry that member's key slot, so a member and its slot are saved together. Additive: the fields are optional and old documents stay valid.
+- Valid and invalid fixtures cover every new contract, and the new fields of the sharing contracts. The format is written down in [docs/locker.md](docs/locker.md).
+
 ## 0.291.0 — 2026-11-05
 
 - Add `share@1`: resource refs, audiences, members and member inputs, transfers, access requests, uniform API requests and responses. Transfers are recipient-bound, last seven days, and default to removing the former owner's membership.

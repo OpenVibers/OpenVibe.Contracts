@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/share/update-request.v1.json",
   "title": "ShareUpdateRequest",
-  "description": "share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "description": "share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days. `lock` sets how the resource itself is sealed (Locker).",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -24,6 +24,15 @@
     "notify": {
       "type": "boolean",
       "default": true
+    },
+    "lock": {
+      "enum": [
+        "none",
+        "people",
+        "password",
+        "link"
+      ],
+      "description": "How the resource is sealed (Locker)."
     }
   },
   "required": [],

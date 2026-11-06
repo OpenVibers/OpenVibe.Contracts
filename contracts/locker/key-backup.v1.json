@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/locker/key-backup.v1.json",
+  "title": "LockerKeyBackup",
+  "description": "locker.key-backup@1: the person's private keys, wrapped. The wrapping key comes from the locker passphrase with PBKDF2-SHA-256, so the server stores bytes it cannot open; a passkey (WebAuthn PRF) may wrap the same bytes later without changing this shape.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "method",
+    "kdf",
+    "iterations",
+    "salt",
+    "nonce",
+    "wrapped_keys"
+  ],
+  "properties": {
+    "method": {
+      "enum": [
+        "passphrase"
+      ],
+      "description": "How the private keys are wrapped. A passkey-only locker comes later."
+    },
+    "kdf": {
+      "const": "PBKDF2-SHA-256"
+    },
+    "iterations": {
+      "type": "integer",
+      "minimum": 600000,
+      "maximum": 10000000
+    },
+    "salt": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{22}==$",
+      "description": "Sixteen random bytes, base64."
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{16}$",
+      "description": "Twelve random bytes, base64: the AES-GCM nonce of the wrapped keys."
+    },
+    "wrapped_keys": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+      "description": "The two private keys as JWKs, sealed with AES-256-GCM under the derived key, base64."
+    }
+  }
+}

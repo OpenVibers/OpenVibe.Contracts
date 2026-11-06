@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/locker/keys-put-request.v1.json",
+  "title": "LockerKeysPutRequest",
+  "description": "locker.keys-put-request@1: what a person sends to set their locker keys. The public keys and the fingerprint are readable by anyone; the private keys go in the backup, wrapped by a key from the locker passphrase, so the server never holds an unwrapped key.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ecdh",
+    "signing",
+    "fingerprint",
+    "fingerprint_signature",
+    "backup"
+  ],
+  "properties": {
+    "ecdh": {
+      "$ref": "public-key.v1.json"
+    },
+    "signing": {
+      "$ref": "public-key.v1.json"
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+$"
+    },
+    "fingerprint_signature": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{86}==$"
+    },
+    "backup": {
+      "$ref": "key-backup.v1.json"
+    }
+  }
+}

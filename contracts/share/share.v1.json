@@ -33,6 +33,15 @@
     "transfer": {
       "$ref": "transfer-view.v1.json"
     },
+    "lock": {
+      "enum": [
+        "none",
+        "people",
+        "password",
+        "link"
+      ],
+      "description": "How the resource is sealed (Locker). none means it is stored as it is; people, password and link are the three Locker locks. The server stores the envelope and never opens it."
+    },
     "you": {
       "$ref": "you.v1.json"
     },
