@@ -1,0 +1,31 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "username": "maticus",
+  "display_name": "Maticus",
+  "avatar_url": "https://cdn.openvibe.network/avatars/maticus.png",
+  "role": "viewer",
+  "added_by": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "added_at": "2026-11-06T00:00:00Z",
+  "key_slot": {
+    "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" },
+    "algorithm": "ECDH-P256/HKDF-SHA256/AES-256-GCM",
+    "recipient_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "ephemeral_public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg",
+      "y": "eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk"
+    },
+    "salt": "c3Nzc3Nzc3Nzc3Nzc3Nzcw==",
+    "nonce": "bm5ubm5ubm5ubm5u",
+    "wrapped_key": "d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3"
+  },
+  "key_fingerprint": "plateau yew apple petal · river stone bread cedar",
+  "fingerprint_changed": false
+}

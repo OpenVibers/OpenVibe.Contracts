@@ -291675,6 +291675,14 @@ export interface ShareMember {
   added_by: SubjectRef;
   added_at: string;
   key_slot?: LockerPeopleSlot;
+  /**
+   * The member's current key fingerprint from Network's key directory (locker.public-keys@1), shown to the owner of a people-locked item; null when the person has no locker key (or Network did not answer).
+   */
+  key_fingerprint?: string | null;
+  /**
+   * Owner-only, for a people-locked item: true when the member's current key is not the one their key_slot was made for, so the sheet warns and re-wraps.
+   */
+  fingerprint_changed?: boolean;
 }
 
 /** share.member-input@1.1.0 (owner: network) */
@@ -291816,14 +291824,18 @@ export interface ShareUpdateRequest {
   members?: ShareMemberInput[];
   notify?: boolean;
   /**
-   * How the resource is sealed (Locker).
+   * How the resource is sealed (Locker). Set when the item is registered; a save may echo the same value but cannot change it.
    */
   lock?: "none" | "people" | "password" | "link";
+  /**
+   * A locker.envelope@1, base64: the content re-sealed for the people who stay, sent with the members that remain when someone is removed from a people-locked item. The service stores it (never opens it) before it drops the member.
+   */
+  envelope?: string;
 }
 
 /** share.transfer-request@1.0.0 (owner: network) */
 /**
- * share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ * share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days. `key_slot` is the content key wrapped for the recipient, required when the item is people-locked (Locker) and checked against the recipient's current key.
  */
 export interface ShareTransferRequest {
   to:
@@ -291836,6 +291848,7 @@ export interface ShareTransferRequest {
         subject: SubjectRef;
       };
   keep_access?: boolean;
+  key_slot?: LockerPeopleSlot;
 }
 
 /** share.transfer-action-request@1.0.0 (owner: network) */

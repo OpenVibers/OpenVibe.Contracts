@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.293.0 — 2026-11-06
+
+- Sharing learns locked items. `share.update-request@1` gains `envelope`: a `locker.envelope@1`, base64, the content re-sealed for the people who stay, sent with the members that remain when someone is removed from a people-locked item. The service stores it before it drops the member; it never opens it.
+- `share.transfer-request@1` gains `key_slot` (that recipient's people slot), required for a people-locked item and checked against the recipient's current key from the key directory.
+- `share.member@1` gains `key_fingerprint` and `fingerprint_changed` (owner-only): the member's current eight-word fingerprint and whether it is still the key their slot was made for, so the share sheet can warn and re-wrap.
+- Additive: every new field is optional and old documents stay valid. Fixtures cover the locked member, the locked member input, the re-seal request and a locked transfer, and a malformed slot is refused.
+
 ## 0.292.0 — 2026-11-06
 
 - Add `locker.envelope@1`: the header of a sealed item — the suite (AES-256-GCM), the chunk size (1 MiB), the padded size, the counter nonce base, the lock kind and one key slot per way in. The content key is never in the header; it is wrapped in a people slot (ECDH P-256 + HKDF-SHA-256, bound to the recipient's key by its RFC 7638 thumbprint), a password slot (PBKDF2-SHA-256, 600000 iterations, the parameters in the header so they can be raised, and bounded above at 10000000 so a hostile header cannot freeze a reader) or a link slot (empty: the key travels in the link's fragment).
