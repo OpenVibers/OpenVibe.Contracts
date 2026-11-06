@@ -6,6 +6,7 @@
     "since": null
   },
   "ends_at": "2026-11-06T18:00:00.000Z",
+  "captions_url": "https://openvibe.live/api/streams/agent/ai_123456/captions.vtt",
   "lines": [
     {
       "id": 1,

@@ -103697,7 +103697,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/live/agent-stream-state.v2.json",
         "title": "LiveAgentStreamState",
-        "description": "live.agent-stream-state@2 (the Agent Streams plan, S4): what the desk reads every ten seconds, GET /api/streams/agent/:id/state on OpenVibe.Live (with the publish ticket). VIEWERS is how many people watch. ENCODE says whether Live wants video: it is true while anyone watches or the stream is public, and while it is false the desk stops encoding and sends a snapshot every five seconds (PUT /api/streams/agent/:id/frame, JPEG or WebP, at most 200 KB, with the ticket). CURTAIN is the desk privacy screen (the reason is the owner only). ENDS_AT is when the stream ends. LINES are the lines the agent said, oldest first, each with its id: the desk asks for the lines after the last id it spoke (the ?after parameter) and speaks them in the person own voice. VOICE is the voice the agent speaks in (the mode, the personality, the voice, the mute and, when the person allowance ran out, the pause message). The v2 shape adds LINES and VOICE to the v1 shape; the v1 fields keep their meaning. The v2 shape adds LINES and VOICE to the v1 shape (both optional, so a v1 reader keeps working); the v1 fields keep their meaning.",
+        "description": "live.agent-stream-state@2 (the Agent Streams plan, S4): what the desk reads every ten seconds, GET /api/streams/agent/:id/state on OpenVibe.Live (with the publish ticket). VIEWERS is how many people watch. ENCODE says whether Live wants video: it is true while anyone watches or the stream is public, and while it is false the desk stops encoding and sends a snapshot every five seconds (PUT /api/streams/agent/:id/frame, JPEG or WebP, at most 200 KB, with the ticket). CURTAIN is the desk privacy screen (the reason is the owner only). ENDS_AT is when the stream ends. LINES are the lines the agent said, oldest first, each with its id: the desk asks for the lines after the last id it spoke (the ?after parameter) and speaks them in the person own voice. VOICE is the voice the agent speaks in (the mode, the personality, the voice, the mute and, when the person allowance ran out, the pause message). The v2 shape adds LINES and VOICE to the v1 shape (both optional, so a v1 reader keeps working); the v1 fields keep their meaning. CAPTIONS_URL is where the recording captions live: the WebVTT a VOD player can attach as a text track.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -103873,6 +103873,13 @@
                 "description": "What the owner is told about the pause, for example voice paused: allowance spent."
               }
             }
+          },
+          "captions_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Where the recording captions live: the WebVTT a VOD player can attach as a text track. The voice itself is mixed into the stream before the recording, so the recording keeps the voice; the captions are the track beside it."
           }
         }
       }
