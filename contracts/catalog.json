@@ -9449,6 +9449,24 @@
       "status": "active"
     },
     {
+      "id": "live.agent-stream-step",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-step.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent-stream-step-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-step-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.agent_stream.changed",
       "version": "1.0.0",
       "owner": "live",
