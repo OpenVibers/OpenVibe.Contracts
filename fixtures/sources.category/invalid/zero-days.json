@@ -1,0 +1,6 @@
+{
+  "key": "news",
+  "retention": {
+    "days": 0
+  }
+}

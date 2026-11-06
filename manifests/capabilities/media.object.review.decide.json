@@ -1,0 +1,15 @@
+{
+  "id": "media.object.review.decide",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Apply an operator's overruling unsafe-image category to a Media object. POST /api/v2/:app/objects/:id/review-decision places the evidence hold for minor_sexual or releases it for fine/sex_acts, recording who and when; it is a service-principal capability and never an app key or the object's owner. OpenVibe.Vision calls it after the operator decides.",
+  "permissions": ["media:review-decide"],
+  "resourceConstraints": ["namespace"],
+  "quotaClass": "media-review-decide",
+  "events": ["media.moderation.action"],
+  "implementedBy": ["POST /api/v2/:app/objects/:id/review-decision"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.no-body@1"
+}

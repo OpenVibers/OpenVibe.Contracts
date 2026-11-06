@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/sources/category.v1.json",
+  "title": "SourceCategory",
+  "description": "One category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The window is what stops the registry's items growing linearly: every category says for itself how long its items live, so a consumer knows how long an item may be there and Sources prunes what the category no longer keeps. The age of an item is the last time it was current: its last fetch while it is live, its removal once it is removed. The categories are the ones sources.source@1 and sources.item@1 use.",
+  "type": "object",
+  "required": ["key", "retention"],
+  "additionalProperties": false,
+  "properties": {
+    "key": {
+      "enum": ["news", "blog", "reviews", "deals", "coupons", "trade", "hosting", "crowdfunding", "games", "housing", "food", "jobs"],
+      "description": "The category's key: the same value sources.source@1's category and sources.item@1's category carry."
+    },
+    "retention": {
+      "description": "How long Sources keeps an item of this category: a window in days, or \"keep\" for reference data that is never pruned by age.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["days"],
+          "additionalProperties": false,
+          "properties": {
+            "days": { "type": "integer", "minimum": 1, "maximum": 3650, "description": "The window in days: an item is kept until it has been out of date for that long." },
+            "reason": { "type": "string", "maxLength": 400, "description": "Why this window: the consumer that reads the category and the copy it keeps, so a reviewer can change the window on evidence." }
+          }
+        },
+        {
+          "const": "keep",
+          "description": "Reference data, never pruned by age: Sources keeps the newest row per source key and prunes only the rows a newer value replaced (a yearly Fair Market Rent, replaced each October)."
+        }
+      ]
+    }
+  }
+}

@@ -84742,6 +84742,44 @@ export interface Source {
   updated_at?: string;
 }
 
+/** sources.category@1.0.0 (owner: sources) */
+/**
+ * One category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The window is what stops the registry's items growing linearly: every category says for itself how long its items live, so a consumer knows how long an item may be there and Sources prunes what the category no longer keeps. The age of an item is the last time it was current: its last fetch while it is live, its removal once it is removed. The categories are the ones sources.source@1 and sources.item@1 use.
+ */
+export interface SourceCategory {
+  /**
+   * The category's key: the same value sources.source@1's category and sources.item@1's category carry.
+   */
+  key:
+    | "news"
+    | "blog"
+    | "reviews"
+    | "deals"
+    | "coupons"
+    | "trade"
+    | "hosting"
+    | "crowdfunding"
+    | "games"
+    | "housing"
+    | "food"
+    | "jobs";
+  /**
+   * How long Sources keeps an item of this category: a window in days, or "keep" for reference data that is never pruned by age.
+   */
+  retention:
+    | {
+        /**
+         * The window in days: an item is kept until it has been out of date for that long.
+         */
+        days: number;
+        /**
+         * Why this window: the consumer that reads the category and the copy it keeps, so a reviewer can change the window on evidence.
+         */
+        reason?: string;
+      }
+    | "keep";
+}
+
 /** sources.item@1.0.0 (owner: sources) */
 /**
  * One thing a source said, with its provenance: source, canonical URL, retrieval time, content hash, raw-body hash, parser version and the terms it was ingested under. A field the source did not state is null — never guessed. Items change only through successful fetches (a new revision per content change) or an explicit, audited removal.

@@ -53,6 +53,16 @@ for (const d of contracts.catalog.length ? JSON.parse(fs.readFileSync(path.join(
     ok(d.replacement && contracts.resolve(d.replacement), `deprecation ${d.id} names an existing replacement`);
     ok(d.removeAfter, `deprecation ${d.id} has a window`);
 }
+// ── The sources categories: one list, three contracts ──
+// sources.source@1 and sources.item@1 carry a category, and sources.category@1 names the same
+// categories with the window each one keeps. Three copies of the list is a drift risk, so the
+// lists are compared here: a category added to one of them without the others fails the run.
+const sourceCategories = contracts.schema('sources.source@1').properties.category.enum;
+const itemCategories = contracts.schema('sources.item@1').properties.category.enum;
+const categoryKeys = contracts.schema('sources.category@1').properties.key.enum;
+ok(JSON.stringify(sourceCategories) === JSON.stringify(itemCategories), 'sources.source@1 and sources.item@1 name the same categories');
+ok(JSON.stringify(sourceCategories) === JSON.stringify(categoryKeys), 'sources.category@1 names the same categories');
+ok(new Set(sourceCategories).size === sourceCategories.length, 'the categories are distinct');
 
 // ── Fixtures: every contract has examples that pass and counter-examples that fail ──
 // A contract with a helper that holds it to more than its schema is checked with that helper, so
