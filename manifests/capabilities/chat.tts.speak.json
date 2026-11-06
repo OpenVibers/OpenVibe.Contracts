@@ -1,0 +1,21 @@
+{
+  "id": "chat.tts.speak",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Ask OpenVibe.Chat for the sound of one line, in the person own voice and on the person allowance (the Agent Streams plan, S4). The caller presents a service token for audience openvibe.chat that names the person it acts for (a node token on_behalf_of), so the voice is that person and never another. The text is one line (220 characters at most). The answer is the audio (base64) with its type; the desk mixes it into the stream Opus track. A person own cloned voice is asked for by name and only by that person.",
+  "permissions": [
+    "chat:tts"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/agent-voice/speak"
+  ],
+  "inputSchema": "chat.tts-speak-request@1",
+  "outputSchema": "chat.tts-speak-result@1"
+}
