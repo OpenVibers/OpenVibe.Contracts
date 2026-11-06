@@ -1,10 +1,22 @@
 # Changelog
 
-## 0.292.0 — 2026-11-06
+## 0.295.0 — 2026-11-06
 
 - Add `sources.category@1`: one category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The `retention` field is either `{ days, reason }` — the window an item lives after it was last current (its last fetch while live, its removal once removed) — or `"keep"`, for reference data that is never pruned by age (Sources keeps the newest row per source key and prunes only the rows a newer value replaced).
 - The categories are the ones `sources.source@1` and `sources.item@1` already use; the three lists are compared in `test/run.js`, so a category added to one of them without the others fails the run. No existing schema changes: `sources.source@1`'s `category` and `sources.item@1`'s `category` keep their shape, so a consumer that reads them is unaffected.
-- OpenVibe.Sources keeps the windows in its own rule table until this release is tagged and pinned; the contract then becomes the one place that names each window.
+- Valid and invalid fixtures cover a windowed category (`news`), a kept category (`housing`), an unknown category, a missing rule and a zero-day window.
+
+## 0.294.0 — 2026-11-06
+
+- Add the unsafe-image review capabilities: `vision.image.review` (Media, Community and Live sort an image or AI text into fine, sex acts or sexual content involving a minor), `vision.review.read` and `vision.review.decide` (the staff queue and an operator's decision), `media.object.review.view` (Vision's 60-second logged evidence view of a hidden or quarantined object) and `media.object.review.decide` (Vision applies an operator's overruling category and releases Media's evidence hold). The Vision and Media service manifests name them.
+
+## 0.292.0 — 2026-11-06
+
+- Add `locker.envelope@1`: the header of a sealed item — the suite (AES-256-GCM), the chunk size (1 MiB), the padded size, the counter nonce base, the lock kind and one key slot per way in. The content key is never in the header; it is wrapped in a people slot (ECDH P-256 + HKDF-SHA-256, bound to the recipient's key by its RFC 7638 thumbprint), a password slot (PBKDF2-SHA-256, 600000 iterations, the parameters in the header so they can be raised, and bounded above at 10000000 so a hostile header cannot freeze a reader) or a link slot (empty: the key travels in the link's fragment).
+- The padded size is padded with Padmé (PoPETs 2019): at most about twelve per cent over the real size, never below 256 bytes, and it leaks O(log log n) bits. Every chunk but the last is a whole chunk; the last holds the rest.
+- Add the key directory contracts: `locker.public-key@1`, `locker.public-keys@1`, `locker.keys-put-request@1`, `locker.key-backup@1` and `locker.key-change@1`, with the eight-word fingerprint (sixty-four bits, in two groups of four) and the signature that proves a person owns their signing key.
+- `share@1` and `share.update-request@1` gain `lock` (`none`, `people`, `password`, `link`), and a share member may carry that member's key slot, so a member and its slot are saved together. Additive: the fields are optional and old documents stay valid.
+- Valid and invalid fixtures cover every new contract, and the new fields of the sharing contracts. The format is written down in [docs/locker.md](docs/locker.md).
 
 ## 0.291.0 — 2026-11-05
 

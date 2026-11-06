@@ -291699,7 +291699,7 @@ export interface ShareResourceRef {
   id: string;
 }
 
-/** share.member@1.0.0 (owner: network) */
+/** share.member@1.1.0 (owner: network) */
 /**
  * share.member@1: a member with their Network identity fields. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).
  */
@@ -291712,9 +291712,10 @@ export interface ShareMember {
   expires_at?: string;
   added_by: SubjectRef;
   added_at: string;
+  key_slot?: LockerPeopleSlot;
 }
 
-/** share.member-input@1.0.0 (owner: network) */
+/** share.member-input@1.1.0 (owner: network) */
 /**
  * share.member-input@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
  */
@@ -291723,6 +291724,7 @@ export type ShareMemberInput = {
   subject?: SubjectRef;
   role: "viewer" | "editor";
   expires_at?: string;
+  key_slot?: LockerPeopleSlot;
 } & {
   [k: string]: unknown | undefined;
 };
@@ -291752,7 +291754,7 @@ export interface ShareAccessRequest {
   state: "pending" | "granted" | "dismissed";
 }
 
-/** share@1.0.0 (owner: network) */
+/** share@1.1.0 (owner: network) */
 /**
  * share@1: the uniform GET/PUT body. People, not bare subjects; ids only, never a resource title or content except the service's own describe() (title and link). Members apply to people audience; pending recipients may preview for seven days.
  */
@@ -291766,6 +291768,10 @@ export interface Share {
    */
   members: ShareMember[];
   transfer?: ShareTransferView;
+  /**
+   * How the resource is sealed (Locker). none means it is stored as it is; people, password and link are the three Locker locks. The server stores the envelope and never opens it.
+   */
+  lock?: "none" | "people" | "password" | "link";
   you: ShareYou;
   requests: ShareAccessRequestView[];
   title: string | null;
@@ -291836,9 +291842,9 @@ export interface SharePeopleLookup {
   person: SharePerson | null;
 }
 
-/** share.update-request@1.0.0 (owner: network) */
+/** share.update-request@1.1.0 (owner: network) */
 /**
- * share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ * share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days. `lock` sets how the resource itself is sealed (Locker).
  */
 export interface ShareUpdateRequest {
   audience?: "public" | "link" | "people" | "private";
@@ -291847,6 +291853,10 @@ export interface ShareUpdateRequest {
    */
   members?: ShareMemberInput[];
   notify?: boolean;
+  /**
+   * How the resource is sealed (Locker).
+   */
+  lock?: "none" | "people" | "password" | "link";
 }
 
 /** share.transfer-request@1.0.0 (owner: network) */
@@ -291984,4 +291994,190 @@ export interface ShareTransferDeclinedPayload {
   subject: SubjectRef;
   occurred_at: string;
   transfer: ShareTransfer;
+}
+
+/** locker.envelope@1.0.0 (owner: network) */
+/**
+ * locker.envelope@1: the header of a Locker envelope. It is the JSON that opens every chunk of the envelope bytes: the suite, the chunk size, the padded size, the counter nonce base and one key slot per way in. The content key is never in the header; it is wrapped inside a slot. Every chunk authenticates the header's core fields (version, suite, chunk_size, padded_size, nonce_base, lock) as associated data, so the framing, the size and the lock kind cannot be changed; the slots sit outside that core on purpose, because adding a member re-wraps the content key without re-encrypting the content, and each slot carries its own AES-GCM tag over the content key with its own parameters bound in.
+ */
+export type LockerEnvelope = {
+  [k: string]: unknown | undefined;
+} & {
+  version: "locker.envelope.v1";
+  suite: "AES-256-GCM";
+  /**
+   * The chunk size in bytes: 1 MiB. Fixed for this version.
+   */
+  chunk_size: 1048576;
+  /**
+   * The size of the padded plaintext in bytes. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show. The size is padded with Padmé (Nikitin et al., PoPETs 2019): it is the next size on a grid that gets finer as the content grows, at most twelve per cent over the real one, and never below 256 bytes. Every chunk but the last is a whole chunk; the last holds what is left of this size.
+   */
+  padded_size: number;
+  /**
+   * Eight random bytes, base64: the first half of every chunk nonce. The second half is the chunk counter, so no nonce repeats inside one envelope.
+   */
+  nonce_base: string;
+  /**
+   * Which way in the envelope has. Exactly one slot kind is present, and it matches this.
+   */
+  lock: "people" | "password" | "link";
+  slots: {
+    /**
+     * @minItems 1
+     * @maxItems 100
+     */
+    people?: [LockerPeopleSlot, ...LockerPeopleSlot[]];
+    password?: LockerPasswordSlot;
+    link?: LockerLinkSlot;
+  };
+};
+
+/** locker.people-slot@1.0.0 (owner: network) */
+/**
+ * locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the recipient's key, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.
+ */
+export interface LockerPeopleSlot {
+  subject: SubjectRef;
+  algorithm: "ECDH-P256/HKDF-SHA256/AES-256-GCM";
+  /**
+   * The RFC 7638 thumbprint of the recipient's ECDH public key: SHA-256 over the canonical JSON of the key's four members, base64url. The slot is bound to this key as well as to the subject, and the reader checks it before it derives anything.
+   */
+  recipient_key: string;
+  ephemeral_public_key: LockerPublicKey;
+  /**
+   * Sixteen random bytes, base64: the HKDF salt for this slot.
+   */
+  salt: string;
+  /**
+   * Twelve random bytes, base64: the AES-GCM nonce of the wrapped content key.
+   */
+  nonce: string;
+  /**
+   * The 32-byte content key and its 16-byte tag, base64. Never the key itself.
+   */
+  wrapped_key: string;
+}
+
+/** locker.password-slot@1.0.0 (owner: network) */
+/**
+ * locker.password-slot@1: the content key wrapped with a password. The wrapping key comes from PBKDF2-SHA-256 with the salt and the iteration count in this slot, so both can be raised later without changing the format. The tag covers the parameters, so they cannot be weakened in transit.
+ */
+export interface LockerPasswordSlot {
+  algorithm: "PBKDF2-SHA256/AES-256-GCM";
+  kdf: "PBKDF2-SHA-256";
+  /**
+   * PBKDF2 iterations. 600000 is the floor for this version; the count may go up, never down.
+   */
+  iterations: number;
+  /**
+   * Sixteen random bytes, base64: the PBKDF2 salt.
+   */
+  salt: string;
+  /**
+   * Twelve random bytes, base64: the AES-GCM nonce of the wrapped content key.
+   */
+  nonce: string;
+  /**
+   * The 32-byte content key and its 16-byte tag, base64. Never the key itself.
+   */
+  wrapped_key: string;
+}
+
+/** locker.link-slot@1.0.0 (owner: network) */
+/**
+ * locker.link-slot@1: a link lock stores no key. The content key travels in the part of the link after the #, which browsers never send to us, so this slot is empty on purpose and the envelope says only that the key is somewhere else.
+ */
+export interface LockerLinkSlot {}
+
+/** locker.public-key@1.0.0 (owner: network) */
+/**
+ * locker.public-key@1: one P-256 public key as a JWK. The same shape is used for the ECDH key that receives content keys and for the ECDSA key that signs the fingerprint; what a key does is decided by where it is used, never by the key itself.
+ */
+export interface LockerPublicKey {
+  kty: "EC";
+  crv: "P-256";
+  /**
+   * The public x coordinate, base64url, as WebCrypto exports it.
+   */
+  x: string;
+  /**
+   * The public y coordinate, base64url, as WebCrypto exports it.
+   */
+  y: string;
+  ext?: true;
+  key_ops?: ("deriveBits" | "deriveKey" | "verify")[];
+}
+
+/** locker.public-keys@1.0.0 (owner: network) */
+/**
+ * locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the eight-word fingerprint. The fingerprint is the first eight bytes of SHA-256 over both public keys, read as eight words in two groups of four, joined by a middle dot, and the signature proves the holder owns the signing key, so a person can compare the eight words out of band and a key change is visible.
+ */
+export interface LockerPublicKeys {
+  subject: SubjectRef;
+  ecdh: LockerPublicKey;
+  signing: LockerPublicKey;
+  /**
+   * Eight words, lower case, in two groups of four joined by a middle dot: sixty-four bits. Compare them out of band; a change means a changed key.
+   */
+  fingerprint: string;
+  /**
+   * The ECDSA signature over both public keys, base64. It proves the holder owns the signing key.
+   */
+  fingerprint_signature: string;
+  updated_at: string;
+}
+
+/** locker.keys-put-request@1.0.0 (owner: network) */
+/**
+ * locker.keys-put-request@1: what a person sends to set their locker keys. The public keys and the fingerprint are readable by anyone; the private keys go in the backup, wrapped by a key from the locker passphrase, so the server never holds an unwrapped key.
+ */
+export interface LockerKeysPutRequest {
+  ecdh: LockerPublicKey;
+  signing: LockerPublicKey;
+  fingerprint: string;
+  fingerprint_signature: string;
+  backup: LockerKeyBackup;
+}
+
+/** locker.key-backup@1.0.0 (owner: network) */
+/**
+ * locker.key-backup@1: the person's private keys, wrapped. The wrapping key comes from the locker passphrase with PBKDF2-SHA-256, so the server stores bytes it cannot open; a passkey (WebAuthn PRF) may wrap the same bytes later without changing this shape.
+ */
+export interface LockerKeyBackup {
+  /**
+   * How the private keys are wrapped. A passkey-only locker comes later.
+   */
+  method: "passphrase";
+  kdf: "PBKDF2-SHA-256";
+  iterations: number;
+  /**
+   * Sixteen random bytes, base64.
+   */
+  salt: string;
+  /**
+   * Twelve random bytes, base64: the AES-GCM nonce of the wrapped keys.
+   */
+  nonce: string;
+  /**
+   * The two private keys as JWKs, sealed with AES-256-GCM under the derived key, base64.
+   */
+  wrapped_keys: string;
+}
+
+/** locker.key-change@1.0.0 (owner: network) */
+/**
+ * locker.key-change@1: a record that a person's locker keys changed, so the share sheet can warn before sharing with a key that is not the one people saw before.
+ */
+export interface LockerKeyChange {
+  subject: SubjectRef;
+  reason: "created" | "rotated" | "restored";
+  changed_at: string;
+  /**
+   * The eight words of the new keys, in two groups of four joined by a middle dot.
+   */
+  fingerprint: string;
+  /**
+   * The eight words before the change, when there were any.
+   */
+  previous_fingerprint?: string;
 }

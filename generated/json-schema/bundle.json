@@ -101684,7 +101684,7 @@
       }
     },
     "share.member": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -101732,6 +101732,9 @@
           "added_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "key_slot": {
+            "$ref": "../locker/people-slot.v1.json"
           }
         },
         "required": [
@@ -101746,7 +101749,7 @@
       }
     },
     "share.member-input": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -101773,6 +101776,9 @@
           "expires_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "key_slot": {
+            "$ref": "../locker/people-slot.v1.json"
           }
         },
         "required": [
@@ -101897,7 +101903,7 @@
       }
     },
     "share": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -101934,6 +101940,15 @@
           },
           "transfer": {
             "$ref": "transfer-view.v1.json"
+          },
+          "lock": {
+            "enum": [
+              "none",
+              "people",
+              "password",
+              "link"
+            ],
+            "description": "How the resource is sealed (Locker). none means it is stored as it is; people, password and link are the three Locker locks. The server stores the envelope and never opens it."
           },
           "you": {
             "$ref": "you.v1.json"
@@ -102205,14 +102220,14 @@
       }
     },
     "share.update-request": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/share/update-request.v1.json",
         "title": "ShareUpdateRequest",
-        "description": "share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "description": "share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days. `lock` sets how the resource itself is sealed (Locker).",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -102234,6 +102249,15 @@
           "notify": {
             "type": "boolean",
             "default": true
+          },
+          "lock": {
+            "enum": [
+              "none",
+              "people",
+              "password",
+              "link"
+            ],
+            "description": "How the resource is sealed (Locker)."
           }
         },
         "required": [],
@@ -102698,6 +102722,543 @@
           "occurred_at",
           "transfer"
         ]
+      }
+    },
+    "locker.envelope": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/envelope.v1.json",
+        "title": "LockerEnvelope",
+        "description": "locker.envelope@1: the header of a Locker envelope. It is the JSON that opens every chunk of the envelope bytes: the suite, the chunk size, the padded size, the counter nonce base and one key slot per way in. The content key is never in the header; it is wrapped inside a slot. Every chunk authenticates the header's core fields (version, suite, chunk_size, padded_size, nonce_base, lock) as associated data, so the framing, the size and the lock kind cannot be changed; the slots sit outside that core on purpose, because adding a member re-wraps the content key without re-encrypting the content, and each slot carries its own AES-GCM tag over the content key with its own parameters bound in.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "suite",
+          "chunk_size",
+          "padded_size",
+          "nonce_base",
+          "lock",
+          "slots"
+        ],
+        "properties": {
+          "version": {
+            "const": "locker.envelope.v1"
+          },
+          "suite": {
+            "const": "AES-256-GCM"
+          },
+          "chunk_size": {
+            "const": 1048576,
+            "description": "The chunk size in bytes: 1 MiB. Fixed for this version."
+          },
+          "padded_size": {
+            "type": "integer",
+            "minimum": 256,
+            "description": "The size of the padded plaintext in bytes. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show. The size is padded with Padmé (Nikitin et al., PoPETs 2019): it is the next size on a grid that gets finer as the content grows, at most twelve per cent over the real one, and never below 256 bytes. Every chunk but the last is a whole chunk; the last holds what is left of this size."
+          },
+          "nonce_base": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{11}=$",
+            "description": "Eight random bytes, base64: the first half of every chunk nonce. The second half is the chunk counter, so no nonce repeats inside one envelope."
+          },
+          "lock": {
+            "enum": [
+              "people",
+              "password",
+              "link"
+            ],
+            "description": "Which way in the envelope has. Exactly one slot kind is present, and it matches this."
+          },
+          "slots": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "people": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "$ref": "people-slot.v1.json"
+                }
+              },
+              "password": {
+                "$ref": "password-slot.v1.json"
+              },
+              "link": {
+                "$ref": "link-slot.v1.json"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "lock": {
+                  "const": "people"
+                }
+              },
+              "required": [
+                "lock"
+              ]
+            },
+            "then": {
+              "properties": {
+                "slots": {
+                  "type": "object",
+                  "required": [
+                    "people"
+                  ],
+                  "not": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "password"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "required": [
+                          "link"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "lock": {
+                  "const": "password"
+                }
+              },
+              "required": [
+                "lock"
+              ]
+            },
+            "then": {
+              "properties": {
+                "slots": {
+                  "type": "object",
+                  "required": [
+                    "password"
+                  ],
+                  "not": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "people"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "required": [
+                          "link"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "lock": {
+                  "const": "link"
+                }
+              },
+              "required": [
+                "lock"
+              ]
+            },
+            "then": {
+              "properties": {
+                "slots": {
+                  "type": "object",
+                  "required": [
+                    "link"
+                  ],
+                  "not": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "people"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "required": [
+                          "password"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "locker.people-slot": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/people-slot.v1.json",
+        "title": "LockerPeopleSlot",
+        "description": "locker.people-slot@1: the content key wrapped for one person. The wrapping key is ECDH P-256 (an ephemeral key pair per envelope) put through HKDF-SHA-256, and the content key is sealed with AES-256-GCM. The tag covers the subject, the recipient's key, the ephemeral public key and the salt, so a slot cannot be moved to another person or to another envelope.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "algorithm",
+          "recipient_key",
+          "ephemeral_public_key",
+          "salt",
+          "nonce",
+          "wrapped_key"
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "algorithm": {
+            "const": "ECDH-P256/HKDF-SHA256/AES-256-GCM"
+          },
+          "recipient_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "description": "The RFC 7638 thumbprint of the recipient's ECDH public key: SHA-256 over the canonical JSON of the key's four members, base64url. The slot is bound to this key as well as to the subject, and the reader checks it before it derives anything."
+          },
+          "ephemeral_public_key": {
+            "$ref": "public-key.v1.json"
+          },
+          "salt": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{22}==$",
+            "description": "Sixteen random bytes, base64: the HKDF salt for this slot."
+          },
+          "nonce": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{16}$",
+            "description": "Twelve random bytes, base64: the AES-GCM nonce of the wrapped content key."
+          },
+          "wrapped_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{64}$",
+            "description": "The 32-byte content key and its 16-byte tag, base64. Never the key itself."
+          }
+        }
+      }
+    },
+    "locker.password-slot": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/password-slot.v1.json",
+        "title": "LockerPasswordSlot",
+        "description": "locker.password-slot@1: the content key wrapped with a password. The wrapping key comes from PBKDF2-SHA-256 with the salt and the iteration count in this slot, so both can be raised later without changing the format. The tag covers the parameters, so they cannot be weakened in transit.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "algorithm",
+          "kdf",
+          "iterations",
+          "salt",
+          "nonce",
+          "wrapped_key"
+        ],
+        "properties": {
+          "algorithm": {
+            "const": "PBKDF2-SHA256/AES-256-GCM"
+          },
+          "kdf": {
+            "const": "PBKDF2-SHA-256"
+          },
+          "iterations": {
+            "type": "integer",
+            "minimum": 600000,
+            "maximum": 10000000,
+            "description": "PBKDF2 iterations. 600000 is the floor for this version; the count may go up, never down."
+          },
+          "salt": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{22}==$",
+            "description": "Sixteen random bytes, base64: the PBKDF2 salt."
+          },
+          "nonce": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{16}$",
+            "description": "Twelve random bytes, base64: the AES-GCM nonce of the wrapped content key."
+          },
+          "wrapped_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{64}$",
+            "description": "The 32-byte content key and its 16-byte tag, base64. Never the key itself."
+          }
+        }
+      }
+    },
+    "locker.link-slot": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/link-slot.v1.json",
+        "title": "LockerLinkSlot",
+        "description": "locker.link-slot@1: a link lock stores no key. The content key travels in the part of the link after the #, which browsers never send to us, so this slot is empty on purpose and the envelope says only that the key is somewhere else.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "locker.public-key": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/public-key.v1.json",
+        "title": "LockerPublicKey",
+        "description": "locker.public-key@1: one P-256 public key as a JWK. The same shape is used for the ECDH key that receives content keys and for the ECDSA key that signs the fingerprint; what a key does is decided by where it is used, never by the key itself.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kty",
+          "crv",
+          "x",
+          "y"
+        ],
+        "properties": {
+          "kty": {
+            "const": "EC"
+          },
+          "crv": {
+            "const": "P-256"
+          },
+          "x": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "description": "The public x coordinate, base64url, as WebCrypto exports it."
+          },
+          "y": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "description": "The public y coordinate, base64url, as WebCrypto exports it."
+          },
+          "ext": {
+            "const": true
+          },
+          "key_ops": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "deriveBits",
+                "deriveKey",
+                "verify"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "locker.public-keys": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/public-keys.v1.json",
+        "title": "LockerPublicKeys",
+        "description": "locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the eight-word fingerprint. The fingerprint is the first eight bytes of SHA-256 over both public keys, read as eight words in two groups of four, joined by a middle dot, and the signature proves the holder owns the signing key, so a person can compare the eight words out of band and a key change is visible.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "ecdh",
+          "signing",
+          "fingerprint",
+          "fingerprint_signature",
+          "updated_at"
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "ecdh": {
+            "$ref": "public-key.v1.json"
+          },
+          "signing": {
+            "$ref": "public-key.v1.json"
+          },
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+ · [a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+            "description": "Eight words, lower case, in two groups of four joined by a middle dot: sixty-four bits. Compare them out of band; a change means a changed key."
+          },
+          "fingerprint_signature": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{86}==$",
+            "description": "The ECDSA signature over both public keys, base64. It proves the holder owns the signing key."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "locker.keys-put-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/keys-put-request.v1.json",
+        "title": "LockerKeysPutRequest",
+        "description": "locker.keys-put-request@1: what a person sends to set their locker keys. The public keys and the fingerprint are readable by anyone; the private keys go in the backup, wrapped by a key from the locker passphrase, so the server never holds an unwrapped key.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ecdh",
+          "signing",
+          "fingerprint",
+          "fingerprint_signature",
+          "backup"
+        ],
+        "properties": {
+          "ecdh": {
+            "$ref": "public-key.v1.json"
+          },
+          "signing": {
+            "$ref": "public-key.v1.json"
+          },
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+ · [a-z]+ [a-z]+ [a-z]+ [a-z]+$"
+          },
+          "fingerprint_signature": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{86}==$"
+          },
+          "backup": {
+            "$ref": "key-backup.v1.json"
+          }
+        }
+      }
+    },
+    "locker.key-backup": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/key-backup.v1.json",
+        "title": "LockerKeyBackup",
+        "description": "locker.key-backup@1: the person's private keys, wrapped. The wrapping key comes from the locker passphrase with PBKDF2-SHA-256, so the server stores bytes it cannot open; a passkey (WebAuthn PRF) may wrap the same bytes later without changing this shape.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "method",
+          "kdf",
+          "iterations",
+          "salt",
+          "nonce",
+          "wrapped_keys"
+        ],
+        "properties": {
+          "method": {
+            "enum": [
+              "passphrase"
+            ],
+            "description": "How the private keys are wrapped. A passkey-only locker comes later."
+          },
+          "kdf": {
+            "const": "PBKDF2-SHA-256"
+          },
+          "iterations": {
+            "type": "integer",
+            "minimum": 600000,
+            "maximum": 10000000
+          },
+          "salt": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{22}==$",
+            "description": "Sixteen random bytes, base64."
+          },
+          "nonce": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{16}$",
+            "description": "Twelve random bytes, base64: the AES-GCM nonce of the wrapped keys."
+          },
+          "wrapped_keys": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+            "description": "The two private keys as JWKs, sealed with AES-256-GCM under the derived key, base64."
+          }
+        }
+      }
+    },
+    "locker.key-change": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/locker/key-change.v1.json",
+        "title": "LockerKeyChange",
+        "description": "locker.key-change@1: a record that a person's locker keys changed, so the share sheet can warn before sharing with a key that is not the one people saw before.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "reason",
+          "changed_at",
+          "fingerprint"
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "reason": {
+            "enum": [
+              "created",
+              "rotated",
+              "restored"
+            ]
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+ · [a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+            "description": "The eight words of the new keys, in two groups of four joined by a middle dot."
+          },
+          "previous_fingerprint": {
+            "type": "string",
+            "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+ · [a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+            "description": "The eight words before the change, when there were any."
+          }
+        }
       }
     }
   }

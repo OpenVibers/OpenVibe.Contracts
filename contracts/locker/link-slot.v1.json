@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/locker/link-slot.v1.json",
+  "title": "LockerLinkSlot",
+  "description": "locker.link-slot@1: a link lock stores no key. The content key travels in the part of the link after the #, which browsers never send to us, so this slot is empty on purpose and the envelope says only that the key is somewhere else.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {}
+}

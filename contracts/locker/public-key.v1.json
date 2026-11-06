@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/locker/public-key.v1.json",
+  "title": "LockerPublicKey",
+  "description": "locker.public-key@1: one P-256 public key as a JWK. The same shape is used for the ECDH key that receives content keys and for the ECDSA key that signs the fingerprint; what a key does is decided by where it is used, never by the key itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kty",
+    "crv",
+    "x",
+    "y"
+  ],
+  "properties": {
+    "kty": {
+      "const": "EC"
+    },
+    "crv": {
+      "const": "P-256"
+    },
+    "x": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$",
+      "description": "The public x coordinate, base64url, as WebCrypto exports it."
+    },
+    "y": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$",
+      "description": "The public y coordinate, base64url, as WebCrypto exports it."
+    },
+    "ext": {
+      "const": true
+    },
+    "key_ops": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "deriveBits",
+          "deriveKey",
+          "verify"
+        ]
+      }
+    }
+  }
+}

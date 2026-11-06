@@ -9134,7 +9134,7 @@
     },
     {
       "id": "share.member",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "share/member.v1.json",
       "visibility": "public",
@@ -9143,7 +9143,7 @@
     },
     {
       "id": "share.member-input",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "share/member-input.v1.json",
       "visibility": "public",
@@ -9170,7 +9170,7 @@
     },
     {
       "id": "share",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "share/share.v1.json",
       "visibility": "public",
@@ -9224,7 +9224,7 @@
     },
     {
       "id": "share.update-request",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "share/update-request.v1.json",
       "visibility": "public",
@@ -9309,6 +9309,87 @@
       "owner": "network",
       "schema": "events/payloads/share.transfer.declined.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.envelope",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/envelope.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.people-slot",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/people-slot.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.password-slot",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/password-slot.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.link-slot",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/link-slot.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.public-key",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/public-key.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.public-keys",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/public-keys.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.keys-put-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/keys-put-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.key-backup",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/key-backup.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "locker.key-change",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "locker/key-change.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     }

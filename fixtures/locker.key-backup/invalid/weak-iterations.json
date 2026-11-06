@@ -1,0 +1,8 @@
+{
+  "method": "passphrase",
+  "kdf": "PBKDF2-SHA-256",
+  "iterations": 10000,
+  "salt": "c3Nzc3Nzc3Nzc3Nzc3Nzcw==",
+  "nonce": "bm5ubm5ubm5ubm5u",
+  "wrapped_keys": "d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3"
+}

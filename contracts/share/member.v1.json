@@ -43,6 +43,9 @@
     "added_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "key_slot": {
+      "$ref": "../locker/people-slot.v1.json"
     }
   },
   "required": [

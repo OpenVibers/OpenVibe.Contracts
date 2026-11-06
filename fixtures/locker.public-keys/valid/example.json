@@ -1,0 +1,18 @@
+{
+  "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "ecdh": {
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg",
+  "y": "eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk"
+},
+  "signing": {
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg",
+  "y": "eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk"
+},
+  "fingerprint": "amber quiet harbor cedar · mist dawn ember willow",
+  "fingerprint_signature": "Z2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZw==",
+  "updated_at": "2026-11-06T00:00:00Z"
+}

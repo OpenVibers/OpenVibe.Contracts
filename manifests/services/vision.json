@@ -35,7 +35,10 @@
     "vision.face.cast.match",
     "vision.face.cast.read",
     "vision.models.read",
-    "vision.benchmarks.read"
+    "vision.benchmarks.read",
+    "vision.image.review",
+    "vision.review.read",
+    "vision.review.decide"
   ],
   "eventsProduced": [
     "vision.result.ready",
@@ -98,7 +101,7 @@
       "none": "no claims: one process serves the site and the API"
     }
   },
-  "notes": "Port 5130, unit openvibe-vision.service, database ov_vision. The Vision room (plan 2026-10-28 §5.8b): ask a picture, read text with the local Tesseract 5 engine first, compare the local reader with up to three AI hints, check HTML, a public URL or a screenshot for UI faults, write alt text, search only your own images by CLIP, read receipts, match products to offers, watch camera stills and find VOD moments. Faces are local (YuNet/SFace): detect and blur are identity-free, and verify, find, cast and library grouping each need a separate signed consent record (vision.consent@1) with a scope, expiry and a revocation that erases the derived data. Refusal is the same whether or not the person exists. OpenVibe.AI is the only model gateway (ai.run.create); no provider key is held, no image bytes are stored for general answers and no face template enters Search, a prompt or Bench. Public AI text passes noLooks. OAuth client `vision`; MCP at POST /mcp (RFC 9728 protected-resource metadata) exposes the image tools and never enrolment, verification or face-group mutation. Answers account export and deletion (ADR-033), subscribes to the two account Events topics and publishes vision.result.ready and vision.alert through its outbox. v1 has no public records, so it has no Search outbox.",
+  "notes": "Port 5130, unit openvibe-vision.service, database ov_vision. The Vision room (plan 2026-10-28 \u00a75.8b): ask a picture, read text with the local Tesseract 5 engine first, compare the local reader with up to three AI hints, check HTML, a public URL or a screenshot for UI faults, write alt text, search only your own images by CLIP, read receipts, match products to offers, watch camera stills and find VOD moments. Faces are local (YuNet/SFace): detect and blur are identity-free, and verify, find, cast and library grouping each need a separate signed consent record (vision.consent@1) with a scope, expiry and a revocation that erases the derived data. Refusal is the same whether or not the person exists. OpenVibe.AI is the only model gateway (ai.run.create); no provider key is held, no image bytes are stored for general answers and no face template enters Search, a prompt or Bench. Public AI text passes noLooks. OAuth client `vision`; MCP at POST /mcp (RFC 9728 protected-resource metadata) exposes the image tools and never enrolment, verification or face-group mutation. Answers account export and deletion (ADR-033), subscribes to the two account Events topics and publishes vision.result.ready and vision.alert through its outbox. v1 has no public records, so it has no Search outbox.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5130",
