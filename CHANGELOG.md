@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.294.0 — 2026-11-06
+
+- Add the unsafe-image review capabilities: `vision.image.review` (Media, Community and Live sort an image or AI text into fine, sex acts or sexual content involving a minor), `vision.review.read` and `vision.review.decide` (the staff queue and an operator's decision), `media.object.review.view` (Vision's 60-second logged evidence view of a hidden or quarantined object) and `media.object.review.decide` (Vision applies an operator's overruling category and releases Media's evidence hold). The Vision and Media service manifests name them.
+
 ## 0.292.0 — 2026-11-06
 
 - Add `locker.envelope@1`: the header of a sealed item — the suite (AES-256-GCM), the chunk size (1 MiB), the padded size, the counter nonce base, the lock kind and one key slot per way in. The content key is never in the header; it is wrapped in a people slot (ECDH P-256 + HKDF-SHA-256, bound to the recipient's key by its RFC 7638 thumbprint), a password slot (PBKDF2-SHA-256, 600000 iterations, the parameters in the header so they can be raised, and bounded above at 10000000 so a hostile header cannot freeze a reader) or a link slot (empty: the key travels in the link's fragment).

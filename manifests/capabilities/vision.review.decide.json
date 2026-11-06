@@ -1,0 +1,15 @@
+{
+  "id": "vision.review.decide",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Set one OpenVibe.Vision unsafe-image review to exactly fine, sex_acts or minor_sexual. POST /api/v1/review/:id/decide records who decided and when, and an overruling category releases Media's evidence hold. Staff use it through the review page; a service token holding this capability can make the same decision.",
+  "permissions": ["vision:review-decide"],
+  "resourceConstraints": ["none"],
+  "quotaClass": "vision-review-decide",
+  "events": [],
+  "implementedBy": ["POST /api/v1/review/:id/decide"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.no-body@1"
+}
