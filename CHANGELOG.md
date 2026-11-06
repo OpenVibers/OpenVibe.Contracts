@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.297.0 — 2026-11-06
 
 - Add `identity.subject-assertion-claims@1`: the claims of a short-lived ES256 assertion signed by OpenVibe.Network that says a person allowed one service to act for them on another service — `sub` (the person), `aud` (the service it is for), `act` (the service it was minted for), optionally `for` (the services that may carry it), `jti`, `iat`, `exp`. Network mints one only from the person's own access token (`POST /internal/subject-assertions`), so a service that merely knows a person's id cannot say the person allowed anything; the key is published in Network's JWKS (`kid ov-network-assertion-1`). The money routes of Billing and Tips check it against the person they act for, and refuse the old "the service vouches for its person" way once `BILLING_REQUIRE_SUBJECT_ASSERTION` / `TIPS_REQUIRE_SUBJECT_ASSERTION` is on. Only a service token Network issued for its own API (`openvibe.network`) mints one. See the ADR-003 amendment of 2026-11-06.
 ## 0.296.0 — 2026-11-06
