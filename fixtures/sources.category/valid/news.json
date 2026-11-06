@@ -1,0 +1,7 @@
+{
+  "key": "news",
+  "retention": {
+    "days": 30,
+    "reason": "News shows the last 30 days and copies every item it follows"
+  }
+}

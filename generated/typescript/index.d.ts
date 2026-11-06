@@ -84788,6 +84788,44 @@ export interface Source {
   updated_at?: string;
 }
 
+/** sources.category@1.0.0 (owner: sources) */
+/**
+ * One category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The window is what stops the registry's items growing linearly: every category says for itself how long its items live, so a consumer knows how long an item may be there and Sources prunes what the category no longer keeps. The age of an item is the last time it was current: its last fetch while it is live, its removal once it is removed. The categories are the ones sources.source@1 and sources.item@1 use.
+ */
+export interface SourceCategory {
+  /**
+   * The category's key: the same value sources.source@1's category and sources.item@1's category carry.
+   */
+  key:
+    | "news"
+    | "blog"
+    | "reviews"
+    | "deals"
+    | "coupons"
+    | "trade"
+    | "hosting"
+    | "crowdfunding"
+    | "games"
+    | "housing"
+    | "food"
+    | "jobs";
+  /**
+   * How long Sources keeps an item of this category: a window in days, or "keep" for reference data that is never pruned by age.
+   */
+  retention:
+    | {
+        /**
+         * The window in days: an item is kept until it has been out of date for that long.
+         */
+        days: number;
+        /**
+         * Why this window: the consumer that reads the category and the copy it keeps, so a reviewer can change the window on evidence.
+         */
+        reason?: string;
+      }
+    | "keep";
+}
+
 /** sources.item@1.0.0 (owner: sources) */
 /**
  * One thing a source said, with its provenance: source, canonical URL, retrieval time, content hash, raw-body hash, parser version and the terms it was ingested under. A field the source did not state is null — never guessed. Items change only through successful fetches (a new revision per content change) or an explicit, audited removal.
@@ -291721,6 +291759,14 @@ export interface ShareMember {
   added_by: SubjectRef;
   added_at: string;
   key_slot?: LockerPeopleSlot;
+  /**
+   * The member's current key fingerprint from Network's key directory (locker.public-keys@1), shown to the owner of a people-locked item; null when the person has no locker key (or Network did not answer).
+   */
+  key_fingerprint?: string | null;
+  /**
+   * Owner-only, for a people-locked item: true when the member's current key is not the one their key_slot was made for, so the sheet warns and re-wraps.
+   */
+  fingerprint_changed?: boolean;
 }
 
 /** share.member-input@1.1.0 (owner: network) */
@@ -291862,14 +291908,18 @@ export interface ShareUpdateRequest {
   members?: ShareMemberInput[];
   notify?: boolean;
   /**
-   * How the resource is sealed (Locker).
+   * How the resource is sealed (Locker). Set when the item is registered; a save may echo the same value but cannot change it.
    */
   lock?: "none" | "people" | "password" | "link";
+  /**
+   * A locker.envelope@1, base64: the content re-sealed for the people who stay, sent with the members that remain when someone is removed from a people-locked item. The service stores it (never opens it) before it drops the member.
+   */
+  envelope?: string;
 }
 
 /** share.transfer-request@1.0.0 (owner: network) */
 /**
- * share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ * share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days. `key_slot` is the content key wrapped for the recipient, required when the item is people-locked (Locker) and checked against the recipient's current key.
  */
 export interface ShareTransferRequest {
   to:
@@ -291882,6 +291932,7 @@ export interface ShareTransferRequest {
         subject: SubjectRef;
       };
   keep_access?: boolean;
+  key_slot?: LockerPeopleSlot;
 }
 
 /** share.transfer-action-request@1.0.0 (owner: network) */

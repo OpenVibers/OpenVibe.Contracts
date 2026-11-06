@@ -1,0 +1,15 @@
+{
+  "id": "vision.image.review",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Sort one image (or one AI text) into OpenVibe.Vision's unsafe-image review: exactly fine (nudity allowed), sex_acts (never public; kept for its owner) or minor_sexual (always blocked, quarantined and reported to the operator). POST /api/v1/review accepts a multipart image, a data URL, a public https image URL or text, plus the caller's object reference; the answer carries the category, plain words, the action and the operator report for category 3. Media, Community and Live call it with their own service token. No image bytes are stored.",
+  "permissions": ["vision:review"],
+  "resourceConstraints": ["none"],
+  "quotaClass": "vision-review",
+  "events": [],
+  "implementedBy": ["POST /api/v1/review"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.no-body@1"
+}

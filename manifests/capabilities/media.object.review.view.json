@@ -1,0 +1,15 @@
+{
+  "id": "media.object.review.view",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Open one 60-second operator evidence view of a hidden or quarantined Media object. POST /api/v2/:app/objects/:id/operator-view answers a signed URL whose purpose is separate from every normal download signature; the view is logged (who, when, expiry) and a fine object is refused. OpenVibe.Vision alone holds it, for the review page.",
+  "permissions": ["media:review-view"],
+  "resourceConstraints": ["namespace"],
+  "quotaClass": "media-review-view",
+  "events": ["media.moderation.action"],
+  "implementedBy": ["POST /api/v2/:app/objects/:id/operator-view"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.no-body@1"
+}

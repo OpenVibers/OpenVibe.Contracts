@@ -3,6 +3,22 @@
 ## Unreleased
 
 - Add `identity.subject-assertion-claims@1`: the claims of a short-lived ES256 assertion signed by OpenVibe.Network that says a person allowed one service to act for them on another service — `sub` (the person), `aud` (the service it is for), `act` (the service it was minted for), optionally `for` (the services that may carry it), `jti`, `iat`, `exp`. Network mints one only from the person's own access token (`POST /internal/subject-assertions`), so a service that merely knows a person's id cannot say the person allowed anything; the key is published in Network's JWKS (`kid ov-network-assertion-1`). The money routes of Billing and Tips check it against the person they act for, and refuse the old "the service vouches for its person" way once `BILLING_REQUIRE_SUBJECT_ASSERTION` / `TIPS_REQUIRE_SUBJECT_ASSERTION` is on. Only a service token Network issued for its own API (`openvibe.network`) mints one. See the ADR-003 amendment of 2026-11-06.
+## 0.296.0 — 2026-11-06
+
+- Sharing learns locked items. `share.update-request@1` gains `envelope`: a `locker.envelope@1`, base64, the content re-sealed for the people who stay, sent with the members that remain when someone is removed from a people-locked item. The service stores it before it drops the member; it never opens it.
+- `share.transfer-request@1` gains `key_slot` (that recipient's people slot), required for a people-locked item and checked against the recipient's current key from the key directory.
+- `share.member@1` gains `key_fingerprint` and `fingerprint_changed` (owner-only): the member's current eight-word fingerprint and whether it is still the key their slot was made for, so the share sheet can warn and re-wrap.
+- Additive: every new field is optional and old documents stay valid. Fixtures cover the locked member, the locked member input, the re-seal request and a locked transfer, and a malformed slot is refused.
+
+## 0.295.0 — 2026-11-06
+
+- Add `sources.category@1`: one category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The `retention` field is either `{ days, reason }` — the window an item lives after it was last current (its last fetch while live, its removal once removed) — or `"keep"`, for reference data that is never pruned by age (Sources keeps the newest row per source key and prunes only the rows a newer value replaced).
+- The categories are the ones `sources.source@1` and `sources.item@1` already use; the three lists are compared in `test/run.js`, so a category added to one of them without the others fails the run. No existing schema changes: `sources.source@1`'s `category` and `sources.item@1`'s `category` keep their shape, so a consumer that reads them is unaffected.
+- Valid and invalid fixtures cover a windowed category (`news`), a kept category (`housing`), an unknown category, a missing rule and a zero-day window.
+
+## 0.294.0 — 2026-11-06
+
+- Add the unsafe-image review capabilities: `vision.image.review` (Media, Community and Live sort an image or AI text into fine, sex acts or sexual content involving a minor), `vision.review.read` and `vision.review.decide` (the staff queue and an operator's decision), `media.object.review.view` (Vision's 60-second logged evidence view of a hidden or quarantined object) and `media.object.review.decide` (Vision applies an operator's overruling category and releases Media's evidence hold). The Vision and Media service manifests name them.
 
 ## 0.292.0 — 2026-11-06
 
