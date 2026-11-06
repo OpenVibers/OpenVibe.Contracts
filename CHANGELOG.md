@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.295.0 — 2026-11-06
+
+- Add `sources.category@1`: one category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The `retention` field is either `{ days, reason }` — the window an item lives after it was last current (its last fetch while live, its removal once removed) — or `"keep"`, for reference data that is never pruned by age (Sources keeps the newest row per source key and prunes only the rows a newer value replaced).
+- The categories are the ones `sources.source@1` and `sources.item@1` already use; the three lists are compared in `test/run.js`, so a category added to one of them without the others fails the run. No existing schema changes: `sources.source@1`'s `category` and `sources.item@1`'s `category` keep their shape, so a consumer that reads them is unaffected.
+- Valid and invalid fixtures cover a windowed category (`news`), a kept category (`housing`), an unknown category, a missing rule and a zero-day window.
+
 ## 0.294.0 — 2026-11-06
 
 - Add the unsafe-image review capabilities: `vision.image.review` (Media, Community and Live sort an image or AI text into fine, sex acts or sexual content involving a minor), `vision.review.read` and `vision.review.decide` (the staff queue and an operator's decision), `media.object.review.view` (Vision's 60-second logged evidence view of a hidden or quarantined object) and `media.object.review.decide` (Vision applies an operator's overruling category and releases Media's evidence hold). The Vision and Media service manifests name them.
