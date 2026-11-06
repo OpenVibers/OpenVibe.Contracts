@@ -291790,6 +291790,15 @@ export interface ShareGrantedPayload {
   occurred_at: string;
   role?: "viewer" | "editor";
   expires_at?: string;
+  reason?:
+    | "member_added"
+    | "member_removed"
+    | "member_expired"
+    | "audience_changed"
+    | "transfer_cancelled"
+    | "transfer_expired"
+    | "ownership_changed";
+  transfer_id?: string;
 }
 
 /** share.revoked@1.0.0 (owner: network) */
@@ -291805,6 +291814,15 @@ export interface ShareRevokedPayload {
   occurred_at: string;
   role?: "viewer" | "editor";
   expires_at?: string;
+  reason?:
+    | "member_added"
+    | "member_removed"
+    | "member_expired"
+    | "audience_changed"
+    | "transfer_cancelled"
+    | "transfer_expired"
+    | "ownership_changed";
+  transfer_id?: string;
 }
 
 /** share.transfer.requested@1.0.0 (owner: network) */

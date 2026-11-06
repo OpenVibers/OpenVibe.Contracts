@@ -39,6 +39,21 @@
     "expires_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "reason": {
+      "enum": [
+        "member_added",
+        "member_removed",
+        "member_expired",
+        "audience_changed",
+        "transfer_cancelled",
+        "transfer_expired",
+        "ownership_changed"
+      ]
+    },
+    "transfer_id": {
+      "type": "string",
+      "format": "uuid"
     }
   },
   "required": [
