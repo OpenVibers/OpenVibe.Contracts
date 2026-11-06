@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.292.0 — 2026-11-06
+
+- Add `sources.category@1`: one category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The `retention` field is either `{ days, reason }` — the window an item lives after it was last current (its last fetch while live, its removal once removed) — or `"keep"`, for reference data that is never pruned by age (Sources keeps the newest row per source key and prunes only the rows a newer value replaced).
+- The categories are the ones `sources.source@1` and `sources.item@1` already use; the three lists are compared in `test/run.js`, so a category added to one of them without the others fails the run. No existing schema changes: `sources.source@1`'s `category` and `sources.item@1`'s `category` keep their shape, so a consumer that reads them is unaffected.
+- OpenVibe.Sources keeps the windows in its own rule table until this release is tagged and pinned; the contract then becomes the one place that names each window.
+
 ## 0.291.0 — 2026-11-05
 
 - Add `share@1`: resource refs, audiences, members and member inputs, transfers, access requests, uniform API requests and responses. Transfers are recipient-bound, last seven days, and default to removing the former owner's membership.

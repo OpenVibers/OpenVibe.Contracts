@@ -349,6 +349,16 @@
       "adr": "ADR-017"
     },
     {
+      "id": "sources.category",
+      "version": "1.0.0",
+      "owner": "sources",
+      "schema": "sources/category.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-017"
+    },
+    {
       "id": "sources.item",
       "version": "1.0.0",
       "owner": "sources",

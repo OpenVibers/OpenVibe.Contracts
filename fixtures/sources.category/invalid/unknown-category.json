@@ -1,0 +1,6 @@
+{
+  "key": "weather",
+  "retention": {
+    "days": 7
+  }
+}
