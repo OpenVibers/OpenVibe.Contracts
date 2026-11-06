@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/list-result.v1.json",
+  "title": "ShareListResult",
+  "description": "share.list-result@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "resource-ref.v1.json"
+          },
+          "owner_subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "role": {
+            "enum": [
+              "viewer",
+              "editor"
+            ]
+          },
+          "shared_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transfer": {
+            "$ref": "transfer.v1.json"
+          }
+        },
+        "required": [
+          "ref",
+          "owner_subject",
+          "audience",
+          "role",
+          "shared_at"
+        ]
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "items",
+    "next_cursor"
+  ]
+}

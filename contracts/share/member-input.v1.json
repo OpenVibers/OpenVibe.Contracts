@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/member-input.v1.json",
+  "title": "ShareMemberInput",
+  "description": "share.member-input@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+    },
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "role": {
+      "enum": [
+        "viewer",
+        "editor"
+      ]
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "role"
+  ],
+  "oneOf": [
+    {
+      "required": [
+        "name"
+      ],
+      "not": {
+        "required": [
+          "subject"
+        ]
+      }
+    },
+    {
+      "required": [
+        "subject"
+      ],
+      "not": {
+        "required": [
+          "name"
+        ]
+      }
+    }
+  ]
+}

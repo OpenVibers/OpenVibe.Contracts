@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.291.0 — 2026-11-05
+
+- Add `share@1`: resource refs, audiences, members and member inputs, transfers, access requests, uniform API requests and responses. Transfers are recipient-bound, last seven days, and default to removing the former owner's membership.
+- The uniform response names people: `share.person@1` on the owner, members, a pending transfer's `to` and each pending request; plus `share.you@1`, pending `requests` (`share.access-request-view@1`), the pending transfer view, and the service's `describe()` fields (`title`, `link`, `roles`, `audiences`, `transferable`). Add `share.people-lookup@1` for the exact-name people endpoint.
+- PUT accepts `notify` (default true); access requests can be `dismissed`; a transfer request accepts `{ name }` or `{ subject }`.
+- Add the five `share.*` event payloads with strict ids-only fields; Network owns the model, adopting services produce events using their own source. Valid and invalid fixtures cover every new contract. No existing schema changes.
+
 
 ## 0.290.0 — 2026-11-05
 

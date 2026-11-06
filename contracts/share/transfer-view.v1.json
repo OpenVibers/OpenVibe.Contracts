@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/transfer-view.v1.json",
+  "title": "ShareTransferView",
+  "description": "share.transfer-view@1: the pending transfer in the GET body, with its recipient as a person. The transfer id is what the sheet sends back.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "from": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "to": {
+      "$ref": "person.v1.json"
+    },
+    "keep_access": {
+      "type": "boolean",
+      "default": false
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "enum": [
+        "pending",
+        "accepted",
+        "declined",
+        "cancelled",
+        "expired"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "from",
+    "to",
+    "keep_access",
+    "requested_at",
+    "expires_at",
+    "state"
+  ]
+}

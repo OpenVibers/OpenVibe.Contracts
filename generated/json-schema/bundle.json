@@ -101584,6 +101584,1056 @@
           }
         }
       }
+    },
+    "share.resource-ref": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/resource-ref.v1.json",
+        "title": "ShareResourceRef",
+        "description": "share.resource-ref@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "service": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "service",
+          "kind",
+          "id"
+        ]
+      }
+    },
+    "share.member": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/member.v1.json",
+        "title": "ShareMember",
+        "description": "share.member@1: a member with their Network identity fields. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "enum": [
+              "viewer",
+              "editor"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "added_by": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "added_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "subject",
+          "username",
+          "display_name",
+          "avatar_url",
+          "role",
+          "added_by",
+          "added_at"
+        ]
+      }
+    },
+    "share.member-input": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/member-input.v1.json",
+        "title": "ShareMemberInput",
+        "description": "share.member-input@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "role": {
+            "enum": [
+              "viewer",
+              "editor"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "role"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "name"
+            ],
+            "not": {
+              "required": [
+                "subject"
+              ]
+            }
+          },
+          {
+            "required": [
+              "subject"
+            ],
+            "not": {
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "share.transfer": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/transfer.v1.json",
+        "title": "ShareTransfer",
+        "description": "share.transfer@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "from": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "to": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "keep_access": {
+            "type": "boolean",
+            "default": false
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "enum": [
+              "pending",
+              "accepted",
+              "declined",
+              "cancelled",
+              "expired"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "from",
+          "to",
+          "keep_access",
+          "requested_at",
+          "expires_at",
+          "state"
+        ]
+      }
+    },
+    "share.access-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/access-request.v1.json",
+        "title": "ShareAccessRequest",
+        "description": "share.access-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "enum": [
+              "pending",
+              "granted",
+              "dismissed"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "subject",
+          "requested_at",
+          "state"
+        ]
+      }
+    },
+    "share": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/share.v1.json",
+        "title": "Share",
+        "description": "share@1: the uniform GET/PUT body. People, not bare subjects; ids only, never a resource title or content except the service's own describe() (title and link). Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "resource-ref.v1.json"
+          },
+          "owner_subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "owner": {
+            "$ref": "person.v1.json"
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "members": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "member.v1.json"
+            }
+          },
+          "transfer": {
+            "$ref": "transfer-view.v1.json"
+          },
+          "you": {
+            "$ref": "you.v1.json"
+          },
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "access-request-view.v1.json"
+            }
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "link": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "viewer",
+                "editor"
+              ]
+            }
+          },
+          "audiences": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "public",
+                "link",
+                "people",
+                "private"
+              ]
+            }
+          },
+          "transferable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ref",
+          "owner_subject",
+          "owner",
+          "audience",
+          "members",
+          "you",
+          "requests",
+          "title",
+          "link",
+          "roles",
+          "audiences",
+          "transferable"
+        ]
+      }
+    },
+    "share.person": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/person.v1.json",
+        "title": "SharePerson",
+        "description": "share.person@1: a person in a sharing answer, from Network's identity projection. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "username",
+          "display_name",
+          "avatar_url"
+        ]
+      }
+    },
+    "share.you": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/you.v1.json",
+        "title": "ShareYou",
+        "description": "share.you@1: who the caller is on this resource, as the sheet needs it. Owner or trusted staff; never a client-supplied value.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "staff"
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "role"
+        ]
+      }
+    },
+    "share.access-request-view": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/access-request-view.v1.json",
+        "title": "ShareAccessRequestView",
+        "description": "share.access-request-view@1: a pending access request in the GET body, with the person who asked. Pending only; dismissed and granted requests are not shown.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "subject",
+          "username",
+          "display_name",
+          "avatar_url",
+          "requested_at"
+        ]
+      }
+    },
+    "share.transfer-view": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/transfer-view.v1.json",
+        "title": "ShareTransferView",
+        "description": "share.transfer-view@1: the pending transfer in the GET body, with its recipient as a person. The transfer id is what the sheet sends back.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "from": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "to": {
+            "$ref": "person.v1.json"
+          },
+          "keep_access": {
+            "type": "boolean",
+            "default": false
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "enum": [
+              "pending",
+              "accepted",
+              "declined",
+              "cancelled",
+              "expired"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "from",
+          "to",
+          "keep_access",
+          "requested_at",
+          "expires_at",
+          "state"
+        ]
+      }
+    },
+    "share.people-lookup": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/people-lookup.v1.json",
+        "title": "SharePeopleLookup",
+        "description": "share.people-lookup@1: the answer to GET /api/v1/share/people?name=exact. person is null when nobody holds that exact name, for banned or deleted accounts, and for non-user subjects.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "person": {
+            "oneOf": [
+              {
+                "$ref": "person.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "person"
+        ]
+      }
+    },
+    "share.update-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/update-request.v1.json",
+        "title": "ShareUpdateRequest",
+        "description": "share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "members": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "member-input.v1.json"
+            }
+          },
+          "notify": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [],
+        "minProperties": 1
+      }
+    },
+    "share.transfer-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/transfer-request.v1.json",
+        "title": "ShareTransferRequest",
+        "description": "share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "to": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+              },
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "subject": {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  }
+                },
+                "required": [
+                  "subject"
+                ]
+              }
+            ]
+          },
+          "keep_access": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "to"
+        ]
+      }
+    },
+    "share.transfer-action-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/transfer-action-request.v1.json",
+        "title": "ShareTransferActionRequest",
+        "description": "share.transfer-action-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "transfer_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "transfer_id"
+        ]
+      }
+    },
+    "share.access-request-create": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/access-request-create.v1.json",
+        "title": "ShareAccessRequestCreate",
+        "description": "share.access-request-create@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      }
+    },
+    "share.list-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/list-result.v1.json",
+        "title": "ShareListResult",
+        "description": "share.list-result@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "ref": {
+                  "$ref": "resource-ref.v1.json"
+                },
+                "owner_subject": {
+                  "$ref": "../identity/subject-ref.v1.json"
+                },
+                "audience": {
+                  "enum": [
+                    "public",
+                    "link",
+                    "people",
+                    "private"
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "viewer",
+                    "editor"
+                  ]
+                },
+                "shared_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "transfer": {
+                  "$ref": "transfer.v1.json"
+                }
+              },
+              "required": [
+                "ref",
+                "owner_subject",
+                "audience",
+                "role",
+                "shared_at"
+              ]
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ]
+      }
+    },
+    "share.granted": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/share.granted.v1.json",
+        "title": "ShareGrantedPayload",
+        "description": "share.granted@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "../../share/resource-ref.v1.json"
+          },
+          "actor": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "owner_subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "role": {
+            "enum": [
+              "viewer",
+              "editor"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "enum": [
+              "member_added",
+              "member_removed",
+              "member_expired",
+              "audience_changed",
+              "transfer_cancelled",
+              "transfer_expired",
+              "ownership_changed"
+            ]
+          },
+          "transfer_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "ref",
+          "actor",
+          "owner_subject",
+          "audience",
+          "subject",
+          "occurred_at"
+        ]
+      }
+    },
+    "share.revoked": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/share.revoked.v1.json",
+        "title": "ShareRevokedPayload",
+        "description": "share.revoked@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "../../share/resource-ref.v1.json"
+          },
+          "actor": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "owner_subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "role": {
+            "enum": [
+              "viewer",
+              "editor"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "enum": [
+              "member_added",
+              "member_removed",
+              "member_expired",
+              "audience_changed",
+              "transfer_cancelled",
+              "transfer_expired",
+              "ownership_changed"
+            ]
+          },
+          "transfer_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "ref",
+          "actor",
+          "owner_subject",
+          "audience",
+          "subject",
+          "occurred_at"
+        ]
+      }
+    },
+    "share.transfer.requested": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/share.transfer.requested.v1.json",
+        "title": "ShareTransferRequestedPayload",
+        "description": "share.transfer.requested@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "../../share/resource-ref.v1.json"
+          },
+          "actor": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "owner_subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transfer": {
+            "$ref": "../../share/transfer.v1.json"
+          }
+        },
+        "required": [
+          "ref",
+          "actor",
+          "owner_subject",
+          "audience",
+          "subject",
+          "occurred_at",
+          "transfer"
+        ]
+      }
+    },
+    "share.transfer.accepted": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/share.transfer.accepted.v1.json",
+        "title": "ShareTransferAcceptedPayload",
+        "description": "share.transfer.accepted@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "../../share/resource-ref.v1.json"
+          },
+          "actor": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "owner_subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transfer": {
+            "$ref": "../../share/transfer.v1.json"
+          }
+        },
+        "required": [
+          "ref",
+          "actor",
+          "owner_subject",
+          "audience",
+          "subject",
+          "occurred_at",
+          "transfer"
+        ]
+      }
+    },
+    "share.transfer.declined": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/share.transfer.declined.v1.json",
+        "title": "ShareTransferDeclinedPayload",
+        "description": "share.transfer.declined@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "../../share/resource-ref.v1.json"
+          },
+          "actor": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "owner_subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "subject": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transfer": {
+            "$ref": "../../share/transfer.v1.json"
+          }
+        },
+        "required": [
+          "ref",
+          "actor",
+          "owner_subject",
+          "audience",
+          "subject",
+          "occurred_at",
+          "transfer"
+        ]
+      }
     }
   }
 }

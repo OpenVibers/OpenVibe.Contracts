@@ -1,0 +1,9 @@
+{
+  "id": "00000000-0000-4000-8000-000000000002",
+  "from": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "to": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" },
+  "keep_access": false,
+  "requested_at": "2026-11-06T00:10:00Z",
+  "expires_at": "2026-11-13T00:10:00Z",
+  "state": "pending"
+}

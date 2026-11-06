@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/people-lookup.v1.json",
+  "title": "SharePeopleLookup",
+  "description": "share.people-lookup@1: the answer to GET /api/v1/share/people?name=exact. person is null when nobody holds that exact name, for banned or deleted accounts, and for non-user subjects.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "person": {
+      "oneOf": [
+        {
+          "$ref": "person.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "person"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/transfer.v1.json",
+  "title": "ShareTransfer",
+  "description": "share.transfer@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "from": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "to": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "keep_access": {
+      "type": "boolean",
+      "default": false
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "enum": [
+        "pending",
+        "accepted",
+        "declined",
+        "cancelled",
+        "expired"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "from",
+    "to",
+    "keep_access",
+    "requested_at",
+    "expires_at",
+    "state"
+  ]
+}

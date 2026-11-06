@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/member.v1.json",
+  "title": "ShareMember",
+  "description": "share.member@1: a member with their Network identity fields. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "username": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "display_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "role": {
+      "enum": [
+        "viewer",
+        "editor"
+      ]
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "added_by": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "added_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "subject",
+    "username",
+    "display_name",
+    "avatar_url",
+    "role",
+    "added_by",
+    "added_at"
+  ]
+}

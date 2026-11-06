@@ -110,7 +110,12 @@
     "network.machine.offline",
     "network.machine.paired",
     "network.machine.roles_changed",
-    "network.machine.revoked"
+    "network.machine.revoked",
+    "share.granted",
+    "share.revoked",
+    "share.transfer.requested",
+    "share.transfer.accepted",
+    "share.transfer.declined"
   ],
   "eventsConsumed": [
     "billing.staff.action",

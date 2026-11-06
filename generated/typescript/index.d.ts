@@ -291650,3 +291650,300 @@ export interface BillingCreditSandboxGrantResult {
    */
   balance_nano_usd: string;
 }
+
+/** share.resource-ref@1.0.0 (owner: network) */
+/**
+ * share.resource-ref@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareResourceRef {
+  service: string;
+  kind: string;
+  id: string;
+}
+
+/** share.member@1.0.0 (owner: network) */
+/**
+ * share.member@1: a member with their Network identity fields. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).
+ */
+export interface ShareMember {
+  subject: SubjectRef;
+  username: string | null;
+  display_name: string | null;
+  avatar_url: string | null;
+  role: "viewer" | "editor";
+  expires_at?: string;
+  added_by: SubjectRef;
+  added_at: string;
+}
+
+/** share.member-input@1.0.0 (owner: network) */
+/**
+ * share.member-input@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export type ShareMemberInput = {
+  name?: string;
+  subject?: SubjectRef;
+  role: "viewer" | "editor";
+  expires_at?: string;
+} & {
+  [k: string]: unknown | undefined;
+};
+
+/** share.transfer@1.0.0 (owner: network) */
+/**
+ * share.transfer@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareTransfer {
+  id: string;
+  from: SubjectRef;
+  to: SubjectRef;
+  keep_access: boolean;
+  requested_at: string;
+  expires_at: string;
+  state: "pending" | "accepted" | "declined" | "cancelled" | "expired";
+}
+
+/** share.access-request@1.0.0 (owner: network) */
+/**
+ * share.access-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareAccessRequest {
+  id: string;
+  subject: SubjectRef;
+  requested_at: string;
+  state: "pending" | "granted" | "dismissed";
+}
+
+/** share@1.0.0 (owner: network) */
+/**
+ * share@1: the uniform GET/PUT body. People, not bare subjects; ids only, never a resource title or content except the service's own describe() (title and link). Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface Share {
+  ref: ShareResourceRef;
+  owner_subject: SubjectRef;
+  owner: SharePerson;
+  audience: "public" | "link" | "people" | "private";
+  /**
+   * @maxItems 100
+   */
+  members: ShareMember[];
+  transfer?: ShareTransferView;
+  you: ShareYou;
+  requests: ShareAccessRequestView[];
+  title: string | null;
+  link: string | null;
+  /**
+   * @minItems 1
+   */
+  roles: ["viewer" | "editor", ...("viewer" | "editor")[]];
+  /**
+   * @minItems 1
+   */
+  audiences: ["public" | "link" | "people" | "private", ...("public" | "link" | "people" | "private")[]];
+  transferable: boolean;
+}
+
+/** share.person@1.0.0 (owner: network) */
+/**
+ * share.person@1: a person in a sharing answer, from Network's identity projection. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).
+ */
+export interface SharePerson {
+  subject: SubjectRef;
+  username: string | null;
+  display_name: string | null;
+  avatar_url: string | null;
+}
+
+/** share.you@1.0.0 (owner: network) */
+/**
+ * share.you@1: who the caller is on this resource, as the sheet needs it. Owner or trusted staff; never a client-supplied value.
+ */
+export interface ShareYou {
+  subject: SubjectRef;
+  role: "owner" | "staff";
+}
+
+/** share.access-request-view@1.0.0 (owner: network) */
+/**
+ * share.access-request-view@1: a pending access request in the GET body, with the person who asked. Pending only; dismissed and granted requests are not shown.
+ */
+export interface ShareAccessRequestView {
+  id: string;
+  subject: SubjectRef;
+  username: string | null;
+  display_name: string | null;
+  avatar_url: string | null;
+  requested_at: string;
+}
+
+/** share.transfer-view@1.0.0 (owner: network) */
+/**
+ * share.transfer-view@1: the pending transfer in the GET body, with its recipient as a person. The transfer id is what the sheet sends back.
+ */
+export interface ShareTransferView {
+  id: string;
+  from: SubjectRef;
+  to: SharePerson;
+  keep_access: boolean;
+  requested_at: string;
+  expires_at: string;
+  state: "pending" | "accepted" | "declined" | "cancelled" | "expired";
+}
+
+/** share.people-lookup@1.0.0 (owner: network) */
+/**
+ * share.people-lookup@1: the answer to GET /api/v1/share/people?name=exact. person is null when nobody holds that exact name, for banned or deleted accounts, and for non-user subjects.
+ */
+export interface SharePeopleLookup {
+  person: SharePerson | null;
+}
+
+/** share.update-request@1.0.0 (owner: network) */
+/**
+ * share.update-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareUpdateRequest {
+  audience?: "public" | "link" | "people" | "private";
+  /**
+   * @maxItems 100
+   */
+  members?: ShareMemberInput[];
+  notify?: boolean;
+}
+
+/** share.transfer-request@1.0.0 (owner: network) */
+/**
+ * share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareTransferRequest {
+  to:
+    | string
+    | SubjectRef
+    | {
+        name: string;
+      }
+    | {
+        subject: SubjectRef;
+      };
+  keep_access?: boolean;
+}
+
+/** share.transfer-action-request@1.0.0 (owner: network) */
+/**
+ * share.transfer-action-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareTransferActionRequest {
+  transfer_id: string;
+}
+
+/** share.access-request-create@1.0.0 (owner: network) */
+/**
+ * share.access-request-create@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareAccessRequestCreate {}
+
+/** share.list-result@1.0.0 (owner: network) */
+/**
+ * share.list-result@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.
+ */
+export interface ShareListResult {
+  items: {
+    ref: ShareResourceRef;
+    owner_subject: SubjectRef;
+    audience: "public" | "link" | "people" | "private";
+    role: "viewer" | "editor";
+    shared_at: string;
+    transfer?: ShareTransfer;
+  }[];
+  next_cursor: string | null;
+}
+
+/** share.granted@1.0.0 (owner: network) */
+/**
+ * share.granted@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareGrantedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  role?: "viewer" | "editor";
+  expires_at?: string;
+  reason?:
+    | "member_added"
+    | "member_removed"
+    | "member_expired"
+    | "audience_changed"
+    | "transfer_cancelled"
+    | "transfer_expired"
+    | "ownership_changed";
+  transfer_id?: string;
+}
+
+/** share.revoked@1.0.0 (owner: network) */
+/**
+ * share.revoked@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareRevokedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  role?: "viewer" | "editor";
+  expires_at?: string;
+  reason?:
+    | "member_added"
+    | "member_removed"
+    | "member_expired"
+    | "audience_changed"
+    | "transfer_cancelled"
+    | "transfer_expired"
+    | "ownership_changed";
+  transfer_id?: string;
+}
+
+/** share.transfer.requested@1.0.0 (owner: network) */
+/**
+ * share.transfer.requested@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareTransferRequestedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  transfer: ShareTransfer;
+}
+
+/** share.transfer.accepted@1.0.0 (owner: network) */
+/**
+ * share.transfer.accepted@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareTransferAcceptedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  transfer: ShareTransfer;
+}
+
+/** share.transfer.declined@1.0.0 (owner: network) */
+/**
+ * share.transfer.declined@1: ids and access metadata only, for every audience. Produced by adopting services; Network owns the shared model.
+ */
+export interface ShareTransferDeclinedPayload {
+  ref: ShareResourceRef;
+  actor: SubjectRef;
+  owner_subject: SubjectRef;
+  audience: "public" | "link" | "people" | "private";
+  subject: SubjectRef;
+  occurred_at: string;
+  transfer: ShareTransfer;
+}

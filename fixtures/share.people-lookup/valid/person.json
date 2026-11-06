@@ -1,0 +1,8 @@
+{
+  "person": {
+    "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" },
+    "username": "maticus",
+    "display_name": "Maticus",
+    "avatar_url": "https://cdn.openvibe.network/avatars/maticus.png"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/you.v1.json",
+  "title": "ShareYou",
+  "description": "share.you@1: who the caller is on this resource, as the sheet needs it. Owner or trusted staff; never a client-supplied value.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "role": {
+      "enum": [
+        "owner",
+        "staff"
+      ]
+    }
+  },
+  "required": [
+    "subject",
+    "role"
+  ]
+}

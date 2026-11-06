@@ -1,0 +1,23 @@
+{
+  "ref": {
+    "service": "community",
+    "kind": "paste",
+    "id": "abc"
+  },
+  "actor": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "owner_subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "audience": "people",
+  "subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "occurred_at": "2026-11-06T00:00:00Z",
+  "role": "viewer",
+  "content": "forbidden"
+}
