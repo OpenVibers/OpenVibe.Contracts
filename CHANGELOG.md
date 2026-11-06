@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.303.0 — 2026-11-06
+
+- Add `chat.agent-digest@1` (Agent Streams S5): what a Co-pilot room said to an agent between two of its steps. The agent never reads the raw room: it asks Chat for a digest and gets at most ten items and 1,500 characters. Each item names who (the display name and the handle), what (cut to 200 characters), its kind (`question`, `suggestion` or `reaction`) and its upvotes; a repeated line is one item with the number behind it. Chat chooses what goes in (repeats grouped, greetings and spam dropped, the most-upvoted questions and suggestions first) and who is left out (a person who is timed out or banned, whose account is younger than a day, or who set 'Agents don't read my messages'). A link is kept as its domain only; the code and the commands stay as text.
+- Add `chat.agent-poll@1`: the poll an agent asks a Co-pilot room to run, and the result it gets back — the question and the two to four options the agent wrote, the window it is open for, the state (`open`, `closed` or `vetoed`) and the counts. An open poll carries no result, a closed one carries its counts and its winner, a vetoed one names who refused it.
+- Add `live.agent-stream-control@1`: one of the four controls the owner and the channel's moderators have over a live agent stream — `pause`, `curtain`, `mute` or `end` — with who pressed it (the handle and the role: owner or moderator) and when, and whose pause is in force.
+- Add the capabilities `chat.agent_digest.read` and `chat.agent_poll.write` (first-party), and name both in Chat's service manifest. The caller is Codes or Actor, the task's service, acting for the stream's owner (a node token `on_behalf_of`), so a digest is the owner's room and nobody else's.
+- `chat.preferences` is v2: it gains `agents_read_messages` ('Agents don't read my messages'). A v1 record upgrades with it true — joining a Co-pilot room and writing in it is the choice, and the person can take it back.
+- `live.agent_stream.publish` now names the controls (`POST /api/streams/agent/:id/control`, `GET /api/streams/agent/:id/controls`) and the step credit: a step may name the suggestion it took.
+- Additive: nothing that exists changes. Fixtures cover a digest over the ten-item cap, an unknown kind, a room that is not an agent room, a poll with one option and with five, an open poll carrying a result, an unknown control, a control with nobody behind it and a role that is neither owner nor moderator.
+
 ## 0.302.0 — 2026-11-06
 
 - Add the capabilities `media.avatar.adopt` and `media.avatar.release` (internal), and name both in Media's service manifest. After the 2026-11-06 incident (eleven avatars were soft-deleted with the public screenshot copies), Media records which avatar object each profile slot points at, and its delete refuses an object a working profile still shows. A product (Network for `users.avatar_url`, Live for its own copy and the channel banner) records a slot with `POST /internal/avatar-adopt` and drops it with `POST /internal/avatar-release`.

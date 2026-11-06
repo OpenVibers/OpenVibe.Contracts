@@ -12,6 +12,8 @@
   ],
   "publicOrigin": "https://openvibe.chat",
   "capabilities": [
+    "chat.agent_digest.read",
+    "chat.agent_poll.write",
     "chat.analysis.read",
     "chat.cache.invalidate",
     "chat.event.publish",

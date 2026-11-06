@@ -1,0 +1,35 @@
+{
+  "poll_id": "pol_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "room": "agent:ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "question": "Which name?",
+  "options": [
+    {
+      "id": "1",
+      "label": "a",
+      "votes": 0
+    },
+    {
+      "id": "2",
+      "label": "b",
+      "votes": 0
+    },
+    {
+      "id": "3",
+      "label": "c",
+      "votes": 0
+    },
+    {
+      "id": "4",
+      "label": "d",
+      "votes": 0
+    },
+    {
+      "id": "5",
+      "label": "e",
+      "votes": 0
+    }
+  ],
+  "opened_at": "2026-11-06T10:00:00.000Z",
+  "closes_at": "2026-11-06T10:01:00.000Z",
+  "state": "open"
+}

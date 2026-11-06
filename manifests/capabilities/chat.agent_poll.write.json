@@ -1,0 +1,22 @@
+{
+  "id": "chat.agent_poll.write",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Run a poll in a Co-pilot room on OpenVibe.Chat, and read its result (the Agent Streams plan, S5). POST /internal/chat/rooms/agent:poll takes chat.agent-poll@1: the question and two to four options the agent wrote, open for 30 to 120 seconds; Chat draws the poll card and `!1` to `!4` vote too. One vote per person, one poll at a time, and at most one poll every five minutes. The owner or a moderator can close a poll early or veto its result. The caller is Codes or Actor, the task's service, acting for the stream's owner (a node token on_behalf_of). Chat never adds an option of its own: a poll can only choose between the options the agent wrote.",
+  "permissions": [
+    "chat:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/rooms/agent:poll",
+    "GET /internal/chat/rooms/agent:poll"
+  ],
+  "inputSchema": "chat.agent-poll@1",
+  "outputSchema": "chat.agent-poll@1"
+}

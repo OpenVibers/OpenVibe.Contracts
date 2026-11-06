@@ -1,0 +1,30 @@
+{
+  "poll_id": "pol_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "room": "agent:ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "question": "Which name: parseRows or readTable?",
+  "options": [
+    {
+      "id": "1",
+      "label": "parseRows",
+      "votes": 4
+    },
+    {
+      "id": "2",
+      "label": "readTable",
+      "votes": 1
+    }
+  ],
+  "opened_at": "2026-11-06T10:00:00.000Z",
+  "closes_at": "2026-11-06T10:01:00.000Z",
+  "closed_at": "2026-11-06T10:01:00.000Z",
+  "state": "closed",
+  "result": {
+    "counts": [
+      4,
+      1
+    ],
+    "total": 5,
+    "winner": "1"
+  },
+  "vetoed_by": null
+}

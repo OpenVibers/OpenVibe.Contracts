@@ -1,0 +1,106 @@
+{
+  "room": "agent:ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "since": null,
+  "until": "2026-11-06T10:05:00.000Z",
+  "items": [
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    },
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "hi",
+      "kind": "reaction",
+      "upvotes": 0
+    }
+  ]
+}

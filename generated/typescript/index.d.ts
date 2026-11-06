@@ -292529,6 +292529,2001 @@ export interface LiveAgentStreamStepRequest {
   cost_usd?: number;
 }
 
+/** chat.agent-digest@1.0.0 (owner: chat) */
+/**
+ * chat.agent-digest@1 (the Agent Streams plan, S5): what a chat room said to an agent between two of its steps, GET /api/v1/rooms/agent:<id>/digest?since= on OpenVibe.Chat. The agent never reads the raw room: it asks for a digest and gets at most ten items and 1,500 characters. Each item names who (the display name and the handle), what (cut to 200 characters), its kind (a question, a suggestion or a reaction) and its upvotes (a thumbs up on the message counts). Chat chooses what goes in: repeats are grouped, greetings and spam are dropped, and the most-upvoted questions and suggestions come first. Nobody is left out by accident: a person who is timed out or banned, whose account is younger than a day, or who set 'Agents don't read my messages' is never in the digest. A link is kept as its domain only ('a link to github.com'), because the agent never follows a link from chat. The code and the commands stay as text: the agent's own tools and approvals decide what may run, never chat.
+ */
+export interface ChatAgentDigest {
+  /**
+   * The room the digest came from: an agent stream's room, `agent:<ags_id>`.
+   */
+  room: string;
+  /**
+   * The start of the window: the moment the agent last read, or null for the first read.
+   */
+  since: string | null;
+  /**
+   * The end of the window: the moment this digest was made.
+   */
+  until: string;
+  /**
+   * What chat said, at most ten items. The order is the one Chat chose: the most-upvoted questions and suggestions first, the reactions last.
+   *
+   * @maxItems 10
+   */
+  items:
+    | []
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        },
+        {
+          /**
+           * Who said it: the display name and the handle. Never an id, never an email, never anything else about them.
+           */
+          who: {
+            /**
+             * The name the room shows.
+             */
+            display_name: string;
+            /**
+             * The handle, so the agent can answer this person by name.
+             */
+            handle: string;
+          };
+          /**
+           * What they said, cut to 200 characters. A link is kept as its domain only.
+           */
+          what: string;
+          /**
+           * What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do.
+           */
+          kind: "question" | "suggestion" | "reaction";
+          /**
+           * How many thumbs up the message carries. The most-upvoted items come first.
+           */
+          upvotes: number;
+          /**
+           * How many people said this same thing. Chat groups repeats into one item; this is the number behind it.
+           */
+          repeated?: number;
+        }
+      ];
+  /**
+   * How many characters the items use together, at most 1,500.
+   */
+  chars?: number;
+  /**
+   * True when Chat left something out because of the ten-item or 1,500-character cap.
+   */
+  truncated?: boolean;
+}
+
+/** chat.agent-poll@1.0.0 (owner: chat) */
+/**
+ * chat.agent-poll@1 (the Agent Streams plan, S5): a poll the agent asks a Co-pilot room to run, and the result it gets back. The agent writes the question and two to four options ('Which name: parseRows or readTable?') and the poll is open for 30 to 120 seconds. Chat draws it as a poll card with buttons; `!1` to `!4` vote too. One vote per person, one poll at a time, and at most one poll every five minutes. The owner (or a moderator) can close a poll early or veto its result. A poll can only choose between the options the agent wrote: Chat never adds one. The result carries the counts, nothing else about who voted.
+ */
+export type ChatAgentPoll = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The poll's id (ULID, Crockford base32).
+   */
+  poll_id: string;
+  /**
+   * The room the poll is in: an agent stream's room, `agent:<ags_id>`.
+   */
+  room: string;
+  /**
+   * The question the agent wrote.
+   */
+  question: string;
+  /**
+   * The options the agent wrote, two to four of them. Chat never adds an option of its own.
+   *
+   * @minItems 2
+   * @maxItems 4
+   */
+  options:
+    | [
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        },
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        },
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        },
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        }
+      ]
+    | [
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        },
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        },
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        },
+        {
+          /**
+           * The option's number: `!1` to `!4` vote for it.
+           */
+          id: string;
+          /**
+           * The option's text, as the agent wrote it.
+           */
+          label: string;
+          /**
+           * How many people chose it. The count is in the result; it says nothing about who.
+           */
+          votes?: number;
+        }
+      ];
+  /**
+   * When the poll opened.
+   */
+  opened_at: string;
+  /**
+   * When the poll closes on its own: 30 to 120 seconds after it opened.
+   */
+  closes_at: string;
+  /**
+   * When the poll was closed early by the owner or a moderator, or null when it ran its time.
+   */
+  closed_at?: string | null;
+  /**
+   * Where the poll stands: open, closed (the counts are final), or vetoed (the owner or a moderator refused the result).
+   */
+  state: "open" | "closed" | "vetoed";
+  /**
+   * The result, once the poll is closed: the counts and the winning option. Null while the poll is open.
+   */
+  result?: {
+    /**
+     * How many votes each option got, in the order the options were written.
+     *
+     * @minItems 2
+     * @maxItems 4
+     */
+    counts: [number, number] | [number, number, number] | [number, number, number, number];
+    /**
+     * How many people voted.
+     */
+    total: number;
+    /**
+     * The option that won, or null when there was no vote or no winner.
+     */
+    winner?: string | null;
+  } | null;
+  /**
+   * Who vetoed the result (the owner or a moderator), or null. Never a person's id: the handle only.
+   */
+  vetoed_by?: string | null;
+};
+
+/** live.agent-stream-control@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-control@1 (the Agent Streams plan, S5): one of the four controls the owner and the channel's moderators have over a live agent stream, with who pressed it. PAUSE tells the task's service (Codes or Actor) to pause at the next safe point; the overlay then says 'Paused by @mod'. CURTAIN is the S1 curtain, raised from the viewer side. MUTE is the S4 mute: the agent voice stops. END ends the stream and the room's Co-pilot reading, while the task itself keeps running off camera unless it was paused. A moderator may press all four, but may not resume a pause the owner set and may not change the mode or the task. Every press is logged: who, which control, when.
+ */
+export interface LiveAgentStreamControl {
+  /**
+   * Which control was pressed.
+   */
+  control: "pause" | "curtain" | "mute" | "end";
+  /**
+   * Who pressed it: the handle and the role they hold. Never an id, never anything else about them.
+   */
+  by: {
+    /**
+     * The handle of the person who pressed the control.
+     */
+    handle: string;
+    /**
+     * What they are on this stream: the owner, or one of the channel's moderators.
+     */
+    role: "owner" | "moderator";
+  };
+  /**
+   * When the control was pressed.
+   */
+  at: string;
+  /**
+   * The agent stream the control was pressed on.
+   */
+  stream?: string;
+  /**
+   * The handle of the person whose pause is in force, or null when the stream is not paused. A moderator cannot resume the owner's pause: this says whose it is.
+   */
+  paused_by?: string | null;
+}
+
 /** live.agent_stream.changed@1.0.0 (owner: live) */
 /**
  * live.agent_stream.changed v1 (OpenVibe.Live, the Agent Streams plan, S1): an agent stream changed. KIND is what happened: started, ended, visibility (the owner switched it) or curtain (the desk's privacy screen went up or came down). It says what happened and never why: the curtain's reason stays with the owner, so a subscriber learns that a private screen is up, not that a password field was focused. VISIBILITY carries the new visibility when KIND is visibility, CURTAIN whether the screen is up when KIND is curtain. The publish ticket, the stream key and the task's contents never appear. Envelope: subject { type: agent_stream, id: ags_… }, actor the owner's subject when Live knows it, else service:live. The event type carries no hyphen (events.event-envelope@1's event_type pattern allows letters, digits and underscores only), so it is live.agent_stream.changed; the stream's contract ids keep live.agent-stream@1.

@@ -1,0 +1,15 @@
+{
+  "poll_id": "pol_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "room": "agent:ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "question": "Which name?",
+  "options": [
+    {
+      "id": "1",
+      "label": "parseRows",
+      "votes": 0
+    }
+  ],
+  "opened_at": "2026-11-06T10:00:00.000Z",
+  "closes_at": "2026-11-06T10:01:00.000Z",
+  "state": "open"
+}

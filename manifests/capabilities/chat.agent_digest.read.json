@@ -1,0 +1,21 @@
+{
+  "id": "chat.agent_digest.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read what a Co-pilot room said, as a digest, on OpenVibe.Chat (the Agent Streams plan, S5). GET /internal/chat/rooms/agent:digest?since= answers chat.agent-digest@1: at most ten items and 1,500 characters, each with who (the display name and the handle), what (cut to 200 characters), its kind (a question, a suggestion or a reaction) and its upvotes. The caller is Codes or Actor, the task's service, acting for the stream's owner (a node token on_behalf_of), so the digest is the owner's room and nobody else's. Chat chooses what goes in and who is left out: a person who is timed out or banned, whose account is younger than a day, or who set 'Agents don't read my messages' is never in the digest, and a link is kept as its domain only. The agent never reads the raw room, and one read per step at most, twenty seconds apart.",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/chat/rooms/agent:digest"
+  ],
+  "inputSchema": "chat.agent-digest@1",
+  "outputSchema": "chat.agent-digest@1"
+}

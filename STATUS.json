@@ -11,6 +11,8 @@
   "deployment": "none of its own: a library and artifact repository published as release tags; services pin a tag and deploy it with their own releases",
   "contracts": "openvibe-contracts (this package: package.json's version, released as the matching tag)",
   "features": [
+    "chat.agent-digest@1, chat.agent-poll@1 and live.agent-stream-control@1 (the Agent Streams plan, S5): the digest a Co-pilot room gives an agent, the poll an agent asks that room to run, and the four controls the owner and the moderators have over a live agent stream",
+    "the capabilities chat.agent_digest.read and chat.agent_poll.write, for Codes and Actor acting for the stream's owner",
     "798 JSON Schemas with valid and invalid fixtures (at v0.210.0)",
     "45 service manifests with lifecycle declarations (39 alpha, 1 beta, 4 stable, 1 retired)",
     "348 capability manifests (306 active, 27 planned, 15 retired) and the staff capability map",
@@ -36,11 +38,11 @@
     "OpenVibe.Food, OpenVibe.Help and OpenVibe.Work become services (plan T19); OpenVibe.Quest and OpenVibe.Rent become services",
     "the forum returns to Community; Deals goes live, with product copy for the new sites",
     "OpenVibe.MediaHub goes live (openvibe.download as a private drive); services declare the account events they consume (ADR-033, SDK 0.37.0)",
-    "ADR-054 — the OpenVibe inventory authority (kinds, definitions, instances, equipped and the ledger), its planned service, capabilities, schemas and events (plan T21 step 1)",
+    "ADR-054 \u2014 the OpenVibe inventory authority (kinds, definitions, instances, equipped and the ledger), its planned service, capabilities, schemas and events (plan T21 step 1)",
     "OpenVibe.Inventory goes live (inventory.openvibe.network, site position 30) with six capabilities active (ADR-054, plan T21 step 2); a definition may name the services or apps that may grant it",
     "the Workshop v1 (ADR-054 section 6): Workshop kinds, network.badge, staff review (inventory.review-request@1, inventory.definition.review active) and media_id on equipped slots",
     "News, Reviews, Trade, Coupons and OpenRestream go live on their own domains (plan T11); the product at openre.stream is OpenRestream, with OpenVibe Live on by default (live.openre.slot.bind)",
-    "ADR-055 (proposed): money and the inventory — primary sales first, gifting next; trading and a market stay closed, and chance is never paid for",
+    "ADR-055 (proposed): money and the inventory \u2014 primary sales first, gifting next; trading and a market stay closed, and chance is never paid for",
     "bench.benchmark@1 and bench.run@1 with the capabilities bench.benchmark.write, bench.run.publish and bench.run.read: the benchmark registry and the results API (spec 2026-10-30, stage B1)"
   ],
   "updated": "2026-10-30"
