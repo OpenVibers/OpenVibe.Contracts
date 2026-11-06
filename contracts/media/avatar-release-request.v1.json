@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/avatar-release-request.v1.json",
+  "title": "MediaAvatarReleaseRequest",
+  "description": "media.avatar-release-request@1: the body of POST /internal/avatar-release on OpenVibe.Media (capability media.avatar.release). The product says a slot no longer points at its picture (the person removed it), or that one object or one person's references are gone (an account deletion), and the object can then be deleted like any other. It names a slot (product and ref), an object_id or a subject; with none, Media answers 400 { ok: false, error }.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "object_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^med_"
+    },
+    "product": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-z][a-z0-9-]{1,31}$"
+    },
+    "ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 64
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^usr_",
+      "description": "The person (usr_…) when the product knows it; Media refuses an object owned by someone else."
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "object_id"
+      ],
+      "properties": {
+        "object_id": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "required": [
+        "product",
+        "ref"
+      ],
+      "properties": {
+        "product": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "required": [
+        "subject"
+      ],
+      "properties": {
+        "subject": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

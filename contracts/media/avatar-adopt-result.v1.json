@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/avatar-adopt-result.v1.json",
+  "title": "MediaAvatarAdoptResult",
+  "description": "media.avatar-adopt-result@1: the answer of POST /internal/avatar-adopt on OpenVibe.Media: { ok: true, ref }, the active reference the slot now holds. A reference is released, never deleted, so Media keeps the history of the objects a person's picture moved through.",
+  "type": "object",
+  "required": [
+    "ok",
+    "ref"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "ref": {
+      "type": "object",
+      "required": [
+        "object_id",
+        "product",
+        "ref",
+        "created_at"
+      ],
+      "properties": {
+        "id": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "object_id": {
+          "type": "string",
+          "pattern": "^med_",
+          "description": "The avatar object (med_…) the slot points at."
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^usr_",
+          "description": "The person (usr_…) when the product knows it; Media refuses an object owned by someone else."
+        },
+        "product": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,31}$",
+          "description": "The product whose profile holds the picture: network (users.avatar_url) or live (its own users.avatar_url, a channel banner)."
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "The slot in that product: the person's id there, or the id and the slot (for example 42:banner)."
+        },
+        "created_at": {
+          "type": "string",
+          "description": "When the slot started pointing at the object."
+        },
+        "released_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Always null in this answer: the reference is the active one."
+        }
+      }
+    }
+  }
+}

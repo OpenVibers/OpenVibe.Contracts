@@ -1,0 +1,21 @@
+{
+  "id": "media.avatar.adopt",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "internal",
+  "description": "A product (Network, Live) records that one of its profile slots points at an avatar object on openvibe.media, so a cleanup refuses to delete a picture that a working profile shows. Recording a slot releases its previous reference.",
+  "permissions": [
+    "avatars:refs"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/avatar-adopt"
+  ],
+  "inputSchema": "media.avatar-adopt-request@1",
+  "outputSchema": "media.avatar-adopt-result@1"
+}

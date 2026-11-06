@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/avatar-release-result.v1.json",
+  "title": "MediaAvatarReleaseResult",
+  "description": "media.avatar-release-result@1: the answer of POST /internal/avatar-release on OpenVibe.Media: { ok: true, released }, how many active references were released (0 when there were none: releasing twice is not an error).",
+  "type": "object",
+  "required": [
+    "ok",
+    "released"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "released": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

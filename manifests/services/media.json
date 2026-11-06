@@ -40,7 +40,9 @@
   },
   "capabilities": [
     "media.access_key.manage",
+    "media.avatar.adopt",
     "media.avatar.ingest",
+    "media.avatar.release",
     "media.derivative.create",
     "media.derivative.read",
     "media.lifecycle.read",

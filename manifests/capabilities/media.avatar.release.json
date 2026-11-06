@@ -1,0 +1,21 @@
+{
+  "id": "media.avatar.release",
+  "version": "1.0",
+  "owner": "media",
+  "status": "active",
+  "visibility": "internal",
+  "description": "A product says a profile slot no longer points at its picture, or that an object's or a person's references are gone, so the object can be deleted normally.",
+  "permissions": [
+    "avatars:refs"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/avatar-release"
+  ],
+  "inputSchema": "media.avatar-release-request@1",
+  "outputSchema": "media.avatar-release-result@1"
+}
