@@ -1,0 +1,11 @@
+{
+  "iss": "https://openvibe.network",
+  "sub": "svc:live",
+  "aud": [
+    "openvibe.billing"
+  ],
+  "act": "svc:live",
+  "jti": "as_abcdef12",
+  "iat": 1790000000,
+  "exp": 1790000060
+}

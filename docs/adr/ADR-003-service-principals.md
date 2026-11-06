@@ -1,6 +1,6 @@
 # ADR-003: Service/app principal authentication and capability grants
 
-**Status:** Accepted, implemented 2026-09-22. Amended 2026-09-24: delegated authorization semantics and approval UX (roadmap §28.3). Amended 2026-10-12: project delegation (`X-OV-Project`).
+**Status:** Accepted, implemented 2026-09-22. Amended 2026-09-24: delegated authorization semantics and approval UX (roadmap §28.3). Amended 2026-10-12: project delegation (`X-OV-Project`). Amended 2026-11-06: subject assertions on the money routes (`X-OV-Subject-Assertion`).
 
 ## Context and current evidence
 
@@ -149,3 +149,80 @@ the person runs. This amendment lets a first-party service name that project, an
   member is accepted and the record names project, person and `via`.
 - Network: the member read needs `network.project.member.read`; a non-member and an unknown project are both 404
   `project.member_not_found`.
+
+## Amendment 2026-11-06: subject assertions on money routes (plan H1)
+
+The rule above ("a first-party service may name **any** person in `X-OV-Subject`; the service vouches for its own
+signed-in user") is too much to believe on a money route. Any first-party service that knew a person's id could
+read their transactions or tip in their name, and a compromised service would be able to do both. On the money
+routes the person's own answer is required instead of the service's word: a **subject assertion**.
+
+### The rule
+
+- **A subject assertion is a Network-signed, 60-second ES256 JWT that says the person allowed one service to act for
+  them on another service.** The claims are `identity.subject-assertion-claims@1`: `iss`, `sub` (the person,
+  `usr_…`), `aud` (the service the assertion is for), `act` (the service it was minted for), `jti`, `iat`, `exp`, and
+  optionally `for` (the services that may carry it).
+- **Only the person's own access token can produce one.** Network mints them at `POST /internal/subject-assertions`
+  (a first-party service token in `Authorization`, the person's own Network access token in `user_token`). Without
+  that token nothing is signed (401 `assertion.no_user_token`), so a service that merely knows a person's id cannot
+  say the person allowed anything. The signing key is Network's own EC (P-256) key, published in its JWKS beside the
+  RS256 session key (`kid ov-network-assertion-1`), so a receiver verifies the signature offline.
+- **Only a token Network issued for its own API mints one.** The service token must be for the audience
+  `openvibe.network`; one minted for another audience (a service talking to Billing, say) is refused (401
+  `token.wrong_audience`), so a service cannot reuse a token it holds elsewhere to have Network sign for people.
+- **The receiver checks the assertion against the person the route acts for.** A route that names a person
+  (`from`, `subject`, `subscriber`, `?subject=`, the path's `usr_…`) must carry the assertion in
+  `X-OV-Subject-Assertion`, and the assertion's `sub` must be that person. One that names another person is refused
+  (403 `subject.assertion_mismatch`) and no money moves.
+- **The audience is checked.** The assertion must be for the receiver's own service (`audience` includes
+  `openvibe.billing` / `openvibe.tips`); one minted for another service is refused (403
+  `assertion.wrong_audience`). A forged or malformed one is refused (403 `assertion.malformed` /
+  `assertion.bad_signature`), an expired one (403 `assertion.expired`), and a replayed one (403
+  `assertion.replayed`): the receiver remembers the `jti` for the replay window.
+- **The service presenting the assertion must be one the assertion names.** `act` is the service it was minted for;
+  `for` names the others that may carry it (a chain). A service that is not in it is refused (403
+  `assertion.actor_mismatch`) — another service's proof is not this service's proof.
+- **A chain carries one assertion.** When the assertion travels (the site mints it for Tips and Billing, Tips carries
+  it on to Billing), the audience is a list and `for` names the services allowed to carry it. The receiver still
+  checks the presenter against `for`.
+- **A person acting for themselves needs none.** A call with the person's own token is not a delegated call: the
+  person is the caller. Billing's own `/api/me/*` routes (the person's wallet) are in this shape.
+- **The switch is off first.** `BILLING_REQUIRE_SUBJECT_ASSERTION` / `TIPS_REQUIRE_SUBJECT_ASSERTION` (off) refuse the
+  old, vouched way once every caller sends assertions. While the flag is off a route that names a person still works
+  the old way, but an assertion that comes is always checked: one that names another person, or that belongs to
+  another service, is refused even with the flag off (money never moves for the wrong person), and one that does not
+  verify is counted and ignored. The receivers say what they saw on `/metrics`
+  (`billing_subject_assertion_calls` / `tips_subject_assertion_calls`, states `asserted`, `unasserted`, `invalid`,
+  `refused`): the flag turns on when `unasserted` stops moving, because that is the number that says every caller
+  sends assertions.
+- **Background work cannot carry one.** An assertion needs the person's live token, so a background path (a cache
+  refresh, a relay) cannot produce one. Those paths keep the old way until they hold the person's token; the flag
+  stays off for a service until every one of its per-person calls can carry one.
+
+### Who mints, who carries
+
+- **Network** signs (`POST /internal/subject-assertions`, the JWKS key, the limiter).
+- **The SDK** (`openvibe-sdk/assertions`) has the two halves: `requestSubjectAssertion()` for a caller,
+  `verifySubjectAssertion()` / `createSubjectAssertionVerifier()` for a receiver (JWKS cached, audience, expiry and
+  the `jti` replay window checked), and `createSubjectAssertionMinter()` for a caller's own helper.
+- **Billing and Tips** check (every per-person route; the flags above).
+- **The callers** mint and carry: Live (its money calls), Tips (the person tipping; and it carries the assertion on
+  to Billing), VIP (a membership bought from the member's credit), the Network wallet (the journal read with
+  Network's service token). A service that only reads a person's own wallet with that person's own token (Services)
+  needs none.
+
+### Tests
+
+- Network: minted with the person's token; refused without it (401); an app token is refused (403
+  `assertion.not_a_service`); a token for another audience is refused (401 `token.wrong_audience`); a token naming
+  another person is refused (403 `assertion.subject_mismatch`); an audience outside the allow-list is refused (403
+  `assertion.audience_not_allowed`); the chain (`for` + an audience list) works; the published JWK carries no private
+  half.
+- Billing and Tips: forged, expired, replayed, wrong-audience and wrong-person assertions are refused, and with the
+  flag on the old way is refused too (403 `subject.assertion_required`); a mismatch never moves money.
+- The SDK: a good assertion verifies; a forged, tampered, expired, replayed, wrong-audience, wrong-issuer,
+  `alg=none` or keyless assertion does not; a caller without the person's token gets nothing; the minter answers
+  null (never throws) when the assertion cannot be had.
+- The callers: a money call for a person carries that person's assertion; a call without the person's token travels
+  the old way; two calls get two assertions.
