@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/agent-stream-step-request.v1.json",
+  "title": "LiveAgentStreamStepRequest",
+  "description": "live.agent-stream-step-request@1 (the Agent Streams plan, S2): the body of POST /api/streams/agent/:id/steps on OpenVibe.Live, which answers 201 with the step it stored (live.agent-stream-step@1). The publisher posts with its publish ticket (Authorization: Bearer wpt_…), and Codes and Actor post through their service tokens with live.agent_stream.publish for the person. AT is when the step began (the agent may say so; Live takes its own clock when it is absent), TITLE says what the step is (at most 120 characters), STATUS says how it stands, DETAIL is the optional longer line (at most 500 characters), TESTS and COST_USD are the optional reports. Live refuses more than one step a second, more than two thousand steps per stream, a title over 120 characters or a detail over 500, and text the house filters refuse.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "status"
+  ],
+  "properties": {
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "status": {
+      "enum": [
+        "started",
+        "passed",
+        "failed",
+        "skipped"
+      ]
+    },
+    "detail": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "tests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passed",
+        "failed"
+      ],
+      "properties": {
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "cost_usd": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+}

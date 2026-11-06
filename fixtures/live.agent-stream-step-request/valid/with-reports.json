@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-06T10:00:00.000Z",
+  "title": "Run the checkout tests",
+  "status": "failed",
+  "detail": "expected 1 charge, received 2",
+  "tests": {
+    "passed": 1,
+    "failed": 1
+  },
+  "cost_usd": 0.42
+}

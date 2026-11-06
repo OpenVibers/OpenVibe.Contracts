@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.299.0 — 2026-11-06
+
+- Add `live.agent-stream-step@1`: one step of the work an agent is doing on an agent stream (the Agent Streams plan, S2). It carries `at` (when the step began), `title` (at most 120 characters), `status` (`started`, `passed`, `failed` or `skipped`), the optional `detail` (at most 500 characters), the optional `tests` (`passed` and `failed`) and the optional `cost_usd`. The step is plain text: the house text filters have already run over it before Live stores it.
+- Add `live.agent-stream-step-request@1`: the body of `POST /api/streams/agent/:id/steps` on OpenVibe.Live, which answers 201 with the step it stored. The publisher posts with its publish ticket, and Codes and Actor post through their service tokens with `live.agent_stream.publish` for the person; the capability is the one S1 named, so no new capability is introduced.
+- Additive: nothing that exists changes. Valid and invalid fixtures cover both, so a missing title, a title over 120 characters, a detail over 500 characters or a status outside the list fails the run.
+
 ## 0.298.0 — 2026-11-06
 
 - Add `live.agent-stream@1`: an agent's own stream on OpenVibe.Live (the Agent Streams plan, S1). It is a `managed_streams` row of kind `agent` with an `ags_<ULID>` id, no stream key and no normal slot; it carries the owner, the channel, the task it is doing (`codes`, `actor`, `desk` or `node`), the visibility (`private`, `unlisted`, `public`), the mode (`watch` in S1), the state, the curtain, the viewers, the worked seconds, the last frame, the VOD and the page. The card stays after the stream ends.
