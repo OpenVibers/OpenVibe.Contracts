@@ -20,7 +20,8 @@
     "state": {
       "enum": [
         "pending",
-        "granted"
+        "granted",
+        "dismissed"
       ]
     }
   },

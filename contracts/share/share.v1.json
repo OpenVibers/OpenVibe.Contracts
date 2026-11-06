@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/share/share.v1.json",
   "title": "Share",
-  "description": "share@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "description": "share@1: the uniform GET/PUT body. People, not bare subjects; ids only, never a resource title or content except the service's own describe() (title and link). Members apply to people audience; pending recipients may preview for seven days.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -11,6 +11,9 @@
     },
     "owner_subject": {
       "$ref": "../identity/subject-ref.v1.json"
+    },
+    "owner": {
+      "$ref": "person.v1.json"
     },
     "audience": {
       "enum": [
@@ -28,13 +31,68 @@
       }
     },
     "transfer": {
-      "$ref": "transfer.v1.json"
+      "$ref": "transfer-view.v1.json"
+    },
+    "you": {
+      "$ref": "you.v1.json"
+    },
+    "requests": {
+      "type": "array",
+      "items": {
+        "$ref": "access-request-view.v1.json"
+      }
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "link": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "viewer",
+          "editor"
+        ]
+      }
+    },
+    "audiences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "public",
+          "link",
+          "people",
+          "private"
+        ]
+      }
+    },
+    "transferable": {
+      "type": "boolean"
     }
   },
   "required": [
     "ref",
     "owner_subject",
+    "owner",
     "audience",
-    "members"
+    "members",
+    "you",
+    "requests",
+    "title",
+    "link",
+    "roles",
+    "audiences",
+    "transferable"
   ]
 }

@@ -20,6 +20,10 @@
       "items": {
         "$ref": "member-input.v1.json"
       }
+    },
+    "notify": {
+      "type": "boolean",
+      "default": true
     }
   },
   "required": [],

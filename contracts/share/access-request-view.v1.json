@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/share/access-request-view.v1.json",
+  "title": "ShareAccessRequestView",
+  "description": "share.access-request-view@1: a pending access request in the GET body, with the person who asked. Pending only; dismissed and granted requests are not shown.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "subject": {
+      "$ref": "../identity/subject-ref.v1.json"
+    },
+    "username": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "display_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "subject",
+    "username",
+    "display_name",
+    "avatar_url",
+    "requested_at"
+  ]
+}

@@ -14,6 +14,31 @@
         },
         {
           "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "subject": {
+              "$ref": "../identity/subject-ref.v1.json"
+            }
+          },
+          "required": [
+            "subject"
+          ]
         }
       ]
     },

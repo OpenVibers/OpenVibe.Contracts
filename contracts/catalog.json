@@ -9168,6 +9168,51 @@
       "status": "active"
     },
     {
+      "id": "share.person",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/person.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.you",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/you.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.access-request-view",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/access-request-view.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.transfer-view",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/transfer-view.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "share.people-lookup",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "share/people-lookup.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "share.update-request",
       "version": "1.0.0",
       "owner": "network",

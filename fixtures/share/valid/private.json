@@ -1,26 +1,29 @@
 {
-  "ref": {
-    "service": "community",
-    "kind": "paste",
-    "id": "abc"
-  },
-  "owner_subject": {
-    "type": "user",
-    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  "ref": { "service": "community", "kind": "paste", "id": "abc" },
+  "owner_subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "owner": {
+    "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+    "username": "ursula",
+    "display_name": "Ursula",
+    "avatar_url": null
   },
   "audience": "private",
   "members": [
     {
-      "subject": {
-        "type": "user",
-        "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
-      },
+      "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" },
+      "username": "maticus",
+      "display_name": "Maticus",
+      "avatar_url": "https://cdn.openvibe.network/avatars/maticus.png",
       "role": "viewer",
-      "added_by": {
-        "type": "user",
-        "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
-      },
+      "added_by": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
       "added_at": "2026-11-06T00:00:00Z"
     }
-  ]
+  ],
+  "you": { "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" }, "role": "owner" },
+  "requests": [],
+  "title": "LOOI bridge notes",
+  "link": "https://community.openvibe.network/p/abc",
+  "roles": ["viewer"],
+  "audiences": ["public", "link", "people", "private"],
+  "transferable": true
 }

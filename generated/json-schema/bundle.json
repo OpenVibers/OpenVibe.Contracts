@@ -101626,12 +101626,30 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/share/member.v1.json",
         "title": "ShareMember",
-        "description": "share.member@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "description": "share.member@1: a member with their Network identity fields. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).",
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "subject": {
             "$ref": "../identity/subject-ref.v1.json"
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "role": {
             "enum": [
@@ -101653,6 +101671,9 @@
         },
         "required": [
           "subject",
+          "username",
+          "display_name",
+          "avatar_url",
           "role",
           "added_by",
           "added_at"
@@ -101797,7 +101818,8 @@
           "state": {
             "enum": [
               "pending",
-              "granted"
+              "granted",
+              "dismissed"
             ]
           }
         },
@@ -101817,7 +101839,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/share/share.v1.json",
         "title": "Share",
-        "description": "share@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+        "description": "share@1: the uniform GET/PUT body. People, not bare subjects; ids only, never a resource title or content except the service's own describe() (title and link). Members apply to people audience; pending recipients may preview for seven days.",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -101826,6 +101848,9 @@
           },
           "owner_subject": {
             "$ref": "../identity/subject-ref.v1.json"
+          },
+          "owner": {
+            "$ref": "person.v1.json"
           },
           "audience": {
             "enum": [
@@ -101843,14 +101868,274 @@
             }
           },
           "transfer": {
-            "$ref": "transfer.v1.json"
+            "$ref": "transfer-view.v1.json"
+          },
+          "you": {
+            "$ref": "you.v1.json"
+          },
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "access-request-view.v1.json"
+            }
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "link": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "viewer",
+                "editor"
+              ]
+            }
+          },
+          "audiences": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "public",
+                "link",
+                "people",
+                "private"
+              ]
+            }
+          },
+          "transferable": {
+            "type": "boolean"
           }
         },
         "required": [
           "ref",
           "owner_subject",
+          "owner",
           "audience",
-          "members"
+          "members",
+          "you",
+          "requests",
+          "title",
+          "link",
+          "roles",
+          "audiences",
+          "transferable"
+        ]
+      }
+    },
+    "share.person": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/person.v1.json",
+        "title": "SharePerson",
+        "description": "share.person@1: a person in a sharing answer, from Network's identity projection. username, display_name and avatar_url are null when Network does not know the subject (or reports it banned or deleted).",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "username",
+          "display_name",
+          "avatar_url"
+        ]
+      }
+    },
+    "share.you": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/you.v1.json",
+        "title": "ShareYou",
+        "description": "share.you@1: who the caller is on this resource, as the sheet needs it. Owner or trusted staff; never a client-supplied value.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "staff"
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "role"
+        ]
+      }
+    },
+    "share.access-request-view": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/access-request-view.v1.json",
+        "title": "ShareAccessRequestView",
+        "description": "share.access-request-view@1: a pending access request in the GET body, with the person who asked. Pending only; dismissed and granted requests are not shown.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatar_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "subject",
+          "username",
+          "display_name",
+          "avatar_url",
+          "requested_at"
+        ]
+      }
+    },
+    "share.transfer-view": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/transfer-view.v1.json",
+        "title": "ShareTransferView",
+        "description": "share.transfer-view@1: the pending transfer in the GET body, with its recipient as a person. The transfer id is what the sheet sends back.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "from": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "to": {
+            "$ref": "person.v1.json"
+          },
+          "keep_access": {
+            "type": "boolean",
+            "default": false
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "enum": [
+              "pending",
+              "accepted",
+              "declined",
+              "cancelled",
+              "expired"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "from",
+          "to",
+          "keep_access",
+          "requested_at",
+          "expires_at",
+          "state"
+        ]
+      }
+    },
+    "share.people-lookup": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/share/people-lookup.v1.json",
+        "title": "SharePeopleLookup",
+        "description": "share.people-lookup@1: the answer to GET /api/v1/share/people?name=exact. person is null when nobody holds that exact name, for banned or deleted accounts, and for non-user subjects.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "person": {
+            "oneOf": [
+              {
+                "$ref": "person.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "person"
         ]
       }
     },
@@ -101880,6 +102165,10 @@
             "items": {
               "$ref": "member-input.v1.json"
             }
+          },
+          "notify": {
+            "type": "boolean",
+            "default": true
           }
         },
         "required": [],
@@ -101906,6 +102195,31 @@
               },
               {
                 "$ref": "../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "pattern": "^@?[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "subject": {
+                    "$ref": "../identity/subject-ref.v1.json"
+                  }
+                },
+                "required": [
+                  "subject"
+                ]
               }
             ]
           },
