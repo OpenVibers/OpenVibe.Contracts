@@ -154,7 +154,7 @@ A person's keys live on Network, opaque. The contracts are:
 
 A person has two key pairs: an **ECDH P-256** pair that receives content keys, and an **ECDSA P-256** pair that signs
 the fingerprint. The **fingerprint** is the first eight bytes of SHA-256 over both public keys, read as eight words
-(256 words, eight bits each) in two groups of four: it is short enough to say out loud and compare once. Sixty-four
+(256 words, eight bits each) in two groups of four, joined by a middle dot: it is short enough to say out loud and compare once. Sixty-four
 bits, not thirty-two: a server that swapped in its own key would need about 2^32 key generations to land on the same
 four words, and 2^64 for the eight. The signature over both public keys proves the holder owns the signing key, so a
 key pair is self-certifying; a change of keys changes the fingerprint, and `locker.key-change@1` records it so a share

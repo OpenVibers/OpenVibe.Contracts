@@ -292072,14 +292072,14 @@ export interface LockerPublicKey {
 
 /** locker.public-keys@1.0.0 (owner: network) */
 /**
- * locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the eight-word fingerprint. The fingerprint is the first eight bytes of SHA-256 over both public keys, read as eight words in two groups of four, and the signature proves the holder owns the signing key, so a person can compare the eight words out of band and a key change is visible.
+ * locker.public-keys@1: what anyone may read about a person's locker: the two public keys and the eight-word fingerprint. The fingerprint is the first eight bytes of SHA-256 over both public keys, read as eight words in two groups of four, joined by a middle dot, and the signature proves the holder owns the signing key, so a person can compare the eight words out of band and a key change is visible.
  */
 export interface LockerPublicKeys {
   subject: SubjectRef;
   ecdh: LockerPublicKey;
   signing: LockerPublicKey;
   /**
-   * Eight words, lower case, in two groups of four: sixty-four bits. Compare them out of band; a change means a changed key.
+   * Eight words, lower case, in two groups of four joined by a middle dot: sixty-four bits. Compare them out of band; a change means a changed key.
    */
   fingerprint: string;
   /**
@@ -292135,7 +292135,7 @@ export interface LockerKeyChange {
   reason: "created" | "rotated" | "restored";
   changed_at: string;
   /**
-   * The eight words of the new keys, in two groups of four.
+   * The eight words of the new keys, in two groups of four joined by a middle dot.
    */
   fingerprint: string;
   /**

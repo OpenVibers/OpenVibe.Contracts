@@ -28,12 +28,12 @@
     },
     "fingerprint": {
       "type": "string",
-      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
-      "description": "The eight words of the new keys, in two groups of four."
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+ · [a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+      "description": "The eight words of the new keys, in two groups of four joined by a middle dot."
     },
     "previous_fingerprint": {
       "type": "string",
-      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+-[a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+ · [a-z]+ [a-z]+ [a-z]+ [a-z]+$",
       "description": "The eight words before the change, when there were any."
     }
   }
