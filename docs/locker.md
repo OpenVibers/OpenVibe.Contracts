@@ -164,6 +164,24 @@ The private keys are stored wrapped (`locker.key-backup@1`): PBKDF2-SHA-256 from
 AES-256-GCM. Network holds the protected copy and cannot open it. There is no reset: if the passphrase and the
 recovery kit are both lost, nobody can open the locker, including OpenVibe.
 
+## Sharing a locked item
+
+`share@1` carries the lock kind, so a service knows how an item is sealed without opening it. For a **people** lock the
+share API also carries the slots, because the slots are how the sharing and the encryption agree on who may read:
+
+* **Adding someone** saves the member and that member's people slot together (`share.member-input@1.key_slot`). The
+  caller wraps the content key for the person's current public key; the server never sees the content key. A member
+  without a slot is refused (`share.slot_required`), and a slot made for another key is refused (`share.key_changed`)
+  after the slot's `recipient_key` is compared with the thumbprint of the person's key as the key directory has it now.
+* **Removing someone** is a re-seal, not a row deletion: the caller sends the content sealed again for those who stay
+  (`share.update-request@1.envelope`) and the service stores it before it drops the member. Without an envelope the
+  request is refused (`share.reseal_required`). Someone who already opened the item keeps what they saw; the fresh
+  content key only stops the next fetch from opening.
+* **A transfer** carries the recipient's slot at offer time (`share.transfer-request@1.key_slot`), and on acceptance the
+  former owner's access goes unless they kept it.
+* **The read** answers each member's slot, and for the owner the member's current fingerprint and whether it changed
+  since the slot was made, which is what the sheet needs to warn and re-wrap.
+
 ## What a service does with a locked item
 
 `openvibe-sdk/locker/server` gives a service the checks in one place: it reads the header and checks its shape and

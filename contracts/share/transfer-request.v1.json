@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/share/transfer-request.v1.json",
   "title": "ShareTransferRequest",
-  "description": "share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days.",
+  "description": "share.transfer-request@1: network-wide sharing. Ids only; no resource title or content. Members apply to people audience; pending recipients may preview for seven days. `key_slot` is the content key wrapped for the recipient, required when the item is people-locked (Locker) and checked against the recipient's current key.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -45,6 +45,9 @@
     "keep_access": {
       "type": "boolean",
       "default": false
+    },
+    "key_slot": {
+      "$ref": "../locker/people-slot.v1.json"
     }
   },
   "required": [

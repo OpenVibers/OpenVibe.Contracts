@@ -46,6 +46,18 @@
     },
     "key_slot": {
       "$ref": "../locker/people-slot.v1.json"
+    },
+    "key_fingerprint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-z]+ [a-z]+ [a-z]+ [a-z]+ · [a-z]+ [a-z]+ [a-z]+ [a-z]+$",
+      "description": "The member's current key fingerprint from Network's key directory (locker.public-keys@1), shown to the owner of a people-locked item; null when the person has no locker key (or Network did not answer)."
+    },
+    "fingerprint_changed": {
+      "type": "boolean",
+      "description": "Owner-only, for a people-locked item: true when the member's current key is not the one their key_slot was made for, so the sheet warns and re-wraps."
     }
   },
   "required": [

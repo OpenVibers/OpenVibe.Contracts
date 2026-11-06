@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.296.0 — 2026-11-06
+
+- Sharing learns locked items. `share.update-request@1` gains `envelope`: a `locker.envelope@1`, base64, the content re-sealed for the people who stay, sent with the members that remain when someone is removed from a people-locked item. The service stores it before it drops the member; it never opens it.
+- `share.transfer-request@1` gains `key_slot` (that recipient's people slot), required for a people-locked item and checked against the recipient's current key from the key directory.
+- `share.member@1` gains `key_fingerprint` and `fingerprint_changed` (owner-only): the member's current eight-word fingerprint and whether it is still the key their slot was made for, so the share sheet can warn and re-wrap.
+- Additive: every new field is optional and old documents stay valid. Fixtures cover the locked member, the locked member input, the re-seal request and a locked transfer, and a malformed slot is refused.
+
 ## 0.295.0 — 2026-11-06
 
 - Add `sources.category@1`: one category of the sources registry and how long OpenVibe.Sources keeps its items (roadmap §3 F). The `retention` field is either `{ days, reason }` — the window an item lives after it was last current (its last fetch while live, its removal once removed) — or `"keep"`, for reference data that is never pruned by age (Sources keeps the newest row per source key and prunes only the rows a newer value replaced).
