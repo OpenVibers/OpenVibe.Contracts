@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/live.agent_stream.changed.v1.json",
+  "title": "LiveAgentStreamChangedPayload",
+  "description": "live.agent_stream.changed v1 (OpenVibe.Live, the Agent Streams plan, S1): an agent stream changed. KIND is what happened: started, ended, visibility (the owner switched it) or curtain (the desk's privacy screen went up or came down). It says what happened and never why: the curtain's reason stays with the owner, so a subscriber learns that a private screen is up, not that a password field was focused. VISIBILITY carries the new visibility when KIND is visibility, CURTAIN whether the screen is up when KIND is curtain. The publish ticket, the stream key and the task's contents never appear. Envelope: subject { type: agent_stream, id: ags_… }, actor the owner's subject when Live knows it, else service:live. The event type carries no hyphen (events.event-envelope@1's event_type pattern allows letters, digits and underscores only), so it is live.agent_stream.changed; the stream's contract ids keep live.agent-stream@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "stream_id",
+    "kind",
+    "at"
+  ],
+  "properties": {
+    "stream_id": {
+      "type": "string",
+      "pattern": "^ags_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "enum": [
+        "started",
+        "ended",
+        "visibility",
+        "curtain"
+      ]
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "unlisted",
+        "public"
+      ],
+      "description": "The new visibility, when KIND is visibility."
+    },
+    "curtain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "up"
+      ],
+      "properties": {
+        "up": {
+          "type": "boolean"
+        }
+      },
+      "description": "Whether the privacy screen is up, when KIND is curtain. Never the reason."
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

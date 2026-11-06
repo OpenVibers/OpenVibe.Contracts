@@ -47,6 +47,7 @@
     "neighbourhood": "streams"
   },
   "capabilities": [
+    "live.agent_stream.publish",
     "live.analytics.read",
     "live.avatar.write",
     "live.openre.slot.bind",
@@ -62,6 +63,7 @@
     "live.url_registry.refresh"
   ],
   "eventsProduced": [
+    "live.agent_stream.changed",
     "live.index_document.deleted",
     "live.index_document.upserted",
     "live.moderation.action",

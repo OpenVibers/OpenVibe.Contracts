@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/agent-stream.v1.json",
+  "title": "LiveAgentStream",
+  "description": "live.agent-stream@1 (the Agent Streams plan, S1): an agent's own stream on OpenVibe.Live. It is a managed_streams row of kind 'agent' with the id ags_<ULID>; it never has a stream key and it never takes a normal slot (a second live one answers 409 live.agent_stream_limit). OWNER is the person the stream belongs to, CHANNEL their Live channel, and TASK says what the agent is doing and where that task lives. VISIBILITY is who may watch; MODE is how the stream is played (S1 accepts watch only) and STATE where it stands. CURTAIN is the desk's privacy screen: while it is up Live pauses every viewer's consumer, so a viewer sees 'Private screen' and never the reason (the reason stays in the owner's view). The card stays after the stream ends, with the last frame, the worked seconds and the VOD once it is recorded.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "channel",
+    "title",
+    "task",
+    "visibility",
+    "mode",
+    "state",
+    "curtain",
+    "viewers",
+    "started_at",
+    "ended_at",
+    "worked_seconds",
+    "last_frame_url",
+    "vod_id",
+    "page_url",
+    "label"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ags_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The agent stream's id (ULID, Crockford base32)."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person the stream is theirs."
+    },
+    "channel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "The owner's Live channel username (the stream's page lives under it)."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "task": {
+      "$ref": "#/$defs/task"
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "unlisted",
+        "public"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "watch",
+        "narrated",
+        "copilot",
+        "chatplays"
+      ],
+      "description": "How the stream is played. S1 accepts watch only."
+    },
+    "state": {
+      "enum": [
+        "idle",
+        "live",
+        "ended"
+      ]
+    },
+    "curtain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "up"
+      ],
+      "properties": {
+        "up": {
+          "type": "boolean"
+        },
+        "since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When it went up; absent while it is down."
+        }
+      }
+    },
+    "viewers": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "worked_seconds": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How long the agent worked (the card's 'worked 42 min')."
+    },
+    "last_frame_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "The last frame the desk sent (JPEG or WebP), or null before the first one."
+    },
+    "vod_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Media's id once the recording is stored."
+    },
+    "page_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://openvibe\\.live/",
+      "description": "The owner's page, /@person/agents/<ags_id> (with ?k= for the owner of an unlisted stream)."
+    },
+    "label": {
+      "const": "AI agent",
+      "description": "Always shown, so a viewer knows whose stream this is."
+    }
+  },
+  "$defs": {
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "ref",
+        "title"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "codes",
+            "actor",
+            "desk",
+            "node"
+          ],
+          "description": "Where the task runs."
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The task's id in that source."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri",
+          "description": "The task's page, when it has one."
+        }
+      }
+    }
+  }
+}

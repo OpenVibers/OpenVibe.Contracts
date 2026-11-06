@@ -1,0 +1,26 @@
+{
+  "id": "ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "channel": "alice",
+  "title": "Fixing the login page",
+  "task": {
+    "source": "codes",
+    "ref": "task_01JAB2C3D4E5F6G7H8J9K0MNP",
+    "title": "Fix the login page",
+    "url": "https://codes.openvibe.live/tasks/task_01JAB2C3D4E5F6G7H8J9K0MNP"
+  },
+  "visibility": "private",
+  "mode": "watch",
+  "state": "idle",
+  "curtain": {
+    "up": false
+  },
+  "viewers": 0,
+  "started_at": null,
+  "ended_at": null,
+  "worked_seconds": 0,
+  "last_frame_url": null,
+  "vod_id": null,
+  "page_url": "https://openvibe.live/@alice/agents/ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "label": "AI agent"
+}

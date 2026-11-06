@@ -1,0 +1,10 @@
+{
+  "viewers": 0,
+  "encode": false,
+  "curtain": {
+    "up": true,
+    "since": "2026-11-06T12:05:00.000Z",
+    "reason": "password_field"
+  },
+  "ends_at": "2026-11-06T13:00:00.000Z"
+}

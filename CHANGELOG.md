@@ -1,8 +1,16 @@
 # Changelog
 
+## 0.298.0 — 2026-11-06
+
+- Add `live.agent-stream@1`: an agent's own stream on OpenVibe.Live (the Agent Streams plan, S1). It is a `managed_streams` row of kind `agent` with an `ags_<ULID>` id, no stream key and no normal slot; it carries the owner, the channel, the task it is doing (`codes`, `actor`, `desk` or `node`), the visibility (`private`, `unlisted`, `public`), the mode (`watch` in S1), the state, the curtain, the viewers, the worked seconds, the last frame, the VOD and the page. The card stays after the stream ends.
+- Add the four request/result schemas: `live.agent-stream-create-request@1` (title, task, visibility, the optional `allow_sites`), `live.agent-stream-publish@1` (`whip_url`, the one-time publish ticket `wpt_…`, `expires_at`), `live.agent-stream-state@1` (viewers, `encode`, the curtain and `ends_at`, what the desk polls) and `live.agent-stream-curtain-request@1` (`up` and the reason).
+- Add the event `live.agent_stream.changed` (`started`, `ended`, `visibility`, `curtain`, never the reason) and the capability `live.agent_stream.publish`, and name both in Live's service manifest. The stream's contract ids keep the design's hyphen (`live.agent-stream@1`); the capability and the event type carry an underscore because `identity.service-token-claims@1`'s `cap` pattern and `events.event-envelope@1`'s `event_type` pattern allow letters, digits and underscores only. The capability's description records the design's `live.agent-stream.publish` name and why it is written `live.agent_stream.publish`. `identity.service-token-claims@1`'s `on_behalf_of` description now says a node token names its owner on the audience where the machine acts for them (Live's), so a receiver knows where to read the stream's owner.
+- Valid and invalid fixtures cover the stream, the create request, the publish part, the state, the curtain request and the event payload, so a missing field, a bad id or a reason outside the list fails the run.
+
 ## 0.297.0 — 2026-11-06
 
 - Add `identity.subject-assertion-claims@1`: the claims of a short-lived ES256 assertion signed by OpenVibe.Network that says a person allowed one service to act for them on another service — `sub` (the person), `aud` (the service it is for), `act` (the service it was minted for), optionally `for` (the services that may carry it), `jti`, `iat`, `exp`. Network mints one only from the person's own access token (`POST /internal/subject-assertions`), so a service that merely knows a person's id cannot say the person allowed anything; the key is published in Network's JWKS (`kid ov-network-assertion-1`). The money routes of Billing and Tips check it against the person they act for, and refuse the old "the service vouches for its person" way once `BILLING_REQUIRE_SUBJECT_ASSERTION` / `TIPS_REQUIRE_SUBJECT_ASSERTION` is on. Only a service token Network issued for its own API (`openvibe.network`) mints one. See the ADR-003 amendment of 2026-11-06.
+
 ## 0.296.0 — 2026-11-06
 
 - Sharing learns locked items. `share.update-request@1` gains `envelope`: a `locker.envelope@1`, base64, the content re-sealed for the people who stay, sent with the members that remain when someone is removed from a people-locked item. The service stores it before it drops the member; it never opens it.
