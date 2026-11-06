@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/agent-poll.v1.json",
+  "title": "ChatAgentPoll",
+  "description": "chat.agent-poll@1 (the Agent Streams plan, S5): a poll the agent asks a Co-pilot room to run, and the result it gets back. The agent writes the question and two to four options ('Which name: parseRows or readTable?') and the poll is open for 30 to 120 seconds. Chat draws it as a poll card with buttons; `!1` to `!4` vote too. One vote per person, one poll at a time, and at most one poll every five minutes. The owner (or a moderator) can close a poll early or veto its result. A poll can only choose between the options the agent wrote: Chat never adds one. The result carries the counts, nothing else about who voted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "poll_id",
+    "room",
+    "question",
+    "options",
+    "opened_at",
+    "closes_at",
+    "state"
+  ],
+  "properties": {
+    "poll_id": {
+      "type": "string",
+      "pattern": "^pol_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The poll's id (ULID, Crockford base32)."
+    },
+    "room": {
+      "type": "string",
+      "pattern": "^agent:ags_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The room the poll is in: an agent stream's room, `agent:<ags_id>`."
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The question the agent wrote."
+    },
+    "options": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "description": "The options the agent wrote, two to four of them. Chat never adds an option of its own.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[1-4]$",
+            "description": "The option's number: `!1` to `!4` vote for it."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The option's text, as the agent wrote it."
+          },
+          "votes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many people chose it. The count is in the result; it says nothing about who."
+          }
+        }
+      }
+    },
+    "opened_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the poll opened."
+    },
+    "closes_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the poll closes on its own: 30 to 120 seconds after it opened."
+    },
+    "closed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the poll was closed early by the owner or a moderator, or null when it ran its time."
+    },
+    "state": {
+      "enum": [
+        "open",
+        "closed",
+        "vetoed"
+      ],
+      "description": "Where the poll stands: open, closed (the counts are final), or vetoed (the owner or a moderator refused the result)."
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "The result, once the poll is closed: the counts and the winning option. Null while the poll is open.",
+      "required": [
+        "counts",
+        "total"
+      ],
+      "properties": {
+        "counts": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "description": "How many votes each option got, in the order the options were written.",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many people voted."
+        },
+        "winner": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[1-4]$",
+          "description": "The option that won, or null when there was no vote or no winner."
+        }
+      }
+    },
+    "vetoed_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Who vetoed the result (the owner or a moderator), or null. Never a person's id: the handle only."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "open"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "type": "null"
+          },
+          "closed_at": {
+            "type": "null"
+          },
+          "vetoed_by": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "closed"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "closed_at",
+          "result"
+        ],
+        "properties": {
+          "result": {
+            "type": "object"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "vetoed_by": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "vetoed"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "closed_at",
+          "vetoed_by"
+        ],
+        "properties": {
+          "closed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "vetoed_by": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}

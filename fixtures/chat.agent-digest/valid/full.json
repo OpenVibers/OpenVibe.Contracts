@@ -1,0 +1,28 @@
+{
+  "room": "agent:ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "since": "2026-11-06T10:00:00.000Z",
+  "until": "2026-11-06T10:05:00.000Z",
+  "chars": 120,
+  "truncated": false,
+  "items": [
+    {
+      "who": {
+        "display_name": "Mira",
+        "handle": "mira"
+      },
+      "what": "why is the test flaky?",
+      "kind": "question",
+      "upvotes": 3
+    },
+    {
+      "who": {
+        "display_name": "Sam",
+        "handle": "sam"
+      },
+      "what": "a link to github.com",
+      "kind": "suggestion",
+      "upvotes": 2,
+      "repeated": 2
+    }
+  ]
+}

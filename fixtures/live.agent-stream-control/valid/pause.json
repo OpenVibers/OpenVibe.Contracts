@@ -1,0 +1,10 @@
+{
+  "control": "pause",
+  "by": {
+    "handle": "mod",
+    "role": "moderator"
+  },
+  "at": "2026-11-06T10:00:00.000Z",
+  "stream": "ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "paused_by": "mod"
+}

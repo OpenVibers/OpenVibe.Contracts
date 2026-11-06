@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/agent-digest.v1.json",
+  "title": "ChatAgentDigest",
+  "description": "chat.agent-digest@1 (the Agent Streams plan, S5): what a chat room said to an agent between two of its steps, GET /api/v1/rooms/agent:<id>/digest?since= on OpenVibe.Chat. The agent never reads the raw room: it asks for a digest and gets at most ten items and 1,500 characters. Each item names who (the display name and the handle), what (cut to 200 characters), its kind (a question, a suggestion or a reaction) and its upvotes (a thumbs up on the message counts). Chat chooses what goes in: repeats are grouped, greetings and spam are dropped, and the most-upvoted questions and suggestions come first. Nobody is left out by accident: a person who is timed out or banned, whose account is younger than a day, or who set 'Agents don't read my messages' is never in the digest. A link is kept as its domain only ('a link to github.com'), because the agent never follows a link from chat. The code and the commands stay as text: the agent's own tools and approvals decide what may run, never chat.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "room",
+    "since",
+    "until",
+    "items"
+  ],
+  "properties": {
+    "room": {
+      "type": "string",
+      "pattern": "^agent:ags_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The room the digest came from: an agent stream's room, `agent:<ags_id>`."
+    },
+    "since": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "The start of the window: the moment the agent last read, or null for the first read."
+    },
+    "until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The end of the window: the moment this digest was made."
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 10,
+      "description": "What chat said, at most ten items. The order is the one Chat chose: the most-upvoted questions and suggestions first, the reactions last.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "who",
+          "what",
+          "kind",
+          "upvotes"
+        ],
+        "properties": {
+          "who": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "display_name",
+              "handle"
+            ],
+            "description": "Who said it: the display name and the handle. Never an id, never an email, never anything else about them.",
+            "properties": {
+              "display_name": {
+                "type": "string",
+                "maxLength": 80,
+                "description": "The name the room shows."
+              },
+              "handle": {
+                "type": "string",
+                "pattern": "^[a-z0-9_]{2,32}$",
+                "description": "The handle, so the agent can answer this person by name."
+              }
+            }
+          },
+          "what": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "What they said, cut to 200 characters. A link is kept as its domain only."
+          },
+          "kind": {
+            "enum": [
+              "question",
+              "suggestion",
+              "reaction"
+            ],
+            "description": "What the line is: a question the agent may answer, a suggestion it may take or leave, or a reaction (a thumbs up, a cheer) that says nothing to do."
+          },
+          "upvotes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many thumbs up the message carries. The most-upvoted items come first."
+          },
+          "repeated": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "How many people said this same thing. Chat groups repeats into one item; this is the number behind it."
+          }
+        }
+      }
+    },
+    "chars": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1500,
+      "description": "How many characters the items use together, at most 1,500."
+    },
+    "truncated": {
+      "type": "boolean",
+      "description": "True when Chat left something out because of the ten-item or 1,500-character cap."
+    }
+  }
+}

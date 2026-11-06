@@ -9512,6 +9512,33 @@
       "status": "active"
     },
     {
+      "id": "chat.agent-digest",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/agent-digest.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.agent-poll",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/agent-poll.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent-stream-control",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-control.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.agent_stream.changed",
       "version": "1.0.0",
       "owner": "live",
