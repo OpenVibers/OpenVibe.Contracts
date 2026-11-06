@@ -9440,6 +9440,15 @@
       "status": "active"
     },
     {
+      "id": "live.agent-stream-state",
+      "version": "2.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-state.v2.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.agent-stream-curtain-request",
       "version": "1.0.0",
       "owner": "live",
@@ -9498,6 +9507,24 @@
       "version": "1.0.0",
       "owner": "report",
       "schema": "report/session-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.tts-speak-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/tts-speak-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.tts-speak-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/tts-speak-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

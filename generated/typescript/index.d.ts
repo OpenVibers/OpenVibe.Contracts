@@ -292373,6 +292373,8 @@ export interface LiveAgentStreamState {
   ends_at: string | null;
 }
 
+/** live.agent-stream-state@2.0.0 (owner: live) */
+
 /** live.agent-stream-curtain-request@1.0.0 (owner: live) */
 /**
  * live.agent-stream-curtain-request@1 (the Agent Streams plan, S1): the body of POST /api/streams/agent/:id/curtain on OpenVibe.Live (capability live.agent_stream.publish): the desk reports that its privacy screen went up or came down. While the curtain is up Live pauses every viewer's consumer (mediasoup consumer.pause()), so a desk that failed to blank still shows nothing. Viewers see 'Private screen' and never why. The curtain comes down only from the desk, after its detectors report clear for two seconds, or from the owner's own button; a detector that fails or is unsure puts it up and never down.
@@ -292672,4 +292674,28 @@ export interface ReportSessionWriteResult {
    * True when this call stored the report, false when it was already there.
    */
   created: boolean;
+}
+
+/** chat.tts-speak-request@1.0.0 (owner: chat) */
+/**
+ * chat.tts-speak-request@1: the body of POST /api/agent-voice/speak (Agent Streams S4). The desk asks Chat for the sound of one line the agent said. TEXT is the line (at most 220 characters). VOICE is a Chat voice id, or absent for the site default. OWN asks for the person own voice, and only the person themself may ask for it.
+ */
+export interface ChatTTSSpeakRequest {
+  text: string;
+  voice?: string;
+  own?: boolean;
+}
+
+/** chat.tts-speak-result@1.0.0 (owner: chat) */
+/**
+ * chat.tts-speak-result@1: the answer of POST /api/agent-voice/speak (Agent Streams S4). AUDIO is the sound of the line (base64), MIME_TYPE what it is, and RATE the sample rate the desk decodes it to (the stream track is 48 kHz).
+ */
+export interface ChatTTSSpeakResult {
+  /**
+   * The audio, base64.
+   */
+  audio: string;
+  mime_type: "audio/mpeg" | "audio/wav" | "audio/ogg" | "audio/webm";
+  rate?: number;
+  voice_id?: string | null;
 }

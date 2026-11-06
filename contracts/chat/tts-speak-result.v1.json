@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/tts-speak-result.v1.json",
+  "title": "ChatTTSSpeakResult",
+  "description": "chat.tts-speak-result@1: the answer of POST /api/agent-voice/speak (Agent Streams S4). AUDIO is the sound of the line (base64), MIME_TYPE what it is, and RATE the sample rate the desk decodes it to (the stream track is 48 kHz).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audio",
+    "mime_type"
+  ],
+  "properties": {
+    "audio": {
+      "type": "string",
+      "description": "The audio, base64."
+    },
+    "mime_type": {
+      "type": "string",
+      "enum": [
+        "audio/mpeg",
+        "audio/wav",
+        "audio/ogg",
+        "audio/webm"
+      ]
+    },
+    "rate": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "voice_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 64
+    }
+  }
+}

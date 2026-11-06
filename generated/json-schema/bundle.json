@@ -103624,7 +103624,7 @@
         }
       }
     },
-    "live.agent-stream-state": {
+    "live.agent-stream-state@1": {
       "version": "1.0.0",
       "owner": "live",
       "status": "active",
@@ -103685,6 +103685,201 @@
               "null"
             ],
             "format": "date-time"
+          }
+        }
+      }
+    },
+    "live.agent-stream-state@2": {
+      "version": "2.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/agent-stream-state.v2.json",
+        "title": "LiveAgentStreamState",
+        "description": "live.agent-stream-state@2 (the Agent Streams plan, S4): what the desk reads every ten seconds, GET /api/streams/agent/:id/state on OpenVibe.Live (with the publish ticket). VIEWERS is how many people watch. ENCODE says whether Live wants video: it is true while anyone watches or the stream is public, and while it is false the desk stops encoding and sends a snapshot every five seconds (PUT /api/streams/agent/:id/frame, JPEG or WebP, at most 200 KB, with the ticket). CURTAIN is the desk privacy screen (the reason is the owner only). ENDS_AT is when the stream ends. LINES are the lines the agent said, oldest first, each with its id: the desk asks for the lines after the last id it spoke (the ?after parameter) and speaks them in the person own voice. VOICE is the voice the agent speaks in (the mode, the personality, the voice, the mute and, when the person allowance ran out, the pause message). The v2 shape adds LINES and VOICE to the v1 shape (both optional, so a v1 reader keeps working); the v1 fields keep their meaning. CAPTIONS_URL is where the recording captions live: the WebVTT a VOD player can attach as a text track.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "viewers",
+          "encode",
+          "curtain",
+          "ends_at"
+        ],
+        "properties": {
+          "viewers": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "encode": {
+            "type": "boolean"
+          },
+          "curtain": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "up"
+            ],
+            "properties": {
+              "up": {
+                "type": "boolean"
+              },
+              "since": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "reason": {
+                "enum": [
+                  "password_field",
+                  "secret_file",
+                  "env_print",
+                  "manual",
+                  "site",
+                  "detector"
+                ],
+                "description": "Why the curtain is up. The owner view only; a viewer never sees it. The password_field reason is the one that silences the agent voice: a line spoken over a password field would put words where a secret is."
+              }
+            }
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "lines": {
+            "type": "array",
+            "description": "The lines the agent said, oldest first. The desk asks for the lines after the last id it spoke.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "at",
+                "text",
+                "kind"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "The line id: the desk cursor."
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 220,
+                  "description": "The line, at most 220 characters. It passed the house text filters before it was written."
+                },
+                "kind": {
+                  "enum": [
+                    "step",
+                    "failure",
+                    "result",
+                    "idle"
+                  ],
+                  "description": "What the line is about: a step that started, a step that failed, a result that landed, or an idle line."
+                },
+                "personality": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "calm",
+                    "hype",
+                    "dry",
+                    "roast",
+                    null
+                  ]
+                },
+                "voice": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 64,
+                  "description": "The Chat voice the line is to be spoken in."
+                }
+              }
+            }
+          },
+          "voice": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "personality",
+              "muted"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "watch",
+                  "narrated"
+                ],
+                "description": "Watch is the quiet mode; narrated is the one where the agent says what it is doing."
+              },
+              "personality": {
+                "enum": [
+                  "calm",
+                  "hype",
+                  "dry",
+                  "roast"
+                ]
+              },
+              "voice": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 64,
+                "description": "The Chat voice the agent speaks in. Null is the site default."
+              },
+              "muted": {
+                "type": "boolean",
+                "description": "The kill switch: the owner or a channel moderator. It takes effect on the desk at once."
+              },
+              "own": {
+                "type": "boolean",
+                "description": "The agent speaks in the person own cloned voice. Only with the person own consent."
+              },
+              "own_consent_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "When the person consented to their own cloned voice. The owner view only."
+              },
+              "paused": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Why the voice is paused, or null: allowance_spent when the person allowance ran out."
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "What the owner is told about the pause, for example voice paused: allowance spent."
+              }
+            }
+          },
+          "captions_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Where the recording captions live: the WebVTT a VOD player can attach as a text track. The voice itself is mixed into the stream before the recording, so the recording keeps the voice; the captions are the track beside it."
           }
         }
       }
@@ -104646,6 +104841,79 @@
           "created": {
             "type": "boolean",
             "description": "True when this call stored the report, false when it was already there."
+          }
+        }
+      }
+    },
+    "chat.tts-speak-request": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/tts-speak-request.v1.json",
+        "title": "ChatTTSSpeakRequest",
+        "description": "chat.tts-speak-request@1: the body of POST /api/agent-voice/speak (Agent Streams S4). The desk asks Chat for the sound of one line the agent said. TEXT is the line (at most 220 characters). VOICE is a Chat voice id, or absent for the site default. OWN asks for the person own voice, and only the person themself may ask for it.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 220
+          },
+          "voice": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "own": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "chat.tts-speak-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/tts-speak-result.v1.json",
+        "title": "ChatTTSSpeakResult",
+        "description": "chat.tts-speak-result@1: the answer of POST /api/agent-voice/speak (Agent Streams S4). AUDIO is the sound of the line (base64), MIME_TYPE what it is, and RATE the sample rate the desk decodes it to (the stream track is 48 kHz).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "audio",
+          "mime_type"
+        ],
+        "properties": {
+          "audio": {
+            "type": "string",
+            "description": "The audio, base64."
+          },
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "audio/mpeg",
+              "audio/wav",
+              "audio/ogg",
+              "audio/webm"
+            ]
+          },
+          "rate": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "voice_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64
           }
         }
       }

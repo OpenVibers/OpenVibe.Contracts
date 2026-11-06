@@ -1,0 +1,30 @@
+{
+  "viewers": 3,
+  "encode": true,
+  "curtain": {
+    "up": false,
+    "since": null
+  },
+  "ends_at": "2026-11-06T18:00:00.000Z",
+  "captions_url": "https://openvibe.live/api/streams/agent/ai_123456/captions.vtt",
+  "lines": [
+    {
+      "id": 1,
+      "at": "2026-11-06T17:00:00.000Z",
+      "text": "The checkout tests are green.",
+      "kind": "result",
+      "personality": "calm",
+      "voice": "gary"
+    }
+  ],
+  "voice": {
+    "mode": "narrated",
+    "personality": "calm",
+    "voice": "gary",
+    "muted": false,
+    "own": false,
+    "own_consent_at": null,
+    "paused": null,
+    "message": null
+  }
+}
