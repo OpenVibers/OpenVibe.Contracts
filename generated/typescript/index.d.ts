@@ -92,7 +92,7 @@ export type ServiceTokenClaims = {
    */
   env?: "sandbox" | "production";
   /**
-   * The person who authorized an app through the authorization-code flow, or the owner an agent acts for (always present on agent tokens). Absent on client_credentials tokens.
+   * The person who authorized an app through the authorization-code flow, or the owner an agent acts for (always present on agent tokens). Also present on a node token that asks for an audience where the machine acts for its owner (Agent Streams S1: openvibe.live and live.agent_stream.publish); absent on every other client_credentials token.
    */
   on_behalf_of?: string;
   /**
@@ -292193,4 +292193,168 @@ export interface LockerKeyChange {
    * The eight words before the change, when there were any.
    */
   previous_fingerprint?: string;
+}
+
+/** live.agent-stream@1.0.0 (owner: live) */
+/**
+ * live.agent-stream@1 (the Agent Streams plan, S1): an agent's own stream on OpenVibe.Live. It is a managed_streams row of kind 'agent' with the id ags_<ULID>; it never has a stream key and it never takes a normal slot (a second live one answers 409 live.agent_stream_limit). OWNER is the person the stream belongs to, CHANNEL their Live channel, and TASK says what the agent is doing and where that task lives. VISIBILITY is who may watch; MODE is how the stream is played (S1 accepts watch only) and STATE where it stands. CURTAIN is the desk's privacy screen: while it is up Live pauses every viewer's consumer, so a viewer sees 'Private screen' and never the reason (the reason stays in the owner's view). The card stays after the stream ends, with the last frame, the worked seconds and the VOD once it is recorded.
+ */
+export interface LiveAgentStream {
+  /**
+   * The agent stream's id (ULID, Crockford base32).
+   */
+  id: string;
+  /**
+   * The person the stream is theirs.
+   */
+  owner: string;
+  /**
+   * The owner's Live channel username (the stream's page lives under it).
+   */
+  channel: string;
+  title: string;
+  task: {
+    /**
+     * Where the task runs.
+     */
+    source: "codes" | "actor" | "desk" | "node";
+    /**
+     * The task's id in that source.
+     */
+    ref: string;
+    title: string;
+    /**
+     * The task's page, when it has one.
+     */
+    url?: string | null;
+  };
+  visibility: "private" | "unlisted" | "public";
+  /**
+   * How the stream is played. S1 accepts watch only.
+   */
+  mode: "watch" | "narrated" | "copilot" | "chatplays";
+  state: "idle" | "live" | "ended";
+  curtain: {
+    up: boolean;
+    /**
+     * When it went up; absent while it is down.
+     */
+    since?: string | null;
+  };
+  viewers: number;
+  started_at: string | null;
+  ended_at: string | null;
+  /**
+   * How long the agent worked (the card's 'worked 42 min').
+   */
+  worked_seconds: number;
+  /**
+   * The last frame the desk sent (JPEG or WebP), or null before the first one.
+   */
+  last_frame_url: string | null;
+  /**
+   * Media's id once the recording is stored.
+   */
+  vod_id: string | null;
+  /**
+   * The owner's page, /@person/agents/<ags_id> (with ?k= for the owner of an unlisted stream).
+   */
+  page_url: string;
+  /**
+   * Always shown, so a viewer knows whose stream this is.
+   */
+  label: "AI agent";
+}
+
+/** live.agent-stream-create-request@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-create-request@1 (the Agent Streams plan, S1): the body of POST /api/streams/agent on OpenVibe.Live (capability live.agent_stream.publish). It answers 201 with the stream (live.agent-stream@1) and the publish part (live.agent-stream-publish@1): { stream, publish }. The caller is the person's own session token, or a first-party service token acting for that person (a Node principal acting for its owner, Codes or Actor) that holds live.agent_stream.publish for the audience openvibe.live; Network grants it to exactly those principals. Never a developer-app token, never another person's stream. TITLE is the card's title, TASK says what the agent is doing and where that task lives, VISIBILITY says who may watch, and ALLOW_SITES is the optional list of hosts a browser desk may navigate to (a desk that leaves the list raises the curtain).
+ */
+export interface LiveAgentStreamCreateRequest {
+  title: string;
+  task: {
+    /**
+     * Where the task runs.
+     */
+    source: "codes" | "actor" | "desk" | "node";
+    /**
+     * The task's id in that source.
+     */
+    ref: string;
+    title: string;
+    /**
+     * The task's page, when it has one.
+     */
+    url?: string | null;
+  };
+  visibility: "private" | "unlisted" | "public";
+  /**
+   * The hosts the browser desk may visit. Absent means no limit.
+   *
+   * @maxItems 50
+   */
+  allow_sites?: string[];
+}
+
+/** live.agent-stream-publish@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-publish@1 (the Agent Streams plan, S1): the publish part of the answer to POST /api/streams/agent (beside the stream, live.agent-stream@1). WHIP_URL is where the desk publishes, TICKET is the publish ticket (wpt_ plus 32 random bytes, base64url; Live keeps only its sha256, it is bound to this stream, this person and one WHIP session, and it lives four hours), and EXPIRES_AT is when the ticket dies. The desk sends the ticket as Authorization: Bearer wpt_… on POST /whip/agent/:id. A ticket that does not match, has expired or names another stream answers 401 invalid_ticket; a second WHIP session while one is up answers 409 already_publishing. POST /api/streams/agent/:id/ticket renews the ticket (the desk renews at three hours) and DELETE /api/streams/agent/:id/ticket revokes it: that is the kill switch, and Live ends the WHIP session at once.
+ */
+export interface LiveAgentStreamPublish {
+  whip_url: string;
+  /**
+   * The publish ticket, shown once. Live stores only its sha256.
+   */
+  ticket: string;
+  expires_at: string;
+}
+
+/** live.agent-stream-state@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-state@1 (the Agent Streams plan, S1): what the desk reads every ten seconds, GET /api/streams/agent/:id/state on OpenVibe.Live (with the publish ticket). VIEWERS is how many people watch. ENCODE says whether Live wants video: it is true while anyone watches or the stream is public, and while it is false the desk stops encoding and sends a snapshot every five seconds (PUT /api/streams/agent/:id/frame, JPEG or WebP, at most 200 KB, with the ticket). CURTAIN is the desk's privacy screen (the reason is the owner's only). ENDS_AT is when the stream ends.
+ */
+export interface LiveAgentStreamState {
+  viewers: number;
+  encode: boolean;
+  curtain: {
+    up: boolean;
+    since?: string | null;
+    /**
+     * Why the curtain is up. The owner's view only; a viewer never sees it.
+     */
+    reason?: "password_field" | "secret_file" | "env_print" | "manual" | "site" | "detector";
+  };
+  ends_at: string | null;
+}
+
+/** live.agent-stream-curtain-request@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-curtain-request@1 (the Agent Streams plan, S1): the body of POST /api/streams/agent/:id/curtain on OpenVibe.Live (capability live.agent_stream.publish): the desk reports that its privacy screen went up or came down. While the curtain is up Live pauses every viewer's consumer (mediasoup consumer.pause()), so a desk that failed to blank still shows nothing. Viewers see 'Private screen' and never why. The curtain comes down only from the desk, after its detectors report clear for two seconds, or from the owner's own button; a detector that fails or is unsure puts it up and never down.
+ */
+export interface LiveAgentStreamCurtainRequest {
+  up: boolean;
+  /**
+   * Why the curtain is up (the last reason when it comes down).
+   */
+  reason: "password_field" | "secret_file" | "env_print" | "manual" | "site" | "detector";
+}
+
+/** live.agent_stream.changed@1.0.0 (owner: live) */
+/**
+ * live.agent_stream.changed v1 (OpenVibe.Live, the Agent Streams plan, S1): an agent stream changed. KIND is what happened: started, ended, visibility (the owner switched it) or curtain (the desk's privacy screen went up or came down). It says what happened and never why: the curtain's reason stays with the owner, so a subscriber learns that a private screen is up, not that a password field was focused. VISIBILITY carries the new visibility when KIND is visibility, CURTAIN whether the screen is up when KIND is curtain. The publish ticket, the stream key and the task's contents never appear. Envelope: subject { type: agent_stream, id: ags_… }, actor the owner's subject when Live knows it, else service:live. The event type carries no hyphen (events.event-envelope@1's event_type pattern allows letters, digits and underscores only), so it is live.agent_stream.changed; the stream's contract ids keep live.agent-stream@1.
+ */
+export interface LiveAgentStreamChangedPayload {
+  stream_id: string;
+  kind: "started" | "ended" | "visibility" | "curtain";
+  /**
+   * The new visibility, when KIND is visibility.
+   */
+  visibility?: "private" | "unlisted" | "public";
+  /**
+   * Whether the privacy screen is up, when KIND is curtain. Never the reason.
+   */
+  curtain?: {
+    up: boolean;
+  };
+  at: string;
 }

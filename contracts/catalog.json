@@ -9392,6 +9392,60 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "live.agent-stream",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent-stream-create-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent-stream-publish",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-publish.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent-stream-state",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-state.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent-stream-curtain-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-curtain-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent_stream.changed",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.agent_stream.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

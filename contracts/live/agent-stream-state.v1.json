@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/agent-stream-state.v1.json",
+  "title": "LiveAgentStreamState",
+  "description": "live.agent-stream-state@1 (the Agent Streams plan, S1): what the desk reads every ten seconds, GET /api/streams/agent/:id/state on OpenVibe.Live (with the publish ticket). VIEWERS is how many people watch. ENCODE says whether Live wants video: it is true while anyone watches or the stream is public, and while it is false the desk stops encoding and sends a snapshot every five seconds (PUT /api/streams/agent/:id/frame, JPEG or WebP, at most 200 KB, with the ticket). CURTAIN is the desk's privacy screen (the reason is the owner's only). ENDS_AT is when the stream ends.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "viewers",
+    "encode",
+    "curtain",
+    "ends_at"
+  ],
+  "properties": {
+    "viewers": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "encode": {
+      "type": "boolean"
+    },
+    "curtain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "up"
+      ],
+      "properties": {
+        "up": {
+          "type": "boolean"
+        },
+        "since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reason": {
+          "enum": [
+            "password_field",
+            "secret_file",
+            "env_print",
+            "manual",
+            "site",
+            "detector"
+          ],
+          "description": "Why the curtain is up. The owner's view only; a viewer never sees it."
+        }
+      }
+    },
+    "ends_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

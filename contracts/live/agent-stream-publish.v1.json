@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/agent-stream-publish.v1.json",
+  "title": "LiveAgentStreamPublish",
+  "description": "live.agent-stream-publish@1 (the Agent Streams plan, S1): the publish part of the answer to POST /api/streams/agent (beside the stream, live.agent-stream@1). WHIP_URL is where the desk publishes, TICKET is the publish ticket (wpt_ plus 32 random bytes, base64url; Live keeps only its sha256, it is bound to this stream, this person and one WHIP session, and it lives four hours), and EXPIRES_AT is when the ticket dies. The desk sends the ticket as Authorization: Bearer wpt_… on POST /whip/agent/:id. A ticket that does not match, has expired or names another stream answers 401 invalid_ticket; a second WHIP session while one is up answers 409 already_publishing. POST /api/streams/agent/:id/ticket renews the ticket (the desk renews at three hours) and DELETE /api/streams/agent/:id/ticket revokes it: that is the kill switch, and Live ends the WHIP session at once.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "whip_url",
+    "ticket",
+    "expires_at"
+  ],
+  "properties": {
+    "whip_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://whip\\.openvibe\\.live/whip/agent/ags_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "ticket": {
+      "type": "string",
+      "pattern": "^wpt_[A-Za-z0-9_-]{43}$",
+      "description": "The publish ticket, shown once. Live stores only its sha256."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
