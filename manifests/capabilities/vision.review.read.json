@@ -1,0 +1,15 @@
+{
+  "id": "vision.review.read",
+  "version": "1.0",
+  "owner": "vision",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read OpenVibe.Vision's unsafe-image review queue and one review, including its operator report and the logged operator views. Staff use it through the review pages; a service token holding this capability can read the queue. POST /api/v1/review/:id/reveal opens one 60-second Media evidence view and logs it.",
+  "permissions": ["vision:review-read"],
+  "resourceConstraints": ["none"],
+  "quotaClass": "vision-review-read",
+  "events": [],
+  "implementedBy": ["GET /api/v1/review", "GET /api/v1/review/reports", "GET /api/v1/review/:id", "POST /api/v1/review/:id/reveal"],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "common.no-body@1"
+}

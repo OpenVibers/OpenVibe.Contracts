@@ -53,7 +53,9 @@
     "media.resource.control",
     "media.resource.read",
     "media.upload.create",
-    "media.zone.provision"
+    "media.zone.provision",
+    "media.object.review.view",
+    "media.object.review.decide"
   ],
   "eventsProduced": [
     "media.clip.failed",
