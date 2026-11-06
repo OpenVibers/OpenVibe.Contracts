@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.300.0 — 2026-11-06
+
+- Add `report.session@1`: the report of one agent session, whatever ran it — a Codes task, an Actor task, a desk session or a session on a person's own machine (the Agent Streams plan, S3). It carries the id (`rps_<ULID>`), the owner (`usr_…`), the source (`codes`, `actor`, `desk` or `node`), the task (title ≤ 200 characters, the task's ref and its link back), the start and end, the worked seconds, the outcome (`done`, `stopped` or `failed`, with `stopped_because` in plain words when it did not finish), the summary (≤ 600 characters), the timeline (the steps, the same shape as `live.agent-stream-step@1`), the outputs (`pr`, `file`, `page`, `deploy`, `clip` or `vod`), the proof (the tests, the screenshots' media ids and the review's verdict), the cost and the models, up to five highlights, the agent stream it streamed on and the visibility (`private`, `unlisted` or `public`). The raw transcript, secrets and code are never in a report: the source service keeps the transcript for the owner, the house redactor runs over every text field before anything is stored, and a pull request is a link (its content shows only when the repository is public).
+- Add `report.session-write-request@1` and `report.session-write-result@1`: the body of `POST /internal/session-reports` on OpenVibe.Report and what it answers. The route is idempotent per (source, task ref): the same session's task always answers the same report. The report's id is Report's own; the body never carries one. The write request's `stream_only` says a stream-only report (Live's, when no tool finished the session).
+- Add the capability `report.session.write` (first-party) and name it in Report's service manifest. The caller is a first-party service — Codes, Actor or Live — with a service token that holds it for the audience `openvibe.report`.
+- Valid and invalid fixtures cover the report, the write request and the write result, so a missing owner, an id that is not `rps_…`, an outcome outside the list or a URL that is not a Report page fails the run.
+
 ## 0.299.0 — 2026-11-06
 
 - Add `live.agent-stream-step@1`: one step of the work an agent is doing on an agent stream (the Agent Streams plan, S2). It carries `at` (when the step began), `title` (at most 120 characters), `status` (`started`, `passed`, `failed` or `skipped`), the optional `detail` (at most 500 characters), the optional `tests` (`passed` and `failed`) and the optional `cost_usd`. The step is plain text: the house text filters have already run over it before Live stores it.

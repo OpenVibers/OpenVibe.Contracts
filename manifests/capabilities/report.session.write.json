@@ -1,0 +1,22 @@
+{
+  "id": "report.session.write",
+  "version": "1.0",
+  "owner": "report",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Write one agent session's report on OpenVibe.Report (the Agent Streams plan, S3). POST /internal/session-reports stores the report of a Codes task, an Actor task, a desk session or a session on a person's own machine, and answers the report's page. The route is idempotent per (source, task ref): the same session's task always answers the same report. The caller is a first-party service - Codes, Actor or Live - with a service token that holds this capability for the audience openvibe.report; Network grants it to exactly those principals. The body names the person the session was theirs, and a service may only write a report for the person it acts for. Every text field passes the house redactor before anything is stored: the raw transcript and secrets never reach the report.",
+  "inputSchema": "report.session-write-request@1",
+  "outputSchema": "report.session-write-result@1",
+  "permissions": [
+    "report:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/session-reports"
+  ],
+  "sensitive": true
+}

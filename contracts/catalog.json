@@ -9474,6 +9474,33 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "report.session",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/session.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.session-write-request",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/session-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.session-write-result",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/session-write-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

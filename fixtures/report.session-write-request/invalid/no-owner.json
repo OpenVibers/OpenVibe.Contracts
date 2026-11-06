@@ -1,0 +1,9 @@
+{
+  "source": "codes",
+  "task": { "title": "Ship the checkout page", "ref": "tsk_1" },
+  "started_at": "2026-11-06T18:00:00.000Z",
+  "ended_at": "2026-11-06T18:42:00.000Z",
+  "worked_seconds": 2520,
+  "outcome": "done",
+  "summary": "Asked for a checkout page."
+}

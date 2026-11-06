@@ -1,0 +1,19 @@
+{
+  "id": "session_01JAN2C3D4E5F6G7H8J9K0MNPS",
+  "owner": "usr_01JAN2C3D4E5F6G7H8J9K0MNPS",
+  "source": "codes",
+  "task": { "title": "Ship the checkout page", "ref": "tsk_1" },
+  "started_at": "2026-11-06T18:00:00.000Z",
+  "ended_at": "2026-11-06T18:42:00.000Z",
+  "worked_seconds": 2520,
+  "outcome": "done",
+  "summary": "Asked for a checkout page.",
+  "timeline": [],
+  "outputs": [],
+  "proof": { "tests": { "passed": 1, "failed": 0 }, "screenshots": [], "review": null },
+  "cost_usd": 0.31,
+  "models": [],
+  "highlights": [],
+  "stream": null,
+  "visibility": "unlisted"
+}
