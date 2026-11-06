@@ -1,0 +1,16 @@
+{
+  "ecdh": {
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg",
+  "y": "eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk"
+},
+  "signing": {
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg",
+  "y": "eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk"
+},
+  "fingerprint": "amber quiet harbor cedar · mist dawn ember willow",
+  "fingerprint_signature": "Z2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZw=="
+}

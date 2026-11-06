@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/locker/envelope.v1.json",
+  "title": "LockerEnvelope",
+  "description": "locker.envelope@1: the header of a Locker envelope. It is the JSON that opens every chunk of the envelope bytes: the suite, the chunk size, the padded size, the counter nonce base and one key slot per way in. The content key is never in the header; it is wrapped inside a slot. Every chunk authenticates the header's core fields (version, suite, chunk_size, padded_size, nonce_base, lock) as associated data, so the framing, the size and the lock kind cannot be changed; the slots sit outside that core on purpose, because adding a member re-wraps the content key without re-encrypting the content, and each slot carries its own AES-GCM tag over the content key with its own parameters bound in.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "suite",
+    "chunk_size",
+    "padded_size",
+    "nonce_base",
+    "lock",
+    "slots"
+  ],
+  "properties": {
+    "version": {
+      "const": "locker.envelope.v1"
+    },
+    "suite": {
+      "const": "AES-256-GCM"
+    },
+    "chunk_size": {
+      "const": 1048576,
+      "description": "The chunk size in bytes: 1 MiB. Fixed for this version."
+    },
+    "padded_size": {
+      "type": "integer",
+      "minimum": 256,
+      "description": "The size of the padded plaintext in bytes. The true size lives inside the encrypted content, so the server cannot read it; this is the size it may store and show. The size is padded with Padmé (Nikitin et al., PoPETs 2019): it is the next size on a grid that gets finer as the content grows, at most twelve per cent over the real one, and never below 256 bytes. Every chunk but the last is a whole chunk; the last holds what is left of this size."
+    },
+    "nonce_base": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{11}=$",
+      "description": "Eight random bytes, base64: the first half of every chunk nonce. The second half is the chunk counter, so no nonce repeats inside one envelope."
+    },
+    "lock": {
+      "enum": [
+        "people",
+        "password",
+        "link"
+      ],
+      "description": "Which way in the envelope has. Exactly one slot kind is present, and it matches this."
+    },
+    "slots": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "people": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "$ref": "people-slot.v1.json"
+          }
+        },
+        "password": {
+          "$ref": "password-slot.v1.json"
+        },
+        "link": {
+          "$ref": "link-slot.v1.json"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "lock": {
+            "const": "people"
+          }
+        },
+        "required": [
+          "lock"
+        ]
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "type": "object",
+            "required": [
+              "people"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "password"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "link"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "lock": {
+            "const": "password"
+          }
+        },
+        "required": [
+          "lock"
+        ]
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "type": "object",
+            "required": [
+              "password"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "people"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "link"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "lock": {
+            "const": "link"
+          }
+        },
+        "required": [
+          "lock"
+        ]
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "type": "object",
+            "required": [
+              "link"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "people"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "password"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

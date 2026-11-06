@@ -1,0 +1,26 @@
+{
+  "version": "locker.envelope.v1",
+  "suite": "AES-256-GCM",
+  "chunk_size": 1048576,
+  "padded_size": 256,
+  "nonce_base": "YmJiYmJiYmI=",
+  "lock": "people",
+  "slots": {
+    "people": [
+{
+  "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR" },
+  "algorithm": "ECDH-P256/HKDF-SHA256/AES-256-GCM",
+  "recipient_key": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "ephemeral_public_key": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg",
+    "y": "eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXk"
+  },
+  "salt": "c3Nzc3Nzc3Nzc3Nzc3Nzcw==",
+  "nonce": "bm5ubm5ubm5ubm5u",
+  "wrapped_key": "d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3"
+}
+    ]
+  }
+}
