@@ -103722,6 +103722,137 @@
         }
       }
     },
+    "live.agent-stream-step": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/agent-stream-step.v1.json",
+        "title": "LiveAgentStreamStep",
+        "description": "live.agent-stream-step@1 (the Agent Streams plan, S2): one step of the work an agent is doing on an agent stream, as the agent posts it while it works. AT is when the step began, TITLE says what the step is (at most 120 characters), STATUS says how it stands (started, passed, failed or skipped), DETAIL is the optional longer line (at most 500 characters), TESTS says how many tests passed and failed when the agent reports them, and COST_USD is what the step cost so far when the agent reports it. The step is plain text: the house text filters have already run over it. Live keeps the steps with the stream and with its recording, and the player's overlay draws them (the current step, a timeline of the last twelve, the tests and the cost).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "at",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the step began."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "What the step is."
+          },
+          "status": {
+            "enum": [
+              "started",
+              "passed",
+              "failed",
+              "skipped"
+            ],
+            "description": "How the step stands."
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "The optional longer line under the title."
+          },
+          "tests": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "passed",
+              "failed"
+            ],
+            "properties": {
+              "passed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "failed": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "description": "How many tests passed and failed, when the agent reports them."
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What the step cost so far, when the agent reports it."
+          }
+        }
+      }
+    },
+    "live.agent-stream-step-request": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/agent-stream-step-request.v1.json",
+        "title": "LiveAgentStreamStepRequest",
+        "description": "live.agent-stream-step-request@1 (the Agent Streams plan, S2): the body of POST /api/streams/agent/:id/steps on OpenVibe.Live, which answers 201 with the step it stored (live.agent-stream-step@1). The publisher posts with its publish ticket (Authorization: Bearer wpt_…), and Codes and Actor post through their service tokens with live.agent_stream.publish for the person. AT is when the step began (the agent may say so; Live takes its own clock when it is absent), TITLE says what the step is (at most 120 characters), STATUS says how it stands, DETAIL is the optional longer line (at most 500 characters), TESTS and COST_USD are the optional reports. Live refuses more than one step a second, more than two thousand steps per stream, a title over 120 characters or a detail over 500, and text the house filters refuse.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "status"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "status": {
+            "enum": [
+              "started",
+              "passed",
+              "failed",
+              "skipped"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "tests": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "passed",
+              "failed"
+            ],
+            "properties": {
+              "passed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "failed": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
     "live.agent_stream.changed": {
       "version": "1.0.0",
       "owner": "live",

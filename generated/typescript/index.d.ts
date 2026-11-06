@@ -292385,6 +292385,56 @@ export interface LiveAgentStreamCurtainRequest {
   reason: "password_field" | "secret_file" | "env_print" | "manual" | "site" | "detector";
 }
 
+/** live.agent-stream-step@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-step@1 (the Agent Streams plan, S2): one step of the work an agent is doing on an agent stream, as the agent posts it while it works. AT is when the step began, TITLE says what the step is (at most 120 characters), STATUS says how it stands (started, passed, failed or skipped), DETAIL is the optional longer line (at most 500 characters), TESTS says how many tests passed and failed when the agent reports them, and COST_USD is what the step cost so far when the agent reports it. The step is plain text: the house text filters have already run over it. Live keeps the steps with the stream and with its recording, and the player's overlay draws them (the current step, a timeline of the last twelve, the tests and the cost).
+ */
+export interface LiveAgentStreamStep {
+  /**
+   * When the step began.
+   */
+  at: string;
+  /**
+   * What the step is.
+   */
+  title: string;
+  /**
+   * How the step stands.
+   */
+  status: "started" | "passed" | "failed" | "skipped";
+  /**
+   * The optional longer line under the title.
+   */
+  detail?: string;
+  /**
+   * How many tests passed and failed, when the agent reports them.
+   */
+  tests?: {
+    passed: number;
+    failed: number;
+  };
+  /**
+   * What the step cost so far, when the agent reports it.
+   */
+  cost_usd?: number;
+}
+
+/** live.agent-stream-step-request@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-step-request@1 (the Agent Streams plan, S2): the body of POST /api/streams/agent/:id/steps on OpenVibe.Live, which answers 201 with the step it stored (live.agent-stream-step@1). The publisher posts with its publish ticket (Authorization: Bearer wpt_…), and Codes and Actor post through their service tokens with live.agent_stream.publish for the person. AT is when the step began (the agent may say so; Live takes its own clock when it is absent), TITLE says what the step is (at most 120 characters), STATUS says how it stands, DETAIL is the optional longer line (at most 500 characters), TESTS and COST_USD are the optional reports. Live refuses more than one step a second, more than two thousand steps per stream, a title over 120 characters or a detail over 500, and text the house filters refuse.
+ */
+export interface LiveAgentStreamStepRequest {
+  at?: string;
+  title: string;
+  status: "started" | "passed" | "failed" | "skipped";
+  detail?: string;
+  tests?: {
+    passed: number;
+    failed: number;
+  };
+  cost_usd?: number;
+}
+
 /** live.agent_stream.changed@1.0.0 (owner: live) */
 /**
  * live.agent_stream.changed v1 (OpenVibe.Live, the Agent Streams plan, S1): an agent stream changed. KIND is what happened: started, ended, visibility (the owner switched it) or curtain (the desk's privacy screen went up or came down). It says what happened and never why: the curtain's reason stays with the owner, so a subscriber learns that a private screen is up, not that a password field was focused. VISIBILITY carries the new visibility when KIND is visibility, CURTAIN whether the screen is up when KIND is curtain. The publish ticket, the stream key and the task's contents never appear. Envelope: subject { type: agent_stream, id: ags_… }, actor the owner's subject when Live knows it, else service:live. The event type carries no hyphen (events.event-envelope@1's event_type pattern allows letters, digits and underscores only), so it is live.agent_stream.changed; the stream's contract ids keep live.agent-stream@1.
