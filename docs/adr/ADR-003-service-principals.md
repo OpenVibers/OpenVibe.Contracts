@@ -192,7 +192,10 @@ routes the person's own answer is required instead of the service's word: a **su
   old, vouched way once every caller sends assertions. While the flag is off a route that names a person still works
   the old way, but an assertion that comes is always checked: one that names another person, or that belongs to
   another service, is refused even with the flag off (money never moves for the wrong person), and one that does not
-  verify is counted and ignored.
+  verify is counted and ignored. The receivers say what they saw on `/metrics`
+  (`billing_subject_assertion_calls` / `tips_subject_assertion_calls`, states `asserted`, `unasserted`, `invalid`,
+  `refused`): the flag turns on when `unasserted` stops moving, because that is the number that says every caller
+  sends assertions.
 - **Background work cannot carry one.** An assertion needs the person's live token, so a background path (a cache
   refresh, a relay) cannot produce one. Those paths keep the old way until they hold the person's token; the flag
   stays off for a service until every one of its per-person calls can carry one.
