@@ -168,6 +168,9 @@ routes the person's own answer is required instead of the service's word: a **su
   that token nothing is signed (401 `assertion.no_user_token`), so a service that merely knows a person's id cannot
   say the person allowed anything. The signing key is Network's own EC (P-256) key, published in its JWKS beside the
   RS256 session key (`kid ov-network-assertion-1`), so a receiver verifies the signature offline.
+- **Only a token Network issued for its own API mints one.** The service token must be for the audience
+  `openvibe.network`; one minted for another audience (a service talking to Billing, say) is refused (401
+  `token.wrong_audience`), so a service cannot reuse a token it holds elsewhere to have Network sign for people.
 - **The receiver checks the assertion against the person the route acts for.** A route that names a person
   (`from`, `subject`, `subscriber`, `?subject=`, the path's `usr_…`) must carry the assertion in
   `X-OV-Subject-Assertion`, and the assertion's `sub` must be that person. One that names another person is refused
@@ -209,9 +212,10 @@ routes the person's own answer is required instead of the service's word: a **su
 ### Tests
 
 - Network: minted with the person's token; refused without it (401); an app token is refused (403
-  `assertion.not_a_service`); a token naming another person is refused (403 `assertion.subject_mismatch`); an
-  audience outside the allow-list is refused (403 `assertion.audience_not_allowed`); the chain (`for` + an audience
-  list) works; the published JWK carries no private half.
+  `assertion.not_a_service`); a token for another audience is refused (401 `token.wrong_audience`); a token naming
+  another person is refused (403 `assertion.subject_mismatch`); an audience outside the allow-list is refused (403
+  `assertion.audience_not_allowed`); the chain (`for` + an audience list) works; the published JWK carries no private
+  half.
 - Billing and Tips: forged, expired, replayed, wrong-audience and wrong-person assertions are refused, and with the
   flag on the old way is refused too (403 `subject.assertion_required`); a mismatch never moves money.
 - The SDK: a good assertion verifies; a forged, tampered, expired, replayed, wrong-audience, wrong-issuer,
