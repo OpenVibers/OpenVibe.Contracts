@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/report/session-write-result.v1.json",
+  "title": "ReportSessionWriteResult",
+  "description": "report.session-write-result@1: what POST /internal/session-reports on OpenVibe.Report answers. ID is the report's id, URL its page (openvibe.report/s/<id>) and CREATED says whether this call stored the report or found the one it had already stored (the route is idempotent per source and task ref).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "url",
+    "created"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^rps_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://openvibe\\.report/s/"
+    },
+    "created": {
+      "type": "boolean",
+      "description": "True when this call stored the report, false when it was already there."
+    }
+  }
+}

@@ -292454,3 +292454,222 @@ export interface LiveAgentStreamChangedPayload {
   };
   at: string;
 }
+
+/** report.session@1.0.0 (owner: report) */
+/**
+ * report.session@1 (the Agent Streams plan, S3): the report of one agent session, whatever ran it - a Codes task, an Actor task, a desk session or a session on a person's own machine. OWNER is the person it belongs to, SOURCE where the work ran and TASK the task it is about, with a link back to it. TIMELINE holds the steps as they happened (the same shape as live.agent-stream-step@1). OUTPUTS are what came out (a pull request, files, pages, a deploy, a clip, the VOD). PROOF is Codes' finished-task proof: the tests, the screenshots and the review. COST_USD and MODELS say what it cost and which models ran. HIGHLIGHTS are up to five one-line moments. STREAM is the agent stream it streamed on, when it did. VISIBILITY is who may see it: private (the default), unlisted (anyone with the link) or public. NEVER IN A REPORT: the raw transcript (the source service keeps it for the owner, privately), secrets (the house redactor runs over every text field before anything is stored) and code or diffs (a link to the pull request is fine; its content shows only when the repository is public).
+ */
+export interface ReportSession {
+  /**
+   * The report's id (ULID, Crockford base32).
+   */
+  id: string;
+  /**
+   * The person the session was theirs.
+   */
+  owner: string;
+  /**
+   * Where the session ran.
+   */
+  source: "codes" | "actor" | "desk" | "node";
+  task: {
+    /**
+     * What the task was, in the person's own words.
+     */
+    title: string;
+    /**
+     * The task's id in its source.
+     */
+    ref: string;
+    /**
+     * The task's page, when it has one.
+     */
+    url?: string | null;
+  };
+  started_at: string;
+  ended_at: string;
+  /**
+   * How long the agent worked (the page's 'worked 42 min').
+   */
+  worked_seconds: number;
+  /**
+   * How the session ended. A session that did not finish says why in stopped_because.
+   */
+  outcome: "done" | "stopped" | "failed";
+  /**
+   * Why it stopped, in plain words. Present when the outcome is not done.
+   */
+  stopped_because?: string;
+  /**
+   * What was asked and what happened, in plain words.
+   */
+  summary: string;
+  /**
+   * The steps, in the order they happened.
+   */
+  timeline: {
+    /**
+     * When the step began.
+     */
+    at: string;
+    title: string;
+    /**
+     * The same statuses as live.agent-stream-step@1.
+     */
+    status: "started" | "passed" | "failed" | "skipped";
+    detail?: string | null;
+    tests?: {
+      passed: number;
+      failed: number;
+    } | null;
+    cost_usd?: number | null;
+  }[];
+  outputs: {
+    /**
+     * What came out.
+     */
+    kind: "pr" | "file" | "page" | "deploy" | "clip" | "vod";
+    url?: string | null;
+    title: string;
+    /**
+     * A pull request's state ('open', 'merged'), when the source knows it.
+     */
+    state?: string | null;
+  }[];
+  proof: {
+    /**
+     * The finished-task tests (Codes' proof).
+     */
+    tests: {
+      passed: number;
+      failed: number;
+    } | null;
+    /**
+     * The screenshots' media ids.
+     */
+    screenshots: string[];
+    /**
+     * The second opinion, in one line, with its notes folded.
+     */
+    review: {
+      verdict: string;
+      notes?: string | null;
+    } | null;
+  };
+  /**
+   * What the session cost, in dollars.
+   */
+  cost_usd: number | null;
+  /**
+   * Which models ran.
+   */
+  models: string[];
+  /**
+   * Up to five one-line moments.
+   *
+   * @maxItems 5
+   */
+  highlights:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string];
+  /**
+   * The agent stream the session streamed on, when it did.
+   */
+  stream: {
+    ags_id: string;
+    vod_id?: string | null;
+  } | null;
+  visibility: "private" | "unlisted" | "public";
+}
+
+/** report.session-write-request@1.0.0 (owner: report) */
+/**
+ * report.session-write-request@1 (the Agent Streams plan, S3): the body of POST /internal/session-reports on OpenVibe.Report (capability report.session.write). The caller is a first-party service - Codes, Actor or Live - holding that capability for the audience openvibe.report; the body names the person the session was theirs. The route is idempotent per (SOURCE, TASK.REF): a repeat of the same session's task answers the report already stored, with created false. The report's id is Report's own (rps_<ULID>); the body never carries one. Every text field passes the house redactor before anything is stored, so no secret and no raw transcript is ever stored.
+ */
+export interface ReportSessionWriteRequest {
+  /**
+   * The person the session was theirs.
+   */
+  owner: string;
+  source: "codes" | "actor" | "desk" | "node";
+  task: {
+    title: string;
+    ref: string;
+    url?: string | null;
+  };
+  started_at: string;
+  ended_at: string;
+  worked_seconds: number;
+  outcome: "done" | "stopped" | "failed";
+  stopped_because?: string;
+  summary: string;
+  timeline?: {
+    at: string;
+    title: string;
+    status: "started" | "passed" | "failed" | "skipped";
+    detail?: string | null;
+    tests?: {
+      passed: number;
+      failed: number;
+    } | null;
+    cost_usd?: number | null;
+  }[];
+  outputs?: {
+    kind: "pr" | "file" | "page" | "deploy" | "clip" | "vod";
+    url?: string | null;
+    title: string;
+    state?: string | null;
+  }[];
+  proof?: {
+    tests: {
+      passed: number;
+      failed: number;
+    } | null;
+    screenshots: string[];
+    review: {
+      verdict: string;
+      notes?: string | null;
+    } | null;
+  };
+  cost_usd?: number | null;
+  models?: string[];
+  /**
+   * @maxItems 5
+   */
+  highlights?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string];
+  stream?: {
+    ags_id: string;
+    vod_id?: string | null;
+  } | null;
+  /**
+   * Who may see it. Absent means private.
+   */
+  visibility?: "private" | "unlisted" | "public";
+  /**
+   * Live's stream-only report: the session is the stream itself and no tool will finish it. Absent or false means a normal session report.
+   */
+  stream_only?: boolean;
+}
+
+/** report.session-write-result@1.0.0 (owner: report) */
+/**
+ * report.session-write-result@1: what POST /internal/session-reports on OpenVibe.Report answers. ID is the report's id, URL its page (openvibe.report/s/<id>) and CREATED says whether this call stored the report or found the one it had already stored (the route is idempotent per source and task ref).
+ */
+export interface ReportSessionWriteResult {
+  id: string;
+  url: string;
+  /**
+   * True when this call stored the report, false when it was already there.
+   */
+  created: boolean;
+}

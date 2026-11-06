@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/report/session.v1.json",
+  "title": "ReportSession",
+  "description": "report.session@1 (the Agent Streams plan, S3): the report of one agent session, whatever ran it - a Codes task, an Actor task, a desk session or a session on a person's own machine. OWNER is the person it belongs to, SOURCE where the work ran and TASK the task it is about, with a link back to it. TIMELINE holds the steps as they happened (the same shape as live.agent-stream-step@1). OUTPUTS are what came out (a pull request, files, pages, a deploy, a clip, the VOD). PROOF is Codes' finished-task proof: the tests, the screenshots and the review. COST_USD and MODELS say what it cost and which models ran. HIGHLIGHTS are up to five one-line moments. STREAM is the agent stream it streamed on, when it did. VISIBILITY is who may see it: private (the default), unlisted (anyone with the link) or public. NEVER IN A REPORT: the raw transcript (the source service keeps it for the owner, privately), secrets (the house redactor runs over every text field before anything is stored) and code or diffs (a link to the pull request is fine; its content shows only when the repository is public).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "source",
+    "task",
+    "started_at",
+    "ended_at",
+    "worked_seconds",
+    "outcome",
+    "summary",
+    "timeline",
+    "outputs",
+    "proof",
+    "cost_usd",
+    "models",
+    "highlights",
+    "stream",
+    "visibility"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^rps_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The report's id (ULID, Crockford base32)."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person the session was theirs."
+    },
+    "source": {
+      "enum": [
+        "codes",
+        "actor",
+        "desk",
+        "node"
+      ],
+      "description": "Where the session ran."
+    },
+    "task": {
+      "$ref": "#/$defs/task"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "worked_seconds": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How long the agent worked (the page's 'worked 42 min')."
+    },
+    "outcome": {
+      "enum": [
+        "done",
+        "stopped",
+        "failed"
+      ],
+      "description": "How the session ended. A session that did not finish says why in stopped_because."
+    },
+    "stopped_because": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "description": "Why it stopped, in plain words. Present when the outcome is not done."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600,
+      "description": "What was asked and what happened, in plain words."
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/step"
+      },
+      "description": "The steps, in the order they happened."
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/output"
+      }
+    },
+    "proof": {
+      "$ref": "#/$defs/proof"
+    },
+    "cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "What the session cost, in dollars."
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 120
+      },
+      "description": "Which models ran."
+    },
+    "highlights": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "description": "Up to five one-line moments."
+    },
+    "stream": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "ags_id"
+      ],
+      "properties": {
+        "ags_id": {
+          "type": "string",
+          "pattern": "^ags_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "vod_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        }
+      },
+      "description": "The agent stream the session streamed on, when it did."
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "unlisted",
+        "public"
+      ]
+    }
+  },
+  "$defs": {
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "ref"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "What the task was, in the person's own words."
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The task's id in its source."
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri",
+          "description": "The task's page, when it has one."
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "at",
+        "title",
+        "status"
+      ],
+      "properties": {
+        "at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the step began."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "status": {
+          "enum": [
+            "started",
+            "passed",
+            "failed",
+            "skipped"
+          ],
+          "description": "The same statuses as live.agent-stream-step@1."
+        },
+        "detail": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "tests": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "passed",
+            "failed"
+          ],
+          "properties": {
+            "passed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "failed": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "cost_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "title"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "pr",
+            "file",
+            "page",
+            "deploy",
+            "clip",
+            "vod"
+          ],
+          "description": "What came out."
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 60,
+          "description": "A pull request's state ('open', 'merged'), when the source knows it."
+        }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tests",
+        "screenshots",
+        "review"
+      ],
+      "properties": {
+        "tests": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "passed",
+            "failed"
+          ],
+          "properties": {
+            "passed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "failed": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "description": "The finished-task tests (Codes' proof)."
+        },
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": "The screenshots' media ids."
+        },
+        "review": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "verdict"
+          ],
+          "properties": {
+            "verdict": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "notes": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 2000
+            }
+          },
+          "description": "The second opinion, in one line, with its notes folded."
+        }
+      }
+    }
+  }
+}

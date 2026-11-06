@@ -1,0 +1,37 @@
+{
+  "id": "rps_01JAN2C3D4E5F6G7H8J9K0MNPS",
+  "owner": "usr_01JAN2C3D4E5F6G7H8J9K0MNPS",
+  "source": "codes",
+  "task": {
+    "title": "Ship the checkout page",
+    "ref": "tsk_01JAN2C3D4E5F6G7H8J9K0MNPS",
+    "url": "https://openvibe.codes/t/tsk_01JAN2C3D4E5F6G7H8J9K0MNPS"
+  },
+  "started_at": "2026-11-06T18:00:00.000Z",
+  "ended_at": "2026-11-06T18:42:00.000Z",
+  "worked_seconds": 2520,
+  "outcome": "done",
+  "summary": "Asked for a checkout page; the agent built it, ran the tests and opened a pull request.",
+  "timeline": [
+    { "at": "2026-11-06T18:01:00.000Z", "title": "Read the checkout code", "status": "passed" },
+    { "at": "2026-11-06T18:20:00.000Z", "title": "Run the checkout tests", "status": "passed", "tests": { "passed": 12, "failed": 0 } }
+  ],
+  "outputs": [
+    { "kind": "pr", "url": "https://forgejo.example/openvibe/site/pulls/7", "title": "Checkout page", "state": "open" }
+  ],
+  "proof": {
+    "tests": { "passed": 12, "failed": 0 },
+    "screenshots": ["med_01JAN2C3D4E5F6G7H8J9K0MNPS"],
+    "review": { "verdict": "Looks good", "notes": "The mobile layout needs a wider gutter." }
+  },
+  "cost_usd": 0.31,
+  "models": ["claude-sonnet-4"],
+  "highlights": [
+    "Found the coupon bug on the first read"
+  ],
+  "stream": {
+    "ags_id": "ags_01JAN2C3D4E5F6G7H8J9K0MNPS",
+    "vod_id": "vod_01JAN2C3D4E5F6G7H8J9K0MNPS"
+  },
+  "visibility": "unlisted"
+}

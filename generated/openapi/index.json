@@ -180,8 +180,8 @@
       "service": "report",
       "name": "OpenVibe.Report",
       "origin": "https://openvibe.report",
-      "operations": 6,
-      "capabilities": 2
+      "operations": 7,
+      "capabilities": 3
     },
     {
       "service": "reviews",
