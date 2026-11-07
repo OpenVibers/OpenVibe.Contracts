@@ -106348,6 +106348,316 @@
           }
         }
       }
+    },
+    "bot.machine-pool": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/machine-pool.v1.json",
+        "title": "BotMachinePool",
+        "description": "bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Node generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner",
+          "head",
+          "machines"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pool_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The pool's id (ULID, Crockford base32). A pool is never edited: a change is a new pool with a new id."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person every machine in the pool belongs to. Pools of different owners are not allowed."
+          },
+          "head": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine that runs `llama-server --rpc`, sees the prompt and answers; it must be one of `machines`. The others receive tensors only."
+          },
+          "machines": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 8,
+            "description": "The members, head included, two to eight.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "owner",
+                "address",
+                "public_ip",
+                "port",
+                "free_vram",
+                "free_ram",
+                "hardware",
+                "certificate"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+                  "description": "The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body."
+                },
+                "owner": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+                  "description": "The machine's owner when it announced itself; it must equal the pool's owner."
+                },
+                "address": {
+                  "type": "string",
+                  "pattern": "^(10\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])|172\\.(1[6-9]|2[0-9]|3[01])|192\\.168)\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])/([89]|[12][0-9]|30)$",
+                  "maxLength": 32,
+                  "description": "The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address."
+                },
+                "public_ip": {
+                  "type": "string",
+                  "maxLength": 45,
+                  "anyOf": [
+                    {
+                      "format": "ipv4"
+                    },
+                    {
+                      "format": "ipv6"
+                    }
+                  ],
+                  "description": "The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head."
+                },
+                "port": {
+                  "type": "integer",
+                  "minimum": 1024,
+                  "maximum": 65535,
+                  "description": "The TCP port of the machine's private link on `address`."
+                },
+                "free_vram": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 16777216,
+                  "description": "Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it."
+                },
+                "free_ram": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 16777216,
+                  "description": "Free system memory when it announced itself, in MB."
+                },
+                "hardware": {
+                  "type": "string",
+                  "maxLength": 120,
+                  "description": "A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model."
+                },
+                "certificate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 8192,
+                  "pattern": "^-----BEGIN CERTIFICATE-----",
+                  "not": {
+                    "type": "string",
+                    "pattern": "PRIVATE KEY"
+                  },
+                  "description": "The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ai.offer-pool": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/offer-pool.v1.json",
+        "title": "AiOfferPool",
+        "description": "ai.offer-pool@1 (the pooled machines design, 2026-11-06): the `pool` part of a community AI offer (ai.offer@1) served by several of one owner's machines together (bot.machine-pool@1). Network adds it from its own approved pool record, never from what a machine reports: the offer is the head's, `head` equals the offer's `machine_id`, and while a machine is in a pool it advertises no offer of its own. It names machines only; no address, key or certificate reaches AI. AI routes the request to the head, runs the same verification as for one machine (canaries, the model fingerprint, spot re-runs) on the pool's answers, keys that verification on this exact membership (another member or head is a new, unverified pool), keeps a pool that is new or failed to the free tier only, and labels its answers \"Community pool (N machines)\".",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "machines",
+          "head"
+        ],
+        "properties": {
+          "machines": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 8,
+            "uniqueItems": true,
+            "description": "The pool's machines, head included (Bot device ids), two to eight.",
+            "items": {
+              "type": "string",
+              "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "head": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine that answers: one of `machines`, and the offer's own `machine_id`."
+          }
+        }
+      }
+    },
+    "ai.offer": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/offer.v1.json",
+        "title": "AiOffer",
+        "description": "ai.offer@1: one community AI offer, a person's machine (OpenVibe.Node's ai plugin, \"Offer to the network\") serving its local models to requests that opt in to community capacity. OpenVibe.Bot reports these fields (POST /internal/ai/offers/report on Network, network.resource.report; a report with any other field is refused whole), and OpenVibe.AI reads them from Network (GET /internal/ai/offers, network.registry.read, { offers, generated_at, count }). Network adds `pool` (ai.offer-pool@1) to the head's offer when the machine is the head of an approved pool (bot.machine-pool@1), and leaves a pool member's own offer out of the list while it is in a pool. For a pool the hours, audience, price, readiness, idle-only and verification apply to the whole pool: it is ready only while every member has approved, renewed its readiness in the last few seconds, and is still the owner's. Nothing here is public: AI shows Exchange a hashed offer id and no owner or machine id.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "offer_id",
+          "machine_id",
+          "owner",
+          "models",
+          "hours",
+          "concurrency",
+          "price",
+          "audience",
+          "group",
+          "ready",
+          "health"
+        ],
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "pattern": "^ai:dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "`ai:<machine_id>`: one offer per machine."
+          },
+          "machine_id": {
+            "type": "string",
+            "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine that answers (for a pool, its head)."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's owner, who earns the offer's credits (a self-served run earns none)."
+          },
+          "models": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 40,
+            "description": "The models offered, as the machine's model server names them.",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "hours": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start",
+              "end",
+              "tz"
+            ],
+            "description": "The local-time window the offer is open; start equal to end is all day, and an overnight window wraps.",
+            "properties": {
+              "start": {
+                "type": "string",
+                "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+              },
+              "end": {
+                "type": "string",
+                "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+              },
+              "tz": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "description": "An IANA time zone, such as Europe/Paris, or UTC."
+              }
+            }
+          },
+          "concurrency": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8,
+            "description": "How many requests may run at once; another is refused as busy, never queued."
+          },
+          "price": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "in_per_million",
+              "out_per_million"
+            ],
+            "description": "Credits per million input and output tokens; 0 and 0 is a volunteer, who earns kudos. One price for a pool.",
+            "properties": {
+              "in_per_million": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "out_per_million": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000000
+              }
+            }
+          },
+          "audience": {
+            "enum": [
+              "everyone",
+              "followers",
+              "group"
+            ],
+            "description": "Who may use it: everyone, the owner's followers, or one group (`group`)."
+          },
+          "group": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80,
+            "description": "The group's id when the audience is `group`, otherwise null."
+          },
+          "ready": {
+            "type": "boolean",
+            "description": "Whether the machine (for a pool, every member) can answer now: online, inside its hours, not paused by idle-only or a kill switch."
+          },
+          "health": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "up",
+                  "degraded",
+                  "down"
+                ]
+              },
+              "checked_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "pool": {
+            "$ref": "offer-pool.v1.json",
+            "description": "Present when the offer is served by a pool of the owner's machines (ai.offer-pool@1)."
+          }
+        }
+      }
     }
   }
 }

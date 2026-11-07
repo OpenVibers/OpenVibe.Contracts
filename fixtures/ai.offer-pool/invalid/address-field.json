@@ -1,0 +1,8 @@
+{
+  "machines": [
+    "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D1",
+    "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D2"
+  ],
+  "head": "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D1",
+  "address": "192.168.1.20/24"
+}

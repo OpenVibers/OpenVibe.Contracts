@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/offer.v1.json",
+  "title": "AiOffer",
+  "description": "ai.offer@1: one community AI offer, a person's machine (OpenVibe.Node's ai plugin, \"Offer to the network\") serving its local models to requests that opt in to community capacity. OpenVibe.Bot reports these fields (POST /internal/ai/offers/report on Network, network.resource.report; a report with any other field is refused whole), and OpenVibe.AI reads them from Network (GET /internal/ai/offers, network.registry.read, { offers, generated_at, count }). Network adds `pool` (ai.offer-pool@1) to the head's offer when the machine is the head of an approved pool (bot.machine-pool@1), and leaves a pool member's own offer out of the list while it is in a pool. For a pool the hours, audience, price, readiness, idle-only and verification apply to the whole pool: it is ready only while every member has approved, renewed its readiness in the last few seconds, and is still the owner's. Nothing here is public: AI shows Exchange a hashed offer id and no owner or machine id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "offer_id",
+    "machine_id",
+    "owner",
+    "models",
+    "hours",
+    "concurrency",
+    "price",
+    "audience",
+    "group",
+    "ready",
+    "health"
+  ],
+  "properties": {
+    "offer_id": {
+      "type": "string",
+      "pattern": "^ai:dev_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "`ai:<machine_id>`: one offer per machine."
+    },
+    "machine_id": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The machine that answers (for a pool, its head)."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The machine's owner, who earns the offer's credits (a self-served run earns none)."
+    },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "description": "The models offered, as the machine's model server names them.",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    "hours": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end",
+        "tz"
+      ],
+      "description": "The local-time window the offer is open; start equal to end is all day, and an overnight window wraps.",
+      "properties": {
+        "start": {
+          "type": "string",
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+        },
+        "end": {
+          "type": "string",
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+        },
+        "tz": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "An IANA time zone, such as Europe/Paris, or UTC."
+        }
+      }
+    },
+    "concurrency": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8,
+      "description": "How many requests may run at once; another is refused as busy, never queued."
+    },
+    "price": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "in_per_million",
+        "out_per_million"
+      ],
+      "description": "Credits per million input and output tokens; 0 and 0 is a volunteer, who earns kudos. One price for a pool.",
+      "properties": {
+        "in_per_million": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "out_per_million": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      }
+    },
+    "audience": {
+      "enum": [
+        "everyone",
+        "followers",
+        "group"
+      ],
+      "description": "Who may use it: everyone, the owner's followers, or one group (`group`)."
+    },
+    "group": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80,
+      "description": "The group's id when the audience is `group`, otherwise null."
+    },
+    "ready": {
+      "type": "boolean",
+      "description": "Whether the machine (for a pool, every member) can answer now: online, inside its hours, not paused by idle-only or a kill switch."
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "up",
+            "degraded",
+            "down"
+          ]
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pool": {
+      "$ref": "offer-pool.v1.json",
+      "description": "Present when the offer is served by a pool of the owner's machines (ai.offer-pool@1)."
+    }
+  }
+}
