@@ -78,7 +78,7 @@
     "tagline": "Your computer, on the web, privately",
     "what": "Share one port on your computer at its own HTTPS address on openvibe.website. Only the people you pick can open it, signed in with OpenVibe. One file and Node: no router settings, no open ports.",
     "legalProfile": "ugc",
-    "position": 51,
+    "position": 52,
     "neighbourhood": "make"
   }
 }

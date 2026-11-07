@@ -22,7 +22,7 @@
     "tagline": "Make a space: an app on your account",
     "what": "Small apps on your OpenVibe account: describe one and OpenVibe AI builds it, or start from a template and change anything in the editor. Spaces sign visitors in, keep shared lists and private data, talk to OpenVibe AI and run their own server code. Static site hosting too.",
     "legalProfile": "ugc",
-    "position": 19,
+    "position": 20,
     "tld": "space",
     "accent": "#818cf8",
     "description": "OpenVibe.Space is where you make spaces, small web apps on your OpenVibe account that OpenVibe AI builds from a description or a template, and host static sites: immutable deploys, one-step rollback, private previews, deploys from a public Git repository and custom domains after a TXT check, with names under openvibe.website. Publishing at a public address is open to OpenVibe staff while abuse handling and a designated DMCA agent are put in place. The old /s/* forum paths redirect to openvibe.community.",

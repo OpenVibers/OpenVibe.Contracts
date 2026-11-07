@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.330.0 — 2026-11-07
+
+- Add the `mail` service manifest: `openvibe.email` as the site **Email** (icon `mail`, the shared glyph font's E054), tagline "An address for every sign-up", the receive-only wording, legal profile `service`, and position 7, directly after Chat. It declares exposure `live`/`service`, port 5250, database `ov_mail`, the Stalwart mail server, `/api/health` and `/api/ready`, its shutdown and due-based recovery, an expand-only rollback, and the purge lease.
+- Add the two capabilities OpenVibe.Mail's API already checks: `mail.addresses.write` (make and retire a mask; make an agent inbox) and `mail.messages.read` (the person's addresses, message metadata and the newest burner code, never a body). Both are first-party, `owner`-constrained, and name their routes. Their request and result schemas are recorded in `compatibility/capability-schema-gaps.json` for now, like the config.manage capabilities added in 0.315.0.
+- The manifest lists no `eventsProduced` yet: the service publishes `mail.mask.created` and `mail.received`, but their payload contracts are not in this release.
+- Sites from the old position 7 up move one place (Services becomes 8, … Connect becomes 52) so Email sits beside Chat without breaking the unique-position rule. No contract changes shape; the only data change is the site order.
+
 ## 0.329.0 — 2026-11-07
 
 - Add `mail.mask@1`: a per-site address on OpenVibe.Mail that delivers into its owner's OpenVibe mailbox and nowhere else. It carries the `msk_…` id, the owner's Network subject, the `<words>.<four characters>@<mask domain>` address, the person's label and purpose, whether it is enabled (a disabled mask leaves the SQL directory Stalwart reads, so it bounces) and when it was made. M1 is receive-only, so this is metadata: no body, no forwarding target.
