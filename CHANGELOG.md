@@ -2,6 +2,8 @@
 
 ## 0.304.0 — 2026-11-06
 
+- Give the id kinds the Agent Streams work needs a prefix: `newId('agent_stream')` is `ags_…` (an agent stream's id), `newId('play_request')` is `req_…` (a chat plays request) and `newId('sandbox_session')` is `sbs_…` (the sandbox desk). Without them a service that had to name one of these ids had to build the ULID itself, and `newId('ags')` threw.
+
 - Add `chat.play-request@1` (Agent Streams S6): one viewer's request for the chat plays desk to build or do something. A request is written with `!do <request>` (at most 200 characters) in an agent stream's room, `agent:<ags_id>`; one open request per person at a time, and an account younger than a day cannot ask. The request carries its votes, its state (`queued`, `running`, `done`, `failed`, `skipped`, `removed` or `refused`), whether it is pinned, and the one-line reason it was refused (with the rule that refused it) when it was. A refused request carries no result; a finished one carries the outcome, the line the overlay and the voice said, and the scratch site the run left.
 - Add `codes.sandbox-session@1`: the sandbox desk a chat plays session runs on. The desk is started with `--shared` — no profile, no keys, no person's files, public egress only and a fresh workspace, wiped at the end — and the session carries the owner's time box (5 to 30 minutes), the step budget, the cap (money and minutes), what it has spent, whether the owner armed it with Go, and the throwaway scratch site with the 24 hours it lives. `egress_public_only` is always true: no private address is reachable.
 - `live.agent-stream-control@1` gains the control `wipe` (additive): Wipe now stops the run and resets the sandbox. The other four controls (pause, curtain, mute, end) keep their shape.
