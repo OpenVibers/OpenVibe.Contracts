@@ -28,6 +28,27 @@
         "inputSchema",
         "outputSchema"
       ]
+    },
+    {
+      "id": "blog.review.ai_editor",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "news.review.ai_editor",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "wiki.review.ai_editor",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
     }
   ]
 }

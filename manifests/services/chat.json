@@ -16,6 +16,7 @@
     "chat.agent_poll.write",
     "chat.analysis.read",
     "chat.cache.invalidate",
+    "chat.config.manage",
     "chat.event.publish",
     "chat.inbox.manage",
     "chat.inbox.read",

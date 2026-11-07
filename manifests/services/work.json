@@ -16,7 +16,8 @@
     "publicSite": "service"
   },
   "capabilities": [
-    "work.application.manage"
+    "work.application.manage",
+    "work.config.manage"
   ],
   "eventsProduced": [
     "work.index_document.upserted",

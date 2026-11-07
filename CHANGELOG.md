@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.315.0 — 2026-11-07
+
+- The owner's Setup tab reaches seven more services: `<service>.config.manage` for `chat`, `connect`, `deals`, `work`, `sources`, `design` and `domains` is now **active** and listed in each service's manifest, because each mounts openvibe-shared/config's routes on `/internal/config` (`GET /internal/config`, `GET|POST /internal/config/:namespace`, `PUT|DELETE /internal/config/:namespace/secrets/:key`, `POST /internal/config/:namespace/test/:key`). Only Network's admin proxy, acting for the owner, holds them and they are never grantable to apps. `media.config.manage` stays planned until Media mounts the routes.
+- Add `blog.review.ai_editor`, `news.review.ai_editor` and `wiki.review.ai_editor`: the editorial queue's AI editor decision (approved or rejected; approved or needs changes on Wiki) recorded by the first-party service principal acting as itself (a `svc:` principal with no `X-OV-Subject`) through Blog's `POST /api/v1/posts/:id/reviews`, News's `POST /api/v1/stories/:id/reviews` and `POST /api/v1/briefs/:id/reviews`, and Wiki's `POST /api/v1/pages/:id/revisions/:n/review`. An approval lets AI-written text publish and index and the page says "Checked by OpenVibe's AI editor" with its date, never "Reviewed by a person"; each is granted only to the orchestrator's service principal. Their requests and results are a recorded schema gap (`compatibility/capability-schema-gaps.json`).
+- `generated/` refreshed: Connect and Design gain an OpenAPI document now that each has an active capability, and Blog, Chat, Deals, Domains, News, Sources, Wiki and Work gain the new operations.
+
 ## 0.312.0 — 2026-11-07
 
 - Add the Codes skills-hub records (the Compute plan §5, E6). `codes.skill@1` is one skill, rule, MCP server, command or hook: its owner, kind, stable slug, title, summary, the four sharing audiences (`private`, `people`, `link`, `public`), the harnesses it is written for, the newest version and that version's body. A `private`, `people` or `link` record is never in the gallery; only `public` is. The body is untrusted Markdown and the page renders it through the markup gate.

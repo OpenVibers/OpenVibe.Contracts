@@ -45,6 +45,7 @@
     "wiki.space.create",
     "wiki.page.create",
     "wiki.page.read",
+    "wiki.review.ai_editor",
     "wiki.revision.propose",
     "wiki.revision.publish",
     "wiki.revision.revert",
