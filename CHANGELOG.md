@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.311.0 — 2026-11-07
+
+- Add `<service>.config.manage` for the eight services that hold an owner input and that Network's admin proxy now reaches for the owner's Setup tab (OWNER-SETUP-AND-ADMIN-CLARITY-DESIGN, 2026-11-07): `chat`, `connect`, `deals`, `work`, `sources`, `design`, `domains` and `media`. Each is internal, held only by Network's admin proxy acting for the owner, never grantable to apps, and **planned** until its service mounts openvibe-shared/config's routes on `/internal/config`; the service then turns it active and lists it in its manifest (Deals' own test pins that list, so listing it early would break its pin bump). Planned capabilities verify like active ones, so Network's grant works the day a service mounts the routes.
+- Every `<service>.config.manage` (the nine active and the eight planned) names `POST /internal/config/:namespace/test/:key` among its routes: openvibe-shared 4.125.0's test hook, which tries a stored value with the provider on the server and answers `{ ok, message }` in one line that never carries a secret.
+- `common.config-namespace@1` (description only): the summary's schema may carry the annotations the Setup tab and the clear admin panel read, `x-owner-input`, `x-required-for`, `x-enum-labels`, `x-advanced` and `x-example`, beside the D11 ones (and `x-unit` names `seconds`). No shape changes.
+
 ## 0.310.0 — 2026-11-07
 
 - Apps ask for consent per purpose at sign-in (the consent plan's C4). An app adds one scope `consent:<purpose>` per purpose to /oauth/authorize, beside its other scopes. It may ask for every purpose of the consent family except the retired `ai.looks`: `ai.train`, `data.public`, `face.recognize` and `app.data`. Any other `consent:` scope is refused with `invalid_scope`. The consent screen lists each purpose in plain words, nothing ticked, and the person can sign in with every purpose refused. A refused purpose is not asked again by that app for 30 days, unless the person asks for it again on their account page.
