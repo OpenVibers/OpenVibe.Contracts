@@ -301911,3 +301911,121 @@ export interface NetworkMenuFeeds {
    */
   updated_at: string;
 }
+
+/** mail.mask@1.0.0 (owner: mail) */
+/**
+ * A per-site address on OpenVibe.Mail that delivers into its owner's OpenVibe mailbox and nowhere else. Turning it off makes the address bounce: it leaves the SQL directory Stalwart reads, so a new message is refused. The address is <words>.<four characters>@<mask domain>; the four characters keep two people from guessing each other's mask. The contract is metadata only: it never carries a message body.
+ */
+export interface MailMask {
+  /**
+   * The mask id. Opaque outside OpenVibe.Mail; never a database integer.
+   */
+  id: string;
+  /**
+   * The Network subject id of the person whose mailbox receives the mask's mail. A mask never forwards outside OpenVibe.
+   */
+  owner: string;
+  /**
+   * The mask address: the words the person chose, a dot, four unguessable characters, and the mask domain (mask.openvibe.email in M1).
+   */
+  address: string;
+  /**
+   * The person's name for the mask, e.g. "Amazon". Free text; never interpreted as an address.
+   */
+  label: string | null;
+  /**
+   * What the mask is for, e.g. "shopping". Optional metadata for the person's own list.
+   */
+  purpose: string | null;
+  /**
+   * Whether the mask resolves. When false the SQL directory has no row for the address, so the mail server refuses it.
+   */
+  enabled: boolean;
+  /**
+   * When the mask was made, ISO 8601 UTC.
+   */
+  created_at: string;
+}
+
+/** mail.burner@1.0.0 (owner: mail) */
+/**
+ * A throwaway receive-only address on OpenVibe.Mail. It expires after ten minutes, an hour, a day or a week, or after the first message when first_message_only is set. When it expires its mail is deleted and the address bounces. A ten-minute burner may be made without an account (owner is null) and is then read with the one-time token the create call returns; the token is deliberately not part of this resource.
+ */
+export interface MailBurner {
+  /**
+   * The burner id. Opaque outside OpenVibe.Mail.
+   */
+  id: string;
+  /**
+   * The Network subject id of the person who made the burner, or null for a ten-minute burner made without an account.
+   */
+  owner: string | null;
+  /**
+   * The burner address: eight unguessable characters on one of the rotating burner domains.
+   */
+  address: string;
+  /**
+   * When the address stops resolving and its mail is due for deletion, ISO 8601 UTC.
+   */
+  expires_at: string;
+  /**
+   * When true the burner accepts one message and then stops resolving.
+   */
+  first_message_only: boolean;
+  /**
+   * When the burner was made, ISO 8601 UTC.
+   */
+  created_at: string;
+}
+
+/** mail.agent-inbox@1.0.0 (owner: mail) */
+/**
+ * An address an agent can read, on the person's own domain: <agent>.<user>@openvibe.email. The mail lands in the person's mailbox, like every other address OpenVibe.Mail hands out; what makes it an agent's inbox is that the service reads it back for the agent acting for that person. One agent has one inbox: asking twice returns the same resource.
+ */
+export interface MailAgentInbox {
+  /**
+   * The inbox id. Opaque outside OpenVibe.Mail.
+   */
+  id: string;
+  /**
+   * The Network subject id of the person whose mailbox receives the agent's mail.
+   */
+  owner: string;
+  /**
+   * The agent's name in the address, lowercased and cleaned (letters, digits and hyphens).
+   */
+  agent_id: string;
+  /**
+   * The agent's address. In M1 the user part is the person's Network username, falling back to their mailbox local when that readable address is already taken.
+   */
+  address: string;
+  /**
+   * When the inbox was made, ISO 8601 UTC.
+   */
+  created_at: string;
+}
+
+/** mail.message-summary@1.0.0 (owner: mail) */
+/**
+ * One message in a mask, burner or agent inbox, as OpenVibe.Mail's list API returns it: the id, the senders, the subject and the time. It deliberately has no preview and no body: a message body is read only by the verification-code endpoint, in memory, and is never part of a list, an event or a database row. additionalProperties is false so a field like body, preview or html fails the contract rather than leaking into an API.
+ */
+export interface MailMessageSummary {
+  /**
+   * The mail server's message id (a JMAP Email id). Opaque outside OpenVibe.Mail.
+   */
+  id: string;
+  /**
+   * The sender addresses, as the mail server parsed them. An address list, not a display name.
+   *
+   * @maxItems 100
+   */
+  from: string[];
+  /**
+   * The subject line, or null when the message had none.
+   */
+  subject: string | null;
+  /**
+   * When the mail server received the message, ISO 8601 UTC, or null when it did not record a time.
+   */
+  received_at: string | null;
+}

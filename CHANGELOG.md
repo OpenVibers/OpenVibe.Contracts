@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.329.0 — 2026-11-07
+
+- Add `mail.mask@1`: a per-site address on OpenVibe.Mail that delivers into its owner's OpenVibe mailbox and nowhere else. It carries the `msk_…` id, the owner's Network subject, the `<words>.<four characters>@<mask domain>` address, the person's label and purpose, whether it is enabled (a disabled mask leaves the SQL directory Stalwart reads, so it bounces) and when it was made. M1 is receive-only, so this is metadata: no body, no forwarding target.
+- Add `mail.burner@1`: a throwaway receive-only address with its `bnr_…` id, an owner (null for the ten-minute burner made without an account), the eight-character address on a rotating burner domain, the expiry, `first_message_only` and the creation time. The one-time read token a create call returns is deliberately not part of the resource.
+- Add `mail.agent-inbox@1`: an agent's address `<agent>.<user>@openvibe.email`, its `agi_…` id, the owner, the cleaned agent id and the creation time. The mail lands in the person's mailbox; one agent has one inbox.
+- Add `mail.message-summary@1`: the one shape a list API returns for a message — id, sender addresses, subject and received time. `additionalProperties` is false, so a `body`, `preview` or `html` field fails the contract rather than leaking into an API; the body is read only by the verification-code endpoint, in memory.
+- All four are new contracts, not changes to existing ones, and the minor is expand-only. Valid and invalid fixtures cover a disabled mask, a guessed address, an anonymous and a one-message burner, a bad owner or agent id, a non-address, and a summary that carries a body.
+
 ## 0.328.0 — 2026-11-07
 
 - Add `actor.assignment@1`: one node of the tree of delegated work (plan §12) — id, root, parent, depth, origin (`person`, `routine`, `outside`), mode (`work`, `consult`, `notify`), reply (`resume`, `poll`, `none`), the agent and task it runs as, the node's level and effective level, the root's budget (limit, spent and remaining), state and timestamps. A node is one hand-off: a person giving Actor a task, a routine or Watch trigger starting a run, an agent handing work to another agent, or Actor starting a Codes or Space task. The effective level is the higher of the agent's own and the one inherited along a person's or routine's line; outside work never passes a level down. A cancel cascades down the tree, and a root's budget stops its children when spent. `GET /api/v1/assignments/:id` answers the node and its children and `POST /api/v1/assignments/:id/cancel` cancels the subtree; both are owner-only and another person gets 404. An existing task gets a root lazily.
