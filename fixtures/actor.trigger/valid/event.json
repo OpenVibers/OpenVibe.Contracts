@@ -1,0 +1,33 @@
+{
+  "id": "trg_01M6VNTQD7NB3QH8K4R2S9T6VX",
+  "owner": "usr_01M6VNTQD7MRZDETZ39NB969XD",
+  "agent_id": "agt_01M6VNTQD7WHPRX74687KCER4S",
+  "agent_name": null,
+  "task": "triage the new issue",
+  "kind": "event",
+  "when": {
+    "words": "When a new issue lands in openvibe/actor",
+    "cron": null,
+    "timezone": null,
+    "event": {
+      "pattern": "github.issue.opened",
+      "filter": {
+        "subject.id": "openvibe/actor"
+      }
+    }
+  },
+  "next_run_at": null,
+  "last_run": {
+    "task_id": "tsk_01M6VNTQD7VN1GGME3XGPJ049A",
+    "state": "needs_you",
+    "at": "2026-11-09T09:00:00.000Z",
+    "error": null
+  },
+  "state": "paused",
+  "paused_reason": "failed",
+  "failures": 5,
+  "watch": null,
+  "undo_until": null,
+  "created_at": "2026-11-09T08:00:00.000Z",
+  "updated_at": "2026-11-09T09:00:00.000Z"
+}

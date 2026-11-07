@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/trigger.v1.json",
+  "title": "ActorTrigger",
+  "description": "actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule or when a Watch event arrives. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE) or event (WHEN has the Watch event PATTERN and FILTER). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active or paused, PAUSED_REASON says why (person or failed after five failed runs in a row), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "agent_id",
+    "task",
+    "kind",
+    "when",
+    "state",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^trg_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "agent_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 60
+    },
+    "task": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "schedule",
+        "event"
+      ]
+    },
+    "when": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "words"
+      ],
+      "properties": {
+        "words": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "cron": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "timezone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 64
+        },
+        "event": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "pattern"
+          ],
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_*]+){1,}$"
+            },
+            "filter": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "next_run_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "last_run": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "state",
+        "at"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "failed",
+            "needs_you",
+            "running"
+          ]
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        }
+      }
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused"
+      ]
+    },
+    "paused_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "person",
+        "failed",
+        null
+      ]
+    },
+    "failures": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "watch": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^wch_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "paused",
+            "disabled",
+            "failed"
+          ]
+        },
+        "last_state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        },
+        "consecutive_failures": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "next_due_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "undo_until": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

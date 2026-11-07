@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/actor/task-event.v2.json",
   "title": "ActorTaskEvent",
-  "description": "actor.task-event@2: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). Every field of actor.task-event@1 keeps its meaning and shape: KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). v2 adds ARTIFACTS to a tool_result: the files and charts that tool made, stored on OpenVibe.Media, private to the task's requester, each with a stable Actor link the task page and a shared session can open. Events are best-effort; the task record (GET /api/v1/tasks/:id) and its result (which carries every artifact of the run) are the source of truth.",
+  "description": "actor.task-event@2: one event on a task's live stream (GET /api/v1/tasks/:id/events, text/event-stream; the SSE id is SEQ, so a reader resumes with Last-Event-ID). Every field of actor.task-event@1 keeps its meaning and shape: KIND is run.job-stream-event@1's three, as platform.task@1 progress names them: state (the task moved to STATE), output (one step of the agent's work: AGENT says what it is doing in TEXT, calls TOOL with a short INPUT summary, or a tool answered), end (the task ended in STATE; nothing follows). v2 adds ARTIFACTS to a tool_result: the files and charts that tool made, stored on OpenVibe.Media, private to the task's requester, each with a stable Actor link the task page and a shared session can open. v2.1 adds the trigger step: a trigger card made, edited, paused, resumed, undone or deleted in the conversation carries the whole actor.trigger@1 in TRIGGER, so a reader renders the live card from the event itself. Events are best-effort; the task record (GET /api/v1/tasks/:id) and its result (which carries every artifact of the run) are the source of truth.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,13 +55,18 @@
         "tool_call",
         "tool_result",
         "check",
-        "handoff"
+        "handoff",
+        "trigger"
       ]
     },
     "assignment_id": {
       "type": "string",
       "pattern": "^asg_[0-9A-HJKMNP-TV-Z]{26}$",
       "description": "The assignment node this step belongs to (actor.assignment@1): the work tree the Dock may draw later. Older events and work with no assignment have none."
+    },
+    "trigger": {
+      "$ref": "trigger.v1.json",
+      "description": "The trigger card this event is about (actor.trigger@1), on a step: \"trigger\"."
     },
     "text": {
       "type": "string",
@@ -175,6 +180,27 @@
             "const": "tool_result"
           }
         }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "trigger"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "output"
+          },
+          "step": {
+            "const": "trigger"
+          }
+        },
+        "required": [
+          "kind",
+          "step"
+        ]
       }
     }
   ]

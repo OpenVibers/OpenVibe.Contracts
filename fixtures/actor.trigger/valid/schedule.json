@@ -1,0 +1,33 @@
+{
+  "id": "trg_01M6VNTQD7NB3QH8K4R2S9T6VW",
+  "owner": "usr_01M6VNTQD7MRZDETZ39NB969XD",
+  "agent_id": "agt_01M6VNTQD7WHPRX74687KCER4S",
+  "agent_name": "Inbox",
+  "task": "summarise my inbox",
+  "kind": "schedule",
+  "when": {
+    "words": "Every weekday at 09:00 (Europe/Berlin)",
+    "cron": "0 9 * * 1-5",
+    "timezone": "Europe/Berlin",
+    "event": null
+  },
+  "next_run_at": "2026-11-10T08:00:00.000Z",
+  "last_run": {
+    "task_id": "tsk_01M6VNTQD7VN1GGME3XGPJ048Z",
+    "state": "ok",
+    "at": "2026-11-09T08:00:12.000Z"
+  },
+  "state": "active",
+  "paused_reason": null,
+  "failures": 0,
+  "watch": {
+    "id": "wch_01M6VNTQD796C68VF8B182VAGS",
+    "status": "active",
+    "last_state": "condition_met",
+    "consecutive_failures": 0,
+    "next_due_at": "2026-11-10T08:00:00.000Z"
+  },
+  "undo_until": "2026-11-09T08:10:00.000Z",
+  "created_at": "2026-11-09T08:00:00.000Z",
+  "updated_at": "2026-11-09T08:00:00.000Z"
+}
