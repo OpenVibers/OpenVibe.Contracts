@@ -204168,6 +204168,178 @@ export interface MediaAvatarReleaseResult {
   released: number;
 }
 
+/** media.vod@1.0.0 (owner: media) */
+/**
+ * media.vod@1: one recorded stream (VOD) as OpenVibe.Media's API answers it (server/vod/finalize.js vodPublic: GET /api/v1/:app/vods/:id, the list, and every read that returns a row). Its numeric id, its app-local user id, title and description, derived status (pending, recording, ready or failed), duration and size, the file basename, the URL its bytes play from (playback_url; hls_url is the master playlist when the object has one), thumbnail, storage provider, visibility, view counts, readiness and times. watch_id is the id openvibe.video addresses the watch page by (openvibe.video/watch?v=<watch_id>): 11 characters of URL-safe base64 from 8 random bytes, fixed for the row's life, never derived from the numeric id. More fields may be added; a consumer reads what it knows.
+ */
+export interface MediaVod {
+  /**
+   * The VOD's numeric id inside Media. Internal: a watch page is addressed by watch_id.
+   */
+  id: number;
+  /**
+   * The id of its watch page on openvibe.video (openvibe.video/watch?v=<watch_id>): 8 random bytes as URL-safe base64, 64 bits. One id space across VODs and clips. Optional: a row written before the ids existed may answer without one until Media's backfill fills it.
+   */
+  watch_id?: string;
+  /**
+   * The tenant that owns the recording (live, media-hub, games…).
+   */
+  app_id: string;
+  stream_id?: number | null;
+  managed_stream_id?: number | null;
+  /**
+   * The owning app's local user id; it is not a Network subject id.
+   */
+  user_id?: string | number | null;
+  title: string;
+  description?: string;
+  /**
+   * Derived (db.vodStatus): recording while it is written, failed when its health quarantined it, ready once a file and a duration or size are there, pending before.
+   */
+  status: "pending" | "recording" | "ready" | "failed" | "unknown";
+  duration: number;
+  duration_seconds?: number;
+  /**
+   * probe (ffprobe), remux (packet timeline) or null (stored 0).
+   */
+  duration_source?: string | null;
+  file_size?: number;
+  /**
+   * The file's basename only; a server path is never returned.
+   */
+  file_path?: string | null;
+  /**
+   * The URL its bytes play from on openvibe.media.
+   */
+  playback_url: string;
+  thumbnail_url?: string | null;
+  /**
+   * local, b2 or r2.
+   */
+  storage_provider?: string;
+  /**
+   * public: anyone. unlisted: reached only by its exact id, never listed, noindex. private: missing to everyone but its owner and staff.
+   */
+  visibility: "public" | "unlisted" | "private";
+  /**
+   * True only for visibility public (kept beside it for older readers).
+   */
+  is_public: boolean;
+  health_status?: string | null;
+  clips_only?: boolean;
+  is_recording?: boolean;
+  ai_overview?: string | null;
+  ai_analyzed_at?: string | null;
+  view_count?: number;
+  unique_views?: number;
+  /**
+   * The object's readiness levels (server/objects/readiness.js) when the read asked for them.
+   */
+  readiness?: {
+    metadata?: boolean;
+    bytes_verified?: boolean;
+    playable?: boolean;
+    reason?: string | null;
+  };
+  /**
+   * The object's master playlist, when it has one (MEDIA_HLS_ENABLED).
+   */
+  hls_url?: string;
+  hls_expires_at?: string | number;
+  /**
+   * UTC 'YYYY-MM-DD HH:MM:SS' as the store keeps it.
+   */
+  created_at: string;
+}
+
+/** media.clip@1.0.0 (owner: media) */
+/**
+ * media.clip@1: one clip as OpenVibe.Media's API answers it (server/vod/clips-routes.js clipPublic: GET /api/v1/:app/clips/:id, the list, create, trim and update). Its numeric id, the recording it was cut from, the clipper and the clipped channel, title and status (processing, ready or failed), its window in the source, duration, the file basename, the URL its bytes play from, thumbnail, visibility, whether an automation cut it (auto_generated) and its view counts. watch_id is the id openvibe.video addresses the watch page by (openvibe.video/watch?v=<watch_id>): 11 characters of URL-safe base64 from 8 random bytes, in the same id space as a VOD's, fixed for the row's life, never derived from the numeric id. More fields may be added.
+ */
+export interface MediaClip {
+  /**
+   * The clip's numeric id inside Media. Internal: a watch page is addressed by watch_id.
+   */
+  id: number;
+  /**
+   * The id of its watch page on openvibe.video (openvibe.video/watch?v=<watch_id>): 8 random bytes as URL-safe base64, 64 bits. One id space across VODs and clips — a watch id never names both a VOD and a clip. Optional: a row written before the ids existed may answer without one until Media's backfill fills it.
+   */
+  watch_id?: string;
+  /**
+   * The tenant that owns the clip (live, media-hub…).
+   */
+  app_id: string;
+  /**
+   * The recording it was cut from, when it has one.
+   */
+  vod_id?: number | null;
+  stream_id?: number | null;
+  /**
+   * The clipper's app-local user id; it is not a Network subject id.
+   */
+  user_id?: string | number | null;
+  /**
+   * The clipped channel's app-local user id (who the clip is of).
+   */
+  channel_user_id?: string | number | null;
+  title: string;
+  description?: string;
+  /**
+   * processing while the cut runs, ready when its file is there, failed when the cut failed (cut_error, and will_retry while a retry is queued).
+   */
+  status: "processing" | "ready" | "failed";
+  cut_error?: string | null;
+  will_retry?: boolean;
+  /**
+   * The clip's start in the source recording, seconds.
+   */
+  start_time?: number;
+  end_time?: number;
+  duration?: number;
+  duration_seconds?: number;
+  /**
+   * The file's basename only.
+   */
+  file_path?: string | null;
+  /**
+   * The URL its bytes play from on openvibe.media.
+   */
+  playback_url: string;
+  thumbnail_url?: string | null;
+  storage_provider?: string;
+  /**
+   * public: anyone. unlisted: reached only by its exact id, never listed, noindex. private: missing to everyone but its owner and staff.
+   */
+  visibility: "public" | "unlisted" | "private";
+  is_public: boolean;
+  /**
+   * True when an automation (Live's AI moments) cut it, not a person. An AI clip is noindex and never in a sitemap.
+   */
+  auto_generated?: boolean;
+  ai_overview?: string | null;
+  ai_analyzed_at?: string | null;
+  view_count?: number;
+  unique_views?: number;
+  /**
+   * The object's readiness levels when the read asked for them.
+   */
+  readiness?: {
+    metadata?: boolean;
+    bytes_verified?: boolean;
+    playable?: boolean;
+    reason?: string | null;
+  };
+  /**
+   * The object's master playlist, when it has one.
+   */
+  hls_url?: string;
+  hls_expires_at?: string | number;
+  /**
+   * UTC 'YYYY-MM-DD HH:MM:SS' as the store keeps it.
+   */
+  created_at: string;
+}
+
 /** media.file-read-result@1.0.0 (owner: media) */
 /**
  * media.file-read-result@1: answers of media.object.read on OpenVibe.Media. GET /api/v1/:app/files/:key → media.file@1 (the file's metadata; 404 when it is not the tenant's); GET /f/:key → the bytes, with Content-Type and Range (a sandbox file only through its signed URL).

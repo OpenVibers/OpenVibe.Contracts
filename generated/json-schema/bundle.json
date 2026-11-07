@@ -56760,6 +56760,399 @@
         }
       }
     },
+    "media.vod": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/vod.v1.json",
+        "title": "MediaVod",
+        "description": "media.vod@1: one recorded stream (VOD) as OpenVibe.Media's API answers it (server/vod/finalize.js vodPublic: GET /api/v1/:app/vods/:id, the list, and every read that returns a row). Its numeric id, its app-local user id, title and description, derived status (pending, recording, ready or failed), duration and size, the file basename, the URL its bytes play from (playback_url; hls_url is the master playlist when the object has one), thumbnail, storage provider, visibility, view counts, readiness and times. watch_id is the id openvibe.video addresses the watch page by (openvibe.video/watch?v=<watch_id>): 11 characters of URL-safe base64 from 8 random bytes, fixed for the row's life, never derived from the numeric id. More fields may be added; a consumer reads what it knows.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "title",
+          "status",
+          "duration",
+          "visibility",
+          "is_public",
+          "playback_url",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The VOD's numeric id inside Media. Internal: a watch page is addressed by watch_id."
+          },
+          "watch_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{11}$",
+            "description": "The id of its watch page on openvibe.video (openvibe.video/watch?v=<watch_id>): 8 random bytes as URL-safe base64, 64 bits. One id space across VODs and clips. Optional: a row written before the ids existed may answer without one until Media's backfill fills it."
+          },
+          "app_id": {
+            "type": "string",
+            "description": "The tenant that owns the recording (live, media-hub, games…)."
+          },
+          "stream_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "managed_stream_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "user_id": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ],
+            "description": "The owning app's local user id; it is not a Network subject id."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "recording",
+              "ready",
+              "failed",
+              "unknown"
+            ],
+            "description": "Derived (db.vodStatus): recording while it is written, failed when its health quarantined it, ready once a file and a duration or size are there, pending before."
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0
+          },
+          "duration_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "duration_source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "probe (ffprobe), remux (packet timeline) or null (stored 0)."
+          },
+          "file_size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "file_path": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The file's basename only; a server path is never returned."
+          },
+          "playback_url": {
+            "type": "string",
+            "description": "The URL its bytes play from on openvibe.media."
+          },
+          "thumbnail_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "storage_provider": {
+            "type": "string",
+            "description": "local, b2 or r2."
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "private"
+            ],
+            "description": "public: anyone. unlisted: reached only by its exact id, never listed, noindex. private: missing to everyone but its owner and staff."
+          },
+          "is_public": {
+            "type": "boolean",
+            "description": "True only for visibility public (kept beside it for older readers)."
+          },
+          "health_status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "clips_only": {
+            "type": "boolean"
+          },
+          "is_recording": {
+            "type": "boolean"
+          },
+          "ai_overview": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ai_analyzed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "view_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unique_views": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "readiness": {
+            "type": "object",
+            "description": "The object's readiness levels (server/objects/readiness.js) when the read asked for them.",
+            "properties": {
+              "metadata": {
+                "type": "boolean"
+              },
+              "bytes_verified": {
+                "type": "boolean"
+              },
+              "playable": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "hls_url": {
+            "type": "string",
+            "description": "The object's master playlist, when it has one (MEDIA_HLS_ENABLED)."
+          },
+          "hls_expires_at": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "UTC 'YYYY-MM-DD HH:MM:SS' as the store keeps it."
+          }
+        }
+      }
+    },
+    "media.clip": {
+      "version": "1.0.0",
+      "owner": "media",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/media/clip.v1.json",
+        "title": "MediaClip",
+        "description": "media.clip@1: one clip as OpenVibe.Media's API answers it (server/vod/clips-routes.js clipPublic: GET /api/v1/:app/clips/:id, the list, create, trim and update). Its numeric id, the recording it was cut from, the clipper and the clipped channel, title and status (processing, ready or failed), its window in the source, duration, the file basename, the URL its bytes play from, thumbnail, visibility, whether an automation cut it (auto_generated) and its view counts. watch_id is the id openvibe.video addresses the watch page by (openvibe.video/watch?v=<watch_id>): 11 characters of URL-safe base64 from 8 random bytes, in the same id space as a VOD's, fixed for the row's life, never derived from the numeric id. More fields may be added.",
+        "type": "object",
+        "required": [
+          "id",
+          "app_id",
+          "title",
+          "status",
+          "visibility",
+          "is_public",
+          "playback_url",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The clip's numeric id inside Media. Internal: a watch page is addressed by watch_id."
+          },
+          "watch_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{11}$",
+            "description": "The id of its watch page on openvibe.video (openvibe.video/watch?v=<watch_id>): 8 random bytes as URL-safe base64, 64 bits. One id space across VODs and clips — a watch id never names both a VOD and a clip. Optional: a row written before the ids existed may answer without one until Media's backfill fills it."
+          },
+          "app_id": {
+            "type": "string",
+            "description": "The tenant that owns the clip (live, media-hub…)."
+          },
+          "vod_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The recording it was cut from, when it has one."
+          },
+          "stream_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "user_id": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ],
+            "description": "The clipper's app-local user id; it is not a Network subject id."
+          },
+          "channel_user_id": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ],
+            "description": "The clipped channel's app-local user id (who the clip is of)."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "processing",
+              "ready",
+              "failed"
+            ],
+            "description": "processing while the cut runs, ready when its file is there, failed when the cut failed (cut_error, and will_retry while a retry is queued)."
+          },
+          "cut_error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "will_retry": {
+            "type": "boolean"
+          },
+          "start_time": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The clip's start in the source recording, seconds."
+          },
+          "end_time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0
+          },
+          "duration_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "file_path": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The file's basename only."
+          },
+          "playback_url": {
+            "type": "string",
+            "description": "The URL its bytes play from on openvibe.media."
+          },
+          "thumbnail_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "storage_provider": {
+            "type": "string"
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "unlisted",
+              "private"
+            ],
+            "description": "public: anyone. unlisted: reached only by its exact id, never listed, noindex. private: missing to everyone but its owner and staff."
+          },
+          "is_public": {
+            "type": "boolean"
+          },
+          "auto_generated": {
+            "type": "boolean",
+            "description": "True when an automation (Live's AI moments) cut it, not a person. An AI clip is noindex and never in a sitemap."
+          },
+          "ai_overview": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ai_analyzed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "view_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unique_views": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "readiness": {
+            "type": "object",
+            "description": "The object's readiness levels when the read asked for them.",
+            "properties": {
+              "metadata": {
+                "type": "boolean"
+              },
+              "bytes_verified": {
+                "type": "boolean"
+              },
+              "playable": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "hls_url": {
+            "type": "string",
+            "description": "The object's master playlist, when it has one."
+          },
+          "hls_expires_at": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "description": "UTC 'YYYY-MM-DD HH:MM:SS' as the store keeps it."
+          }
+        }
+      }
+    },
     "media.file-read-result": {
       "version": "1.0.0",
       "owner": "media",

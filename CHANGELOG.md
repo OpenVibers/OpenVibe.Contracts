@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.321.0 — 2026-11-07
+
+- Add `media.vod@1` and `media.clip@1`: one recorded stream and one clip as OpenVibe.Media's API answers them. Both carry `watch_id`, the id openvibe.video addresses a watch page by (`openvibe.video/watch?v=<watch_id>`), and the shape around it that consumers already read — the numeric id (internal), the owning tenant, the app-local user ids, title and status, duration and size, the file basename, `playback_url`, thumbnail, storage provider, visibility, view counts and times; a clip also names the recording it was cut from, its window in that recording and whether an automation cut it. `watch_id` is **additive and optional** (11 characters of URL-safe base64 from 8 random bytes, one id space across VODs and clips, fixed for the row's life and never the numeric id), because a row written before Media's backfill may answer without one.
+- Valid and invalid fixtures cover a public recording with a watch id and an unlisted one before the backfill, a person-made clip and an AI clip, a watch id of the wrong length, one with a character base64url never has, one with a slash, and an unknown visibility.
+
 ## 0.320.0 — 2026-11-07
 
 - `frame.menu-card@1` items gain an optional `image`: `src` (https on the publishing site's own origin or an `openvibe.*` host, at most 400 characters), optional `w` and `h` (whole pixels, 16–1920) and an optional `alt` of at most 120 characters. Network keeps an image whose `src` passes the same host rule as the item's `url`, drops one from anywhere else, and passes it through in `GET /api/frame` so the Frame menu and Network's `/my` can draw a thumbnail.
