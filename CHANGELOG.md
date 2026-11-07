@@ -1,9 +1,14 @@
 # Changelog
 
-## 0.325.0 — 2026-11-07
+## 0.326.0 — 2026-11-07
 
 - Add `network.menu-feeds@1`: the cards a person chose to show in the OpenVibe menu's "Choose your feeds", in their order, following them across every site. `on` holds up to four `<site>:<cardId>` ids (lower-case letters, digits and dashes) and `updated_at` says when the choice last changed. OpenVibe.Network keeps it at `GET` and `PUT /api/v1/me/menu-feeds`; a person who has never chosen gets `{ on: null }` from the GET. An empty array is a cleared choice.
 - Additive: a new contract only; nothing that exists today changes shape.
+
+## 0.325.0 — 2026-11-07
+
+- Add `media.vod@1` and `media.clip@1`: one recorded stream and one clip as OpenVibe.Media's API answers them. Both carry `watch_id`, the id openvibe.video addresses a watch page by (`openvibe.video/watch?v=<watch_id>`), and the shape around it that consumers already read — the numeric id (internal), the owning tenant, the app-local user ids, title and status, duration and size, the file basename, `playback_url`, thumbnail, storage provider, visibility, view counts and times; a clip also names the recording it was cut from, its window in that recording and whether an automation cut it. `watch_id` is **additive and optional** (11 characters of URL-safe base64 from 8 random bytes, one id space across VODs and clips, fixed for the row's life and never the numeric id), because a row written before Media's backfill may answer without one.
+- Valid and invalid fixtures cover a public recording with a watch id and an unlisted one before the backfill, a person-made clip and an AI clip, a watch id of the wrong length, one with a character base64url never has, one with a slash, and an unknown visibility.
 
 ## 0.324.0 — 2026-11-07
 
