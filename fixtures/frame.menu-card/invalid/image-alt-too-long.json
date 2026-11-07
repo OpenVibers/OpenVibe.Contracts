@@ -1,0 +1,11 @@
+{
+  "id": "live-now",
+  "site": "live",
+  "title": "Live now",
+  "kind": "rail",
+  "items": [
+    { "title": "Nova", "url": "https://openvibe.live/@nova", "image": { "src": "https://openvibe.live/t/nova.jpg", "alt": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" } }
+  ],
+  "updated_at": "2026-11-07T08:00:00Z",
+  "ttl_s": 30
+}

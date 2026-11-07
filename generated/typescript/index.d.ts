@@ -298505,7 +298505,7 @@ export interface AgentTimelineListResult {
 
 /** frame.menu-card@1.0.0 (owner: network) */
 /**
- * frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.
+ * frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. An item may also carry a small picture (image) of the same shape: https on the site's own origin or an openvibe.* host, with an optional 16–1920 pixel width and height and a short alt text. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.
  */
 export interface FrameMenuCard {
   /**
@@ -298545,6 +298545,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         }
       ]
     | [
@@ -298561,6 +298582,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298575,6 +298617,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         }
       ]
     | [
@@ -298591,6 +298654,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298605,6 +298689,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298619,6 +298724,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         }
       ]
     | [
@@ -298635,6 +298761,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298649,6 +298796,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298663,6 +298831,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298677,6 +298866,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         }
       ]
     | [
@@ -298693,6 +298903,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298707,6 +298938,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298721,6 +298973,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298735,6 +299008,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298749,6 +299043,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         }
       ]
     | [
@@ -298765,6 +299080,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298779,6 +299115,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298793,6 +299150,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298807,6 +299185,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298821,6 +299220,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         },
         {
           /**
@@ -298835,6 +299255,27 @@ export interface FrameMenuCard {
            * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
            */
           url: string;
+          /**
+           * A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.
+           */
+          image?: {
+            /**
+             * The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host.
+             */
+            src: string;
+            /**
+             * The picture's natural width in pixels, when the site knows it.
+             */
+            w?: number;
+            /**
+             * The picture's natural height in pixels, when the site knows it.
+             */
+            h?: number;
+            /**
+             * A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it.
+             */
+            alt?: string;
+          };
         }
       ];
   more?: {

@@ -4,7 +4,7 @@
   "title": "Live now",
   "kind": "rail",
   "items": [
-    { "title": "Nova", "meta": "12 watching", "url": "https://openvibe.live/@nova" },
+    { "title": "Nova", "meta": "12 watching", "url": "https://openvibe.live/@nova", "image": { "src": "https://openvibe.live/t/nova.jpg?w=640", "w": 640, "h": 360, "alt": "Nova at the desk" } },
     { "title": "Kitchen radio", "meta": "3 watching", "url": "https://openvibe.live/@kitchen" }
   ],
   "more": { "label": "See all", "url": "https://openvibe.live/live" },

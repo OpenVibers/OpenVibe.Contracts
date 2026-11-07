@@ -108085,7 +108085,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/frame/menu-card.v1.json",
         "title": "FrameMenuCard",
-        "description": "frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.",
+        "description": "frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. An item may also carry a small picture (image) of the same shape: https on the site's own origin or an openvibe.* host, with an optional 16–1920 pixel width and height and a short alt text. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.",
         "type": "object",
         "required": [
           "id",
@@ -108151,6 +108151,40 @@
                   "maxLength": 400,
                   "pattern": "^https://",
                   "description": "Where the entry opens: https on the publishing site's own origin or an openvibe.* host."
+                },
+                "image": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "src"
+                  ],
+                  "description": "A small picture of the entry: a video's thumbnail, a world's cover or a stream's preview. Optional; a site with no real picture leaves it out rather than sending a placeholder.",
+                  "properties": {
+                    "src": {
+                      "type": "string",
+                      "format": "uri",
+                      "maxLength": 400,
+                      "pattern": "^https://",
+                      "description": "The picture's address: https on the publishing site's own origin or an openvibe.* host. Network drops an image from another host."
+                    },
+                    "w": {
+                      "type": "integer",
+                      "minimum": 16,
+                      "maximum": 1920,
+                      "description": "The picture's natural width in pixels, when the site knows it."
+                    },
+                    "h": {
+                      "type": "integer",
+                      "minimum": 16,
+                      "maximum": 1920,
+                      "description": "The picture's natural height in pixels, when the site knows it."
+                    },
+                    "alt": {
+                      "type": "string",
+                      "maxLength": 120,
+                      "description": "A short description of the picture for anyone who cannot see it. May be empty when the entry's title already says it."
+                    }
+                  }
                 }
               }
             }
