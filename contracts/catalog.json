@@ -9717,6 +9717,60 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "common.agent-step",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/agent-step.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.step.started",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "events/payloads/agent.step.started.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.step.updated",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "events/payloads/agent.step.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.step.ended",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "events/payloads/agent.step.ended.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.timeline-entry",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/timeline-entry.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.timeline-list-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/timeline-list-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

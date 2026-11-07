@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/agent.step.updated.v1.json",
+  "title": "AgentStepUpdatedPayload",
+  "description": "agent.step.updated v1 (design 2026-11-07 §2). A step changed: it is waiting, it needs the person, or it moved on. The same payload as agent.step.started; the envelope says what changed. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.",
+  "$ref": "../../common/agent-step.v1.json"
+}

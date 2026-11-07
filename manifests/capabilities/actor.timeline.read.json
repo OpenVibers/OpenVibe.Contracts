@@ -1,0 +1,22 @@
+{
+  "id": "actor.timeline.read",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read one person's agent timeline from OpenVibe.Actor (design 2026-11-07): what the agent did in every mode, newest first, with a cursor and the mode and needs-you filters, as agent.timeline-list-result@1. GET /api/v1/agent/timeline. Only the person's own entries; titles, outcomes and links only, never a prompt or a diff.",
+  "permissions": [
+    "actor:read"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/agent/timeline",
+    "GET /api/v1/agent/timeline/stream"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "agent.timeline-list-result@1"
+}

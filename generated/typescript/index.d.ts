@@ -298021,3 +298021,312 @@ export interface AiOffer {
   };
   pool?: AiOfferPool;
 }
+
+/** common.agent-step@1.0.0 (owner: contracts) */
+/**
+ * One step of the agent's work, as any mode publishes it (agent.step.started, agent.step.updated, agent.step.ended; design 2026-11-07 §2). The person it is for is the envelope's subject. The payload is the step's shape: what it is, where it ran, why, how it ended, what it cost, and where to see it. It never carries the step's content: no prompt, no diff, no page, no message, no file. The three events share this payload; what differs is the envelope's event_type. The agent.* namespace belongs to the network, so any first-party mode may publish into it (like provider.*); OpenVibe.Actor registers the family and keeps the timeline.
+ */
+export interface AgentStepPayload {
+  /**
+   * The mode's own id for this step (a Codes task id, a Run job id, a stream id).
+   */
+  step_id: string;
+  /**
+   * The mode the step belongs to.
+   */
+  mode: "talk" | "act" | "run" | "code" | "browse" | "watch" | "stream";
+  /**
+   * The product that ran it (chat, codes, run, watch, live, surf, actor).
+   */
+  product: string;
+  /**
+   * The product's own id for the thing this step is about.
+   */
+  ref?: string | null;
+  /**
+   * A short plain-text name for the step. What it was, never what it said.
+   */
+  title: string;
+  status: "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+  started_at: string;
+  ended_at?: string | null;
+  /**
+   * Where the step ran and why the agent put it there, in one line each.
+   */
+  placement?: {
+    where?: string | null;
+    why?: string | null;
+  } | null;
+  cost_usd?: number | null;
+  /**
+   * The step's own page in its product.
+   */
+  link?: string | null;
+  /**
+   * Why it failed or stopped, in one line a person can act on.
+   */
+  reason?: string | null;
+  /**
+   * The agent's sentence for the mode change this step announced.
+   */
+  transition?: string | null;
+  /**
+   * The approval this step waits on, and the mode that owns it. The person answers it in the mode.
+   */
+  approval?: {
+    product?: string;
+    id?: string;
+    kind?: string;
+  } | null;
+}
+
+/** agent.step.started@1.0.0 (owner: actor) */
+/**
+ * agent.step.started v1 (design 2026-11-07 §2). A step began: the mode started working on it. Envelope: source the mode that runs it (a first-party service), subject the person it is for, visibility internal, actor the person or the mode. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.
+ */
+export interface AgentStepStartedPayload {
+  /**
+   * The mode's own id for this step (a Codes task id, a Run job id, a stream id).
+   */
+  step_id: string;
+  /**
+   * The mode the step belongs to.
+   */
+  mode: "talk" | "act" | "run" | "code" | "browse" | "watch" | "stream";
+  /**
+   * The product that ran it (chat, codes, run, watch, live, surf, actor).
+   */
+  product: string;
+  /**
+   * The product's own id for the thing this step is about.
+   */
+  ref?: string | null;
+  /**
+   * A short plain-text name for the step. What it was, never what it said.
+   */
+  title: string;
+  status: "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+  started_at: string;
+  ended_at?: string | null;
+  /**
+   * Where the step ran and why the agent put it there, in one line each.
+   */
+  placement?: {
+    where?: string | null;
+    why?: string | null;
+  } | null;
+  cost_usd?: number | null;
+  /**
+   * The step's own page in its product.
+   */
+  link?: string | null;
+  /**
+   * Why it failed or stopped, in one line a person can act on.
+   */
+  reason?: string | null;
+  /**
+   * The agent's sentence for the mode change this step announced.
+   */
+  transition?: string | null;
+  /**
+   * The approval this step waits on, and the mode that owns it. The person answers it in the mode.
+   */
+  approval?: {
+    product?: string;
+    id?: string;
+    kind?: string;
+  } | null;
+}
+
+/** agent.step.updated@1.0.0 (owner: actor) */
+/**
+ * agent.step.updated v1 (design 2026-11-07 §2). A step changed: it is waiting, it needs the person, or it moved on. The same payload as agent.step.started; the envelope says what changed. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.
+ */
+export interface AgentStepUpdatedPayload {
+  /**
+   * The mode's own id for this step (a Codes task id, a Run job id, a stream id).
+   */
+  step_id: string;
+  /**
+   * The mode the step belongs to.
+   */
+  mode: "talk" | "act" | "run" | "code" | "browse" | "watch" | "stream";
+  /**
+   * The product that ran it (chat, codes, run, watch, live, surf, actor).
+   */
+  product: string;
+  /**
+   * The product's own id for the thing this step is about.
+   */
+  ref?: string | null;
+  /**
+   * A short plain-text name for the step. What it was, never what it said.
+   */
+  title: string;
+  status: "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+  started_at: string;
+  ended_at?: string | null;
+  /**
+   * Where the step ran and why the agent put it there, in one line each.
+   */
+  placement?: {
+    where?: string | null;
+    why?: string | null;
+  } | null;
+  cost_usd?: number | null;
+  /**
+   * The step's own page in its product.
+   */
+  link?: string | null;
+  /**
+   * Why it failed or stopped, in one line a person can act on.
+   */
+  reason?: string | null;
+  /**
+   * The agent's sentence for the mode change this step announced.
+   */
+  transition?: string | null;
+  /**
+   * The approval this step waits on, and the mode that owns it. The person answers it in the mode.
+   */
+  approval?: {
+    product?: string;
+    id?: string;
+    kind?: string;
+  } | null;
+}
+
+/** agent.step.ended@1.0.0 (owner: actor) */
+/**
+ * agent.step.ended v1 (design 2026-11-07 §2). A step ended: it is done, it failed, or the person stopped it. Envelope: source the mode that ran it, subject the person it is for, visibility internal. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.
+ */
+export interface AgentStepEndedPayload {
+  /**
+   * The mode's own id for this step (a Codes task id, a Run job id, a stream id).
+   */
+  step_id: string;
+  /**
+   * The mode the step belongs to.
+   */
+  mode: "talk" | "act" | "run" | "code" | "browse" | "watch" | "stream";
+  /**
+   * The product that ran it (chat, codes, run, watch, live, surf, actor).
+   */
+  product: string;
+  /**
+   * The product's own id for the thing this step is about.
+   */
+  ref?: string | null;
+  /**
+   * A short plain-text name for the step. What it was, never what it said.
+   */
+  title: string;
+  status: "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+  started_at: string;
+  ended_at?: string | null;
+  /**
+   * Where the step ran and why the agent put it there, in one line each.
+   */
+  placement?: {
+    where?: string | null;
+    why?: string | null;
+  } | null;
+  cost_usd?: number | null;
+  /**
+   * The step's own page in its product.
+   */
+  link?: string | null;
+  /**
+   * Why it failed or stopped, in one line a person can act on.
+   */
+  reason?: string | null;
+  /**
+   * The agent's sentence for the mode change this step announced.
+   */
+  transition?: string | null;
+  /**
+   * The approval this step waits on, and the mode that owns it. The person answers it in the mode.
+   */
+  approval?: {
+    product?: string;
+    id?: string;
+    kind?: string;
+  } | null;
+}
+
+/** agent.timeline-entry@1.0.0 (owner: actor) */
+/**
+ * One entry of the agent's timeline (design 2026-11-07 §2): one step of the agent's work, in one mode, for one person. The Dock shows it: the mode's icon and word, the title, where it ran and why, the outcome, the time and the cost. Only a title, an outcome and a link: never a prompt, a diff or a page. A person sees their own entries; another person's entry is a 404. The audience is 'private' (Only me) unless the person shared the entry through the one Share sheet.
+ */
+export interface AgentTimelineEntry {
+  id: string;
+  /**
+   * The person the step was for.
+   */
+  subject: string;
+  mode: "talk" | "act" | "run" | "code" | "browse" | "watch" | "stream";
+  product: string;
+  ref?: string | null;
+  title: string;
+  started_at: string;
+  ended_at?: string | null;
+  status: "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+  /**
+   * Where the step ran and why the agent put it there, in one line each.
+   */
+  placement?: {
+    where?: string | null;
+    why?: string | null;
+  } | null;
+  cost_usd?: number | null;
+  link?: string | null;
+  reason?: string | null;
+  transition?: string | null;
+  /**
+   * The approval this step waits on, and the mode that owns it. The person answers it in the mode.
+   */
+  approval?: {
+    product?: string;
+    id?: string;
+    kind?: string;
+  } | null;
+  /**
+   * Who may see it. 'private' is Only me, the default; the other three come from the one Share sheet.
+   */
+  audience: "private" | "link" | "people" | "public";
+  /**
+   * Whether the person shared this entry (the share row itself lives in the sharing system).
+   */
+  shared?: boolean | null;
+}
+
+/** agent.timeline-list-result@1.0.0 (owner: actor) */
+/**
+ * The person's agent timeline (design 2026-11-07 §1): what the agent is doing now, what needs them, and the entries themselves, newest first. The Dock's filters live in the query (cursor, mode, needs_you); counts say how many entries a hidden filter would show, so a filter never hides without a count.
+ */
+export interface AgentTimelineListResult {
+  /**
+   * The step the agent is doing this moment, if any.
+   */
+  now: AgentTimelineEntry | null;
+  /**
+   * Every approval or question from any mode, oldest first.
+   *
+   * @maxItems 50
+   */
+  needs_you: AgentTimelineEntry[];
+  /**
+   * @maxItems 200
+   */
+  entries: AgentTimelineEntry[];
+  /**
+   * The cursor of the next page, or null at the end.
+   */
+  next_cursor: string | null;
+  /**
+   * How many entries each mode has (and "needs_you"), so the Dock can show what a filter would hide.
+   */
+  counts: {
+    [k: string]: number | undefined;
+  };
+}

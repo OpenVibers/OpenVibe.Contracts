@@ -14,8 +14,9 @@ const [major, minor] = pkg.version.split('.').map(Number);
 
 // Minor versions that were never released (no tag), so they have no entry. 306 and 307 were reserved for the pooled
 // machines and consent branches, which merged after Memory M5 took 308: they became 0.309.0 and 0.310.0, and the two
-// numbers stay unused (a tag below the newest one would read as a downgrade to the pin bot).
-const NEVER_RELEASED = new Set([293, 306, 307]);
+// numbers stay unused (a tag below the newest one would read as a downgrade to the pin bot). 313 was claimed by A6's
+// Contracts PR while main moved to 0.314.0 and 0.315.0; it merged as 0.316.0 and the number stays unused.
+const NEVER_RELEASED = new Set([293, 306, 307, 313]);
 const FIRST_MINOR = 30;
 
 assert.strictEqual(major, 0, 'the check counts 0.x minors; update it when 1.0.0 ships');

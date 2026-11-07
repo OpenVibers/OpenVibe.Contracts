@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/timeline-list-result.v1.json",
+  "title": "AgentTimelineListResult",
+  "description": "The person's agent timeline (design 2026-11-07 §1): what the agent is doing now, what needs them, and the entries themselves, newest first. The Dock's filters live in the query (cursor, mode, needs_you); counts say how many entries a hidden filter would show, so a filter never hides without a count.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "now",
+    "needs_you",
+    "entries",
+    "next_cursor",
+    "counts"
+  ],
+  "properties": {
+    "now": {
+      "anyOf": [
+        {
+          "$ref": "./timeline-entry.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "The step the agent is doing this moment, if any."
+    },
+    "needs_you": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "$ref": "./timeline-entry.v1.json"
+      },
+      "description": "Every approval or question from any mode, oldest first."
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "./timeline-entry.v1.json"
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200,
+      "description": "The cursor of the next page, or null at the end."
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "How many entries each mode has (and \"needs_you\"), so the Dock can show what a filter would hide."
+    }
+  }
+}

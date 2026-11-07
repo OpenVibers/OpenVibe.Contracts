@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/agent.step.ended.v1.json",
+  "title": "AgentStepEndedPayload",
+  "description": "agent.step.ended v1 (design 2026-11-07 §2). A step ended: it is done, it failed, or the person stopped it. Envelope: source the mode that ran it, subject the person it is for, visibility internal. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.",
+  "$ref": "../../common/agent-step.v1.json"
+}
