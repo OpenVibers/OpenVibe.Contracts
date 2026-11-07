@@ -1,4 +1,22 @@
 # Changelog
+## 0.336.0 — 2026-11-07
+
+- The run's options carry the latency class the caller asks for: `interactive` (answer as soon as the provider can),
+  `background` (minutes; the run is priced on the cheapest tier that can wait) or `batch` (hours; the run is queued and
+  answered through a provider's own batch API). A batch run may also say `deadline_hours` (1 to 72): how long the answer may
+  take. The class is the workflow's own (the route's `constraints.latency_class`): a caller may ask for a slower class and
+  never for a faster one, and a faster ask is not refused — the run happens in the workflow's own class and says so.
+- The run's answer carries `latency_class` (the class the run really ran in), `service_tier` (`standard`, `flex`,
+  `batch`, `offpeak`, `local`: the tier it was priced on — the one the provider served or the one the router chose) and
+  `latency_clamped` (the class asked for and the class used, when the ask was clamped).
+- Add the batches contract: `ai.batch@1`, `ai.batch-item@1`, `ai.batch-create-request@1`, `ai.batch-create-result@1` and
+  `ai.batch-read-result@1` for `/api/v1/batches` on OpenVibe.AI. A batch is a queue of many prompts that are answered
+  later, at half the retail price; the batch says where it stands, and a prompt that reaches its deadline without cheap
+  capacity expires and is never charged.
+- Add the grants `ai.batches.create` (open a batch, cancel one) and `ai.batches.read` (read the caller's own batches).
+  A first-party service opens a batch on the network's own account with `ai.batches.create`; a person or a developer app
+  pays with its own account.
+
 
 ## 0.335.0 — 2026-11-07
 

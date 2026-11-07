@@ -15271,7 +15271,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/ai/run-request.v1.json",
         "title": "AiRunRequest",
-        "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.",
+        "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).",
         "type": "object",
         "required": [
           "workflow"
@@ -15320,6 +15320,20 @@
                 "type": "boolean",
                 "default": false,
                 "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on."
+              },
+              "latency": {
+                "enum": [
+                  "interactive",
+                  "background",
+                  "batch"
+                ],
+                "description": "The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped)."
+              },
+              "deadline_hours": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 72,
+                "description": "For a batch run: how long the answer may take, in hours (1 to 72). The run is queued and answered within the deadline; a deadline the provider cannot meet sends the run back to the ordinary path. Omitted: the service's own default."
               }
             }
           },
@@ -15348,7 +15362,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/ai/run.v1.json",
         "title": "AiRun",
-        "description": "A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.",
+        "description": "A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. latency_class is the class the run really ran in, service_tier the tier it was priced on, and latency_clamped set when the caller asked for a faster class than the workflow allows. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.",
         "type": "object",
         "required": [
           "id",
@@ -15645,6 +15659,59 @@
             "type": "integer",
             "minimum": 0,
             "description": "Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later."
+          },
+          "latency_class": {
+            "enum": [
+              "interactive",
+              "background",
+              "batch"
+            ],
+            "description": "The class the run really ran in: how long the caller was willing to wait. It is the workflow's own class (the route's constraints.latency_class) or a slower one the caller asked for (options.latency); a caller can never make a run faster than its workflow allows."
+          },
+          "service_tier": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "standard",
+              "flex",
+              "batch",
+              "offpeak",
+              "local",
+              null
+            ],
+            "description": "The tier the run was priced on: the tier the provider really served (standard, flex, batch) or the one the router chose (offpeak inside a provider's off-peak hours, local on the host's own model). Null while the run has not answered. A provider that does not say which tier it served is priced at the list price: a saving nobody confirmed is not a saving."
+          },
+          "latency_clamped": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "asked",
+              "used"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "asked": {
+                "enum": [
+                  "interactive",
+                  "background",
+                  "batch"
+                ],
+                "description": "The class the caller asked for."
+              },
+              "used": {
+                "enum": [
+                  "interactive",
+                  "background",
+                  "batch"
+                ],
+                "description": "The class the run really ran in."
+              }
+            },
+            "description": "Set when the caller asked for a faster class than the workflow allows: the class asked for and the class the run really ran in. The run is never refused for it."
           },
           "retry_of": {
             "type": [
@@ -18829,6 +18896,376 @@
                 "items": {
                   "$ref": "run-citation.v1.json"
                 }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "ai.batch": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/batch.v1.json",
+        "title": "AiBatch",
+        "description": "ai.batch@1: a batch of many prompts on OpenVibe.AI (POST /api/v1/batches, GET /api/v1/batches, GET /api/v1/batches/:id). The answers are not waited for: the batch is queued, and the batch says where it stands. A batch is billed at half the retail price through Billing like every other request; the batch table is the queue and the status, never a second ledger. The owner of the batch is the account that pays for it: a person, a developer app's project, or a first-party service with the ai.batches.create grant (the network's own account).",
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "owner_type",
+          "owner_id",
+          "project_id",
+          "item_count",
+          "items",
+          "discount",
+          "deadline_at",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^bat_[0-9a-f]{24}$"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "expired",
+              "cancelled"
+            ],
+            "description": "queued (asked for), running (items are being answered), succeeded, failed (an item failed), expired (the deadline passed with nothing answered), cancelled (the caller cancelled it)."
+          },
+          "owner_type": {
+            "enum": [
+              "user",
+              "app",
+              "service"
+            ],
+            "description": "Who pays for the batch."
+          },
+          "owner_id": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The developer app's project, when an app owns the batch."
+          },
+          "item_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many prompts the batch carries."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "batch-item.v1.json"
+            },
+            "description": "The items, in order. The list of batches answers with the same objects and no items (an empty array): the items come from GET /api/v1/batches/:id."
+          },
+          "discount": {
+            "type": "string",
+            "description": "The share of the retail card the customer is charged, as a decimal fraction of a million (500000 = half)."
+          },
+          "deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the batch stops waiting: the deadline the caller asked for (1 to 72 hours)."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "absorbed_nano_usd": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the network absorbed for this batch, in nano-USD, as a string."
+          },
+          "ran_on_regular_capacity": {
+            "type": "boolean",
+            "description": "The batch ran on the ordinary capacity (not on free or community capacity): it cost the network more than the customer paid, and the difference is the absorbed amount."
+          }
+        }
+      }
+    },
+    "ai.batch-item": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/batch-item.v1.json",
+        "title": "AiBatchItem",
+        "description": "ai.batch-item@1: one prompt of a batch on OpenVibe.AI (POST /api/v1/batches). The item is the queue and the status of that one prompt: it waits for capacity (or for a provider's own batch API), runs, and carries the answer, the run it made and the money. A prompt that reached its deadline without capacity expires and is never charged.",
+        "type": "object",
+        "required": [
+          "idx",
+          "status",
+          "model",
+          "run_id",
+          "answer",
+          "error_code",
+          "error_detail",
+          "reason",
+          "capacity",
+          "route_provider",
+          "route_model",
+          "deadline_at",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "idx": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The item's place in the batch."
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "waiting",
+              "running",
+              "succeeded",
+              "failed",
+              "expired",
+              "cancelled"
+            ],
+            "description": "queued (asked for, not started), waiting (no cheap capacity yet), running (a provider works on it), succeeded, failed, expired (the deadline passed; not charged), cancelled (the batch was cancelled)."
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The model the item asked for, or the batch's own."
+          },
+          "run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The run the item made, when it made one."
+          },
+          "answer": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The answer the provider gave, as text."
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "error_detail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Why the item ended without an answer (it expired, it was cancelled)."
+          },
+          "capacity": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Where the answer came from: a community offer, the regular capacity, or a provider's own batch API."
+          },
+          "route_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "route_model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cost_nano_usd": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the answer really cost, in nano-USD (1 USD = 1e9 nano), as a string: the money is never a float."
+          },
+          "absorbed_nano_usd": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the network absorbed (the route cost more than the customer paid), in nano-USD, as a string."
+          },
+          "charged_nano_usd": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the customer was charged, in nano-USD, as a string: half the retail card."
+          },
+          "deadline_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai.batch-create-request": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/batch-create-request.v1.json",
+        "title": "AiBatchCreateRequest",
+        "description": "ai.batch-create-request@1: the body of POST /api/v1/batches on OpenVibe.AI (capability ai.batches.create). One batch of many prompts: the answers come later, and the batch is billed at half the retail price. Errors are problem+json: 422 input.invalid (no items, an empty prompt, a prompt over 20000 characters, a deadline outside 1 to 72 hours), 422 batch.too_large (more prompts than the service's cap), 403 batch.no_payer (the token names no account to pay), 403 batch.no_grant (a service without the ai.batches.create grant).",
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "description": "The prompts of the batch, in order. Each item is a prompt, or an object with a prompt and the model it wants.",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "prompt"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "prompt": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000
+                    },
+                    "model": {
+                      "type": "string",
+                      "description": "The model this item wants (a model key, or provider/model)."
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "model": {
+            "type": "string",
+            "description": "The model the whole batch asks for, when no item names one."
+          },
+          "deadline_hours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 72,
+            "description": "How long the batch may take, in hours (1 to 72). Omitted: the service's own default (24 hours). A prompt that reaches the deadline without cheap capacity expires and is never charged."
+          }
+        }
+      }
+    },
+    "ai.batch-create-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/batch-create-result.v1.json",
+        "title": "AiBatchCreateResult",
+        "description": "ai.batch-create-result@1: the answers of ai.batches.create on OpenVibe.AI. POST /api/v1/batches → 201 { batch }; POST /api/v1/batches/:id/cancel → { batch } (the batch is cancelled: the items that had not run are cancelled and nothing is charged for them).",
+        "type": "object",
+        "required": [
+          "batch"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "batch": {
+            "$ref": "batch.v1.json"
+          }
+        }
+      }
+    },
+    "ai.batch-read-result": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/batch-read-result.v1.json",
+        "title": "AiBatchReadResult",
+        "description": "ai.batch-read-result@1: the answers of ai.batches.read on OpenVibe.AI (the caller's own batches). GET /api/v1/batches → { batches } (newest first, the items not included); GET /api/v1/batches/:id → { batch } (with its items). Somebody else's batch is 404 batch.not_found.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "batches"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "batches": {
+                "type": "array",
+                "items": {
+                  "$ref": "batch.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "batch"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "batch": {
+                "$ref": "batch.v1.json"
               }
             }
           }

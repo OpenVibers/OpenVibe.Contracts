@@ -1,0 +1,7 @@
+{
+  "items": [
+    "one prompt"
+  ],
+  "model": "gpt-4o-mini",
+  "deadline_hours": 24
+}

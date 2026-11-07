@@ -960,6 +960,7 @@ sub(path.join(__dirname, 'billing-grace.test.js'));
 sub(path.join(__dirname, 'resources.test.js'));
 // The wait record (plan A2): a wait is a record, not a running loop.
 sub(path.join(__dirname, 'actor-wait.test.js'));
+sub(path.join(__dirname, 'batching-latency.test.js'));
 sub(path.join(__dirname, 'network-consent.test.js'));
 // The machines hub (plan L34): one catalogue of roles, declared by the products that own them.
 sub(path.join(__dirname, 'machines.test.js'));

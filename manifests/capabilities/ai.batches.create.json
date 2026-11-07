@@ -1,0 +1,22 @@
+{
+  "id": "ai.batches.create",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Open a batch of many prompts on OpenVibe.AI (POST /api/v1/batches) and cancel one (POST /api/v1/batches/:id/cancel). A batch is answered later, through a provider's own batch API when there is one, and is billed at half the retail price. A first-party service needs this grant to open a batch on the network's own account; a person or a developer app pays with its own account.",
+  "inputSchema": "ai.batch-create-request@1",
+  "outputSchema": "ai.batch-create-result@1",
+  "permissions": [
+    "ai:batch"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "ai-batch",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/batches",
+    "POST /api/v1/batches/:id/cancel"
+  ]
+}

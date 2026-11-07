@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/batch-create-request.v1.json",
+  "title": "AiBatchCreateRequest",
+  "description": "ai.batch-create-request@1: the body of POST /api/v1/batches on OpenVibe.AI (capability ai.batches.create). One batch of many prompts: the answers come later, and the batch is billed at half the retail price. Errors are problem+json: 422 input.invalid (no items, an empty prompt, a prompt over 20000 characters, a deadline outside 1 to 72 hours), 422 batch.too_large (more prompts than the service's cap), 403 batch.no_payer (the token names no account to pay), 403 batch.no_grant (a service without the ai.batches.create grant).",
+  "type": "object",
+  "required": [
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The prompts of the batch, in order. Each item is a prompt, or an object with a prompt and the model it wants.",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          {
+            "type": "object",
+            "required": [
+              "prompt"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "model": {
+                "type": "string",
+                "description": "The model this item wants (a model key, or provider/model)."
+              }
+            }
+          }
+        ]
+      }
+    },
+    "model": {
+      "type": "string",
+      "description": "The model the whole batch asks for, when no item names one."
+    },
+    "deadline_hours": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 72,
+      "description": "How long the batch may take, in hours (1 to 72). Omitted: the service's own default (24 hours). A prompt that reaches the deadline without cheap capacity expires and is never charged."
+    }
+  }
+}

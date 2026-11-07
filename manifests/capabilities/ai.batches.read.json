@@ -1,0 +1,22 @@
+{
+  "id": "ai.batches.read",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read the caller's own batches and their items (GET /api/v1/batches, GET /api/v1/batches/:id). Somebody else's batch is not found.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "ai.batch-read-result@1",
+  "permissions": [
+    "ai:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "ai-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/batches",
+    "GET /api/v1/batches/:id"
+  ]
+}
