@@ -15,7 +15,8 @@
   "quotaClass": "standard",
   "events": [],
   "implementedBy": [
-    "POST /api/v1/spaces/:id/publish"
+    "POST /api/v1/spaces/:id/publish",
+    "POST /api/v1/agent/approvals/:id/decide"
   ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "space.build-publish@1"
