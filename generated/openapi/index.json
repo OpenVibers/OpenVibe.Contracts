@@ -5,28 +5,28 @@
       "service": "actor",
       "name": "OpenVibe.Actor",
       "origin": "https://openvibe.actor",
-      "operations": 36,
+      "operations": 37,
       "capabilities": 13
     },
     {
       "service": "ai",
       "name": "OpenVibe.AI",
       "origin": "https://ai.openvibe.services",
-      "operations": 65,
+      "operations": 66,
       "capabilities": 15
     },
     {
       "service": "bench",
       "name": "OpenVibe.Bench",
       "origin": "https://bench.openvibe.services",
-      "operations": 26,
+      "operations": 27,
       "capabilities": 13
     },
     {
       "service": "billing",
       "name": "OpenVibe.Billing",
       "origin": "https://billing.openvibe.network",
-      "operations": 47,
+      "operations": 48,
       "capabilities": 19
     },
     {
@@ -54,7 +54,7 @@
       "service": "codes",
       "name": "OpenVibe.Codes",
       "origin": "https://openvibe.codes",
-      "operations": 9,
+      "operations": 10,
       "capabilities": 5
     },
     {
@@ -110,7 +110,7 @@
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",
-      "operations": 11,
+      "operations": 12,
       "capabilities": 2
     },
     {
@@ -145,7 +145,7 @@
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
-      "operations": 55,
+      "operations": 62,
       "capabilities": 35
     },
     {
@@ -180,7 +180,7 @@
       "service": "report",
       "name": "OpenVibe.Report",
       "origin": "https://openvibe.report",
-      "operations": 7,
+      "operations": 8,
       "capabilities": 3
     },
     {
@@ -208,7 +208,7 @@
       "service": "services",
       "name": "OpenVibe.Services",
       "origin": "https://openvibe.services",
-      "operations": 15,
+      "operations": 16,
       "capabilities": 5
     },
     {
@@ -271,7 +271,7 @@
       "service": "watch",
       "name": "OpenVibe.Watch",
       "origin": "https://openvibe.watch",
-      "operations": 18,
+      "operations": 19,
       "capabilities": 7
     },
     {

@@ -12,8 +12,9 @@ const pkg = require(path.join(ROOT, 'package.json'));
 const versions = [...text.matchAll(/^## (\d+)\.(\d+)\.(\d+)\b/gm)].map((m) => [+m[1], +m[2], +m[3]]);
 const [major, minor] = pkg.version.split('.').map(Number);
 
-// Minor versions that were never released (no tag), so they have no entry. 306 is the pooled-machines branch (it
-// carries its own 0.306.0 entry and has not merged); 307 is reserved by work in flight, so Memory M5 takes 308.
+// Minor versions that were never released (no tag), so they have no entry. 306 and 307 were reserved for the pooled
+// machines and consent branches, which merged after Memory M5 took 308: they became 0.309.0 and 0.310.0, and the two
+// numbers stay unused (a tag below the newest one would read as a downgrade to the pin bot).
 const NEVER_RELEASED = new Set([293, 306, 307]);
 const FIRST_MINOR = 30;
 

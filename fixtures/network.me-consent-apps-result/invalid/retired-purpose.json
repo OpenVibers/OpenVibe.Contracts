@@ -1,0 +1,55 @@
+{
+  "purposes": [
+    {
+      "id": "ai.train",
+      "title": "Train AI on your content",
+      "allows": "It may use your streams, videos, voice, chat, posts, pictures and code to train or improve its AI.",
+      "cannot_undo": "A model it already trained keeps what it learned.",
+      "adults_only": true,
+      "text_version": "2026-11-07.1"
+    },
+    {
+      "id": "app.data",
+      "title": "Use your content",
+      "allows": "It may read and use your streams, videos, posts and other content for its own features.",
+      "cannot_undo": "A copy it already made stays with the app.",
+      "adults_only": false,
+      "text_version": "2026-11-07.1"
+    }
+  ],
+  "apps": [
+    {
+      "client": "app_01K6R3A1B2C3D4E5F6G7H8J9KD",
+      "name": "Clip Helper",
+      "third_party": true,
+      "granted": [
+        {
+          "consent_id": "cns_01K9A3A1B2C3D4E5F6G7H8J9KC",
+          "purpose": "ai.looks",
+          "granted_at": "2026-11-07T05:00:00.000Z",
+          "text_version": "2026-11-07.1"
+        }
+      ],
+      "quiet": [
+        {
+          "purpose": "face.recognize",
+          "refused_at": "2026-11-07T05:00:00.000Z",
+          "quiet_until": "2026-12-07T05:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "client": "openvibe-live",
+      "name": "OpenVibe.Live",
+      "third_party": false,
+      "granted": [],
+      "quiet": [
+        {
+          "purpose": "data.public",
+          "refused_at": "2026-11-06T05:00:00.000Z",
+          "quiet_until": "2026-12-06T05:00:00.000Z"
+        }
+      ]
+    }
+  ]
+}

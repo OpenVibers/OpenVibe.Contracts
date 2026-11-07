@@ -96,6 +96,29 @@ export type ServiceTokenClaims = {
    */
   on_behalf_of?: string;
   /**
+   * App tokens from the authorization-code flow (0.310.0): the purposes the person (on_behalf_of) granted this app at sign-in and that are still active when the token is issued, the claim network.consent-claim@1 defines. Present when the sign-in asked for consent:<purpose> scopes, [] when none is granted, absent otherwise.
+   *
+   * @maxItems 4
+   */
+  consent?:
+    | []
+    | ["ai.train" | "data.public" | "face.recognize" | "app.data"]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ];
+  /**
    * Agent tokens: the host that runs the agent and the token was minted for (RFC 8693 actor claim), a service or an app.
    */
   act?: {
@@ -4728,7 +4751,7 @@ export type ConfigSnapshot = {
 
 /** common.config-namespace@1.0.0 (owner: network) */
 /**
- * common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps).
+ * common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps, seconds), and for the owner's Setup tab and the clear admin panel (openvibe-shared 4.125.0) x-owner-input ({ group, unlocks, get_it_at, get_it_how, test }: a field only the owner can give), x-required-for (the feature an unset field blocks), x-enum-labels ({ value: { label, description } }), x-advanced (folded under Advanced settings) and x-example (a placeholder; never on a secret).
  */
 export interface ConfigNamespace {
   service: string;
@@ -4788,7 +4811,7 @@ export interface ConfigNamespace {
    */
   pins: string[];
   /**
-   * The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to) and x-unit (nano_usd, ms or bps).
+   * The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to), x-unit (nano_usd, ms, bps or seconds), x-owner-input, x-required-for, x-enum-labels, x-advanced and x-example.
    */
   schema: {} | null;
   /**
@@ -272170,7 +272193,7 @@ export interface NetworkConsent {
         "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
       ];
   /**
-   * The app the choice is for: null means OpenVibe itself; otherwise the OAuth client id of an app the person granted (required for app.data, and only there).
+   * The app the choice is for: null means OpenVibe itself; otherwise the OAuth client id of the app the person granted it to. app.data always names one. Since 0.310.0 an app may ask for any purpose at sign-in (consent:<purpose>, network.consent-claim@1): the grant is one record per purpose with this client and source oauth, and it allows that app only, never OpenVibe itself or another app.
    */
   client: string | null;
   /**
@@ -272202,7 +272225,7 @@ export interface NetworkConsent {
           "verify" | "find" | "cast" | "library"
         ];
     /**
-     * app.data only: what the app may do with the person's content, as the consent screen showed it.
+     * app.data only, and not written since 0.310.0: an app's consent screen grants each purpose as its own record (client set), so a reader asks for the purpose itself. Kept so older records still validate.
      *
      * @maxItems 4
      */
@@ -272230,7 +272253,7 @@ export interface NetworkConsent {
    */
   text_version: string;
   /**
-   * Where the choice was made: the account page, an app's consent screen, the person's own API call, or OpenVibe.Vision's older face consents moved into Network.
+   * Where the choice was made: the account page, an app's consent screen at sign-in (consent:<purpose>, with client set), the person's own API call, or OpenVibe.Vision's older face consents moved into Network.
    */
   source: "account" | "oauth" | "api" | "import:vision";
   /**
@@ -283014,6 +283037,838 @@ export interface NetworkMeConsentResult {
   }[];
 }
 
+/** network.consent-claim@1.0.0 (owner: network) */
+/**
+ * network.consent-claim@1 (the consent plan's C4, 2026-11-07): the purposes a person granted to one app at sign-in, as the `consent` claim of the tokens OpenVibe.Network issues to that app. An app asks with one scope `consent:<purpose>` per purpose, beside its other scopes, in /oauth/authorize. The purposes an app may ask for are network.consent@1's except the retired ai.looks: ai.train, data.public, face.recognize and app.data. Any other `consent:` scope is refused with invalid_scope. The consent screen lists each purpose in plain words, off until the person ticks it, and the person can sign in with every purpose refused. A granted purpose is a network.consent@1 record with the app's OAuth client id as client and source oauth; the person turns it off on their account page (DELETE /api/v1/me/consent/:purpose/:client). A refused purpose is not asked again by that app for 30 days, unless the person asks for it again on their account page. The schema is the claims object of any token that carries the claim: a first-party user access token, a Dock token, or an app token (identity.service-token-claims@1).
+ */
+export interface NetworkConsentClaim {
+  /**
+   * Exactly the purposes this sign-in asked for that the person has granted to this app and that are active when the token is issued, in network.consent@1's order. Never a refused or unasked purpose and never another app's grant. An empty list means none is granted: the app learns "not granted", never whether the person refused or was not asked. The claim is absent when the sign-in asked for no consent scope. Every new token works it out again, so a purpose the person turns off is gone from the next one (a refresh, or the next code); a token already issued keeps it until it expires. A service about to use a person's content for an app still asks POST /internal/consent/check with the app as client. The token response's `scope` lists consent:<purpose> only for the purposes granted.
+   *
+   * @maxItems 4
+   */
+  consent:
+    | []
+    | ["ai.train" | "data.public" | "face.recognize" | "app.data"]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ];
+  [k: string]: unknown | undefined;
+}
+
+/** network.me-consent-apps-result@1.0.0 (owner: network) */
+/**
+ * network.me-consent-apps-result@1 (the consent plan's C4, 2026-11-07): "Apps you allowed" on the signed-in person's account page. GET /api/v1/me/consent/apps on OpenVibe.Network. It lists every app the person granted a purpose to on its sign-in screen (consent:<purpose>, network.consent-claim@1), with the purposes granted and those refused in the last 30 days. It also carries the words the app consent screen shows for each purpose. Only the person's own session reads it; an app never sees this list, its own entry included.
+ */
+export interface NetworkMeConsentAppsResult {
+  /**
+   * The purposes an app may ask for, with the exact words the app consent screen shows.
+   *
+   * @maxItems 8
+   */
+  purposes:
+    | []
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ];
+  /**
+   * One entry per app with a purpose granted or refused, apps with an active grant first, then by name.
+   *
+   * @maxItems 200
+   */
+  apps: {
+    /**
+     * The app's OAuth client id.
+     */
+    client: string;
+    /**
+     * The app's name as its developer (or OpenVibe, for its own sites) registered it.
+     */
+    name: string;
+    /**
+     * True for a developer's app (app_<ULID>), false for an OpenVibe site.
+     */
+    third_party: boolean;
+    /**
+     * The purposes the app holds now (active network.consent@1 records with this client).
+     *
+     * @maxItems 4
+     */
+    granted:
+      | []
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ]
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ]
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ]
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ];
+    /**
+     * The purposes the person refused this app in the last 30 days: the app does not ask for them again until quiet_until. DELETE /api/v1/me/consent/:purpose/:client/refusal ends that early, so the next sign-in asks.
+     *
+     * @maxItems 4
+     */
+    quiet:
+      | []
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ]
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ]
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ]
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ];
+  }[];
+}
+
 /** network.consent-check-request@1.0.0 (owner: network) */
 /**
  * network.consent-check-request@1 (L24): may this purpose be used for these people? POST /internal/consent/check on OpenVibe.Network with a service token holding network.consent.read. One purpose per call, up to 500 subjects (a dataset build or a chat log checks its authors in batches).
@@ -283028,7 +283883,7 @@ export interface NetworkConsentCheckRequest {
    */
   kind?: "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code";
   /**
-   * app.data only: the app asking. Required for app.data.
+   * The app the use is for. Required for app.data. For any other purpose it asks about that app's own grant from its sign-in (consent:<purpose>, 0.310.0); without it the answer is about OpenVibe's own use. One app's grant never answers for OpenVibe or for another app.
    */
   client?: string;
   /**
@@ -283046,7 +283901,7 @@ export interface NetworkConsentCheckRequest {
 
 /** network.consent-check-result@1.0.0 (owner: network) */
 /**
- * network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.
+ * network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An app's grant (client set) answers only a check that names that app. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.
  */
 export interface NetworkConsentCheckResult {
   purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";
@@ -295316,4 +296171,1744 @@ export interface ChatParty {
   join_url: string;
   created_at: string;
   ended_at?: string | null;
+}
+
+/** bot.machine-pool@1.0.0 (owner: bot) */
+/**
+ * bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Node generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.
+ */
+export interface BotMachinePool {
+  /**
+   * The pool's id (ULID, Crockford base32). A pool is never edited: a change is a new pool with a new id.
+   */
+  id: string;
+  /**
+   * The person every machine in the pool belongs to. Pools of different owners are not allowed.
+   */
+  owner: string;
+  /**
+   * The machine that runs `llama-server --rpc`, sees the prompt and answers; it must be one of `machines`. The others receive tensors only.
+   */
+  head: string;
+  /**
+   * The members, head included, two to eight.
+   *
+   * @minItems 2
+   * @maxItems 8
+   */
+  machines:
+    | [
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        }
+      ]
+    | [
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        },
+        {
+          /**
+           * The machine (Bot's device id), resolved by Network from the machine's own node token, never taken from the body.
+           */
+          id: string;
+          /**
+           * The machine's owner when it announced itself; it must equal the pool's owner.
+           */
+          owner: string;
+          /**
+           * The machine's private IPv4 address and prefix on the local network (RFC 1918 only, a /8 to a /30), such as 192.168.1.2/24, configured on one of its own interfaces. The private link listens only here; never 0.0.0.0, loopback or a public address.
+           */
+          address: string;
+          /**
+           * The public address Network saw the announcement come from (never the body's claim). Every member must share it with the head.
+           */
+          public_ip: (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) &
+            string;
+          /**
+           * The TCP port of the machine's private link on `address`.
+           */
+          port: number;
+          /**
+           * Free GPU memory when it announced itself, in MB. The head's default and each member's share of the pool's credits follow it.
+           */
+          free_vram: number;
+          /**
+           * Free system memory when it announced itself, in MB.
+           */
+          free_ram: number;
+          /**
+           * A short hardware name the fit table matches measured speeds on, such as x86_64 or the GPU model.
+           */
+          hardware: string;
+          /**
+           * The machine's self-signed Ed25519 public certificate (PEM) for this pool's private link, or null until the machine approves the pool on itself. Never a private key.
+           */
+          certificate: string | null;
+        }
+      ];
+}
+
+/** ai.offer-pool@1.0.0 (owner: ai) */
+/**
+ * ai.offer-pool@1 (the pooled machines design, 2026-11-06): the `pool` part of a community AI offer (ai.offer@1) served by several of one owner's machines together (bot.machine-pool@1). Network adds it from its own approved pool record, never from what a machine reports: the offer is the head's, `head` equals the offer's `machine_id`, and while a machine is in a pool it advertises no offer of its own. It names machines only; no address, key or certificate reaches AI. AI routes the request to the head, runs the same verification as for one machine (canaries, the model fingerprint, spot re-runs) on the pool's answers, keys that verification on this exact membership (another member or head is a new, unverified pool), keeps a pool that is new or failed to the free tier only, and labels its answers "Community pool (N machines)".
+ */
+export interface AiOfferPool {
+  /**
+   * The pool's machines, head included (Bot device ids), two to eight.
+   *
+   * @minItems 2
+   * @maxItems 8
+   */
+  machines:
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  /**
+   * The machine that answers: one of `machines`, and the offer's own `machine_id`.
+   */
+  head: string;
+}
+
+/** ai.offer@1.0.0 (owner: ai) */
+/**
+ * ai.offer@1: one community AI offer, a person's machine (OpenVibe.Node's ai plugin, "Offer to the network") serving its local models to requests that opt in to community capacity. OpenVibe.Bot reports these fields (POST /internal/ai/offers/report on Network, network.resource.report; a report with any other field is refused whole), and OpenVibe.AI reads them from Network (GET /internal/ai/offers, network.registry.read, { offers, generated_at, count }). Network adds `pool` (ai.offer-pool@1) to the head's offer when the machine is the head of an approved pool (bot.machine-pool@1), and leaves a pool member's own offer out of the list while it is in a pool. For a pool the hours, audience, price, readiness, idle-only and verification apply to the whole pool: it is ready only while every member has approved, renewed its readiness in the last few seconds, and is still the owner's. Nothing here is public: AI shows Exchange a hashed offer id and no owner or machine id.
+ */
+export interface AiOffer {
+  /**
+   * `ai:<machine_id>`: one offer per machine.
+   */
+  offer_id: string;
+  /**
+   * The machine that answers (for a pool, its head).
+   */
+  machine_id: string;
+  /**
+   * The machine's owner, who earns the offer's credits (a self-served run earns none).
+   */
+  owner: string;
+  /**
+   * The models offered, as the machine's model server names them.
+   *
+   * @minItems 1
+   * @maxItems 40
+   */
+  models: [string, ...string[]];
+  /**
+   * The local-time window the offer is open; start equal to end is all day, and an overnight window wraps.
+   */
+  hours: {
+    start: string;
+    end: string;
+    /**
+     * An IANA time zone, such as Europe/Paris, or UTC.
+     */
+    tz: string;
+  };
+  /**
+   * How many requests may run at once; another is refused as busy, never queued.
+   */
+  concurrency: number;
+  /**
+   * Credits per million input and output tokens; 0 and 0 is a volunteer, who earns kudos. One price for a pool.
+   */
+  price: {
+    in_per_million: number;
+    out_per_million: number;
+  };
+  /**
+   * Who may use it: everyone, the owner's followers, or one group (`group`).
+   */
+  audience: "everyone" | "followers" | "group";
+  /**
+   * The group's id when the audience is `group`, otherwise null.
+   */
+  group: string | null;
+  /**
+   * Whether the machine (for a pool, every member) can answer now: online, inside its hours, not paused by idle-only or a kill switch.
+   */
+  ready: boolean;
+  health: {
+    status: "up" | "degraded" | "down";
+    checked_at?: string;
+  };
+  pool?: AiOfferPool;
 }

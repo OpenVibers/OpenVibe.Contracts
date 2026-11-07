@@ -1,0 +1,29 @@
+{
+  "id": "pool_01J8Z3Q4R5S6T7V8W9X0Y1Z2P1",
+  "owner": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A1",
+  "head": "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D1",
+  "machines": [
+    {
+      "id": "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D1",
+      "owner": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A1",
+      "address": "192.168.1.20/24",
+      "public_ip": "203.0.113.7",
+      "port": 50053,
+      "free_vram": 24000,
+      "free_ram": 32000,
+      "hardware": "NVIDIA GeForce RTX 4090",
+      "certificate": null
+    },
+    {
+      "id": "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D2",
+      "owner": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A1",
+      "address": "8.8.8.8/24",
+      "public_ip": "203.0.113.7",
+      "port": 50053,
+      "free_vram": 12000,
+      "free_ram": 32000,
+      "hardware": "NVIDIA GeForce RTX 4090",
+      "certificate": null
+    }
+  ]
+}

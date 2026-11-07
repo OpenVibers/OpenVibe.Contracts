@@ -1,0 +1,25 @@
+{
+  "offer_id": "ai:dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D1",
+  "machine_id": "dev_01J8Z3Q4R5S6T7V8W9X0Y1Z2D1",
+  "owner": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A1",
+  "models": [
+    "qwen3:8b"
+  ],
+  "hours": {
+    "start": "22:00",
+    "end": "08:00",
+    "tz": "Europe/Paris"
+  },
+  "concurrency": 1,
+  "price": {
+    "in_per_million": 0.2,
+    "out_per_million": 0.6
+  },
+  "audience": "everyone",
+  "group": null,
+  "ready": true,
+  "health": {
+    "status": "up",
+    "checked_at": "2026-11-07T10:00:00.000Z"
+  }
+}
