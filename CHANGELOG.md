@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.333.0 — 2026-11-07
+
+- The `network` manifest names the two hosts Network serves since 2026-11-07: `openvibe.my` (the account hub's own home,
+  Network#646) and `openvibe.link` (OpenVibe Link's home, Network#644). A service that builds its CORS list or its
+  checks from manifest domains (Network's first-party origins, Chat's Bearer-only DM grant, the registry's nightly
+  browser check, Space's reserved names) now includes them. The `www.` names only redirect, so they are not listed.
+
 ## 0.332.0 — 2026-11-07
 
 - Add `common.control-lease@1`, the shared control lease (seven domains plan B3): the thing a lease controls, its holder (a `person`, an `ai` or `nobody`, with the holder's subject or null), when the holder got the controls, an optional absolute `expires_ms`, the subjects watching and a `seq` that increments on every holder change, expiry or take-back. A watcher-only change does not increment `seq`. The authority that owns the thing enforces the rules; Chat hosts a room's lease, names the thing `chat.room:<slug>` and accepts a control change only from the current holder, while take-back by the room's owner always wins; only the owner hands the remote to an `ai`, and a person holder who leaves keeps it for a minute.

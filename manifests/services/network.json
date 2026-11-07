@@ -13,7 +13,9 @@
     "api.openvibe.network",
     "admin.openvibe.network",
     "my.openvibe.network",
-    "themes.openvibe.network"
+    "themes.openvibe.network",
+    "openvibe.my",
+    "openvibe.link"
   ],
   "publicOrigin": "https://openvibe.network",
   "health": "/api/health",
