@@ -265911,11 +265911,11 @@ export type ActorTaskEvent = {
   is_error?: boolean;
 };
 
-/** actor.task-event@2.1.0 (owner: actor) */
+/** actor.task-event@2.2.0 (owner: actor) */
 
-/** actor.trigger@1.0.0 (owner: actor) */
+/** actor.trigger@1.1.0 (owner: actor) */
 /**
- * actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule or when a Watch event arrives. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE) or event (WHEN has the Watch event PATTERN and FILTER). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active or paused, PAUSED_REASON says why (person or failed after five failed runs in a row), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist.
+ * actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule, when a Watch event arrives, or (kind goal) keeps working toward a goal. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE), event (WHEN has the Watch event PATTERN and FILTER) or goal (checked on WHEN's CRON, with GOAL saying what it works toward). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active, paused or done (a goal ended itself when its done-test passed), PAUSED_REASON says why (person, failed after five failed runs in a row, or for a goal: done, budget or deadline), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. GOAL is present only for a goal: the goal in words, the done-test the agent evaluates each run, how many runs it has used against its limit, what it has spent against its money budget, its deadline, and the last verdict. ANSWER_IN_CHAT (default true) says whether each run's answer is posted into the conversation that made the trigger, under its card; NOTIFY (default false) says whether the person is also told through OpenVibe's notifications. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist.
  */
 export interface ActorTrigger {
   id: string;
@@ -265923,7 +265923,7 @@ export interface ActorTrigger {
   agent_id: string;
   agent_name?: string | null;
   task: string;
-  kind: "schedule" | "event";
+  kind: "schedule" | "event" | "goal";
   when: {
     words: string;
     cron?: string | null;
@@ -265935,6 +265935,59 @@ export interface ActorTrigger {
       } | null;
     } | null;
   };
+  /**
+   * A goal trigger's progress: what it keeps working toward and how far it has got. Null for a schedule or event trigger.
+   */
+  goal?: {
+    /**
+     * The goal in the person's words, the sentence that made it: "keep checking the price of the Framework 13 every 30 minutes until it drops under €120".
+     */
+    text: string;
+    /**
+     * The check the agent evaluates each run and answers yes or no with a short reason: "the price is under €120".
+     */
+    done_test: string;
+    /**
+     * How many runs of the goal have finished.
+     */
+    runs_used: number;
+    /**
+     * The most runs allowed; the goal ends when it reaches it. Null for no run limit.
+     */
+    runs_max?: number | null;
+    /**
+     * What its runs have spent so far.
+     */
+    spent_usd?: number;
+    /**
+     * The most its runs may spend; the goal ends when it reaches it. Null for only the person's own allowance.
+     */
+    budget_usd?: number | null;
+    /**
+     * The end of the goal's time: after it the goal ends whether or not the done-test passed. Null for no deadline.
+     */
+    deadline_at?: string | null;
+    /**
+     * The last run's reason the done-test is not met yet, in its words: "€134".
+     */
+    not_yet?: string | null;
+    /**
+     * The last run's answer to the done-test.
+     */
+    verdict?: {
+      done: boolean;
+      reason: string;
+      at: string;
+    } | null;
+  } | null;
+  /**
+   * Whether each run's answer is posted into the conversation that made the trigger, under its card. Default true.
+   */
+  answer_in_chat?: boolean;
+  /**
+   * Whether the person is also told through OpenVibe's notifications when a run finishes. Default false: the answer in the chat is the telling, unless they asked for more.
+   */
+  notify?: boolean;
   next_run_at?: string | null;
   last_run?: {
     task_id: string;
@@ -265942,8 +265995,8 @@ export interface ActorTrigger {
     at: string;
     error?: string | null;
   } | null;
-  state: "active" | "paused";
-  paused_reason?: "person" | "failed" | null;
+  state: "active" | "paused" | "done";
+  paused_reason?: "person" | "failed" | "done" | "budget" | "deadline" | null;
   failures?: number;
   watch?: {
     id: string;

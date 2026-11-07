@@ -56,8 +56,51 @@
         "tool_result",
         "check",
         "handoff",
-        "trigger"
+        "trigger",
+        "trigger-run"
       ]
+    },
+    "trigger_id": {
+      "type": "string",
+      "pattern": "^trg_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The trigger this run belongs to, on a step: \"trigger-run\"."
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "state",
+        "at"
+      ],
+      "description": "The routine run this event reports, on a step: \"trigger-run\". It is posted into the conversation that made the trigger, under its card: the run's answer and sources when it finished, and one line saying why when it did not.",
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "failed",
+            "needs_you"
+          ]
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "The addresses the run read, on a step: \"trigger-run\".",
+      "items": {
+        "type": "string",
+        "maxLength": 4000
+      }
     },
     "assignment_id": {
       "type": "string",
@@ -200,6 +243,50 @@
         "required": [
           "kind",
           "step"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "run"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "output"
+          },
+          "step": {
+            "const": "trigger-run"
+          }
+        },
+        "required": [
+          "kind",
+          "step",
+          "trigger_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "sources"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "output"
+          },
+          "step": {
+            "const": "trigger-run"
+          }
+        },
+        "required": [
+          "kind",
+          "step",
+          "run"
         ]
       }
     }
