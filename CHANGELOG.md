@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.318.0 — 2026-11-07
+
+- Add `network.presence@1`: one person's online status as another may see it — `online`, `away`, `dnd`, `invisible` or `offline`, an optional status line (80 characters) and one emoji, whether they are streaming on OpenVibe.Live (`live`), and when it changed. OpenVibe.Network owns it; the state is derived from a heartbeat (online under 2 minutes, offline after 3) and the last input (away after 10 minutes), and invisible or `show_status` off is seen as offline.
+- Add `network.presence-update-request@1`: the optional fields of `PUT /api/v1/me/presence` — the chosen state (`auto`, `dnd`, `invisible`), the status line and emoji, and the "Show my status" switch.
+- Add the event `network.presence.changed`, at most once per person per 30 seconds and only for a real change. Its payload is the public view: an invisible person is sent as offline with no status text or emoji, and the state list has no `invisible`.
+- Add the capabilities `network.presence.read` (OpenVibe.Network's `GET /internal/presence`, for Chat) and `chat.dm.peers.read` (OpenVibe.Chat's `POST /internal/chat/dm/peers`, for Network's "follows or has a DM" rule), and name them in the two service manifests.
+- Valid and invalid fixtures cover the presence, the update request and the event, so a bad subject, an unknown state, an over-long status or a second emoji fails the run.
+
 ## 0.317.0 — 2026-11-07
 
 - Add `frame.menu-card@1`: one card a site publishes for the network's Frame menu (the menu's network cards). A card has a stable id and site, a title of at most 60 characters, a kind (`rail`, `rows` or `chips`), up to six items with a title of at most 80, an optional meta line of at most 120 and an https URL, an optional `more` link with a label of at most 24, the time it was built and its ttl. A URL must be https on the publishing site's own origin or an `openvibe.*` host; the text is plain words and Network strips markup and drops unknown fields.

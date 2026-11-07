@@ -9789,6 +9789,51 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.presence",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/presence.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.presence-update-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/presence-update-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.presence.changed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.presence.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.presence-list-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/presence-list-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.dm-peers-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/dm-peers-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

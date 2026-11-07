@@ -298693,3 +298693,106 @@ export interface FrameMenuCard {
  */
 export type FrameMenuCards =
   [] | [FrameMenuCard] | [FrameMenuCard, FrameMenuCard] | [FrameMenuCard, FrameMenuCard, FrameMenuCard];
+
+/** network.presence@1.0.0 (owner: network) */
+/**
+ * network.presence@1 (plan 2026-10-22 track X item 9): one person's online status as another person may see it. OpenVibe.Network owns presence: POST /api/v1/me/presence/heartbeat keeps it fresh, PUT /api/v1/me/presence sets the chosen state, status line and emoji, and GET /api/v1/presence?subjects=… answers for the people the asker follows or has a DM with. The state is derived: online while the newest heartbeat is under 2 minutes old, away after 10 minutes without input (the client's heartbeat says idle), offline after 3 minutes without a heartbeat. Invisible and show_status off are seen as offline, and an invisible person is left out of the answer entirely; last seen is never returned. live is true while the person is streaming on OpenVibe.Live, and only for someone who would otherwise be visible. (The event is network.presence.changed@1.)
+ */
+export interface NetworkPresence {
+  /**
+   * The person's canonical subject.
+   */
+  subject: string;
+  /**
+   * The public state. A reader never receives invisible (the person is offline instead, or absent from a list); the stored chosen state can be auto, dnd or invisible.
+   */
+  state: "online" | "away" | "dnd" | "invisible" | "offline";
+  /**
+   * The person's status line in their own words, or null. Never shown while they are invisible or have show_status off.
+   */
+  status_text?: string | null;
+  /**
+   * One emoji that sits beside the status line, or null.
+   */
+  emoji?: string | null;
+  /**
+   * The person is streaming on OpenVibe.Live now. Live outranks their chosen state; it is false while they are invisible or have show_status off.
+   */
+  live?: boolean;
+  /**
+   * When the person's presence row last changed.
+   */
+  updated_at: string;
+}
+
+/** network.presence-update-request@1.0.0 (owner: network) */
+/**
+ * network.presence-update-request@1: the body of PUT /api/v1/me/presence on OpenVibe.Network. Every field is optional; only the fields sent change. state is the person's chosen state (auto: online or away from heartbeats, dnd, invisible); status_text and emoji are theirs; show_status is the 'Show my status' switch. An empty body is refused.
+ */
+export interface NetworkPresenceUpdateRequest {
+  /**
+   * The chosen state. auto derives online or away from the newest heartbeat and the last input.
+   */
+  state?: "auto" | "dnd" | "invisible";
+  /**
+   * The status line; null clears it. Markup and control characters are stripped.
+   */
+  status_text?: string | null;
+  /**
+   * One emoji, or null to clear it. More than one grapheme cluster is refused.
+   */
+  emoji?: string | null;
+  /**
+   * The 'Show my status' switch (default on). Off reads as offline to everyone, like invisible.
+   */
+  show_status?: boolean;
+}
+
+/** network.presence.changed@1.0.0 (owner: network) */
+/**
+ * network.presence.changed v1 (OpenVibe.Network server/presence; plan 2026-10-22 track X item 9). A person's public presence changed: their chosen state, status line, emoji, the show_status switch, or the derived online/away/offline state. OpenVibe.Network writes it to its outbox beside the presence row, at most once per person per 30 seconds (the debounce), and only for a real change. The payload is the public view in network.presence@1: invisible and show_status off are sent as offline with no status text or emoji, so the event never carries what the person hid. Envelope: subject { type: user, id: <usr_…> }, visibility internal, actor the person. A presence change is not a reason to notify anyone.
+ */
+export interface NetworkPresenceChangedPayload {
+  subject: string;
+  /**
+   * The public state. Never invisible: an invisible person is sent as offline, without their status text or emoji.
+   */
+  state: "online" | "away" | "dnd" | "offline";
+  status_text?: string | null;
+  emoji?: string | null;
+  /**
+   * Streaming on OpenVibe.Live now; false while invisible or with show_status off.
+   */
+  live?: boolean;
+  updated_at: string;
+}
+
+/** network.presence-list-result@1.0.0 (owner: network) */
+/**
+ * network.presence-list-result@1: the public presence of the people one person may see, from GET /api/v1/presence?subjects=… (the person's own token) or GET /internal/presence?for=…&subjects=… (a first-party service with network.presence.read). Only people the asker follows or has a DM with, and themselves, are answered; a stranger and an invisible person are left out (the caller reads them as offline), never as an error. At most 100 subjects per call.
+ */
+export interface NetworkPresenceListResult {
+  /**
+   * The visible people, in no particular order.
+   *
+   * @maxItems 100
+   */
+  presence: NetworkPresence[];
+}
+
+/** chat.dm-peers-result@1.0.0 (owner: chat) */
+/**
+ * chat.dm-peers-result@1: which of the candidate people share a conversation with one person on OpenVibe.Chat (POST /internal/chat/dm/peers, chat.dm.peers.read). It answers with subjects only; a candidate with no shared conversation is simply absent. Used by OpenVibe.Network's presence privacy rule.
+ */
+export interface ChatDmPeersResult {
+  /**
+   * The person whose conversations were read.
+   */
+  subject: string;
+  /**
+   * The candidates that share at least one conversation with them, as subjects.
+   *
+   * @maxItems 100
+   */
+  peers: string[];
+}

@@ -1,0 +1,19 @@
+{
+  "id": "chat.dm.peers.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read which of the candidate people share a direct or group conversation with one person on OpenVibe.Chat. It answers with subjects only (never a message, a conversation name or another participant), for OpenVibe.Network's presence privacy rule: presence is visible to people someone follows or has a DM with, never to strangers. First-party only; never grantable to an app or an agent.",
+  "permissions": [
+    "chat:dm-peers:read"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/dm/peers"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "chat.dm-peers-result@1"
+}
