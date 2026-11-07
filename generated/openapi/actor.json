@@ -285,6 +285,52 @@
     }
    }
   },
+  "/api/v1/agent/timeline/stream": {
+   "get": {
+    "operationId": "get_api_v1_agent_timeline_stream",
+    "summary": "Read one person's agent timeline from OpenVibe.Actor (design 2026-11-07): what the agent did in every mode, newest first, with a cursor and the mode and needs-you filters, as agent.timeline-list-resul",
+    "description": "**actor.timeline.read** (first-party): Read one person's agent timeline from OpenVibe.Actor (design 2026-11-07): what the agent did in every mode, newest first, with a cursor and the mode and needs-you filters, as agent.timeline-list-result@1. GET /api/v1/agent/timeline. Only the person's own entries; titles, outcomes and links only, never a prompt or a diff.",
+    "tags": [
+     "actor.timeline"
+    ],
+    "x-openvibe-capabilities": [
+     "actor.timeline.read"
+    ],
+    "x-openvibe-visibility": [
+     "first-party"
+    ],
+    "x-openvibe-quota-class": "standard",
+    "security": [
+     {
+      "openvibeToken": [
+       "actor.timeline.read"
+      ]
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/agent.timeline-list-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/v1/agents": {
    "get": {
     "operationId": "get_api_v1_agents",

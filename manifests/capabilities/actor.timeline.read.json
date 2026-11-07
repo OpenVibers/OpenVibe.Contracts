@@ -14,7 +14,8 @@
   "quotaClass": "standard",
   "events": [],
   "implementedBy": [
-    "GET /api/v1/agent/timeline"
+    "GET /api/v1/agent/timeline",
+    "GET /api/v1/agent/timeline/stream"
   ],
   "inputSchema": "common.no-body@1",
   "outputSchema": "agent.timeline-list-result@1"
