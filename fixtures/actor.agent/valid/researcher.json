@@ -1,0 +1,16 @@
+{
+  "id": "agt_01M4C49CW34NGX7TR2TNRVFWNY",
+  "owner": "user:usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A1",
+  "name": "Researcher",
+  "face": "https://openvibe.media/avatars/researcher.png",
+  "voice": null,
+  "model": {
+    "engine": "own-keys",
+    "model": "openai:gpt-5.1"
+  },
+  "computer": null,
+  "apps": [],
+  "memory": null,
+  "level": "approve-for-me",
+  "created_at": "2026-11-07T09:31:00.000Z"
+}

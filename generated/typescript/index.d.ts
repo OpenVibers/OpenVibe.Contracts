@@ -210232,7 +210232,7 @@ export type JobFrame =
 
 /** platform.task@1.0.0 (owner: network) */
 /**
- * platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to (actor.task-webhook@1, signed with `webhook_secret`, which only the creating answer carries). Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields.
+ * platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to (actor.task-webhook@1, signed with `webhook_secret`, which only the creating answer carries). Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields. A-1 adds AGENT_ID (the agent contact the task runs as; absent means the person's Vibe), LEVEL (the thread's own approval level), EFFECTIVE_LEVEL (max of the agent level and the person's own inherited line) and AGENT_LEVEL (the agent contact's own level), so a reader never has to guess why a step did or did not ask.
  */
 export type Task = {
   [k: string]: unknown | undefined;
@@ -211047,6 +211047,22 @@ export type Task = {
    * The secret every webhook delivery of this task is signed with (X-OpenVibe-Signature-V2: t=<unix seconds>,v2=<hex HMAC-SHA256 of "<t>.<raw body>">, verified by openvibe-sdk/events verifyDeliveryV2). Present only in the answer that created the task (and an idempotent repeat of it), never in a read or a list; erased once the task has ended and its deliveries are done.
    */
   webhook_secret?: string;
+  /**
+   * The agent contact (actor.agent@1) this task runs as. Absent on a task with no person (a service or project task); a person's task defaults to their Vibe, created on first read.
+   */
+  agent_id?: string;
+  /**
+   * The thread's own approval level (the task is the thread). Default ask.
+   */
+  level?: "ask" | "auto-edits" | "approve-for-me" | "full";
+  /**
+   * The level Actor applies: the higher of the agent contact's level and the thread line's levels. It inherits only along this person's own parent tasks, never from another person's or a service's work. The always-ask floor still applies.
+   */
+  effective_level?: "ask" | "auto-edits" | "approve-for-me" | "full";
+  /**
+   * The agent contact's own level, before the thread's level is raised above it.
+   */
+  agent_level?: "ask" | "auto-edits" | "approve-for-me" | "full";
 };
 
 /** events.delivery-policy@1.0.0 (owner: events) */
@@ -262578,7 +262594,7 @@ export interface SpaceModerationActionPayload {
 
 /** actor.task-create-request@1.0.0 (owner: actor) */
 /**
- * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agents (routing still checks that it can take the task). IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict. WEBHOOKS (at most 8): each an https URL and the state changes to deliver there (the names of platform.task@1 `state`). Actor signs every delivery with a secret it mints for the task, returned once as `webhook_secret` in the answer that created it (and in an idempotent repeat), and POSTs actor.task-webhook@1 through its egress guard: public addresses only, ports 443 or 8443, no credentials in the URL, never a redirect. A URL that cannot be delivered to is refused 422 actor.webhook.refused. A webhook may instead name a project secret (`secret_ref`, ADR-056): its deliveries are then signed by OpenVibe.Network with that secret, in the same headers, and no webhook_secret is minted when every webhook names one. A secret_ref on a task outside a project is refused 422 actor.webhook.secret_unavailable.
+ * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agent-systems, the public catalog (routing still checks that it can take the task); AGENT_ID names one of the caller's own agent contacts from GET /api/v1/agents to run this task as (absent: Vibe, their first agent). LEVEL is the thread's approval level; the effective level is the higher of the agent's own level and this one, inherited along the person's own parent chain and never from outside work. IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict. WEBHOOKS (at most 8): each an https URL and the state changes to deliver there (the names of platform.task@1 `state`). Actor signs every delivery with a secret it mints for the task, returned once as `webhook_secret` in the answer that created it (and in an idempotent repeat), and POSTs actor.task-webhook@1 through its egress guard: public addresses only, ports 443 or 8443, no credentials in the URL, never a redirect. A URL that cannot be delivered to is refused 422 actor.webhook.refused. A webhook may instead name a project secret (`secret_ref`, ADR-056): its deliveries are then signed by OpenVibe.Network with that secret, in the same headers, and no webhook_secret is minted when every webhook names one. A secret_ref on a task outside a project is refused 422 actor.webhook.secret_unavailable.
  */
 export interface ActorTaskCreateRequest {
   /**
@@ -264346,6 +264362,14 @@ export interface ActorTaskCreateRequest {
           secret_ref?: string;
         }
       ];
+  /**
+   * One of the caller's own agent contacts (actor.agent@1) the task runs as. Absent: their Vibe, created on first read. The public agent-system catalog stays in `agent`.
+   */
+  agent_id?: string;
+  /**
+   * The thread's approval level. The effective level is max(the agent's level, this level, the levels of the person's own parent tasks). The always-ask floor still applies.
+   */
+  level?: "ask" | "auto-edits" | "approve-for-me" | "full";
 }
 
 /** actor.agent-manage-request@1.0.0 (owner: actor) */
@@ -265748,6 +265772,87 @@ export interface ActorAgentListResult {
 }
 
 /** actor.agent-list-result@2.0.0 (owner: actor) */
+
+/** actor.agent@1.0.0 (owner: actor) */
+/**
+ * actor.agent@1: one of a person's agents as a contact (plan §12, A-1). An agent has a stable id and owner, a name and face, an optional TTS voice, the model it runs on (the OpenVibe runtime, the person's own keys, a free model on OpenVibe's GPU or their own Claude Code/Codex on a Link machine), the computer it uses (null when it has none, or one of Computer's kinds and placements), the connected apps it may use, its OpenVibe Memory scope (null when it keeps none), its approval level and when it was added. The default level is ask; money, passwords, deletions and sending to a new recipient always ask at every level, as a server-side floor.
+ */
+export interface ActorAgent {
+  /**
+   * agt_<ULID>, Actor's own id for the contact. Vibe, the first agent every person gets, is one of these.
+   */
+  id: string;
+  /**
+   * The person the contact belongs to (identity.subject-ref@1 in one column). Another person's agent is 404.
+   */
+  owner: string;
+  name: string;
+  /**
+   * An avatar ref: an https image URL, a Media id, or a preset face such as preset:researcher. The UI draws it; Actor only stores and returns it.
+   */
+  face: string;
+  /**
+   * A TTS voice id, or null when the agent has no voice. Voice calls are A-6; the field is stored now so a contact keeps its voice.
+   */
+  voice: string | null;
+  model: {
+    /**
+     * runtime: OpenVibe's own agent loop; own-keys: the person's provider keys through OpenVibe.AI; open-gpu: a free open model on OpenVibe's GPU; link: the person's own Claude Code or Codex on a Link machine.
+     */
+    engine: "runtime" | "own-keys" | "open-gpu" | "link";
+    /**
+     * The model id on that engine (a tier such as smart, a provider:model id, an open model name, or a harness name).
+     */
+    model: string;
+  };
+  computer: null | {
+    /**
+     * Computer's kinds (plan §6): a browser, a kept browser, a Linux desktop, a GPU desktop, an always-on computer, the person's own computer, or a throwaway.
+     */
+    kind: "browser" | "kept-browser" | "desktop" | "gpu-desktop" | "always-on" | "your-computer" | "throwaway";
+    /**
+     * Where it runs: OpenVibe decides (auto), the person's Link machine, the OpenVibe home desktops, or OVH's cloud.
+     */
+    placement: "auto" | "link" | "home" | "ovh";
+  };
+  /**
+   * Connected app ids the agent may use (Connect's catalogue slugs).
+   *
+   * @maxItems 50
+   */
+  apps: string[];
+  /**
+   * The OpenVibe Memory scope id this agent reads and writes, or null when it keeps no memory.
+   */
+  memory: string | null;
+  /**
+   * The approval level (plan §12): ask (the default) asks before every act; auto-edits lets the agent edit files and run its own work without asking; approve-for-me has a reviewer model of another family decide ordinary acts; full runs without asking. The floor still asks for money, passwords, deletions and sending to a new recipient at every level.
+   */
+  level: "ask" | "auto-edits" | "approve-for-me" | "full";
+  created_at: string;
+}
+
+/** actor.agent-list@1.0.0 (owner: actor) */
+/**
+ * actor.agent-list@1: GET /api/v1/agents for a signed-in person (capability actor.agent.manage): their own agent contacts, Vibe first. Vibe, the person's first agent, is created on this first read and cannot be deleted. Another person's agents are never in this list. The public agent-system catalog stays at GET /api/v1/agent-systems (actor.agent-list-result@2).
+ */
+export interface ActorAgentList {
+  /**
+   * @maxItems 32
+   */
+  agents: ActorAgent[];
+}
+
+/** actor.level-change@1.0.0 (owner: actor) */
+/**
+ * actor.level-change@1: the body of PUT /api/v1/agents/{id}/level (capability actor.agent.manage). LEVEL is the new approval level of the person's agent; the answer is the agent (actor.agent@1) with its level. The level never widens the floor: money, passwords, deletions and sending to a new recipient ask at every level. AGENT_ID and THREAD_ID are optional echoes for a caller changing a level from a thread; Actor checks the agent in the path and stores the agent level only.
+ */
+export interface ActorLevelChange {
+  level: "ask" | "auto-edits" | "approve-for-me" | "full";
+  agent_id?: string;
+  thread_id?: string;
+  reason?: string;
+}
 
 /** actor.wait@1.0.0 (owner: actor) */
 /**

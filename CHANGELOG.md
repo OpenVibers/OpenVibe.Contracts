@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.321.0 — 2026-11-07
+
+- Add `actor.agent@1`: one of a person's agents as a contact (plan §12 A-1) — id, owner, name, face, voice, model (`engine` runtime / own-keys / open-gpu / link, plus the model id), computer (null or a Computer kind and placement), connected app ids, OpenVibe Memory scope id (or null), approval level (`ask`, `auto-edits`, `approve-for-me`, `full`) and when it was added. Levels default to ask; money, passwords, deletions and sending to a new recipient always ask at every level, as a server-side floor.
+- Add `actor.agent-list@1`: a signed-in person's own agents (`GET /api/v1/agents`), Vibe first. Vibe is created on the first read and is not deletable. The public agent-system catalog keeps `actor.agent-list-result@2` and now has an explicit `GET /api/v1/agent-systems` for a signed-in caller.
+- Add `actor.level-change@1`: the body of `PUT /api/v1/agents/{id}/level`; optional `agent_id`, `thread_id` and `reason` are echoes, the path names the agent.
+- `actor.task-create-request@1` gains optional `agent_id` (the contact the task runs as; absent means Vibe) and `level` (the thread's own level). `platform.task@1` gains optional `agent_id`, `level`, `effective_level` and `agent_level`. The effective level is the higher of the agent's level and the person's own thread line; it never inherits from another person's or a service's work.
+- Name the contact routes in `actor.agent.manage` and the catalog and presets routes in `actor.agent.read`; add valid and invalid fixtures for the three new contracts.
+# Changelog
+
 ## 0.320.0 — 2026-11-07
 
 - `frame.menu-card@1` items gain an optional `image`: `src` (https on the publishing site's own origin or an `openvibe.*` host, at most 400 characters), optional `w` and `h` (whole pixels, 16–1920) and an optional `alt` of at most 120 characters. Network keeps an image whose `src` passes the same host rule as the item's `url`, drops one from anywhere else, and passes it through in `GET /api/frame` so the Frame menu and Network's `/my` can draw a thumbnail.
