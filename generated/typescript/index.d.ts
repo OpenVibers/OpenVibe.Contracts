@@ -289206,6 +289206,55 @@ export interface AiMemoryWriteRequest {
   source?: string;
 }
 
+/** ai.memory-export@1.0.0 (owner: ai) */
+/**
+ * ai.memory-export@1 (OpenVibe.AI; Memory M5): the one portable memory file. GET /api/v1/memory/export answers it, decrypted for the person's own export; POST /api/v1/memory/import accepts the same document (only `format`, `version` and `items` are read on import). Every item carries the text after redaction, its kind and scope, its source and the confidence the store had; ids, owners and merge/conflict links are deliberately absent, so a file can be moved to another account and imported without carrying anyone's identity. A profile is derived from the items and is rebuilt, never imported.
+ */
+export interface AiMemoryExportV1 {
+  format: "openvibe.memory-export@1";
+  version: 1;
+  /**
+   * When the file was written. Informational only; import never trusts it as an item time.
+   */
+  exported_at: string;
+  /**
+   * @maxItems 10000
+   */
+  items: {
+    /**
+     * The item text after the store's own redaction. A secret that survived an older export is redacted again on import.
+     */
+    text: string;
+    kind: "preference" | "fact" | "project_rule" | "procedure" | "decision" | "lesson";
+    /**
+     * `user` for the person, or `project:<slug>` for a project. Never an absolute path.
+     */
+    scope: string;
+    /**
+     * The adapter id (claude-code, cursor, …), the service (actor, vibe, know, person) or the memory-service adapter (mem0, letta, zep) the item came from.
+     */
+    source: string;
+    /**
+     * The path relative to the scanned root and the heading, when the item came from a file.
+     */
+    source_ref?: {
+      path?: string;
+      heading?: string;
+    } | null;
+    /**
+     * Defaults to active on import. A conflict item is imported as suggested: its pair did not come with it.
+     */
+    status?: "active" | "suggested" | "archived" | "conflict";
+    confidence?: number;
+    /**
+     * The Node machine id the item came from, when it came from one.
+     */
+    machine?: string | null;
+    seen_at?: string;
+    created_at?: string;
+  }[];
+}
+
 /** ai.me-credential@1.0.0 (owner: ai) */
 /**
  * ai.me-credential@1 (OpenVibe.AI; L36 Y1): one of the person's own provider keys as the person reads it from GET /api/v1/me/credentials. It is never the key: `hint` is the last four characters, and `last_error` is a redacted line that never carries the key. `status` is what the last save-time or run-time check found: ok, failing or untested. `models_count` is how many models the provider listed when it was last tested. Own keys are free to their owner: no fee, no cap and no network budget.
