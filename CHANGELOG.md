@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.317.0 — 2026-11-07
+
+- The merged public site: OpenVibe.AI is no longer a site of its own. Its service manifest keeps the API, the run receipt and the operator console but drops the `site` block, so Network's Frame lists Exchange instead of AI. `manifests/products/ai.openvibe.services.json` is `kind: moved`, points at Exchange and keeps the API address, and Exchange's own site block now carries the merged tagline ("Every AI model, one account") and what it does.
+- No contract shapes change.
+
 ## 0.316.0 — 2026-11-07
 
 - Add `agent.timeline-entry@1`: one entry of the agent's timeline (design 2026-11-07 §2) — one step of the agent's work, in one mode, for one person. It carries the mode, the product, the step's own id, a plain title, when it started and ended, its status (running, waiting, needs_you, done, failed, stopped), the placement (where it ran and why), the cost, a link to the step's page, the one-line reason when it failed, the transition sentence when the mode changed, and the audience (private is Only me, the default). It never carries a prompt, a diff or a page.
