@@ -1,0 +1,15 @@
+{
+  "skill_id": "skl_01M4XEV0JT93CAYTXVD6V0QW1E",
+  "version": 4,
+  "summary": "Open a pull request, wait for CI, and merge only when it is green.",
+  "body": "---\nname: ship-a-change\ndescription: Open a PR, wait for CI, and merge only when it is green.\n---\n\n# Ship a change\n\nRolled back to the three-step version.\n",
+  "tools": [
+    "claude-code",
+    "codex",
+    "opencode"
+  ],
+  "audience": "public",
+  "created_by": "usr_01M4XEV0JT93CAYTXVD6V0QW1F",
+  "created_at": "2026-11-07T10:30:00.000Z",
+  "note": "rolled back to 1"
+}

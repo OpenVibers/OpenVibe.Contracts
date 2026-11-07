@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.312.0 — 2026-11-07
+
+- Add the Codes skills-hub records (the Compute plan §5, E6). `codes.skill@1` is one skill, rule, MCP server, command or hook: its owner, kind, stable slug, title, summary, the four sharing audiences (`private`, `people`, `link`, `public`), the harnesses it is written for, the newest version and that version's body. A `private`, `people` or `link` record is never in the gallery; only `public` is. The body is untrusted Markdown and the page renders it through the markup gate.
+- Add `codes.skill-version@1`: one immutable version of a record, keyed by `skill_id` and a growing `version`, with the body, summary, tools, audience, author and the note that says why it was written. A rollback copies the chosen version into a new one rather than rewriting history, so a Node that synced version 3 can still name it.
+- Valid and invalid fixtures cover a public skill, a private rule, a people-shared MCP record, versions 1 and 4, and the bad ids, kinds, audiences, tools, bodies and authors.
+
 ## 0.311.0 — 2026-11-07
 
 - Add `<service>.config.manage` for the eight services that hold an owner input and that Network's admin proxy now reaches for the owner's Setup tab (OWNER-SETUP-AND-ADMIN-CLARITY-DESIGN, 2026-11-07): `chat`, `connect`, `deals`, `work`, `sources`, `design`, `domains` and `media`. Each is internal, held only by Network's admin proxy acting for the owner, never grantable to apps, and **planned** until its service mounts openvibe-shared/config's routes on `/internal/config`; the service then turns it active and lists it in its manifest (Deals' own test pins that list, so listing it early would break its pin bump). Planned capabilities verify like active ones, so Network's grant works the day a service mounts the routes.

@@ -455,6 +455,24 @@
       "adr": "ADR-022"
     },
     {
+      "id": "codes.skill",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/skill.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.skill-version",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/skill-version.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "services.app-manifest",
       "version": "1.0.0",
       "owner": "services",

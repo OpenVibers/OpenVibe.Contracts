@@ -1,0 +1,15 @@
+{
+  "id": "skl_01M4XEV0JT93CAYTXVD6V0QW1E",
+  "owner_subject": "usr_01M4XEV0JT93CAYTXVD6V0QW1F",
+  "kind": "skill",
+  "slug": "ship-a-change",
+  "title": "Ship a change",
+  "summary": "",
+  "audience": "everyone",
+  "official": false,
+  "tools": [],
+  "version": 1,
+  "body": "text",
+  "created_at": "2026-11-07T09:00:00.000Z",
+  "updated_at": "2026-11-07T09:00:00.000Z"
+}
