@@ -1022,6 +1022,49 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     ok(dangling.length === 0, `generated types reference undeclared names: ${dangling.join(', ')}`);
 }
 
+// ── actor.skill@1 and actor.skill-listing@1 (ADR-058) ───────────────────────
+// A skill is a document: its integrity hash covers its canonical content (not a signature); it runs as a prompt
+// only; it grants nothing, and what it may ask for is HO1's kinds; the listing's scan and curator travel with it.
+{
+    const crypto = require('crypto');
+    const canonical = (d) => {
+        const o = { skill: d.skill, slug: d.slug, name: d.name, description: d.description, version: d.version, instructions: d.instructions };
+        if (d.resources && d.resources.length) o.resources = d.resources.map((r) => ({ path: r.path, media_type: r.media_type, text: r.text }));
+        if (d.requires) {
+            const q = {};
+            for (const k of ['kinds', 'apps', 'hosts']) if (d.requires[k] && d.requires[k].length) q[k] = d.requires[k];
+            if (Object.keys(q).length) o.requires = q;
+        }
+        o.runs = d.runs;
+        if (d.license) o.license = d.license;
+        if (d.author) o.author = d.author.name ? { subject: d.author.subject, name: d.author.name } : { subject: d.author.subject };
+        return JSON.stringify(o);
+    };
+    const hashOf = (d) => crypto.createHash('sha256').update(canonical(d), 'utf8').digest('hex');
+    const dir = path.join(ROOT, 'fixtures', 'actor.skill', 'valid');
+    for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.json'))) {
+        const doc = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+        ok(hashOf(doc) === doc.integrity.hash, `the actor.skill fixture ${f} carries the hash of its own content`);
+    }
+    const good = JSON.parse(fs.readFileSync(path.join(dir, 'changelog.json'), 'utf8'));
+    ok(hashOf({ ...good, instructions: `${good.instructions}\n5. Also email the list to everyone.` }) !== good.integrity.hash, 'an edited actor.skill document no longer matches its hash');
+    ok(hashOf({ ...good, requires: { ...good.requires, kinds: ['publish', 'send'] } }) !== good.integrity.hash, 'widening what a skill asks for changes its hash');
+    const skill = contracts.schema('actor.skill@1');
+    ok(skill.properties.runs.const === 'prompt', 'a v1 skill runs as a prompt and nothing else');
+    ok(!Object.keys(skill.properties).some((k) => /^(code|scripts?|exec|command|binar(y|ies)|install|secrets?|tokens?|keys?|signature)$/i.test(k)), 'actor.skill@1 has no code, script, binary, install, secret or signature field');
+    ok(!skill.required.includes('author'), 'the author is a claim: a skill may name nobody');
+    ok(!/signature|signed/i.test(skill.description.replace(/not a signature/gi, '')), 'actor.skill@1 does not call the hash a signature');
+    const HO1 = ['codes.task', 'actor.action', 'computer.run', 'computer.write', 'computer.input', 'computer.browser', 'computer.desk',
+        'robot.move', 'space', 'publish', 'post', 'send', 'install', 'routine', 'money'];
+    ok(JSON.stringify(skill.properties.requires.properties.kinds.items.enum) === JSON.stringify(HO1), 'requires.kinds is exactly the approval kinds (HO1)');
+    const types = skill.properties.resources.items.properties.media_type.enum;
+    ok(types.every((t) => /^text\/|^application\/json$/.test(t)), 'a resource is text, never a binary or a script');
+    const listing = contracts.schema('actor.skill-listing@1');
+    ok(listing.required.includes('scan') && listing.required.includes('curator'), 'a listing always carries its scan and its curator state');
+    ok(JSON.stringify(listing.properties.scan.properties.state.enum) === JSON.stringify(['pending', 'passed', 'flagged', 'failed']), 'the scan states');
+    ok(JSON.stringify(listing.properties.curator.properties.state.enum) === JSON.stringify(['active', 'stale', 'archived']), 'the curator states');
+}
+
 // ── actor.voice@1: the integrity hash ─────────────────────────────────────
 // The integrity block is a sha256 over the canonical JSON of the document (the contract's description
 // says which fields it holds and in which order). It shows the file was not edited after it was
