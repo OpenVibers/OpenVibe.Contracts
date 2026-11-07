@@ -301032,6 +301032,212 @@ export interface AgentTimelineListResult {
   };
 }
 
+/** actor.voice@1.0.0 (owner: actor) */
+/**
+ * actor.voice@1: an agent's voice and nothing else — the small document a person hands to somebody else so their agent speaks in the same house voice. It carries the agent's name, a short bio, its instructions (the house voice it speaks in), the rules it keeps, its default approval level, the model it prefers and the connected apps it may use (ids only, never a key), an optional face (an avatar ref), an optional author, and an integrity block. It never carries memory, a connector's token or a file: a voice is a voice, not a person. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written, and it says nothing about who wrote it — anyone can write a file that names an author and compute its hash. The AUTHOR is therefore a claim, not a fact: a document may name anyone, and whoever reads it must say so (it says it was made by …; that is not checked). Only the service that owns the agent may vouch for who wrote a voice, and it does so by sharing it itself. The canonical JSON is the document's own fields, in this order and with these names: voice, name, bio, face, instructions, rules, level, model, apps, author; an optional field that is absent or empty is left out, author is { subject } or { subject, name }, and the value is the compact JSON of that object (no spaces). CREATED_AT is when the document was written; it is not part of the hash. Importing a voice makes a new agent at level ask whatever the file says: a borrowed agent starts cautious, and the person raises it themselves.
+ */
+export interface ActorVoice {
+  /**
+   * The document marker. This is the agent's voice, not a TTS voice id.
+   */
+  voice: "actor.voice@1";
+  /**
+   * The agent's name.
+   */
+  name: string;
+  /**
+   * A short bio: one or two lines on what this agent is for.
+   */
+  bio?: string;
+  /**
+   * An avatar ref: an https image URL, a Media id, or a preset face such as preset:researcher.
+   */
+  face?: string;
+  /**
+   * The house voice the agent speaks in: what it does, how it says it, what it never does.
+   */
+  instructions: string;
+  /**
+   * The rules it keeps, one line each.
+   *
+   * @maxItems 20
+   */
+  rules?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * The approval level it works at (actor.agent@1's levels). The default is ask; an import always starts at ask.
+   */
+  level: "ask" | "auto-edits" | "approve-for-me" | "full";
+  /**
+   * The model it prefers, by id. Never a key: the key stays in OpenVibe.AI's vault.
+   */
+  model?: {
+    engine: "runtime" | "own-keys" | "open-gpu" | "link";
+    model: string;
+  };
+  /**
+   * The connected app ids it may use (Connect's catalogue slugs). Ids only: a token is never here.
+   *
+   * @maxItems 50
+   */
+  apps?: string[];
+  /**
+   * Who the document says it is from. A claim, not a fact: a file may name anyone, and the hash says nothing about it. A service that owns the agent may vouch for its author in its own record instead.
+   */
+  author?: {
+    /**
+     * The Network subject the document names.
+     */
+    subject: string;
+    name?: string;
+  };
+  integrity: {
+    /**
+     * How the document was checked: sha256 over the canonical JSON.
+     */
+    alg: "sha256";
+    /**
+     * The hex sha256 of the canonical JSON. It shows the file was not edited; it proves nothing about who wrote it.
+     */
+    hash: string;
+  };
+  /**
+   * When the document was written. Not part of the hash.
+   */
+  created_at?: string;
+}
+
 /** frame.menu-card@1.0.0 (owner: network) */
 /**
  * frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. An item may also carry a small picture (image) of the same shape: https on the site's own origin or an openvibe.* host, with an optional 16–1920 pixel width and height and a short alt text. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.

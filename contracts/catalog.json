@@ -9915,6 +9915,16 @@
       "status": "active"
     },
     {
+      "id": "actor.voice",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/voice.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
       "id": "frame.menu-card",
       "version": "1.0.0",
       "owner": "network",

@@ -1021,6 +1021,42 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     ok(dangling.length === 0, `generated types reference undeclared names: ${dangling.join(', ')}`);
 }
 
+// ── actor.voice@1: the integrity hash ─────────────────────────────────────
+// The integrity block is a sha256 over the canonical JSON of the document (the contract's description
+// says which fields it holds and in which order). It shows the file was not edited after it was
+// written; it says nothing about who wrote it, and the author in a file is a claim.
+{
+    const crypto = require('crypto');
+    const canonical = (d) => {
+        const o = { voice: d.voice, name: d.name };
+        if (d.bio) o.bio = d.bio;
+        if (d.face) o.face = d.face;
+        o.instructions = d.instructions;
+        if (d.rules && d.rules.length) o.rules = d.rules;
+        o.level = d.level;
+        if (d.model) o.model = { engine: d.model.engine, model: d.model.model };
+        if (d.apps && d.apps.length) o.apps = d.apps;
+        if (d.author) o.author = d.author.name ? { subject: d.author.subject, name: d.author.name } : { subject: d.author.subject };
+        return JSON.stringify(o);
+    };
+    const hashOf = (d) => crypto.createHash('sha256').update(canonical(d), 'utf8').digest('hex');
+    const dir = path.join(ROOT, 'fixtures', 'actor.voice', 'valid');
+    for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.json'))) {
+        const doc = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+        ok(hashOf(doc) === doc.integrity.hash, `the actor.voice fixture ${f} carries the hash of its own content`);
+    }
+    const good = JSON.parse(fs.readFileSync(path.join(dir, 'researcher.json'), 'utf8'));
+    const edited = { ...good, instructions: good.instructions.replace('Research carefully.', 'Do not research.') };
+    ok(hashOf(edited) !== edited.integrity.hash, 'an edited actor.voice document no longer matches its hash');
+    const props = contracts.schema('actor.voice@1').properties;
+    ok(props.integrity && !props.signature, 'actor.voice@1 has an integrity block, not a signature');
+    ok(!contracts.schema('actor.voice@1').required.includes('author'), 'the author is a claim: a document may name nobody');
+    ok(!Object.keys(props).some((k) => /memory|token|secret|key|file/i.test(k)),
+        'actor.voice@1 has no memory, token, secret or file field');
+    ok(!/signature|signed/i.test(contracts.schema('actor.voice@1').description),
+        'actor.voice@1 does not call the hash a signature');
+}
+
 console.log(skips.length
     ? `openvibe-contracts: ${n} checks passed, ${skips.length} skipped (${skips.join(' | ')})${strict ? ' — strict: skips fail the run' : ''}`
     : `openvibe-contracts: ${n} checks passed`);
