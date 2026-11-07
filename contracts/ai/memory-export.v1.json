@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/memory-export.v1.json",
+  "title": "AiMemoryExportV1",
+  "description": "ai.memory-export@1 (OpenVibe.AI; Memory M5): the one portable memory file. GET /api/v1/memory/export answers it, decrypted for the person's own export; POST /api/v1/memory/import accepts the same document (only `format`, `version` and `items` are read on import). Every item carries the text after redaction, its kind and scope, its source and the confidence the store had; ids, owners and merge/conflict links are deliberately absent, so a file can be moved to another account and imported without carrying anyone's identity. A profile is derived from the items and is rebuilt, never imported.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "exported_at",
+    "items"
+  ],
+  "properties": {
+    "format": {
+      "const": "openvibe.memory-export@1"
+    },
+    "version": {
+      "const": 1
+    },
+    "exported_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the file was written. Informational only; import never trusts it as an item time."
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "kind",
+          "scope",
+          "source"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8000,
+            "description": "The item text after the store's own redaction. A secret that survived an older export is redacted again on import."
+          },
+          "kind": {
+            "enum": [
+              "preference",
+              "fact",
+              "project_rule",
+              "procedure",
+              "decision",
+              "lesson"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "pattern": "^(user|project:[a-z0-9][a-z0-9._-]{0,63})$",
+            "description": "`user` for the person, or `project:<slug>` for a project. Never an absolute path."
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "The adapter id (claude-code, cursor, …), the service (actor, vibe, know, person) or the memory-service adapter (mem0, letta, zep) the item came from."
+          },
+          "source_ref": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "heading": {
+                "type": "string",
+                "maxLength": 300
+              }
+            },
+            "description": "The path relative to the scanned root and the heading, when the item came from a file."
+          },
+          "status": {
+            "enum": [
+              "active",
+              "suggested",
+              "archived",
+              "conflict"
+            ],
+            "description": "Defaults to active on import. A conflict item is imported as suggested: its pair did not come with it."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "machine": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100,
+            "description": "The Node machine id the item came from, when it came from one."
+          },
+          "seen_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

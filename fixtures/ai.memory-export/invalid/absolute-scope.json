@@ -1,0 +1,13 @@
+{
+  "format": "openvibe.memory-export@1",
+  "version": 1,
+  "exported_at": "2026-11-07T09:30:00.000Z",
+  "items": [
+    {
+      "text": "A note with an absolute path for a scope.",
+      "kind": "fact",
+      "scope": "project:/home/ada/secret",
+      "source": "claude-code"
+    }
+  ]
+}

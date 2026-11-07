@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.308.0 — 2026-11-07
+
+- Add `ai.memory-export@1` (Memory M5): the one portable memory file. It carries `format: openvibe.memory-export@1`, `version: 1`, `exported_at` and every item's text, kind, scope, source, confidence and source reference. It deliberately has no ids, owners, merge links or conflict pair, so a file can be imported into another account without carrying anyone's identity, and a profile is derived from the items and rebuilt, never imported. OpenVibe.AI's `GET /api/v1/memory/export` writes it and `POST /api/v1/memory/import` accepts the same document; both redact again.
+- Valid and invalid fixtures cover an export with items and an empty one, a wrong format/version and a scope that is an absolute path instead of `user` or `project:<slug>`.
+
 ## 0.305.0 — 2026-11-07
 
 - Give the id kinds the S7 work needs a prefix: `newId('agent_stream_schedule')` is `scd_…` (a scheduled public agent stream) and `newId('party')` is `pty_…` (a watch party's id when a party is not named by its room slug).
