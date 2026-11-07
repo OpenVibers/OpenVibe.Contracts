@@ -1,0 +1,23 @@
+{
+  "id": "scd_01JAB2C3D4E5F6G7H8J9K0MNPX",
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "channel": "mira",
+  "title": "Nightly dependency update",
+  "task": {
+    "source": "actor",
+    "ref": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPY",
+    "title": "Update the dependencies"
+  },
+  "mode": "watch",
+  "visibility": "public",
+  "starts_at": "2026-11-08T03:00:00.000Z",
+  "state": "missed",
+  "agent_stream_id": null,
+  "missed_reason": "desk_offline",
+  "waits_for_go": false,
+  "started_at": null,
+  "ended_at": null,
+  "reminders": 0,
+  "page_url": "https://openvibe.live/@mira/agents",
+  "created_at": "2026-11-07T03:00:00.000Z"
+}

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/party.v1.json",
+  "title": "ChatParty",
+  "description": "chat.party@1 (Agent Streams S7): a watch party on a public agent stream or its VOD. A party is a Chat room of kind 'party' where friends watch in sync with their own chat beside the stream's. On a VOD the position follows the host's; on a live stream it follows the live edge, so there is no position to keep. A party is private by default: joining is by its link, and it may be listed on the stream's page as a count only ('3 parties watching') — names are never in that count. The id is the room's slug.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "agent_stream_id",
+    "host",
+    "title",
+    "sync",
+    "visibility",
+    "listed",
+    "join_url",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,30}[a-z0-9]$",
+      "description": "The party room's slug (its room id in Chat)."
+    },
+    "agent_stream_id": {
+      "type": "string",
+      "pattern": "^ags_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The public agent stream the party watches."
+    },
+    "vod_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Media's recording id when the party watches the VOD; null on a live stream."
+    },
+    "host": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person whose position the party follows on a VOD."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "sync": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "playing"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "live",
+            "vod"
+          ],
+          "description": "Live follows the live edge; vod follows the host's position."
+        },
+        "position_s": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The host's position on the VOD, in whole seconds. Absent on a live stream."
+        },
+        "playing": {
+          "type": "boolean"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the position was set; a reader adds the time since to a playing position."
+        }
+      }
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "link"
+      ],
+      "description": "Private by default: members only. 'link' lets anyone with join_url in; neither makes the party a directory entry."
+    },
+    "listed": {
+      "type": "boolean",
+      "description": "Whether the stream's page counts this party. The count carries no names."
+    },
+    "join_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^(https://openvibe\\.chat|https://openvibe\\.live)/",
+      "description": "The party's link, the one way in."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  }
+}

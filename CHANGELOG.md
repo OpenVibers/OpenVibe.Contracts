@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.305.0 — 2026-11-07
+
+- Give the id kinds the S7 work needs a prefix: `newId('agent_stream_schedule')` is `scd_…` (a scheduled public agent stream) and `newId('party')` is `pty_…` (a watch party's id when a party is not named by its room slug).
+- Add `live.agent-stream-schedule@1` (Agent Streams S7): an owner's schedule for a public agent stream — a time, a task template and the mode. Live starts it when the owner's desk is online; when the desk is not, the record says `missed` with `desk_offline` ("didn't start: the desk was offline") and nothing runs. A `chatplays` schedule keeps its time but waits for the owner's Go (`waits_for_go`), the S6 rule. The record carries the stream it started, its reminder count (the people who opted in, never who they are) and the page where it shows 24 hours before its time.
+- Add `chat.party@1` (Agent Streams S7): a watch party on a public agent stream or its VOD, a Chat room of kind `party`. On a VOD the position follows the host's; on a live stream it follows the live edge. A party is private by default, joining is by its link, and a listed party reaches the stream's page only as a count ("3 parties watching") — the count never carries names.
+- Extend `live.agent_stream.publish` with the schedule routes and the desk heartbeat: `POST|GET /api/streams/agent/schedules`, `DELETE /api/streams/agent/schedules/:id`, `POST /api/streams/agent/schedules/:id/remind`, `POST /api/streams/agent/schedules/:id/go` and `POST /api/streams/agent/desk/heartbeat`.
+- Valid and invalid fixtures cover a scheduled stream, a missed one with the desk offline, a chatplays schedule that waits for Go, a missing task and an unknown state; a private VOD party, a live party with a link, a party made public and a party with a room id that cannot exist.
+
 ## 0.304.0 — 2026-11-06
 
 - Give the id kinds the Agent Streams work needs a prefix: `newId('agent_stream')` is `ags_…` (an agent stream's id), `newId('play_request')` is `req_…` (a chat plays request) and `newId('sandbox_session')` is `sbs_…` (the sandbox desk). Without them a service that had to name one of these ids had to build the ULID itself, and `newId('ags')` threw.

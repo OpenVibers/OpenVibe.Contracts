@@ -294972,3 +294972,131 @@ export interface CodesSandboxSession {
     kept: boolean;
   } | null;
 }
+
+/** live.agent-stream-schedule@1.0.0 (owner: live) */
+/**
+ * live.agent-stream-schedule@1 (Agent Streams S7): an owner's schedule for a public agent stream. A schedule names a time, the task template the desk will run and the mode; Live starts it when the owner's desk is online, and when the desk is not it says 'didn't start: the desk was offline' and runs nothing. A chatplays schedule never starts on its own: it waits for the owner's Go (the S6 rule). The schedule shows on the channel's Agents tab and in Today 24 hours before its time. The id is scd_<ULID>; the started stream (if any) is named by agent_stream_id.
+ */
+export interface LiveAgentStreamSchedule {
+  /**
+   * The schedule's id (ULID, Crockford base32).
+   */
+  id: string;
+  /**
+   * The person whose desk runs the scheduled task.
+   */
+  owner: string;
+  /**
+   * The owner's Live channel username.
+   */
+  channel: string;
+  title: string;
+  task: {
+    /**
+     * Where the task runs.
+     */
+    source: "codes" | "actor" | "desk" | "node";
+    /**
+     * The task's id in that source.
+     */
+    ref: string;
+    title: string;
+    /**
+     * The task's page, when it has one.
+     */
+    url?: string | null;
+  };
+  /**
+   * How the stream is played. Watch, Narrated and Co-pilot may start on schedule; chatplays waits for the owner's Go.
+   */
+  mode: "watch" | "narrated" | "copilot" | "chatplays";
+  /**
+   * Who may watch the stream the schedule starts. Today shows public schedules only.
+   */
+  visibility: "private" | "unlisted" | "public";
+  starts_at: string;
+  /**
+   * Where the schedule stands: scheduled, live (with agent_stream_id), ended, missed ('didn't start: the desk was offline') or cancelled by its owner.
+   */
+  state: "scheduled" | "live" | "ended" | "missed" | "cancelled";
+  /**
+   * The stream the schedule started, once it did.
+   */
+  agent_stream_id?: string | null;
+  /**
+   * Why a scheduled start did not happen. 'waits_for_go' is a chatplays schedule keeping its time until the owner presses Go; 'desk_offline' is the design's 'didn't start: the desk was offline'.
+   */
+  missed_reason?: "desk_offline" | "task_not_ready" | "waits_for_go" | null;
+  /**
+   * True for a chatplays schedule: the time has come but nothing runs until the owner presses Go.
+   */
+  waits_for_go?: boolean;
+  started_at?: string | null;
+  ended_at?: string | null;
+  /**
+   * How many followers opted in to a reminder; neighbours never see who they are.
+   */
+  reminders?: number;
+  /**
+   * For the caller's own view: whether this caller opted in to a reminder. Absent when there is no caller.
+   */
+  reminded?: boolean;
+  /**
+   * The channel's Agents tab, where the schedule shows 24 hours before its time.
+   */
+  page_url?: string;
+  created_at: string;
+}
+
+/** chat.party@1.0.0 (owner: chat) */
+/**
+ * chat.party@1 (Agent Streams S7): a watch party on a public agent stream or its VOD. A party is a Chat room of kind 'party' where friends watch in sync with their own chat beside the stream's. On a VOD the position follows the host's; on a live stream it follows the live edge, so there is no position to keep. A party is private by default: joining is by its link, and it may be listed on the stream's page as a count only ('3 parties watching') — names are never in that count. The id is the room's slug.
+ */
+export interface ChatParty {
+  /**
+   * The party room's slug (its room id in Chat).
+   */
+  id: string;
+  /**
+   * The public agent stream the party watches.
+   */
+  agent_stream_id: string;
+  /**
+   * Media's recording id when the party watches the VOD; null on a live stream.
+   */
+  vod_id?: string | null;
+  /**
+   * The person whose position the party follows on a VOD.
+   */
+  host: string;
+  title: string;
+  sync: {
+    /**
+     * Live follows the live edge; vod follows the host's position.
+     */
+    mode: "live" | "vod";
+    /**
+     * The host's position on the VOD, in whole seconds. Absent on a live stream.
+     */
+    position_s?: number;
+    playing: boolean;
+    /**
+     * When the position was set; a reader adds the time since to a playing position.
+     */
+    at?: string;
+  };
+  /**
+   * Private by default: members only. 'link' lets anyone with join_url in; neither makes the party a directory entry.
+   */
+  visibility: "private" | "link";
+  /**
+   * Whether the stream's page counts this party. The count carries no names.
+   */
+  listed: boolean;
+  /**
+   * The party's link, the one way in.
+   */
+  join_url: string;
+  created_at: string;
+  ended_at?: string | null;
+}

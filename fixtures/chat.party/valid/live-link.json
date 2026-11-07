@@ -1,0 +1,15 @@
+{
+  "id": "live-edge",
+  "agent_stream_id": "ags_01JAB2C3D4E5F6G7H8J9K0MNPV",
+  "vod_id": null,
+  "host": "usr_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "title": "Watching the live edge",
+  "sync": {
+    "mode": "live",
+    "playing": true
+  },
+  "visibility": "link",
+  "listed": false,
+  "join_url": "https://openvibe.live/@mira/agents/ags_01JAB2C3D4E5F6G7H8J9K0MNPV?party=live-edge",
+  "created_at": "2026-11-07T21:00:00.000Z"
+}

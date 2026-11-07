@@ -124,7 +124,7 @@
       "service": "live",
       "name": "OpenVibe.Live",
       "origin": "https://openvibe.live",
-      "operations": 40,
+      "operations": 46,
       "capabilities": 11
     },
     {

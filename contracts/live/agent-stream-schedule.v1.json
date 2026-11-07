@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/agent-stream-schedule.v1.json",
+  "title": "LiveAgentStreamSchedule",
+  "description": "live.agent-stream-schedule@1 (Agent Streams S7): an owner's schedule for a public agent stream. A schedule names a time, the task template the desk will run and the mode; Live starts it when the owner's desk is online, and when the desk is not it says 'didn't start: the desk was offline' and runs nothing. A chatplays schedule never starts on its own: it waits for the owner's Go (the S6 rule). The schedule shows on the channel's Agents tab and in Today 24 hours before its time. The id is scd_<ULID>; the started stream (if any) is named by agent_stream_id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "channel",
+    "title",
+    "task",
+    "mode",
+    "visibility",
+    "starts_at",
+    "state",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^scd_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The schedule's id (ULID, Crockford base32)."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person whose desk runs the scheduled task."
+    },
+    "channel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "The owner's Live channel username."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "task": {
+      "$ref": "agent-stream.v1.json#/$defs/task"
+    },
+    "mode": {
+      "enum": [
+        "watch",
+        "narrated",
+        "copilot",
+        "chatplays"
+      ],
+      "description": "How the stream is played. Watch, Narrated and Co-pilot may start on schedule; chatplays waits for the owner's Go."
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "unlisted",
+        "public"
+      ],
+      "description": "Who may watch the stream the schedule starts. Today shows public schedules only."
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "enum": [
+        "scheduled",
+        "live",
+        "ended",
+        "missed",
+        "cancelled"
+      ],
+      "description": "Where the schedule stands: scheduled, live (with agent_stream_id), ended, missed ('didn't start: the desk was offline') or cancelled by its owner."
+    },
+    "agent_stream_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^ags_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The stream the schedule started, once it did."
+    },
+    "missed_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "desk_offline",
+        "task_not_ready",
+        "waits_for_go",
+        null
+      ],
+      "description": "Why a scheduled start did not happen. 'waits_for_go' is a chatplays schedule keeping its time until the owner presses Go; 'desk_offline' is the design's 'didn't start: the desk was offline'."
+    },
+    "waits_for_go": {
+      "type": "boolean",
+      "description": "True for a chatplays schedule: the time has come but nothing runs until the owner presses Go."
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "reminders": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many followers opted in to a reminder; neighbours never see who they are."
+    },
+    "reminded": {
+      "type": "boolean",
+      "description": "For the caller's own view: whether this caller opted in to a reminder. Absent when there is no caller."
+    },
+    "page_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://openvibe\\.live/",
+      "description": "The channel's Agents tab, where the schedule shows 24 hours before its time."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
