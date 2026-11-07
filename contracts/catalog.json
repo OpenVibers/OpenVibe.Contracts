@@ -9627,6 +9627,33 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "bot.machine-pool",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/machine-pool.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.offer-pool",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/offer-pool.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.offer",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/offer.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
