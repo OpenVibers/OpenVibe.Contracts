@@ -38,7 +38,8 @@
     "chat.ticket.write",
     "chat.tts.speak",
     "chat.vibe.ask",
-    "chat.vibe.deliver"
+    "chat.vibe.deliver",
+    "chat.dm.peers.read"
   ],
   "eventsProduced": [
     "chat.message.created",
@@ -94,7 +95,7 @@
         },
         {
           "kind": "consumer",
-          "what": "OpenVibe.Events redelivers the events of Chat's subscriptions (network.block.changed, network.user.token_valid_after, live.release.deployed, \u2026) that were pending during the stop (at least once, deduped by event_id)"
+          "what": "OpenVibe.Events redelivers the events of Chat's subscriptions (network.block.changed, network.user.token_valid_after, live.release.deployed, …) that were pending during the stop (at least once, deduped by event_id)"
         }
       ]
     },
@@ -105,7 +106,7 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "the schema code only adds (CREATE \u2026 IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
       }
     },
     "contracts": {

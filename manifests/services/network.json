@@ -83,7 +83,8 @@
     "network.consent.read",
     "network.consent.manage",
     "network.machines.read",
-    "network.machines.manage"
+    "network.machines.manage",
+    "network.presence.read"
   ],
   "eventsProduced": [
     "network.account.deleted",
@@ -115,7 +116,8 @@
     "share.revoked",
     "share.transfer.requested",
     "share.transfer.accepted",
-    "share.transfer.declined"
+    "share.transfer.declined",
+    "network.presence.changed"
   ],
   "eventsConsumed": [
     "billing.staff.action",

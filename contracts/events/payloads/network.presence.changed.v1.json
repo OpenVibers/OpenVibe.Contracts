@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.presence.changed.v1.json",
+  "title": "NetworkPresenceChangedPayload",
+  "description": "network.presence.changed v1 (OpenVibe.Network server/presence; plan 2026-10-22 track X item 9). A person's public presence changed: their chosen state, status line, emoji, the show_status switch, or the derived online/away/offline state. OpenVibe.Network writes it to its outbox beside the presence row, at most once per person per 30 seconds (the debounce), and only for a real change. The payload is the public view in network.presence@1: invisible and show_status off are sent as offline with no status text or emoji, so the event never carries what the person hid. Envelope: subject { type: user, id: <usr_\u2026> }, visibility internal, actor the person. A presence change is not a reason to notify anyone.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subject",
+    "state",
+    "updated_at"
+  ],
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "state": {
+      "enum": [
+        "online",
+        "away",
+        "dnd",
+        "offline"
+      ],
+      "description": "The public state. Never invisible: an invisible person is sent as offline, without their status text or emoji."
+    },
+    "status_text": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    },
+    "emoji": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 16
+    },
+    "live": {
+      "type": "boolean",
+      "default": false,
+      "description": "Streaming on OpenVibe.Live now; false while invisible or with show_status off."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

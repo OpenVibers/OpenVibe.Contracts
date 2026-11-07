@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/dm-peers-result.v1.json",
+  "title": "ChatDmPeersResult",
+  "description": "chat.dm-peers-result@1: which of the candidate people share a conversation with one person on OpenVibe.Chat (POST /internal/chat/dm/peers, chat.dm.peers.read). It answers with subjects only; a candidate with no shared conversation is simply absent. Used by OpenVibe.Network's presence privacy rule.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["subject", "peers"],
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person whose conversations were read."
+    },
+    "peers": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+      "description": "The candidates that share at least one conversation with them, as subjects."
+    }
+  }
+}
