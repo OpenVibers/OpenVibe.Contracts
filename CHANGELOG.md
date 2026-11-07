@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.330.0 — 2026-11-07
+
+- Add `common.control-lease@1`, the shared control lease (seven domains plan B3): the thing a lease controls, its holder (a `person`, an `ai` or `nobody`, with the holder's subject or null), when the holder got the controls, an optional absolute `expires_ms`, the subjects watching and a `seq` that increments on every holder change, expiry or take-back. A watcher-only change does not increment `seq`. The authority that owns the thing enforces the rules; Chat hosts a room's lease, names the thing `chat.room:<slug>` and accepts a control change only from the current holder, while take-back by the room's owner always wins.
+- Add `common.sync-clock@1`, the shared timeline (B4): the room, the media (a Media ref or an https URL), the position at `at_ms`, the rate, whether it is paused, who set it and a `seq`. A player computes `position_ms + (authority now - at_ms) * rate` while it plays and `position_ms` while it is paused. Chat stamps `at_ms` and `seq` and stores the latest state in `room_sync_clocks` (the memory copy is the room's live state).
+- Valid and invalid fixtures cover a person, AI and free lease, a lease with a time limit, seq zero, a nobody with a subject, a duplicate watcher, a URL and a Media-ref clock, a clock at a rate and paused, an http URL, a bad room and a bad media object.
+
 ## 0.329.0 — 2026-11-07
 
 - Add `mail.mask@1`: a per-site address on OpenVibe.Mail that delivers into its owner's OpenVibe mailbox and nowhere else. It carries the `msk_…` id, the owner's Network subject, the `<words>.<four characters>@<mask domain>` address, the person's label and purpose, whether it is enabled (a disabled mask leaves the SQL directory Stalwart reads, so it bounces) and when it was made. M1 is receive-only, so this is metadata: no body, no forwarding target.

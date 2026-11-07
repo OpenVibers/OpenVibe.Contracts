@@ -109565,6 +109565,213 @@
           }
         }
       }
+    },
+    "common.control-lease": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/control-lease.v1.json",
+        "title": "ControlLease",
+        "description": "common.control-lease@1: who holds the controls of a shared thing (seven domains plan B3). The state names the thing, its holder (a person, an AI, or nobody when the controls are free), when the holder got them, an optional time limit as an absolute epoch instant, the subjects watching and a sequence number. Every control change, including an expiry or a take-back, increments seq; a change in watchers alone does not. The authority that owns the thing writes and enforces the state: it decides who may request, grant, release or take the controls, and take-back always wins. Chat hosts a room's lease on its room socket and names the thing chat.room:<slug>; the holder is the person or AI whose subject Chat would accept on a set.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "thing",
+          "holder",
+          "since_ms",
+          "watchers",
+          "seq"
+        ],
+        "properties": {
+          "thing": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The shared thing the lease controls, in the owning authority's own namespace. Chat writes chat.room:<slug>."
+          },
+          "holder": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "subject"
+            ],
+            "description": "Who may act on the thing now. nobody means the controls are free; subject is null exactly then.",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "person",
+                  "ai",
+                  "nobody"
+                ],
+                "description": "A signed-in person, an AI agent the authority can name, or nobody."
+              },
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "The authority's subject for the holder (a Network usr_… subject for a person, an agent subject for an AI); null when the kind is nobody."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "nobody"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "subject": {
+                      "const": null
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "person",
+                        "ai"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "since_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "When the current holder got the controls, as epoch milliseconds in the authority's clock."
+          },
+          "expires_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "When the holder's time runs out, as epoch milliseconds; null or absent means no time limit. At that instant the authority makes the holder nobody and increments seq."
+          },
+          "watchers": {
+            "type": "array",
+            "maxItems": 500,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": "The subjects watching the thing now, as live presence rather than a durable membership list. The authority decides who is listed; Chat lists the signed-in subjects connected to the room. A change here does not increment seq."
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The control version: starts at 1 for a thing's first state and increments on every holder change, expiry or take-back. A client ignores a state with a seq it has already seen."
+          }
+        }
+      }
+    },
+    "common.sync-clock": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/sync-clock.v1.json",
+        "title": "SyncClock",
+        "description": "common.sync-clock@1: one timeline for many players (seven domains plan B4). The authority stamps at_ms and seq when it accepts a change and fans the state out; a player computes where it should be as position_ms + (authority time now - at_ms) * rate when paused is false, and exactly position_ms when paused is true. Chat hosts a room's clock on its room socket, keeps the latest state in memory and in the room_sync_clocks table, refuses a set from anyone but the current common.control-lease@1 holder, and sends the state to a member when they join the room. Clock offset is measured over the same socket with time ping/pong pairs, best of five samples, refreshed every 60 s.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "room",
+          "media",
+          "position_ms",
+          "rate",
+          "paused",
+          "at_ms",
+          "set_by",
+          "seq"
+        ],
+        "properties": {
+          "room": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "description": "The authority's room id (Chat: the room's slug)."
+          },
+          "media": {
+            "description": "What is playing: an OpenVibe media ref or an https URL. A ref names a Media object; a URL is the media file itself.",
+            "oneOf": [
+              {
+                "$ref": "../media/media-ref.v1.json"
+              },
+              {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 2048
+              }
+            ]
+          },
+          "position_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2592000000,
+            "description": "The media position at at_ms, in milliseconds. At most 30 days."
+          },
+          "rate": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 16,
+            "description": "The playback rate the room is playing at (1 is normal speed)."
+          },
+          "paused": {
+            "type": "boolean",
+            "description": "When true the timeline stands still at position_ms; when false it advances at rate."
+          },
+          "at_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The authority's epoch milliseconds when it accepted this state. A player subtracts this from the authority's clock now, so the value is never the player's own clock."
+          },
+          "set_by": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The subject that made the change (the lease holder's subject as the authority knows it)."
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The timeline version: starts at 1 and increments on every accepted change. A client ignores a state with a seq it has already seen."
+          }
+        }
+      }
     }
   }
 }

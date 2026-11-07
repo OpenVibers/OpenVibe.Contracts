@@ -1,0 +1,11 @@
+{
+  "thing": "chat.room:friday-film",
+  "holder": { "kind": "person", "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS" },
+  "since_ms": 1794067200000,
+  "expires_ms": 1794070800000,
+  "watchers": [
+    "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "usr_01JAB2C3D4E5F6G7H8J9K0MNPX"
+  ],
+  "seq": 4
+}

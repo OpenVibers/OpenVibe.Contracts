@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/sync-clock.v1.json",
+  "title": "SyncClock",
+  "description": "common.sync-clock@1: one timeline for many players (seven domains plan B4). The authority stamps at_ms and seq when it accepts a change and fans the state out; a player computes where it should be as position_ms + (authority time now - at_ms) * rate when paused is false, and exactly position_ms when paused is true. Chat hosts a room's clock on its room socket, keeps the latest state in memory and in the room_sync_clocks table, refuses a set from anyone but the current common.control-lease@1 holder, and sends the state to a member when they join the room. Clock offset is measured over the same socket with time ping/pong pairs, best of five samples, refreshed every 60 s.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["room", "media", "position_ms", "rate", "paused", "at_ms", "set_by", "seq"],
+  "properties": {
+    "room": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "The authority's room id (Chat: the room's slug)."
+    },
+    "media": {
+      "description": "What is playing: an OpenVibe media ref or an https URL. A ref names a Media object; a URL is the media file itself.",
+      "oneOf": [
+        { "$ref": "../media/media-ref.v1.json" },
+        { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048 }
+      ]
+    },
+    "position_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2592000000,
+      "description": "The media position at at_ms, in milliseconds. At most 30 days."
+    },
+    "rate": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 16,
+      "description": "The playback rate the room is playing at (1 is normal speed)."
+    },
+    "paused": {
+      "type": "boolean",
+      "description": "When true the timeline stands still at position_ms; when false it advances at rate."
+    },
+    "at_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The authority's epoch milliseconds when it accepted this state. A player subtracts this from the authority's clock now, so the value is never the player's own clock."
+    },
+    "set_by": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The subject that made the change (the lease holder's subject as the authority knows it)."
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The timeline version: starts at 1 and increments on every accepted change. A client ignores a state with a seq it has already seen."
+    }
+  }
+}
