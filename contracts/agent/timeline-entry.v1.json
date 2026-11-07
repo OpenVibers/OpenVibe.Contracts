@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/timeline-entry.v1.json",
+  "title": "AgentTimelineEntry",
+  "description": "One entry of the agent's timeline (design 2026-11-07 §2): one step of the agent's work, in one mode, for one person. The Dock shows it: the mode's icon and word, the title, where it ran and why, the outcome, the time and the cost. Only a title, an outcome and a link: never a prompt, a diff or a page. A person sees their own entries; another person's entry is a 404. The audience is 'private' (Only me) unless the person shared the entry through the one Share sheet.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "subject",
+    "mode",
+    "product",
+    "title",
+    "status",
+    "started_at",
+    "audience"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person the step was for."
+    },
+    "mode": {
+      "enum": [
+        "talk",
+        "act",
+        "run",
+        "code",
+        "browse",
+        "watch",
+        "stream"
+      ]
+    },
+    "product": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "running",
+        "waiting",
+        "needs_you",
+        "done",
+        "failed",
+        "stopped"
+      ]
+    },
+    "placement": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Where the step ran and why the agent put it there, in one line each.",
+      "properties": {
+        "where": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "why": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 240
+        }
+      }
+    },
+    "cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "link": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^https://",
+      "maxLength": 2048
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 240
+    },
+    "transition": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 240
+    },
+    "approval": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "The approval this step waits on, and the mode that owns it. The person answers it in the mode.",
+      "properties": {
+        "product": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      }
+    },
+    "audience": {
+      "enum": [
+        "private",
+        "link",
+        "people",
+        "public"
+      ],
+      "description": "Who may see it. 'private' is Only me, the default; the other three come from the one Share sheet."
+    },
+    "shared": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Whether the person shared this entry (the share row itself lives in the sharing system)."
+    }
+  }
+}

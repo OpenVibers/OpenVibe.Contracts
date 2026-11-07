@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/common/agent-step.v1.json",
+  "title": "AgentStepPayload",
+  "description": "One step of the agent's work, as any mode publishes it (agent.step.started, agent.step.updated, agent.step.ended; design 2026-11-07 §2). The person it is for is the envelope's subject. The payload is the step's shape: what it is, where it ran, why, how it ended, what it cost, and where to see it. It never carries the step's content: no prompt, no diff, no page, no message, no file. The three events share this payload; what differs is the envelope's event_type. The agent.* namespace belongs to the network, so any first-party mode may publish into it (like provider.*); OpenVibe.Actor registers the family and keeps the timeline.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "step_id",
+    "mode",
+    "product",
+    "title",
+    "status",
+    "started_at"
+  ],
+  "properties": {
+    "step_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "The mode's own id for this step (a Codes task id, a Run job id, a stream id)."
+    },
+    "mode": {
+      "enum": [
+        "talk",
+        "act",
+        "run",
+        "code",
+        "browse",
+        "watch",
+        "stream"
+      ],
+      "description": "The mode the step belongs to."
+    },
+    "product": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "description": "The product that ran it (chat, codes, run, watch, live, surf, actor)."
+    },
+    "ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120,
+      "description": "The product's own id for the thing this step is about."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "A short plain-text name for the step. What it was, never what it said."
+    },
+    "status": {
+      "enum": [
+        "running",
+        "waiting",
+        "needs_you",
+        "done",
+        "failed",
+        "stopped"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "placement": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Where the step ran and why the agent put it there, in one line each.",
+      "properties": {
+        "where": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "why": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 240
+        }
+      }
+    },
+    "cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "link": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^https://",
+      "maxLength": 2048,
+      "description": "The step's own page in its product."
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 240,
+      "description": "Why it failed or stopped, in one line a person can act on."
+    },
+    "transition": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 240,
+      "description": "The agent's sentence for the mode change this step announced."
+    },
+    "approval": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "The approval this step waits on, and the mode that owns it. The person answers it in the mode.",
+      "properties": {
+        "product": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      }
+    }
+  }
+}

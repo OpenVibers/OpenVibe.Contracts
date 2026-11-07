@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.312.0 — 2026-11-07
+
+- Add `agent.timeline-entry@1`: one entry of the agent's timeline (design 2026-11-07 §2) — one step of the agent's work, in one mode, for one person. It carries the mode, the product, the step's own id, a plain title, when it started and ended, its status (running, waiting, needs_you, done, failed, stopped), the placement (where it ran and why), the cost, a link to the step's page, the one-line reason when it failed, the transition sentence when the mode changed, and the audience (private is Only me, the default). It never carries a prompt, a diff or a page.
+- Add `common.agent-step@1` and the three events `agent.step.started`, `agent.step.updated` and `agent.step.ended`: the one shape every mode publishes when the agent does something (Chat, Codes, Run, Watch, Live, Surf), with the person's subject on the envelope. The payload is the step's shape only — a title, an outcome, a link, a cost — and never the step's content: a prompt, a diff, a page, a message or a file is refused by the schema. The `agent.*` namespace belongs to the network (like `provider.*`), so any first-party mode may publish into it; OpenVibe.Actor registers the family in Contracts and keeps the one timeline behind the Dock.
+- Add `agent.timeline-list-result@1`: what the Dock's Agent panel reads — the step happening now, what needs the person (oldest first), the entries themselves (newest first), the next cursor, and the per-mode counts so a filter never hides without a count.
+- Add `actor.timeline.read`: `GET /api/v1/agent/timeline`, the person's own timeline with the cursor and the mode and needs-you filters. Only their own entries; another person's entry is a 404.
+- Valid and invalid fixtures cover a step that starts, waits and ends, a timeline entry and a list, a payload with a prompt or a diff in it, an unknown status, a mode that is not one of the seven, and an entry of another person.
+
+## 0.311.0 — 2026-11-07
+
+- Reserved: an open pull request (#319) releases 0.311.0. This line keeps the changelog's history whole; that pull request's own entry replaces it when it merges.
+
 ## 0.310.0 — 2026-11-07
 
 - Apps ask for consent per purpose at sign-in (the consent plan's C4). An app adds one scope `consent:<purpose>` per purpose to /oauth/authorize, beside its other scopes. It may ask for every purpose of the consent family except the retired `ai.looks`: `ai.train`, `data.public`, `face.recognize` and `app.data`. Any other `consent:` scope is refused with `invalid_scope`. The consent screen lists each purpose in plain words, nothing ticked, and the person can sign in with every purpose refused. A refused purpose is not asked again by that app for 30 days, unless the person asks for it again on their account page.

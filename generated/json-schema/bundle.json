@@ -106876,6 +106876,447 @@
           }
         }
       }
+    },
+    "common.agent-step": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/common/agent-step.v1.json",
+        "title": "AgentStepPayload",
+        "description": "One step of the agent's work, as any mode publishes it (agent.step.started, agent.step.updated, agent.step.ended; design 2026-11-07 §2). The person it is for is the envelope's subject. The payload is the step's shape: what it is, where it ran, why, how it ended, what it cost, and where to see it. It never carries the step's content: no prompt, no diff, no page, no message, no file. The three events share this payload; what differs is the envelope's event_type. The agent.* namespace belongs to the network, so any first-party mode may publish into it (like provider.*); OpenVibe.Actor registers the family and keeps the timeline.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step_id",
+          "mode",
+          "product",
+          "title",
+          "status",
+          "started_at"
+        ],
+        "properties": {
+          "step_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The mode's own id for this step (a Codes task id, a Run job id, a stream id)."
+          },
+          "mode": {
+            "enum": [
+              "talk",
+              "act",
+              "run",
+              "code",
+              "browse",
+              "watch",
+              "stream"
+            ],
+            "description": "The mode the step belongs to."
+          },
+          "product": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "The product that ran it (chat, codes, run, watch, live, surf, actor)."
+          },
+          "ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "description": "The product's own id for the thing this step is about."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "description": "A short plain-text name for the step. What it was, never what it said."
+          },
+          "status": {
+            "enum": [
+              "running",
+              "waiting",
+              "needs_you",
+              "done",
+              "failed",
+              "stopped"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "placement": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "description": "Where the step ran and why the agent put it there, in one line each.",
+            "properties": {
+              "where": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 160
+              },
+              "why": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 240
+              }
+            }
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "link": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "The step's own page in its product."
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 240,
+            "description": "Why it failed or stopped, in one line a person can act on."
+          },
+          "transition": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 240,
+            "description": "The agent's sentence for the mode change this step announced."
+          },
+          "approval": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "description": "The approval this step waits on, and the mode that owns it. The person answers it in the mode.",
+            "properties": {
+              "product": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          }
+        }
+      }
+    },
+    "agent.step.started": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/agent.step.started.v1.json",
+        "title": "AgentStepStartedPayload",
+        "description": "agent.step.started v1 (design 2026-11-07 §2). A step began: the mode started working on it. Envelope: source the mode that runs it (a first-party service), subject the person it is for, visibility internal, actor the person or the mode. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.",
+        "$ref": "../../common/agent-step.v1.json"
+      }
+    },
+    "agent.step.updated": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/agent.step.updated.v1.json",
+        "title": "AgentStepUpdatedPayload",
+        "description": "agent.step.updated v1 (design 2026-11-07 §2). A step changed: it is waiting, it needs the person, or it moved on. The same payload as agent.step.started; the envelope says what changed. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.",
+        "$ref": "../../common/agent-step.v1.json"
+      }
+    },
+    "agent.step.ended": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/agent.step.ended.v1.json",
+        "title": "AgentStepEndedPayload",
+        "description": "agent.step.ended v1 (design 2026-11-07 §2). A step ended: it is done, it failed, or the person stopped it. Envelope: source the mode that ran it, subject the person it is for, visibility internal. The payload is common.agent-step@1: titles, outcomes and links only, never a prompt or a diff.",
+        "$ref": "../../common/agent-step.v1.json"
+      }
+    },
+    "agent.timeline-entry": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/timeline-entry.v1.json",
+        "title": "AgentTimelineEntry",
+        "description": "One entry of the agent's timeline (design 2026-11-07 §2): one step of the agent's work, in one mode, for one person. The Dock shows it: the mode's icon and word, the title, where it ran and why, the outcome, the time and the cost. Only a title, an outcome and a link: never a prompt, a diff or a page. A person sees their own entries; another person's entry is a 404. The audience is 'private' (Only me) unless the person shared the entry through the one Share sheet.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "subject",
+          "mode",
+          "product",
+          "title",
+          "status",
+          "started_at",
+          "audience"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person the step was for."
+          },
+          "mode": {
+            "enum": [
+              "talk",
+              "act",
+              "run",
+              "code",
+              "browse",
+              "watch",
+              "stream"
+            ]
+          },
+          "product": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "status": {
+            "enum": [
+              "running",
+              "waiting",
+              "needs_you",
+              "done",
+              "failed",
+              "stopped"
+            ]
+          },
+          "placement": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "description": "Where the step ran and why the agent put it there, in one line each.",
+            "properties": {
+              "where": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 160
+              },
+              "why": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 240
+              }
+            }
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "link": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https://",
+            "maxLength": 2048
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 240
+          },
+          "transition": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 240
+          },
+          "approval": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "description": "The approval this step waits on, and the mode that owns it. The person answers it in the mode.",
+            "properties": {
+              "product": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          },
+          "audience": {
+            "enum": [
+              "private",
+              "link",
+              "people",
+              "public"
+            ],
+            "description": "Who may see it. 'private' is Only me, the default; the other three come from the one Share sheet."
+          },
+          "shared": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Whether the person shared this entry (the share row itself lives in the sharing system)."
+          }
+        }
+      }
+    },
+    "agent.timeline-list-result": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/timeline-list-result.v1.json",
+        "title": "AgentTimelineListResult",
+        "description": "The person's agent timeline (design 2026-11-07 §1): what the agent is doing now, what needs them, and the entries themselves, newest first. The Dock's filters live in the query (cursor, mode, needs_you); counts say how many entries a hidden filter would show, so a filter never hides without a count.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "now",
+          "needs_you",
+          "entries",
+          "next_cursor",
+          "counts"
+        ],
+        "properties": {
+          "now": {
+            "anyOf": [
+              {
+                "$ref": "./timeline-entry.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The step the agent is doing this moment, if any."
+          },
+          "needs_you": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "$ref": "./timeline-entry.v1.json"
+            },
+            "description": "Every approval or question from any mode, oldest first."
+          },
+          "entries": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "$ref": "./timeline-entry.v1.json"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The cursor of the next page, or null at the end."
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "How many entries each mode has (and \"needs_you\"), so the Dock can show what a filter would hide."
+          }
+        }
+      }
     }
   }
 }

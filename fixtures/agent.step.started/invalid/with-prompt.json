@@ -1,0 +1,20 @@
+{
+  "step_id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "mode": "code",
+  "product": "codes",
+  "ref": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "title": "Running the checkout tests",
+  "status": "running",
+  "started_at": "2026-11-07T09:00:00.000Z",
+  "ended_at": null,
+  "placement": {
+    "where": "On your desktop",
+    "why": "it needs your files and your Claude sign-in, and it is free"
+  },
+  "cost_usd": null,
+  "link": "https://codes.openvibe.network/tasks/tsk_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "reason": null,
+  "transition": null,
+  "approval": null,
+  "prompt": "the prompt the person typed"
+}
