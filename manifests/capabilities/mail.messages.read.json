@@ -1,0 +1,29 @@
+{
+  "id": "mail.messages.read",
+  "version": "1.0",
+  "owner": "mail",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Read what arrived for a person's addresses: the addresses they own with their state and counts, and the metadata of a mask's, burner's or agent inbox's messages (sender, subject, time) plus the newest verification code in a burner. Never a message body, and never another person's mail. The caller must act for the person (on_behalf_of), except a burner read with the one-time token its create call returned.",
+  "permissions": [
+    "mail:messages:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "mail-messages-read",
+  "events": [
+    "mail.received"
+  ],
+  "implementedBy": [
+    "GET /api/v1/me/mail",
+    "GET /api/v1/masks",
+    "GET /api/v1/masks/:id",
+    "GET /api/v1/burners",
+    "GET /api/v1/burners/:id/messages",
+    "GET /api/v1/burners/:id/code",
+    "GET /api/v1/agent-inboxes",
+    "GET /api/v1/agent-inboxes/:id/messages"
+  ]
+}

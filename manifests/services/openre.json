@@ -25,7 +25,7 @@
     "tagline": "Go live once, stream everywhere",
     "what": "Open restreaming: one stream to Twitch, YouTube, Kick and any RTMP or SRT server at once, with OpenVibe Live on by default.",
     "legalProfile": "service",
-    "position": 18,
+    "position": 19,
     "tld": "stream",
     "accent": "#ef4444",
     "description": "OpenRestream is an open restreaming platform. Send one stream from OBS or any RTMP encoder and it goes to Twitch, YouTube, Kick and any RTMP, RTMPS or SRT destination at the same time, each with its own health, logs and retries. Your OpenVibe Live channel is on by default, so every stream also shows on openvibe.live with its chat, clips and VODs; switch it off for any stream. It is free and open source, with no follower minimum. No OBS? Go live from your browser on OpenVibe.Live.",
