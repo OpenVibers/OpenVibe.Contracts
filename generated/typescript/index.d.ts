@@ -211255,6 +211255,10 @@ export type Task = {
      * One plain phrase, for example 'free on your computer' or 'about $0.01 a minute'.
      */
     cost_hint?: string | null;
+    /**
+     * True while the person drives this Computer (they took it over): the agent's input actions are refused, and Give it back hands it over again.
+     */
+    driving?: boolean;
   } | null;
 };
 
