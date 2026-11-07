@@ -301589,3 +301589,20 @@ export interface ChatDmPeersResult {
    */
   peers: string[];
 }
+
+/** network.menu-feeds@1.0.0 (owner: network) */
+/**
+ * network.menu-feeds@1 (the menu's Choose your feeds, 2026-11-07): the sites' menu cards a person chose to show in the OpenVibe menu, in their order. It lives in the Network, not in the browser, because localStorage is per site and the choice follows the person across every domain. GET /api/v1/me/menu-feeds and PUT /api/v1/me/menu-feeds on OpenVibe.Network; a person who has never chosen gets { on: null } from the GET.
+ */
+export interface NetworkMenuFeeds {
+  /**
+   * The cards the person chose, in the order the menu shows them: up to four `<site>:<cardId>` ids. An empty array means they cleared the choice and the menu falls back to its own default cards.
+   *
+   * @maxItems 4
+   */
+  on: [] | [string] | [string, string] | [string, string, string] | [string, string, string, string];
+  /**
+   * When the person last changed the choice.
+   */
+  updated_at: string;
+}

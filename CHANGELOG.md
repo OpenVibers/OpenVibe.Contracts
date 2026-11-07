@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.325.0 — 2026-11-07
+
+- Add `network.menu-feeds@1`: the cards a person chose to show in the OpenVibe menu's "Choose your feeds", in their order, following them across every site. `on` holds up to four `<site>:<cardId>` ids (lower-case letters, digits and dashes) and `updated_at` says when the choice last changed. OpenVibe.Network keeps it at `GET` and `PUT /api/v1/me/menu-feeds`; a person who has never chosen gets `{ on: null }` from the GET. An empty array is a cleared choice.
+- Additive: a new contract only; nothing that exists today changes shape.
+
 ## 0.324.0 — 2026-11-07
 
 - Space's builder API moves under `/api/v1/builder/spaces`: `GET /api/v1/spaces` was the forum's old API (it lives on OpenVibe.Community since 2026-11-07, and Space still answers it with a redirect), so the API the person's own agent works through needs an address of its own. The capabilities name the new routes: `space.build.read` (`GET /api/v1/builder/spaces`, `…/:id`, `…/:id/files`, `…/:id/files/:path`, `…/:id/preview`), `space.build.create` (`POST /api/v1/builder/spaces`), `space.build.write` (`PUT /api/v1/builder/spaces/:id/files`) and `space.build.publish` (`POST /api/v1/builder/spaces/:id/publish`, and the person's answer at `POST /api/v1/agent/approvals/:id/decide`).

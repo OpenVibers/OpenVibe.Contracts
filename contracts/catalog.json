@@ -9918,6 +9918,15 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.menu-feeds",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/menu-feeds.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
