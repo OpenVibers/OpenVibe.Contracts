@@ -6,6 +6,7 @@
 - `actor.task-event@2` and `agent.timeline-entry@1` carry the same `computer` object by `$ref`: the task's step in the Dock and the task record read the same fields, never a copy.
 - `run.session@1` gains optional `task_id` (the Actor task that asked for the session, so the session points back at the task) and `curtain` (the privacy screen: while it is up the session's still answers the curtain picture, never the screen). `run.session-create-request@1` gains optional `task_id`.
 - The `run.session.started` and `run.session.ended` event payloads carry the same optional `task_id` and `curtain`, so a session's own events stay valid with the new session shape.
+- Capabilities name the routes: `run.session.read` gains `GET /api/v1/sessions/{id}/still`, `run.session.control` gains `POST /api/v1/sessions/{id}/curtain`, `actor.task.read` gains `GET /api/v1/tasks/{id}/still`, and `actor.task.create` gains `POST /api/v1/tasks/{id}/takeover` and `…/giveback`.
 - Additive only: every new field is optional and nothing that exists today changes shape.
 
 ## 0.326.0 — 2026-11-07

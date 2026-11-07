@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "sensitive": true,
-  "description": "Give OpenVibe.Actor a task: POST /api/v1/tasks with the task in plain words, a mode (cheapest, balanced, best, fastest, private) and a budget. Actor picks the agent system for it with openvibe-sdk/placement, runs it, has a second model family check the result, and records the result, the cost to the cent and the explanation on the task (platform.task@1, answered 201 with state queued). POST /api/v1/tasks/:id/cancel stops a task that has not ended. A person's tasks are theirs; a token that names a project puts the task in that project. Each person has a daily free allowance; a task whose cheapest eligible agent would cost more than its budget fails with actor.budget.exceeded instead of running. A task may register webhooks: Actor POSTs actor.task-webhook@1 to each on the state changes it asked for, signed with a secret minted for the task and returned once, as webhook_secret, in the answer that created it.",
+  "description": "Give OpenVibe.Actor a task: POST /api/v1/tasks with the task in plain words, a mode (cheapest, balanced, best, fastest, private) and a budget. Actor picks the agent system for it with openvibe-sdk/placement, runs it, has a second model family check the result, and records the result, the cost to the cent and the explanation on the task (platform.task@1, answered 201 with state queued). POST /api/v1/tasks/:id/cancel stops a task that has not ended. POST /api/v1/tasks/:id/takeover gives the person the Computer the task opened (the agent's input is refused while they drive) and POST /api/v1/tasks/:id/giveback hands it back; both are the task's own person's, built on the same hand-off the agent's hand_to_person tool uses. A person's tasks are theirs; a token that names a project puts the task in that project. Each person has a daily free allowance; a task whose cheapest eligible agent would cost more than its budget fails with actor.budget.exceeded instead of running. A task may register webhooks: Actor POSTs actor.task-webhook@1 to each on the state changes it asked for, signed with a secret minted for the task and returned once, as webhook_secret, in the answer that created it.",
   "inputSchema": "actor.task-create-request@1",
   "outputSchema": "platform.task@1",
   "permissions": [
@@ -19,6 +19,8 @@
   "events": [],
   "implementedBy": [
     "POST /api/v1/tasks",
-    "POST /api/v1/tasks/:id/cancel"
+    "POST /api/v1/tasks/:id/cancel",
+    "POST /api/v1/tasks/:id/takeover",
+    "POST /api/v1/tasks/:id/giveback"
   ]
 }
