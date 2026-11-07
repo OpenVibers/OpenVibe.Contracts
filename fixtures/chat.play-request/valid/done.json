@@ -1,0 +1,23 @@
+{
+  "request_id": "req_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "room": "agent:ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "author": {
+    "handle": "mira",
+    "display_name": "Mira"
+  },
+  "text": "build a snake game I can play",
+  "votes": 12,
+  "voters": 12,
+  "state": "done",
+  "pinned": false,
+  "created_at": "2026-11-06T20:00:00.000Z",
+  "started_at": "2026-11-06T20:05:00.000Z",
+  "ended_at": "2026-11-06T20:09:12.000Z",
+  "refusal": null,
+  "result": {
+    "outcome": "done",
+    "line": "Done: a snake game at https://scratch.openvibe.space/snake-4f2a",
+    "scratch_url": "https://scratch.openvibe.space/snake-4f2a",
+    "task_id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  }
+}

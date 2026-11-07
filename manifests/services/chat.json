@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "contractRanges": {
     "openvibe-contracts": ">=0.13.0 <1.0.0"
   },
@@ -21,6 +21,8 @@
     "chat.inbox.read",
     "chat.inbox.reply",
     "chat.live_bridge.write",
+    "chat.play_queue.read",
+    "chat.play_queue.write",
     "chat.message.send",
     "chat.messages.read",
     "chat.moderation.queue.read",

@@ -1,0 +1,21 @@
+{
+  "id": "chat.play_queue.read",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a chat plays queue on OpenVibe.Chat (the Agent Streams plan, S6). GET /internal/chat/rooms/agent:play-queue answers chat.play-request@1: the requests of the room `agent:<ags_id>`, each with its votes and its state, the current request and the top of the queue. The caller is Codes, the task's service, acting for the stream's owner (a node token on_behalf_of), so the queue it reads is the owner's room and nobody else's. Chat chooses what the queue holds: a request enters it only after the house text filters and the safety check, one open request per person at a time.",
+  "inputSchema": "chat.play-request@1",
+  "outputSchema": "chat.play-request@1",
+  "permissions": [
+    "chat:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/chat/rooms/agent:play-queue"
+  ]
+}

@@ -9591,6 +9591,24 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "chat.play-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/play-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.sandbox-session",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/sandbox-session.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

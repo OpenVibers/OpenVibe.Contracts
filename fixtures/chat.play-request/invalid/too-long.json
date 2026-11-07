@@ -1,0 +1,18 @@
+{
+  "request_id": "req_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "room": "agent:ags_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "author": {
+    "handle": "mira",
+    "display_name": "Mira"
+  },
+  "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "votes": 0,
+  "voters": 0,
+  "state": "queued",
+  "pinned": false,
+  "created_at": "2026-11-06T20:00:00.000Z",
+  "started_at": null,
+  "ended_at": null,
+  "refusal": null,
+  "result": null
+}

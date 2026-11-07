@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/live/agent-stream-control.v1.json",
   "title": "LiveAgentStreamControl",
-  "description": "live.agent-stream-control@1 (the Agent Streams plan, S5): one of the four controls the owner and the channel's moderators have over a live agent stream, with who pressed it. PAUSE tells the task's service (Codes or Actor) to pause at the next safe point; the overlay then says 'Paused by @mod'. CURTAIN is the S1 curtain, raised from the viewer side. MUTE is the S4 mute: the agent voice stops. END ends the stream and the room's Co-pilot reading, while the task itself keeps running off camera unless it was paused. A moderator may press all four, but may not resume a pause the owner set and may not change the mode or the task. Every press is logged: who, which control, when.",
+  "description": "live.agent-stream-control@1 (the Agent Streams plan, S5): one of the controls the owner and the channel's moderators have over a live agent stream, with who pressed it. PAUSE tells the task's service (Codes or Actor) to pause at the next safe point; the overlay then says 'Paused by @mod'. CURTAIN is the S1 curtain, raised from the viewer side. MUTE is the S4 mute: the agent voice stops. END ends the stream and the room's Co-pilot reading, while the task itself keeps running off camera unless it was paused. WIPE is the chat plays control of S6: it stops the run and resets the sandbox desk. A moderator may press every control, but may not resume a pause the owner set and may not change the mode or the task. Every press is logged: who, which control, when.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -16,7 +16,8 @@
         "pause",
         "curtain",
         "mute",
-        "end"
+        "end",
+        "wipe"
       ],
       "description": "Which control was pressed."
     },

@@ -11,6 +11,8 @@
   "deployment": "none of its own: a library and artifact repository published as release tags; services pin a tag and deploy it with their own releases",
   "contracts": "openvibe-contracts (this package: package.json's version, released as the matching tag)",
   "features": [
+    "chat.play-request@1 and codes.sandbox-session@1 (the Agent Streams plan, S6): the queue a chat plays room keeps and the sandbox desk that works it, with the owner's time box, cap and Go, and the scratch site that lives 24 hours",
+    "the capabilities chat.play_queue.read and chat.play_queue.write, for Codes acting for the stream's owner",
     "chat.agent-digest@1, chat.agent-poll@1 and live.agent-stream-control@1 (the Agent Streams plan, S5): the digest a Co-pilot room gives an agent, the poll an agent asks that room to run, and the four controls the owner and the moderators have over a live agent stream",
     "the capabilities chat.agent_digest.read and chat.agent_poll.write, for Codes and Actor acting for the stream's owner",
     "798 JSON Schemas with valid and invalid fixtures (at v0.210.0)",

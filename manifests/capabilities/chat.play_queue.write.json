@@ -1,0 +1,21 @@
+{
+  "id": "chat.play_queue.write",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Write a chat plays queue on OpenVibe.Chat (the Agent Streams plan, S6): record how a request ran. POST /internal/chat/rooms/agent:play-queue/:request_id takes chat.play-request@1 and moves the request from queued to running, and records its outcome (done, failed, timeout, budget or stopped) with the one line the overlay and the voice say and the scratch site the run left. The caller is Codes, the task's service, acting for the stream's owner (a node token on_behalf_of). Chat never lets this capability ask for money, add a person to the queue or change a vote: the queue's people and votes belong to the room.",
+  "inputSchema": "chat.play-request@1",
+  "outputSchema": "chat.play-request@1",
+  "permissions": [
+    "chat:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/chat/rooms/agent:play-queue/:request_id"
+  ]
+}
