@@ -1,0 +1,19 @@
+{
+  "id": "skl_01M4XEV0JT93CAYTXVD6V0QW1E",
+  "owner_subject": "usr_01M4XEV0JT93CAYTXVD6V0QW1F",
+  "kind": "skill",
+  "slug": "ship-a-change",
+  "title": "Ship a change",
+  "summary": "Open a pull request, wait for CI, and merge only when it is green.",
+  "audience": "public",
+  "official": false,
+  "tools": [
+    "claude-code",
+    "codex",
+    "opencode"
+  ],
+  "version": 3,
+  "body": "---\nname: ship-a-change\ndescription: Open a PR, wait for CI, and merge only when it is green.\n---\n\n# Ship a change\n\n1. Read the repository's own instructions.\n2. Run the narrowest test that proves the change.\n3. Open the pull request with what changed and how it was checked.\n",
+  "created_at": "2026-11-07T09:00:00.000Z",
+  "updated_at": "2026-11-07T10:30:00.000Z"
+}

@@ -4751,7 +4751,7 @@ export type ConfigSnapshot = {
 
 /** common.config-namespace@1.0.0 (owner: network) */
 /**
- * common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps).
+ * common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps, seconds), and for the owner's Setup tab and the clear admin panel (openvibe-shared 4.125.0) x-owner-input ({ group, unlocks, get_it_at, get_it_how, test }: a field only the owner can give), x-required-for (the feature an unset field blocks), x-enum-labels ({ value: { label, description } }), x-advanced (folded under Advanced settings) and x-example (a placeholder; never on a secret).
  */
 export interface ConfigNamespace {
   service: string;
@@ -4811,7 +4811,7 @@ export interface ConfigNamespace {
    */
   pins: string[];
   /**
-   * The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to) and x-unit (nano_usd, ms or bps).
+   * The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to), x-unit (nano_usd, ms, bps or seconds), x-owner-input, x-required-for, x-enum-labels, x-advanced and x-example.
    */
   schema: {} | null;
   /**
@@ -87022,6 +87022,174 @@ export interface CodesModerationActionPayload {
    * Per action: the fields changed, the previous and new state, a bulk action's count, … never the content.
    */
   details?: {};
+}
+
+/** codes.skill@1.0.0 (owner: codes) */
+/**
+ * codes.skill@1: one skill, rule, MCP server, command or hook in the OpenVibe.Codes hub (the Compute plan §5, E6). KIND says what it is: a skill is a SKILL.md folder the agent tools load, a rule is text for the tools' AGENTS.md/CLAUDE.md files, an mcp record is one MCP server definition, and command/hook are a slash command and a hook. SLUG is the folder name (lowercase letters, digits and hyphens) and is stable within one owner. VERSION is the newest record in codes.skill-version@1; BODY is that version's content. AUDIENCE is the four sharing audiences of openvibe-sdk/share: private (the owner only), people (the owner and the members listed in codes_skill_members), link (anyone with the link, not in the gallery) and public (the gallery, search and agents). A private, people or link record is never in the gallery. OFFICIAL marks OpenVibe's own skills. TOOLS names the harnesses the skill is written for; an empty list means every tool the Node knows. The body is untrusted text: the page renders it through the markup gate (escape first, then a small Markdown subset), never as HTML.
+ */
+export interface CodesSkill {
+  /**
+   * The hub id (skl_ + ULID).
+   */
+  id: string;
+  /**
+   * The person who owns the record.
+   */
+  owner_subject: string;
+  kind: "skill" | "rule" | "mcp" | "command" | "hook";
+  /**
+   * The stable folder name (SKILL.md lives in a folder with this name).
+   */
+  slug: string;
+  title: string;
+  summary: string;
+  /**
+   * The sharing audience, the same four openvibe-sdk/share uses.
+   */
+  audience: "public" | "link" | "people" | "private";
+  /**
+   * True for OpenVibe's own records; the gallery shows them beside community ones.
+   */
+  official: boolean;
+  /**
+   * @maxItems 8
+   */
+  tools:
+    | []
+    | ["claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ];
+  /**
+   * The newest coded_skill_versions row for this record.
+   */
+  version: number;
+  /**
+   * The skill's SKILL.md body (or the rule/command/hook/MCP text), untrusted Markdown.
+   */
+  body: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/** codes.skill-version@1.0.0 (owner: codes) */
+/**
+ * codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Node's state can name the version it wrote.
+ */
+export interface CodesSkillVersion {
+  skill_id: string;
+  version: number;
+  summary: string;
+  body: string;
+  /**
+   * @maxItems 8
+   */
+  tools:
+    | []
+    | ["claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ]
+    | [
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents",
+        "claude-code" | "codex" | "opencode" | "command-code" | "minimax-code" | "aider" | "agents"
+      ];
+  audience: "public" | "link" | "people" | "private";
+  created_by: string;
+  created_at: string;
+  /**
+   * Why this version was written: created, edited, published, or rolled back to N.
+   */
+  note?: string;
 }
 
 /** services.app-manifest@1.0.0 (owner: services) */

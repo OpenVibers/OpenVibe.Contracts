@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/skill-version.v1.json",
+  "title": "CodesSkillVersion",
+  "description": "codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Node's state can name the version it wrote.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "skill_id",
+    "version",
+    "summary",
+    "body",
+    "tools",
+    "audience",
+    "created_by",
+    "created_at"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 131072
+    },
+    "tools": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "claude-code",
+          "codex",
+          "opencode",
+          "command-code",
+          "minimax-code",
+          "aider",
+          "agents"
+        ]
+      }
+    },
+    "audience": {
+      "enum": [
+        "public",
+        "link",
+        "people",
+        "private"
+      ]
+    },
+    "created_by": {
+      "type": "string",
+      "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|system)$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Why this version was written: created, edited, published, or rolled back to N."
+    }
+  }
+}

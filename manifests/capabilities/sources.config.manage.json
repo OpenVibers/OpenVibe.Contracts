@@ -1,0 +1,24 @@
+{
+  "id": "sources.config.manage",
+  "version": "1.0",
+  "owner": "sources",
+  "status": "planned",
+  "visibility": "internal",
+  "description": "Manage the configuration namespaces and secrets of OpenVibe.Sources through openvibe-shared/config (D11), so the owner can give its keys and accounts on Network's Setup tab: GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. POST /internal/config/:namespace/test/:key asks the service's tester to try a stored value with the provider on the server, answering { ok, message } in one line that never carries a secret (the owner's Setup tab). Planned until OpenVibe.Sources mounts these routes; it then turns active and its service manifest lists it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+  "permissions": [
+    "config:manage"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "config-manage",
+  "events": [],
+  "implementedBy": [
+    "GET /internal/config",
+    "GET|POST /internal/config/:namespace",
+    "PUT|DELETE /internal/config/:namespace/secrets/:key",
+    "POST /internal/config/:namespace/test/:key"
+  ],
+  "inputSchema": "common.config-change@1",
+  "outputSchema": "common.config-namespace@1"
+}

@@ -1177,7 +1177,7 @@
    "get": {
     "operationId": "get_internal_config",
     "summary": "Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one ",
-    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. POST /internal/config/:namespace/test/:key asks the service's tester to try a stored value with the provider on the server, answering { ok, message } in one line that never carries a secret (the owner's Setup tab). Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
      "bench.config"
     ],
@@ -1284,7 +1284,7 @@
    "get": {
     "operationId": "get_internal_config_namespace",
     "summary": "Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one ",
-    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. POST /internal/config/:namespace/test/:key asks the service's tester to try a stored value with the provider on the server, answering { ok, message } in one line that never carries a secret (the owner's Setup tab). Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
      "bench.config"
     ],
@@ -1397,7 +1397,7 @@
    "post": {
     "operationId": "post_internal_config_namespace",
     "summary": "Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one ",
-    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. POST /internal/config/:namespace/test/:key asks the service's tester to try a stored value with the provider on the server, answering { ok, message } in one line that never carries a secret (the owner's Setup tab). Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
      "bench.config"
     ],
@@ -1463,7 +1463,7 @@
    "delete": {
     "operationId": "delete_internal_config_namespace_secrets_key",
     "summary": "Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one ",
-    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. POST /internal/config/:namespace/test/:key asks the service's tester to try a stored value with the provider on the server, answering { ok, message } in one line that never carries a secret (the owner's Setup tab). Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
      "bench.config"
     ],
@@ -1584,7 +1584,81 @@
    "put": {
     "operationId": "put_internal_config_namespace_secrets_key",
     "summary": "Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one ",
-    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. POST /internal/config/:namespace/test/:key asks the service's tester to try a stored value with the provider on the server, answering { ok, message } in one line that never carries a secret (the owner's Setup tab). Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
+    "tags": [
+     "bench.config"
+    ],
+    "x-openvibe-capabilities": [
+     "bench.config.manage"
+    ],
+    "x-openvibe-visibility": [
+     "internal"
+    ],
+    "x-openvibe-quota-class": "config-manage",
+    "security": [
+     {
+      "openvibeToken": [
+       "bench.config.manage"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/common.config-change.v1"
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "namespace",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "key",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/common.config-namespace.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/internal/config/{namespace}/test/{key}": {
+   "post": {
+    "operationId": "post_internal_config_namespace_test_key",
+    "summary": "Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one ",
+    "description": "**bench.config.manage** (internal): Manage the configuration namespaces and secrets of OpenVibe.Bench through openvibe-shared/config (D11): GET /internal/config lists the namespace summaries, GET /internal/config/:namespace returns one as common.config-namespace@1, POST applies common.config-change@1, and PUT /internal/config/:namespace/secrets/:key sets a secret with common.config-secret-put@1 (write-only; the answer is the marker) while DELETE removes it. POST /internal/config/:namespace/test/:key asks the service's tester to try a stored value with the provider on the server, answering { ok, message } in one line that never carries a secret (the owner's Setup tab). Only Network's admin proxy, acting for the owner, holds this capability; it is never grantable to apps. Each request carries the owner as actor, and the service audits every write with that actor and key, never a secret value.",
     "tags": [
      "bench.config"
     ],
@@ -2556,7 +2630,7 @@
    },
    "common.config-namespace.v1": {
     "title": "ConfigNamespace",
-    "description": "common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps).",
+    "description": "common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps, seconds), and for the owner's Setup tab and the clear admin panel (openvibe-shared 4.125.0) x-owner-input ({ group, unlocks, get_it_at, get_it_how, test }: a field only the owner can give), x-required-for (the feature an unset field blocks), x-enum-labels ({ value: { label, description } }), x-advanced (folded under Advanced settings) and x-example (a placeholder; never on a secret).",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -2655,7 +2729,7 @@
        "object",
        "null"
       ],
-      "description": "The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to) and x-unit (nano_usd, ms or bps)."
+      "description": "The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to), x-unit (nano_usd, ms, bps or seconds), x-owner-input, x-required-for, x-enum-labels, x-advanced and x-example."
      },
      "active": {
       "description": "The active revision as a snapshot (common.config-snapshot@1), or null.",

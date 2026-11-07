@@ -112,11 +112,24 @@ for (const cap of capabilities.manifests) {
 // Owner settings (AI Exchange D11, S1): one internal config capability per service, on
 // openvibe-shared/config's admin routes. Only Network's admin proxy, acting for the owner, holds
 // them; they are never grantable to apps. Network uses its own admin config routes, not the proxy.
+// 0.311.0 (the owner's Setup tab): the config admin routes gained POST /internal/config/:namespace/test/:key
+// (openvibe-shared 4.125.0's test hook), and eight more services that hold an owner input are reachable. Those
+// eight are planned until each mounts the routes: then it turns active and its service manifest lists it (Deals'
+// own test pins that list, so listing it early would break the service's pin bump).
+const CONFIG_ROUTES = ['GET /internal/config', 'GET|POST /internal/config/:namespace', 'PUT|DELETE /internal/config/:namespace/secrets/:key', 'POST /internal/config/:namespace/test/:key'];
 for (const svc of ['ai', 'billing', 'services', 'watch', 'bench', 'report', 'host', 'codes', 'actor']) {
     const c = capabilities.get(`${svc}.config.manage`);
     ok(c && c.owner === svc && c.status === 'active' && c.visibility === 'internal', `${svc}.config.manage is an active internal capability`);
-    ok(JSON.stringify(c.implementedBy) === JSON.stringify(['GET /internal/config', 'GET|POST /internal/config/:namespace', 'PUT|DELETE /internal/config/:namespace/secrets/:key']), `${svc}.config.manage names the config routes`);
+    ok(JSON.stringify(c.implementedBy) === JSON.stringify(CONFIG_ROUTES), `${svc}.config.manage names the config routes`);
     ok(/Only Network's admin proxy, acting for the owner, holds this capability/.test(c.description) && /never grantable to apps/.test(c.description), `${svc}.config.manage says who holds it and that an app never does`);
+}
+for (const svc of ['chat', 'connect', 'deals', 'work', 'sources', 'design', 'domains', 'media']) {
+    const c = capabilities.get(`${svc}.config.manage`);
+    ok(c && c.owner === svc && c.status === 'planned' && c.visibility === 'internal', `${svc}.config.manage is a planned internal capability`);
+    ok(JSON.stringify(c.implementedBy) === JSON.stringify(CONFIG_ROUTES), `${svc}.config.manage names the config routes`);
+    ok(/Only Network's admin proxy, acting for the owner, holds this capability/.test(c.description) && /never grantable to apps/.test(c.description), `${svc}.config.manage says who holds it and that an app never does`);
+    ok(/Setup tab/.test(c.description) && /\/test\/:key/.test(c.description), `${svc}.config.manage says what the Setup tab and its test route do`);
+    ok(!services.get(svc).capabilities.includes(c.id), `${svc} does not list ${c.id} before it serves it`);
 }
 ok(!capabilities.get('network.config.manage'), 'network uses its own admin config routes, not the proxy capability');
 // Developer-app events (v0.28, ADR-014): grantable to apps, owned by Events, project-scoped. The
