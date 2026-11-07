@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.325.0 — 2026-11-07
+
+- Add `media.vod@1` and `media.clip@1`: one recorded stream and one clip as OpenVibe.Media's API answers them. Both carry `watch_id`, the id openvibe.video addresses a watch page by (`openvibe.video/watch?v=<watch_id>`), and the shape around it that consumers already read — the numeric id (internal), the owning tenant, the app-local user ids, title and status, duration and size, the file basename, `playback_url`, thumbnail, storage provider, visibility, view counts and times; a clip also names the recording it was cut from, its window in that recording and whether an automation cut it. `watch_id` is **additive and optional** (11 characters of URL-safe base64 from 8 random bytes, one id space across VODs and clips, fixed for the row's life and never the numeric id), because a row written before Media's backfill may answer without one.
+- Valid and invalid fixtures cover a public recording with a watch id and an unlisted one before the backfill, a person-made clip and an AI clip, a watch id of the wrong length, one with a character base64url never has, one with a slash, and an unknown visibility.
 ## 0.324.0 — 2026-11-07
 
 - Space's builder API moves under `/api/v1/builder/spaces`: `GET /api/v1/spaces` was the forum's old API (it lives on OpenVibe.Community since 2026-11-07, and Space still answers it with a redirect), so the API the person's own agent works through needs an address of its own. The capabilities name the new routes: `space.build.read` (`GET /api/v1/builder/spaces`, `…/:id`, `…/:id/files`, `…/:id/files/:path`, `…/:id/preview`), `space.build.create` (`POST /api/v1/builder/spaces`), `space.build.write` (`PUT /api/v1/builder/spaces/:id/files`) and `space.build.publish` (`POST /api/v1/builder/spaces/:id/publish`, and the person's answer at `POST /api/v1/agent/approvals/:id/decide`).
