@@ -1,0 +1,21 @@
+{
+  "id": "actor.assignment.read",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read one node of your assignment tree and its children with GET /api/v1/assignments/:id (actor.assignment@1): the hand-off, who started it, its mode and reply, the agent and task it runs as, its level and effective level, the root's budget and the state. Only the person whose work it is can read it; another person gets the same 404 as a node that does not exist.",
+  "inputSchema": "common.no-body@1",
+  "permissions": [
+    "actor:assignments:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "actor-read",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/assignments/:id"
+  ],
+  "outputSchema": "actor.assignment-tree@1"
+}

@@ -84467,6 +84467,11 @@
               "handoff"
             ]
           },
+          "assignment_id": {
+            "type": "string",
+            "pattern": "^asg_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The assignment node this step belongs to (actor.assignment@1): the work tree the Dock may draw later. Older events and work with no assignment have none."
+          },
           "text": {
             "type": "string",
             "maxLength": 8000
@@ -84652,6 +84657,228 @@
           },
           "task": {
             "$ref": "../platform/task.v1.json"
+          }
+        }
+      }
+    },
+    "actor.assignment": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/assignment.v1.json",
+        "title": "ActorAssignment",
+        "description": "actor.assignment@1: one node of the tree of delegated work (plan §12). A node is a hand-off — a person giving Actor a task, a routine or Watch trigger starting a run, an agent handing work to another agent, or Actor starting a Codes or Space task. ID is the node; ROOT names the node whose BUDGET the whole tree spends, PARENT the node that handed this work over (null on a root) and DEPTH its distance from the root (0 on a root). ORIGIN says who started the line: a person (person), a routine or Watch trigger (routine), or work from outside Actor (outside). MODE is the hand-off's kind (work, consult, notify) and REPLY how its result comes back (resume into the parent, poll, or none). LEVEL is the node's own level and EFFECTIVE_LEVEL the level its steps run at: the higher of the agent's own level and the one inherited from a person's or routine's line. Outside work never passes a level down. BUDGET is the root's budget and what the tree has spent. A cancel cascades down the tree. GET /api/v1/assignments/:id returns { assignment, children } and POST /api/v1/assignments/:id/cancel returns { assignment, cancelled }; both are owner-only, and another person's node is the same 404 as one that does not exist. A task has no node until one is made for it: an existing task gets a root lazily.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "root",
+          "parent",
+          "depth",
+          "origin",
+          "mode",
+          "reply",
+          "agent_id",
+          "task_id",
+          "level",
+          "effective_level",
+          "budget",
+          "state",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^asg_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "root": {
+            "type": "string",
+            "pattern": "^asg_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "parent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^asg_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "depth": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "person",
+              "routine",
+              "outside"
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "work",
+              "consult",
+              "notify"
+            ]
+          },
+          "reply": {
+            "type": "string",
+            "enum": [
+              "resume",
+              "poll",
+              "none"
+            ]
+          },
+          "agent_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "task_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "ask",
+              "auto-edits",
+              "approve-for-me",
+              "full"
+            ]
+          },
+          "effective_level": {
+            "type": "string",
+            "enum": [
+              "ask",
+              "auto-edits",
+              "approve-for-me",
+              "full"
+            ]
+          },
+          "budget": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The budget of the root of this tree, and what the tree has spent of it. Every node carries the same root budget.",
+            "required": [
+              "limit_usd",
+              "spent_usd",
+              "remaining_usd"
+            ],
+            "properties": {
+              "limit_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "spent_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "remaining_usd": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "waiting",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "actor.assignment-tree": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/assignment-tree.v1.json",
+        "title": "ActorAssignmentTree",
+        "description": "actor.assignment-tree@1: GET /api/v1/assignments/:id (capability actor.assignment.read): the node and its direct children, oldest first. Each node is an actor.assignment@1. Only the owner can read the tree; another person gets 404.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assignment",
+          "children"
+        ],
+        "properties": {
+          "assignment": {
+            "$ref": "assignment.v1.json"
+          },
+          "children": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "assignment.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "actor.assignment-cancel-result": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/assignment-cancel-result.v1.json",
+        "title": "ActorAssignmentCancelResult",
+        "description": "actor.assignment-cancel-result@1: POST /api/v1/assignments/:id/cancel (capability actor.assignment.cancel): the node as it is now and every node the cancel stopped, the node included and its children below it. The tasks those nodes ran are cancelled too. Only the owner can cancel; another person gets 404.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assignment",
+          "cancelled"
+        ],
+        "properties": {
+          "assignment": {
+            "$ref": "assignment.v1.json"
+          },
+          "cancelled": {
+            "type": "array",
+            "maxItems": 1000,
+            "items": {
+              "$ref": "assignment.v1.json"
+            }
           }
         }
       }

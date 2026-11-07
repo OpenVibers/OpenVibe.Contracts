@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.327.0 — 2026-11-07
+
+- Add `actor.assignment@1`: one node of the tree of delegated work (plan §12) — id, root, parent, depth, origin (`person`, `routine`, `outside`), mode (`work`, `consult`, `notify`), reply (`resume`, `poll`, `none`), the agent and task it runs as, the node's level and effective level, the root's budget (limit, spent and remaining), state and timestamps. A node is one hand-off: a person giving Actor a task, a routine or Watch trigger starting a run, an agent handing work to another agent, or Actor starting a Codes or Space task. The effective level is the higher of the agent's own and the one inherited along a person's or routine's line; outside work never passes a level down. A cancel cascades down the tree, and a root's budget stops its children when spent. `GET /api/v1/assignments/:id` answers the node and its children and `POST /api/v1/assignments/:id/cancel` cancels the subtree; both are owner-only and another person gets 404. An existing task gets a root lazily.
+- Add the capabilities `actor.assignment.read` and `actor.assignment.cancel`, and name them in Actor's service manifest. They are the two assignment routes above.
+- `actor.task-event@2` gains an optional `assignment_id` on a step event, so the Dock's timeline can draw the work tree later. Additive: an event without one stays valid, and the task record is still the source of truth.
+
 ## 0.326.0 — 2026-11-07
 
 - Add `network.menu-feeds@1`: the cards a person chose to show in the OpenVibe menu's "Choose your feeds", in their order, following them across every site. `on` holds up to four `<site>:<cardId>` ids (lower-case letters, digits and dashes) and `updated_at` says when the choice last changed. OpenVibe.Network keeps it at `GET` and `PUT /api/v1/me/menu-feeds`; a person who has never chosen gets `{ on: null }` from the GET. An empty array is a cleared choice.

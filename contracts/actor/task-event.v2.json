@@ -58,6 +58,11 @@
         "handoff"
       ]
     },
+    "assignment_id": {
+      "type": "string",
+      "pattern": "^asg_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The assignment node this step belongs to (actor.assignment@1): the work tree the Dock may draw later. Older events and work with no assignment have none."
+    },
     "text": {
       "type": "string",
       "maxLength": 8000
