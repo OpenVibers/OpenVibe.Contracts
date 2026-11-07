@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/mail/burner.v1.json",
+  "title": "MailBurner",
+  "description": "A throwaway receive-only address on OpenVibe.Mail. It expires after ten minutes, an hour, a day or a week, or after the first message when first_message_only is set. When it expires its mail is deleted and the address bounces. A ten-minute burner may be made without an account (owner is null) and is then read with the one-time token the create call returns; the token is deliberately not part of this resource.",
+  "type": "object",
+  "required": ["id", "owner", "address", "expires_at", "first_message_only", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^bnr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The burner id. Opaque outside OpenVibe.Mail."
+    },
+    "owner": {
+      "type": ["string", "null"],
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Network subject id of the person who made the burner, or null for a ten-minute burner made without an account."
+    },
+    "address": {
+      "type": "string",
+      "format": "email",
+      "pattern": "^[a-z0-9]{8}@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$",
+      "maxLength": 254,
+      "description": "The burner address: eight unguessable characters on one of the rotating burner domains."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the address stops resolving and its mail is due for deletion, ISO 8601 UTC."
+    },
+    "first_message_only": {
+      "type": "boolean",
+      "description": "When true the burner accepts one message and then stops resolving."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the burner was made, ISO 8601 UTC."
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/mail/agent-inbox.v1.json",
+  "title": "MailAgentInbox",
+  "description": "An address an agent can read, on the person's own domain: <agent>.<user>@openvibe.email. The mail lands in the person's mailbox, like every other address OpenVibe.Mail hands out; what makes it an agent's inbox is that the service reads it back for the agent acting for that person. One agent has one inbox: asking twice returns the same resource.",
+  "type": "object",
+  "required": ["id", "owner", "agent_id", "address", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^agi_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The inbox id. Opaque outside OpenVibe.Mail."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Network subject id of the person whose mailbox receives the agent's mail."
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?$",
+      "maxLength": 32,
+      "description": "The agent's name in the address, lowercased and cleaned (letters, digits and hyphens)."
+    },
+    "address": {
+      "type": "string",
+      "format": "email",
+      "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$",
+      "maxLength": 254,
+      "description": "The agent's address. In M1 the user part is the person's Network username, falling back to their mailbox local when that readable address is already taken."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the inbox was made, ISO 8601 UTC."
+    }
+  }
+}

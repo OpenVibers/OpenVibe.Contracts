@@ -9975,6 +9975,42 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "mail.mask",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/mask.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mail.burner",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/burner.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mail.agent-inbox",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/agent-inbox.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mail.message-summary",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/message-summary.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

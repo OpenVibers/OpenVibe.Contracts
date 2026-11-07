@@ -109339,6 +109339,232 @@
           }
         }
       }
+    },
+    "mail.mask": {
+      "version": "1.0.0",
+      "owner": "mail",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/mail/mask.v1.json",
+        "title": "MailMask",
+        "description": "A per-site address on OpenVibe.Mail that delivers into its owner's OpenVibe mailbox and nowhere else. Turning it off makes the address bounce: it leaves the SQL directory Stalwart reads, so a new message is refused. The address is <words>.<four characters>@<mask domain>; the four characters keep two people from guessing each other's mask. The contract is metadata only: it never carries a message body.",
+        "type": "object",
+        "required": [
+          "id",
+          "owner",
+          "address",
+          "label",
+          "purpose",
+          "enabled",
+          "created_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^msk_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The mask id. Opaque outside OpenVibe.Mail; never a database integer."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The Network subject id of the person whose mailbox receives the mask's mail. A mask never forwards outside OpenVibe."
+          },
+          "address": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?\\.[a-z0-9]{4}@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$",
+            "maxLength": 254,
+            "description": "The mask address: the words the person chose, a dot, four unguessable characters, and the mask domain (mask.openvibe.email in M1)."
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "description": "The person's name for the mask, e.g. \"Amazon\". Free text; never interpreted as an address."
+          },
+          "purpose": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "description": "What the mask is for, e.g. \"shopping\". Optional metadata for the person's own list."
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the mask resolves. When false the SQL directory has no row for the address, so the mail server refuses it."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the mask was made, ISO 8601 UTC."
+          }
+        }
+      }
+    },
+    "mail.burner": {
+      "version": "1.0.0",
+      "owner": "mail",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/mail/burner.v1.json",
+        "title": "MailBurner",
+        "description": "A throwaway receive-only address on OpenVibe.Mail. It expires after ten minutes, an hour, a day or a week, or after the first message when first_message_only is set. When it expires its mail is deleted and the address bounces. A ten-minute burner may be made without an account (owner is null) and is then read with the one-time token the create call returns; the token is deliberately not part of this resource.",
+        "type": "object",
+        "required": [
+          "id",
+          "owner",
+          "address",
+          "expires_at",
+          "first_message_only",
+          "created_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^bnr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The burner id. Opaque outside OpenVibe.Mail."
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The Network subject id of the person who made the burner, or null for a ten-minute burner made without an account."
+          },
+          "address": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^[a-z0-9]{8}@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$",
+            "maxLength": 254,
+            "description": "The burner address: eight unguessable characters on one of the rotating burner domains."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the address stops resolving and its mail is due for deletion, ISO 8601 UTC."
+          },
+          "first_message_only": {
+            "type": "boolean",
+            "description": "When true the burner accepts one message and then stops resolving."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the burner was made, ISO 8601 UTC."
+          }
+        }
+      }
+    },
+    "mail.agent-inbox": {
+      "version": "1.0.0",
+      "owner": "mail",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/mail/agent-inbox.v1.json",
+        "title": "MailAgentInbox",
+        "description": "An address an agent can read, on the person's own domain: <agent>.<user>@openvibe.email. The mail lands in the person's mailbox, like every other address OpenVibe.Mail hands out; what makes it an agent's inbox is that the service reads it back for the agent acting for that person. One agent has one inbox: asking twice returns the same resource.",
+        "type": "object",
+        "required": [
+          "id",
+          "owner",
+          "agent_id",
+          "address",
+          "created_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^agi_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The inbox id. Opaque outside OpenVibe.Mail."
+          },
+          "owner": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The Network subject id of the person whose mailbox receives the agent's mail."
+          },
+          "agent_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?$",
+            "maxLength": 32,
+            "description": "The agent's name in the address, lowercased and cleaned (letters, digits and hyphens)."
+          },
+          "address": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$",
+            "maxLength": 254,
+            "description": "The agent's address. In M1 the user part is the person's Network username, falling back to their mailbox local when that readable address is already taken."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the inbox was made, ISO 8601 UTC."
+          }
+        }
+      }
+    },
+    "mail.message-summary": {
+      "version": "1.0.0",
+      "owner": "mail",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/mail/message-summary.v1.json",
+        "title": "MailMessageSummary",
+        "description": "One message in a mask, burner or agent inbox, as OpenVibe.Mail's list API returns it: the id, the senders, the subject and the time. It deliberately has no preview and no body: a message body is read only by the verification-code endpoint, in memory, and is never part of a list, an event or a database row. additionalProperties is false so a field like body, preview or html fails the contract rather than leaking into an API.",
+        "type": "object",
+        "required": [
+          "id",
+          "from",
+          "subject",
+          "received_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "The mail server's message id (a JMAP Email id). Opaque outside OpenVibe.Mail."
+          },
+          "from": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "format": "email",
+              "maxLength": 254
+            },
+            "description": "The sender addresses, as the mail server parsed them. An address list, not a display name."
+          },
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000,
+            "description": "The subject line, or null when the message had none."
+          },
+          "received_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the mail server received the message, ISO 8601 UTC, or null when it did not record a time."
+          }
+        }
+      }
     }
   }
 }

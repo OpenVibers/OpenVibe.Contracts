@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/mail/mask.v1.json",
+  "title": "MailMask",
+  "description": "A per-site address on OpenVibe.Mail that delivers into its owner's OpenVibe mailbox and nowhere else. Turning it off makes the address bounce: it leaves the SQL directory Stalwart reads, so a new message is refused. The address is <words>.<four characters>@<mask domain>; the four characters keep two people from guessing each other's mask. The contract is metadata only: it never carries a message body.",
+  "type": "object",
+  "required": ["id", "owner", "address", "label", "purpose", "enabled", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^msk_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The mask id. Opaque outside OpenVibe.Mail; never a database integer."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Network subject id of the person whose mailbox receives the mask's mail. A mask never forwards outside OpenVibe."
+    },
+    "address": {
+      "type": "string",
+      "format": "email",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?\\.[a-z0-9]{4}@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$",
+      "maxLength": 254,
+      "description": "The mask address: the words the person chose, a dot, four unguessable characters, and the mask domain (mask.openvibe.email in M1)."
+    },
+    "label": {
+      "type": ["string", "null"],
+      "maxLength": 120,
+      "description": "The person's name for the mask, e.g. \"Amazon\". Free text; never interpreted as an address."
+    },
+    "purpose": {
+      "type": ["string", "null"],
+      "maxLength": 120,
+      "description": "What the mask is for, e.g. \"shopping\". Optional metadata for the person's own list."
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether the mask resolves. When false the SQL directory has no row for the address, so the mail server refuses it."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the mask was made, ISO 8601 UTC."
+    }
+  }
+}
