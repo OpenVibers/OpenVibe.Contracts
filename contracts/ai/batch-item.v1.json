@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/batch-item.v1.json",
+  "title": "AiBatchItem",
+  "description": "ai.batch-item@1: one prompt of a batch on OpenVibe.AI (POST /api/v1/batches). The item is the queue and the status of that one prompt: it waits for capacity (or for a provider's own batch API), runs, and carries the answer, the run it made and the money. A prompt that reached its deadline without capacity expires and is never charged.",
+  "type": "object",
+  "required": [
+    "idx",
+    "status",
+    "model",
+    "run_id",
+    "answer",
+    "error_code",
+    "error_detail",
+    "reason",
+    "capacity",
+    "route_provider",
+    "route_model",
+    "deadline_at",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "idx": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The item's place in the batch."
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "waiting",
+        "running",
+        "succeeded",
+        "failed",
+        "expired",
+        "cancelled"
+      ],
+      "description": "queued (asked for, not started), waiting (no cheap capacity yet), running (a provider works on it), succeeded, failed, expired (the deadline passed; not charged), cancelled (the batch was cancelled)."
+    },
+    "model": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The model the item asked for, or the batch's own."
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The run the item made, when it made one."
+    },
+    "answer": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The answer the provider gave, as text."
+    },
+    "error_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "error_detail": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Why the item ended without an answer (it expired, it was cancelled)."
+    },
+    "capacity": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Where the answer came from: a community offer, the regular capacity, or a provider's own batch API."
+    },
+    "route_provider": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "route_model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "cost_nano_usd": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "What the answer really cost, in nano-USD (1 USD = 1e9 nano), as a string: the money is never a float."
+    },
+    "absorbed_nano_usd": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "What the network absorbed (the route cost more than the customer paid), in nano-USD, as a string."
+    },
+    "charged_nano_usd": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "What the customer was charged, in nano-USD, as a string: half the retail card."
+    },
+    "deadline_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

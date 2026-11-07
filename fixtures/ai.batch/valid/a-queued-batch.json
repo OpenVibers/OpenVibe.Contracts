@@ -1,0 +1,16 @@
+{
+  "id": "bat_0123456789abcdef01234567",
+  "status": "queued",
+  "owner_type": "user",
+  "owner_id": "usr_01K6R3A1B2C3D4E5F6G7H8J9KF",
+  "project_id": null,
+  "item_count": 2,
+  "items": [],
+  "discount": "500000",
+  "deadline_at": "2026-11-08T22:58:00.000Z",
+  "created_at": "2026-11-07T22:58:00.000Z",
+  "updated_at": "2026-11-08T00:10:00.000Z",
+  "finished_at": null,
+  "absorbed_nano_usd": "0",
+  "ran_on_regular_capacity": false
+}

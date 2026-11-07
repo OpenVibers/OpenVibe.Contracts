@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/batch-read-result.v1.json",
+  "title": "AiBatchReadResult",
+  "description": "ai.batch-read-result@1: the answers of ai.batches.read on OpenVibe.AI (the caller's own batches). GET /api/v1/batches → { batches } (newest first, the items not included); GET /api/v1/batches/:id → { batch } (with its items). Somebody else's batch is 404 batch.not_found.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "batches"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "batches": {
+          "type": "array",
+          "items": {
+            "$ref": "batch.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "batch"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "batch": {
+          "$ref": "batch.v1.json"
+        }
+      }
+    }
+  ]
+}

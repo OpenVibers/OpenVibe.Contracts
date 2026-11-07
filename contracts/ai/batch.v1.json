@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/batch.v1.json",
+  "title": "AiBatch",
+  "description": "ai.batch@1: a batch of many prompts on OpenVibe.AI (POST /api/v1/batches, GET /api/v1/batches, GET /api/v1/batches/:id). The answers are not waited for: the batch is queued, and the batch says where it stands. A batch is billed at half the retail price through Billing like every other request; the batch table is the queue and the status, never a second ledger. The owner of the batch is the account that pays for it: a person, a developer app's project, or a first-party service with the ai.batches.create grant (the network's own account).",
+  "type": "object",
+  "required": [
+    "id",
+    "status",
+    "owner_type",
+    "owner_id",
+    "project_id",
+    "item_count",
+    "items",
+    "discount",
+    "deadline_at",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^bat_[0-9a-f]{24}$"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "succeeded",
+        "failed",
+        "expired",
+        "cancelled"
+      ],
+      "description": "queued (asked for), running (items are being answered), succeeded, failed (an item failed), expired (the deadline passed with nothing answered), cancelled (the caller cancelled it)."
+    },
+    "owner_type": {
+      "enum": [
+        "user",
+        "app",
+        "service"
+      ],
+      "description": "Who pays for the batch."
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The developer app's project, when an app owns the batch."
+    },
+    "item_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many prompts the batch carries."
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "batch-item.v1.json"
+      },
+      "description": "The items, in order. The list of batches answers with the same objects and no items (an empty array): the items come from GET /api/v1/batches/:id."
+    },
+    "discount": {
+      "type": "string",
+      "description": "The share of the retail card the customer is charged, as a decimal fraction of a million (500000 = half)."
+    },
+    "deadline_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the batch stops waiting: the deadline the caller asked for (1 to 72 hours)."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "absorbed_nano_usd": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "What the network absorbed for this batch, in nano-USD, as a string."
+    },
+    "ran_on_regular_capacity": {
+      "type": "boolean",
+      "description": "The batch ran on the ordinary capacity (not on free or community capacity): it cost the network more than the customer paid, and the difference is the absorbed amount."
+    }
+  }
+}
