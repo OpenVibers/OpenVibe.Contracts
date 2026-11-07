@@ -9485,6 +9485,24 @@
       "status": "active"
     },
     {
+      "id": "live.agent-sandbox-worker-request",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-sandbox-worker-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.agent-sandbox-worker-result",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-sandbox-worker-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.agent-stream",
       "version": "1.0.0",
       "owner": "live",

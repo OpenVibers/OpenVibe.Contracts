@@ -1,0 +1,8 @@
+{
+  "worker": {
+    "ready": false,
+    "code": "sandbox_worker_missing",
+    "reason": "Needs the sandbox worker; coming soon",
+    "last_seen_at": null
+  }
+}

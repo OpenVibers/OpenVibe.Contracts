@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/agent-sandbox-worker-request.v1.json",
+  "title": "LiveAgentSandboxWorkerRequest",
+  "description": "live.agent-sandbox-worker-request@1 (Agent Streams S6): the body of POST /api/streams/agent/:id/plays/worker on OpenVibe.Live (capability live.agent_sandbox.register). It is the sandbox worker's own check-in: the worker says it is there and reports the isolation facts Live requires, and Live derives health only from that check-in (it stores no endpoint and never calls the worker). Only a first-party service token whose principal holds live.agent_sandbox.register may send it, and it names the person it works for in X-OV-Subject, who must own the stream. The owner's session, a desk ticket and a person token are refused. Live counts a check-in within the last minute as alive and requires isolation to say exactly: host_network false, credentials false, profile false, egress_proxy true, workspace 'ephemeral'. The worker may report more than these five facts (its own checks, limits and versions); Live reads only the five and stores the report it was given. A worker that cannot say each of the five is not registered at all.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "isolation"
+  ],
+  "properties": {
+    "worker_id": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "The worker's name in its own records; not a secret and not an address."
+    },
+    "service": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "The worker implementation that checked in (`codes-sandbox` for OpenVibe.Codes')."
+    },
+    "version": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "ready": {
+      "type": "boolean",
+      "description": "The worker's own view of its health; Live's health is the check-in plus the isolation report, never this flag alone."
+    },
+    "reasons": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "description": "Why the worker says it is not ready (its self-test's failures), for the owner's page."
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "description": "The worker's self-test: one boolean per check it ran (the network namespace, the egress refusals, the cleaned environment, the host files, the capabilities, seccomp, the cgroup limits, the wipe)."
+    },
+    "checked_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When that self-test ran; null before the first one."
+    },
+    "isolation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "host_network",
+        "credentials",
+        "profile",
+        "egress_proxy",
+        "workspace"
+      ],
+      "properties": {
+        "host_network": {
+          "const": false,
+          "description": "The sandbox has its own network namespace; it cannot reach the host's network."
+        },
+        "credentials": {
+          "const": false,
+          "description": "No credential of the host, the worker or the person is inside the sandbox."
+        },
+        "profile": {
+          "const": false,
+          "description": "No browser or desktop profile of the host's is mounted."
+        },
+        "egress_proxy": {
+          "const": true,
+          "description": "Its only way out is the worker's proxy, which applies the egress guard."
+        },
+        "workspace": {
+          "const": "ephemeral",
+          "description": "The workspace is the sandbox's own and is gone with the wipe."
+        }
+      }
+    },
+    "browser": {
+      "type": "boolean",
+      "description": "Whether this worker has the optional headless browser."
+    },
+    "capacity": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "How many sandboxes it may run at once."
+    },
+    "active": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many are running now."
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the worker assembled the report."
+    }
+  }
+}

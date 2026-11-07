@@ -1,0 +1,53 @@
+{
+  "worker_id": "sbw-ovhost",
+  "service": "codes-sandbox",
+  "version": "0.7.0",
+  "ready": true,
+  "checks": {
+    "network_namespace": true,
+    "no_direct_egress": true,
+    "egress_refuses_private": true,
+    "clean_env": true,
+    "no_host_files": true,
+    "no_capabilities": true,
+    "seccomp": true,
+    "limits": true,
+    "wipe": true
+  },
+  "checked_at": "2026-11-07T12:00:00.000Z",
+  "isolation": {
+    "sandbox": "bubblewrap",
+    "bubblewrap": "0.9.0",
+    "user_namespace": true,
+    "network_namespace": true,
+    "egress": {
+      "via": "proxy",
+      "public_only": true,
+      "ports": [80, 443],
+      "direct": "none"
+    },
+    "host_credentials": "none",
+    "host_files": "none",
+    "capabilities": "none",
+    "seccomp": true,
+    "host_network": false,
+    "credentials": false,
+    "profile": false,
+    "egress_proxy": true,
+    "workspace": "ephemeral",
+    "workspace_kind": "tmpfs, wiped with the sandbox",
+    "limits": {
+      "kind": "cgroup",
+      "enforced": true,
+      "memory_mb": 2048,
+      "disk_mb": 512,
+      "pids": 256,
+      "cpu_percent": 100,
+      "time_box_minutes": [5, 30]
+    }
+  },
+  "browser": false,
+  "capacity": 2,
+  "active": 0,
+  "at": "2026-11-07T12:00:00.000Z"
+}
