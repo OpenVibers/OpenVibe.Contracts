@@ -87331,6 +87331,254 @@
         ]
       }
     },
+    "space.build-space": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/build-space.v1.json",
+        "title": "SpaceBuildSpace",
+        "description": "space.build-space@1: one of a person's own spaces, as their agent sees it while it builds (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). The id, the slug it publishes under, its name and description, whether it is published and where, and when it last changed. Nothing about anyone else's space is ever in this shape.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "published",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^spc_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The space's id."
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){2,39}$",
+            "description": "The name it publishes under (<slug>.openvibe.website)."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "published": {
+            "type": "boolean",
+            "description": "True while it is live at its own address."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Where it lives: its own address once published, the editor while it is a draft."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When it last changed."
+          }
+        }
+      }
+    },
+    "space.build-list": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/build-list.v1.json",
+        "title": "SpaceBuildList",
+        "description": "space.build-list@1: the spaces of one person, as their agent sees them (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces answers { spaces }; GET /api/v1/spaces/:id answers { space }.",
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "spaces"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "spaces": {
+                "type": "array",
+                "items": {
+                  "$ref": "build-space.v1.json"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "space"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "space": {
+                "$ref": "build-space.v1.json"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "space.build-files": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/build-files.v1.json",
+        "title": "SpaceBuildFiles",
+        "description": "space.build-files@1: the source files of one of a person's spaces, as their agent sees them (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces/:id/files answers { files }: every file of the space, its path and its whole content. The same shape is the body of PUT /api/v1/spaces/:id/files (space.build-write@1): the files to write, which replace the space's files as a whole.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "files"
+        ],
+        "properties": {
+          "files": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "content"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "maxLength": 80,
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*){0,3}$",
+                  "description": "The file's path inside the space: letters, digits, \".\", \"-\", \"_\", up to four folders."
+                },
+                "content": {
+                  "type": "string",
+                  "maxLength": 200000,
+                  "description": "The file's whole content."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "space.build-create": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/build-create.v1.json",
+        "title": "SpaceBuildCreate",
+        "description": "space.build-create@1: the body of POST /api/v1/spaces, the agent asking Space for a new space of its own (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). It answers space.build-list@1 ({ space }). The name and the description are what the space shows; the space is made from Space's blank template and the agent fills its files.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "The space's name."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 400,
+            "description": "What the space does, in a line."
+          }
+        }
+      }
+    },
+    "space.build-preview": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/build-preview.v1.json",
+        "title": "SpaceBuildPreview",
+        "description": "space.build-preview@1: where a person's space can be seen right now, as their agent sees it (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces/:id/preview answers { url, files, published }: the address to open (the editor with its live preview while the space is a draft, its own address once it is published), the paths of the files it is made of, and whether it is live.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "url",
+          "files",
+          "published"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Where the space can be seen now."
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "description": "The paths of the files the space is made of."
+          },
+          "published": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "space.build-publish": {
+      "version": "1.0.0",
+      "owner": "space",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/space/build-publish.v1.json",
+        "title": "SpaceBuildPublish",
+        "description": "space.build-publish@1: what happened when a person's agent asked to publish one of their spaces (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). POST /api/v1/spaces/:id/publish asks to publish and answers { state: 'pending' } with the approval the person answers in the Dock; it never publishes without that answer. When the person approves, Space publishes and the step is { state: 'published', url }; when they decline, { state: 'declined' }.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "enum": [
+              "pending",
+              "published",
+              "declined"
+            ],
+            "description": "pending: the person must answer first. published: it is live at url. declined: the person said no."
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Where it lives once it is published."
+          },
+          "approval_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80,
+            "description": "The request the person answers in the Dock (its id)."
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 240,
+            "description": "Why it was refused, in one line a person can act on."
+          }
+        }
+      }
+    },
     "space.deploy-create-request": {
       "version": "1.0.0",
       "owner": "space",

@@ -1,0 +1,24 @@
+{
+  "id": "space.build.read",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a person's own spaces and their source files, as their agent (OpenVibe.Actor) works on them (plan 2026-10-22 §Z stage Z1: Space's builder becomes a task of the person's one agent). GET /api/v1/spaces lists the person's spaces, GET /api/v1/spaces/:id reads one, GET /api/v1/spaces/:id/files reads its files, GET /api/v1/spaces/:id/preview says where it can be seen. A first-party service names the person in X-OV-Subject; Space reads only that person's own spaces, and another person's space is the same 404 as one that does not exist.",
+  "permissions": [
+    "spaces:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/spaces",
+    "GET /api/v1/spaces/:id",
+    "GET /api/v1/spaces/:id/files",
+    "GET /api/v1/spaces/:id/preview"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "space.build-list@1"
+}

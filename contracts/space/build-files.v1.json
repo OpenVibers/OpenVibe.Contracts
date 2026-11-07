@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/space/build-files.v1.json",
+  "title": "SpaceBuildFiles",
+  "description": "space.build-files@1: the source files of one of a person's spaces, as their agent sees them (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces/:id/files answers { files }: every file of the space, its path and its whole content. The same shape is the body of PUT /api/v1/spaces/:id/files (space.build-write@1): the files to write, which replace the space's files as a whole.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "files"
+  ],
+  "properties": {
+    "files": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "content"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 80,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*){0,3}$",
+            "description": "The file's path inside the space: letters, digits, \".\", \"-\", \"_\", up to four folders."
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 200000,
+            "description": "The file's whole content."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/space/build-space.v1.json",
+  "title": "SpaceBuildSpace",
+  "description": "space.build-space@1: one of a person's own spaces, as their agent sees it while it builds (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). The id, the slug it publishes under, its name and description, whether it is published and where, and when it last changed. Nothing about anyone else's space is ever in this shape.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "slug",
+    "name",
+    "published",
+    "url"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^spc_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The space's id."
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){2,39}$",
+      "description": "The name it publishes under (<slug>.openvibe.website)."
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 400
+    },
+    "published": {
+      "type": "boolean",
+      "description": "True while it is live at its own address."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Where it lives: its own address once published, the editor while it is a draft."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When it last changed."
+    }
+  }
+}

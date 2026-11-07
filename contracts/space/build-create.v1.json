@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/space/build-create.v1.json",
+  "title": "SpaceBuildCreate",
+  "description": "space.build-create@1: the body of POST /api/v1/spaces, the agent asking Space for a new space of its own (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). It answers space.build-list@1 ({ space }). The name and the description are what the space shows; the space is made from Space's blank template and the agent fills its files.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "The space's name."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 400,
+      "description": "What the space does, in a line."
+    }
+  }
+}

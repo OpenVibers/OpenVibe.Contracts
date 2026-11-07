@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/space/build-preview.v1.json",
+  "title": "SpaceBuildPreview",
+  "description": "space.build-preview@1: where a person's space can be seen right now, as their agent sees it (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces/:id/preview answers { url, files, published }: the address to open (the editor with its live preview while the space is a draft, its own address once it is published), the paths of the files it is made of, and whether it is live.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "files",
+    "published"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Where the space can be seen now."
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 80
+      },
+      "description": "The paths of the files the space is made of."
+    },
+    "published": {
+      "type": "boolean"
+    }
+  }
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.321.0 — 2026-11-07
+
+- Space's builder becomes a task of the person's one agent (plan 2026-10-22 §Z, stage Z1). Add the contracts of Space's builder API: `space.build-space@1` (one of a person's own spaces: its id, slug, name, description, whether it is published and where, and when it changed), `space.build-list@1` (`{ spaces }` or `{ space }`), `space.build-files@1` (the space's files, each a path and its whole content), `space.build-create@1` (the body of a request for a new space), `space.build-preview@1` (where the space can be seen now, its file paths, and whether it is live) and `space.build-publish@1` (`pending`, `published` or `declined`, with the request the person answers in the Dock).
+- Add the capabilities `space.build.read` (list and read the person's own spaces and their files), `space.build.create` (make a new space), `space.build.write` (write the files of one of them) and `space.build.publish` (ask to publish; the person answers before anything goes live). A first-party service names the person in `X-OV-Subject`, and only that person's own spaces are in reach.
+- Additive: nothing that exists today changes shape.
+
 ## 0.320.0 — 2026-11-07
 
 - `frame.menu-card@1` items gain an optional `image`: `src` (https on the publishing site's own origin or an `openvibe.*` host, at most 400 characters), optional `w` and `h` (whole pixels, 16–1920) and an optional `alt` of at most 120 characters. Network keeps an image whose `src` passes the same host rule as the item's `url`, drops one from anywhere else, and passes it through in `GET /api/frame` so the Frame menu and Network's `/my` can draw a thumbnail.
