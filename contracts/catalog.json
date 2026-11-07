@@ -5171,6 +5171,24 @@
       "status": "active"
     },
     {
+      "id": "media.vod",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/vod.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.clip",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/clip.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "media.file-read-result",
       "version": "1.0.0",
       "owner": "media",

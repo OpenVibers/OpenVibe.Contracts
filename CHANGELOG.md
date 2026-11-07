@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.319.0 — 2026-11-07
+
+- Add `media.vod@1` and `media.clip@1`: one recorded stream and one clip as OpenVibe.Media's API answers them. Both carry `watch_id`, the id openvibe.video addresses a watch page by (`openvibe.video/watch?v=<watch_id>`), and the shape around it that consumers already read — the numeric id (internal), the owning tenant, the app-local user ids, title and status, duration and size, the file basename, `playback_url`, thumbnail, storage provider, visibility, view counts and times; a clip also names the recording it was cut from, its window in that recording and whether an automation cut it. `watch_id` is **additive and optional** (11 characters of URL-safe base64 from 8 random bytes, one id space across VODs and clips, fixed for the row's life and never the numeric id), because a row written before Media's backfill may answer without one.
+- Valid and invalid fixtures cover a public recording with a watch id and an unlisted one before the backfill, a person-made clip and an AI clip, a watch id of the wrong length, one with a character base64url never has, one with a slash, and an unknown visibility.
+
 ## 0.318.0 — 2026-11-07
 
 - Add `network.presence@1`: one person's online status as another may see it — `online`, `away`, `dnd`, `invisible` or `offline`, an optional status line (80 characters) and one emoji, whether they are streaming on OpenVibe.Live (`live`), and when it changed. OpenVibe.Network owns it; the state is derived from a heartbeat (online under 2 minutes, offline after 3) and the last input (away after 10 minutes), and invisible or `show_status` off is seen as offline.
