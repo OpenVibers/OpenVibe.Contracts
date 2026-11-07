@@ -1,0 +1,28 @@
+{
+  "id": "tl_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "mode": "browse",
+  "product": "surf",
+  "ref": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "title": "Surfing the web for you",
+  "started_at": "2026-11-07T09:00:00.000Z",
+  "ended_at": null,
+  "status": "running",
+  "placement": {
+    "where": "a shared desk host",
+    "why": "it browses for you, never with your accounts"
+  },
+  "cost_usd": null,
+  "link": "https://openvibe.surf/web/t/tsk_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "computer": {
+    "session_id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQS",
+    "machine": "a shared desk host",
+    "where": "network",
+    "cost_hint": "an OpenVibe desk host, metered by the minute"
+  },
+  "reason": null,
+  "transition": null,
+  "approval": null,
+  "audience": "private",
+  "shared": false
+}

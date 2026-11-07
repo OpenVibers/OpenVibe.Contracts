@@ -128,6 +128,10 @@
       ],
       "maxLength": 240
     },
+    "computer": {
+      "$ref": "../platform/task.v1.json#/properties/computer",
+      "description": "The Computer this step works on, when it opened one: the same object (and the same session id) the task record and the task's step carry. Absent for a step that has no Computer."
+    },
     "approval": {
       "type": [
         "object",
