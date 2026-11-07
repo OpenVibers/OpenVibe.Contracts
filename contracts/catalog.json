@@ -9609,6 +9609,24 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "live.agent-stream-schedule",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/agent-stream-schedule.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.party",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/party.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "id": "friday-watch",
+  "agent_stream_id": "ags_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "vod_id": "4242",
+  "host": "usr_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "title": "Friday watch: the robot build",
+  "sync": {
+    "mode": "vod",
+    "position_s": 312,
+    "playing": true,
+    "at": "2026-11-07T20:30:00.000Z"
+  },
+  "visibility": "private",
+  "listed": true,
+  "join_url": "https://openvibe.chat/rooms/friday-watch",
+  "created_at": "2026-11-07T20:00:00.000Z",
+  "ended_at": null
+}

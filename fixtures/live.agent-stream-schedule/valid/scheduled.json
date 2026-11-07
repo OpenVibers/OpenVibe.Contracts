@@ -1,0 +1,25 @@
+{
+  "id": "scd_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "channel": "mira",
+  "title": "Fix the login page, on a schedule",
+  "task": {
+    "source": "codes",
+    "ref": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPW",
+    "title": "Fix the login page",
+    "url": "https://openvibe.codes/t/tsk_01JAB2C3D4E5F6G7H8J9K0MNPW"
+  },
+  "mode": "narrated",
+  "visibility": "public",
+  "starts_at": "2026-11-08T19:00:00.000Z",
+  "state": "scheduled",
+  "agent_stream_id": null,
+  "missed_reason": null,
+  "waits_for_go": false,
+  "started_at": null,
+  "ended_at": null,
+  "reminders": 3,
+  "reminded": true,
+  "page_url": "https://openvibe.live/@mira/agents",
+  "created_at": "2026-11-07T02:00:00.000Z"
+}

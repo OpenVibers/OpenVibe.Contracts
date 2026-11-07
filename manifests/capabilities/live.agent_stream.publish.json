@@ -4,7 +4,7 @@
   "owner": "live",
   "status": "active",
   "visibility": "public",
-  "description": "Publish an agent's stream on OpenVibe.Live (the Agent Streams plan, S1). POST /api/streams/agent creates the agent stream and its publish ticket, POST /api/streams/agent/:id/ticket renews that ticket, DELETE /api/streams/agent/:id/ticket revokes it (the kill switch: Live ends the WHIP session at once), POST /api/streams/agent/:id/curtain raises the desk's privacy screen, PUT /api/streams/agent/:id/frame sends the last frame while Live wants no video, POST /api/streams/agent/:id/end ends the stream, and GET /api/streams/agent/:id/state tells the desk whether to encode, and POST /api/streams/agent/:id/control is one of the four controls (pause, curtain, mute, end) with the moderator rules of the Agent Streams plan, S5. The publish capability also covers the step credit: a step may name the suggestion it took (\"Suggested by @mira\"). The caller is the person's own session token, or a first-party service token acting for that person (a Node principal acting for its owner, Codes or Actor) that holds this capability for the audience openvibe.live: Network grants it to exactly those principals. Never a developer-app token, never another person's stream. The Agent Streams design calls it live.agent-stream.publish; a capability id in this system carries no hyphen (the capability pattern and the token claims' cap pattern both allow letters, digits and underscores only), so the id is live.agent_stream.publish.",
+  "description": "Publish an agent's stream on OpenVibe.Live (the Agent Streams plan, S1). POST /api/streams/agent creates the agent stream and its publish ticket, POST /api/streams/agent/:id/ticket renews that ticket, DELETE /api/streams/agent/:id/ticket revokes it (the kill switch: Live ends the WHIP session at once), POST /api/streams/agent/:id/curtain raises the desk's privacy screen, PUT /api/streams/agent/:id/frame sends the last frame while Live wants no video, POST /api/streams/agent/:id/end ends the stream, and GET /api/streams/agent/:id/state tells the desk whether to encode, and POST /api/streams/agent/:id/control is one of the four controls (pause, curtain, mute, end) with the moderator rules of the Agent Streams plan, S5. The publish capability also covers the step credit: a step may name the suggestion it took (\"Suggested by @mira\"). The caller is the person's own session token, or a first-party service token acting for that person (a Node principal acting for its owner, Codes or Actor) that holds this capability for the audience openvibe.live: Network grants it to exactly those principals. Never a developer-app token, never another person's stream. The Agent Streams design calls it live.agent-stream.publish; a capability id in this system carries no hyphen (the capability pattern and the token claims' cap pattern both allow letters, digits and underscores only), so the id is live.agent_stream.publish. S7 adds the owner's schedules: POST /api/streams/agent/schedules writes one, GET /api/streams/agent/schedules lists the caller's, DELETE /api/streams/agent/schedules/:id cancels one, POST /api/streams/agent/schedules/:id/remind opts the caller in to its reminder, POST /api/streams/agent/schedules/:id/go is the owner's Go for a chatplays schedule, and POST /api/streams/agent/desk/heartbeat says the owner's desk is online so a due schedule can start. A schedule that finds the desk offline is recorded as missed ('didn't start: the desk was offline') and starts nothing.",
   "inputSchema": "live.agent-stream-create-request@1",
   "outputSchema": "live.agent-stream-publish@1",
   "permissions": [
@@ -26,7 +26,13 @@
     "POST /api/streams/agent/:id/end",
     "GET /api/streams/agent/:id/state",
     "POST /api/streams/agent/:id/control",
-    "GET /api/streams/agent/:id/controls"
+    "GET /api/streams/agent/:id/controls",
+    "POST /api/streams/agent/schedules",
+    "GET /api/streams/agent/schedules",
+    "DELETE /api/streams/agent/schedules/:id",
+    "POST /api/streams/agent/schedules/:id/remind",
+    "POST /api/streams/agent/schedules/:id/go",
+    "POST /api/streams/agent/desk/heartbeat"
   ],
   "sensitive": true
 }
