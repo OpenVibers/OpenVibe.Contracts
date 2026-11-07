@@ -265936,6 +265936,61 @@ export interface ActorTaskWebhook {
   task: Task;
 }
 
+/** actor.assignment@1.0.0 (owner: actor) */
+/**
+ * actor.assignment@1: one node of the tree of delegated work (plan §12). A node is a hand-off — a person giving Actor a task, a routine or Watch trigger starting a run, an agent handing work to another agent, or Actor starting a Codes or Space task. ID is the node; ROOT names the node whose BUDGET the whole tree spends, PARENT the node that handed this work over (null on a root) and DEPTH its distance from the root (0 on a root). ORIGIN says who started the line: a person (person), a routine or Watch trigger (routine), or work from outside Actor (outside). MODE is the hand-off's kind (work, consult, notify) and REPLY how its result comes back (resume into the parent, poll, or none). LEVEL is the node's own level and EFFECTIVE_LEVEL the level its steps run at: the higher of the agent's own level and the one inherited from a person's or routine's line. Outside work never passes a level down. BUDGET is the root's budget and what the tree has spent. A cancel cascades down the tree. GET /api/v1/assignments/:id returns { assignment, children } and POST /api/v1/assignments/:id/cancel returns { assignment, cancelled }; both are owner-only, and another person's node is the same 404 as one that does not exist. A task has no node until one is made for it: an existing task gets a root lazily.
+ */
+export interface ActorAssignment {
+  id: string;
+  root: string;
+  parent: string | null;
+  depth: number;
+  origin: "person" | "routine" | "outside";
+  mode: "work" | "consult" | "notify";
+  reply: "resume" | "poll" | "none";
+  agent_id: string | null;
+  task_id: string | null;
+  level: "ask" | "auto-edits" | "approve-for-me" | "full";
+  effective_level: "ask" | "auto-edits" | "approve-for-me" | "full";
+  /**
+   * The budget of the root of this tree, and what the tree has spent of it. Every node carries the same root budget.
+   */
+  budget: {
+    limit_usd: number;
+    spent_usd: number;
+    remaining_usd: number;
+  };
+  state: "queued" | "running" | "waiting" | "succeeded" | "failed" | "cancelled";
+  created_at: string;
+  updated_at: string;
+  started_at?: string | null;
+  ended_at?: string | null;
+}
+
+/** actor.assignment-tree@1.0.0 (owner: actor) */
+/**
+ * actor.assignment-tree@1: GET /api/v1/assignments/:id (capability actor.assignment.read): the node and its direct children, oldest first. Each node is an actor.assignment@1. Only the owner can read the tree; another person gets 404.
+ */
+export interface ActorAssignmentTree {
+  assignment: ActorAssignment;
+  /**
+   * @maxItems 100
+   */
+  children: ActorAssignment[];
+}
+
+/** actor.assignment-cancel-result@1.0.0 (owner: actor) */
+/**
+ * actor.assignment-cancel-result@1: POST /api/v1/assignments/:id/cancel (capability actor.assignment.cancel): the node as it is now and every node the cancel stopped, the node included and its children below it. The tasks those nodes ran are cancelled too. Only the owner can cancel; another person gets 404.
+ */
+export interface ActorAssignmentCancelResult {
+  assignment: ActorAssignment;
+  /**
+   * @maxItems 1000
+   */
+  cancelled: ActorAssignment[];
+}
+
 /** actor.agent-list-result@1.0.0 (owner: actor) */
 /**
  * actor.agent-list-result@1: GET /api/v1/agents (capability actor.agent.read): every agent system Actor can route a task to. KIND is the backend class (ADR-044): openvibe-runtime (OpenVibe's own agent, acting through OpenVibe services), agent-platform (another platform's agent, called through its API), open-model (an open model on OpenVibe's own hardware), codes (coding work through OpenVibe.Codes), node and run (a person's machine or OpenVibe.Run). TRUST is ADR-046's class; private mode takes only first-party ones. CAN are the task classes and tools it takes (task:<class>, tool:<name>). RATE_CARD is the published price, revised by review and never written by a model (SOURCE says where it comes from, VERIFIED_AT when a person last checked it). AVAILABLE says whether it can take a task now and REASON why not.

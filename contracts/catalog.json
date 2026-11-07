@@ -7308,6 +7308,36 @@
       "adr": "ADR-044"
     },
     {
+      "id": "actor.assignment",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/assignment.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "actor.assignment-tree",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/assignment-tree.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "actor.assignment-cancel-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/assignment-cancel-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
       "id": "actor.agent-list-result",
       "version": "1.0.0",
       "owner": "actor",

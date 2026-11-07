@@ -1,0 +1,17 @@
+{
+  "id": "asg_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "root": "asg_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "parent": null,
+  "depth": -1,
+  "origin": "person",
+  "mode": "work",
+  "reply": "resume",
+  "agent_id": null,
+  "task_id": null,
+  "level": "ask",
+  "effective_level": "ask",
+  "budget": { "limit_usd": 1, "spent_usd": 0, "remaining_usd": 1 },
+  "state": "queued",
+  "created_at": "2026-11-07T10:00:00.000Z",
+  "updated_at": "2026-11-07T10:00:00.000Z"
+}

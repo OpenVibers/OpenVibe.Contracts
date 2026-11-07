@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/assignment-cancel-result.v1.json",
+  "title": "ActorAssignmentCancelResult",
+  "description": "actor.assignment-cancel-result@1: POST /api/v1/assignments/:id/cancel (capability actor.assignment.cancel): the node as it is now and every node the cancel stopped, the node included and its children below it. The tasks those nodes ran are cancelled too. Only the owner can cancel; another person gets 404.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "assignment",
+    "cancelled"
+  ],
+  "properties": {
+    "assignment": {
+      "$ref": "assignment.v1.json"
+    },
+    "cancelled": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "$ref": "assignment.v1.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "actor.assignment.cancel",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "description": "Cancel your assignment tree from one node down with POST /api/v1/assignments/:id/cancel: every child node is cancelled and every task still running under the tree is stopped. It answers the node and the nodes it cancelled. Only the person whose work it is can cancel it; another person gets the same 404 as a node that does not exist.",
+  "inputSchema": "common.no-body@1",
+  "permissions": [
+    "actor:assignments:cancel"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "actor-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/assignments/:id/cancel"
+  ],
+  "outputSchema": "actor.assignment-cancel-result@1"
+}

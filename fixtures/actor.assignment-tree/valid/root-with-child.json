@@ -1,0 +1,38 @@
+{
+  "assignment": {
+    "id": "asg_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "root": "asg_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "parent": null,
+    "depth": 0,
+    "origin": "person",
+    "mode": "work",
+    "reply": "resume",
+    "agent_id": null,
+    "task_id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "level": "ask",
+    "effective_level": "ask",
+    "budget": { "limit_usd": 0.05, "spent_usd": 0, "remaining_usd": 0.05 },
+    "state": "running",
+    "created_at": "2026-11-07T10:00:00.000Z",
+    "updated_at": "2026-11-07T10:00:00.000Z"
+  },
+  "children": [
+    {
+      "id": "asg_01JAB2C3D4E5F6G7H8J9K0MNPT",
+      "root": "asg_01JAB2C3D4E5F6G7H8J9K0MNPS",
+      "parent": "asg_01JAB2C3D4E5F6G7H8J9K0MNPS",
+      "depth": 1,
+      "origin": "person",
+      "mode": "consult",
+      "reply": "resume",
+      "agent_id": null,
+      "task_id": null,
+      "level": "full",
+      "effective_level": "full",
+      "budget": { "limit_usd": 0.05, "spent_usd": 0, "remaining_usd": 0.05 },
+      "state": "queued",
+      "created_at": "2026-11-07T10:00:01.000Z",
+      "updated_at": "2026-11-07T10:00:01.000Z"
+    }
+  ]
+}

@@ -29,7 +29,9 @@
     "actor.model.manage",
     "actor.a2a.task",
     "actor.config.manage",
-    "actor.timeline.read"
+    "actor.timeline.read",
+    "actor.assignment.read",
+    "actor.assignment.cancel"
   ],
   "eventsProduced": [
     "agent.step.started",
