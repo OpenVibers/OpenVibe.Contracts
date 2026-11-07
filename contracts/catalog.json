@@ -8972,6 +8972,15 @@
       "status": "active"
     },
     {
+      "id": "ai.memory-export",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/memory-export.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.me-credential",
       "version": "1.0.0",
       "owner": "ai",

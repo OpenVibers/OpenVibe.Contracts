@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.308.0 — 2026-11-07
+
+- Add `ai.memory-export@1` (Memory M5): the one portable memory file. It carries `format: openvibe.memory-export@1`, `version: 1`, `exported_at` and every item's text, kind, scope, source, confidence and source reference. It deliberately has no ids, owners, merge links or conflict pair, so a file can be imported into another account without carrying anyone's identity, and a profile is derived from the items and rebuilt, never imported. OpenVibe.AI's `GET /api/v1/memory/export` writes it and `POST /api/v1/memory/import` accepts the same document; both redact again.
+- Valid and invalid fixtures cover an export with items and an empty one, a wrong format/version and a scope that is an absolute path instead of `user` or `project:<slug>`.
+
 ## 0.306.0 — 2026-11-07
 
 - Add `bot.machine-pool@1` (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC (`rpc-server` on the members, `llama-server --rpc` on the head). OpenVibe.Network holds the record: the owner proposes it on /machines with two to eight of their own machines (the default head has the most free VRAM), and each machine reads it with its own node token and approves it on itself. A member's `certificate` is null until it approves; then it is that machine's self-signed Ed25519 public certificate, which the other members pin for the pool's private link. The private key stays on the machine: a certificate slot holding anything with `PRIVATE KEY` in it is refused, and so is any field the schema does not name. A member's `address` is a private RFC 1918 address and prefix (never 0.0.0.0, loopback or a public address) and its `public_ip` is the address Network saw it from. The rules a schema cannot say are written in the description and checked by Network and Node: the head is a member, every member is the owner's today, all share one public address and one private subnet, the head's direct link probe to each passes, every key is its own, and any change of membership, owner, head or key revokes the pool so every machine approves a new one.
