@@ -1,0 +1,12 @@
+{
+  "id": "new-worlds",
+  "site": "games",
+  "title": "New worlds",
+  "kind": "rows",
+  "items": [
+    { "title": "Harbour Town", "meta": "Built by 4 people", "url": "https://openvibe.games/w/harbour-town" },
+    { "title": "Night Market", "meta": "18 visitors this week", "url": "https://openvibe.games/w/night-market" }
+  ],
+  "updated_at": "2026-11-07T07:58:00Z",
+  "ttl_s": 300
+}

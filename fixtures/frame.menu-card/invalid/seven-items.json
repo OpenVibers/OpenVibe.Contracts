@@ -1,0 +1,17 @@
+{
+  "id": "trending",
+  "site": "media-hub",
+  "title": "Trending",
+  "kind": "rows",
+  "items": [
+    { "title": "One", "url": "https://openvibe.video/one" },
+    { "title": "Two", "url": "https://openvibe.video/two" },
+    { "title": "Three", "url": "https://openvibe.video/three" },
+    { "title": "Four", "url": "https://openvibe.video/four" },
+    { "title": "Five", "url": "https://openvibe.video/five" },
+    { "title": "Six", "url": "https://openvibe.video/six" },
+    { "title": "Seven", "url": "https://openvibe.video/seven" }
+  ],
+  "updated_at": "2026-11-07T08:00:00Z",
+  "ttl_s": 300
+}

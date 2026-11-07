@@ -1,0 +1,6 @@
+[
+  { "id": "one", "site": "live", "title": "One", "kind": "rail", "items": [], "updated_at": "2026-11-07T08:00:00Z", "ttl_s": 30 },
+  { "id": "two", "site": "live", "title": "Two", "kind": "rows", "items": [], "updated_at": "2026-11-07T08:00:00Z", "ttl_s": 30 },
+  { "id": "three", "site": "live", "title": "Three", "kind": "chips", "items": [], "updated_at": "2026-11-07T08:00:00Z", "ttl_s": 30 },
+  { "id": "four", "site": "live", "title": "Four", "kind": "rows", "items": [], "updated_at": "2026-11-07T08:00:00Z", "ttl_s": 30 }
+]

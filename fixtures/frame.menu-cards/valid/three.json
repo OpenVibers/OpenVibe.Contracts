@@ -1,0 +1,36 @@
+[
+  {
+    "id": "live-now",
+    "site": "live",
+    "title": "Live now",
+    "kind": "rail",
+    "items": [
+      { "title": "Nova", "meta": "12 watching", "url": "https://openvibe.live/@nova" }
+    ],
+    "more": { "label": "See all", "url": "https://openvibe.live/live" },
+    "updated_at": "2026-11-07T08:00:00Z",
+    "ttl_s": 30
+  },
+  {
+    "id": "new-worlds",
+    "site": "games",
+    "title": "New worlds",
+    "kind": "rows",
+    "items": [
+      { "title": "Harbour Town", "meta": "Built by 4 people", "url": "https://openvibe.games/w/harbour-town" }
+    ],
+    "updated_at": "2026-11-07T07:58:00Z",
+    "ttl_s": 300
+  },
+  {
+    "id": "trending",
+    "site": "media-hub",
+    "title": "Trending",
+    "kind": "rows",
+    "items": [
+      { "title": "Sunday market", "meta": "2,100 views this week", "url": "https://openvibe.video/watch/abc" }
+    ],
+    "updated_at": "2026-11-07T07:55:00Z",
+    "ttl_s": 300
+  }
+]

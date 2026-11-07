@@ -107683,6 +107683,137 @@
           }
         }
       }
+    },
+    "frame.menu-card": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/frame/menu-card.v1.json",
+        "title": "FrameMenuCard",
+        "description": "frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.",
+        "type": "object",
+        "required": [
+          "id",
+          "site",
+          "title",
+          "kind",
+          "items",
+          "updated_at",
+          "ttl_s"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The card's stable id in its site (live-now, new-worlds, trending). Two cards of one site never share it."
+          },
+          "site": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$",
+            "description": "The Frame site id that publishes the card (live, games, media-hub). Network checks it against the host the file came from."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "description": "The card's heading, in the owner's words."
+          },
+          "kind": {
+            "enum": [
+              "rail",
+              "rows",
+              "chips"
+            ],
+            "description": "The block the Frame draws: a rail of live channels, a ranked list of rows, or a short row of chips."
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 6,
+            "description": "The card's entries, in the site's own order. Empty means the site has a card but nothing to show (nobody is live); Network then skips it.",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "url"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80,
+                  "description": "The entry's name, plain words."
+                },
+                "meta": {
+                  "type": "string",
+                  "maxLength": 120,
+                  "description": "One short line under the name: \"12 watching\", \"7,412 views this week\", \"3 players\"."
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "maxLength": 400,
+                  "pattern": "^https://",
+                  "description": "Where the entry opens: https on the publishing site's own origin or an openvibe.* host."
+                }
+              }
+            }
+          },
+          "more": {
+            "type": "object",
+            "required": [
+              "label",
+              "url"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 24,
+                "description": "The link's words (\"See all\", \"More worlds\")."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 400,
+                "pattern": "^https://",
+                "description": "https on the publishing site's own origin or an openvibe.* host."
+              }
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the site last built the card."
+          },
+          "ttl_s": {
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 86400,
+            "description": "How long the site considers the card fresh, in seconds. Live uses 30; Network itself refetches every five minutes."
+          }
+        }
+      }
+    },
+    "frame.menu-cards": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/frame/menu-cards.v1.json",
+        "title": "FrameMenuCards",
+        "description": "frame.menu-cards@1: the public file a site serves at /.well-known/openvibe-menu.json — an array of at most three frame.menu-card@1 cards from one site. Network fetches it every five minutes with a five-second timeout and a 64 KB cap, drops unknown fields and markup, and keeps the site's last good card for 30 minutes if the file fails. An empty array is valid and means the site publishes no card right now.",
+        "type": "array",
+        "maxItems": 3,
+        "items": {
+          "$ref": "menu-card.v1.json"
+        }
+      }
     }
   }
 }

@@ -9771,6 +9771,24 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "frame.menu-card",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "frame/menu-card.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "frame.menu-cards",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "frame/menu-cards.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
