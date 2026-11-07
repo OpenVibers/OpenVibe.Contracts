@@ -206745,7 +206745,7 @@ export interface CommunityForumThread {
   slug: string;
   title: string;
   /**
-   * /s/<space>/t/<slug>
+   * /forum/<space>/<slug>
    */
   url: string;
   /**
@@ -207060,7 +207060,7 @@ export type CommunitySpaceReadResult =
 
 /** community.thread-read-result@1.0.0 (owner: community) */
 /**
- * community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.
+ * community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /forum/:space and /forum/:space/:slug are the same as HTML pages; GET /forum/feed.xml and /forum/:space/feed.xml are RSS feeds of public threads.
  */
 export type CommunityThreadReadResult =
   | {

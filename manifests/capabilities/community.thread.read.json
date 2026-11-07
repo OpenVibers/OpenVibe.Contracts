@@ -17,10 +17,10 @@
   "implementedBy": [
     "GET /api/v1/spaces/:space/threads",
     "GET /api/v1/spaces/:space/threads/:slug",
-    "GET /s/:space",
-    "GET /s/:space/t/:slug",
-    "GET /s/feed.xml",
-    "GET /s/:space/feed.xml"
+    "GET /forum/:space",
+    "GET /forum/:space/:slug",
+    "GET /forum/feed.xml",
+    "GET /forum/:space/feed.xml"
   ],
   "inputSchema": "common.no-body@1"
 }
