@@ -72,15 +72,15 @@
       "none": "no claims: one process serves the site and the API"
     }
   },
-  "notes": "Port 5150, unit openvibe-exchange.service, database ov_exchange. The Exchange room: trade what people make. v1 is free and swap only, with a permission passport, four conformance tests per version, a manifest/passport sandbox dry run, install with the exact passport snapshot, one-tap idempotent revoke, free claims and swap offers, a fixed prohibited-items/no-money filter and staff hide. Every public listing is one search.index-document@1 queued in exchange_outbox, with a tombstone when it closes or is hidden; the relay waits for Network's search.document.write grant. v1 writes no Network grant and runs no listing code, so network.grants.write, network.grants.revoke and run.sandbox.execute are not registered. OAuth client `exchange`; answers account export and deletion (ADR-033) and subscribes to the two account Events topics. No money, no AI and no capability of its own.",
+  "notes": "Port 5150, unit openvibe-exchange.service, database ov_exchange. The Exchange is the network's AI: every model one account, the live price, speed and uptime of every offer, chat with one model or three side by side, blind Arena rankings, companions, a private GPU endpoint and one OpenAI- and Anthropic-compatible endpoint. The public pages of OpenVibe.AI live here since 2026-11-07. It reads OpenVibe.AI's public Exchange API (catalog, usage, community offers) and keeps chats, companion memory, shares and the daily catalog snapshot in PostgreSQL. v1's listings are retired: their pages answer 410 and their tables stay read-only. OAuth client `exchange`; answers account export and deletion (ADR-033) and subscribes to the two account Events topics.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5150",
   "site": {
     "name": "Exchange",
     "icon": "exchange",
-    "tagline": "Trade what people make",
-    "what": "Free and swap listings for agents, MCP tools, templates, themes, game assets and creator services, each with a permission passport, conformance tests, a sandbox dry run, install with the passport snapshot and one-tap revoke.",
+    "tagline": "Every AI model, one account",
+    "what": "Every AI model, one account: live prices, speed and uptime of every offer, chat with up to three models side by side, Arena rankings, companions, a private GPU endpoint and one OpenAI- and Anthropic-compatible endpoint. The public pages of OpenVibe.AI live here now.",
     "legalProfile": "ugc",
     "position": 44,
     "neighbourhood": "shop"

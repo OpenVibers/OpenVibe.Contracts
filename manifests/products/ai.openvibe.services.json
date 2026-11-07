@@ -4,9 +4,10 @@
   "name": "ai.openvibe.services",
   "icon": "fa-robot",
   "accent": "#c084fc",
-  "tagline": "One AI gateway for every model you choose",
-  "legalProfile": "service",
-  "description": "OpenVibe.AI is the network's AI gateway: OpenAI-compatible providers, Anthropic, local and open models behind one API, with routing for cost, speed, quality or privacy, provider fallback, versioned prompt templates and typed workflows, durable runs, structured output, embeddings, speech to text and media analysis, budgets and your own provider keys. Its public API and developer console are live here, and OpenVibe.Live and OpenVibe.Network call it too.",
+  "kind": "moved",
+  "tagline": "Moved: OpenVibe.AI's public pages are OpenVibe.Exchange.",
+  "legalProfile": "info",
+  "description": "OpenVibe.AI is the network's AI gateway: OpenAI-compatible providers, Anthropic, local and open models behind one API, with routing for cost, speed, quality or privacy, provider fallback, versioned prompt templates, durable runs, embeddings and speech to text. Its public pages moved into OpenVibe.Exchange on 2026-11-07; this address keeps the API, a run's receipt and the operator console.",
   "pillars": [
     {
       "title": "Any provider",
@@ -17,17 +18,30 @@
       "text": "Cheap, fast, best or private: routes choose, and fall back when a provider fails."
     },
     {
-      "title": "Templates & workflows",
-      "text": "Versioned prompts and typed workflows with durable, resumable runs."
+      "title": "Runs explained",
+      "text": "Every run says which model answered, why it was chosen and what it cost."
     },
     {
-      "title": "Your keys, your budget",
-      "text": "Bring your own provider keys; quotas and budgets per project."
+      "title": "The public pages are Exchange",
+      "text": "Prices, speed, uptime, the start guide and the questions live at openvibe.exchange."
     }
   ],
   "keywords": "ai gateway, open source ai api, llm router, model routing, prompt templates, ai workflows, speech to text api, openvibe ai",
   "relationships": {
     "service": "ai",
-    "plannedRepo": "OpenVibe.AI"
+    "plannedRepo": "OpenVibe.AI",
+    "linksLead": "OpenVibe.AI's public pages are OpenVibe.Exchange now; the API stays here.",
+    "links": [
+      {
+        "label": "OpenVibe.Exchange",
+        "url": "https://openvibe.exchange/",
+        "note": "Every AI model, one account: live prices, speed and uptime, chat, the start guide, the FAQ and the routing explainer."
+      },
+      {
+        "label": "OpenVibe.AI API",
+        "url": "https://ai.openvibe.services/v1/models",
+        "note": "The OpenAI-compatible endpoint, the six operations and a run's receipt; authenticated with an OpenVibe.Network token."
+      }
+    ]
   }
 }

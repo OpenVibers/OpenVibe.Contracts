@@ -1,9 +1,14 @@
 # Changelog
 
-## 0.319.0 — 2026-11-07
+## 0.320.0 — 2026-11-07
 
 - Add `media.vod@1` and `media.clip@1`: one recorded stream and one clip as OpenVibe.Media's API answers them. Both carry `watch_id`, the id openvibe.video addresses a watch page by (`openvibe.video/watch?v=<watch_id>`), and the shape around it that consumers already read — the numeric id (internal), the owning tenant, the app-local user ids, title and status, duration and size, the file basename, `playback_url`, thumbnail, storage provider, visibility, view counts and times; a clip also names the recording it was cut from, its window in that recording and whether an automation cut it. `watch_id` is **additive and optional** (11 characters of URL-safe base64 from 8 random bytes, one id space across VODs and clips, fixed for the row's life and never the numeric id), because a row written before Media's backfill may answer without one.
 - Valid and invalid fixtures cover a public recording with a watch id and an unlisted one before the backfill, a person-made clip and an AI clip, a watch id of the wrong length, one with a character base64url never has, one with a slash, and an unknown visibility.
+
+## 0.319.0 — 2026-11-07
+
+- The merged public site: OpenVibe.AI is no longer a site of its own. Its service manifest keeps the API, the run receipt and the operator console but drops the `site` block, so Network's Frame lists Exchange instead of AI. `manifests/products/ai.openvibe.services.json` is `kind: moved`, points at Exchange and keeps the API address, and Exchange's own site block now carries the merged tagline ("Every AI model, one account") and what it does.
+- No contract shapes change.
 
 ## 0.318.0 — 2026-11-07
 

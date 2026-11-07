@@ -17,6 +17,6 @@
   "implementedBy": [
     "POST /api/v1/spaces/:space/threads/:slug/votes",
     "POST /api/v1/comments/:commentId/votes",
-    "POST /s/:space/t/:slug/vote"
+    "POST /forum/:space/:slug/vote"
   ]
 }
