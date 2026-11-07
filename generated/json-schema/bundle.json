@@ -108979,6 +108979,40 @@
           }
         }
       }
+    },
+    "network.menu-feeds": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/menu-feeds.v1.json",
+        "title": "NetworkMenuFeeds",
+        "description": "network.menu-feeds@1 (the menu's Choose your feeds, 2026-11-07): the sites' menu cards a person chose to show in the OpenVibe menu, in their order. It lives in the Network, not in the browser, because localStorage is per site and the choice follows the person across every domain. GET /api/v1/me/menu-feeds and PUT /api/v1/me/menu-feeds on OpenVibe.Network; a person who has never chosen gets { on: null } from the GET.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "on",
+          "updated_at"
+        ],
+        "properties": {
+          "on": {
+            "type": "array",
+            "maxItems": 4,
+            "description": "The cards the person chose, in the order the menu shows them: up to four `<site>:<cardId>` ids. An empty array means they cleared the choice and the menu falls back to its own default cards.",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,30}:[a-z0-9-]{1,30}$",
+              "description": "One card: the site's id, a colon, and the card's own id (both lower-case letters, digits and dashes)."
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the person last changed the choice."
+          }
+        }
+      }
     }
   }
 }
