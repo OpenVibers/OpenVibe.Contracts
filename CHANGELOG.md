@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.334.0 — 2026-11-07
+
+- The `chat` manifest names `openvibe.party`, the Watch Together host OpenVibe.Chat serves beside `openvibe.chat`
+  (Party watch v1, plan R1). Chat's service manifest is what services check a party link against: a media party plays a
+  Media ref or an https URL on a host a manifest names, so a party started from an OpenVibe page passes and a link to
+  somebody else's server does not. The `www.` name only redirects, so it is not listed.
+
 ## 0.333.0 — 2026-11-07
 
 - The `network` manifest names the two hosts Network serves since 2026-11-07: `openvibe.my` (the account hub's own home,
