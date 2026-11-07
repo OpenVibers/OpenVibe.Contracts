@@ -211235,6 +211235,31 @@ export type Task = {
    * The agent contact's own level, before the thread's level is raised above it.
    */
   agent_level?: "ask" | "auto-edits" | "approve-for-me" | "full";
+  /**
+   * The Computer a running task opened (plan 2026-11-07: Surf, Computer and Actor are one experience): a browser or desktop session, wherever it runs. It is the one id every surface reads — Surf's task card, the Dock's step and Actor's conversation — never a copy. Present while the task holds it; null once it ended. session_id is the session on the service that owns it (OpenVibe.Run's ses_…); when the desk runs directly on one of the person's own machines through OpenVibe.Bot there is no Run session and it is null. machine is the person's own word for where it runs (their computer's name, or 'a shared desk host'). where: yours (one of their own machines), home (a desk host someone offers at home) or network (an OpenVibe desk host). cost_hint is one plain phrase about what it costs.
+   */
+  computer?: {
+    /**
+     * OpenVibe.Run's session id (ses_…), or null when the desk runs directly on the person's machine through OpenVibe.Bot.
+     */
+    session_id: string | null;
+    /**
+     * The person's word for it: their computer's name, or a desk host.
+     */
+    machine: string;
+    /**
+     * yours: one of the person's own machines; home: a desk host someone offers at home; network: an OpenVibe desk host.
+     */
+    where: "yours" | "home" | "network";
+    /**
+     * One plain phrase, for example 'free on your computer' or 'about $0.01 a minute'.
+     */
+    cost_hint?: string | null;
+    /**
+     * True while the person drives this Computer (they took it over): the agent's input actions are refused, and Give it back hands it over again.
+     */
+    driving?: boolean;
+  } | null;
 };
 
 /** events.delivery-policy@1.0.0 (owner: events) */
@@ -274038,6 +274063,14 @@ export type RunSession = {
     desk_seconds: number;
   };
   idempotency_key: string | null;
+  /**
+   * The OpenVibe.Actor task that asked for this session (plan 2026-11-07: one id across Surf, Computer and Actor). Null when a person opened it themselves. The session is the Computer the task's record carries.
+   */
+  task_id?: string | null;
+  /**
+   * Curtain now (the privacy screen): while it is up the session's still answers the curtain picture, never the screen. The person raises and lifts it with POST /api/v1/sessions/{id}/curtain.
+   */
+  curtain?: boolean;
 };
 
 /** run.session-create-request@1.0.0 (owner: run) */
@@ -274068,6 +274101,10 @@ export interface RunSessionCreateRequest {
   machine?: string;
   requirements?: WorkloadRequirements;
   idempotency_key?: string;
+  /**
+   * The OpenVibe.Actor task that asks for this session (plan 2026-11-07: one id across Surf, Computer and Actor). It is carried back on run.session@1, so the session and the task point at each other.
+   */
+  task_id?: string;
 }
 
 /** run.session-control-request@1.0.0 (owner: run) */
@@ -274197,6 +274234,14 @@ export interface RunSessionStartedPayload {
     desk_seconds: number;
   };
   idempotency_key: string | null;
+  /**
+   * The OpenVibe.Actor task that asked for this session (plan 2026-11-07: one id across Surf, Computer and Actor). Null when a person opened it themselves. The session is the Computer the task's record carries.
+   */
+  task_id?: string | null;
+  /**
+   * Curtain now (the privacy screen): while it is up the session's still answers the curtain picture, never the screen. The person raises and lifts it with POST /api/v1/sessions/{id}/curtain.
+   */
+  curtain?: boolean;
 }
 
 /** run.session.ended@1.0.0 (owner: run) */
@@ -274287,6 +274332,14 @@ export interface RunSessionEndedPayload {
     desk_seconds: number;
   };
   idempotency_key: string | null;
+  /**
+   * The OpenVibe.Actor task that asked for this session (plan 2026-11-07: one id across Surf, Computer and Actor). Null when a person opened it themselves. The session is the Computer the task's record carries.
+   */
+  task_id?: string | null;
+  /**
+   * Curtain now (the privacy screen): while it is up the session's still answers the curtain picture, never the screen. The person raises and lifts it with POST /api/v1/sessions/{id}/curtain.
+   */
+  curtain?: boolean;
 }
 
 /** bot.desk-lease@1.0.0 (owner: bot) */
@@ -300806,6 +300859,31 @@ export interface AgentTimelineEntry {
   link?: string | null;
   reason?: string | null;
   transition?: string | null;
+  /**
+   * The Computer a running task opened (plan 2026-11-07: Surf, Computer and Actor are one experience): a browser or desktop session, wherever it runs. It is the one id every surface reads — Surf's task card, the Dock's step and Actor's conversation — never a copy. Present while the task holds it; null once it ended. session_id is the session on the service that owns it (OpenVibe.Run's ses_…); when the desk runs directly on one of the person's own machines through OpenVibe.Bot there is no Run session and it is null. machine is the person's own word for where it runs (their computer's name, or 'a shared desk host'). where: yours (one of their own machines), home (a desk host someone offers at home) or network (an OpenVibe desk host). cost_hint is one plain phrase about what it costs.
+   */
+  computer?: {
+    /**
+     * OpenVibe.Run's session id (ses_…), or null when the desk runs directly on the person's machine through OpenVibe.Bot.
+     */
+    session_id: string | null;
+    /**
+     * The person's word for it: their computer's name, or a desk host.
+     */
+    machine: string;
+    /**
+     * yours: one of the person's own machines; home: a desk host someone offers at home; network: an OpenVibe desk host.
+     */
+    where: "yours" | "home" | "network";
+    /**
+     * One plain phrase, for example 'free on your computer' or 'about $0.01 a minute'.
+     */
+    cost_hint?: string | null;
+    /**
+     * True while the person drives this Computer (they took it over): the agent's input actions are refused, and Give it back hands it over again.
+     */
+    driving?: boolean;
+  } | null;
   /**
    * The approval this step waits on, and the mode that owns it. The person answers it in the mode.
    */

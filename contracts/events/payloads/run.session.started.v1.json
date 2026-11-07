@@ -59,6 +59,12 @@
     },
     "idempotency_key": {
       "$ref": "../../run/session.v1.json#/properties/idempotency_key"
+    },
+    "task_id": {
+      "$ref": "../../run/session.v1.json#/properties/task_id"
+    },
+    "curtain": {
+      "$ref": "../../run/session.v1.json#/properties/curtain"
     }
   }
 }

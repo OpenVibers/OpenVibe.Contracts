@@ -98,6 +98,23 @@
           "type": "null"
         }
       ]
+    },
+    "task_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "The OpenVibe.Actor task that asked for this session (plan 2026-11-07: one id across Surf, Computer and Actor). Null when a person opened it themselves. The session is the Computer the task's record carries."
+    },
+    "curtain": {
+      "type": "boolean",
+      "default": false,
+      "description": "Curtain now (the privacy screen): while it is up the session's still answers the curtain picture, never the screen. The person raises and lifts it with POST /api/v1/sessions/{id}/curtain."
     }
   },
   "allOf": [

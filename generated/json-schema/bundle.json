@@ -75407,6 +75407,9 @@
               "full"
             ],
             "description": "The agent contact's own level, before the thread's level is raised above it."
+          },
+          "computer": {
+            "$ref": "#/$defs/computer"
           }
         },
         "allOf": [
@@ -75584,7 +75587,63 @@
             "cancel": null,
             "progress": null
           }
-        ]
+        ],
+        "$defs": {
+          "computer": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "description": "The Computer a running task opened (plan 2026-11-07: Surf, Computer and Actor are one experience): a browser or desktop session, wherever it runs. It is the one id every surface reads — Surf's task card, the Dock's step and Actor's conversation — never a copy. Present while the task holds it; null once it ended. session_id is the session on the service that owns it (OpenVibe.Run's ses_…); when the desk runs directly on one of the person's own machines through OpenVibe.Bot there is no Run session and it is null. machine is the person's own word for where it runs (their computer's name, or 'a shared desk host'). where: yours (one of their own machines), home (a desk host someone offers at home) or network (an OpenVibe desk host). cost_hint is one plain phrase about what it costs.",
+            "required": [
+              "session_id",
+              "machine",
+              "where"
+            ],
+            "properties": {
+              "session_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "OpenVibe.Run's session id (ses_…), or null when the desk runs directly on the person's machine through OpenVibe.Bot."
+              },
+              "machine": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80,
+                "description": "The person's word for it: their computer's name, or a desk host."
+              },
+              "where": {
+                "enum": [
+                  "yours",
+                  "home",
+                  "network"
+                ],
+                "description": "yours: one of the person's own machines; home: a desk host someone offers at home; network: an OpenVibe desk host."
+              },
+              "cost_hint": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 120,
+                "description": "One plain phrase, for example 'free on your computer' or 'about $0.01 a minute'."
+              },
+              "driving": {
+                "type": "boolean",
+                "default": false,
+                "description": "True while the person drives this Computer (they took it over): the agent's input actions are refused, and Give it back hands it over again."
+              }
+            }
+          }
+        }
       }
     },
     "events.delivery-policy": {
@@ -84482,6 +84541,9 @@
           "is_error": {
             "type": "boolean"
           },
+          "computer": {
+            "$ref": "../platform/task.v1.json#/$defs/computer"
+          },
           "artifacts": {
             "type": "array",
             "maxItems": 20,
@@ -92330,6 +92392,23 @@
                 "type": "null"
               }
             ]
+          },
+          "task_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The OpenVibe.Actor task that asked for this session (plan 2026-11-07: one id across Surf, Computer and Actor). Null when a person opened it themselves. The session is the Computer the task's record carries."
+          },
+          "curtain": {
+            "type": "boolean",
+            "default": false,
+            "description": "Curtain now (the privacy screen): while it is up the session's still answers the curtain picture, never the screen. The person raises and lifts it with POST /api/v1/sessions/{id}/curtain."
           }
         },
         "allOf": [
@@ -92653,6 +92732,11 @@
           },
           "idempotency_key": {
             "$ref": "session.v1.json#/$defs/idempotency_key"
+          },
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The OpenVibe.Actor task that asks for this session (plan 2026-11-07: one id across Surf, Computer and Actor). It is carried back on run.session@1, so the session and the task point at each other."
           }
         },
         "examples": [
@@ -92899,6 +92983,12 @@
           },
           "idempotency_key": {
             "$ref": "../../run/session.v1.json#/properties/idempotency_key"
+          },
+          "task_id": {
+            "$ref": "../../run/session.v1.json#/properties/task_id"
+          },
+          "curtain": {
+            "$ref": "../../run/session.v1.json#/properties/curtain"
           }
         }
       }
@@ -92975,6 +93065,12 @@
           },
           "idempotency_key": {
             "$ref": "../../run/session.v1.json#/properties/idempotency_key"
+          },
+          "task_id": {
+            "$ref": "../../run/session.v1.json#/properties/task_id"
+          },
+          "curtain": {
+            "$ref": "../../run/session.v1.json#/properties/curtain"
           }
         }
       }
@@ -108486,6 +108582,9 @@
               "null"
             ],
             "maxLength": 240
+          },
+          "computer": {
+            "$ref": "../platform/task.v1.json#/$defs/computer"
           },
           "approval": {
             "type": [
