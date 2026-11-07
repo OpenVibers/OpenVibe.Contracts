@@ -8324,6 +8324,24 @@
       "status": "active"
     },
     {
+      "id": "network.consent-claim",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/consent-claim.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.me-consent-apps-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/me-consent-apps-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.consent-check-request",
       "version": "1.0.0",
       "owner": "network",
@@ -8967,6 +8985,15 @@
       "version": "1.0.0",
       "owner": "ai",
       "schema": "ai/memory-write-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.memory-export",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/memory-export.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
@@ -9624,6 +9651,33 @@
       "version": "1.0.0",
       "owner": "chat",
       "schema": "chat/party.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bot.machine-pool",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/machine-pool.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.offer-pool",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/offer-pool.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.offer",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/offer.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"

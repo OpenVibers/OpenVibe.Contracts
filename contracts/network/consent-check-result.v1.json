@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/network/consent-check-result.v1.json",
   "title": "NetworkConsentCheckResult",
-  "description": "network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.",
+  "description": "network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An app's grant (client set) answers only a check that names that app. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.",
   "type": "object",
   "additionalProperties": false,
   "required": ["purpose", "allowed", "checked_at"],
