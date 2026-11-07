@@ -4,7 +4,7 @@
   "owner": "network",
   "status": "active",
   "visibility": "internal",
-  "description": "A paired machine presents its own capabilities and rotates its own credential, never another machine's.",
+  "description": "A paired machine presents its own capabilities and rotates its own credential, never another machine's. It also announces itself for its owner's machine pools (bot.machine-pool@1), reads, approves and renews the pools it is a member of, and leaves them; it never acts for another machine.",
   "permissions": [
     "nodes:self"
   ],
@@ -15,6 +15,11 @@
   "events": [],
   "implementedBy": [
     "PUT /api/v1/node/self/capabilities",
-    "POST /api/v1/node/self/credential"
+    "POST /api/v1/node/self/credential",
+    "POST /api/v1/node/self/pools/announce",
+    "GET /api/v1/node/self/pools/:id",
+    "POST /api/v1/node/self/pools/:id/approve",
+    "POST /api/v1/node/self/pools/:id/status",
+    "POST /api/v1/node/self/pools/:id/leave"
   ]
 }

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/offer-pool.v1.json",
+  "title": "AiOfferPool",
+  "description": "ai.offer-pool@1 (the pooled machines design, 2026-11-06): the `pool` part of a community AI offer (ai.offer@1) served by several of one owner's machines together (bot.machine-pool@1). Network adds it from its own approved pool record, never from what a machine reports: the offer is the head's, `head` equals the offer's `machine_id`, and while a machine is in a pool it advertises no offer of its own. It names machines only; no address, key or certificate reaches AI. AI routes the request to the head, runs the same verification as for one machine (canaries, the model fingerprint, spot re-runs) on the pool's answers, keys that verification on this exact membership (another member or head is a new, unverified pool), keeps a pool that is new or failed to the free tier only, and labels its answers \"Community pool (N machines)\".",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "machines",
+    "head"
+  ],
+  "properties": {
+    "machines": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "description": "The pool's machines, head included (Bot device ids), two to eight.",
+      "items": {
+        "type": "string",
+        "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$"
+      }
+    },
+    "head": {
+      "type": "string",
+      "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The machine that answers: one of `machines`, and the offer's own `machine_id`."
+    }
+  }
+}

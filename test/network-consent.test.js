@@ -57,7 +57,7 @@ for (const id of ['network.consent', 'network.consent-choice', 'network.me-conse
     }
 }
 
-// Apps ask per purpose at sign-in (C4, 0.307.0): consent:<purpose> scopes and the `consent` claim. An app may ask for
+// Apps ask per purpose at sign-in (C4, 0.310.0): consent:<purpose> scopes and the `consent` claim. An app may ask for
 // every purpose of the family except the retired ai.looks, and the claim, the app token's claim and the account page's
 // "Apps you allowed" all list that same set.
 const APP_PURPOSES = PURPOSES.filter((p) => p !== 'ai.looks');

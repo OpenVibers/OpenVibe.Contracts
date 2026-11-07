@@ -12,8 +12,10 @@ const pkg = require(path.join(ROOT, 'package.json'));
 const versions = [...text.matchAll(/^## (\d+)\.(\d+)\.(\d+)\b/gm)].map((m) => [+m[1], +m[2], +m[3]]);
 const [major, minor] = pkg.version.split('.').map(Number);
 
-// Minor versions that were never released (no tag), so they have no entry.
-const NEVER_RELEASED = new Set([293]);
+// Minor versions that were never released (no tag), so they have no entry. 306 and 307 were reserved for the pooled
+// machines and consent branches, which merged after Memory M5 took 308: they became 0.309.0 and 0.310.0, and the two
+// numbers stay unused (a tag below the newest one would read as a downgrade to the pin bot).
+const NEVER_RELEASED = new Set([293, 306, 307]);
 const FIRST_MINOR = 30;
 
 assert.strictEqual(major, 0, 'the check counts 0.x minors; update it when 1.0.0 ships');

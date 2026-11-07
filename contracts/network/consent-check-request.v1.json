@@ -18,7 +18,7 @@
     "client": {
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$",
-      "description": "The app the use is for. Required for app.data. For any other purpose it asks about that app's own grant from its sign-in (consent:<purpose>, 0.307.0); without it the answer is about OpenVibe's own use. One app's grant never answers for OpenVibe or for another app."
+      "description": "The app the use is for. Required for app.data. For any other purpose it asks about that app's own grant from its sign-in (consent:<purpose>, 0.310.0); without it the answer is about OpenVibe's own use. One app's grant never answers for OpenVibe or for another app."
     },
     "feature": {
       "enum": ["verify", "find", "cast", "library"],
