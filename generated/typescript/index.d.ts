@@ -274230,6 +274230,14 @@ export interface RunSessionStartedPayload {
     desk_seconds: number;
   };
   idempotency_key: string | null;
+  /**
+   * The OpenVibe.Actor task that asked for this session (plan 2026-11-07: one id across Surf, Computer and Actor). Null when a person opened it themselves. The session is the Computer the task's record carries.
+   */
+  task_id?: string | null;
+  /**
+   * Curtain now (the privacy screen): while it is up the session's still answers the curtain picture, never the screen. The person raises and lifts it with POST /api/v1/sessions/{id}/curtain.
+   */
+  curtain?: boolean;
 }
 
 /** run.session.ended@1.0.0 (owner: run) */
@@ -274320,6 +274328,14 @@ export interface RunSessionEndedPayload {
     desk_seconds: number;
   };
   idempotency_key: string | null;
+  /**
+   * The OpenVibe.Actor task that asked for this session (plan 2026-11-07: one id across Surf, Computer and Actor). Null when a person opened it themselves. The session is the Computer the task's record carries.
+   */
+  task_id?: string | null;
+  /**
+   * Curtain now (the privacy screen): while it is up the session's still answers the curtain picture, never the screen. The person raises and lifts it with POST /api/v1/sessions/{id}/curtain.
+   */
+  curtain?: boolean;
 }
 
 /** bot.desk-lease@1.0.0 (owner: bot) */

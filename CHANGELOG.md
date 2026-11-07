@@ -5,6 +5,7 @@
 - One Computer across Surf, Actor and the Dock (plan 2026-11-07: "Surf, Computer and Actor are one experience"): `platform.task@1` gains optional `computer` (`session_id`, `machine`, `where`, `cost_hint`) — the browser or desktop session a running task opened, wherever it runs. `session_id` is OpenVibe.Run's `ses_…`; it is null only when the desk runs directly on the person's own machine through OpenVibe.Bot, where there is no Run session. `where` is `yours`, `home` or `network`, and `machine` is the person's own word for it.
 - `actor.task-event@2` and `agent.timeline-entry@1` carry the same `computer` object by `$ref`: the task's step in the Dock and the task record read the same fields, never a copy.
 - `run.session@1` gains optional `task_id` (the Actor task that asked for the session, so the session points back at the task) and `curtain` (the privacy screen: while it is up the session's still answers the curtain picture, never the screen). `run.session-create-request@1` gains optional `task_id`.
+- The `run.session.started` and `run.session.ended` event payloads carry the same optional `task_id` and `curtain`, so a session's own events stay valid with the new session shape.
 - Additive only: every new field is optional and nothing that exists today changes shape.
 
 ## 0.326.0 — 2026-11-07
