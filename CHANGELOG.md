@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.319.0 — 2026-11-07
+
+- The merged public site: OpenVibe.AI is no longer a site of its own. Its service manifest keeps the API, the run receipt and the operator console but drops the `site` block, so Network's Frame lists Exchange instead of AI. `manifests/products/ai.openvibe.services.json` is `kind: moved`, points at Exchange and keeps the API address, and Exchange's own site block now carries the merged tagline ("Every AI model, one account") and what it does.
+- No contract shapes change.
+
 ## 0.318.0 — 2026-11-07
 
 - Add `network.presence@1`: one person's online status as another may see it — `online`, `away`, `dnd`, `invisible` or `offline`, an optional status line (80 characters) and one emoji, whether they are streaming on OpenVibe.Live (`live`), and when it changed. OpenVibe.Network owns it; the state is derived from a heartbeat (online under 2 minutes, offline after 3) and the last input (away after 10 minutes), and invisible or `show_status` off is seen as offline.
