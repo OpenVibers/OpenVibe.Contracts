@@ -4,7 +4,7 @@
   "owner": "network",
   "status": "active",
   "visibility": "public",
-  "description": "\"Your data choices\" for the signed-in person (L24): GET /api/v1/me/consent lists every purpose with its wording, the person's choices and their history; PUT /api/v1/me/consent/:purpose turns one on or off (network.consent-choice@1); DELETE /api/v1/me/consent/:purpose/:client revokes one app. Off is the default for every purpose. Only the person's own session or token reaches it.",
+  "description": "\"Your data choices\" for the signed-in person (L24): GET /api/v1/me/consent lists every purpose with its wording, the person's choices and their history; PUT /api/v1/me/consent/:purpose turns one on or off (network.consent-choice@1); DELETE /api/v1/me/consent/:purpose/:client turns one app's purpose off. \"Apps you allowed\" (0.310.0): GET /api/v1/me/consent/apps lists the purposes each app was granted or refused at sign-in (network.me-consent-apps-result@1), and DELETE /api/v1/me/consent/:purpose/:client/refusal ends a refusal's 30 quiet days so that app's next sign-in asks again. Off is the default for every purpose. Only the person's own session or token reaches it.",
   "inputSchema": "network.consent-choice@1",
   "outputSchema": "network.me-consent-result@1",
   "permissions": [
@@ -21,6 +21,8 @@
   "implementedBy": [
     "GET /api/v1/me/consent",
     "PUT /api/v1/me/consent/:purpose",
-    "DELETE /api/v1/me/consent/:purpose/:client"
+    "DELETE /api/v1/me/consent/:purpose/:client",
+    "GET /api/v1/me/consent/apps",
+    "DELETE /api/v1/me/consent/:purpose/:client/refusal"
   ]
 }

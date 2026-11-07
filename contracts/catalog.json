@@ -8324,6 +8324,24 @@
       "status": "active"
     },
     {
+      "id": "network.consent-claim",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/consent-claim.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.me-consent-apps-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/me-consent-apps-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.consent-check-request",
       "version": "1.0.0",
       "owner": "network",

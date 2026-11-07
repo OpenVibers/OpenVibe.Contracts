@@ -35,7 +35,7 @@
     "client": {
       "type": ["string", "null"],
       "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$",
-      "description": "The app the choice is for: null means OpenVibe itself; otherwise the OAuth client id of an app the person granted (required for app.data, and only there)."
+      "description": "The app the choice is for: null means OpenVibe itself; otherwise the OAuth client id of the app the person granted it to. app.data always names one. Since 0.310.0 an app may ask for any purpose at sign-in (consent:<purpose>, network.consent-claim@1): the grant is one record per purpose with this client and source oauth, and it allows that app only, never OpenVibe itself or another app."
     },
     "options": {
       "type": "object",
@@ -57,7 +57,7 @@
           "maxItems": 4,
           "uniqueItems": true,
           "items": { "enum": ["ai.train", "data.public", "face.recognize", "ai.looks"] },
-          "description": "app.data only: what the app may do with the person's content, as the consent screen showed it."
+          "description": "app.data only, and not written since 0.310.0: an app's consent screen grants each purpose as its own record (client set), so a reader asks for the purpose itself. Kept so older records still validate."
         }
       },
       "description": "What the purpose needs beyond on and kinds. An empty object for ai.train and ai.looks."
@@ -69,7 +69,7 @@
     },
     "source": {
       "enum": ["account", "oauth", "api", "import:vision"],
-      "description": "Where the choice was made: the account page, an app's consent screen, the person's own API call, or OpenVibe.Vision's older face consents moved into Network."
+      "description": "Where the choice was made: the account page, an app's consent screen at sign-in (consent:<purpose>, with client set), the person's own API call, or OpenVibe.Vision's older face consents moved into Network."
     },
     "granted_at": {
       "type": "string",

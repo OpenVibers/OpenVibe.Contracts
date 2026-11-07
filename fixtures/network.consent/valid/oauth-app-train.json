@@ -1,0 +1,14 @@
+{
+  "id": "cns_01K9A3A1B2C3D4E5F6G7H8J9KC",
+  "subject": "usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+  "purpose": "ai.train",
+  "on": true,
+  "kinds": [],
+  "client": "app_01K6R3A1B2C3D4E5F6G7H8J9KD",
+  "options": {},
+  "text_version": "2026-11-07.1",
+  "source": "oauth",
+  "granted_at": "2026-11-07T05:00:00.000Z",
+  "revoked_at": null,
+  "expires_at": null
+}
