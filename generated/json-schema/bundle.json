@@ -3047,7 +3047,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/common/config-namespace.v1.json",
         "title": "ConfigNamespace",
-        "description": "common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps).",
+        "description": "common.config-namespace@1 (AI Exchange D11): one service configuration namespace as openvibe-shared/config's summary() returns it (config-pg.js), plus `sealed`, `pins` and `schema`. GET /internal/config lists these for a service and GET /internal/config/:namespace returns one. Values are the active ones over the defaults, with every secret-class value replaced by its marker; a marker never carries the value. `sealed` says whether the service has a KEK so secrets are envelopes (false is the pre-D11 plaintext behaviour). `pins` names the keys whose x-env variable is set, so their effective value is the environment's and a write is 409 config.pinned_in_env. `schema` is the namespace's JSON Schema so a client can draw the form; its annotations are title, description, x-group, x-env, x-danger, x-bind and x-unit (nano_usd, ms, bps, seconds), and for the owner's Setup tab and the clear admin panel (openvibe-shared 4.125.0) x-owner-input ({ group, unlocks, get_it_at, get_it_how, test }: a field only the owner can give), x-required-for (the feature an unset field blocks), x-enum-labels ({ value: { label, description } }), x-advanced (folded under Advanced settings) and x-example (a placeholder; never on a secret).",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -3146,7 +3146,7 @@
               "object",
               "null"
             ],
-            "description": "The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to) and x-unit (nano_usd, ms or bps)."
+            "description": "The namespace's JSON Schema, or null when it has none. Annotations the client may read: title, description, x-group, x-env, x-danger, x-bind (the key whose value the secret is bound to), x-unit (nano_usd, ms, bps or seconds), x-owner-input, x-required-for, x-enum-labels, x-advanced and x-example."
           },
           "active": {
             "description": "The active revision as a snapshot (common.config-snapshot@1), or null.",
