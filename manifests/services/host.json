@@ -24,7 +24,7 @@
     "tagline": "Hosting, compared honestly",
     "what": "Cloud, VPS and dedicated plans, hosting offers, domain prices and benchmarks people run side by side, each with the day it was checked and its source; never ranked by who pays.",
     "legalProfile": "hosting",
-    "position": 15,
+    "position": 16,
     "tld": "host",
     "accent": "#94a3b8",
     "description": "OpenVibe.Host compares hosting: plans from providers' official APIs and staff entries that name their source, priced per month, per vCPU and per GB, each dated and linked to its source; offers posted on LowEndSpirit's Offers board; domain prices per ending with a name check at the registry; and benchmarks people run with YABS on their own servers. Its console lists your own servers on Linode, DigitalOcean, Vultr and Hetzner Cloud in one place. The order comes only from the visitor's sort; affiliate links are marked. Static hosting is OpenVibe.Space.",

@@ -1,10 +1,17 @@
 # Changelog
 
-## 0.330.0 — 2026-11-07
+## 0.331.0 — 2026-11-07
 
 - Add `common.control-lease@1`, the shared control lease (seven domains plan B3): the thing a lease controls, its holder (a `person`, an `ai` or `nobody`, with the holder's subject or null), when the holder got the controls, an optional absolute `expires_ms`, the subjects watching and a `seq` that increments on every holder change, expiry or take-back. A watcher-only change does not increment `seq`. The authority that owns the thing enforces the rules; Chat hosts a room's lease, names the thing `chat.room:<slug>` and accepts a control change only from the current holder, while take-back by the room's owner always wins.
 - Add `common.sync-clock@1`, the shared timeline (B4): the room, the media (a Media ref or an https URL), the position at `at_ms`, the rate, whether it is paused, who set it and a `seq`. A player computes `position_ms + (authority now - at_ms) * rate` while it plays and `position_ms` while it is paused. Chat stamps `at_ms` and `seq` and stores the latest state in `room_sync_clocks` (the memory copy is the room's live state).
 - Valid and invalid fixtures cover a person, AI and free lease, a lease with a time limit, seq zero, a nobody with a subject, a duplicate watcher, a URL and a Media-ref clock, a clock at a rate and paused, an http URL, a bad room and a bad media object.
+
+## 0.330.0 — 2026-11-07
+
+- Add the `mail` service manifest: `openvibe.email` as the site **Email** (icon `mail`, the shared glyph font's E054), tagline "An address for every sign-up", the receive-only wording, legal profile `service`, and position 7, directly after Chat. It declares exposure `live`/`service`, port 5250, database `ov_mail`, the Stalwart mail server, `/api/health` and `/api/ready`, its shutdown and due-based recovery, an expand-only rollback, and the purge lease.
+- Add the two capabilities OpenVibe.Mail's API already checks: `mail.addresses.write` (make and retire a mask; make an agent inbox) and `mail.messages.read` (the person's addresses, message metadata and the newest burner code, never a body). Both are first-party, `owner`-constrained, and name their routes. Their request and result schemas are recorded in `compatibility/capability-schema-gaps.json` for now, like the config.manage capabilities added in 0.315.0.
+- The manifest lists no `eventsProduced` yet: the service publishes `mail.mask.created` and `mail.received`, but their payload contracts are not in this release.
+- Sites from the old position 7 up move one place (Services becomes 8, … Connect becomes 52) so Email sits beside Chat without breaking the unique-position rule. No contract changes shape; the only data change is the site order.
 
 ## 0.329.0 — 2026-11-07
 

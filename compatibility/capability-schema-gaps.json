@@ -49,6 +49,20 @@
         "inputSchema",
         "outputSchema"
       ]
+    },
+    {
+      "id": "mail.addresses.write",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    {
+      "id": "mail.messages.read",
+      "missing": [
+        "inputSchema",
+        "outputSchema"
+      ]
     }
   ]
 }

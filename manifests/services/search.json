@@ -91,7 +91,7 @@
     "tagline": "Search the OpenVibe network",
     "what": "One search box over what the network's services have published: streams, clips, pastes, wiki pages, news and more, from OpenVibe's own index.",
     "legalProfile": "public",
-    "position": 33,
+    "position": 34,
     "faq": [
       {
         "question": "What does OpenVibe Search cover?",

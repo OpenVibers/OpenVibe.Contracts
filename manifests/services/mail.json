@@ -1,0 +1,94 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.330.0 <1.0.0"
+  },
+  "id": "mail",
+  "name": "OpenVibe.Mail",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Mail",
+  "domains": [
+    "openvibe.email"
+  ],
+  "publicOrigin": "https://openvibe.email",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "openvibe.email serves the page at / and the API at /api/v1 once the Mail vhost replaces the parked 302 to Chat (the same deploy); mask.openvibe.email, burn1-3.openvibe.email and mail.openvibe.email receive SMTP only"
+  },
+  "capabilities": [
+    "mail.addresses.write",
+    "mail.messages.read"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; /api/ready is what requires the PostgreSQL database and the Stalwart mail server, and says which one failed"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "the purge timer is stopped and a run in flight finishes its transactions",
+        "the Events outbox relay is stopped after its current batch",
+        "HTTP server closed and in-flight requests drained",
+        "PostgreSQL pool closed, then the process exits"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "masks, burners, agent inboxes, mailboxes and the observed-message receipts in ov_mail survive a stop unchanged; Stalwart's message blobs stay on its own disk"
+        },
+        {
+          "kind": "outbox",
+          "what": "the Events outbox keeps unsent mail.mask.created and mail.received rows and relays them when OpenVibe.Events answers again"
+        },
+        {
+          "kind": "schedule",
+          "what": "the purge job is due-based: its first run after a stop deletes what expired while the service was down and disables the masks whose date has passed"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations 0001-0006 are expand only (CREATE TABLE/VIEW/INDEX and ADD COLUMN); an earlier release reads none of what a later one added"
+      }
+    },
+    "contracts": {
+      "range": ">=0.330.0 <1.0.0"
+    },
+    "leases": {
+      "claims": [
+        {
+          "what": "the due purge run: expired burners, their Stalwart accounts, due masks and observed-message counters",
+          "holder": "the Mail process whose transaction last wrote mail_settings.purge_lease",
+          "expires": "30 seconds after the last take; the next run takes it then",
+          "fencing": "the lease row is claimed by one transaction with updated_at gating the next claim, so a second run skips while the lease is fresh"
+        }
+      ]
+    }
+  },
+  "notes": "Port 5250, unit openvibe-mail.service, database ov_mail, plus the Stalwart receive-only mail server in openvibe-stalwart.service. M1: masks (<words>.<four characters>@mask.openvibe.email) that deliver into the person's OpenVibe mailbox and nowhere else, burners on rotating subdomains that expire after ten minutes, an hour, a day or a week (or after the first message), and agent inboxes <agent>.<user>@openvibe.email. Nothing here sends or relays mail; a message body is read only by the code endpoint, in memory, and is never stored, logged, served as HTML or put in an event. The page at / is openvibe-shared/shell and the API is /api/v1; OAuth client `mail`, redirect https://openvibe.email/auth/callback. The service registers mail.addresses.write and mail.messages.read for an app or agent acting for a person (on_behalf_of); it holds no service grant of its own. It publishes mail.mask.created and mail.received through Events, but their payload contracts are not in this release, so eventsProduced stays empty until they are. The mask domain, the burner domains and mail.openvibe.email receive SMTP only and are not HTTP origins.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5250",
+  "site": {
+    "name": "Email",
+    "icon": "mail",
+    "tagline": "An address for every sign-up",
+    "what": "Ten-minute addresses that show you the code, and inboxes for your agents. Receive only.",
+    "legalProfile": "service",
+    "position": 7,
+    "neighbourhood": "people"
+  }
+}
