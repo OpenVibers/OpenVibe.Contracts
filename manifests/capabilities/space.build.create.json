@@ -4,7 +4,7 @@
   "owner": "space",
   "status": "active",
   "visibility": "first-party",
-  "description": "Make one of a person's own spaces, as their agent (OpenVibe.Actor) builds it (plan 2026-10-22 §Z stage Z1). POST /api/v1/spaces makes a new space of the person named in X-OV-Subject, from Space's blank template; the agent then fills its files with space.build.write.",
+  "description": "Make one of a person's own spaces, as their agent (OpenVibe.Actor) builds it (plan 2026-10-22 §Z stage Z1). POST /api/v1/builder/spaces makes a new space of the person named in X-OV-Subject, from Space's blank template; the agent then fills its files with space.build.write.",
   "permissions": [
     "spaces:write"
   ],
@@ -14,7 +14,7 @@
   "quotaClass": "standard",
   "events": [],
   "implementedBy": [
-    "POST /api/v1/spaces"
+    "POST /api/v1/builder/spaces"
   ],
   "inputSchema": "space.build-create@1",
   "outputSchema": "space.build-list@1"

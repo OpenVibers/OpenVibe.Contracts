@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.324.0 — 2026-11-07
+
+- Space's builder API moves under `/api/v1/builder/spaces`: `GET /api/v1/spaces` was the forum's old API (it lives on OpenVibe.Community since 2026-11-07, and Space still answers it with a redirect), so the API the person's own agent works through needs an address of its own. The capabilities name the new routes: `space.build.read` (`GET /api/v1/builder/spaces`, `…/:id`, `…/:id/files`, `…/:id/files/:path`, `…/:id/preview`), `space.build.create` (`POST /api/v1/builder/spaces`), `space.build.write` (`PUT /api/v1/builder/spaces/:id/files`) and `space.build.publish` (`POST /api/v1/builder/spaces/:id/publish`, and the person's answer at `POST /api/v1/agent/approvals/:id/decide`).
+- No contract shape changes: the bodies and the capability ids stay as they were.
+
 ## 0.323.0 — 2026-11-07
 
 - Space's builder API says two more routes in its capabilities: `space.build.read` now names `GET /api/v1/spaces/:id/files/:path` (one file of one of the person's own spaces), and `space.build.publish` names `POST /api/v1/agent/approvals/:id/decide` (the person's answer to the agent's request to publish, which OpenVibe.Actor passes on with the person's own token).
