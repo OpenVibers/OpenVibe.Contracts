@@ -109189,6 +109189,152 @@
         }
       }
     },
+    "actor.voice": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/voice.v1.json",
+        "title": "ActorVoice",
+        "description": "actor.voice@1: an agent's voice and nothing else — the small document a person hands to somebody else so their agent speaks in the same house voice. It carries the agent's name, a short bio, its instructions (the house voice it speaks in), the rules it keeps, its default approval level, the model it prefers and the connected apps it may use (ids only, never a key), an optional face (an avatar ref), an optional author, and an integrity block. It never carries memory, a connector's token or a file: a voice is a voice, not a person. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written, and it says nothing about who wrote it — anyone can write a file that names an author and compute its hash. The AUTHOR is therefore a claim, not a fact: a document may name anyone, and whoever reads it must say so (it says it was made by …; that is not checked). Only the service that owns the agent may vouch for who wrote a voice, and it does so by sharing it itself. The canonical JSON is the document's own fields, in this order and with these names: voice, name, bio, face, instructions, rules, level, model, apps, author; an optional field that is absent or empty is left out, author is { subject } or { subject, name }, and the value is the compact JSON of that object (no spaces). CREATED_AT is when the document was written; it is not part of the hash. Importing a voice makes a new agent at level ask whatever the file says: a borrowed agent starts cautious, and the person raises it themselves.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "voice",
+          "name",
+          "instructions",
+          "level",
+          "integrity"
+        ],
+        "properties": {
+          "voice": {
+            "const": "actor.voice@1",
+            "description": "The document marker. This is the agent's voice, not a TTS voice id."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "description": "The agent's name."
+          },
+          "bio": {
+            "type": "string",
+            "maxLength": 280,
+            "description": "A short bio: one or two lines on what this agent is for."
+          },
+          "face": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "An avatar ref: an https image URL, a Media id, or a preset face such as preset:researcher."
+          },
+          "instructions": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "description": "The house voice the agent speaks in: what it does, how it says it, what it never does."
+          },
+          "rules": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": "The rules it keeps, one line each."
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "ask",
+              "auto-edits",
+              "approve-for-me",
+              "full"
+            ],
+            "description": "The approval level it works at (actor.agent@1's levels). The default is ask; an import always starts at ask."
+          },
+          "model": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "engine",
+              "model"
+            ],
+            "properties": {
+              "engine": {
+                "type": "string",
+                "enum": [
+                  "runtime",
+                  "own-keys",
+                  "open-gpu",
+                  "link"
+                ]
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "description": "The model it prefers, by id. Never a key: the key stays in OpenVibe.AI's vault."
+          },
+          "apps": {
+            "type": "array",
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9._-]{0,63}$"
+            },
+            "description": "The connected app ids it may use (Connect's catalogue slugs). Ids only: a token is never here."
+          },
+          "author": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "subject"
+            ],
+            "description": "Who the document says it is from. A claim, not a fact: a file may name anyone, and the hash says nothing about it. A service that owns the agent may vouch for its author in its own record instead.",
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The Network subject the document names."
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 80
+              }
+            }
+          },
+          "integrity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "alg",
+              "hash"
+            ],
+            "properties": {
+              "alg": {
+                "const": "sha256",
+                "description": "How the document was checked: sha256 over the canonical JSON."
+              },
+              "hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$",
+                "description": "The hex sha256 of the canonical JSON. It shows the file was not edited; it proves nothing about who wrote it."
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the document was written. Not part of the hash."
+          }
+        }
+      }
+    },
     "frame.menu-card": {
       "version": "1.0.0",
       "owner": "network",

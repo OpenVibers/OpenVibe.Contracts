@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.335.0 — 2026-11-07
+
+- Add `actor.voice@1`: an agent's voice as a file, and nothing else. The document carries the agent's name, a short bio, its instructions (the house voice it speaks in), its rules, its default approval level (`ask`, `auto-edits`, `approve-for-me`, `full` — the levels of `actor.agent@1`), the model it prefers and the connected apps it may use (ids only, never a key), an optional face (an avatar ref), an optional author and a `created_at`. It never carries memory, a connector's token or a file.
+- The document carries an **integrity** block, not a signature: `integrity: { alg: "sha256", hash }`, where the hash is the sha256 over the canonical JSON of the document. It shows the file was not edited after it was written. It says nothing about who wrote it: anyone can write a file that names an author and compute its hash, so the author in a document is a claim and the contract says so. Only the service that owns an agent may vouch for its author, in its own record.
+- The contract says exactly which fields the canonical JSON holds and in which order, and `created_at` is not one of them. The author may be absent: a document may name nobody.
+- Importing a voice makes a new agent at level `ask`, whatever the file says: a borrowed agent starts cautious and the person raises it themselves. Valid and invalid fixtures cover a full voice, a minimal one, a document carrying memory, one carrying a connector's token and one with a level that is not a level.
+- Additive only: a new contract and its fixtures; nothing that exists today changes shape.
+
 ## 0.334.0 — 2026-11-07
 
 - The `chat` manifest names `openvibe.party`, the Watch Together host OpenVibe.Chat serves beside `openvibe.chat`
