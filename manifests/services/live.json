@@ -47,6 +47,7 @@
     "neighbourhood": "streams"
   },
   "capabilities": [
+    "live.agent_sandbox.register",
     "live.agent_stream.publish",
     "live.analytics.read",
     "live.avatar.write",
