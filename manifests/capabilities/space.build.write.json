@@ -1,0 +1,21 @@
+{
+  "id": "space.build.write",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Write the files of one of a person's own spaces, as their agent (OpenVibe.Actor) builds it (plan 2026-10-22 §Z stage Z1). PUT /api/v1/builder/spaces/:id/files replaces the space's files with the ones in the body. Every write is audited like Space's own editor writes are, and the space's own limits (files, bytes) are the same ones.",
+  "permissions": [
+    "spaces:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/builder/spaces/:id/files"
+  ],
+  "inputSchema": "space.build-files@1",
+  "outputSchema": "space.build-files@1"
+}

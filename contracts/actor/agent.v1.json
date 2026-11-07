@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/agent.v1.json",
+  "title": "ActorAgent",
+  "description": "actor.agent@1: one of a person's agents as a contact (plan §12, A-1). An agent has a stable id and owner, a name and face, an optional TTS voice, the model it runs on (the OpenVibe runtime, the person's own keys, a free model on OpenVibe's GPU or their own Claude Code/Codex on a Link machine), the computer it uses (null when it has none, or one of Computer's kinds and placements), the connected apps it may use, its OpenVibe Memory scope (null when it keeps none), its approval level and when it was added. The default level is ask; money, passwords, deletions and sending to a new recipient always ask at every level, as a server-side floor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "name",
+    "face",
+    "voice",
+    "model",
+    "computer",
+    "apps",
+    "memory",
+    "level",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "agt_<ULID>, Actor's own id for the contact. Vibe, the first agent every person gets, is one of these."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^user:usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person the contact belongs to (identity.subject-ref@1 in one column). Another person's agent is 404."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "face": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "An avatar ref: an https image URL, a Media id, or a preset face such as preset:researcher. The UI draws it; Actor only stores and returns it."
+    },
+    "voice": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80,
+      "description": "A TTS voice id, or null when the agent has no voice. Voice calls are A-6; the field is stored now so a contact keeps its voice."
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine",
+        "model"
+      ],
+      "properties": {
+        "engine": {
+          "type": "string",
+          "enum": [
+            "runtime",
+            "own-keys",
+            "open-gpu",
+            "link"
+          ],
+          "description": "runtime: OpenVibe's own agent loop; own-keys: the person's provider keys through OpenVibe.AI; open-gpu: a free open model on OpenVibe's GPU; link: the person's own Claude Code or Codex on a Link machine."
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "The model id on that engine (a tier such as smart, a provider:model id, an open model name, or a harness name)."
+        }
+      }
+    },
+    "computer": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "placement"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "browser",
+                "kept-browser",
+                "desktop",
+                "gpu-desktop",
+                "always-on",
+                "your-computer",
+                "throwaway"
+              ],
+              "description": "Computer's kinds (plan §6): a browser, a kept browser, a Linux desktop, a GPU desktop, an always-on computer, the person's own computer, or a throwaway."
+            },
+            "placement": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "link",
+                "home",
+                "ovh"
+              ],
+              "description": "Where it runs: OpenVibe decides (auto), the person's Link machine, the OpenVibe home desktops, or OVH's cloud."
+            }
+          }
+        }
+      ]
+    },
+    "apps": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9._-]{0,63}$"
+      },
+      "description": "Connected app ids the agent may use (Connect's catalogue slugs)."
+    },
+    "memory": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 100,
+      "description": "The OpenVibe Memory scope id this agent reads and writes, or null when it keeps no memory."
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "ask",
+        "auto-edits",
+        "approve-for-me",
+        "full"
+      ],
+      "description": "The approval level (plan §12): ask (the default) asks before every act; auto-edits lets the agent edit files and run its own work without asking; approve-for-me has a reviewer model of another family decide ordinary acts; full runs without asking. The floor still asks for money, passwords, deletions and sending to a new recipient at every level."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "space.build.publish",
+  "version": "1.0",
+  "owner": "space",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Ask to publish one of a person's own spaces, as their agent (OpenVibe.Actor) built it (plan 2026-10-22 §Z stage Z1). POST /api/v1/builder/spaces/:id/publish asks and answers { state: 'pending' } with the request the person answers in the Dock; Space never publishes without that answer, and the agent is told to wait. The person's answer reaches Space through POST /api/v1/agent/approvals/:id/decide.",
+  "permissions": [
+    "spaces:publish"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/builder/spaces/:id/publish",
+    "POST /api/v1/agent/approvals/:id/decide"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "space.build-publish@1"
+}

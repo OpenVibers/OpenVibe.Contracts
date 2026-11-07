@@ -1,9 +1,32 @@
 # Changelog
 
-## 0.321.0 — 2026-11-07
+## 0.325.0 — 2026-11-07
 
 - Add `media.vod@1` and `media.clip@1`: one recorded stream and one clip as OpenVibe.Media's API answers them. Both carry `watch_id`, the id openvibe.video addresses a watch page by (`openvibe.video/watch?v=<watch_id>`), and the shape around it that consumers already read — the numeric id (internal), the owning tenant, the app-local user ids, title and status, duration and size, the file basename, `playback_url`, thumbnail, storage provider, visibility, view counts and times; a clip also names the recording it was cut from, its window in that recording and whether an automation cut it. `watch_id` is **additive and optional** (11 characters of URL-safe base64 from 8 random bytes, one id space across VODs and clips, fixed for the row's life and never the numeric id), because a row written before Media's backfill may answer without one.
 - Valid and invalid fixtures cover a public recording with a watch id and an unlisted one before the backfill, a person-made clip and an AI clip, a watch id of the wrong length, one with a character base64url never has, one with a slash, and an unknown visibility.
+## 0.324.0 — 2026-11-07
+
+- Space's builder API moves under `/api/v1/builder/spaces`: `GET /api/v1/spaces` was the forum's old API (it lives on OpenVibe.Community since 2026-11-07, and Space still answers it with a redirect), so the API the person's own agent works through needs an address of its own. The capabilities name the new routes: `space.build.read` (`GET /api/v1/builder/spaces`, `…/:id`, `…/:id/files`, `…/:id/files/:path`, `…/:id/preview`), `space.build.create` (`POST /api/v1/builder/spaces`), `space.build.write` (`PUT /api/v1/builder/spaces/:id/files`) and `space.build.publish` (`POST /api/v1/builder/spaces/:id/publish`, and the person's answer at `POST /api/v1/agent/approvals/:id/decide`).
+- No contract shape changes: the bodies and the capability ids stay as they were.
+
+## 0.323.0 — 2026-11-07
+
+- Space's builder API says two more routes in its capabilities: `space.build.read` now names `GET /api/v1/spaces/:id/files/:path` (one file of one of the person's own spaces), and `space.build.publish` names `POST /api/v1/agent/approvals/:id/decide` (the person's answer to the agent's request to publish, which OpenVibe.Actor passes on with the person's own token).
+- No contract shape changes: `space.build.read` and `space.build.publish` keep the bodies they had.
+
+## 0.322.0 — 2026-11-07
+
+- Add `actor.agent@1`: one of a person's agents as a contact (plan §12 A-1) — id, owner, name, face, voice, model (`engine` runtime / own-keys / open-gpu / link, plus the model id), computer (null or a Computer kind and placement), connected app ids, OpenVibe Memory scope id (or null), approval level (`ask`, `auto-edits`, `approve-for-me`, `full`) and when it was added. Levels default to ask; money, passwords, deletions and sending to a new recipient always ask at every level, as a server-side floor.
+- Add `actor.agent-list@1`: a signed-in person's own agents (`GET /api/v1/agents`), Vibe first. Vibe is created on the first read and is not deletable. The public agent-system catalog keeps `actor.agent-list-result@2` and now has an explicit `GET /api/v1/agent-systems` for a signed-in caller.
+- Add `actor.level-change@1`: the body of `PUT /api/v1/agents/{id}/level`; optional `agent_id`, `thread_id` and `reason` are echoes, the path names the agent.
+- `actor.task-create-request@1` gains optional `agent_id` (the contact the task runs as; absent means Vibe) and `level` (the thread's own level). `platform.task@1` gains optional `agent_id`, `level`, `effective_level` and `agent_level`. The effective level is the higher of the agent's level and the person's own thread line; it never inherits from another person's or a service's work.
+- Name the contact routes in `actor.agent.manage` and the catalog and presets routes in `actor.agent.read`; add valid and invalid fixtures for the three new contracts.
+
+## 0.321.0 — 2026-11-07
+
+- Space's builder becomes a task of the person's one agent (plan 2026-10-22 §Z, stage Z1). Add the contracts of Space's builder API: `space.build-space@1` (one of a person's own spaces: its id, slug, name, description, whether it is published and where, and when it changed), `space.build-list@1` (`{ spaces }` or `{ space }`), `space.build-files@1` (the space's files, each a path and its whole content), `space.build-create@1` (the body of a request for a new space), `space.build-preview@1` (where the space can be seen now, its file paths, and whether it is live) and `space.build-publish@1` (`pending`, `published` or `declined`, with the request the person answers in the Dock).
+- Add the capabilities `space.build.read` (list and read the person's own spaces and their files), `space.build.create` (make a new space), `space.build.write` (write the files of one of them) and `space.build.publish` (ask to publish; the person answers before anything goes live). A first-party service names the person in `X-OV-Subject`, and only that person's own spaces are in reach.
+- Additive: nothing that exists today changes shape.
 
 ## 0.320.0 — 2026-11-07
 
