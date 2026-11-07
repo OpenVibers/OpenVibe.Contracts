@@ -1,10 +1,19 @@
 # Changelog
 
-## 0.327.0 — 2026-11-07
+## 0.328.0 — 2026-11-07
 
 - Add `actor.assignment@1`: one node of the tree of delegated work (plan §12) — id, root, parent, depth, origin (`person`, `routine`, `outside`), mode (`work`, `consult`, `notify`), reply (`resume`, `poll`, `none`), the agent and task it runs as, the node's level and effective level, the root's budget (limit, spent and remaining), state and timestamps. A node is one hand-off: a person giving Actor a task, a routine or Watch trigger starting a run, an agent handing work to another agent, or Actor starting a Codes or Space task. The effective level is the higher of the agent's own and the one inherited along a person's or routine's line; outside work never passes a level down. A cancel cascades down the tree, and a root's budget stops its children when spent. `GET /api/v1/assignments/:id` answers the node and its children and `POST /api/v1/assignments/:id/cancel` cancels the subtree; both are owner-only and another person gets 404. An existing task gets a root lazily.
 - Add the capabilities `actor.assignment.read` and `actor.assignment.cancel`, and name them in Actor's service manifest. They are the two assignment routes above.
 - `actor.task-event@2` gains an optional `assignment_id` on a step event, so the Dock's timeline can draw the work tree later. Additive: an event without one stays valid, and the task record is still the source of truth.
+
+## 0.327.0 — 2026-11-07
+
+- One Computer across Surf, Actor and the Dock (plan 2026-11-07: "Surf, Computer and Actor are one experience"): `platform.task@1` gains optional `computer` (`session_id`, `machine`, `where`, `cost_hint`, `driving`) — the browser or desktop session a running task opened, wherever it runs. `session_id` is OpenVibe.Run's `ses_…`; it is null only when the desk runs directly on the person's own machine through OpenVibe.Bot, where there is no Run session. `where` is `yours`, `home` or `network`, and `machine` is the person's own word for it.
+- `actor.task-event@2` and `agent.timeline-entry@1` carry the same `computer` object by `$ref`: the task's step in the Dock and the task record read the same fields, never a copy.
+- `run.session@1` gains optional `task_id` (the Actor task that asked for the session, so the session points back at the task) and `curtain` (the privacy screen: while it is up the session's still answers the curtain picture, never the screen). `run.session-create-request@1` gains optional `task_id`.
+- The `run.session.started` and `run.session.ended` event payloads carry the same optional `task_id` and `curtain`, so a session's own events stay valid with the new session shape.
+- Capabilities name the routes: `run.session.read` gains `GET /api/v1/sessions/{id}/still`, `run.session.control` gains `POST /api/v1/sessions/{id}/curtain`, `actor.task.read` gains `GET /api/v1/tasks/{id}/still`, and `actor.task.create` gains `POST /api/v1/tasks/{id}/takeover` and `…/giveback`.
+- Additive only: every new field is optional and nothing that exists today changes shape.
 
 ## 0.326.0 — 2026-11-07
 

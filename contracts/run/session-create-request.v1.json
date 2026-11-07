@@ -38,6 +38,11 @@
     },
     "idempotency_key": {
       "$ref": "session.v1.json#/$defs/idempotency_key"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The OpenVibe.Actor task that asks for this session (plan 2026-11-07: one id across Surf, Computer and Actor). It is carried back on run.session@1, so the session and the task point at each other."
     }
   },
   "examples": [

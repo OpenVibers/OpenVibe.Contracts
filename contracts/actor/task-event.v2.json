@@ -78,6 +78,9 @@
     "is_error": {
       "type": "boolean"
     },
+    "computer": {
+      "$ref": "../platform/task.v1.json#/$defs/computer"
+    },
     "artifacts": {
       "type": "array",
       "maxItems": 20,

@@ -1,0 +1,39 @@
+{
+  "id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQS",
+  "owner": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "via": "service:actor",
+  "kind": "browser",
+  "state": "running",
+  "size": {
+    "width": 1280,
+    "height": 800
+  },
+  "ttl_s": 3600,
+  "idle_s": 900,
+  "placement": {
+    "machine": "dev_01J8Z4M2Q0R7T9YV3K6N8P1W2X",
+    "desk": "desk-s0mnpqs",
+    "trust": "first-party",
+    "offer_id": null,
+    "region": null,
+    "reasons": [
+      "an OpenVibe desk host with room"
+    ]
+  },
+  "timings": {
+    "created_at": "2026-11-07T09:00:00Z",
+    "started_at": "2026-11-07T09:00:04Z",
+    "last_used_at": "2026-11-07T09:05:00Z",
+    "ended_at": null
+  },
+  "end": null,
+  "usage": {
+    "desk_seconds": 296
+  },
+  "idempotency_key": "actor:tsk_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "task_id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "curtain": false
+}

@@ -1,0 +1,15 @@
+{
+  "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPT",
+  "requester": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS" },
+  "task": "Compare three hosting plans under $10 a month.",
+  "mode": "balanced",
+  "budget": { "per_task_usd": 1, "per_day_usd": 10 },
+  "state": "running",
+  "created_at": "2026-11-07T09:00:00.000Z",
+  "computer": {
+    "session_id": "ses_01JD2C3D4E5F6G7H8J9K0MNPQR",
+    "machine": "a shared desk host",
+    "where": "cloud",
+    "cost_hint": null
+  }
+}

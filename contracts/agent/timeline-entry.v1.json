@@ -128,6 +128,9 @@
       ],
       "maxLength": 240
     },
+    "computer": {
+      "$ref": "../platform/task.v1.json#/$defs/computer"
+    },
     "approval": {
       "type": [
         "object",
