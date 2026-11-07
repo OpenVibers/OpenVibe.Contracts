@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/sandbox-session.v1.json",
+  "title": "CodesSandboxSession",
+  "description": "codes.sandbox-session@1 (the Agent Streams plan, S6): the sandbox desk a chat plays session runs on. The desk is started with `--shared`: no profile, no keys, no person's files, public egress only (no private address is reachable) and a fresh workspace, and it is wiped at the end of the session. The owner sets the time box (5 to 30 minutes) and the cap (money and minutes), and arms the session with Go before the first request may run. The scratch site is a throwaway OpenVibe.Space address that is removed after 24 hours unless the owner keeps it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "session_id",
+    "task",
+    "owner",
+    "state",
+    "time_box_minutes",
+    "step_budget",
+    "cap",
+    "spend",
+    "armed",
+    "egress_public_only"
+  ],
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "pattern": "^sbs_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The sandbox session's id (ULID, Crockford base32)."
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title"
+      ],
+      "description": "The task the desk is running for the queue.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The task's id in Codes."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person the session spends their own allowance for."
+    },
+    "state": {
+      "enum": [
+        "idle",
+        "armed",
+        "running",
+        "paused",
+        "wiped",
+        "ended"
+      ],
+      "description": "Where the desk stands: idle (nothing yet), armed (the owner pressed Go, the first request may run), running, paused, wiped (Wipe now reset the sandbox) or ended."
+    },
+    "time_box_minutes": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 30,
+      "description": "How long one request may run, in minutes (the owner sets 5 to 30; the default is 10)."
+    },
+    "step_budget": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "How many steps one request may take."
+    },
+    "cap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "money_cents",
+        "minutes"
+      ],
+      "description": "The owner's cap for the session: the money and the minutes it may spend. When it is spent, the queue closes.",
+      "properties": {
+        "money_cents": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The cap in cents."
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The cap in minutes of work."
+        }
+      }
+    },
+    "spend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "money_cents",
+        "seconds",
+        "steps"
+      ],
+      "description": "What the session has spent so far.",
+      "properties": {
+        "money_cents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "armed": {
+      "type": "boolean",
+      "description": "Whether the owner pressed Go. The first request of a session waits for it."
+    },
+    "armed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the owner pressed Go."
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "wiped_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When Wipe now reset the sandbox."
+    },
+    "egress_public_only": {
+      "const": true,
+      "description": "Always true: the sandbox reaches public addresses only, and no private address is reachable."
+    },
+    "scratch_site": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "expires_at",
+        "kept"
+      ],
+      "description": "The throwaway site the run left, or null before the first one.",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When it is removed (24 hours after it was made, unless it is kept)."
+        },
+        "kept": {
+          "type": "boolean",
+          "description": "Whether the owner kept it past its 24 hours."
+        }
+      }
+    }
+  }
+}

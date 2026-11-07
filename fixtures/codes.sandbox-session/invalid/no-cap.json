@@ -1,0 +1,23 @@
+{
+  "session_id": "sbs_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "task": {
+    "id": "tsk_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "title": "Chat plays"
+  },
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "state": "armed",
+  "time_box_minutes": 10,
+  "step_budget": 40,
+  "spend": {
+    "money_cents": 0,
+    "seconds": 0,
+    "steps": 0
+  },
+  "armed": true,
+  "armed_at": "2026-11-06T20:00:00.000Z",
+  "started_at": null,
+  "ended_at": null,
+  "wiped_at": null,
+  "egress_public_only": true,
+  "scratch_site": null
+}

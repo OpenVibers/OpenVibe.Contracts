@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/play-request.v1.json",
+  "title": "ChatPlayRequest",
+  "description": "chat.play-request@1 (the Agent Streams plan, S6): one viewer's request for the chat plays desk to build or do something. A request is written with `!do <request>` (at most 200 characters) in an agent stream's room, `agent:<ags_id>`. One open request per person at a time, and an account younger than a day cannot ask. The request passes the house text filters and the safety check before it is listed; a refused request carries a one-line reason and never enters the queue. Viewers vote with a thumbs-up or `!vote <n>`, and every five minutes, or when the current request finishes, the top request becomes the next task. The owner or a moderator can skip, remove or pin a request. The result is the run's outcome and the scratch site it left behind.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "room",
+    "author",
+    "text",
+    "votes",
+    "state",
+    "pinned",
+    "created_at"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "pattern": "^req_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The request's id (ULID, Crockford base32)."
+    },
+    "room": {
+      "type": "string",
+      "pattern": "^agent:ags_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The room the request was made in: an agent stream's room, `agent:<ags_id>`."
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handle"
+      ],
+      "description": "Who asked. The handle and the display name only, never an id.",
+      "properties": {
+        "handle": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]{2,32}$",
+          "description": "The handle of the person who asked."
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 64,
+          "description": "Their display name, when they have one."
+        }
+      }
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "What the viewer asked for, as they typed it (at most 200 characters)."
+    },
+    "votes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many votes the request has. The count says nothing about who voted."
+    },
+    "voters": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many people voted (one vote each)."
+    },
+    "state": {
+      "enum": [
+        "queued",
+        "running",
+        "done",
+        "failed",
+        "skipped",
+        "removed",
+        "refused"
+      ],
+      "description": "Where the request stands: queued (waiting), running (the desk is on it), done or failed (it ran), skipped (a moderator or the owner passed over it), removed (it left the queue) or refused (the safety check or the filters turned it down)."
+    },
+    "pinned": {
+      "type": "boolean",
+      "description": "A pinned request stays at the top of the queue until it is removed or it runs."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the request was asked for."
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the desk began it, or null while it waits."
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When it finished, was skipped or was removed, or null while it stands."
+    },
+    "refusal": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "reason"
+      ],
+      "description": "Why the request was refused, when it was: the code and the one-line reason the room saw. Null when the request was accepted.",
+      "properties": {
+        "code": {
+          "enum": [
+            "platform_floor",
+            "harm",
+            "attack",
+            "account_or_money",
+            "account_too_new",
+            "too_long",
+            "already_open"
+          ],
+          "description": "Which rule turned it down."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The one-line reason shown in the room."
+        }
+      }
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "line"
+      ],
+      "description": "How the run ended, once it ran: the outcome and the line the overlay and the voice said.",
+      "properties": {
+        "outcome": {
+          "enum": [
+            "done",
+            "failed",
+            "timeout",
+            "budget",
+            "stopped"
+          ],
+          "description": "How it ended."
+        },
+        "line": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The one line the room and the overlay saw, e.g. 'Done: a snake game at the scratch address'."
+        },
+        "scratch_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri",
+          "description": "The throwaway scratch site the run left, when it left one."
+        },
+        "task_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The Codes task that ran it."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "refused"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "refusal": {
+            "type": "object"
+          },
+          "result": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "refusal"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "not": {
+              "const": "refused"
+            }
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "refusal": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

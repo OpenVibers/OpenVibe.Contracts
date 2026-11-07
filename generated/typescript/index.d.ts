@@ -294490,13 +294490,13 @@ export type ChatAgentPoll = {
 
 /** live.agent-stream-control@1.0.0 (owner: live) */
 /**
- * live.agent-stream-control@1 (the Agent Streams plan, S5): one of the four controls the owner and the channel's moderators have over a live agent stream, with who pressed it. PAUSE tells the task's service (Codes or Actor) to pause at the next safe point; the overlay then says 'Paused by @mod'. CURTAIN is the S1 curtain, raised from the viewer side. MUTE is the S4 mute: the agent voice stops. END ends the stream and the room's Co-pilot reading, while the task itself keeps running off camera unless it was paused. A moderator may press all four, but may not resume a pause the owner set and may not change the mode or the task. Every press is logged: who, which control, when.
+ * live.agent-stream-control@1 (the Agent Streams plan, S5): one of the controls the owner and the channel's moderators have over a live agent stream, with who pressed it. PAUSE tells the task's service (Codes or Actor) to pause at the next safe point; the overlay then says 'Paused by @mod'. CURTAIN is the S1 curtain, raised from the viewer side. MUTE is the S4 mute: the agent voice stops. END ends the stream and the room's Co-pilot reading, while the task itself keeps running off camera unless it was paused. WIPE is the chat plays control of S6: it stops the run and resets the sandbox desk. A moderator may press every control, but may not resume a pause the owner set and may not change the mode or the task. Every press is logged: who, which control, when.
  */
 export interface LiveAgentStreamControl {
   /**
    * Which control was pressed.
    */
-  control: "pause" | "curtain" | "mute" | "end";
+  control: "pause" | "curtain" | "mute" | "end" | "wipe";
   /**
    * Who pressed it: the handle and the role they hold. Never an id, never anything else about them.
    */
@@ -294785,4 +294785,190 @@ export interface ChatTTSSpeakResult {
   mime_type: "audio/mpeg" | "audio/wav" | "audio/ogg" | "audio/webm";
   rate?: number;
   voice_id?: string | null;
+}
+
+/** chat.play-request@1.0.0 (owner: chat) */
+/**
+ * chat.play-request@1 (the Agent Streams plan, S6): one viewer's request for the chat plays desk to build or do something. A request is written with `!do <request>` (at most 200 characters) in an agent stream's room, `agent:<ags_id>`. One open request per person at a time, and an account younger than a day cannot ask. The request passes the house text filters and the safety check before it is listed; a refused request carries a one-line reason and never enters the queue. Viewers vote with a thumbs-up or `!vote <n>`, and every five minutes, or when the current request finishes, the top request becomes the next task. The owner or a moderator can skip, remove or pin a request. The result is the run's outcome and the scratch site it left behind.
+ */
+export type ChatPlayRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The request's id (ULID, Crockford base32).
+   */
+  request_id: string;
+  /**
+   * The room the request was made in: an agent stream's room, `agent:<ags_id>`.
+   */
+  room: string;
+  /**
+   * Who asked. The handle and the display name only, never an id.
+   */
+  author: {
+    /**
+     * The handle of the person who asked.
+     */
+    handle: string;
+    /**
+     * Their display name, when they have one.
+     */
+    display_name?: string | null;
+  };
+  /**
+   * What the viewer asked for, as they typed it (at most 200 characters).
+   */
+  text: string;
+  /**
+   * How many votes the request has. The count says nothing about who voted.
+   */
+  votes: number;
+  /**
+   * How many people voted (one vote each).
+   */
+  voters?: number;
+  /**
+   * Where the request stands: queued (waiting), running (the desk is on it), done or failed (it ran), skipped (a moderator or the owner passed over it), removed (it left the queue) or refused (the safety check or the filters turned it down).
+   */
+  state: "queued" | "running" | "done" | "failed" | "skipped" | "removed" | "refused";
+  /**
+   * A pinned request stays at the top of the queue until it is removed or it runs.
+   */
+  pinned: boolean;
+  /**
+   * When the request was asked for.
+   */
+  created_at: string;
+  /**
+   * When the desk began it, or null while it waits.
+   */
+  started_at?: string | null;
+  /**
+   * When it finished, was skipped or was removed, or null while it stands.
+   */
+  ended_at?: string | null;
+  /**
+   * Why the request was refused, when it was: the code and the one-line reason the room saw. Null when the request was accepted.
+   */
+  refusal?: {
+    /**
+     * Which rule turned it down.
+     */
+    code: "platform_floor" | "harm" | "attack" | "account_or_money" | "account_too_new" | "too_long" | "already_open";
+    /**
+     * The one-line reason shown in the room.
+     */
+    reason: string;
+  } | null;
+  /**
+   * How the run ended, once it ran: the outcome and the line the overlay and the voice said.
+   */
+  result?: {
+    /**
+     * How it ended.
+     */
+    outcome: "done" | "failed" | "timeout" | "budget" | "stopped";
+    /**
+     * The one line the room and the overlay saw, e.g. 'Done: a snake game at the scratch address'.
+     */
+    line: string;
+    /**
+     * The throwaway scratch site the run left, when it left one.
+     */
+    scratch_url?: string | null;
+    /**
+     * The Codes task that ran it.
+     */
+    task_id?: string | null;
+  } | null;
+};
+
+/** codes.sandbox-session@1.0.0 (owner: codes) */
+/**
+ * codes.sandbox-session@1 (the Agent Streams plan, S6): the sandbox desk a chat plays session runs on. The desk is started with `--shared`: no profile, no keys, no person's files, public egress only (no private address is reachable) and a fresh workspace, and it is wiped at the end of the session. The owner sets the time box (5 to 30 minutes) and the cap (money and minutes), and arms the session with Go before the first request may run. The scratch site is a throwaway OpenVibe.Space address that is removed after 24 hours unless the owner keeps it.
+ */
+export interface CodesSandboxSession {
+  /**
+   * The sandbox session's id (ULID, Crockford base32).
+   */
+  session_id: string;
+  /**
+   * The task the desk is running for the queue.
+   */
+  task: {
+    /**
+     * The task's id in Codes.
+     */
+    id: string;
+    title: string;
+  };
+  /**
+   * The person the session spends their own allowance for.
+   */
+  owner: string;
+  /**
+   * Where the desk stands: idle (nothing yet), armed (the owner pressed Go, the first request may run), running, paused, wiped (Wipe now reset the sandbox) or ended.
+   */
+  state: "idle" | "armed" | "running" | "paused" | "wiped" | "ended";
+  /**
+   * How long one request may run, in minutes (the owner sets 5 to 30; the default is 10).
+   */
+  time_box_minutes: number;
+  /**
+   * How many steps one request may take.
+   */
+  step_budget: number;
+  /**
+   * The owner's cap for the session: the money and the minutes it may spend. When it is spent, the queue closes.
+   */
+  cap: {
+    /**
+     * The cap in cents.
+     */
+    money_cents: number;
+    /**
+     * The cap in minutes of work.
+     */
+    minutes: number;
+  };
+  /**
+   * What the session has spent so far.
+   */
+  spend: {
+    money_cents: number;
+    seconds: number;
+    steps: number;
+  };
+  /**
+   * Whether the owner pressed Go. The first request of a session waits for it.
+   */
+  armed: boolean;
+  /**
+   * When the owner pressed Go.
+   */
+  armed_at?: string | null;
+  started_at?: string | null;
+  ended_at?: string | null;
+  /**
+   * When Wipe now reset the sandbox.
+   */
+  wiped_at?: string | null;
+  /**
+   * Always true: the sandbox reaches public addresses only, and no private address is reachable.
+   */
+  egress_public_only: true;
+  /**
+   * The throwaway site the run left, or null before the first one.
+   */
+  scratch_site?: {
+    url: string;
+    /**
+     * When it is removed (24 hours after it was made, unless it is kept).
+     */
+    expires_at: string;
+    /**
+     * Whether the owner kept it past its 24 hours.
+     */
+    kept: boolean;
+  } | null;
 }
