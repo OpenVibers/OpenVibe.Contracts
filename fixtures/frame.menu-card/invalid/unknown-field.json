@@ -1,0 +1,10 @@
+{
+  "id": "trending",
+  "site": "media-hub",
+  "title": "Trending",
+  "kind": "rows",
+  "items": [],
+  "updated_at": "2026-11-07T08:00:00Z",
+  "ttl_s": 300,
+  "html": "<script>alert(1)</script>"
+}

@@ -298330,3 +298330,366 @@ export interface AgentTimelineListResult {
     [k: string]: number | undefined;
   };
 }
+
+/** frame.menu-card@1.0.0 (owner: network) */
+/**
+ * frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.
+ */
+export interface FrameMenuCard {
+  /**
+   * The card's stable id in its site (live-now, new-worlds, trending). Two cards of one site never share it.
+   */
+  id: string;
+  /**
+   * The Frame site id that publishes the card (live, games, media-hub). Network checks it against the host the file came from.
+   */
+  site: string;
+  /**
+   * The card's heading, in the owner's words.
+   */
+  title: string;
+  /**
+   * The block the Frame draws: a rail of live channels, a ranked list of rows, or a short row of chips.
+   */
+  kind: "rail" | "rows" | "chips";
+  /**
+   * The card's entries, in the site's own order. Empty means the site has a card but nothing to show (nobody is live); Network then skips it.
+   *
+   * @maxItems 6
+   */
+  items:
+    | []
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ];
+  more?: {
+    /**
+     * The link's words ("See all", "More worlds").
+     */
+    label: string;
+    /**
+     * https on the publishing site's own origin or an openvibe.* host.
+     */
+    url: string;
+  };
+  /**
+   * When the site last built the card.
+   */
+  updated_at: string;
+  /**
+   * How long the site considers the card fresh, in seconds. Live uses 30; Network itself refetches every five minutes.
+   */
+  ttl_s: number;
+}
+
+/** frame.menu-cards@1.0.0 (owner: network) */
+/**
+ * frame.menu-cards@1: the public file a site serves at /.well-known/openvibe-menu.json — an array of at most three frame.menu-card@1 cards from one site. Network fetches it every five minutes with a five-second timeout and a 64 KB cap, drops unknown fields and markup, and keeps the site's last good card for 30 minutes if the file fails. An empty array is valid and means the site publishes no card right now.
+ *
+ * @maxItems 3
+ */
+export type FrameMenuCards =
+  [] | [FrameMenuCard] | [FrameMenuCard, FrameMenuCard] | [FrameMenuCard, FrameMenuCard, FrameMenuCard];
