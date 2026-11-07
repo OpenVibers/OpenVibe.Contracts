@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.320.0 — 2026-11-07
+
+- `frame.menu-card@1` items gain an optional `image`: `src` (https on the publishing site's own origin or an `openvibe.*` host, at most 400 characters), optional `w` and `h` (whole pixels, 16–1920) and an optional `alt` of at most 120 characters. Network keeps an image whose `src` passes the same host rule as the item's `url`, drops one from anywhere else, and passes it through in `GET /api/frame` so the Frame menu and Network's `/my` can draw a thumbnail.
+- Additive: every item without an image stays valid, so an older publisher file keeps passing and an older reader ignores the field.
+- Valid fixtures cover an item with a full image and one with only `src`; invalid fixtures cover `http`, a width under 16, an `alt` over 120, a missing `src` and an unknown image field.
+
 ## 0.319.0 — 2026-11-07
 
 - The merged public site: OpenVibe.AI is no longer a site of its own. Its service manifest keeps the API, the run receipt and the operator console but drops the `site` block, so Network's Frame lists Exchange instead of AI. `manifests/products/ai.openvibe.services.json` is `kind: moved`, points at Exchange and keeps the API address, and Exchange's own site block now carries the merged tagline ("Every AI model, one account") and what it does.
