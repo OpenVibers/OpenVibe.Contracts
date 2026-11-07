@@ -97,7 +97,7 @@
     "tagline": "Run jobs on machines that can",
     "what": "Send a job to one API with your project's token: Compute places it on a node that offers its runtime, streams its output and meters it per second.",
     "legalProfile": "hosting",
-    "position": 34,
+    "position": 35,
     "tld": "run",
     "accent": "#a78bfa",
     "description": "OpenVibe.Run executes jobs: a project submits a job (a pre-registered artifact, its input and its limits) to one API, Run chooses a node from the network's offers that its requirements allow, OpenVibe.Bot hands it to the node and meters every wall-clock second, the output streams back, and the job ends succeeded, failed, cancelled or expired. Alpha: jobs run on nodes paired with OpenVibe through the OpenVibe Node.",

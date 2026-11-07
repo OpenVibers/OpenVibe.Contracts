@@ -1,10 +1,16 @@
 # Changelog
 
-## 0.330.0 — 2026-11-09
+## 0.331.0 — 2026-11-09
 
 - Add `actor.trigger@1`: a trigger made in an Actor conversation — its `trg_…` id, owner, agent, task, kind (`schedule` or `event`), the plain-language and machine schedule (a five-field cron in the person's timezone) or Watch event pattern and filter, the next run, the last run's result (`ok`, `failed`, `needs_you`), state, why it is paused, the consecutive failure count, the Watch subscription's own state and the ten-minute undo window. Owner-only: another person's trigger is the same 404 as one that does not exist.
 - `actor.task-event@2` gains an optional `trigger` and the `trigger` step: the card as it is created, edited, paused, resumed, undone or deleted in the conversation travels with the event, so a reader renders the live card without a second fetch. Additive: an event without one stays valid, and the task record is still the source of truth.
 - Additive only: a new contract and an optional field plus one new step value; nothing that exists today changes shape.
+## 0.330.0 — 2026-11-07
+
+- Add the `mail` service manifest: `openvibe.email` as the site **Email** (icon `mail`, the shared glyph font's E054), tagline "An address for every sign-up", the receive-only wording, legal profile `service`, and position 7, directly after Chat. It declares exposure `live`/`service`, port 5250, database `ov_mail`, the Stalwart mail server, `/api/health` and `/api/ready`, its shutdown and due-based recovery, an expand-only rollback, and the purge lease.
+- Add the two capabilities OpenVibe.Mail's API already checks: `mail.addresses.write` (make and retire a mask; make an agent inbox) and `mail.messages.read` (the person's addresses, message metadata and the newest burner code, never a body). Both are first-party, `owner`-constrained, and name their routes. Their request and result schemas are recorded in `compatibility/capability-schema-gaps.json` for now, like the config.manage capabilities added in 0.315.0.
+- The manifest lists no `eventsProduced` yet: the service publishes `mail.mask.created` and `mail.received`, but their payload contracts are not in this release.
+- Sites from the old position 7 up move one place (Services becomes 8, … Connect becomes 52) so Email sits beside Chat without breaking the unique-position rule. No contract changes shape; the only data change is the site order.
 
 ## 0.329.0 — 2026-11-07
 

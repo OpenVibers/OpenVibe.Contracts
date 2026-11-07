@@ -24,7 +24,7 @@
     "tagline": "Tips, paid messages and alerts for any stream",
     "what": "A tip page and alert kit for creators on any platform: tips, paid messages, text-to-speech and media requests, goals and OBS overlays, settled by the network’s billing ledger.",
     "legalProfile": "streaming",
-    "position": 12,
+    "position": 13,
     "tld": "tips",
     "accent": "#4ade80",
     "description": "OpenVibe.Tips gives every creator a tip page at openvibe.tips/<name> and an alert kit for their stream, wherever they stream: supporters send a tip, a highlighted paid message, a message read out on stream or a video request, within the creator’s own limits, and an overlay link shows each one in OBS as it lands, next to the creator’s goals. It works for OpenVibe.Live, Twitch, YouTube and Kick alike. Payments settle in OpenVibe.Billing, and every receipt shows separately when the payment settled and when the message was delivered.",

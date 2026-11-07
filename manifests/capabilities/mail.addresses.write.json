@@ -1,0 +1,25 @@
+{
+  "id": "mail.addresses.write",
+  "version": "1.0",
+  "owner": "mail",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Make and retire the addresses OpenVibe.Mail hands out for a person: a mask (a per-site address that delivers into their OpenVibe mailbox and nowhere else) and an agent inbox (<agent>.<user>@openvibe.email). Turning a mask off makes its address bounce. The caller must act for the person (on_behalf_of); it never sends mail.",
+  "permissions": [
+    "mail:addresses:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "mail-addresses-write",
+  "events": [
+    "mail.mask.created"
+  ],
+  "implementedBy": [
+    "POST /api/v1/masks",
+    "POST /api/v1/masks/:id/disable",
+    "DELETE /api/v1/masks/:id",
+    "POST /api/v1/agent-inboxes"
+  ]
+}

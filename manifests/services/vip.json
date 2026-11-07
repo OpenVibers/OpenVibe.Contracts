@@ -24,7 +24,7 @@
     "tagline": "Memberships for creators and their software",
     "what": "Memberships open to anyone on OpenVibe: creators publish plans with perks, members join through the network’s billing ledger, and apps and tools check a membership with the SDK.",
     "legalProfile": "account",
-    "position": 13,
+    "position": 14,
     "tld": "vip",
     "accent": "#e879f9",
     "description": "OpenVibe.VIP is a membership site, like Patreon, open to anyone with an OpenVibe account. A creator publishes plans with perks, and members join from their Vibes credit or another way OpenVibe.Billing offers. The perks follow them across OpenVibe: a badge in chat, members-only posts and rooms, roles and emotes. Plans are versioned, so members keep the terms they joined under. Developers sell subscriptions to their own apps and tools the same way: the app signs a person in with OpenVibe and asks VIP whether they are a member (openvibe-sdk/vip).",
