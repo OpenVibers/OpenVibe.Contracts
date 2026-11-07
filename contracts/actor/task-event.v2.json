@@ -74,8 +74,7 @@
       "type": "boolean"
     },
     "computer": {
-      "$ref": "../platform/task.v1.json#/properties/computer",
-      "description": "On a tool_result of computer_desk (and on the take-over step): the Computer this task opened or works on, the same object the task record carries. One id, never a copy."
+      "$ref": "../platform/task.v1.json#/$defs/computer"
     },
     "artifacts": {
       "type": "array",
