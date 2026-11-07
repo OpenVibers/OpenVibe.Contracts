@@ -7798,6 +7798,60 @@
       "status": "active"
     },
     {
+      "id": "space.build-space",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/build-space.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.build-list",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/build-list.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.build-files",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/build-files.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.build-create",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/build-create.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.build-preview",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/build-preview.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "space.build-publish",
+      "version": "1.0.0",
+      "owner": "space",
+      "schema": "space/build-publish.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "space.deploy-create-request",
       "version": "1.0.0",
       "owner": "space",

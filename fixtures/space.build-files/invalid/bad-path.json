@@ -1,0 +1,5 @@
+{
+  "files": [
+    { "path": "../secrets.txt", "content": "no" }
+  ]
+}

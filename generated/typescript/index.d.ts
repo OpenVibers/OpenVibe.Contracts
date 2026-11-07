@@ -269576,6 +269576,2253 @@ export type FoodRecipeResult =
           ];
     };
 
+/** space.build-space@1.0.0 (owner: space) */
+/**
+ * space.build-space@1: one of a person's own spaces, as their agent sees it while it builds (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). The id, the slug it publishes under, its name and description, whether it is published and where, and when it last changed. Nothing about anyone else's space is ever in this shape.
+ */
+export interface SpaceBuildSpace {
+  /**
+   * The space's id.
+   */
+  id: string;
+  /**
+   * The name it publishes under (<slug>.openvibe.website).
+   */
+  slug: string;
+  name: string;
+  description?: string;
+  /**
+   * True while it is live at its own address.
+   */
+  published: boolean;
+  /**
+   * Where it lives: its own address once published, the editor while it is a draft.
+   */
+  url: string;
+  /**
+   * When it last changed.
+   */
+  updated_at?: string;
+}
+
+/** space.build-list@1.0.0 (owner: space) */
+/**
+ * space.build-list@1: the spaces of one person, as their agent sees them (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces answers { spaces }; GET /api/v1/spaces/:id answers { space }.
+ */
+export type SpaceBuildList =
+  | {
+      spaces: SpaceBuildSpace[];
+    }
+  | {
+      space: SpaceBuildSpace;
+    };
+
+/** space.build-files@1.0.0 (owner: space) */
+/**
+ * space.build-files@1: the source files of one of a person's spaces, as their agent sees them (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces/:id/files answers { files }: every file of the space, its path and its whole content. The same shape is the body of PUT /api/v1/spaces/:id/files (space.build-write@1): the files to write, which replace the space's files as a whole.
+ */
+export interface SpaceBuildFiles {
+  /**
+   * @maxItems 20
+   */
+  files:
+    | []
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        },
+        {
+          /**
+           * The file's path inside the space: letters, digits, ".", "-", "_", up to four folders.
+           */
+          path: string;
+          /**
+           * The file's whole content.
+           */
+          content: string;
+        }
+      ];
+}
+
+/** space.build-create@1.0.0 (owner: space) */
+/**
+ * space.build-create@1: the body of POST /api/v1/spaces, the agent asking Space for a new space of its own (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). It answers space.build-list@1 ({ space }). The name and the description are what the space shows; the space is made from Space's blank template and the agent fills its files.
+ */
+export interface SpaceBuildCreate {
+  /**
+   * The space's name.
+   */
+  name?: string;
+  /**
+   * What the space does, in a line.
+   */
+  description?: string;
+}
+
+/** space.build-preview@1.0.0 (owner: space) */
+/**
+ * space.build-preview@1: where a person's space can be seen right now, as their agent sees it (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces/:id/preview answers { url, files, published }: the address to open (the editor with its live preview while the space is a draft, its own address once it is published), the paths of the files it is made of, and whether it is live.
+ */
+export interface SpaceBuildPreview {
+  /**
+   * Where the space can be seen now.
+   */
+  url: string;
+  /**
+   * The paths of the files the space is made of.
+   */
+  files: string[];
+  published: boolean;
+}
+
+/** space.build-publish@1.0.0 (owner: space) */
+/**
+ * space.build-publish@1: what happened when a person's agent asked to publish one of their spaces (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). POST /api/v1/spaces/:id/publish asks to publish and answers { state: 'pending' } with the approval the person answers in the Dock; it never publishes without that answer. When the person approves, Space publishes and the step is { state: 'published', url }; when they decline, { state: 'declined' }.
+ */
+export interface SpaceBuildPublish {
+  /**
+   * pending: the person must answer first. published: it is live at url. declined: the person said no.
+   */
+  state: "pending" | "published" | "declined";
+  /**
+   * Where it lives once it is published.
+   */
+  url?: string | null;
+  /**
+   * The request the person answers in the Dock (its id).
+   */
+  approval_id?: string | null;
+  /**
+   * Why it was refused, in one line a person can act on.
+   */
+  reason?: string | null;
+}
+
 /** space.deploy-create-request@1.0.0 (owner: space) */
 /**
  * space.deploy-create-request@1: bodies of space.deploy.create on OpenVibe.Space (a deployer or above of the project; an app principal added as deployer can deploy from CI). POST /api/v1/sites/:id/deploys uploads a deploy: the raw body is a tar or tar.gz archive (Content-Type application/gzip, application/x-gzip, application/x-tar or application/octet-stream), or multipart/form-data with archive=<one archive> or files=<file>… (each part's filename is its path); optional fields activate=1, root=<subdirectory to deploy> and strip=folder (removes a shared first segment) also work as query parameters. It is validated (path traversal, links, special and hidden files, server-side code, file types, sizes and quotas) and never executed; a refusal is a problem whose extra carries the failed deploy_id and its log (413 upload.too_large, quota.storage; 422 validation codes; 429 quota.deploys_per_day; 403 site.taken_down; 503 upload.busy; 507 storage.host_full). POST /api/v1/deploys/:id/activate { expected_active? } and POST /api/v1/sites/:id/rollback { deploy_id?, expected_active? } switch the site's pointer in one step (rollback without deploy_id goes to the deploy active before; 409 deploy.not_ready, site.active_changed when expected_active is stale, deploy.no_previous). GET /api/v1/sites/:id/deploys, /deploys/:id and /deploys/:id/log take no body.

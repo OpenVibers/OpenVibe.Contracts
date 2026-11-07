@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/space/build-list.v1.json",
+  "title": "SpaceBuildList",
+  "description": "space.build-list@1: the spaces of one person, as their agent sees them (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). GET /api/v1/spaces answers { spaces }; GET /api/v1/spaces/:id answers { space }.",
+  "anyOf": [
+    {
+      "type": "object",
+      "required": [
+        "spaces"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "spaces": {
+          "type": "array",
+          "items": {
+            "$ref": "build-space.v1.json"
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "space"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "space": {
+          "$ref": "build-space.v1.json"
+        }
+      }
+    }
+  ]
+}

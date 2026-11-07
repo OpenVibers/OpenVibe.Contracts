@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/space/build-publish.v1.json",
+  "title": "SpaceBuildPublish",
+  "description": "space.build-publish@1: what happened when a person's agent asked to publish one of their spaces (OpenVibe.Space's builder API; plan 2026-10-22 §Z stage Z1). POST /api/v1/spaces/:id/publish asks to publish and answers { state: 'pending' } with the approval the person answers in the Dock; it never publishes without that answer. When the person approves, Space publishes and the step is { state: 'published', url }; when they decline, { state: 'declined' }.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "state"
+  ],
+  "properties": {
+    "state": {
+      "enum": [
+        "pending",
+        "published",
+        "declined"
+      ],
+      "description": "pending: the person must answer first. published: it is live at url. declined: the person said no."
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "Where it lives once it is published."
+    },
+    "approval_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80,
+      "description": "The request the person answers in the Dock (its id)."
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 240,
+      "description": "Why it was refused, in one line a person can act on."
+    }
+  }
+}
