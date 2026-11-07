@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.323.0 — 2026-11-07
+
+- Space's builder API says two more routes in its capabilities: `space.build.read` now names `GET /api/v1/spaces/:id/files/:path` (one file of one of the person's own spaces), and `space.build.publish` names `POST /api/v1/agent/approvals/:id/decide` (the person's answer to the agent's request to publish, which OpenVibe.Actor passes on with the person's own token).
+- No contract shape changes: `space.build.read` and `space.build.publish` keep the bodies they had.
+
 ## 0.322.0 — 2026-11-07
 
 - Add `actor.agent@1`: one of a person's agents as a contact (plan §12 A-1) — id, owner, name, face, voice, model (`engine` runtime / own-keys / open-gpu / link, plus the model id), computer (null or a Computer kind and placement), connected app ids, OpenVibe Memory scope id (or null), approval level (`ask`, `auto-edits`, `approve-for-me`, `full`) and when it was added. Levels default to ask; money, passwords, deletions and sending to a new recipient always ask at every level, as a server-side floor.
