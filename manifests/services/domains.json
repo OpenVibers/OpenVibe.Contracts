@@ -17,6 +17,7 @@
   },
   "capabilities": [
     "domains.actions.read",
+    "domains.config.manage",
     "domains.proposal.decide"
   ],
   "eventsProduced": [],

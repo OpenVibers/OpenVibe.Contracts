@@ -15,7 +15,9 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": [
+    "connect.config.manage"
+  ],
   "eventsProduced": ["connect.hook.received"],
   "eventsConsumed": ["network.account.export_requested", "network.account.deleted", "connect.hook.received"],
   "namespacesOwned": [

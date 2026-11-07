@@ -53,6 +53,7 @@
     "blog.post.schedule",
     "blog.post.unpublish",
     "blog.post.delete",
+    "blog.review.ai_editor",
     "blog.feed.read"
   ],
   "eventsProduced": [

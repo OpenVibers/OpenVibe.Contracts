@@ -33,8 +33,8 @@
       "service": "blog",
       "name": "OpenVibe.Blog",
       "origin": "https://openvibe.blog",
-      "operations": 22,
-      "capabilities": 12
+      "operations": 23,
+      "capabilities": 13
     },
     {
       "service": "bot",
@@ -47,8 +47,8 @@
       "service": "chat",
       "name": "OpenVibe.Chat",
       "origin": "https://openvibe.chat",
-      "operations": 60,
-      "capabilities": 24
+      "operations": 66,
+      "capabilities": 25
     },
     {
       "service": "codes",
@@ -65,6 +65,13 @@
       "capabilities": 13
     },
     {
+      "service": "connect",
+      "name": "OpenVibe Connect",
+      "origin": "https://connect.openvibe.website",
+      "operations": 6,
+      "capabilities": 1
+    },
+    {
       "service": "coupons",
       "name": "OpenVibe.Coupons",
       "origin": "https://openvibe.coupons",
@@ -75,15 +82,22 @@
       "service": "deals",
       "name": "OpenVibe.Deals",
       "origin": "https://openvibe.deals",
-      "operations": 18,
-      "capabilities": 12
+      "operations": 24,
+      "capabilities": 13
+    },
+    {
+      "service": "design",
+      "name": "OpenVibe.Design",
+      "origin": "https://openvibe.design",
+      "operations": 6,
+      "capabilities": 1
     },
     {
       "service": "domains",
       "name": "OpenVibe.Domains",
       "origin": "https://openvibe.domains",
-      "operations": 2,
-      "capabilities": 2
+      "operations": 8,
+      "capabilities": 3
     },
     {
       "service": "events",
@@ -152,8 +166,8 @@
       "service": "news",
       "name": "OpenVibe.News",
       "origin": "https://openvibe.news",
-      "operations": 26,
-      "capabilities": 11
+      "operations": 28,
+      "capabilities": 12
     },
     {
       "service": "openre",
@@ -215,8 +229,8 @@
       "service": "sources",
       "name": "OpenVibe.Sources",
       "origin": "https://sources.openvibe.network",
-      "operations": 13,
-      "capabilities": 3
+      "operations": 19,
+      "capabilities": 4
     },
     {
       "service": "space",
@@ -279,14 +293,14 @@
       "name": "OpenVibe.Wiki",
       "origin": "https://openvibe.wiki",
       "operations": 25,
-      "capabilities": 8
+      "capabilities": 9
     },
     {
       "service": "work",
       "name": "OpenVibe.Work",
       "origin": "https://openvibe.work",
-      "operations": 5,
-      "capabilities": 1
+      "operations": 11,
+      "capabilities": 2
     },
     {
       "service": "zone",

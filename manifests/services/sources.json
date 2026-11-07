@@ -20,6 +20,7 @@
     "note": "internal ingestion service; sources.openvibe.network says so (its API is loopback-only)"
   },
   "capabilities": [
+    "sources.config.manage",
     "sources.source.read",
     "sources.item.read",
     "sources.source.manage"
