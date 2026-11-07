@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/live/agent-sandbox-worker-result.v1.json",
+  "title": "LiveAgentSandboxWorkerResult",
+  "description": "live.agent-sandbox-worker-result@1 (Agent Streams S6): the answer to POST /api/streams/agent/:id/plays/worker (capability live.agent_sandbox.register). It carries the worker's state for the stream's owner as Live now holds it: whether a healthy worker is registered, the code and the owner-facing reason when not, when the last check-in was, and how long a check-in counts (a minute). Live never returns an endpoint: there is none to return.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "worker"
+  ],
+  "properties": {
+    "worker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ready",
+        "stale_after_ms"
+      ],
+      "properties": {
+        "ready": {
+          "type": "boolean"
+        },
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "sandbox_worker_missing",
+            "sandbox_worker_stale",
+            "sandbox_worker_not_isolated",
+            null
+          ],
+          "description": "Why there is no healthy worker; null when ready is true."
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500,
+          "description": "The line the owner's page shows; null when ready is true."
+        },
+        "last_seen_at": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "The last check-in, in milliseconds since the epoch; null when the worker never checked in."
+        },
+        "stale_after_ms": {
+          "type": "integer",
+          "minimum": 1000
+        }
+      }
+    }
+  }
+}
