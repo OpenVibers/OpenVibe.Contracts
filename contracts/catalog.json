@@ -9970,6 +9970,26 @@
       "adr": "ADR-044"
     },
     {
+      "id": "actor.skill-listing",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill-listing.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-058"
+    },
+    {
+      "id": "actor.skill",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-058"
+    },
+    {
       "id": "frame.menu-card",
       "version": "1.0.0",
       "owner": "network",

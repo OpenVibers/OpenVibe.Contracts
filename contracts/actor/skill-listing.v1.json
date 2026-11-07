@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/skill-listing.v1.json",
+  "title": "ActorSkillListing",
+  "description": "actor.skill-listing@1: a skill in the registry, the record every site shows on its card (ADR-058). It carries the document as published (actor.skill@1), the PUBLISHER from the registry's own record (vouched: unlike the document's author, this is who published it), the SCAN (its state and findings travel with the listing), and the CURATOR's state. Install rules every site keeps: a passed skill installs in one tap; a flagged one only after the person reads the findings and confirms; a failed one never; a stale or archived one is not offered. Installing copies the document into the person's agent; it grants nothing (the skill's requires is a declaration).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "listing",
+    "id",
+    "skill",
+    "publisher",
+    "scan",
+    "curator",
+    "listed_at"
+  ],
+  "properties": {
+    "listing": {
+      "const": "actor.skill-listing@1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The listing's id."
+    },
+    "skill": {
+      "$ref": "skill.v1.json",
+      "description": "The document as published."
+    },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "description": "Who published it, from the registry's own record.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "openvibe",
+            "person"
+          ],
+          "description": "OpenVibe's own skills, or a person's."
+        },
+        "subject": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "The person who published it (kind person)."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      }
+    },
+    "scan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "description": "What the registry's scan found. It travels with the listing.",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "passed",
+            "flagged",
+            "failed"
+          ]
+        },
+        "scanner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "The scanner and its version."
+        },
+        "scanned_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "findings": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule",
+              "severity",
+              "note"
+            ],
+            "properties": {
+              "rule": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_.-]{1,63}$",
+                "description": "Which rule, such as asks.undeclared_kind or text.secret_request."
+              },
+              "severity": {
+                "type": "string",
+                "enum": [
+                  "info",
+                  "warn",
+                  "block"
+                ]
+              },
+              "where": {
+                "type": "string",
+                "maxLength": 120,
+                "description": "instructions, description, or a resource path."
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 280,
+                "description": "What it found, in plain words."
+              }
+            }
+          }
+        }
+      }
+    },
+    "curator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "description": "The curator ships with the catalogue: what is used stays, what is not goes stale.",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "stale",
+            "archived"
+          ]
+        },
+        "last_used_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "near_duplicate_of": {
+          "type": "string",
+          "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "A listing that does the same job."
+        }
+      }
+    },
+    "installs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "listed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "retired_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,4 +1,17 @@
 # Changelog
+## 0.337.0 — 2026-11-07
+
+- Add `actor.skill@1` and `actor.skill-listing@1` (ADR-058, plan HO2: the skills registry's skeleton). A skill is a
+  document an agent loads to do one kind of job well: a slug, a name, a one-line description (the only part an agent
+  reads before it loads it), a version, Markdown instructions, up to ten text resources, and `requires` (the approval
+  kinds, connected apps and hosts it may ask for). It grants nothing: every step still goes through the agent's level
+  and approvals. A v1 skill runs as a prompt only (no code, no binary, no install recipe). Its integrity hash shows the
+  file was not edited; it is not a signature, and the author in a document is a claim.
+- The listing is the registry's record every site shows: the document, the publisher from the registry's own record,
+  the scan (`pending`, `passed`, `flagged`, `failed`, with findings) and the curator's state (`active`, `stale`,
+  `archived`, the last use and a near-duplicate). A passed skill installs in one tap, a flagged one after the person
+  reads the findings, a failed one never; a stale or archived one is not offered.
+
 ## 0.336.0 — 2026-11-07
 
 - The run's options carry the latency class the caller asks for: `interactive` (answer as soon as the provider can),
