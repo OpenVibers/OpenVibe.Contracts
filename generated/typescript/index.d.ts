@@ -265911,7 +265911,51 @@ export type ActorTaskEvent = {
   is_error?: boolean;
 };
 
-/** actor.task-event@2.0.0 (owner: actor) */
+/** actor.task-event@2.1.0 (owner: actor) */
+
+/** actor.trigger@1.0.0 (owner: actor) */
+/**
+ * actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule or when a Watch event arrives. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE) or event (WHEN has the Watch event PATTERN and FILTER). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active or paused, PAUSED_REASON says why (person or failed after five failed runs in a row), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist.
+ */
+export interface ActorTrigger {
+  id: string;
+  owner: string;
+  agent_id: string;
+  agent_name?: string | null;
+  task: string;
+  kind: "schedule" | "event";
+  when: {
+    words: string;
+    cron?: string | null;
+    timezone?: string | null;
+    event?: {
+      pattern: string;
+      filter?: {
+        [k: string]: (string | number | boolean | null) | undefined;
+      } | null;
+    } | null;
+  };
+  next_run_at?: string | null;
+  last_run?: {
+    task_id: string;
+    state: "ok" | "failed" | "needs_you" | "running";
+    at: string;
+    error?: string | null;
+  } | null;
+  state: "active" | "paused";
+  paused_reason?: "person" | "failed" | null;
+  failures?: number;
+  watch?: {
+    id: string;
+    status: "active" | "paused" | "disabled" | "failed";
+    last_state?: string | null;
+    consecutive_failures?: number;
+    next_due_at?: string | null;
+  } | null;
+  undo_until?: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 /** actor.task-list-result@1.0.0 (owner: actor) */
 /**
