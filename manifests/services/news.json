@@ -88,6 +88,7 @@
     "news.source.attach",
     "news.timeline.update",
     "news.perspective.update",
+    "news.review.ai_editor",
     "news.topic.manage"
   ],
   "eventsProduced": [

@@ -1,0 +1,21 @@
+{
+  "id": "live.agent_sandbox.register",
+  "version": "1.0",
+  "owner": "live",
+  "status": "active",
+  "visibility": "internal",
+  "description": "The chat plays sandbox worker checks in for the person it works for on OpenVibe.Live (Agent Streams S6): POST /api/streams/agent/:id/plays/worker. Only a first-party service token whose principal holds this capability may register one, and it names the person in X-OV-Subject, who must own the stream. The owner's own session, a desk ticket (wpt_) and a person token are refused: an owner who could register a worker would declare their own unisolated machine a sandbox, and the gate would mean nothing. The body is live.agent-sandbox-worker-request@1, the worker's own report; Live requires isolation to say exactly host_network false, credentials false, profile false, egress_proxy true and workspace 'ephemeral', and refuses a worker that does not. Health comes only from a check-in within the last minute; Live stores no endpoint, never calls the worker and never accepts an isolation code it cannot read. The capability is internal because no person or app calls it: OpenVibe.Codes' sandbox worker holds it through its own Network service client for the audience openvibe.live.",
+  "inputSchema": "live.agent-sandbox-worker-request@1",
+  "outputSchema": "live.agent-sandbox-worker-result@1",
+  "permissions": [
+    "live:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/streams/agent/:id/plays/worker"
+  ]
+}

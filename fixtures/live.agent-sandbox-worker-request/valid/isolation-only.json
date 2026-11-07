@@ -1,0 +1,9 @@
+{
+  "isolation": {
+    "host_network": false,
+    "credentials": false,
+    "profile": false,
+    "egress_proxy": true,
+    "workspace": "ephemeral"
+  }
+}

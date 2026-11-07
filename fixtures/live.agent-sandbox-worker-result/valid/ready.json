@@ -1,0 +1,9 @@
+{
+  "worker": {
+    "ready": true,
+    "code": null,
+    "reason": null,
+    "last_seen_at": 1770000000000,
+    "stale_after_ms": 60000
+  }
+}

@@ -293405,6 +293405,115 @@ export interface LockerKeyChange {
   previous_fingerprint?: string;
 }
 
+/** live.agent-sandbox-worker-request@1.0.0 (owner: live) */
+/**
+ * live.agent-sandbox-worker-request@1 (Agent Streams S6): the body of POST /api/streams/agent/:id/plays/worker on OpenVibe.Live (capability live.agent_sandbox.register). It is the sandbox worker's own check-in: the worker says it is there and reports the isolation facts Live requires, and Live derives health only from that check-in (it stores no endpoint and never calls the worker). Only a first-party service token whose principal holds live.agent_sandbox.register may send it, and it names the person it works for in X-OV-Subject, who must own the stream. The owner's session, a desk ticket and a person token are refused. Live counts a check-in within the last minute as alive and requires isolation to say exactly: host_network false, credentials false, profile false, egress_proxy true, workspace 'ephemeral'. The worker may report more than these five facts (its own checks, limits and versions); Live reads only the five and stores the report it was given. A worker that cannot say each of the five is not registered at all.
+ */
+export interface LiveAgentSandboxWorkerRequest {
+  /**
+   * The worker's name in its own records; not a secret and not an address.
+   */
+  worker_id?: string;
+  /**
+   * The worker implementation that checked in (`codes-sandbox` for OpenVibe.Codes').
+   */
+  service?: string;
+  version?: string;
+  /**
+   * The worker's own view of its health; Live's health is the check-in plus the isolation report, never this flag alone.
+   */
+  ready?: boolean;
+  /**
+   * Why the worker says it is not ready (its self-test's failures), for the owner's page.
+   *
+   * @maxItems 10
+   */
+  reasons?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string];
+  /**
+   * The worker's self-test: one boolean per check it ran (the network namespace, the egress refusals, the cleaned environment, the host files, the capabilities, seccomp, the cgroup limits, the wipe).
+   */
+  checks?: {
+    [k: string]: boolean | undefined;
+  };
+  /**
+   * When that self-test ran; null before the first one.
+   */
+  checked_at?: string | null;
+  isolation: {
+    /**
+     * The sandbox has its own network namespace; it cannot reach the host's network.
+     */
+    host_network: false;
+    /**
+     * No credential of the host, the worker or the person is inside the sandbox.
+     */
+    credentials: false;
+    /**
+     * No browser or desktop profile of the host's is mounted.
+     */
+    profile: false;
+    /**
+     * Its only way out is the worker's proxy, which applies the egress guard.
+     */
+    egress_proxy: true;
+    /**
+     * The workspace is the sandbox's own and is gone with the wipe.
+     */
+    workspace: "ephemeral";
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Whether this worker has the optional headless browser.
+   */
+  browser?: boolean;
+  /**
+   * How many sandboxes it may run at once.
+   */
+  capacity?: number;
+  /**
+   * How many are running now.
+   */
+  active?: number;
+  /**
+   * When the worker assembled the report.
+   */
+  at?: string;
+}
+
+/** live.agent-sandbox-worker-result@1.0.0 (owner: live) */
+/**
+ * live.agent-sandbox-worker-result@1 (Agent Streams S6): the answer to POST /api/streams/agent/:id/plays/worker (capability live.agent_sandbox.register). It carries the worker's state for the stream's owner as Live now holds it: whether a healthy worker is registered, the code and the owner-facing reason when not, when the last check-in was, and how long a check-in counts (a minute). Live never returns an endpoint: there is none to return.
+ */
+export interface LiveAgentSandboxWorkerResult {
+  worker: {
+    ready: boolean;
+    /**
+     * Why there is no healthy worker; null when ready is true.
+     */
+    code?: "sandbox_worker_missing" | "sandbox_worker_stale" | "sandbox_worker_not_isolated" | null;
+    /**
+     * The line the owner's page shows; null when ready is true.
+     */
+    reason?: string | null;
+    /**
+     * The last check-in, in milliseconds since the epoch; null when the worker never checked in.
+     */
+    last_seen_at?: number | null;
+    stale_after_ms: number;
+  };
+}
+
 /** live.agent-stream@1.0.0 (owner: live) */
 /**
  * live.agent-stream@1 (the Agent Streams plan, S1): an agent's own stream on OpenVibe.Live. It is a managed_streams row of kind 'agent' with the id ags_<ULID>; it never has a stream key and it never takes a normal slot (a second live one answers 409 live.agent_stream_limit). OWNER is the person the stream belongs to, CHANNEL their Live channel, and TASK says what the agent is doing and where that task lives. VISIBILITY is who may watch; MODE is how the stream is played (S1 accepts watch only) and STATE where it stands. CURTAIN is the desk's privacy screen: while it is up Live pauses every viewer's consumer, so a viewer sees 'Private screen' and never the reason (the reason stays in the owner's view). The card stays after the stream ends, with the last frame, the worked seconds and the VOD once it is recorded.

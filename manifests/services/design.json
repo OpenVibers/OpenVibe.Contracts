@@ -15,7 +15,9 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": [
+    "design.config.manage"
+  ],
   "eventsProduced": [
     "design.index_document.deleted",
     "design.index_document.upserted"

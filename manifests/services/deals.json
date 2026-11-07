@@ -78,6 +78,7 @@
     "neighbourhood": "shop"
   },
   "capabilities": [
+    "deals.config.manage",
     "deals.offer.submit",
     "deals.offer.update",
     "deals.offer.expire",

@@ -1,12 +1,24 @@
 # Changelog
 
-## 0.313.0 — 2026-11-07
+## 0.316.0 — 2026-11-07
 
 - Add `agent.timeline-entry@1`: one entry of the agent's timeline (design 2026-11-07 §2) — one step of the agent's work, in one mode, for one person. It carries the mode, the product, the step's own id, a plain title, when it started and ended, its status (running, waiting, needs_you, done, failed, stopped), the placement (where it ran and why), the cost, a link to the step's page, the one-line reason when it failed, the transition sentence when the mode changed, and the audience (private is Only me, the default). It never carries a prompt, a diff or a page.
 - Add `common.agent-step@1` and the three events `agent.step.started`, `agent.step.updated` and `agent.step.ended`: the one shape every mode publishes when the agent does something (Chat, Codes, Run, Watch, Live, Surf), with the person's subject on the envelope. The payload is the step's shape only — a title, an outcome, a link, a cost — and never the step's content: a prompt, a diff, a page, a message or a file is refused by the schema. The `agent.*` namespace belongs to the network (like `provider.*`), so any first-party mode may publish into it; OpenVibe.Actor registers the family in Contracts and keeps the one timeline behind the Dock.
 - Add `agent.timeline-list-result@1`: what the Dock's Agent panel reads — the step happening now, what needs the person (oldest first), the entries themselves (newest first), the next cursor, and the per-mode counts so a filter never hides without a count.
 - Add `actor.timeline.read`: `GET /api/v1/agent/timeline`, the person's own timeline with the cursor and the mode and needs-you filters. Only their own entries; another person's entry is a 404.
 - Valid and invalid fixtures cover a step that starts, waits and ends, a timeline entry and a list, a payload with a prompt or a diff in it, an unknown status, a mode that is not one of the seven, and an entry of another person.
+
+## 0.315.0 — 2026-11-07
+
+- The owner's Setup tab reaches seven more services: `<service>.config.manage` for `chat`, `connect`, `deals`, `work`, `sources`, `design` and `domains` is now **active** and listed in each service's manifest, because each mounts openvibe-shared/config's routes on `/internal/config` (`GET /internal/config`, `GET|POST /internal/config/:namespace`, `PUT|DELETE /internal/config/:namespace/secrets/:key`, `POST /internal/config/:namespace/test/:key`). Only Network's admin proxy, acting for the owner, holds them and they are never grantable to apps. `media.config.manage` stays planned until Media mounts the routes.
+- Add `blog.review.ai_editor`, `news.review.ai_editor` and `wiki.review.ai_editor`: the editorial queue's AI editor decision (approved or rejected; approved or needs changes on Wiki) recorded by the first-party service principal acting as itself (a `svc:` principal with no `X-OV-Subject`) through Blog's `POST /api/v1/posts/:id/reviews`, News's `POST /api/v1/stories/:id/reviews` and `POST /api/v1/briefs/:id/reviews`, and Wiki's `POST /api/v1/pages/:id/revisions/:n/review`. An approval lets AI-written text publish and index and the page says "Checked by OpenVibe's AI editor" with its date, never "Reviewed by a person"; each is granted only to the orchestrator's service principal. Their requests and results are a recorded schema gap (`compatibility/capability-schema-gaps.json`).
+- `generated/` refreshed: Connect and Design gain an OpenAPI document now that each has an active capability, and Blog, Chat, Deals, Domains, News, Sources, Wiki and Work gain the new operations.
+
+## 0.314.0 — 2026-11-07
+
+- Add the capability `live.agent_sandbox.register` (Agent Streams S6): the chat plays sandbox worker's check-in on OpenVibe.Live, `POST /api/streams/agent/:id/plays/worker`, owned by Live and internal. Only a first-party service token whose principal holds it may register a worker, and the token names the person it works for in `X-OV-Subject`, who must own the stream. The owner's own session, a desk ticket (`wpt_`) and a person token are refused: an owner who could register a worker would declare their own unisolated machine a sandbox. The worker reports the isolation facts Live requires (no host network, no credentials, no profile, egress through the proxy, an ephemeral workspace) and Live derives health only from a check-in within the last minute; Live stores no endpoint and never calls the worker. Name the capability in Live's service manifest.
+- Add `live.agent-sandbox-worker-request@1`: the worker's check-in body, which names the five isolation facts Live reads exactly (`host_network` false, `credentials` false, `profile` false, `egress_proxy` true, `workspace` `ephemeral`) and may carry the worker's own checks, limits, versions and counts. A worker that cannot say each of the five is not registered. Add `live.agent-sandbox-worker-result@1`: the worker's state for the stream's owner, with the reason when there is no healthy one, the last check-in and the minute a check-in counts for. Live never returns an endpoint: there is none.
+- Valid and invalid fixtures cover a full worker check-in and an isolation-only one, a worker with the host's network and one that cannot say there is no profile, and a healthy worker, a stale one, a missing stale window and an unknown state code.
 
 ## 0.312.0 — 2026-11-07
 
@@ -36,7 +48,6 @@
 - Add `ai.offer-pool@1`, the `pool` part of the AI offer: `{ machines, head }`, two to eight machine ids and the head, which is the offer's own machine. Network adds it from its approved pool record, never from what a machine reports, and leaves a member's own offer out while it is in a pool. It names machines only: no address, key or certificate reaches AI. One price, audience, hours, idle-only and verification apply to the whole pool; AI verifies a pool's answers as it would one machine's, keys that verification on the exact membership, keeps a new or failed pool to the free tier only, and labels it "Community pool (N machines)".
 - `network.node.self.manage` names the five pool routes a machine calls with its own token (announce, read, approve, renew readiness, leave) in `implementedBy`.
 - Valid and invalid fixtures cover a pool waiting for approvals, an approved pool of three, a single-machine offer, a pool's offer and one still waiting, a group offer, a missing head or owner, a one-machine pool, a repeated member, a private key in the certificate slot, a public, loopback or wildcard address, a port under 1024, and an address, certificate or key smuggled into a field the schema does not name.
-
 
 ## 0.308.0 — 2026-11-07
 
@@ -140,7 +151,6 @@
 - The uniform response names people: `share.person@1` on the owner, members, a pending transfer's `to` and each pending request; plus `share.you@1`, pending `requests` (`share.access-request-view@1`), the pending transfer view, and the service's `describe()` fields (`title`, `link`, `roles`, `audiences`, `transferable`). Add `share.people-lookup@1` for the exact-name people endpoint.
 - PUT accepts `notify` (default true); access requests can be `dismissed`; a transfer request accepts `{ name }` or `{ subject }`.
 - Add the five `share.*` event payloads with strict ids-only fields; Network owns the model, adopting services produce events using their own source. Valid and invalid fixtures cover every new contract. No existing schema changes.
-
 
 ## 0.290.0 — 2026-11-05
 
@@ -576,7 +586,6 @@
 - **Two person capabilities**, `ai.me.read` and `ai.me.manage`: only the person's own Network token, or the person
   session on AI's own site behind a same-origin check, reaches them. A service token is refused, and so is any token
   carrying `on_behalf_of`, whatever capabilities it holds (the AI #204/#205 rule).
-
 
 ## 0.256.0 — 2026-10-31
 
