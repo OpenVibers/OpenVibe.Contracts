@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/presence.v1.json",
+  "title": "NetworkPresence",
+  "description": "network.presence@1 (plan 2026-10-22 track X item 9): one person's online status as another person may see it. OpenVibe.Network owns presence: POST /api/v1/me/presence/heartbeat keeps it fresh, PUT /api/v1/me/presence sets the chosen state, status line and emoji, and GET /api/v1/presence?subjects=… answers for the people the asker follows or has a DM with. The state is derived: online while the newest heartbeat is under 2 minutes old, away after 10 minutes without input (the client's heartbeat says idle), offline after 3 minutes without a heartbeat. Invisible and show_status off are seen as offline, and an invisible person is left out of the answer entirely; last seen is never returned. live is true while the person is streaming on OpenVibe.Live, and only for someone who would otherwise be visible. (The event is network.presence.changed@1.)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["subject", "state", "updated_at"],
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The person's canonical subject."
+    },
+    "state": {
+      "enum": ["online", "away", "dnd", "invisible", "offline"],
+      "description": "The public state. A reader never receives invisible (the person is offline instead, or absent from a list); the stored chosen state can be auto, dnd or invisible."
+    },
+    "status_text": {
+      "type": ["string", "null"],
+      "maxLength": 80,
+      "description": "The person's status line in their own words, or null. Never shown while they are invisible or have show_status off."
+    },
+    "emoji": {
+      "type": ["string", "null"],
+      "maxLength": 16,
+      "description": "One emoji that sits beside the status line, or null."
+    },
+    "live": {
+      "type": "boolean",
+      "default": false,
+      "description": "The person is streaming on OpenVibe.Live now. Live outranks their chosen state; it is false while they are invisible or have show_status off."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the person's presence row last changed."
+    }
+  }
+}

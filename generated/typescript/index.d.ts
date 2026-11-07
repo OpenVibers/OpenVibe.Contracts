@@ -206745,7 +206745,7 @@ export interface CommunityForumThread {
   slug: string;
   title: string;
   /**
-   * /s/<space>/t/<slug>
+   * /forum/<space>/<slug>
    */
   url: string;
   /**
@@ -207060,7 +207060,7 @@ export type CommunitySpaceReadResult =
 
 /** community.thread-read-result@1.0.0 (owner: community) */
 /**
- * community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /s/:space and /s/:space/t/:slug are the same as HTML pages; GET /s/feed.xml and /s/:space/feed.xml are RSS feeds of public threads.
+ * community.thread-read-result@1: answers of community.thread.read on OpenVibe.Community. GET /api/v1/spaces/:space/threads?sort=&page=&limit=&category=&status= → a page of threads with the space, paging, categories, children and what the viewer may do; GET /api/v1/spaces/:space/threads/:slug?page= → the thread with a page of posts (reactions, author stats, crosspost info, attachments settings, paging, viewer). GET /forum/:space and /forum/:space/:slug are the same as HTML pages; GET /forum/feed.xml and /forum/:space/feed.xml are RSS feeds of public threads.
  */
 export type CommunityThreadReadResult =
   | {
@@ -298329,4 +298329,470 @@ export interface AgentTimelineListResult {
   counts: {
     [k: string]: number | undefined;
   };
+}
+
+/** frame.menu-card@1.0.0 (owner: network) */
+/**
+ * frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.
+ */
+export interface FrameMenuCard {
+  /**
+   * The card's stable id in its site (live-now, new-worlds, trending). Two cards of one site never share it.
+   */
+  id: string;
+  /**
+   * The Frame site id that publishes the card (live, games, media-hub). Network checks it against the host the file came from.
+   */
+  site: string;
+  /**
+   * The card's heading, in the owner's words.
+   */
+  title: string;
+  /**
+   * The block the Frame draws: a rail of live channels, a ranked list of rows, or a short row of chips.
+   */
+  kind: "rail" | "rows" | "chips";
+  /**
+   * The card's entries, in the site's own order. Empty means the site has a card but nothing to show (nobody is live); Network then skips it.
+   *
+   * @maxItems 6
+   */
+  items:
+    | []
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        },
+        {
+          /**
+           * The entry's name, plain words.
+           */
+          title: string;
+          /**
+           * One short line under the name: "12 watching", "7,412 views this week", "3 players".
+           */
+          meta?: string;
+          /**
+           * Where the entry opens: https on the publishing site's own origin or an openvibe.* host.
+           */
+          url: string;
+        }
+      ];
+  more?: {
+    /**
+     * The link's words ("See all", "More worlds").
+     */
+    label: string;
+    /**
+     * https on the publishing site's own origin or an openvibe.* host.
+     */
+    url: string;
+  };
+  /**
+   * When the site last built the card.
+   */
+  updated_at: string;
+  /**
+   * How long the site considers the card fresh, in seconds. Live uses 30; Network itself refetches every five minutes.
+   */
+  ttl_s: number;
+}
+
+/** frame.menu-cards@1.0.0 (owner: network) */
+/**
+ * frame.menu-cards@1: the public file a site serves at /.well-known/openvibe-menu.json — an array of at most three frame.menu-card@1 cards from one site. Network fetches it every five minutes with a five-second timeout and a 64 KB cap, drops unknown fields and markup, and keeps the site's last good card for 30 minutes if the file fails. An empty array is valid and means the site publishes no card right now.
+ *
+ * @maxItems 3
+ */
+export type FrameMenuCards =
+  [] | [FrameMenuCard] | [FrameMenuCard, FrameMenuCard] | [FrameMenuCard, FrameMenuCard, FrameMenuCard];
+
+/** network.presence@1.0.0 (owner: network) */
+/**
+ * network.presence@1 (plan 2026-10-22 track X item 9): one person's online status as another person may see it. OpenVibe.Network owns presence: POST /api/v1/me/presence/heartbeat keeps it fresh, PUT /api/v1/me/presence sets the chosen state, status line and emoji, and GET /api/v1/presence?subjects=… answers for the people the asker follows or has a DM with. The state is derived: online while the newest heartbeat is under 2 minutes old, away after 10 minutes without input (the client's heartbeat says idle), offline after 3 minutes without a heartbeat. Invisible and show_status off are seen as offline, and an invisible person is left out of the answer entirely; last seen is never returned. live is true while the person is streaming on OpenVibe.Live, and only for someone who would otherwise be visible. (The event is network.presence.changed@1.)
+ */
+export interface NetworkPresence {
+  /**
+   * The person's canonical subject.
+   */
+  subject: string;
+  /**
+   * The public state. A reader never receives invisible (the person is offline instead, or absent from a list); the stored chosen state can be auto, dnd or invisible.
+   */
+  state: "online" | "away" | "dnd" | "invisible" | "offline";
+  /**
+   * The person's status line in their own words, or null. Never shown while they are invisible or have show_status off.
+   */
+  status_text?: string | null;
+  /**
+   * One emoji that sits beside the status line, or null.
+   */
+  emoji?: string | null;
+  /**
+   * The person is streaming on OpenVibe.Live now. Live outranks their chosen state; it is false while they are invisible or have show_status off.
+   */
+  live?: boolean;
+  /**
+   * When the person's presence row last changed.
+   */
+  updated_at: string;
+}
+
+/** network.presence-update-request@1.0.0 (owner: network) */
+/**
+ * network.presence-update-request@1: the body of PUT /api/v1/me/presence on OpenVibe.Network. Every field is optional; only the fields sent change. state is the person's chosen state (auto: online or away from heartbeats, dnd, invisible); status_text and emoji are theirs; show_status is the 'Show my status' switch. An empty body is refused.
+ */
+export interface NetworkPresenceUpdateRequest {
+  /**
+   * The chosen state. auto derives online or away from the newest heartbeat and the last input.
+   */
+  state?: "auto" | "dnd" | "invisible";
+  /**
+   * The status line; null clears it. Markup and control characters are stripped.
+   */
+  status_text?: string | null;
+  /**
+   * One emoji, or null to clear it. More than one grapheme cluster is refused.
+   */
+  emoji?: string | null;
+  /**
+   * The 'Show my status' switch (default on). Off reads as offline to everyone, like invisible.
+   */
+  show_status?: boolean;
+}
+
+/** network.presence.changed@1.0.0 (owner: network) */
+/**
+ * network.presence.changed v1 (OpenVibe.Network server/presence; plan 2026-10-22 track X item 9). A person's public presence changed: their chosen state, status line, emoji, the show_status switch, or the derived online/away/offline state. OpenVibe.Network writes it to its outbox beside the presence row, at most once per person per 30 seconds (the debounce), and only for a real change. The payload is the public view in network.presence@1: invisible and show_status off are sent as offline with no status text or emoji, so the event never carries what the person hid. Envelope: subject { type: user, id: <usr_…> }, visibility internal, actor the person. A presence change is not a reason to notify anyone.
+ */
+export interface NetworkPresenceChangedPayload {
+  subject: string;
+  /**
+   * The public state. Never invisible: an invisible person is sent as offline, without their status text or emoji.
+   */
+  state: "online" | "away" | "dnd" | "offline";
+  status_text?: string | null;
+  emoji?: string | null;
+  /**
+   * Streaming on OpenVibe.Live now; false while invisible or with show_status off.
+   */
+  live?: boolean;
+  updated_at: string;
+}
+
+/** network.presence-list-result@1.0.0 (owner: network) */
+/**
+ * network.presence-list-result@1: the public presence of the people one person may see, from GET /api/v1/presence?subjects=… (the person's own token) or GET /internal/presence?for=…&subjects=… (a first-party service with network.presence.read). Only people the asker follows or has a DM with, and themselves, are answered; a stranger and an invisible person are left out (the caller reads them as offline), never as an error. At most 100 subjects per call.
+ */
+export interface NetworkPresenceListResult {
+  /**
+   * The visible people, in no particular order.
+   *
+   * @maxItems 100
+   */
+  presence: NetworkPresence[];
+}
+
+/** chat.dm-peers-result@1.0.0 (owner: chat) */
+/**
+ * chat.dm-peers-result@1: which of the candidate people share a conversation with one person on OpenVibe.Chat (POST /internal/chat/dm/peers, chat.dm.peers.read). It answers with subjects only; a candidate with no shared conversation is simply absent. Used by OpenVibe.Network's presence privacy rule.
+ */
+export interface ChatDmPeersResult {
+  /**
+   * The person whose conversations were read.
+   */
+  subject: string;
+  /**
+   * The candidates that share at least one conversation with them, as subjects.
+   *
+   * @maxItems 100
+   */
+  peers: string[];
 }

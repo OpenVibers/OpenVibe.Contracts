@@ -1,0 +1,11 @@
+{
+  "id": "trending",
+  "site": "media-hub",
+  "title": "Trending",
+  "kind": "rows",
+  "items": [
+    { "title": "A clip", "meta": "2,100 views", "url": "http://openvibe.video/watch/abc" }
+  ],
+  "updated_at": "2026-11-07T08:00:00Z",
+  "ttl_s": 300
+}

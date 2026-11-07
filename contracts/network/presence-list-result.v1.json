@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/presence-list-result.v1.json",
+  "title": "NetworkPresenceListResult",
+  "description": "network.presence-list-result@1: the public presence of the people one person may see, from GET /api/v1/presence?subjects=… (the person's own token) or GET /internal/presence?for=…&subjects=… (a first-party service with network.presence.read). Only people the asker follows or has a DM with, and themselves, are answered; a stranger and an invisible person are left out (the caller reads them as offline), never as an error. At most 100 subjects per call.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["presence"],
+  "properties": {
+    "presence": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "$ref": "presence.v1.json" },
+      "description": "The visible people, in no particular order."
+    }
+  }
+}

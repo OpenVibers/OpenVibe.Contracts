@@ -1,0 +1,13 @@
+{
+  "id": "live-now",
+  "site": "live",
+  "title": "Live now",
+  "kind": "rail",
+  "items": [
+    { "title": "Nova", "meta": "12 watching", "url": "https://openvibe.live/@nova" },
+    { "title": "Kitchen radio", "meta": "3 watching", "url": "https://openvibe.live/@kitchen" }
+  ],
+  "more": { "label": "See all", "url": "https://openvibe.live/live" },
+  "updated_at": "2026-11-07T08:00:00Z",
+  "ttl_s": 30
+}

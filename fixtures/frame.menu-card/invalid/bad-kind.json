@@ -1,0 +1,9 @@
+{
+  "id": "trending",
+  "site": "media-hub",
+  "title": "Trending",
+  "kind": "grid",
+  "items": [],
+  "updated_at": "2026-11-07T08:00:00Z",
+  "ttl_s": 300
+}

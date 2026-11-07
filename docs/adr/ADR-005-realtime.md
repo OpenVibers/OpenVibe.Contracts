@@ -78,3 +78,42 @@ Guessed private topic yields nothing; reconnect from a cursor gets the complete 
 - A stored notification and its event commit together or not at all.
 
 These are Events `test/realtime-tickets.test.js`, Network `test/notification-events.test.js` and Shared `test/notification-live.test.js`.
+
+## Amendment 3 (2026-11-07): a person's own online status, owned by Network
+
+**Status:** Accepted (plan 2026-10-22 track X item 9). This amendment supersedes amendment 1 for a person's
+chosen online status; amendment 1 still governs who is connected to a room right now.
+
+**Decision.** Each person has a **presence** of online, away, do not disturb or invisible, with an optional
+status line and one emoji. It lives in OpenVibe.Network (`network.presence@1`), not in Chat's WebSocket map:
+the person carries it across every site, and a DM list must show it when the person is not in that room.
+- A heartbeat from any open tab (`POST /api/v1/me/presence/heartbeat`, at most once a minute) keeps it fresh.
+  Online while the newest heartbeat is under 2 minutes old; away after 10 minutes without input (the client
+  says `idle: true`); offline after 3 minutes without a heartbeat.
+- `PUT /api/v1/me/presence` sets the chosen state (`auto`, `dnd`, `invisible`), the status line, the emoji and
+  the "Show my status" switch. Invisible and the switch off read as offline to everyone.
+- `GET /api/v1/presence?subjects=…` answers only for people the asker follows or has a DM with (and
+  themselves), up to 100 subjects, and never for an invisible person. Last seen is never returned.
+- `network.presence.changed` is written to Network's outbox on a real change, at most once per person per
+  30 seconds, with the public view only (invisible is offline). It is an administrative event for first-party
+  consumers, not a per-join realtime topic: no join or leave is ever published, and the event carries no
+  status text or emoji for someone who hid them.
+- Chat keeps its per-room connection map for "who is in this room", and draws the person's dot from Network's
+  presence (cached 30 seconds), never the reverse. DND mutes Chat's own notification pings.
+
+**Alternatives considered.**
+- Keeping presence in Chat only: rejected. It cannot follow a person across sites or exist while they are
+  not connected to a chat socket, and the owner asked for a status that follows them everywhere.
+- A per-join/per-leave event topic: still rejected (amendment 1); this amendment adds only a debounced state
+  change, never connection churn.
+- Storing last seen and returning it: rejected. The owner's privacy list says last seen is never shown.
+
+**Consequences.** Network stores one row per person who has ever sent a heartbeat (erased with the account and
+included in its export, ADR-033). Services read the API with a person's own token, or with a service token and
+`network.presence.read` on behalf of one person; the DM part of the rule is read from Chat through
+`chat.dm.peers.read`. A stranger's presence is indistinguishable from an offline one.
+
+**Acceptance.** A stranger gets no row; a follower gets online/away/dnd; an invisible person gets no row and
+the event says offline; a heartbeat older than 3 minutes reads offline; an idle heartbeat does not move
+`last_active_at`; the event is debounced. These are Network `test/presence.test.js` and Chat
+`test/presence.test.js`.

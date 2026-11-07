@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/presence-update-request.v1.json",
+  "title": "NetworkPresenceUpdateRequest",
+  "description": "network.presence-update-request@1: the body of PUT /api/v1/me/presence on OpenVibe.Network. Every field is optional; only the fields sent change. state is the person's chosen state (auto: online or away from heartbeats, dnd, invisible); status_text and emoji are theirs; show_status is the 'Show my status' switch. An empty body is refused.",
+  "type": "object",
+  "additionalProperties": false,
+  "minProperties": 1,
+  "properties": {
+    "state": {
+      "enum": ["auto", "dnd", "invisible"],
+      "description": "The chosen state. auto derives online or away from the newest heartbeat and the last input."
+    },
+    "status_text": {
+      "type": ["string", "null"],
+      "maxLength": 80,
+      "description": "The status line; null clears it. Markup and control characters are stripped."
+    },
+    "emoji": {
+      "type": ["string", "null"],
+      "maxLength": 16,
+      "description": "One emoji, or null to clear it. More than one grapheme cluster is refused."
+    },
+    "show_status": {
+      "type": "boolean",
+      "description": "The 'Show my status' switch (default on). Off reads as offline to everyone, like invisible."
+    }
+  }
+}

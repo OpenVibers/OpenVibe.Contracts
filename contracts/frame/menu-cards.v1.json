@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/frame/menu-cards.v1.json",
+  "title": "FrameMenuCards",
+  "description": "frame.menu-cards@1: the public file a site serves at /.well-known/openvibe-menu.json — an array of at most three frame.menu-card@1 cards from one site. Network fetches it every five minutes with a five-second timeout and a 64 KB cap, drops unknown fields and markup, and keeps the site's last good card for 30 minutes if the file fails. An empty array is valid and means the site publishes no card right now.",
+  "type": "array",
+  "maxItems": 3,
+  "items": {
+    "$ref": "menu-card.v1.json"
+  }
+}

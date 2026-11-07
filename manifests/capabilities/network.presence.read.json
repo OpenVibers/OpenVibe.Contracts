@@ -1,0 +1,21 @@
+{
+  "id": "network.presence.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read the public presence of people on behalf of one person: the online/away/dnd/offline state, status line and emoji, and whether they are streaming on OpenVibe.Live. It answers only for people that person follows or has a DM with (and themselves); invisible, show_status off and strangers are never disclosed, and last seen is never returned. First-party services only (Chat draws the dots in its DMs and member lists); never grantable to an app or an agent.",
+  "permissions": [
+    "presence:read"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "presence-read",
+  "events": [
+    "network.presence.changed"
+  ],
+  "implementedBy": [
+    "GET /internal/presence?for=usr_\u2026&subjects=usr_\u2026,usr_\u2026"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.presence-list-result@1"
+}
