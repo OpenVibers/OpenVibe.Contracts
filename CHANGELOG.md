@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.307.0 — 2026-11-07
+
+- Apps ask for consent per purpose at sign-in (the consent plan's C4). An app adds one scope `consent:<purpose>` per purpose to /oauth/authorize, beside its other scopes. It may ask for every purpose of the consent family except the retired `ai.looks`: `ai.train`, `data.public`, `face.recognize` and `app.data`. Any other `consent:` scope is refused with `invalid_scope`. The consent screen lists each purpose in plain words, nothing ticked, and the person can sign in with every purpose refused. A refused purpose is not asked again by that app for 30 days, unless the person asks for it again on their account page.
+- Add `network.consent-claim@1`: the `consent` claim of the tokens Network issues from that sign-in (a first-party user token, a Dock token or an app token). It holds exactly the purposes the sign-in asked for that the person granted to that app and that are active when the token is issued, `[]` when none. It never holds a refused purpose or another app's grant, and the app learns only "not granted". The claim is absent when no consent scope was asked. Every new token works it out again, so a purpose turned off is gone from the next one.
+- `identity.service-token-claims@1` gains the optional `consent` claim (additive): an app token from the authorization-code flow carries it when the sign-in asked for consent scopes.
+- Add `network.me-consent-apps-result@1`: "Apps you allowed" on the account page (`GET /api/v1/me/consent/apps`), listing each app's granted purposes and the ones refused in the last 30 days (`quiet`, with the day it ends), with the words the app consent screen shows. `network.consent.manage` names that route and `DELETE /api/v1/me/consent/:purpose/:client/refusal`, which ends a refusal's quiet days so the app's next sign-in asks again.
+- `network.consent@1`: an app's grant is one record per purpose, with the app as `client` and `source` `oauth`. `client` is no longer only for `app.data`, and `options.purposes` is not written any more (kept so older records validate). `network.consent-check-request@1`'s `client` may name the app for any purpose: one app's grant never answers for OpenVibe itself or for another app. Descriptions only: no shape changes.
+- Valid and invalid fixtures cover a user token with one purpose, an app token with none and with all four, a retired, unknown, duplicated or missing claim, a claim that is not a list, an app's grant record, the account page with two apps and with none, a bad client id, a retired purpose, an extra key and a quiet refusal with no end.
+
 ## 0.305.0 — 2026-11-07
 
 - Give the id kinds the S7 work needs a prefix: `newId('agent_stream_schedule')` is `scd_…` (a scheduled public agent stream) and `newId('party')` is `pty_…` (a watch party's id when a party is not named by its room slug).

@@ -96,6 +96,29 @@ export type ServiceTokenClaims = {
    */
   on_behalf_of?: string;
   /**
+   * App tokens from the authorization-code flow (0.307.0): the purposes the person (on_behalf_of) granted this app at sign-in and that are still active when the token is issued, the claim network.consent-claim@1 defines. Present when the sign-in asked for consent:<purpose> scopes, [] when none is granted, absent otherwise.
+   *
+   * @maxItems 4
+   */
+  consent?:
+    | []
+    | ["ai.train" | "data.public" | "face.recognize" | "app.data"]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ];
+  /**
    * Agent tokens: the host that runs the agent and the token was minted for (RFC 8693 actor claim), a service or an app.
    */
   act?: {
@@ -272002,7 +272025,7 @@ export interface NetworkConsent {
         "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code"
       ];
   /**
-   * The app the choice is for: null means OpenVibe itself; otherwise the OAuth client id of an app the person granted (required for app.data, and only there).
+   * The app the choice is for: null means OpenVibe itself; otherwise the OAuth client id of the app the person granted it to. app.data always names one. Since 0.307.0 an app may ask for any purpose at sign-in (consent:<purpose>, network.consent-claim@1): the grant is one record per purpose with this client and source oauth, and it allows that app only, never OpenVibe itself or another app.
    */
   client: string | null;
   /**
@@ -272034,7 +272057,7 @@ export interface NetworkConsent {
           "verify" | "find" | "cast" | "library"
         ];
     /**
-     * app.data only: what the app may do with the person's content, as the consent screen showed it.
+     * app.data only, and not written since 0.307.0: an app's consent screen grants each purpose as its own record (client set), so a reader asks for the purpose itself. Kept so older records still validate.
      *
      * @maxItems 4
      */
@@ -272062,7 +272085,7 @@ export interface NetworkConsent {
    */
   text_version: string;
   /**
-   * Where the choice was made: the account page, an app's consent screen, the person's own API call, or OpenVibe.Vision's older face consents moved into Network.
+   * Where the choice was made: the account page, an app's consent screen at sign-in (consent:<purpose>, with client set), the person's own API call, or OpenVibe.Vision's older face consents moved into Network.
    */
   source: "account" | "oauth" | "api" | "import:vision";
   /**
@@ -282846,6 +282869,838 @@ export interface NetworkMeConsentResult {
   }[];
 }
 
+/** network.consent-claim@1.0.0 (owner: network) */
+/**
+ * network.consent-claim@1 (the consent plan's C4, 2026-11-07): the purposes a person granted to one app at sign-in, as the `consent` claim of the tokens OpenVibe.Network issues to that app. An app asks with one scope `consent:<purpose>` per purpose, beside its other scopes, in /oauth/authorize. The purposes an app may ask for are network.consent@1's except the retired ai.looks: ai.train, data.public, face.recognize and app.data. Any other `consent:` scope is refused with invalid_scope. The consent screen lists each purpose in plain words, off until the person ticks it, and the person can sign in with every purpose refused. A granted purpose is a network.consent@1 record with the app's OAuth client id as client and source oauth; the person turns it off on their account page (DELETE /api/v1/me/consent/:purpose/:client). A refused purpose is not asked again by that app for 30 days, unless the person asks for it again on their account page. The schema is the claims object of any token that carries the claim: a first-party user access token, a Dock token, or an app token (identity.service-token-claims@1).
+ */
+export interface NetworkConsentClaim {
+  /**
+   * Exactly the purposes this sign-in asked for that the person has granted to this app and that are active when the token is issued, in network.consent@1's order. Never a refused or unasked purpose and never another app's grant. An empty list means none is granted: the app learns "not granted", never whether the person refused or was not asked. The claim is absent when the sign-in asked for no consent scope. Every new token works it out again, so a purpose the person turns off is gone from the next one (a refresh, or the next code); a token already issued keeps it until it expires. A service about to use a person's content for an app still asks POST /internal/consent/check with the app as client. The token response's `scope` lists consent:<purpose> only for the purposes granted.
+   *
+   * @maxItems 4
+   */
+  consent:
+    | []
+    | ["ai.train" | "data.public" | "face.recognize" | "app.data"]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ]
+    | [
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data",
+        "ai.train" | "data.public" | "face.recognize" | "app.data"
+      ];
+  [k: string]: unknown | undefined;
+}
+
+/** network.me-consent-apps-result@1.0.0 (owner: network) */
+/**
+ * network.me-consent-apps-result@1 (the consent plan's C4, 2026-11-07): "Apps you allowed" on the signed-in person's account page. GET /api/v1/me/consent/apps on OpenVibe.Network. It lists every app the person granted a purpose to on its sign-in screen (consent:<purpose>, network.consent-claim@1), with the purposes granted and those refused in the last 30 days. It also carries the words the app consent screen shows for each purpose. Only the person's own session reads it; an app never sees this list, its own entry included.
+ */
+export interface NetworkMeConsentAppsResult {
+  /**
+   * The purposes an app may ask for, with the exact words the app consent screen shows.
+   *
+   * @maxItems 8
+   */
+  purposes:
+    | []
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ]
+    | [
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        },
+        {
+          id: "ai.train" | "data.public" | "face.recognize" | "app.data";
+          title: string;
+          /**
+           * What ticking it allows the app, in one plain line.
+           */
+          allows: string;
+          /**
+           * What turning it off later cannot undo (empty when nothing).
+           */
+          cannot_undo: string;
+          /**
+           * Ticking it asks the person to confirm they are 18 or older.
+           */
+          adults_only: boolean;
+          text_version: string;
+        }
+      ];
+  /**
+   * One entry per app with a purpose granted or refused, apps with an active grant first, then by name.
+   *
+   * @maxItems 200
+   */
+  apps: {
+    /**
+     * The app's OAuth client id.
+     */
+    client: string;
+    /**
+     * The app's name as its developer (or OpenVibe, for its own sites) registered it.
+     */
+    name: string;
+    /**
+     * True for a developer's app (app_<ULID>), false for an OpenVibe site.
+     */
+    third_party: boolean;
+    /**
+     * The purposes the app holds now (active network.consent@1 records with this client).
+     *
+     * @maxItems 4
+     */
+    granted:
+      | []
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ]
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ]
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ]
+      | [
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          },
+          {
+            consent_id: string;
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            granted_at: string;
+            text_version: string;
+          }
+        ];
+    /**
+     * The purposes the person refused this app in the last 30 days: the app does not ask for them again until quiet_until. DELETE /api/v1/me/consent/:purpose/:client/refusal ends that early, so the next sign-in asks.
+     *
+     * @maxItems 4
+     */
+    quiet:
+      | []
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ]
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ]
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ]
+      | [
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          },
+          {
+            purpose: "ai.train" | "data.public" | "face.recognize" | "app.data";
+            refused_at: string;
+            quiet_until: string;
+          }
+        ];
+  }[];
+}
+
 /** network.consent-check-request@1.0.0 (owner: network) */
 /**
  * network.consent-check-request@1 (L24): may this purpose be used for these people? POST /internal/consent/check on OpenVibe.Network with a service token holding network.consent.read. One purpose per call, up to 500 subjects (a dataset build or a chat log checks its authors in batches).
@@ -282860,7 +283715,7 @@ export interface NetworkConsentCheckRequest {
    */
   kind?: "streams" | "vods" | "clips" | "voice" | "chat" | "posts" | "pictures" | "code";
   /**
-   * app.data only: the app asking. Required for app.data.
+   * The app the use is for. Required for app.data. For any other purpose it asks about that app's own grant from its sign-in (consent:<purpose>, 0.307.0); without it the answer is about OpenVibe's own use. One app's grant never answers for OpenVibe or for another app.
    */
   client?: string;
   /**
@@ -282878,7 +283733,7 @@ export interface NetworkConsentCheckRequest {
 
 /** network.consent-check-result@1.0.0 (owner: network) */
 /**
- * network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.
+ * network.consent-check-result@1 (L24): the answer to network.consent-check-request@1. Every subject asked about is in allowed: true only for an active choice that covers the purpose, the kind, the app and the feature asked about. An app's grant (client set) answers only a check that names that app. An unknown or deleted subject is false, the same as a person who never chose (the answer never says whether an account exists). A service caches an answer for at most 60 s and drops it on network.consent.changed; when Network cannot answer, every subject is false.
  */
 export interface NetworkConsentCheckResult {
   purpose: "ai.train" | "data.public" | "face.recognize" | "ai.looks" | "app.data";

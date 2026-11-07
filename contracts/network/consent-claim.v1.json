@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/consent-claim.v1.json",
+  "title": "NetworkConsentClaim",
+  "description": "network.consent-claim@1 (the consent plan's C4, 2026-11-07): the purposes a person granted to one app at sign-in, as the `consent` claim of the tokens OpenVibe.Network issues to that app. An app asks with one scope `consent:<purpose>` per purpose, beside its other scopes, in /oauth/authorize. The purposes an app may ask for are network.consent@1's except the retired ai.looks: ai.train, data.public, face.recognize and app.data. Any other `consent:` scope is refused with invalid_scope. The consent screen lists each purpose in plain words, off until the person ticks it, and the person can sign in with every purpose refused. A granted purpose is a network.consent@1 record with the app's OAuth client id as client and source oauth; the person turns it off on their account page (DELETE /api/v1/me/consent/:purpose/:client). A refused purpose is not asked again by that app for 30 days, unless the person asks for it again on their account page. The schema is the claims object of any token that carries the claim: a first-party user access token, a Dock token, or an app token (identity.service-token-claims@1).",
+  "type": "object",
+  "required": ["consent"],
+  "additionalProperties": true,
+  "properties": {
+    "consent": {
+      "type": "array",
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": { "enum": ["ai.train", "data.public", "face.recognize", "app.data"] },
+      "description": "Exactly the purposes this sign-in asked for that the person has granted to this app and that are active when the token is issued, in network.consent@1's order. Never a refused or unasked purpose and never another app's grant. An empty list means none is granted: the app learns \"not granted\", never whether the person refused or was not asked. The claim is absent when the sign-in asked for no consent scope. Every new token works it out again, so a purpose the person turns off is gone from the next one (a refresh, or the next code); a token already issued keeps it until it expires. A service about to use a person's content for an app still asks POST /internal/consent/check with the app as client. The token response's `scope` lists consent:<purpose> only for the purposes granted."
+    }
+  }
+}

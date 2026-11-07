@@ -1,0 +1,12 @@
+{
+  "sub": "42",
+  "id": "42",
+  "subject_id": "usr_01K6R2Z8C4V7M9Q3T5W1X2Y3Z4",
+  "username": "ana",
+  "client_id": "openvibe-live",
+  "consent": [
+    "data.sell"
+  ],
+  "iat": 1790000000,
+  "exp": 1790003600
+}

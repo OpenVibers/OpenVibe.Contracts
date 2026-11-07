@@ -1,0 +1,21 @@
+{
+  "purposes": [
+    {
+      "id": "ai.train",
+      "title": "Train AI on your content",
+      "allows": "It may use your streams, videos, voice, chat, posts, pictures and code to train or improve its AI.",
+      "cannot_undo": "A model it already trained keeps what it learned.",
+      "adults_only": true,
+      "text_version": "2026-11-07.1"
+    },
+    {
+      "id": "app.data",
+      "title": "Use your content",
+      "allows": "It may read and use your streams, videos, posts and other content for its own features.",
+      "cannot_undo": "A copy it already made stays with the app.",
+      "adults_only": false,
+      "text_version": "2026-11-07.1"
+    }
+  ],
+  "apps": []
+}

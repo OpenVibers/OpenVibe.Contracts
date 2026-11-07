@@ -92,6 +92,20 @@
       "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
       "description": "The person who authorized an app through the authorization-code flow, or the owner an agent acts for (always present on agent tokens). Also present on a node token that asks for an audience where the machine acts for its owner (Agent Streams S1: openvibe.live and live.agent_stream.publish); absent on every other client_credentials token."
     },
+    "consent": {
+      "type": "array",
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ai.train",
+          "data.public",
+          "face.recognize",
+          "app.data"
+        ]
+      },
+      "description": "App tokens from the authorization-code flow (0.307.0): the purposes the person (on_behalf_of) granted this app at sign-in and that are still active when the token is issued, the claim network.consent-claim@1 defines. Present when the sign-in asked for consent:<purpose> scopes, [] when none is granted, absent otherwise."
+    },
     "act": {
       "type": "object",
       "required": [

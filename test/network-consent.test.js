@@ -57,6 +57,44 @@ for (const id of ['network.consent', 'network.consent-choice', 'network.me-conse
     }
 }
 
+// Apps ask per purpose at sign-in (C4, 0.307.0): consent:<purpose> scopes and the `consent` claim. An app may ask for
+// every purpose of the family except the retired ai.looks, and the claim, the app token's claim and the account page's
+// "Apps you allowed" all list that same set.
+const APP_PURPOSES = PURPOSES.filter((p) => p !== 'ai.looks');
+const claim = schema('network/consent-claim.v1.json');
+const tokenClaims = schema('identity/service-token-claims.v1.json');
+const apps = schema('network/me-consent-apps-result.v1.json');
+for (const [name, list] of [
+    ['claim.consent', claim.properties.consent.items.enum],
+    ['service-token.consent', tokenClaims.properties.consent.items.enum],
+    ['apps.purposes.id', apps.properties.purposes.items.properties.id.enum],
+    ['apps.granted.purpose', apps.properties.apps.items.properties.granted.items.properties.purpose.enum],
+    ['apps.quiet.purpose', apps.properties.apps.items.properties.quiet.items.properties.purpose.enum],
+]) assert.deepStrictEqual(list, APP_PURPOSES, `${name} lists the purposes an app may ask for`);
+assert.strictEqual(claim.properties.consent.uniqueItems, true, 'a purpose is in the claim once');
+assert.strictEqual(claim.properties.consent.maxItems, APP_PURPOSES.length);
+// The claim carries what was granted, nothing about what was refused.
+assert.deepStrictEqual(Object.keys(claim.properties), ['consent'], 'the claim names granted purposes only');
+assert.ok(!('refused' in apps.properties.apps.items.properties), 'the account page calls a refusal quiet, with its end');
+assert.strictEqual(apps.properties.apps.items.additionalProperties, false);
+// An app's grant is a consent record like any other: client set, source oauth.
+const appGrant = fx('network.consent', 'valid', 'oauth-app-train.json');
+assert.strictEqual(appGrant.source, 'oauth');
+assert.ok(appGrant.client && appGrant.purpose !== 'app.data', 'an app holds a purpose other than app.data under its own client id');
+// The account page reaches the new routes through the same capability.
+const manage = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifests', 'capabilities', 'network.consent.manage.json'), 'utf8'));
+for (const route of ['GET /api/v1/me/consent/apps', 'DELETE /api/v1/me/consent/:purpose/:client/refusal']) {
+    assert.ok(manage.implementedBy.includes(route), `network.consent.manage names ${route}`);
+}
+for (const id of ['network.consent-claim', 'network.me-consent-apps-result']) {
+    for (const kind of ['valid', 'invalid']) {
+        for (const f of fs.readdirSync(path.join(ROOT, 'fixtures', id, kind))) {
+            const r = c.validate(`${id}@1`, fx(id, kind, f));
+            assert.strictEqual(r.valid, kind === 'valid', `${id} ${kind}/${f}: ${JSON.stringify(r.errors)}`);
+        }
+    }
+}
+
 // The change event names the change, never the content it covers.
 assert.strictEqual(changed.additionalProperties, false);
 assert.ok(!('content' in changed.properties) && !('text' in changed.properties), 'the event carries no content');
@@ -74,4 +112,4 @@ const network = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifests', 'service
 assert.ok(network.capabilities.includes('network.consent.read') && network.capabilities.includes('network.consent.manage'));
 assert.ok(network.eventsProduced.includes('network.consent.changed'));
 
-console.log('network.consent@1: one list of purposes and kinds, cns_ ids, no selling purpose, fixtures, capabilities');
+console.log('network.consent@1: one list of purposes and kinds, cns_ ids, no selling purpose, the consent claim and Apps you allowed, fixtures, capabilities');
