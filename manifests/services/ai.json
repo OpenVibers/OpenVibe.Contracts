@@ -25,6 +25,8 @@
     "ai.model.read",
     "ai.provider.manage",
     "ai.quota.attribution.manage",
+    "ai.batches.create",
+    "ai.batches.read",
     "ai.run.create",
     "ai.run.read",
     "ai.usage.read",

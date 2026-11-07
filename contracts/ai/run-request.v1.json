@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/ai/run-request.v1.json",
   "title": "AiRunRequest",
-  "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.",
+  "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).",
   "type": "object",
   "required": [
     "workflow"
@@ -51,6 +51,16 @@
           "type": "boolean",
           "default": false,
           "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on."
+        },
+        "latency": {
+          "enum": ["interactive", "background", "batch"],
+          "description": "The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped)."
+        },
+        "deadline_hours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 72,
+          "description": "For a batch run: how long the answer may take, in hours (1 to 72). The run is queued and answered within the deadline; a deadline the provider cannot meet sends the run back to the ordinary path. Omitted: the service's own default."
         }
       }
     },

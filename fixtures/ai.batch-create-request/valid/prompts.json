@@ -1,0 +1,9 @@
+{
+  "items": [
+    "one prompt",
+    {
+      "prompt": "another prompt",
+      "model": "gpt-4o-mini"
+    }
+  ]
+}

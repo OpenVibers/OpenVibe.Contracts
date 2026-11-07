@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/batch-create-result.v1.json",
+  "title": "AiBatchCreateResult",
+  "description": "ai.batch-create-result@1: the answers of ai.batches.create on OpenVibe.AI. POST /api/v1/batches → 201 { batch }; POST /api/v1/batches/:id/cancel → { batch } (the batch is cancelled: the items that had not run are cancelled and nothing is charged for them).",
+  "type": "object",
+  "required": [
+    "batch"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "batch": {
+      "$ref": "batch.v1.json"
+    }
+  }
+}

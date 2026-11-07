@@ -1,0 +1,14 @@
+{
+  "voice": "actor.voice@1",
+  "name": "Researcher",
+  "instructions": "Research carefully.",
+  "level": "ask",
+  "author": {
+    "subject": "usr_01M4C49CW34NGX7TR2TNRVFWNY"
+  },
+  "integrity": {
+    "alg": "sha256",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "memory": "mems_01M4C49CW7R8S9T0A1B2C3D4E5"
+}

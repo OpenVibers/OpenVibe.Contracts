@@ -1631,6 +1631,51 @@
       "status": "active"
     },
     {
+      "id": "ai.batch",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/batch.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.batch-item",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/batch-item.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.batch-create-request",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/batch-create-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.batch-create-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/batch-create-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.batch-read-result",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/batch-read-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.run-read-result",
       "version": "1.0.0",
       "owner": "ai",
@@ -9913,6 +9958,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "actor.voice",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/voice.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
     },
     {
       "id": "frame.menu-card",

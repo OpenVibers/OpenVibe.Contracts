@@ -8,7 +8,8 @@
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Chat",
   "domains": [
-    "openvibe.chat"
+    "openvibe.chat",
+    "openvibe.party"
   ],
   "publicOrigin": "https://openvibe.chat",
   "capabilities": [

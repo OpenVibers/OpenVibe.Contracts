@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.337.0 — 2026-11-07
+
+- The `chat` manifest names `openvibe.party`, the Watch Together host OpenVibe.Chat serves beside `openvibe.chat`
+  (Party watch v1, plan R1). Chat's service manifest is what services check a party link against: a media party plays a
+  Media ref or an https URL on a host a manifest names, so a party started from an OpenVibe page passes and a link to
+  somebody else's server does not. The `www.` name only redirects, so it is not listed.
+
+## 0.336.0 — 2026-11-07
+
+- The run's options carry the latency class the caller asks for: `interactive` (answer as soon as the provider can),
+  `background` (minutes; the run is priced on the cheapest tier that can wait) or `batch` (hours; the run is queued and
+  answered through a provider's own batch API). A batch run may also say `deadline_hours` (1 to 72): how long the answer may
+  take. The class is the workflow's own (the route's `constraints.latency_class`): a caller may ask for a slower class and
+  never for a faster one, and a faster ask is not refused — the run happens in the workflow's own class and says so.
+- The run's answer carries `latency_class` (the class the run really ran in), `service_tier` (`standard`, `flex`,
+  `batch`, `offpeak`, `local`: the tier it was priced on — the one the provider served or the one the router chose) and
+  `latency_clamped` (the class asked for and the class used, when the ask was clamped).
+- Add the batches contract: `ai.batch@1`, `ai.batch-item@1`, `ai.batch-create-request@1`, `ai.batch-create-result@1` and
+  `ai.batch-read-result@1` for `/api/v1/batches` on OpenVibe.AI. A batch is a queue of many prompts that are answered
+  later, at half the retail price; the batch says where it stands, and a prompt that reaches its deadline without cheap
+  capacity expires and is never charged.
+- Add the grants `ai.batches.create` (open a batch, cancel one) and `ai.batches.read` (read the caller's own batches).
+  A first-party service opens a batch on the network's own account with `ai.batches.create`; a person or a developer app
+  pays with its own account.
+
+
+## 0.335.0 — 2026-11-07
+
+- Add `actor.voice@1`: an agent's voice as a file, and nothing else. The document carries the agent's name, a short bio, its instructions (the house voice it speaks in), its rules, its default approval level (`ask`, `auto-edits`, `approve-for-me`, `full` — the levels of `actor.agent@1`), the model it prefers and the connected apps it may use (ids only, never a key), an optional face (an avatar ref), an optional author and a `created_at`. It never carries memory, a connector's token or a file.
+- The document carries an **integrity** block, not a signature: `integrity: { alg: "sha256", hash }`, where the hash is the sha256 over the canonical JSON of the document. It shows the file was not edited after it was written. It says nothing about who wrote it: anyone can write a file that names an author and compute its hash, so the author in a document is a claim and the contract says so. Only the service that owns an agent may vouch for its author, in its own record.
+- The contract says exactly which fields the canonical JSON holds and in which order, and `created_at` is not one of them. The author may be absent: a document may name nobody.
+- Importing a voice makes a new agent at level `ask`, whatever the file says: a borrowed agent starts cautious and the person raises it themselves. Valid and invalid fixtures cover a full voice, a minimal one, a document carrying memory, one carrying a connector's token and one with a level that is not a level.
+- Additive only: a new contract and its fixtures; nothing that exists today changes shape.
+
 ## 0.334.0 — 2026-11-07
 
 - `actor.trigger@1` gains the goal kind (plan HO3): a trigger that keeps working toward a goal on a schedule. Additive:

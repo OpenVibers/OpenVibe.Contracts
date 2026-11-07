@@ -158449,7 +158449,7 @@ export interface AiAttributionQuota {
 
 /** ai.run-request@1.0.0 (owner: ai) */
 /**
- * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas.
+ * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).
  */
 export interface AiRunRequest {
   /**
@@ -158480,6 +158480,14 @@ export interface AiRunRequest {
      * Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on.
      */
     debug?: boolean;
+    /**
+     * The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped).
+     */
+    latency?: "interactive" | "background" | "batch";
+    /**
+     * For a batch run: how long the answer may take, in hours (1 to 72). The run is queued and answered within the deadline; a deadline the provider cannot meet sends the run back to the ordinary path. Omitted: the service's own default.
+     */
+    deadline_hours?: number;
   };
   /**
    * Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision).
@@ -158491,7 +158499,7 @@ export interface AiRunRequest {
 
 /** ai.run@1.1.0 (owner: ai) */
 /**
- * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.
+ * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. latency_class is the class the run really ran in, service_tier the tier it was priced on, and latency_clamped set when the caller asked for a faster class than the workflow allows. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.
  */
 export interface AiRun {
   id: string;
@@ -158574,6 +158582,27 @@ export interface AiRun {
    * Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later.
    */
   citations_count: number;
+  /**
+   * The class the run really ran in: how long the caller was willing to wait. It is the workflow's own class (the route's constraints.latency_class) or a slower one the caller asked for (options.latency); a caller can never make a run faster than its workflow allows.
+   */
+  latency_class?: "interactive" | "background" | "batch";
+  /**
+   * The tier the run was priced on: the tier the provider really served (standard, flex, batch) or the one the router chose (offpeak inside a provider's off-peak hours, local on the host's own model). Null while the run has not answered. A provider that does not say which tier it served is priced at the list price: a saving nobody confirmed is not a saving.
+   */
+  service_tier?: "standard" | "flex" | "batch" | "offpeak" | "local" | null;
+  /**
+   * Set when the caller asked for a faster class than the workflow allows: the class asked for and the class the run really ran in. The run is never refused for it.
+   */
+  latency_clamped?: {
+    /**
+     * The class the caller asked for.
+     */
+    asked: "interactive" | "background" | "batch";
+    /**
+     * The class the run really ran in.
+     */
+    used: "interactive" | "background" | "batch";
+  } | null;
   retry_of: string | null;
   idempotency_key: string | null;
   trace_id: string | null;
@@ -159862,6 +159891,170 @@ export type AiRunCreateResult =
     }
   | {
       citations: AiRunCitation[];
+    };
+
+/** ai.batch@1.0.0 (owner: ai) */
+/**
+ * ai.batch@1: a batch of many prompts on OpenVibe.AI (POST /api/v1/batches, GET /api/v1/batches, GET /api/v1/batches/:id). The answers are not waited for: the batch is queued, and the batch says where it stands. A batch is billed at half the retail price through Billing like every other request; the batch table is the queue and the status, never a second ledger. The owner of the batch is the account that pays for it: a person, a developer app's project, or a first-party service with the ai.batches.create grant (the network's own account).
+ */
+export interface AiBatch {
+  id: string;
+  /**
+   * queued (asked for), running (items are being answered), succeeded, failed (an item failed), expired (the deadline passed with nothing answered), cancelled (the caller cancelled it).
+   */
+  status: "queued" | "running" | "succeeded" | "failed" | "expired" | "cancelled";
+  /**
+   * Who pays for the batch.
+   */
+  owner_type: "user" | "app" | "service";
+  owner_id: string;
+  /**
+   * The developer app's project, when an app owns the batch.
+   */
+  project_id: string | null;
+  /**
+   * How many prompts the batch carries.
+   */
+  item_count: number;
+  /**
+   * The items, in order. The list of batches answers with the same objects and no items (an empty array): the items come from GET /api/v1/batches/:id.
+   */
+  items: AiBatchItem[];
+  /**
+   * The share of the retail card the customer is charged, as a decimal fraction of a million (500000 = half).
+   */
+  discount: string;
+  /**
+   * When the batch stops waiting: the deadline the caller asked for (1 to 72 hours).
+   */
+  deadline_at: string;
+  created_at: string;
+  updated_at: string;
+  finished_at?: string | null;
+  /**
+   * What the network absorbed for this batch, in nano-USD, as a string.
+   */
+  absorbed_nano_usd?: string | null;
+  /**
+   * The batch ran on the ordinary capacity (not on free or community capacity): it cost the network more than the customer paid, and the difference is the absorbed amount.
+   */
+  ran_on_regular_capacity?: boolean;
+}
+
+/** ai.batch-item@1.0.0 (owner: ai) */
+/**
+ * ai.batch-item@1: one prompt of a batch on OpenVibe.AI (POST /api/v1/batches). The item is the queue and the status of that one prompt: it waits for capacity (or for a provider's own batch API), runs, and carries the answer, the run it made and the money. A prompt that reached its deadline without capacity expires and is never charged.
+ */
+export interface AiBatchItem {
+  /**
+   * The item's place in the batch.
+   */
+  idx: number;
+  /**
+   * queued (asked for, not started), waiting (no cheap capacity yet), running (a provider works on it), succeeded, failed, expired (the deadline passed; not charged), cancelled (the batch was cancelled).
+   */
+  status: "queued" | "waiting" | "running" | "succeeded" | "failed" | "expired" | "cancelled";
+  /**
+   * The model the item asked for, or the batch's own.
+   */
+  model: string | null;
+  /**
+   * The run the item made, when it made one.
+   */
+  run_id: string | null;
+  /**
+   * The answer the provider gave, as text.
+   */
+  answer: string | null;
+  error_code: string | null;
+  error_detail: string | null;
+  /**
+   * Why the item ended without an answer (it expired, it was cancelled).
+   */
+  reason: string | null;
+  /**
+   * Where the answer came from: a community offer, the regular capacity, or a provider's own batch API.
+   */
+  capacity: string | null;
+  route_provider: string | null;
+  route_model: string | null;
+  /**
+   * What the answer really cost, in nano-USD (1 USD = 1e9 nano), as a string: the money is never a float.
+   */
+  cost_nano_usd?: string | null;
+  /**
+   * What the network absorbed (the route cost more than the customer paid), in nano-USD, as a string.
+   */
+  absorbed_nano_usd?: string | null;
+  /**
+   * What the customer was charged, in nano-USD, as a string: half the retail card.
+   */
+  charged_nano_usd?: string | null;
+  deadline_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/** ai.batch-create-request@1.0.0 (owner: ai) */
+/**
+ * ai.batch-create-request@1: the body of POST /api/v1/batches on OpenVibe.AI (capability ai.batches.create). One batch of many prompts: the answers come later, and the batch is billed at half the retail price. Errors are problem+json: 422 input.invalid (no items, an empty prompt, a prompt over 20000 characters, a deadline outside 1 to 72 hours), 422 batch.too_large (more prompts than the service's cap), 403 batch.no_payer (the token names no account to pay), 403 batch.no_grant (a service without the ai.batches.create grant).
+ */
+export interface AiBatchCreateRequest {
+  /**
+   * The prompts of the batch, in order. Each item is a prompt, or an object with a prompt and the model it wants.
+   *
+   * @minItems 1
+   */
+  items: [
+    (
+      | string
+      | {
+          prompt: string;
+          /**
+           * The model this item wants (a model key, or provider/model).
+           */
+          model?: string;
+        }
+    ),
+    ...(
+      | string
+      | {
+          prompt: string;
+          /**
+           * The model this item wants (a model key, or provider/model).
+           */
+          model?: string;
+        }
+    )[]
+  ];
+  /**
+   * The model the whole batch asks for, when no item names one.
+   */
+  model?: string;
+  /**
+   * How long the batch may take, in hours (1 to 72). Omitted: the service's own default (24 hours). A prompt that reaches the deadline without cheap capacity expires and is never charged.
+   */
+  deadline_hours?: number;
+}
+
+/** ai.batch-create-result@1.0.0 (owner: ai) */
+/**
+ * ai.batch-create-result@1: the answers of ai.batches.create on OpenVibe.AI. POST /api/v1/batches → 201 { batch }; POST /api/v1/batches/:id/cancel → { batch } (the batch is cancelled: the items that had not run are cancelled and nothing is charged for them).
+ */
+export interface AiBatchCreateResult {
+  batch: AiBatch;
+}
+
+/** ai.batch-read-result@1.0.0 (owner: ai) */
+/**
+ * ai.batch-read-result@1: the answers of ai.batches.read on OpenVibe.AI (the caller's own batches). GET /api/v1/batches → { batches } (newest first, the items not included); GET /api/v1/batches/:id → { batch } (with its items). Somebody else's batch is 404 batch.not_found.
+ */
+export type AiBatchReadResult =
+  | {
+      batches: AiBatch[];
+    }
+  | {
+      batch: AiBatch;
     };
 
 /** ai.run-read-result@1.0.0 (owner: ai) */
@@ -301083,6 +301276,212 @@ export interface AgentTimelineListResult {
   counts: {
     [k: string]: number | undefined;
   };
+}
+
+/** actor.voice@1.0.0 (owner: actor) */
+/**
+ * actor.voice@1: an agent's voice and nothing else — the small document a person hands to somebody else so their agent speaks in the same house voice. It carries the agent's name, a short bio, its instructions (the house voice it speaks in), the rules it keeps, its default approval level, the model it prefers and the connected apps it may use (ids only, never a key), an optional face (an avatar ref), an optional author, and an integrity block. It never carries memory, a connector's token or a file: a voice is a voice, not a person. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written, and it says nothing about who wrote it — anyone can write a file that names an author and compute its hash. The AUTHOR is therefore a claim, not a fact: a document may name anyone, and whoever reads it must say so (it says it was made by …; that is not checked). Only the service that owns the agent may vouch for who wrote a voice, and it does so by sharing it itself. The canonical JSON is the document's own fields, in this order and with these names: voice, name, bio, face, instructions, rules, level, model, apps, author; an optional field that is absent or empty is left out, author is { subject } or { subject, name }, and the value is the compact JSON of that object (no spaces). CREATED_AT is when the document was written; it is not part of the hash. Importing a voice makes a new agent at level ask whatever the file says: a borrowed agent starts cautious, and the person raises it themselves.
+ */
+export interface ActorVoice {
+  /**
+   * The document marker. This is the agent's voice, not a TTS voice id.
+   */
+  voice: "actor.voice@1";
+  /**
+   * The agent's name.
+   */
+  name: string;
+  /**
+   * A short bio: one or two lines on what this agent is for.
+   */
+  bio?: string;
+  /**
+   * An avatar ref: an https image URL, a Media id, or a preset face such as preset:researcher.
+   */
+  face?: string;
+  /**
+   * The house voice the agent speaks in: what it does, how it says it, what it never does.
+   */
+  instructions: string;
+  /**
+   * The rules it keeps, one line each.
+   *
+   * @maxItems 20
+   */
+  rules?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * The approval level it works at (actor.agent@1's levels). The default is ask; an import always starts at ask.
+   */
+  level: "ask" | "auto-edits" | "approve-for-me" | "full";
+  /**
+   * The model it prefers, by id. Never a key: the key stays in OpenVibe.AI's vault.
+   */
+  model?: {
+    engine: "runtime" | "own-keys" | "open-gpu" | "link";
+    model: string;
+  };
+  /**
+   * The connected app ids it may use (Connect's catalogue slugs). Ids only: a token is never here.
+   *
+   * @maxItems 50
+   */
+  apps?: string[];
+  /**
+   * Who the document says it is from. A claim, not a fact: a file may name anyone, and the hash says nothing about it. A service that owns the agent may vouch for its author in its own record instead.
+   */
+  author?: {
+    /**
+     * The Network subject the document names.
+     */
+    subject: string;
+    name?: string;
+  };
+  integrity: {
+    /**
+     * How the document was checked: sha256 over the canonical JSON.
+     */
+    alg: "sha256";
+    /**
+     * The hex sha256 of the canonical JSON. It shows the file was not edited; it proves nothing about who wrote it.
+     */
+    hash: string;
+  };
+  /**
+   * When the document was written. Not part of the hash.
+   */
+  created_at?: string;
 }
 
 /** frame.menu-card@1.0.0 (owner: network) */
