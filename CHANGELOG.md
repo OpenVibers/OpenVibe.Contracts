@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.309.0 — 2026-11-07
+
+- Add the Codes skills-hub records (the Compute plan §5, E6). `codes.skill@1` is one skill, rule, MCP server, command or hook: its owner, kind, stable slug, title, summary, the four sharing audiences (`private`, `people`, `link`, `public`), the harnesses it is written for, the newest version and that version's body. A `private`, `people` or `link` record is never in the gallery; only `public` is. The body is untrusted Markdown and the page renders it through the markup gate.
+- Add `codes.skill-version@1`: one immutable version of a record, keyed by `skill_id` and a growing `version`, with the body, summary, tools, audience, author and the note that says why it was written. A rollback copies the chosen version into a new one rather than rewriting history, so a Node that synced version 3 can still name it.
+- Valid and invalid fixtures cover a public skill, a private rule, a people-shared MCP record, versions 1 and 4, and the bad ids, kinds, audiences, tools, bodies and authors.
+
 ## 0.308.0 — 2026-11-07
 
 - Add `ai.memory-export@1` (Memory M5): the one portable memory file. It carries `format: openvibe.memory-export@1`, `version: 1`, `exported_at` and every item's text, kind, scope, source, confidence and source reference. It deliberately has no ids, owners, merge links or conflict pair, so a file can be imported into another account without carrying anyone's identity, and a profile is derived from the items and rebuilt, never imported. OpenVibe.AI's `GET /api/v1/memory/export` writes it and `POST /api/v1/memory/import` accepts the same document; both redact again.

@@ -6532,6 +6532,196 @@
         "$ref": "../../common/moderation-action.v1.json"
       }
     },
+    "codes.skill": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/skill.v1.json",
+        "title": "CodesSkill",
+        "description": "codes.skill@1: one skill, rule, MCP server, command or hook in the OpenVibe.Codes hub (the Compute plan §5, E6). KIND says what it is: a skill is a SKILL.md folder the agent tools load, a rule is text for the tools' AGENTS.md/CLAUDE.md files, an mcp record is one MCP server definition, and command/hook are a slash command and a hook. SLUG is the folder name (lowercase letters, digits and hyphens) and is stable within one owner. VERSION is the newest record in codes.skill-version@1; BODY is that version's content. AUDIENCE is the four sharing audiences of openvibe-sdk/share: private (the owner only), people (the owner and the members listed in codes_skill_members), link (anyone with the link, not in the gallery) and public (the gallery, search and agents). A private, people or link record is never in the gallery. OFFICIAL marks OpenVibe's own skills. TOOLS names the harnesses the skill is written for; an empty list means every tool the Node knows. The body is untrusted text: the page renders it through the markup gate (escape first, then a small Markdown subset), never as HTML.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner_subject",
+          "kind",
+          "slug",
+          "title",
+          "summary",
+          "audience",
+          "official",
+          "tools",
+          "version",
+          "body",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The hub id (skl_ + ULID)."
+          },
+          "owner_subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person who owns the record."
+          },
+          "kind": {
+            "enum": [
+              "skill",
+              "rule",
+              "mcp",
+              "command",
+              "hook"
+            ]
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+            "description": "The stable folder name (SKILL.md lives in a folder with this name)."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ],
+            "description": "The sharing audience, the same four openvibe-sdk/share uses."
+          },
+          "official": {
+            "type": "boolean",
+            "description": "True for OpenVibe's own records; the gallery shows them beside community ones."
+          },
+          "tools": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "claude-code",
+                "codex",
+                "opencode",
+                "command-code",
+                "minimax-code",
+                "aider",
+                "agents"
+              ]
+            }
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The newest coded_skill_versions row for this record."
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 131072,
+            "description": "The skill's SKILL.md body (or the rule/command/hook/MCP text), untrusted Markdown."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "codes.skill-version": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/skill-version.v1.json",
+        "title": "CodesSkillVersion",
+        "description": "codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Node's state can name the version it wrote.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "skill_id",
+          "version",
+          "summary",
+          "body",
+          "tools",
+          "audience",
+          "created_by",
+          "created_at"
+        ],
+        "properties": {
+          "skill_id": {
+            "type": "string",
+            "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 131072
+          },
+          "tools": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "claude-code",
+                "codex",
+                "opencode",
+                "command-code",
+                "minimax-code",
+                "aider",
+                "agents"
+              ]
+            }
+          },
+          "audience": {
+            "enum": [
+              "public",
+              "link",
+              "people",
+              "private"
+            ]
+          },
+          "created_by": {
+            "type": "string",
+            "pattern": "^(usr_[0-9A-HJKMNP-TV-Z]{26}|system)$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Why this version was written: created, edited, published, or rolled back to N."
+          }
+        }
+      }
+    },
     "services.app-manifest": {
       "version": "1.0.0",
       "owner": "services",
