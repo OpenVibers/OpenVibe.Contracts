@@ -1,0 +1,13 @@
+{
+  "room": "friday-film",
+  "media": {
+    "media_id": "legacy:media:vod:4242",
+    "role": "main"
+  },
+  "position_ms": 12000,
+  "rate": 1.25,
+  "paused": true,
+  "at_ms": 1794067200123,
+  "set_by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "seq": 8
+}

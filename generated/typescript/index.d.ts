@@ -302073,3 +302073,77 @@ export interface MailMessageSummary {
    */
   received_at: string | null;
 }
+
+/** common.control-lease@1.0.0 (owner: contracts) */
+/**
+ * common.control-lease@1: who holds the controls of a shared thing (seven domains plan B3). The state names the thing, its holder (a person, an AI, or nobody when the controls are free), when the holder got them, an optional time limit as an absolute epoch instant, the subjects watching and a sequence number. Every control change, including an expiry or a take-back, increments seq; a change in watchers alone does not. The authority that owns the thing writes and enforces the state: it decides who may request, grant, release or take the controls, and take-back always wins. Chat hosts a room's lease on its room socket and names the thing chat.room:<slug>; the holder is the person or AI whose subject Chat would accept on a set.
+ */
+export interface ControlLease {
+  /**
+   * The shared thing the lease controls, in the owning authority's own namespace. Chat writes chat.room:<slug>.
+   */
+  thing: string;
+  /**
+   * Who may act on the thing now. nobody means the controls are free; subject is null exactly then.
+   */
+  holder: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * When the current holder got the controls, as epoch milliseconds in the authority's clock.
+   */
+  since_ms: number;
+  /**
+   * When the holder's time runs out, as epoch milliseconds; null or absent means no time limit. At that instant the authority makes the holder nobody and increments seq.
+   */
+  expires_ms?: number | null;
+  /**
+   * The subjects watching the thing now, as live presence rather than a durable membership list. The authority decides who is listed; Chat lists the signed-in subjects connected to the room. A change here does not increment seq.
+   *
+   * @maxItems 500
+   */
+  watchers: string[];
+  /**
+   * The control version: starts at 1 for a thing's first state and increments on every holder change, expiry or take-back. A client ignores a state with a seq it has already seen.
+   */
+  seq: number;
+}
+
+/** common.sync-clock@1.0.0 (owner: contracts) */
+/**
+ * common.sync-clock@1: one timeline for many players (seven domains plan B4). The authority stamps at_ms and seq when it accepts a change and fans the state out; a player computes where it should be as position_ms + (authority time now - at_ms) * rate when paused is false, and exactly position_ms when paused is true. Chat hosts a room's clock on its room socket, keeps the latest state in memory and in the room_sync_clocks table, refuses a set from anyone but the current common.control-lease@1 holder, and sends the state to a member when they join the room. Clock offset is measured over the same socket with time ping/pong pairs, best of five samples, refreshed every 60 s.
+ */
+export interface SyncClock {
+  /**
+   * The authority's room id (Chat: the room's slug).
+   */
+  room: string;
+  /**
+   * What is playing: an OpenVibe media ref or an https URL. A ref names a Media object; a URL is the media file itself.
+   */
+  media: MediaRef | string;
+  /**
+   * The media position at at_ms, in milliseconds. At most 30 days.
+   */
+  position_ms: number;
+  /**
+   * The playback rate the room is playing at (1 is normal speed).
+   */
+  rate: number;
+  /**
+   * When true the timeline stands still at position_ms; when false it advances at rate.
+   */
+  paused: boolean;
+  /**
+   * The authority's epoch milliseconds when it accepted this state. A player subtracts this from the authority's clock now, so the value is never the player's own clock.
+   */
+  at_ms: number;
+  /**
+   * The subject that made the change (the lease holder's subject as the authority knows it).
+   */
+  set_by: string;
+  /**
+   * The timeline version: starts at 1 and increments on every accepted change. A client ignores a state with a seq it has already seen.
+   */
+  seq: number;
+}

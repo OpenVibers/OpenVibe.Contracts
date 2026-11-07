@@ -10021,6 +10021,24 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "common.control-lease",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/control-lease.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "common.sync-clock",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "common/sync-clock.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -1,10 +1,17 @@
 # Changelog
 
+## 0.332.0 — 2026-11-07
+
+- Add `common.control-lease@1`, the shared control lease (seven domains plan B3): the thing a lease controls, its holder (a `person`, an `ai` or `nobody`, with the holder's subject or null), when the holder got the controls, an optional absolute `expires_ms`, the subjects watching and a `seq` that increments on every holder change, expiry or take-back. A watcher-only change does not increment `seq`. The authority that owns the thing enforces the rules; Chat hosts a room's lease, names the thing `chat.room:<slug>` and accepts a control change only from the current holder, while take-back by the room's owner always wins; only the owner hands the remote to an `ai`, and a person holder who leaves keeps it for a minute.
+- Add `common.sync-clock@1`, the shared timeline (B4): the room, the media (a Media ref or an https URL; Chat accepts only a host an OpenVibe service manifest names, so Party plays OpenVibe media), the position at `at_ms`, the rate, whether it is paused, who set it and a `seq`. A player computes `position_ms + (authority now - at_ms) * rate` while it plays and `position_ms` while it is paused. Chat stamps `at_ms` and `seq` and stores the latest state in `room_sync_clocks` (the memory copy is the room's live state).
+- Valid and invalid fixtures cover a person, AI and free lease, a lease with a time limit, seq zero, a nobody with a subject, a duplicate watcher, a URL and a Media-ref clock, a clock at a rate and paused, an http URL, a bad room and a bad media object.
+
 ## 0.331.0 — 2026-11-09
 
 - Add `actor.trigger@1`: a trigger made in an Actor conversation — its `trg_…` id, owner, agent, task, kind (`schedule` or `event`), the plain-language and machine schedule (a five-field cron in the person's timezone) or Watch event pattern and filter, the next run, the last run's result (`ok`, `failed`, `needs_you`), state, why it is paused, the consecutive failure count, the Watch subscription's own state and the ten-minute undo window. Owner-only: another person's trigger is the same 404 as one that does not exist.
 - `actor.task-event@2` gains an optional `trigger` and the `trigger` step: the card as it is created, edited, paused, resumed, undone or deleted in the conversation travels with the event, so a reader renders the live card without a second fetch. Additive: an event without one stays valid, and the task record is still the source of truth.
 - Additive only: a new contract and an optional field plus one new step value; nothing that exists today changes shape.
+
 ## 0.330.0 — 2026-11-07
 
 - Add the `mail` service manifest: `openvibe.email` as the site **Email** (icon `mail`, the shared glyph font's E054), tagline "An address for every sign-up", the receive-only wording, legal profile `service`, and position 7, directly after Chat. It declares exposure `live`/`service`, port 5250, database `ov_mail`, the Stalwart mail server, `/api/health` and `/api/ready`, its shutdown and due-based recovery, an expand-only rollback, and the purge lease.
