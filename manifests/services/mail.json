@@ -18,9 +18,14 @@
   },
   "capabilities": [
     "mail.addresses.write",
-    "mail.messages.read"
+    "mail.messages.read",
+    "mail.agent.read",
+    "mail.agent.reply",
+    "mail.agent.answering"
   ],
-  "eventsProduced": [],
+  "eventsProduced": [
+    "mail.agent_inbox.received"
+  ],
   "eventsConsumed": [],
   "namespacesOwned": [],
   "lifecycle": {

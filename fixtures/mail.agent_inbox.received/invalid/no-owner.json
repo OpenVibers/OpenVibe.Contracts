@@ -1,0 +1,10 @@
+{
+  "inbox_id": "agi_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "inbox": "helper.alice@openvibe.email",
+  "agent_id": "helper",
+  "message_id": "m-4711",
+  "from": "dana@example.net",
+  "subject": "Could you check Tuesday?",
+  "excerpt": "Hi — are we still on for Tuesday at 10?",
+  "received_at": "2026-11-07T12:00:00Z"
+}

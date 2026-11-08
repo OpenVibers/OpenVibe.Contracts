@@ -1,0 +1,24 @@
+{
+  "id": "mail.agent.read",
+  "version": "1.0",
+  "owner": "mail",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Read one message sent to an agent's own address, in full plain text, as that agent acting for the person whose mailbox received it. GET /internal/mail/agents/:agent_id/messages/:message_id answers mail.agent-inbox-message@1: the sender, the addresses the mail server stamped at delivery, the subject, the text cut to 4000 characters, and the two threading headers a reply needs. Never the HTML and never an attachment. The token must name the person (on_behalf_of), the agent must be one of that person's inboxes, and the message must have been delivered to that address; anything else is the same 404 as a message that does not exist. Loopback only; granted to OpenVibe.Actor alone, which reads a letter and answers it under the person's approval policy.",
+  "permissions": [
+    "mail:messages:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "internal-read",
+  "events": [
+    "mail.agent_inbox.received"
+  ],
+  "implementedBy": [
+    "GET /internal/mail/agents/:agent_id/messages/:message_id"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "mail.agent-inbox-message@1"
+}

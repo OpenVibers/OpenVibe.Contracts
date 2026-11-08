@@ -1,0 +1,7 @@
+{
+  "message_id": "m-4711",
+  "to": "dana@example.net",
+  "body": "Tuesday at 10 is still good. See you then.\n\n— Helper, answering for Alice",
+  "in_reply_to": "dana-1@example.net",
+  "references": ["dana-1@example.net"]
+}

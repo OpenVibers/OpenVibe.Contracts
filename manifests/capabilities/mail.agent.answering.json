@@ -1,0 +1,23 @@
+{
+  "id": "mail.agent.answering",
+  "version": "1.0",
+  "owner": "mail",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Read and set whether an agent answers the mail sent to its own address: GET /api/v1/agent-inboxes/:id/answering and PUT /api/v1/agent-inboxes/:id/answering, both mail.inbox-answering@1. It is OFF by default and per agent; turning it on is what makes Mail publish mail.agent_inbox.received for that address at all. The caller must act for the person (on_behalf_of), and another person's inbox is the same 404 as one that does not exist. Mail still publishes nothing for a sender on the person's block list or for a message the mail server marked as spam.",
+  "permissions": [
+    "mail:addresses:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "mail-addresses-write",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/agent-inboxes/:id/answering",
+    "PUT /api/v1/agent-inboxes/:id/answering"
+  ],
+  "inputSchema": "mail.inbox-answering@1",
+  "outputSchema": "mail.inbox-answering@1"
+}

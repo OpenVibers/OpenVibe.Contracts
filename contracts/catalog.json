@@ -10124,6 +10124,51 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "mail.agent_inbox.received",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "events/payloads/mail.agent_inbox.received.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mail.agent-inbox-message",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/agent-inbox-message.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mail.agent-reply-request",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/agent-reply-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mail.agent-reply-result",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/agent-reply-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "mail.inbox-answering",
+      "version": "1.0.0",
+      "owner": "mail",
+      "schema": "mail/inbox-answering.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
