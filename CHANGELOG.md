@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.342.0 — 2026-11-08
+
+- Add `actor.skill@2` and `actor.skill-listing@2` (ADR-060, plan HO8): a skill may now bring code that runs in a
+  sandbox instead of only a prompt. `runs` is `prompt` or `sandbox`; a sandbox skill carries 1 to 5 JavaScript
+  `tools` (name, description, `entry` naming one of its resources, a JSON Schema subset for `args`, `net`
+  `deny`/`openvibe-only`/`public` default `deny`, and limits under 30 s / 256 MiB), and the code itself is an
+  ordinary text resource (`.js`, at most 64 KiB) in the same integrity hash. `requires.kinds` gains `skill.run`.
+  The v2 listing pins each code resource's Media id and sha256 and lets a scan finding name the tool it is about.
+  Code never runs on an OpenVibe server, never outside a sandbox and never with a secret: it runs as a Run
+  `function` job on a Node that declared the skill runner. `actor.skill@1` and `actor.skill-listing@1` are
+  unchanged and remain what a prompt-only skill publishes.
+
 ## 0.341.0 — 2026-11-08
 
 - The actor capabilities name the canvas routes (plan HO9): `GET /api/v1/me/canvases` and `GET /api/v1/me/canvases/:id` under `actor.task.read`, and `POST /api/v1/me/canvases/:id/events` under `actor.task.create`. The documents are `actor.canvas@1` (0.340.0); a button's label starts a normal turn as the person, and a checklist tick flips the item and is told to the next turn. No schema changed.

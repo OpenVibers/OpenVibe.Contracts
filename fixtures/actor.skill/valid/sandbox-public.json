@@ -1,0 +1,58 @@
+{
+  "skill": "actor.skill@2",
+  "slug": "fetch-a-page-title",
+  "name": "Fetch a page title",
+  "description": "Use when someone gives a web address and asks what the page is called: reads the title over the internet.",
+  "version": "2.1.0",
+  "instructions": "Call fetch_title with the https URL. It runs in a sandbox with the internet, and only for this call.",
+  "resources": [
+    {
+      "path": "fetch_title.js",
+      "media_type": "text/javascript",
+      "text": "'use strict';\nlet raw = '';\nprocess.stdin.setEncoding('utf8');\nprocess.stdin.on('data', (chunk) => { raw += chunk; });\nprocess.stdin.on('end', async () => {\n  const input = JSON.parse(raw);\n  const response = await fetch(input.url, { signal: AbortSignal.timeout(8000) });\n  const html = await response.text();\n  const title = (html.match(/<title[^>]*>([^<]*)<\\/title>/i) || [])[1] || '';\n  process.stdout.write(JSON.stringify({ status: response.status, title: title.trim() }));\n});\n"
+    }
+  ],
+  "tools": [
+    {
+      "name": "fetch_title",
+      "description": "Read a page over https and answer its status and title.",
+      "language": "javascript",
+      "entry": "fetch_title.js",
+      "args": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "^https://",
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "net": "public",
+      "limits": {
+        "wall_ms": 15000,
+        "mem_bytes": 134217728
+      }
+    }
+  ],
+  "requires": {
+    "kinds": [
+      "skill.run",
+      "send"
+    ]
+  },
+  "runs": "sandbox",
+  "license": "MIT",
+  "author": {
+    "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "name": "Ann"
+  },
+  "integrity": {
+    "alg": "sha256",
+    "hash": "53d984eb0e639c1b07c99b9a5aec6d64ea9e594cbe404a0a9256debf7cb8b49e"
+  }
+}

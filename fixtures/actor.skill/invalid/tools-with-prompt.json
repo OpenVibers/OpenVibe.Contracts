@@ -1,0 +1,36 @@
+{
+  "skill": "actor.skill@2",
+  "slug": "prompt-with-tools",
+  "name": "Prompt with tools",
+  "description": "Use when testing: a prompt skill may not carry tools.",
+  "version": "1.0.0",
+  "instructions": "None.",
+  "resources": [
+    {
+      "path": "tool.js",
+      "media_type": "text/javascript",
+      "text": "process.stdout.write(\"{}\");\n"
+    }
+  ],
+  "tools": [
+    {
+      "name": "tool",
+      "description": "Does nothing.",
+      "language": "javascript",
+      "entry": "tool.js",
+      "args": {
+        "type": "object"
+      }
+    }
+  ],
+  "requires": {
+    "kinds": [
+      "skill.run"
+    ]
+  },
+  "runs": "prompt",
+  "integrity": {
+    "alg": "sha256",
+    "hash": "9f8e9341f37a7033b06e4938d5b7093c14081af565bfcb8c4d75d5967995782a"
+  }
+}

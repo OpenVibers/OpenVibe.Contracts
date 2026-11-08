@@ -1,0 +1,37 @@
+{
+  "skill": "actor.skill@2",
+  "slug": "missing-entry",
+  "name": "Missing entry",
+  "description": "Use when testing: the entry names no resource.",
+  "version": "1.0.0",
+  "instructions": "None.",
+  "resources": [
+    {
+      "path": "main.js",
+      "media_type": "text/javascript",
+      "text": "process.stdout.write(\"{}\");\n"
+    }
+  ],
+  "tools": [
+    {
+      "name": "run",
+      "description": "Does nothing.",
+      "language": "javascript",
+      "entry": "missing.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    }
+  ],
+  "requires": {
+    "kinds": [
+      "skill.run"
+    ]
+  },
+  "runs": "sandbox",
+  "integrity": {
+    "alg": "sha256",
+    "hash": "381dee9a1be1b96565c3d91514cbbe7b6b038fa12417b901fa35346118503199"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "skill": "actor.skill@2",
+  "slug": "slow-tool",
+  "name": "Slow tool",
+  "description": "Use when testing: a tool may not ask for 60 seconds.",
+  "version": "1.0.0",
+  "instructions": "None.",
+  "resources": [
+    {
+      "path": "main.js",
+      "media_type": "text/javascript",
+      "text": "process.stdout.write(\"{}\");\n"
+    }
+  ],
+  "tools": [
+    {
+      "name": "run",
+      "description": "Does nothing.",
+      "language": "javascript",
+      "entry": "main.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny",
+      "limits": {
+        "wall_ms": 60000
+      }
+    }
+  ],
+  "requires": {
+    "kinds": [
+      "skill.run"
+    ]
+  },
+  "runs": "sandbox",
+  "integrity": {
+    "alg": "sha256",
+    "hash": "53d79a8a2b14765ca0c1f76d5290ad9faacdaf7019de65d508a599b93fe43690"
+  }
+}

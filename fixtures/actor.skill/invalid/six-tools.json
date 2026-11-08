@@ -1,0 +1,87 @@
+{
+  "skill": "actor.skill@2",
+  "slug": "too-many-tools",
+  "name": "Too many tools",
+  "description": "Use when testing: at most five tools.",
+  "version": "1.0.0",
+  "instructions": "None.",
+  "resources": [
+    {
+      "path": "main.js",
+      "media_type": "text/javascript",
+      "text": "process.stdout.write(\"{}\");\n"
+    }
+  ],
+  "tools": [
+    {
+      "name": "tool_0",
+      "description": "Tool 0.",
+      "language": "javascript",
+      "entry": "main.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    },
+    {
+      "name": "tool_1",
+      "description": "Tool 1.",
+      "language": "javascript",
+      "entry": "main.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    },
+    {
+      "name": "tool_2",
+      "description": "Tool 2.",
+      "language": "javascript",
+      "entry": "main.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    },
+    {
+      "name": "tool_3",
+      "description": "Tool 3.",
+      "language": "javascript",
+      "entry": "main.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    },
+    {
+      "name": "tool_4",
+      "description": "Tool 4.",
+      "language": "javascript",
+      "entry": "main.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    },
+    {
+      "name": "tool_5",
+      "description": "Tool 5.",
+      "language": "javascript",
+      "entry": "main.js",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    }
+  ],
+  "requires": {
+    "kinds": [
+      "skill.run"
+    ]
+  },
+  "runs": "sandbox",
+  "integrity": {
+    "alg": "sha256",
+    "hash": "a94a6187ee9c21ea851bfe4d4d9585a0742c356d746f13e143f1f56a893ed2c7"
+  }
+}

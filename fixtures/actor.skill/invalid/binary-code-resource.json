@@ -1,0 +1,37 @@
+{
+  "skill": "actor.skill@2",
+  "slug": "binary-skill",
+  "name": "Binary skill",
+  "description": "Use when testing: a resource is text, never a binary.",
+  "version": "1.0.0",
+  "instructions": "None.",
+  "resources": [
+    {
+      "path": "tool.wasm",
+      "media_type": "application/wasm",
+      "text": "AGFzbQEAAAA="
+    }
+  ],
+  "tools": [
+    {
+      "name": "run",
+      "description": "Does nothing.",
+      "language": "javascript",
+      "entry": "tool.wasm",
+      "args": {
+        "type": "object"
+      },
+      "net": "deny"
+    }
+  ],
+  "requires": {
+    "kinds": [
+      "skill.run"
+    ]
+  },
+  "runs": "sandbox",
+  "integrity": {
+    "alg": "sha256",
+    "hash": "cc81e02bc538c64fe95f187f6de2304b5316ec4e7a695a0d931d821bd5e9b7a5"
+  }
+}
