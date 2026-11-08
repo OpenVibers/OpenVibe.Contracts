@@ -1,0 +1,17 @@
+{
+  "task_id": "tsk_01M6VNTQD7VN1GGME3XGPJ048Z",
+  "seq": 12,
+  "kind": "output",
+  "at": "2026-11-09T10:30:20.000Z",
+  "step": "trigger-run",
+  "trigger_id": "trg_01M6VNTQD7NB3QH8K4R2S9T6VW",
+  "run": {
+    "task_id": "tsk_01M6VNTQD7VN1GGME3XGPJ048Z",
+    "state": "ok",
+    "at": "2026-11-09T10:30:20.000Z"
+  },
+  "text": "The Framework 13 is €134 on the maker's store, so it has not dropped under €120 yet.",
+  "sources": [
+    "https://frame.work/de/en/products/laptop13"
+  ]
+}

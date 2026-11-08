@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/actor/trigger.v1.json",
   "title": "ActorTrigger",
-  "description": "actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule or when a Watch event arrives. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE) or event (WHEN has the Watch event PATTERN and FILTER). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active or paused, PAUSED_REASON says why (person or failed after five failed runs in a row), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist.",
+  "description": "actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule, when a Watch event arrives, or (kind goal) keeps working toward a goal. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE), event (WHEN has the Watch event PATTERN and FILTER) or goal (checked on WHEN's CRON, with GOAL saying what it works toward). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active, paused or done (a goal ended itself when its done-test passed), PAUSED_REASON says why (person, failed after five failed runs in a row, or for a goal: done, budget or deadline), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. GOAL is present only for a goal: the goal in words, the done-test the agent evaluates each run, how many runs it has used against its limit, what it has spent against its money budget, its deadline, and the last verdict. ANSWER_IN_CHAT (default true) says whether each run's answer is posted into the conversation that made the trigger, under its card; NOTIFY (default false) says whether the person is also told through OpenVibe's notifications. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -45,7 +45,8 @@
       "type": "string",
       "enum": [
         "schedule",
-        "event"
+        "event",
+        "goal"
       ]
     },
     "when": {
@@ -106,6 +107,113 @@
         }
       }
     },
+    "goal": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "A goal trigger's progress: what it keeps working toward and how far it has got. Null for a schedule or event trigger.",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "done_test",
+        "runs_used"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "The goal in the person's words, the sentence that made it: \"keep checking the price of the Framework 13 every 30 minutes until it drops under €120\"."
+        },
+        "done_test": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "The check the agent evaluates each run and answers yes or no with a short reason: \"the price is under €120\"."
+        },
+        "runs_used": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000,
+          "description": "How many runs of the goal have finished."
+        },
+        "runs_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "The most runs allowed; the goal ends when it reaches it. Null for no run limit."
+        },
+        "spent_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "What its runs have spent so far."
+        },
+        "budget_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "The most its runs may spend; the goal ends when it reaches it. Null for only the person's own allowance."
+        },
+        "deadline_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The end of the goal's time: after it the goal ends whether or not the done-test passed. Null for no deadline."
+        },
+        "not_yet": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300,
+          "description": "The last run's reason the done-test is not met yet, in its words: \"€134\"."
+        },
+        "verdict": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "done",
+            "reason",
+            "at"
+          ],
+          "description": "The last run's answer to the done-test.",
+          "properties": {
+            "done": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "answer_in_chat": {
+      "type": "boolean",
+      "description": "Whether each run's answer is posted into the conversation that made the trigger, under its card. Default true.",
+      "default": true
+    },
+    "notify": {
+      "type": "boolean",
+      "description": "Whether the person is also told through OpenVibe's notifications when a run finishes. Default false: the answer in the chat is the telling, unless they asked for more.",
+      "default": false
+    },
     "next_run_at": {
       "type": [
         "string",
@@ -155,7 +263,8 @@
       "type": "string",
       "enum": [
         "active",
-        "paused"
+        "paused",
+        "done"
       ]
     },
     "paused_reason": {
@@ -166,6 +275,9 @@
       "enum": [
         "person",
         "failed",
+        "done",
+        "budget",
+        "deadline",
         null
       ]
     },

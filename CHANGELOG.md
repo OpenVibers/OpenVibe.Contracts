@@ -1,4 +1,21 @@
 # Changelog
+
+## 0.338.0 — 2026-11-08
+
+- `actor.trigger@1` gains the goal kind (plan HO3): a trigger that keeps working toward a goal on a schedule. Additive:
+  - `kind` may now be `goal`, and `state` may be `done` (a goal ended itself when its done-test passed);
+  - `paused_reason` adds `done`, `budget` and `deadline` beside `person` and `failed`;
+  - the optional `goal` object says the goal in the person's words, the `done_test` the agent answers yes or no each run,
+    `runs_used` against `runs_max`, `spent_usd` against `budget_usd`, `deadline_at`, the last run's `not_yet` reason and
+    its `verdict`;
+  - the optional `answer_in_chat` (default true) says whether each run's answer is posted into the conversation that made
+    the trigger, under its card, and `notify` (default false) whether the person is also told through OpenVibe's
+    notifications.
+- Nothing that exists today changes shape: a schedule or event trigger without the new fields stays valid.
+- `actor.task-event@2` gains the `trigger-run` step (2.2.0): a routine's run posted into the conversation that made the
+  trigger, under its card. Additive: `trigger_id` names the routine, `run` says which task ran and how it ended
+  (`ok`, `failed`, `needs_you`), `text` is its answer or the one line saying why it did not finish, and `sources` are
+  the addresses it read (at most 8). An event without them, and the `trigger` card step, are unchanged.
 ## 0.337.0 — 2026-11-07
 
 - Add `actor.skill@1` and `actor.skill-listing@1` (ADR-058, plan HO2: the skills registry's skeleton). A skill is a
