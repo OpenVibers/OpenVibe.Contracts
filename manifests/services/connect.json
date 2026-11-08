@@ -8,9 +8,10 @@
   "status": "alpha",
   "repository": "OpenVibers/OpenVibe.Connect",
   "domains": [
+    "connect.openvibe.link",
     "connect.openvibe.website"
   ],
-  "publicOrigin": "https://connect.openvibe.website",
+  "publicOrigin": "https://connect.openvibe.link",
   "exposure": {
     "state": "live",
     "publicSite": "service"
@@ -68,7 +69,7 @@
       "none": "one process holds every tunnel; a second process would need the share-to-tunnel routing CON-3 adds"
     }
   },
-  "notes": "Port 5240, unit openvibe-connect.service, PostgreSQL database ov_connect. Website Connect v0 (plan 2026-10-28 §5.9b; ADR-057 as reviewed 2026-11-02): a share is one port on a person's computer at https://<label>--<user>.openvibe.website behind OpenVibe sign-in, carried by a one-file client (Node 22) over one WebSocket on 443 (ovconnect-ws/1). Space site names never contain \"--\", so share hosts and Space sites never collide; nginx sends *--*.openvibe.website here and every other *.openvibe.website to Space. Modes owner, named and signin (staff-first); no public shares until CON-9 and CON-21. The share API is a person's (session or Network user token): GET/POST /api/v1/shares, GET/PATCH/DELETE /api/v1/shares/:id, POST /api/v1/shares/:id/key, GET /api/v1/shares/:id/visits. The website.*/connect.*/events.hook* capabilities stay planned until the QUIC edge, the Link plugin and the hooks land (CON-3/4/5/15). OAuth client `connect`; answers account export and deletion (ADR-033) and subscribes to those Events topics.",
+  "notes": "Port 5240, unit openvibe-connect.service, PostgreSQL database ov_connect. Website Connect v0 (plan 2026-10-28 §5.9b; ADR-057 as reviewed 2026-11-02): a share is one port on a person's computer at https://<label>--<user>.openvibe.link behind OpenVibe sign-in (on OpenVibe Link since 2026-11-08; connect.openvibe.website and its old share hosts answer page loads with a 302 to the same path on openvibe.link), carried by a one-file client (Node 22) over one WebSocket on 443 (ovconnect-ws/1). Space site names never contain \"--\", so share hosts and Space sites never collide; nginx sends *--*.openvibe.link (and the legacy *--*.openvibe.website) here and every other *.openvibe.website to Space. Modes owner, named and signin (staff-first); no public shares until CON-9 and CON-21. The share API is a person's (session or Network user token): GET/POST /api/v1/shares, GET/PATCH/DELETE /api/v1/shares/:id, POST /api/v1/shares/:id/key, GET /api/v1/shares/:id/visits. The website.*/connect.*/events.hook* capabilities stay planned until the QUIC edge, the Link plugin and the hooks land (CON-3/4/5/15). OAuth client `connect`; answers account export and deletion (ADR-033) and subscribes to those Events topics.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5240",
@@ -76,7 +77,7 @@
     "name": "Connect",
     "icon": "connect",
     "tagline": "Your computer, on the web, privately",
-    "what": "Share one port on your computer at its own HTTPS address on openvibe.website. Only the people you pick can open it, signed in with OpenVibe. One file and Node: no router settings, no open ports.",
+    "what": "Share one port on your computer at its own HTTPS address on openvibe.link. Only the people you pick can open it, signed in with OpenVibe. One file and Node: no router settings, no open ports.",
     "legalProfile": "ugc",
     "position": 52,
     "neighbourhood": "make"

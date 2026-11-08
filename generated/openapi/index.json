@@ -67,7 +67,7 @@
     {
       "service": "connect",
       "name": "OpenVibe Connect",
-      "origin": "https://connect.openvibe.website",
+      "origin": "https://connect.openvibe.link",
       "operations": 6,
       "capabilities": 1
     },
