@@ -1,0 +1,64 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.346.0 <1.0.0"
+  },
+  "id": "studio",
+  "name": "OpenVibe.Studio",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Studio",
+  "domains": [
+    "openvibe.studio"
+  ],
+  "publicOrigin": "https://openvibe.studio",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "openvibe.studio serves Photo (PhotoCraft) and Light (LightCraft), built by our CI from pinned tags, once Studio's vhost replaces the parked redirect."
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed and in-flight requests drained, then the process exits"
+      ]
+    },
+    "startupRecovery": {
+      "none": "Studio keeps no state of its own: the apps run in the browser and files live on OpenVibe Download and Pics."
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "Studio has no database; the app bundles are versioned by their pinned tags."
+      }
+    },
+    "contracts": {
+      "range": ">=0.346.0 <1.0.0"
+    },
+    "leases": {
+      "none": "Studio holds no leases."
+    }
+  },
+  "site": {
+    "name": "Studio",
+    "icon": "image",
+    "tagline": "Edit photos right in your browser",
+    "what": "Photo for layers and retouching, Light for your library and RAW files: open-source apps, free, with your files on OpenVibe.",
+    "legalProfile": "hosting",
+    "position": 55,
+    "neighbourhood": "make"
+  }
+}
