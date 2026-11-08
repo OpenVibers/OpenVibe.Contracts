@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/emails.v1.json",
+  "title": "Verified email addresses for the authenticated person",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["emails"],
+  "properties": {
+    "emails": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/email" },
+      "maxItems": 11
+    }
+  },
+  "$defs": {
+    "email": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "email", "verified", "primary", "created_at"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "format": "email" },
+        "verified": { "type": "boolean" },
+        "primary": { "type": "boolean" },
+        "created_at": { "type": "string" },
+        "verified_at": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
