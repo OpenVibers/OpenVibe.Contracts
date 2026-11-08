@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.341.0 — 2026-11-08
+
+- The actor capabilities name the canvas routes (plan HO9): `GET /api/v1/me/canvases` and `GET /api/v1/me/canvases/:id` under `actor.task.read`, and `POST /api/v1/me/canvases/:id/events` under `actor.task.create`. The documents are `actor.canvas@1` (0.340.0); a button's label starts a normal turn as the person, and a checklist tick flips the item and is told to the next turn. No schema changed.
+
 ## 0.340.0 — 2026-11-08
 
 - Add `actor.canvas@1` (ADR-059, plan HO9): an agent's live panel beside the conversation, as data. A canvas is a

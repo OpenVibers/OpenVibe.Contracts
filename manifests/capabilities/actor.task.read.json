@@ -4,7 +4,7 @@
   "owner": "actor",
   "status": "active",
   "visibility": "public",
-  "description": "Read one of your tasks (platform.task@1: state, result, cost, explanation, the Computer it opened) with GET /api/v1/tasks/:id, and watch it live with GET /api/v1/tasks/:id/events: text/event-stream of actor.task-event@2 (state changes, the agent's steps, the Computer, the files and charts a tool made, the end), resumable with Last-Event-ID. GET /api/v1/tasks/:id/still answers the Computer's newest frame as a small JPEG (at most once a second, the curtain picture while Curtain now is up), fetched from the session's own service as the person. A file or chart the task made is opened with GET /api/v1/tasks/:id/artifacts/:mediaId, which answers a redirect to a fresh signed OpenVibe.Media URL: the object is private to the task's requester. Only the task's requester (or its project's tokens) can read it.",
+  "description": "Read one of your tasks (platform.task@1: state, result, cost, explanation, the Computer it opened) with GET /api/v1/tasks/:id, and watch it live with GET /api/v1/tasks/:id/events: text/event-stream of actor.task-event@2 (state changes, the agent's steps, the Computer, the files and charts a tool made, the end), resumable with Last-Event-ID. GET /api/v1/tasks/:id/still answers the Computer's newest frame as a small JPEG (at most once a second, the curtain picture while Curtain now is up), fetched from the session's own service as the person. A file or chart the task made is opened with GET /api/v1/tasks/:id/artifacts/:mediaId, which answers a redirect to a fresh signed OpenVibe.Media URL: the object is private to the task's requester. Only the task's requester (or its project's tokens) can read it. A conversation's canvas is read at GET /api/v1/me/canvases?thread=… and GET /api/v1/me/canvases/:id: the actor.canvas@1 document an agent drew beside it (HO9), only for its owner.",
   "inputSchema": "common.no-body@1",
   "outputSchema": "platform.task@1",
   "permissions": [
@@ -20,6 +20,8 @@
     "GET /api/v1/tasks/:id",
     "GET /api/v1/tasks/:id/events",
     "GET /api/v1/tasks/:id/still",
-    "GET /api/v1/tasks/:id/artifacts/:mediaId"
+    "GET /api/v1/tasks/:id/artifacts/:mediaId",
+    "GET /api/v1/me/canvases",
+    "GET /api/v1/me/canvases/:id"
   ]
 }
