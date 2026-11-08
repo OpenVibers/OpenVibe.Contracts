@@ -271,7 +271,7 @@
       "properties": {
         "kinds": {
           "type": "array",
-          "maxItems": 16,
+          "maxItems": 19,
           "uniqueItems": true,
           "items": {
             "type": "string",
@@ -291,6 +291,9 @@
               "install",
               "routine",
               "money",
+              "device.camera",
+              "device.location",
+              "device.notify",
               "skill.run"
             ]
           },

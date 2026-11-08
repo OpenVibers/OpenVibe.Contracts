@@ -1,0 +1,9 @@
+{
+  "decision": "answer",
+  "location": {
+    "lat": 52.31,
+    "lng": 4.76,
+    "accuracy_m": 1200,
+    "precise": false
+  }
+}

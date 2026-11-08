@@ -1,0 +1,12 @@
+{
+  "decision": "answer",
+  "photo": {
+    "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "location": {
+    "lat": 52.31,
+    "lng": 4.76,
+    "accuracy_m": 1200,
+    "precise": false
+  }
+}
