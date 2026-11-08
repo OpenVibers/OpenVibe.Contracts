@@ -49,6 +49,7 @@
     "neighbourhood": "people"
   },
   "capabilities": [
+    "identity.emails.read",
     "identity.subject.resolve",
     "identity.trust.read",
     "mods.grant.manage",
