@@ -1,0 +1,16 @@
+{
+  "canvas": "actor.canvas@1",
+  "id": "cnv_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "title": "Lisbon, 14–17 November",
+  "version": 3,
+  "agent_id": "agt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "thread": "tsk_42",
+  "updated_at": "2026-11-08T01:00:00.000Z",
+  "blocks": [
+    {
+      "type": "link",
+      "href": "javascript:alert(1)",
+      "text": "x"
+    }
+  ]
+}
