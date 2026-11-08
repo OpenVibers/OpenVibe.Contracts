@@ -1,0 +1,11 @@
+{
+  "inbox_id": "agi_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "inbox": "helper.alice@openvibe.email",
+  "agent_id": "helper",
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "message_id": "m-4712",
+  "from": "robot@example.net",
+  "subject": null,
+  "excerpt": "",
+  "received_at": null
+}

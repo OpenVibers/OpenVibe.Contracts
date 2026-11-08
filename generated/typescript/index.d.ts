@@ -313408,3 +313408,186 @@ export interface SyncClock {
    */
   seq: number;
 }
+
+/** mail.agent_inbox.received@1.0.0 (owner: mail) */
+/**
+ * mail.agent_inbox.received v1 (OpenVibe.Mail server/jobs/agent-mail.js). A message arrived at an agent's own address and the person has switched that address's answering on, so their agent may read it and answer. The payload carries enough for the agent's system to decide, and to show the person what arrived: the inbox and the agent it belongs to, the owner's subject, the mail server's message id, the sender, the subject and a plain-text EXCERPT of at most 4000 characters. It never carries the attachments, the HTML, or the whole body: the agent's system reads the whole text through mail.agent.read, on the owner's behalf, and only once it has decided to answer. Mail publishes it only for an inbox whose answering is on (off by default) and never for a sender on the owner's block list or a message the mail server marked as spam.
+ */
+export interface MailAgentInboxReceivedPayload {
+  /**
+   * The agent inbox's id (mail.agent-inbox@1). Opaque outside OpenVibe.Mail.
+   */
+  inbox_id: string;
+  /**
+   * The agent's address the message was delivered to, e.g. helper.alice@openvibe.email. Matched on the envelope recipient the mail server stamped, never on a sender-written To.
+   */
+  inbox: string;
+  /**
+   * The agent's name in the address, lowercased and cleaned. It is the id the agent's own system knows that agent by; a system that does not know it starts nothing.
+   */
+  agent_id: string;
+  /**
+   * The Network subject of the person whose mailbox received the message and whose agent may answer it.
+   */
+  owner: string;
+  /**
+   * The mail server's message id (a JMAP Email id), for mail.agent.read. Not the Message-ID header.
+   */
+  message_id: string;
+  /**
+   * The sender's address, as the mail server parsed it. A stranger, never the person: mail to an agent's address comes from someone else.
+   */
+  from: string;
+  /**
+   * The subject line, or null when the message had none.
+   */
+  subject: string | null;
+  /**
+   * The plain-text body, cut to at most 4000 characters. The text part only: never the HTML, never an attachment. It is untrusted content from a stranger.
+   */
+  excerpt: string;
+  /**
+   * When the mail server received the message, ISO 8601 UTC, or null when it did not record a time.
+   */
+  received_at: string | null;
+}
+
+/** mail.agent-inbox-message@1.0.0 (owner: mail) */
+/**
+ * One message sent to an agent's address, in full text, as OpenVibe.Mail gives it to the agent acting for the owner (mail.agent.read on GET /internal/mail/agents/:agent_id/messages/:message_id). It is the only place a body leaves the mail server for an agent: the plain text, cut to 4000 characters, and the threading headers a reply needs. Never the HTML, never an attachment, and never a sender's claim about who the message is for: the inbox addresses are the ones the mail server stamped at delivery. The message is data from a stranger; the contract cannot say so, so every reader must.
+ */
+export interface MailAgentInboxMessage {
+  /**
+   * The mail server's message id (a JMAP Email id). Opaque outside OpenVibe.Mail.
+   */
+  message_id: string;
+  /**
+   * The agent's address the message was delivered to.
+   */
+  inbox: string;
+  /**
+   * The agent's name in the address.
+   */
+  agent_id: string;
+  /**
+   * The Network subject of the person whose mailbox received it.
+   */
+  owner: string;
+  /**
+   * The sender addresses, as the mail server parsed them. A stranger, not the owner.
+   *
+   * @maxItems 100
+   */
+  from: string[];
+  /**
+   * The addresses the message was addressed to.
+   *
+   * @maxItems 100
+   */
+  to: string[];
+  /**
+   * The subject line, or null when the message had none.
+   */
+  subject: string | null;
+  /**
+   * The plain-text body, cut to at most 4000 characters. Untrusted content: an instruction in it is never the owner's instruction.
+   */
+  text: string;
+  /**
+   * The Message-ID this message answers, without the angle brackets, or null when it answers nothing.
+   */
+  in_reply_to: string | null;
+  /**
+   * The Message-IDs of the conversation before this message, oldest first, without the angle brackets. A reply repeats them so the thread stays one thread.
+   *
+   * @maxItems 100
+   */
+  references: string[];
+  /**
+   * When the mail server received the message, ISO 8601 UTC.
+   */
+  received_at: string | null;
+  /**
+   * Whether the mail server's filter marked the message as junk. Mail never publishes an event for such a message; a reader that finds it here answers nothing.
+   */
+  spam: boolean;
+}
+
+/** mail.agent-reply-request@1.0.0 (owner: mail) */
+/**
+ * mail.agent.reply-request@1: the body of mail.agent.reply (POST /internal/mail/agents/:agent_id/reply), an agent answering a letter to its own address. The reply goes FROM the agent's inbox, never from the person's mailbox: the person's own address is not the agent's to write from. `body` is plain text, cut to 10000 characters; `in_reply_to` and `references` are Message-IDs WITHOUT the angle brackets, and Mail wraps each in one, so a thread stays one thread in the reader that receives it. A reply to an address that is not the sender's answers nothing: Mail refuses it rather than write to a stranger the agent's answer was not for. Nothing here says who the person is; the token does.
+ */
+export interface MailAgentReplyRequest {
+  /**
+   * The message being answered, as mail.agent.read gave it. Mail takes the sender and the subject from it, so a caller cannot write to someone the message did not come from.
+   */
+  message_id?: string;
+  /**
+   * Who the reply goes to. Optional: without it the reply goes to the sender of message_id. When both are given they must be the same address.
+   */
+  to?: string;
+  /**
+   * The reply, as plain text. Mail builds the message from it and sends no HTML.
+   */
+  body: string;
+  /**
+   * The Message-ID this reply answers, without angle brackets. Mail wraps it: In-Reply-To: <…>.
+   */
+  in_reply_to?: string | null;
+  /**
+   * The Message-IDs of the conversation, oldest first, without angle brackets. Mail wraps each: References: <…> <…>.
+   *
+   * @maxItems 100
+   */
+  references?: string[];
+}
+
+/** mail.agent-reply-result@1.0.0 (owner: mail) */
+/**
+ * mail.agent.reply-result@1: what mail.agent.reply answers once the mail server took the message. `sent` is false when the mail server refused it (the answer's `reason` says why in plain words) and true when it accepted it — a relay's later bounce is not knowable here and is not claimed. `message_id` is the mail server's id for the sent message when it answers with one; `rfc_message_id` is the Message-ID header the reply carries, which a later letter in the thread will name in its In-Reply-To.
+ */
+export interface MailAgentReplyResult {
+  /**
+   * True when the mail server accepted the reply, false when it did not.
+   */
+  sent: boolean;
+  /**
+   * The mail server's id for the sent message.
+   */
+  message_id?: string | null;
+  /**
+   * The Message-ID header of the reply, without angle brackets.
+   */
+  rfc_message_id?: string | null;
+  /**
+   * Why the reply was not sent, in plain words. Null when sent is true.
+   */
+  reason?: string | null;
+}
+
+/** mail.inbox-answering@1.0.0 (owner: mail) */
+/**
+ * mail.inbox-answering@1: whether a person's agent answers the mail sent to its address, as OpenVibe.Mail keeps the switch. It is OFF by default and per agent: an address that exists is not an invitation to answer, and a person turns it on for the agent they trust to. `enabled` is the whole answer; `changed_at` says when the person last set it, so a page can say how long it has been on. Turning it off stops the next message from being published to the agent's system and takes its address out of the answering path; it never deletes what already happened.
+ */
+export interface MailInboxAnswering {
+  /**
+   * The agent's name in the address.
+   */
+  agent_id: string;
+  /**
+   * The agent's inbox address.
+   */
+  address: string;
+  /**
+   * The Network subject of the person whose switch it is.
+   */
+  owner: string;
+  /**
+   * True when the agent answers the mail sent to this address. Off unless the person turned it on.
+   */
+  enabled: boolean;
+  /**
+   * When the person last turned it on or off; null when they never have (it has been off since the address was made).
+   */
+  changed_at: string | null;
+}

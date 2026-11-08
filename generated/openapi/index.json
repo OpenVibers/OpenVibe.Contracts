@@ -145,8 +145,8 @@
       "service": "mail",
       "name": "OpenVibe.Mail",
       "origin": "https://openvibe.email",
-      "operations": 12,
-      "capabilities": 2
+      "operations": 16,
+      "capabilities": 5
     },
     {
       "service": "media",

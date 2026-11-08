@@ -1,0 +1,6 @@
+{
+  "message_id": "m-4711",
+  "body": "An answer sent from the person's own mailbox, which is not the agent's to write from.",
+  "from": "alice@openvibe.email",
+  "html": "<p>An answer</p>"
+}

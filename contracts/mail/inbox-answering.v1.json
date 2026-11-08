@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/mail/inbox-answering.v1.json",
+  "title": "MailInboxAnswering",
+  "description": "mail.inbox-answering@1: whether a person's agent answers the mail sent to its address, as OpenVibe.Mail keeps the switch. It is OFF by default and per agent: an address that exists is not an invitation to answer, and a person turns it on for the agent they trust to. `enabled` is the whole answer; `changed_at` says when the person last set it, so a page can say how long it has been on. Turning it off stops the next message from being published to the agent's system and takes its address out of the answering path; it never deletes what already happened.",
+  "type": "object",
+  "required": ["agent_id", "address", "owner", "enabled", "changed_at"],
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?$",
+      "maxLength": 32,
+      "description": "The agent's name in the address."
+    },
+    "address": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254,
+      "description": "The agent's inbox address."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Network subject of the person whose switch it is."
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "True when the agent answers the mail sent to this address. Off unless the person turned it on."
+    },
+    "changed_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the person last turned it on or off; null when they never have (it has been off since the address was made)."
+    }
+  }
+}

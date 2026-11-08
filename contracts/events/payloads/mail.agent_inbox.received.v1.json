@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/mail.agent_inbox.received.v1.json",
+  "title": "MailAgentInboxReceivedPayload",
+  "description": "mail.agent_inbox.received v1 (OpenVibe.Mail server/jobs/agent-mail.js). A message arrived at an agent's own address and the person has switched that address's answering on, so their agent may read it and answer. The payload carries enough for the agent's system to decide, and to show the person what arrived: the inbox and the agent it belongs to, the owner's subject, the mail server's message id, the sender, the subject and a plain-text EXCERPT of at most 4000 characters. It never carries the attachments, the HTML, or the whole body: the agent's system reads the whole text through mail.agent.read, on the owner's behalf, and only once it has decided to answer. Mail publishes it only for an inbox whose answering is on (off by default) and never for a sender on the owner's block list or a message the mail server marked as spam.",
+  "type": "object",
+  "required": ["inbox_id", "inbox", "agent_id", "owner", "message_id", "from", "subject", "excerpt", "received_at"],
+  "additionalProperties": false,
+  "properties": {
+    "inbox_id": {
+      "type": "string",
+      "pattern": "^agi_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The agent inbox's id (mail.agent-inbox@1). Opaque outside OpenVibe.Mail."
+    },
+    "inbox": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254,
+      "description": "The agent's address the message was delivered to, e.g. helper.alice@openvibe.email. Matched on the envelope recipient the mail server stamped, never on a sender-written To."
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?$",
+      "maxLength": 32,
+      "description": "The agent's name in the address, lowercased and cleaned. It is the id the agent's own system knows that agent by; a system that does not know it starts nothing."
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The Network subject of the person whose mailbox received the message and whose agent may answer it."
+    },
+    "message_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "description": "The mail server's message id (a JMAP Email id), for mail.agent.read. Not the Message-ID header."
+    },
+    "from": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254,
+      "description": "The sender's address, as the mail server parsed it. A stranger, never the person: mail to an agent's address comes from someone else."
+    },
+    "subject": {
+      "type": ["string", "null"],
+      "maxLength": 2000,
+      "description": "The subject line, or null when the message had none."
+    },
+    "excerpt": {
+      "type": "string",
+      "maxLength": 4000,
+      "description": "The plain-text body, cut to at most 4000 characters. The text part only: never the HTML, never an attachment. It is untrusted content from a stranger."
+    },
+    "received_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the mail server received the message, ISO 8601 UTC, or null when it did not record a time."
+    }
+  }
+}
