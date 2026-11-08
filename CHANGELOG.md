@@ -1,11 +1,33 @@
 # Changelog
 
+## 0.338.0 — 2026-11-08
+
+- `actor.trigger@1` gains the goal kind (plan HO3): a trigger that keeps working toward a goal on a schedule. Additive:
+  - `kind` may now be `goal`, and `state` may be `done` (a goal ended itself when its done-test passed);
+  - `paused_reason` adds `done`, `budget` and `deadline` beside `person` and `failed`;
+  - the optional `goal` object says the goal in the person's words, the `done_test` the agent answers yes or no each run,
+    `runs_used` against `runs_max`, `spent_usd` against `budget_usd`, `deadline_at`, the last run's `not_yet` reason and
+    its `verdict`;
+  - the optional `answer_in_chat` (default true) says whether each run's answer is posted into the conversation that made
+    the trigger, under its card, and `notify` (default false) whether the person is also told through OpenVibe's
+    notifications.
+- Nothing that exists today changes shape: a schedule or event trigger without the new fields stays valid.
+- `actor.task-event@2` gains the `trigger-run` step (2.2.0): a routine's run posted into the conversation that made the
+  trigger, under its card. Additive: `trigger_id` names the routine, `run` says which task ran and how it ended
+  (`ok`, `failed`, `needs_you`), `text` is its answer or the one line saying why it did not finish, and `sources` are
+  the addresses it read (at most 8). An event without them, and the `trigger` card step, are unchanged.
 ## 0.337.0 — 2026-11-07
 
-- The `chat` manifest names `openvibe.party`, the Watch Together host OpenVibe.Chat serves beside `openvibe.chat`
-  (Party watch v1, plan R1). Chat's service manifest is what services check a party link against: a media party plays a
-  Media ref or an https URL on a host a manifest names, so a party started from an OpenVibe page passes and a link to
-  somebody else's server does not. The `www.` name only redirects, so it is not listed.
+- Add `actor.skill@1` and `actor.skill-listing@1` (ADR-058, plan HO2: the skills registry's skeleton). A skill is a
+  document an agent loads to do one kind of job well: a slug, a name, a one-line description (the only part an agent
+  reads before it loads it), a version, Markdown instructions, up to ten text resources, and `requires` (the approval
+  kinds, connected apps and hosts it may ask for). It grants nothing: every step still goes through the agent's level
+  and approvals. A v1 skill runs as a prompt only (no code, no binary, no install recipe). Its integrity hash shows the
+  file was not edited; it is not a signature, and the author in a document is a claim.
+- The listing is the registry's record every site shows: the document, the publisher from the registry's own record,
+  the scan (`pending`, `passed`, `flagged`, `failed`, with findings) and the curator's state (`active`, `stale`,
+  `archived`, the last use and a near-duplicate). A passed skill installs in one tap, a flagged one after the person
+  reads the findings, a failed one never; a stale or archived one is not offered.
 
 ## 0.336.0 — 2026-11-07
 
@@ -36,20 +58,10 @@
 
 ## 0.334.0 — 2026-11-07
 
-- `actor.trigger@1` gains the goal kind (plan HO3): a trigger that keeps working toward a goal on a schedule. Additive:
-  - `kind` may now be `goal`, and `state` may be `done` (a goal ended itself when its done-test passed);
-  - `paused_reason` adds `done`, `budget` and `deadline` beside `person` and `failed`;
-  - the optional `goal` object says the goal in the person's words, the `done_test` the agent answers yes or no each run,
-    `runs_used` against `runs_max`, `spent_usd` against `budget_usd`, `deadline_at`, the last run's `not_yet` reason and
-    its `verdict`;
-  - the optional `answer_in_chat` (default true) says whether each run's answer is posted into the conversation that made
-    the trigger, under its card, and `notify` (default false) whether the person is also told through OpenVibe's
-    notifications.
-- Nothing that exists today changes shape: a schedule or event trigger without the new fields stays valid.
-- `actor.task-event@2` gains the `trigger-run` step (2.2.0): a routine's run posted into the conversation that made the
-  trigger, under its card. Additive: `trigger_id` names the routine, `run` says which task ran and how it ended
-  (`ok`, `failed`, `needs_you`), `text` is its answer or the one line saying why it did not finish, and `sources` are
-  the addresses it read (at most 8). An event without them, and the `trigger` card step, are unchanged.
+- The `chat` manifest names `openvibe.party`, the Watch Together host OpenVibe.Chat serves beside `openvibe.chat`
+  (Party watch v1, plan R1). Chat's service manifest is what services check a party link against: a media party plays a
+  Media ref or an https URL on a host a manifest names, so a party started from an OpenVibe page passes and a link to
+  somebody else's server does not. The `www.` name only redirects, so it is not listed.
 
 ## 0.333.0 — 2026-11-07
 

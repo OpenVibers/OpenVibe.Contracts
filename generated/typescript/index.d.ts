@@ -301484,6 +301484,2956 @@ export interface ActorVoice {
   created_at?: string;
 }
 
+/** actor.skill-listing@1.0.0 (owner: actor) */
+/**
+ * actor.skill-listing@1: a skill in the registry, the record every site shows on its card (ADR-058). It carries the document as published (actor.skill@1), the PUBLISHER from the registry's own record (vouched: unlike the document's author, this is who published it), the SCAN (its state and findings travel with the listing), and the CURATOR's state. Install rules every site keeps: a passed skill installs in one tap; a flagged one only after the person reads the findings and confirms; a failed one never; a stale or archived one is not offered. Installing copies the document into the person's agent; it grants nothing (the skill's requires is a declaration).
+ */
+export interface ActorSkillListing {
+  listing: "actor.skill-listing@1";
+  /**
+   * The listing's id.
+   */
+  id: string;
+  skill: ActorSkill;
+  /**
+   * Who published it, from the registry's own record.
+   */
+  publisher: {
+    /**
+     * OpenVibe's own skills, or a person's.
+     */
+    kind: "openvibe" | "person";
+    /**
+     * The person who published it (kind person).
+     */
+    subject?: string;
+    name?: string;
+  };
+  /**
+   * What the registry's scan found. It travels with the listing.
+   */
+  scan: {
+    state: "pending" | "passed" | "flagged" | "failed";
+    /**
+     * The scanner and its version.
+     */
+    scanner?: string;
+    scanned_at?: string;
+    /**
+     * @maxItems 50
+     */
+    findings?: {
+      /**
+       * Which rule, such as asks.undeclared_kind or text.secret_request.
+       */
+      rule: string;
+      severity: "info" | "warn" | "block";
+      /**
+       * instructions, description, or a resource path.
+       */
+      where?: string;
+      /**
+       * What it found, in plain words.
+       */
+      note: string;
+    }[];
+  };
+  /**
+   * The curator ships with the catalogue: what is used stays, what is not goes stale.
+   */
+  curator: {
+    state: "active" | "stale" | "archived";
+    last_used_at?: string;
+    /**
+     * A listing that does the same job.
+     */
+    near_duplicate_of?: string;
+  };
+  installs?: number;
+  listed_at: string;
+  retired_at?: string;
+}
+
+/** actor.skill@1.0.0 (owner: actor) */
+/**
+ * actor.skill@1: a skill, the document an agent loads to do one kind of job well (ADR-058). It follows the open Markdown-skill shape (a name, a one-line description, Markdown instructions) with what OpenVibe adds: a slug, a version, up to ten TEXT resources, and REQUIRES, what the skill may ask an agent to do. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@1). A v1 skill RUNS AS A PROMPT and nothing else: no code, no binary, no install recipe (a skill that runs code waits for a sandbox and a new major). DESCRIPTION is the only part an agent reads before it loads the skill (progressive disclosure), so it says when to use it. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.
+ */
+export interface ActorSkill {
+  /**
+   * The document marker.
+   */
+  skill: "actor.skill@1";
+  /**
+   * Its name in the registry: lowercase letters, digits and hyphens.
+   */
+  slug: string;
+  /**
+   * What a person reads on its card.
+   */
+  name: string;
+  /**
+   * When to use it, in one line: the only part an agent reads before it loads the skill.
+   */
+  description: string;
+  /**
+   * Its semantic version.
+   */
+  version: string;
+  /**
+   * What to do, in Markdown. The agent reads it as guidance; it never grants a permission.
+   */
+  instructions: string;
+  /**
+   * Text the instructions refer to (a checklist, a template, a table). Never code to run.
+   *
+   * @maxItems 10
+   */
+  resources?:
+    | []
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        },
+        {
+          /**
+           * A relative name, no "..", ending in .md, .txt, .json or .csv.
+           */
+          path: string;
+          media_type: "text/markdown" | "text/plain" | "application/json" | "text/csv";
+          text: string;
+        }
+      ];
+  /**
+   * What the skill may ask an agent to do. It grants nothing: each step still goes through the agent's level and approvals.
+   */
+  requires?: {
+    /**
+     * The kinds of act (actor approvals, HO1) its steps may be.
+     *
+     * @maxItems 15
+     */
+    kinds?:
+      | []
+      | [
+          | "codes.task"
+          | "actor.action"
+          | "computer.run"
+          | "computer.write"
+          | "computer.input"
+          | "computer.browser"
+          | "computer.desk"
+          | "robot.move"
+          | "space"
+          | "publish"
+          | "post"
+          | "send"
+          | "install"
+          | "routine"
+          | "money"
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+          )
+        ];
+    /**
+     * Connected apps it uses (connect slugs). The person connects each one themselves.
+     *
+     * @maxItems 20
+     */
+    apps?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * Web hosts it reads from or writes to.
+     *
+     * @maxItems 20
+     */
+    hosts?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * How it runs. v1 skills are instructions and text only.
+   */
+  runs: "prompt";
+  /**
+   * An SPDX licence id, such as MIT or CC-BY-4.0.
+   */
+  license?: string;
+  /**
+   * Who the document says wrote it: a claim, never checked here.
+   */
+  author?: {
+    subject: string;
+    name?: string;
+  };
+  /**
+   * When the document was written. Not hashed.
+   */
+  created_at?: string;
+  /**
+   * A sha256 over the canonical JSON: the file was not edited after it was written. Not a signature.
+   */
+  integrity: {
+    alg: "sha256";
+    hash: string;
+  };
+}
+
 /** frame.menu-card@1.0.0 (owner: network) */
 /**
  * frame.menu-card@1: one card a site publishes for the network's Frame menu. Each open site serves an array of at most three cards at /.well-known/openvibe-menu.json (frame.menu-cards@1); Network fetches that public file every five minutes, validates every card here, strips markup from the text and ranks the cards in GET /api/frame. A card is one kind of menu block: a rail (the live rail), rows (a ranked list) or chips (a short row of words). Every item links to https on the site's own origin or an openvibe.* host; Network refuses another origin. An item may also carry a small picture (image) of the same shape: https on the site's own origin or an openvibe.* host, with an optional 16–1920 pixel width and height and a short alt text. The text is plain words: markup is stripped, unknown fields are dropped and a file that fails this schema leaves the site's last good card in place for 30 minutes.

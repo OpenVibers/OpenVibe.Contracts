@@ -1,0 +1,56 @@
+{
+  "listing": "actor.skill-listing@1",
+  "id": "skl_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "skill": {
+    "skill": "actor.skill@1",
+    "slug": "weekly-changelog-post",
+    "name": "Weekly changelog post",
+    "description": "Use when asked to write the week's changelog: what shipped, grouped by product, as a draft post.",
+    "version": "1.2.0",
+    "instructions": "1. Read the changelog entries of the last seven days.\n2. Group them by product, newest first.\n3. Write a draft with the template in template.md.\n4. Publish only after the person approves it.",
+    "resources": [
+      {
+        "path": "template.md",
+        "media_type": "text/markdown",
+        "text": "# This week on OpenVibe\n\n## <product>\n- <what shipped>"
+      }
+    ],
+    "requires": {
+      "kinds": [
+        "publish"
+      ],
+      "apps": [],
+      "hosts": [
+        "openvibe.blog"
+      ]
+    },
+    "runs": "prompt",
+    "license": "CC-BY-4.0",
+    "author": {
+      "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "name": "Ann"
+    },
+    "created_at": "2026-11-07T23:00:00.000Z",
+    "integrity": {
+      "alg": "sha256",
+      "hash": "b3e351154b87238e67434bc973c15c7a831742a43728529b05532dd14e5d9893"
+    }
+  },
+  "publisher": {
+    "kind": "person",
+    "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "name": "Ann"
+  },
+  "scan": {
+    "state": "passed",
+    "scanner": "openvibe-skill-scan 1.0.0",
+    "scanned_at": "2026-11-07T23:01:00.000Z",
+    "findings": []
+  },
+  "curator": {
+    "state": "active",
+    "last_used_at": "2026-11-07T23:30:00.000Z"
+  },
+  "installs": 12,
+  "listed_at": "2026-11-07T23:01:00.000Z"
+}
