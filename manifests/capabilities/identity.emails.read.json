@@ -8,7 +8,7 @@
   "inputSchema": "identity.emails-request@1",
   "outputSchema": "identity.emails@1",
   "permissions": ["identity:read"],
-  "resourceConstraints": ["own-account-or-explicit-consent"],
+  "resourceConstraints": ["owner"],
   "quotaClass": "identity-read",
   "events": [],
   "implementedBy": ["GET /api/v1/me/emails"]
