@@ -50,6 +50,7 @@
   },
   "capabilities": [
     "identity.subject.resolve",
+    "identity.trust.read",
     "mods.grant.manage",
     "network.account.deletion.confirm",
     "network.account.export.contribute",

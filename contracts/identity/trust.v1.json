@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/trust.v1.json",
+  "title": "IdentityTrust",
+  "description": "identity.trust@1: privacy-limited age and abuse signals for an account or guest. Never includes an IP address, email, last-seen timestamp, service user id, or linked account identities. Only coarse age bands and aggregate counts are exposed.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["kind", "age_band", "account_age_hours", "account_age_days", "passkey", "linked_accounts", "active_30d", "email_verified", "verified", "verified_by"],
+      "properties": {
+        "kind": { "const": "account" },
+        "age_band": { "$ref": "#/$defs/ageBand" },
+        "account_age_hours": { "type": "integer", "minimum": 0 },
+        "account_age_days": { "type": "integer", "minimum": 0 },
+        "passkey": { "type": "boolean" },
+        "linked_accounts": { "type": "integer", "minimum": 0 },
+        "active_30d": { "type": "boolean" },
+        "email_verified": { "type": "boolean" },
+        "verified": { "type": "boolean" },
+        "verified_by": { "type": "array", "items": { "enum": ["passkey", "linked_account", "30_days_active"] }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["kind", "age_band", "age_hours", "age_days", "networks_seen", "guests_from_same_networks_24h", "converted"],
+      "properties": {
+        "kind": { "const": "guest" },
+        "age_band": { "$ref": "#/$defs/ageBand" },
+        "age_hours": { "type": "integer", "minimum": 0 },
+        "age_days": { "type": "integer", "minimum": 0 },
+        "sessions": { "type": "integer", "minimum": 0, "description": "Distinct days seen, included only when the server tracks session days." },
+        "networks_seen": { "type": "integer", "minimum": 0, "description": "Count of distinct network identifiers seen; identifiers are never returned." },
+        "guests_from_same_networks_24h": { "type": "integer", "minimum": 0, "description": "Count of other guests first seen from any of this guest's networks in the last 24 hours; no network identifiers are returned." },
+        "banned": { "type": "boolean" },
+        "restricted": { "type": "boolean" },
+        "converted": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "ageBand": { "type": "string", "enum": ["under_1h", "under_1d", "under_7d", "under_30d", "30d_plus"] }
+  }
+}

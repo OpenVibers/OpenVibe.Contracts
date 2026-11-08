@@ -1,0 +1,12 @@
+{
+  "kind": "account",
+  "age_band": "30d_plus",
+  "account_age_hours": 960,
+  "account_age_days": 40,
+  "passkey": true,
+  "linked_accounts": 2,
+  "active_30d": true,
+  "email_verified": true,
+  "verified": true,
+  "verified_by": ["passkey", "linked_account", "30_days_active"]
+}
