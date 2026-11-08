@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.348.0 — 2026-11-08
+
+- Service manifests: `studio` (OpenVibe.Studio at openvibe.studio, live: Photo and Light in the browser), and
+  `connect` lives at `https://connect.openvibe.link` (its home on OpenVibe Link since 11-08; `connect.openvibe.website`
+  stays as the second domain). The registry still gave the old origin, so the sign-in canary read a 302 for Connect.
+
 ## 0.347.0 — 2026-11-08
 
 - Add `identity.trust@1` and `identity.trust-request@1` for account and guest abuse signals, plus the app-grantable
