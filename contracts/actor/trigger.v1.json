@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/actor/trigger.v1.json",
   "title": "ActorTrigger",
-  "description": "actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule, when a Watch event arrives, or (kind goal) keeps working toward a goal. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE), event (WHEN has the Watch event PATTERN and FILTER) or goal (checked on WHEN's CRON, with GOAL saying what it works toward). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active, paused or done (a goal ended itself when its done-test passed), PAUSED_REASON says why (person, failed after five failed runs in a row, or for a goal: done, budget or deadline), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. GOAL is present only for a goal: the goal in words, the done-test the agent evaluates each run, how many runs it has used against its limit, what it has spent against its money budget, its deadline, and the last verdict. ANSWER_IN_CHAT (default true) says whether each run's answer is posted into the conversation that made the trigger, under its card; NOTIFY (default false) says whether the person is also told through OpenVibe's notifications. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist.",
+  "description": "actor.trigger@1: a trigger made in an Actor conversation — something that runs on a schedule, when a Watch event arrives, or (kind goal) keeps working toward a goal. ID is the trigger, OWNER the person it belongs to, AGENT_ID the agent it runs as, TASK what it runs, and KIND schedule (WHEN has a five-field CRON in the person's TIMEZONE), event (WHEN has the Watch event PATTERN and FILTER), goal (checked on WHEN's CRON, with GOAL saying what it works toward) or mention (waits for the person to say one of WHEN.MENTION's phrases in their own conversation with their own agent). WHEN.WORDS is always the plain-language line shown on the card. NEXT_RUN_AT is the next scheduled occurrence (null for an event trigger), LAST_RUN is the newest run of the trigger with its result (ok, failed, needs_you or running) and WHEN_AT, STATE is active, paused or done (a goal ended itself when its done-test passed), PAUSED_REASON says why (person, failed after five failed runs in a row, or for a goal: done, budget or deadline), and FAILURES is the consecutive failed-run count. WATCH is the subscription's own state when it is an event trigger (a schedule trigger has its Watch schedule too), null when Watch is not reachable. GOAL is present only for a goal: the goal in words, the done-test the agent evaluates each run, how many runs it has used against its limit, what it has spent against its money budget, its deadline, and the last verdict. ANSWER_IN_CHAT (default true) says whether each run's answer is posted into the conversation that made the trigger, under its card; NOTIFY (default false) says whether the person is also told through OpenVibe's notifications. UNDO_UNTIL is the end of the ten-minute undo window; after it the trigger is deleted, not undone. A trigger is owner-only: another person's id is the same 404 as one that does not exist. A mention trigger listens only to the person's own words to their own agent, never anyone else's messages, never a room or a stream chat, and never the agent's own answers; matching is case-insensitive, on word boundaries, after Unicode normalisation.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -46,7 +46,8 @@
       "enum": [
         "schedule",
         "event",
-        "goal"
+        "goal",
+        "mention"
       ]
     },
     "when": {
@@ -102,6 +103,40 @@
                   "null"
                 ]
               }
+            }
+          }
+        },
+        "mention": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "The phrases a mention trigger waits for, and whether one or all of them must appear. Present only for kind mention; matching is case-insensitive, on word boundaries, after Unicode normalisation.",
+          "additionalProperties": false,
+          "required": [
+            "phrases",
+            "match"
+          ],
+          "properties": {
+            "phrases": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 5,
+              "description": "One to five phrases, each 2 to 80 characters and trimmed (no leading or trailing whitespace).",
+              "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80,
+                "pattern": "^\\S(?:[\\s\\S]{0,78}\\S)?$"
+              }
+            },
+            "match": {
+              "type": "string",
+              "enum": [
+                "any",
+                "all"
+              ],
+              "description": "any: one of the phrases is enough. all: every phrase must appear."
             }
           }
         }
@@ -213,6 +248,22 @@
       "type": "boolean",
       "description": "Whether the person is also told through OpenVibe's notifications when a run finishes. Default false: the answer in the chat is the telling, unless they asked for more.",
       "default": false
+    },
+    "fires": {
+      "type": "string",
+      "enum": [
+        "once_per_conversation"
+      ],
+      "default": "once_per_conversation",
+      "description": "How often the trigger may fire. In v1 the only value is once_per_conversation: at most once in each conversation. Optional; absent means the same."
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When a mention trigger stops listening: required for kind mention and at most 90 days after created_at (the default is 30). JSON Schema cannot compare expires_at with created_at, so Actor enforces the 90-day cap; test/run.js checks the fixtures and the rule. Null or absent for other kinds."
     },
     "next_run_at": {
       "type": [
@@ -345,5 +396,44 @@
       "type": "string",
       "format": "date-time"
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "const": "mention"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "expires_at"
+        ],
+        "properties": {
+          "when": {
+            "type": "object",
+            "required": [
+              "mention"
+            ],
+            "properties": {
+              "mention": {
+                "type": "object"
+              }
+            }
+          },
+          "fires": {
+            "const": "once_per_conversation"
+          },
+          "expires_at": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -1,0 +1,26 @@
+{
+  "id": "trg_01M6VNTQD7NB3QH8K4R2S9T6W3",
+  "owner": "usr_01M6VNTQD7MRZDETZ39NB969XD",
+  "agent_id": "agt_01M6VNTQD7WHPRX74687KCER4S",
+  "agent_name": "Deals",
+  "task": "check the release's rollback plan and say whether it can be rolled back",
+  "kind": "mention",
+  "when": {
+    "words": "When you mention the release",
+    "mention": {
+      "phrases": [
+        "the release",
+        "shipping"
+      ],
+      "match": "any"
+    }
+  },
+  "fires": "always",
+  "expires_at": "2026-12-08T08:00:00.000Z",
+  "state": "active",
+  "paused_reason": null,
+  "failures": 0,
+  "undo_until": "2026-11-09T08:10:00.000Z",
+  "created_at": "2026-11-09T08:00:00.000Z",
+  "updated_at": "2026-11-09T08:00:00.000Z"
+}

@@ -1059,6 +1059,39 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     ok(c.properties.blocks.maxItems === 60, 'at most 60 blocks');
 }
 
+// ── actor.trigger@1 mention kind (HO13): only the person's own words ────────
+// A mention trigger waits for the person to say one of a few phrases to their own agent. It is additive: the
+// kind, when.mention, fires and expires_at; nothing a schedule, event or goal trigger carries changes shape.
+// The 90-day cap compares two fields, which JSON Schema cannot do: the schema says so and Actor enforces it, and
+// the fixtures and this block hold it.
+{
+    const s = contracts.schema('actor.trigger@1');
+    const mention = s.properties.when.properties.mention;
+    ok(s.properties.kind.enum.includes('mention'), 'actor.trigger@1 can be a mention trigger');
+    ok(mention && mention.properties.phrases.minItems === 1 && mention.properties.phrases.maxItems === 5, 'a mention trigger carries one to five phrases');
+    ok(mention.properties.phrases.items.minLength === 2 && mention.properties.phrases.items.maxLength === 80, 'a phrase is 2 to 80 characters');
+    ok(JSON.stringify(mention.properties.match.enum) === JSON.stringify(['any', 'all']), 'a mention trigger matches any or all of its phrases');
+    ok(JSON.stringify(s.properties.fires.enum) === JSON.stringify(['once_per_conversation']), 'a mention trigger fires once per conversation, the only value in v1');
+    ok(/at most 90 days/.test(s.properties.expires_at.description) && /cannot compare/.test(s.properties.expires_at.description), 'the schema says expires_at is capped at 90 days and that JSON Schema cannot compare the dates');
+    const within = (t) => {
+        const day = 24 * 60 * 60 * 1000;
+        const gap = Date.parse(t.expires_at) - Date.parse(t.created_at);
+        return gap > 0 && gap <= 90 * day;
+    };
+    const dir = path.join(ROOT, 'fixtures', 'actor.trigger', 'valid');
+    for (const f of ['mention-any.json', 'mention-all.json']) {
+        const t = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+        ok(t.kind === 'mention' && within(t), `the ${f} fixture expires within 90 days of created_at`);
+        ok(contracts.validate('actor.trigger@1', t).valid, `the ${f} fixture is a valid mention trigger`);
+    }
+    const t = JSON.parse(fs.readFileSync(path.join(dir, 'mention-any.json'), 'utf8'));
+    const late = { ...t, expires_at: new Date(Date.parse(t.created_at) + 91 * 24 * 60 * 60 * 1000).toISOString() };
+    ok(!within(late), 'a mention trigger more than 90 days after created_at breaks the rule Actor enforces');
+    ok(contracts.validate('actor.trigger@1', late).valid, 'JSON Schema alone accepts it: the 90-day rule lives in the description, Actor and this block');
+    const spaced = { ...t, when: { ...t.when, mention: { ...t.when.mention, phrases: [` ${t.when.mention.phrases[0]} `] } } };
+    ok(!contracts.validate('actor.trigger@1', spaced).valid, 'a phrase with surrounding whitespace is not trimmed');
+}
+
 // ── actor.skill@1/@2 and actor.skill-listing@1/@2 (ADR-058, ADR-060) ─────────
 // A skill is a document: its integrity hash covers its canonical content (not a signature); @1 runs as a prompt
 // only; @2 may run code in a sandbox, with the code in a resource and the tools naming it. It grants nothing, and
