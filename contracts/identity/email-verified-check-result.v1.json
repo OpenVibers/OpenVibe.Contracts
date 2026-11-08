@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/email-verified-check-result.v1.json",
+  "title": "Verified email check result",
+  "description": "Whether the supplied email address is verified for the supplied subject. Unknown subjects and addresses both return false.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verified"],
+  "properties": { "verified": { "type": "boolean" } }
+}

@@ -1,0 +1,6 @@
+{
+  "emails": [
+    { "id": "01JAB2C3D4E5F6G7H8J9K0MNPQ", "email": "person@example.net", "verified": true, "primary": true, "created_at": "2026-11-08T10:00:00Z", "verified_at": "2026-11-08T10:00:00Z" },
+    { "id": "01JAB2C3D4E5F6G7H8J9K0MNPR", "email": "backup@example.net", "verified": false, "primary": false, "created_at": "2026-11-08T10:05:00Z", "verified_at": null }
+  ]
+}

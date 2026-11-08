@@ -1,0 +1,5 @@
+{
+  "emails": [
+    { "id": "01JAB2C3D4E5F6G7H9K0MNPQ", "email": "person@example.net", "verified": true, "primary": false, "created_at": "2026-11-08T10:00:00Z", "verified_at": null }
+  ]
+}

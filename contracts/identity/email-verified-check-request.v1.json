@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/email-verified-check-request.v1.json",
+  "title": "Check a person's verified email address",
+  "description": "A service with identity.emails.read asks whether one supplied email address is verified for one Network subject. The response never reveals address lists or whether an unknown subject exists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["subject", "email"],
+  "properties": {
+    "subject": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "email": { "type": "string", "format": "email", "maxLength": 254 }
+  }
+}

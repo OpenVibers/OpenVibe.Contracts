@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/emails-request.v1.json",
+  "title": "Read the authenticated person's shared verified email addresses",
+  "description": "An empty request body for reading the authenticated person's verified email address.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {}
+}

@@ -294,6 +294,601 @@ export type IdentityTrustRequest =
     }
   | NoBody;
 
+/** identity.emails@1.0.0 (owner: network) */
+/**
+ * The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the single address selected for that app; primary reflects whether it is the account's primary address.
+ */
+export type VerifiedEmailAddressesForTheAuthenticatedPerson = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * @maxItems 11
+   */
+  emails:
+    | []
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ]
+    | [
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        },
+        {
+          id: string;
+          email: string;
+          verified: boolean;
+          primary: boolean;
+          created_at: string;
+          verified_at?: string | null;
+        }
+      ];
+};
+
+/** identity.emails-request@1.0.0 (owner: network) */
+/**
+ * An empty request body for reading the authenticated person's verified email address.
+ */
+export interface ReadTheAuthenticatedPersonSSharedVerifiedEmailAddresses {}
+
+/** identity.email-add-request@1.0.0 (owner: network) */
+/**
+ * A single email address the account owner wants to verify and attach to their own account.
+ */
+export interface AddAnEmailAddressToTheAuthenticatedPersonSAccount {
+  email: string;
+}
+
+/** identity.email-verified-check-request@1.0.0 (owner: network) */
+/**
+ * A service with identity.emails.read asks whether one supplied email address is verified for one Network subject. The response never reveals address lists or whether an unknown subject exists.
+ */
+export interface CheckAPersonSVerifiedEmailAddress {
+  subject: string;
+  email: string;
+}
+
+/** identity.email-verified-check-result@1.0.0 (owner: network) */
+/**
+ * Whether the supplied email address is verified for the supplied subject. Unknown subjects and addresses both return false.
+ */
+export interface VerifiedEmailCheckResult {
+  verified: boolean;
+}
+
 /** identity.subject-projection@1.0.0 (owner: network) */
 /**
  * identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.349.0 — 2026-11-08
+
+- Add `identity.emails@1` and `identity.email-add-request@1` and the `identity.emails.read` capability for a person's verified, privacy-limited email addresses.
+
 ## 0.348.0 — 2026-11-08
 
 - Service manifests: `studio` (OpenVibe.Studio at openvibe.studio, live: Photo and Light in the browser), and

@@ -88,6 +88,51 @@
       "status": "active"
     },
     {
+      "id": "identity.emails",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/emails.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "identity.emails-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/emails-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "identity.email-add-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/email-add-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "identity.email-verified-check-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/email-verified-check-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "identity.email-verified-check-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "identity/email-verified-check-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "identity.subject-projection",
       "version": "1.0.0",
       "owner": "network",
