@@ -73,9 +73,31 @@ const FULL_CHECK = {
     'zone.object-zone-usage': (v) => contracts.zones.checkObjectZoneUsage(v), 'common.usage-recorded': (v) => contracts.usage.checkUsageRecorded(v),
     'common.resource-name': (v) => contracts.resources.checkName(v), 'common.resource-control-request': (v) => contracts.resources.checkControlRequest(v),
     'common.resource-control-result': (v) => contracts.resources.checkControlResult(v),
+    // A tool's entry has to name one of the document's own code resources, a cross-field rule JSON
+    // Schema cannot state (the registry checks it too, before it stores anything).
+    'actor.skill': (v, ref) => {
+        const r = contracts.validate(ref, v);
+        if (!r.valid) return r;
+        const paths = new Set((v.resources || []).map((x) => x.path));
+        const missing = (v.tools || []).filter((t) => !paths.has(t.entry));
+        return missing.length
+            ? { valid: false, errors: missing.map((t) => ({ path: '/tools', message: `entry ${t.entry} names no resource` })) }
+            : r;
+    },
 };
-// `fixtures/<id>/` is one set per contract id, checked against its newest major (a v1 file's fixtures
-// stay valid under an additive v2, and a v2-only example belongs there too).
+/** The ref a fixture names itself (`skill: actor.skill@2`) or the bare id (newest major) when it names none. */
+const majorRef = (id, value) => {
+    if (!value || typeof value !== 'object') return id;
+    for (const v of Object.values(value)) {
+        if (typeof v !== 'string' || !v.startsWith(`${id}@`)) continue;
+        const major = v.slice(id.length + 1);
+        if (/^\d+$/.test(major) && contracts.catalog.some((e) => e.id === id && e.version.split('.')[0] === major)) return `${id}@${major}`;
+    }
+    return id;
+};
+// `fixtures/<id>/` is one set per contract id, checked against the major the document names, or its
+// newest major when it names none (a v1 file's fixtures stay valid under an additive v2, and a v2-only
+// example belongs there too).
 for (const c of [...new Map(contracts.catalog.map((e) => [e.id, e])).values()]) {
     for (const kind of ['valid', 'invalid']) {
         const dir = path.join(ROOT, 'fixtures', c.id, kind);
@@ -83,7 +105,8 @@ for (const c of [...new Map(contracts.catalog.map((e) => [e.id, e])).values()]) 
         ok(list.length > 0, `${c.id} has ${kind} fixtures`);
         for (const f of list) {
             const value = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-            const r = FULL_CHECK[c.id] ? FULL_CHECK[c.id](value) : contracts.validate(c.id, value);
+            const ref = majorRef(c.id, value);
+            const r = FULL_CHECK[c.id] ? FULL_CHECK[c.id](value, ref) : contracts.validate(ref, value);
             ok(r.valid === (kind === 'valid'), `${c.id} ${kind}/${f}: ${r.valid ? 'passed' : JSON.stringify(r.errors)}`);
         }
     }
@@ -1036,14 +1059,26 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     ok(c.properties.blocks.maxItems === 60, 'at most 60 blocks');
 }
 
-// ── actor.skill@1 and actor.skill-listing@1 (ADR-058) ───────────────────────
-// A skill is a document: its integrity hash covers its canonical content (not a signature); it runs as a prompt
-// only; it grants nothing, and what it may ask for is HO1's kinds; the listing's scan and curator travel with it.
+// ── actor.skill@1/@2 and actor.skill-listing@1/@2 (ADR-058, ADR-060) ─────────
+// A skill is a document: its integrity hash covers its canonical content (not a signature); @1 runs as a prompt
+// only; @2 may run code in a sandbox, with the code in a resource and the tools naming it. It grants nothing, and
+// what it may ask for is HO1's kinds; the listing's scan and curator travel with it, and pin the scanned code.
 {
     const crypto = require('crypto');
     const canonical = (d) => {
         const o = { skill: d.skill, slug: d.slug, name: d.name, description: d.description, version: d.version, instructions: d.instructions };
         if (d.resources && d.resources.length) o.resources = d.resources.map((r) => ({ path: r.path, media_type: r.media_type, text: r.text }));
+        if (d.tools && d.tools.length) o.tools = d.tools.map((t) => {
+            const x = { name: t.name, description: t.description, language: t.language, entry: t.entry, args: t.args };
+            if (t.net !== undefined) x.net = t.net;
+            if (t.limits) {
+                const l = {};
+                if (t.limits.wall_ms !== undefined) l.wall_ms = t.limits.wall_ms;
+                if (t.limits.mem_bytes !== undefined) l.mem_bytes = t.limits.mem_bytes;
+                if (Object.keys(l).length) x.limits = l;
+            }
+            return x;
+        });
         if (d.requires) {
             const q = {};
             for (const k of ['kinds', 'apps', 'hosts']) if (d.requires[k] && d.requires[k].length) q[k] = d.requires[k];
@@ -1077,6 +1112,45 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     ok(listing.required.includes('scan') && listing.required.includes('curator'), 'a listing always carries its scan and its curator state');
     ok(JSON.stringify(listing.properties.scan.properties.state.enum) === JSON.stringify(['pending', 'passed', 'flagged', 'failed']), 'the scan states');
     ok(JSON.stringify(listing.properties.curator.properties.state.enum) === JSON.stringify(['active', 'stale', 'archived']), 'the curator states');
+
+    // actor.skill@2 (ADR-060): code can run, but only in a sandbox and only the code in the document.
+    const skill2 = contracts.schema('actor.skill@2');
+    ok(JSON.stringify(skill2.properties.runs.enum) === JSON.stringify(['prompt', 'sandbox']), 'a @2 skill runs as a prompt or in a sandbox');
+    const tool = skill2.properties.tools.items;
+    ok(skill2.properties.tools.minItems === 1 && skill2.properties.tools.maxItems === 5, 'a sandbox skill carries one to five tools');
+    ok(tool.properties.language.const === 'javascript', 'v1 tools are JavaScript only');
+    ok(tool.properties.entry.pattern.endsWith('\\.js$'), 'a tool entry names a .js resource');
+    ok(JSON.stringify(tool.properties.net.enum) === JSON.stringify(['deny', 'openvibe-only', 'public']) && tool.properties.net.default === 'deny', 'a tool denies the network by default and may ask for OpenVibe only or the internet');
+    ok(tool.properties.limits.properties.wall_ms.maximum === 30000 && tool.properties.limits.properties.mem_bytes.maximum === 268435456, 'tool limits stay under the caps: 30 s and 256 MiB');
+    ok(tool.properties.limits.properties.wall_ms.default === 10000 && tool.properties.limits.properties.mem_bytes.default === 134217728, 'tool limits default to 10 s and 128 MiB');
+    const arg = skill2.$defs.argValue;
+    ok(arg.additionalProperties === false && JSON.stringify(arg.properties.type.enum) === JSON.stringify(['string', 'number', 'integer', 'boolean', 'array']), 'tool args are a JSON Schema subset, never $ref or a nested object');
+    ok(arg.properties.pattern.maxLength === 200, 'a tool arg pattern is at most 200 characters');
+    ok(JSON.stringify(skill2.properties.requires.properties.kinds.items.enum) === JSON.stringify([...HO1, 'skill.run']), 'a @2 skill may ask for skill.run beside the HO1 kinds');
+    const fields = [...Object.keys(skill2.properties), ...Object.keys(tool.properties), ...Object.keys(skill2.properties.resources.items.properties), ...Object.keys(skill2.properties.requires.properties)];
+    ok(!fields.some((k) => /^(secrets?|tokens?|env|environment|password|credential|key)$/i.test(k)), 'actor.skill@2 has no secret, token, env or key field');
+    ok(!Object.keys(skill2.properties).some((k) => /^(code|scripts?|exec|command|binar(y|ies)|install)$/i.test(k)), 'code is a resource, not a top-level field');
+    const deny = JSON.parse(fs.readFileSync(path.join(dir, 'sandbox-deny.json'), 'utf8'));
+    ok(hashOf({ ...deny, tools: [{ ...deny.tools[0], net: 'public' }] }) !== deny.integrity.hash, 'changing a tool network changes the hash');
+    ok(hashOf({ ...deny, resources: [{ ...deny.resources[0], text: `${deny.resources[0].text}\n// edited` }] }) !== deny.integrity.hash, 'changing the code changes the hash');
+    const entryIsCode = (doc) => {
+        const paths = new Map((doc.resources || []).map((x) => [x.path, x]));
+        return (doc.tools || []).every((t) => paths.get(t.entry) && paths.get(t.entry).media_type === 'text/javascript');
+    };
+    for (const f of ['prompt-only.json', 'sandbox-deny.json', 'sandbox-public.json']) {
+        const doc = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+        ok(entryIsCode(doc), `the @2 fixture ${f} names a code resource in every tool entry`);
+    }
+    ok(!entryIsCode({ ...deny, tools: [{ ...deny.tools[0], entry: 'missing.js' }] }), 'a tool entry that names no resource is not a valid skill (a schema cannot check this; the registry and these fixtures do)');
+    const listing2 = contracts.schema('actor.skill-listing@2');
+    ok(listing2.properties.skill.$ref === 'skill.v2.json', 'a @2 listing carries a @2 document');
+    ok(JSON.stringify(listing2.properties.code.items.required) === JSON.stringify(['name', 'media_id', 'sha256']), 'a listing pins each code resource by Media id and sha256');
+    ok(listing2.properties.scan.properties.findings.items.properties.tool.pattern === '^[a-z][a-z0-9_]{0,31}$', 'a scan finding may name the tool it is about');
+    const pinned = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'actor.skill-listing', 'valid', 'sandbox-public.json'), 'utf8'));
+    const code = pinned.code[0];
+    const resource = pinned.skill.resources.find((r) => r.path === code.name);
+    ok(resource && crypto.createHash('sha256').update(resource.text, 'utf8').digest('hex') === code.sha256, 'the bytes a listing pins are the bytes in the document');
+    ok(pinned.skill.tools.every((t) => pinned.code.some((c) => c.name === t.entry)), 'every tool of a sandbox listing has a code object');
 }
 
 // ── actor.voice@1: the integrity hash ─────────────────────────────────────

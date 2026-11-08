@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.343.0 — 2026-11-08
+
+- Add `actor.skill@2` and `actor.skill-listing@2` (ADR-060, plan HO8): a skill may now bring code that runs in a
+  sandbox instead of only a prompt. `runs` is `prompt` or `sandbox`; a sandbox skill carries 1 to 5 JavaScript
+  `tools` (name, description, `entry` naming one of its resources, a JSON Schema subset for `args`, `net`
+  `deny`/`openvibe-only`/`public` default `deny`, and limits under 30 s / 256 MiB), and the code itself is an
+  ordinary text resource (`.js`, at most 64 KiB) in the same integrity hash. `requires.kinds` gains `skill.run`.
+  The v2 listing pins each code resource's Media id and sha256 and lets a scan finding name the tool it is about.
+  Code never runs on an OpenVibe server, never outside a sandbox and never with a secret: it runs as a Run
+  `function` job on a Node that declared the skill runner. `actor.skill@1` and `actor.skill-listing@1` are
+  unchanged and remain what a prompt-only skill publishes.
+
 ## 0.342.0 — 2026-11-07
 
 - Add `mail.agent_inbox.received@1` (track HO6, channels): a message arrived at an agent's own address and the person has switched that address's answering on, so their agent may read it. The payload names the inbox and the agent, the owner, the mail server's message id, the sender, the subject and a plain-text excerpt of at most 4000 characters. It never carries the attachments, the HTML or the whole body: the agent's system reads the text through `mail.agent.read`, on the owner's behalf, once it has decided to answer. Mail publishes nothing for a sender on the person's block list or a message the mail server marked as spam, and nothing at all until the person turns the agent's switch on.

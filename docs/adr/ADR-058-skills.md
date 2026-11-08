@@ -23,7 +23,8 @@
    resources, and what it may ask an agent to do (`requires`: HO1 kinds, connected apps, hosts).
 2. **v1 skills run as a prompt and nothing else** (`runs: "prompt"`):
    - no code, no binaries, no install recipes;
-   - a skill that runs code waits for a sandbox (plan HO8) and a new major.
+   - a skill that runs code waits for a sandbox (plan HO8) and a new major. **Superseded for code by
+     [ADR-060](ADR-060-skills-run-sandboxed.md).**
 3. **A skill grants nothing.** `requires` declares; the agent's level and approvals decide every step, as for any
    other step. A step of a kind the skill did not declare is a scan finding.
 4. **The integrity hash is not a signature**, as for voices:

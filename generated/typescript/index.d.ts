@@ -301554,6 +301554,879 @@ export interface ActorSkillListing {
   retired_at?: string;
 }
 
+/** actor.skill-listing@2.0.0 (owner: actor) */
+/**
+ * actor.skill-listing@2: a skill in the registry, the record every site shows on its card (ADR-058, ADR-060). It keeps every field and meaning of actor.skill-listing@1 and adds what a sandbox skill needs to be shown and run: the document is actor.skill@2, CODE lists, per code resource, its name (the resource path a tool's entry names), the Media object id its bytes are stored under and the sha256 of those bytes, so the bytes that run are the bytes that were scanned; and the SCAN's findings may name the TOOL they are about, so a person reads the scan one tool at a time. A sandbox listing carries code; a prompt listing carries none. It still carries the PUBLISHER from the registry's own record (vouched: unlike the document's author, this is who published it), the SCAN (its state and findings travel with the listing), and the CURATOR's state. Install rules every site keeps: a passed skill installs in one tap; a flagged one only after the person reads the findings and confirms; a failed one never; a stale or archived one is not offered. Installing copies the document into the person's agent; it grants nothing (the skill's requires is a declaration).
+ */
+export type ActorSkillListingV2 = {
+  [k: string]: unknown | undefined;
+} & {
+  listing: "actor.skill-listing@2";
+  /**
+   * The listing's id.
+   */
+  id: string;
+  skill: ActorSkillV2;
+  /**
+   * Per code resource of a sandbox skill: the resource path a tool entry names, the Media object the registry stored its bytes under, and the sha256 of those bytes. Required when the skill runs in a sandbox; absent for a prompt skill.
+   *
+   * @maxItems 10
+   */
+  code?:
+    | []
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ]
+    | [
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        },
+        {
+          /**
+           * The resource path, as the document's tools entry names it.
+           */
+          name: string;
+          /**
+           * The Media object id the code bytes are stored under.
+           */
+          media_id: string;
+          /**
+           * Lowercase hex SHA-256 of the code bytes.
+           */
+          sha256: string;
+        }
+      ];
+  /**
+   * Who published it, from the registry's own record.
+   */
+  publisher: {
+    /**
+     * OpenVibe's own skills, or a person's.
+     */
+    kind: "openvibe" | "person";
+    /**
+     * The person who published it (kind person).
+     */
+    subject?: string;
+    name?: string;
+  };
+  /**
+   * What the registry's scan found. It travels with the listing, and a finding about a tool names it.
+   */
+  scan: {
+    state: "pending" | "passed" | "flagged" | "failed";
+    /**
+     * The scanner and its version.
+     */
+    scanner?: string;
+    scanned_at?: string;
+    /**
+     * @maxItems 50
+     */
+    findings?: {
+      /**
+       * Which rule, such as code.network or code.env.
+       */
+      rule: string;
+      severity: "info" | "warn" | "block";
+      /**
+       * instructions, description, or a resource path.
+       */
+      where?: string;
+      /**
+       * The tool the finding is about, when it is about one tool.
+       */
+      tool?: string;
+      /**
+       * What it found, in plain words.
+       */
+      note: string;
+    }[];
+  };
+  /**
+   * The curator ships with the catalogue: what is used stays, what is not goes stale.
+   */
+  curator: {
+    state: "active" | "stale" | "archived";
+    last_used_at?: string;
+    /**
+     * A listing that does the same job.
+     */
+    near_duplicate_of?: string;
+  };
+  installs?: number;
+  listed_at: string;
+  retired_at?: string;
+};
+
 /** actor.canvas@1.0.0 (owner: actor) */
 /**
  * actor.canvas@1: an agent's live panel beside the conversation (ADR-059) — a board of a trip, a table of prices, a checklist of what is left. It is DATA: a list of blocks drawn by one renderer (OpenVibe.Shared ov-canvas.js) wherever it is shown (Chat, Surf, the Dock, Actor). There is no HTML, no style, no script and no frame: text is plain and the renderer escapes it; an image is only a picture on openvibe.media; a link opens in a new tab with its host shown. A canvas acts only through the person: a button sends its label to the agent as the person's own message (action ask), and ticking a checklist item tells the agent which item changed; the agent's next steps go through its level and approvals like any other. VERSION only grows: a viewer ignores an older one, and the agent replaces the whole document, never part of it.
@@ -304790,6 +305663,6635 @@ export interface ActorSkill {
     hash: string;
   };
 }
+
+/** actor.skill@2.0.0 (owner: actor) */
+/**
+ * actor.skill@2: a skill, the document an agent loads to do one kind of job well (ADR-058, ADR-060). It keeps every field and meaning of actor.skill@1 and adds a way for the skill to bring CODE that runs in a sandbox: RUNS is prompt (as @1, text and instructions only) or sandbox. A sandbox skill carries its code as ordinary TEXT resources (a .js path with media_type text/javascript, at most 64 KiB each, in the integrity hash); TOOLS (1 to 5, only when runs is sandbox) say what an agent may call: a name, a description the agent reads, language javascript (the only one in v1), an ENTRY naming one of the skill's own .js resources, ARGS as a JSON Schema subset (an object whose properties are string, number, integer, boolean or an array of those; enum, maxLength, and pattern at most 200 characters; no $ref and no nested object), NET (deny by default, openvibe-only, public) and LIMITS (wall_ms at most 30000, default 10000; mem_bytes at most 268435456, default 134217728). A sandbox skill's requires.kinds names skill.run; a prompt skill declares no tools. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@2). Code never runs on an OpenVibe server and never sees a secret: it runs as a Run job of class function on a Node that declared the skill runner, with the network its tool declared and the exact bytes the registry scanned. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, tools, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; tools are [{ name, description, language, entry, args, net, limits }] in the document's order, with an absent net or limits (and each absent limits field) left out and args as the object the document wrote; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.
+ */
+export type ActorSkillV2 = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The document marker.
+   */
+  skill: "actor.skill@2";
+  /**
+   * Its name in the registry: lowercase letters, digits and hyphens.
+   */
+  slug: string;
+  /**
+   * What a person reads on its card.
+   */
+  name: string;
+  /**
+   * When to use it, in one line: the only part an agent reads before it loads the skill.
+   */
+  description: string;
+  /**
+   * Its semantic version.
+   */
+  version: string;
+  /**
+   * What to do, in Markdown. The agent reads it as guidance; it never grants a permission.
+   */
+  instructions: string;
+  /**
+   * Text the instructions refer to (a checklist, a template, a table) and, for a sandbox skill, the code a tool's entry names. Code is a text resource, not a binary and not an install recipe: it runs in a sandbox and never on an OpenVibe server. Any resource is at most 64 KiB; a non-code resource keeps @1's 20000-character cap.
+   *
+   * @maxItems 10
+   */
+  resources?:
+    | []
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ]
+    | [
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        },
+        {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        } & {
+          [k: string]: unknown | undefined;
+        }
+      ];
+  /**
+   * The tools an agent may call, present exactly when runs is sandbox. Each one runs the code in the resource its entry names, in a sandbox, with the network it declares and never wider.
+   *
+   * @minItems 1
+   * @maxItems 5
+   */
+  tools?:
+    | [
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        }
+      ]
+    | [
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        },
+        {
+          /**
+           * The name the agent calls.
+           */
+          name: string;
+          /**
+           * What it does: the agent reads this before it calls the tool.
+           */
+          description: string;
+          /**
+           * The only language in v1.
+           */
+          language: "javascript";
+          /**
+           * The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema).
+           */
+          entry: string;
+          /**
+           * The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.
+           */
+          args: {
+            type: "object";
+            description?: string;
+            properties?: {
+              [k: string]:
+                | {
+                    type: "string" | "number" | "integer" | "boolean" | "array";
+                    description?: string;
+                    /**
+                     * @minItems 1
+                     * @maxItems 100
+                     */
+                    enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                    maxLength?: number;
+                    /**
+                     * A regular expression, at most 200 characters. No longer pattern is allowed in v1.
+                     */
+                    pattern?: string;
+                    items?: {
+                      type: "string" | "number" | "integer" | "boolean";
+                      description?: string;
+                      /**
+                       * @minItems 1
+                       * @maxItems 100
+                       */
+                      enum?: [string | number | number | boolean, ...(string | number | number | boolean)[]];
+                      maxLength?: number;
+                      pattern?: string;
+                    };
+                    minItems?: number;
+                    maxItems?: number;
+                  }
+                | undefined;
+            };
+            /**
+             * @maxItems 20
+             */
+            required?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string]
+              | [string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string]
+              | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ]
+              | [
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string,
+                  string
+                ];
+            additionalProperties?: false;
+          };
+          /**
+           * The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this.
+           */
+          net?: "deny" | "openvibe-only" | "public";
+          /**
+           * Caps on one run of the tool. Run treats them as declared, never above its own caps.
+           */
+          limits?: {
+            /**
+             * Wall-clock time, at most 30000 ms; default 10000.
+             */
+            wall_ms?: number;
+            /**
+             * Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB).
+             */
+            mem_bytes?: number;
+          };
+        }
+      ];
+  /**
+   * What the skill may ask an agent to do. It grants nothing: each step still goes through the agent's level and approvals. A sandbox skill names skill.run here.
+   */
+  requires?: {
+    /**
+     * The kinds of act (actor approvals, HO1) its steps may be.
+     *
+     * @maxItems 16
+     */
+    kinds?:
+      | []
+      | [
+          | "codes.task"
+          | "actor.action"
+          | "computer.run"
+          | "computer.write"
+          | "computer.input"
+          | "computer.browser"
+          | "computer.desk"
+          | "robot.move"
+          | "space"
+          | "publish"
+          | "post"
+          | "send"
+          | "install"
+          | "routine"
+          | "money"
+          | "skill.run"
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ]
+      | [
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          ),
+          (
+            | "codes.task"
+            | "actor.action"
+            | "computer.run"
+            | "computer.write"
+            | "computer.input"
+            | "computer.browser"
+            | "computer.desk"
+            | "robot.move"
+            | "space"
+            | "publish"
+            | "post"
+            | "send"
+            | "install"
+            | "routine"
+            | "money"
+            | "skill.run"
+          )
+        ];
+    /**
+     * Connected apps it uses (connect slugs). The person connects each one themselves.
+     *
+     * @maxItems 20
+     */
+    apps?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * Web hosts it reads from or writes to.
+     *
+     * @maxItems 20
+     */
+    hosts?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  /**
+   * How it runs: prompt (instructions and text only, as @1) or sandbox (its code runs in a sandbox, never on an OpenVibe server).
+   */
+  runs: "prompt" | "sandbox";
+  /**
+   * An SPDX licence id, such as MIT or CC-BY-4.0.
+   */
+  license?: string;
+  /**
+   * Who the document says wrote it: a claim, never checked here.
+   */
+  author?: {
+    subject: string;
+    name?: string;
+  };
+  /**
+   * When the document was written. Not hashed.
+   */
+  created_at?: string;
+  /**
+   * A sha256 over the canonical JSON: the file was not edited after it was written. Not a signature.
+   */
+  integrity: {
+    alg: "sha256";
+    hash: string;
+  };
+};
 
 /** frame.menu-card@1.0.0 (owner: network) */
 /**

@@ -1,0 +1,577 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/skill.v2.json",
+  "title": "ActorSkillV2",
+  "description": "actor.skill@2: a skill, the document an agent loads to do one kind of job well (ADR-058, ADR-060). It keeps every field and meaning of actor.skill@1 and adds a way for the skill to bring CODE that runs in a sandbox: RUNS is prompt (as @1, text and instructions only) or sandbox. A sandbox skill carries its code as ordinary TEXT resources (a .js path with media_type text/javascript, at most 64 KiB each, in the integrity hash); TOOLS (1 to 5, only when runs is sandbox) say what an agent may call: a name, a description the agent reads, language javascript (the only one in v1), an ENTRY naming one of the skill's own .js resources, ARGS as a JSON Schema subset (an object whose properties are string, number, integer, boolean or an array of those; enum, maxLength, and pattern at most 200 characters; no $ref and no nested object), NET (deny by default, openvibe-only, public) and LIMITS (wall_ms at most 30000, default 10000; mem_bytes at most 268435456, default 134217728). A sandbox skill's requires.kinds names skill.run; a prompt skill declares no tools. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@2). Code never runs on an OpenVibe server and never sees a secret: it runs as a Run job of class function on a Node that declared the skill runner, with the network its tool declared and the exact bytes the registry scanned. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, tools, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; tools are [{ name, description, language, entry, args, net, limits }] in the document's order, with an absent net or limits (and each absent limits field) left out and args as the object the document wrote; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "skill",
+    "slug",
+    "name",
+    "description",
+    "version",
+    "instructions",
+    "runs",
+    "integrity"
+  ],
+  "properties": {
+    "skill": {
+      "const": "actor.skill@2",
+      "description": "The document marker."
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$",
+      "description": "Its name in the registry: lowercase letters, digits and hyphens."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "What a person reads on its card."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 280,
+      "description": "When to use it, in one line: the only part an agent reads before it loads the skill."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})\\.(0|[1-9][0-9]{0,5})$",
+      "description": "Its semantic version."
+    },
+    "instructions": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000,
+      "description": "What to do, in Markdown. The agent reads it as guidance; it never grants a permission."
+    },
+    "resources": {
+      "type": "array",
+      "maxItems": 10,
+      "description": "Text the instructions refer to (a checklist, a template, a table) and, for a sandbox skill, the code a tool's entry names. Code is a text resource, not a binary and not an install recipe: it runs in a sandbox and never on an OpenVibe server. Any resource is at most 64 KiB; a non-code resource keeps @1's 20000-character cap.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "media_type",
+          "text"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,59}(?:/[a-z0-9][a-z0-9_-]{0,59}){0,3}\\.(md|txt|json|csv|js)$",
+            "description": "A relative name, no \"..\", ending in .md, .txt, .json, .csv or .js. A .js resource is code and is named by a tool's entry."
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "text/markdown",
+              "text/plain",
+              "application/json",
+              "text/csv",
+              "text/javascript"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 65536
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "pattern": "\\.js$"
+                }
+              },
+              "required": [
+                "path"
+              ]
+            },
+            "then": {
+              "properties": {
+                "media_type": {
+                  "type": "string",
+                  "const": "text/javascript"
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 65536,
+                  "description": "At most 64 KiB of code."
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "media_type": {
+                  "type": "string",
+                  "const": "text/javascript"
+                }
+              },
+              "required": [
+                "media_type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "pattern": "\\.js$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "media_type": {
+                  "type": "string",
+                  "enum": [
+                    "text/markdown",
+                    "text/plain",
+                    "application/json",
+                    "text/csv"
+                  ]
+                }
+              },
+              "required": [
+                "media_type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 20000
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "tools": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "description": "The tools an agent may call, present exactly when runs is sandbox. Each one runs the code in the resource its entry names, in a sandbox, with the network it declares and never wider.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "description",
+          "language",
+          "entry",
+          "args"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,31}$",
+            "description": "The name the agent calls."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "What it does: the agent reads this before it calls the tool."
+          },
+          "language": {
+            "const": "javascript",
+            "description": "The only language in v1."
+          },
+          "entry": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,59}(?:/[a-z0-9][a-z0-9_-]{0,59}){0,3}\\.js$",
+            "description": "The name of one of the skill's own .js resources (a cross-field rule the registry checks, not this schema)."
+          },
+          "args": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "description": "The tool's input as a JSON Schema subset: an object whose properties are string, number, integer, boolean or an array of those, with enum, maxLength and pattern (at most 200 characters). No $ref and no nested object.",
+            "properties": {
+              "type": {
+                "const": "object"
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "properties": {
+                "type": "object",
+                "maxProperties": 20,
+                "additionalProperties": {
+                  "$ref": "#/$defs/argValue"
+                }
+              },
+              "required": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$"
+                }
+              },
+              "additionalProperties": {
+                "const": false
+              }
+            }
+          },
+          "net": {
+            "type": "string",
+            "enum": [
+              "deny",
+              "openvibe-only",
+              "public"
+            ],
+            "default": "deny",
+            "description": "The network the tool may reach: deny (no network; the default), openvibe-only (OpenVibe's own endpoints), or public (the internet). It is never wider than this."
+          },
+          "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Caps on one run of the tool. Run treats them as declared, never above its own caps.",
+            "properties": {
+              "wall_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 30000,
+                "default": 10000,
+                "description": "Wall-clock time, at most 30000 ms; default 10000."
+              },
+              "mem_bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 268435456,
+                "default": 134217728,
+                "description": "Peak memory, at most 268435456 bytes (256 MiB); default 134217728 (128 MiB)."
+              }
+            }
+          }
+        }
+      }
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the skill may ask an agent to do. It grants nothing: each step still goes through the agent's level and approvals. A sandbox skill names skill.run here.",
+      "properties": {
+        "kinds": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "codes.task",
+              "actor.action",
+              "computer.run",
+              "computer.write",
+              "computer.input",
+              "computer.browser",
+              "computer.desk",
+              "robot.move",
+              "space",
+              "publish",
+              "post",
+              "send",
+              "install",
+              "routine",
+              "money",
+              "skill.run"
+            ]
+          },
+          "description": "The kinds of act (actor approvals, HO1) its steps may be."
+        },
+        "apps": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{0,63}$"
+          },
+          "description": "Connected apps it uses (connect slugs). The person connects each one themselves."
+        },
+        "hosts": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$"
+          },
+          "description": "Web hosts it reads from or writes to."
+        }
+      }
+    },
+    "runs": {
+      "type": "string",
+      "enum": [
+        "prompt",
+        "sandbox"
+      ],
+      "description": "How it runs: prompt (instructions and text only, as @1) or sandbox (its code runs in a sandbox, never on an OpenVibe server)."
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "An SPDX licence id, such as MIT or CC-BY-4.0."
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject"
+      ],
+      "description": "Who the document says wrote it: a claim, never checked here.",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the document was written. Not hashed."
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alg",
+        "hash"
+      ],
+      "description": "A sha256 over the canonical JSON: the file was not edited after it was written. Not a signature.",
+      "properties": {
+        "alg": {
+          "const": "sha256"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "runs": {
+            "type": "string",
+            "const": "prompt"
+          }
+        },
+        "required": [
+          "runs"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "tools"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "runs": {
+            "type": "string",
+            "const": "sandbox"
+          }
+        },
+        "required": [
+          "runs"
+        ]
+      },
+      "then": {
+        "required": [
+          "requires",
+          "tools"
+        ],
+        "type": "object",
+        "properties": {
+          "requires": {
+            "required": [
+              "kinds"
+            ],
+            "type": "object",
+            "properties": {
+              "kinds": {
+                "type": "array",
+                "contains": {
+                  "const": "skill.run"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "runs": {
+            "type": "string",
+            "const": "prompt"
+          }
+        },
+        "required": [
+          "runs"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "requires": {
+            "type": "object",
+            "properties": {
+              "kinds": {
+                "type": "array",
+                "not": {
+                  "contains": {
+                    "const": "skill.run"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "argValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "array"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "enum": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "type": [
+              "string",
+              "number",
+              "integer",
+              "boolean"
+            ]
+          }
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65536
+        },
+        "pattern": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "A regular expression, at most 200 characters. No longer pattern is allowed in v1."
+        },
+        "items": {
+          "$ref": "#/$defs/argScalar"
+        },
+        "minItems": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "maxItems": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      }
+    },
+    "argScalar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "enum": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "type": [
+              "string",
+              "number",
+              "integer",
+              "boolean"
+            ]
+          }
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65536
+        },
+        "pattern": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    }
+  }
+}
