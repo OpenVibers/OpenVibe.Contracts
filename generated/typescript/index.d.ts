@@ -301554,6 +301554,363 @@ export interface ActorSkillListing {
   retired_at?: string;
 }
 
+/** actor.canvas@1.0.0 (owner: actor) */
+/**
+ * actor.canvas@1: an agent's live panel beside the conversation (ADR-059) — a board of a trip, a table of prices, a checklist of what is left. It is DATA: a list of blocks drawn by one renderer (OpenVibe.Shared ov-canvas.js) wherever it is shown (Chat, Surf, the Dock, Actor). There is no HTML, no style, no script and no frame: text is plain and the renderer escapes it; an image is only a picture on openvibe.media; a link opens in a new tab with its host shown. A canvas acts only through the person: a button sends its label to the agent as the person's own message (action ask), and ticking a checklist item tells the agent which item changed; the agent's next steps go through its level and approvals like any other. VERSION only grows: a viewer ignores an older one, and the agent replaces the whole document, never part of it.
+ */
+export interface ActorCanvas {
+  canvas: "actor.canvas@1";
+  id: string;
+  title: string;
+  /**
+   * Grows with every update; a viewer ignores an older version.
+   */
+  version: number;
+  /**
+   * The agent that draws it.
+   */
+  agent_id?: string;
+  /**
+   * The conversation it sits beside (Actor's task or chat id).
+   */
+  thread?: string;
+  updated_at: string;
+  /**
+   * @maxItems 60
+   */
+  blocks: (
+    | {
+        type: "heading";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        text: string;
+        level?: 1 | 2;
+      }
+    | {
+        type: "text";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        text: string;
+      }
+    | {
+        type: "list";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        /**
+         * @maxItems 50
+         */
+        items: string[];
+        ordered?: boolean;
+      }
+    | {
+        type: "checklist";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        /**
+         * @maxItems 50
+         */
+        items: {
+          id: string;
+          text: string;
+          done: boolean;
+        }[];
+      }
+    | {
+        type: "table";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        /**
+         * @minItems 1
+         * @maxItems 8
+         */
+        columns:
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string];
+        /**
+         * @maxItems 100
+         */
+        rows:
+          | []
+          | [string | number]
+          | [string | number, string | number]
+          | [string | number, string | number, string | number]
+          | [string | number, string | number, string | number, string | number]
+          | [string | number, string | number, string | number, string | number, string | number]
+          | [string | number, string | number, string | number, string | number, string | number, string | number]
+          | [
+              string | number,
+              string | number,
+              string | number,
+              string | number,
+              string | number,
+              string | number,
+              string | number
+            ]
+          | [
+              string | number,
+              string | number,
+              string | number,
+              string | number,
+              string | number,
+              string | number,
+              string | number,
+              string | number
+            ][];
+      }
+    | {
+        type: "metric";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        label: string;
+        value: string;
+        note?: string;
+      }
+    | {
+        type: "chart";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        kind: "bar" | "line";
+        unit?: string;
+        /**
+         * @minItems 1
+         * @maxItems 4
+         */
+        series:
+          | [
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              }
+            ]
+          | [
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              },
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              }
+            ]
+          | [
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              },
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              },
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              }
+            ]
+          | [
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              },
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              },
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              },
+              {
+                name: string;
+                /**
+                 * @minItems 1
+                 * @maxItems 60
+                 */
+                points: [
+                  {
+                    x: string;
+                    y: number;
+                  },
+                  ...{
+                    x: string;
+                    y: number;
+                  }[]
+                ];
+              }
+            ];
+      }
+    | {
+        type: "image";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        /**
+         * A picture on openvibe.media, and nowhere else.
+         */
+        src: string;
+        alt: string;
+      }
+    | {
+        type: "link";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        href: string;
+        text: string;
+      }
+    | {
+        type: "button";
+        /**
+         * A stable id, so a viewer keeps its place when the canvas updates.
+         */
+        id?: string;
+        label: string;
+        /**
+         * The label goes to the agent as the person's own message. A button never acts by itself.
+         */
+        action: "ask";
+      }
+  )[];
+}
+
 /** actor.skill@1.0.0 (owner: actor) */
 /**
  * actor.skill@1: a skill, the document an agent loads to do one kind of job well (ADR-058). It follows the open Markdown-skill shape (a name, a one-line description, Markdown instructions) with what OpenVibe adds: a slug, a version, up to ten TEXT resources, and REQUIRES, what the skill may ask an agent to do. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@1). A v1 skill RUNS AS A PROMPT and nothing else: no code, no binary, no install recipe (a skill that runs code waits for a sandbox and a new major). DESCRIPTION is the only part an agent reads before it loads the skill (progressive disclosure), so it says when to use it. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.

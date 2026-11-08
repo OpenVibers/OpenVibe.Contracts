@@ -9980,6 +9980,16 @@
       "adr": "ADR-058"
     },
     {
+      "id": "actor.canvas",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/canvas.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-059"
+    },
+    {
       "id": "actor.skill",
       "version": "1.0.0",
       "owner": "actor",

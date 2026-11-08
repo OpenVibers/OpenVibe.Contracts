@@ -1,0 +1,103 @@
+{
+  "canvas": "actor.canvas@1",
+  "id": "cnv_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "title": "Lisbon, 14–17 November",
+  "version": 3,
+  "agent_id": "agt_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "thread": "tsk_42",
+  "updated_at": "2026-11-08T01:00:00.000Z",
+  "blocks": [
+    {
+      "type": "heading",
+      "text": "Lisbon, 14–17 November",
+      "level": 1
+    },
+    {
+      "type": "metric",
+      "label": "Flights and hotel",
+      "value": "€612",
+      "note": "two people, booked nothing yet"
+    },
+    {
+      "type": "checklist",
+      "id": "todo",
+      "items": [
+        {
+          "id": "flights",
+          "text": "Pick the flights",
+          "done": true
+        },
+        {
+          "id": "hotel",
+          "text": "Choose a hotel near Alfama",
+          "done": false
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "id": "hotels",
+      "columns": [
+        "Hotel",
+        "Night",
+        "Walk to the river"
+      ],
+      "rows": [
+        [
+          "Casa A",
+          118,
+          "6 min"
+        ],
+        [
+          "Hotel B",
+          96,
+          "14 min"
+        ]
+      ]
+    },
+    {
+      "type": "chart",
+      "id": "prices",
+      "kind": "line",
+      "unit": "€",
+      "series": [
+        {
+          "name": "Flights",
+          "points": [
+            {
+              "x": "Mon",
+              "y": 240
+            },
+            {
+              "x": "Tue",
+              "y": 212
+            },
+            {
+              "x": "Wed",
+              "y": 199
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "src": "https://openvibe.media/t/lisbon.jpg",
+      "alt": "The river at dusk"
+    },
+    {
+      "type": "link",
+      "href": "https://openvibe.video/watch?v=AbCdEfGhIjK",
+      "text": "The walking tour video"
+    },
+    {
+      "type": "text",
+      "text": "Casa A is closer to the river; Hotel B is cheaper.\nBoth have free cancellation until Friday."
+    },
+    {
+      "type": "button",
+      "label": "Book Casa A",
+      "action": "ask"
+    }
+  ]
+}

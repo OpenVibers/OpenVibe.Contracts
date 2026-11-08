@@ -1022,6 +1022,20 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     ok(dangling.length === 0, `generated types reference undeclared names: ${dangling.join(', ')}`);
 }
 
+// ── actor.canvas@1 (ADR-059): data, never markup; a button only asks ─────────
+{
+    const c = contracts.schema('actor.canvas@1');
+    const types = c.properties.blocks.items.oneOf.map((b) => b.properties.type.const);
+    ok(!types.some((t) => /^(html|script|style|iframe|frame|embed|markup)$/i.test(t)), 'no canvas block is markup, a script, a style or a frame');
+    const button = c.properties.blocks.items.oneOf.find((b) => b.properties.type.const === 'button');
+    ok(button.properties.action.const === 'ask', 'a button only sends its label to the agent as the person\'s message');
+    const image = c.properties.blocks.items.oneOf.find((b) => b.properties.type.const === 'image');
+    ok(new RegExp(image.properties.src.pattern).test('https://openvibe.media/t/x.jpg') && !new RegExp(image.properties.src.pattern).test('https://tracker.example/p.png'), 'a picture comes from openvibe.media only');
+    const link = c.properties.blocks.items.oneOf.find((b) => b.properties.type.const === 'link');
+    ok(!new RegExp(link.properties.href.pattern).test('javascript:alert(1)') && !new RegExp(link.properties.href.pattern).test('http://x.y'), 'a link is https only');
+    ok(c.properties.blocks.maxItems === 60, 'at most 60 blocks');
+}
+
 // ── actor.skill@1 and actor.skill-listing@1 (ADR-058) ───────────────────────
 // A skill is a document: its integrity hash covers its canonical content (not a signature); it runs as a prompt
 // only; it grants nothing, and what it may ask for is HO1's kinds; the listing's scan and curator travel with it.

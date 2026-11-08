@@ -1,4 +1,13 @@
 # Changelog
+
+## 0.340.0 — 2026-11-08
+
+- Add `actor.canvas@1` (ADR-059, plan HO9): an agent's live panel beside the conversation, as data. A canvas is a
+  list of blocks (a heading, text, a list, a checklist, a table, a metric, a bar or line chart, a picture from
+  openvibe.media, a link, a button) drawn by one renderer (OpenVibe.Shared `ov-canvas.js`) wherever it is shown. There
+  is no HTML, style, script or frame; text is plain. A button only sends its label to the agent as the person's own
+  message, and ticking a checklist item tells the agent which item changed: a canvas never acts by itself. `version`
+  only grows, and the agent replaces the whole document.
 ## 0.339.0 — 2026-11-08
 
 - The batches contract says what cancelling does. Only the prompts that never had a run are cancelled, and

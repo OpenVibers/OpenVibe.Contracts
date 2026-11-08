@@ -110142,6 +110142,444 @@
         }
       }
     },
+    "actor.canvas": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/canvas.v1.json",
+        "title": "ActorCanvas",
+        "description": "actor.canvas@1: an agent's live panel beside the conversation (ADR-059) — a board of a trip, a table of prices, a checklist of what is left. It is DATA: a list of blocks drawn by one renderer (OpenVibe.Shared ov-canvas.js) wherever it is shown (Chat, Surf, the Dock, Actor). There is no HTML, no style, no script and no frame: text is plain and the renderer escapes it; an image is only a picture on openvibe.media; a link opens in a new tab with its host shown. A canvas acts only through the person: a button sends its label to the agent as the person's own message (action ask), and ticking a checklist item tells the agent which item changed; the agent's next steps go through its level and approvals like any other. VERSION only grows: a viewer ignores an older one, and the agent replaces the whole document, never part of it.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "canvas",
+          "id",
+          "title",
+          "version",
+          "blocks",
+          "updated_at"
+        ],
+        "properties": {
+          "canvas": {
+            "const": "actor.canvas@1"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^cnv_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Grows with every update; a viewer ignores an older version."
+          },
+          "agent_id": {
+            "type": "string",
+            "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The agent that draws it."
+          },
+          "thread": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "The conversation it sits beside (Actor's task or chat id)."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "blocks": {
+            "type": "array",
+            "maxItems": 60,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "A heading.",
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "heading"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 120,
+                      "minLength": 1
+                    },
+                    "level": {
+                      "type": "integer",
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "Plain text; line breaks are kept, and nothing in it is markup.",
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "text"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 4000,
+                      "minLength": 1
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "A list of short lines.",
+                  "required": [
+                    "type",
+                    "items"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "list"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "items": {
+                      "type": "array",
+                      "maxItems": 50,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 280,
+                        "minLength": 1
+                      }
+                    },
+                    "ordered": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "Items the person can tick; a tick tells the agent which item changed.",
+                  "required": [
+                    "type",
+                    "items"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "checklist"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "items": {
+                      "type": "array",
+                      "maxItems": 50,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "id",
+                          "text",
+                          "done"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$"
+                          },
+                          "text": {
+                            "type": "string",
+                            "maxLength": 280,
+                            "minLength": 1
+                          },
+                          "done": {
+                            "type": "boolean"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "A table: up to 8 columns and 100 rows of text or numbers.",
+                  "required": [
+                    "type",
+                    "columns",
+                    "rows"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "table"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "columns": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "minLength": 1
+                      }
+                    },
+                    "rows": {
+                      "type": "array",
+                      "maxItems": 100,
+                      "items": {
+                        "type": "array",
+                        "maxItems": 8,
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 200
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "One number that matters, with its label.",
+                  "required": [
+                    "type",
+                    "label",
+                    "value"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "metric"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "label": {
+                      "type": "string",
+                      "maxLength": 60,
+                      "minLength": 1
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 40,
+                      "minLength": 1
+                    },
+                    "note": {
+                      "type": "string",
+                      "maxLength": 120
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "A small bar or line chart; the renderer draws it, nothing is fetched.",
+                  "required": [
+                    "type",
+                    "kind",
+                    "series"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "chart"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "bar",
+                        "line"
+                      ]
+                    },
+                    "unit": {
+                      "type": "string",
+                      "maxLength": 12
+                    },
+                    "series": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 4,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "name",
+                          "points"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "maxLength": 40,
+                            "minLength": 1
+                          },
+                          "points": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": 60,
+                            "items": {
+                              "type": "object",
+                              "additionalProperties": false,
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "properties": {
+                                "x": {
+                                  "type": "string",
+                                  "maxLength": 20,
+                                  "minLength": 1
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "A picture from OpenVibe.Media.",
+                  "required": [
+                    "type",
+                    "src",
+                    "alt"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "image"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "src": {
+                      "type": "string",
+                      "pattern": "^https://openvibe\\.media/[A-Za-z0-9._~/%-]{1,1024}(\\?[A-Za-z0-9._~=&%-]{0,200})?$",
+                      "description": "A picture on openvibe.media, and nowhere else."
+                    },
+                    "alt": {
+                      "type": "string",
+                      "maxLength": 200
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "A link: it opens in a new tab and shows its host.",
+                  "required": [
+                    "type",
+                    "href",
+                    "text"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "link"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "href": {
+                      "type": "string",
+                      "pattern": "^https://[^\\s\"'<>]{1,2048}$"
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 120,
+                      "minLength": 1
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "A reply the person can send with one tap.",
+                  "required": [
+                    "type",
+                    "label",
+                    "action"
+                  ],
+                  "properties": {
+                    "type": {
+                      "const": "button"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$",
+                      "description": "A stable id, so a viewer keeps its place when the canvas updates."
+                    },
+                    "label": {
+                      "type": "string",
+                      "maxLength": 40,
+                      "minLength": 1
+                    },
+                    "action": {
+                      "const": "ask",
+                      "description": "The label goes to the agent as the person's own message. A button never acts by itself."
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
     "actor.skill": {
       "version": "1.0.0",
       "owner": "actor",
