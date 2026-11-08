@@ -301585,9 +301585,9 @@ export interface ActorSkillListing {
   retired_at?: string;
 }
 
-/** actor.skill-listing@2.0.0 (owner: actor) */
+/** actor.skill-listing@2.1.0 (owner: actor) */
 /**
- * actor.skill-listing@2: a skill in the registry, the record every site shows on its card (ADR-058, ADR-060). It keeps every field and meaning of actor.skill-listing@1 and adds what a sandbox skill needs to be shown and run: the document is actor.skill@2, CODE lists, per code resource, its name (the resource path a tool's entry names), the Media object id its bytes are stored under and the sha256 of those bytes, so the bytes that run are the bytes that were scanned; and the SCAN's findings may name the TOOL they are about, so a person reads the scan one tool at a time. A sandbox listing carries code; a prompt listing carries none. It still carries the PUBLISHER from the registry's own record (vouched: unlike the document's author, this is who published it), the SCAN (its state and findings travel with the listing), and the CURATOR's state. Install rules every site keeps: a passed skill installs in one tap; a flagged one only after the person reads the findings and confirms; a failed one never; a stale or archived one is not offered. Installing copies the document into the person's agent; it grants nothing (the skill's requires is a declaration).
+ * actor.skill-listing@2: a skill in the registry, the record every site shows on its card (ADR-058, ADR-060). It keeps every field and meaning of actor.skill-listing@1 and adds what a sandbox skill needs to be shown and run: the document is actor.skill@2, CODE lists, per code resource, its name (the resource path a tool's entry names), the Media object id its bytes are stored under and the sha256 of those bytes, so the bytes that run are the bytes that were scanned; and the SCAN's findings may name the TOOL they are about, so a person reads the scan one tool at a time. A sandbox listing carries code; a prompt listing carries none. It still carries the PUBLISHER from the registry's own record (vouched: unlike the document's author, this is who published it), the SCAN (its state and findings travel with the listing), and the CURATOR's state. Install rules every site keeps: a passed skill installs in one tap; a flagged one only after the person reads the findings and confirms; a failed one never; a stale or archived one is not offered. Installing copies the document into the person's agent; it grants nothing (the skill's requires is a declaration). VISIBILITY is public (the default, and what every listing is today) or private (only its publisher sees or installs it); because a private listing always belongs to a person, VISIBILITY private requires PUBLISHER.KIND person.
  */
 export type ActorSkillListingV2 = {
   [k: string]: unknown | undefined;
@@ -302409,6 +302409,10 @@ export type ActorSkillListingV2 = {
     subject?: string;
     name?: string;
   };
+  /**
+   * public: anyone may see and install it, as every listing is today (the default, and what an absent field means). private: only its publisher sees or installs it, so its publisher.kind is person.
+   */
+  visibility?: "public" | "private";
   /**
    * What the registry's scan found. It travels with the listing, and a finding about a tool names it.
    */

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.346.0 — 2026-11-08
+
+- `actor.skill-listing@2` (2.1.0) gains `visibility` (plan HO11, the agent writes its own skills): `public` (the
+  default, and what every listing is today) or `private`, meaning only its publisher sees or installs it. Additive:
+  the field is optional, so a listing without it stays public and nothing that exists today changes shape. A private
+  listing's `publisher.kind` must be `person`: OpenVibe's own skills are always public. JSON Schema states both the
+  enum and that rule, and the fixtures hold it.
+
 ## 0.345.0 — 2026-11-08
 
 - Add `actor.approval-answer@1` (plan HO12, the phone as the agent's eyes and hands): the person's answer to an
