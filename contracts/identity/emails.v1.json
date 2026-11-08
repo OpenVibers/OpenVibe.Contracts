@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/identity/emails.v1.json",
   "title": "Verified email addresses for the authenticated person",
+  "description": "The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the currently selected primary address.",
   "type": "object",
   "additionalProperties": false,
   "required": ["emails"],

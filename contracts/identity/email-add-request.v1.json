@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/identity/email-add-request.v1.json",
+  "title": "Add an email address to the authenticated person's account",
+  "description": "A single email address the account owner wants to verify and attach to their own account.",
   "type": "object",
   "additionalProperties": false,
   "required": ["email"],
