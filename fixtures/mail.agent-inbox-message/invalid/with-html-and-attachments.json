@@ -1,0 +1,16 @@
+{
+  "message_id": "m-4714",
+  "inbox": "helper.alice@openvibe.email",
+  "agent_id": "helper",
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "from": ["dana@example.net"],
+  "to": ["helper.alice@openvibe.email"],
+  "subject": "A big one",
+  "text": "the body",
+  "in_reply_to": null,
+  "references": [],
+  "received_at": "2026-11-07T12:00:00Z",
+  "spam": false,
+  "html": "<p>the body</p>",
+  "attachments": [{ "name": "a.pdf" }]
+}

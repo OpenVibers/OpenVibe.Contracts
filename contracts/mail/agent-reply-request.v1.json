@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/mail/agent-reply-request.v1.json",
+  "title": "MailAgentReplyRequest",
+  "description": "mail.agent.reply-request@1: the body of mail.agent.reply (POST /internal/mail/agents/:agent_id/reply), an agent answering a letter to its own address. The reply goes FROM the agent's inbox, never from the person's mailbox: the person's own address is not the agent's to write from. `body` is plain text, cut to 10000 characters; `in_reply_to` and `references` are Message-IDs WITHOUT the angle brackets, and Mail wraps each in one, so a thread stays one thread in the reader that receives it. A reply to an address that is not the sender's answers nothing: Mail refuses it rather than write to a stranger the agent's answer was not for. Nothing here says who the person is; the token does.",
+  "type": "object",
+  "required": ["body"],
+  "additionalProperties": false,
+  "properties": {
+    "message_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "description": "The message being answered, as mail.agent.read gave it. Mail takes the sender and the subject from it, so a caller cannot write to someone the message did not come from."
+    },
+    "to": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254,
+      "description": "Who the reply goes to. Optional: without it the reply goes to the sender of message_id. When both are given they must be the same address."
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000,
+      "description": "The reply, as plain text. Mail builds the message from it and sends no HTML."
+    },
+    "in_reply_to": {
+      "type": ["string", "null"],
+      "maxLength": 998,
+      "description": "The Message-ID this reply answers, without angle brackets. Mail wraps it: In-Reply-To: <…>."
+    },
+    "references": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "type": "string", "maxLength": 998 },
+      "description": "The Message-IDs of the conversation, oldest first, without angle brackets. Mail wraps each: References: <…> <…>."
+    }
+  }
+}

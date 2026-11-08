@@ -1,0 +1,22 @@
+{
+  "id": "mail.agent.reply",
+  "version": "1.0",
+  "owner": "mail",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Send a reply FROM an agent's own address, as that agent acting for the person whose mailbox receives its mail. POST /internal/mail/agents/:agent_id/reply takes mail.agent-reply-request@1 and answers mail.agent-reply-result@1. The reply is plain text, comes from <agent>.<user>@openvibe.email and from nothing else, and carries In-Reply-To and References so it stays in the thread; the recipient is the sender of the message being answered, or the same address named in `to`, and never a stranger the message did not come from. The recipient is therefore never new: this is an answer, not a first letter. The token must name the person (on_behalf_of) and the agent must be one of their inboxes. Loopback only; granted to OpenVibe.Actor alone, which sends the reply the person approved.",
+  "permissions": [
+    "mail:messages:send"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "internal-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/mail/agents/:agent_id/reply"
+  ],
+  "inputSchema": "mail.agent-reply-request@1",
+  "outputSchema": "mail.agent-reply-result@1"
+}

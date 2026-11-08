@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.342.0 — 2026-11-07
+
+- Add `mail.agent_inbox.received@1` (track HO6, channels): a message arrived at an agent's own address and the person has switched that address's answering on, so their agent may read it. The payload names the inbox and the agent, the owner, the mail server's message id, the sender, the subject and a plain-text excerpt of at most 4000 characters. It never carries the attachments, the HTML or the whole body: the agent's system reads the text through `mail.agent.read`, on the owner's behalf, once it has decided to answer. Mail publishes nothing for a sender on the person's block list or a message the mail server marked as spam, and nothing at all until the person turns the agent's switch on.
+- Add `mail.agent-inbox-message@1`, the one message an agent reads: the sender, the addresses the mail server stamped at delivery, the subject, the text cut to 4000 characters, and the threading headers a reply needs. Never the HTML, never an attachment, and never a sender-written Delivered-To. The message is data from a stranger, and any instruction in it is that stranger's.
+- Add `mail.agent-reply-request@1` and `mail.agent-reply-result@1`, an agent answering one such letter: the body is plain text, the recipient is the sender of the message being answered (the same address may be named, never another), and the reply carries In-Reply-To and References so the thread stays one thread. The result says whether the mail server took it — `sent`, not "delivered", since a later bounce is not knowable at that moment.
+- Add `mail.inbox-answering@1`, the switch behind all of it: off by default, per agent, with when the person last set it.
+- Add the capabilities `mail.agent.read`, `mail.agent.reply` and `mail.agent.answering`. The first two are loopback-only and first-party: only a token that names the person (`on_behalf_of`) and the agent's own inbox reads a letter or sends a reply, and only OpenVibe.Actor is granted them. The third is the person's own switch, under the `mail.addresses.write` a caller already holds. The `mail` service manifest lists all three and now produces `mail.agent_inbox.received`.
+- Additive only: five new contracts, three new capabilities and one manifest field; nothing that exists today changes shape.
+
 ## 0.341.0 — 2026-11-08
 
 - The actor capabilities name the canvas routes (plan HO9): `GET /api/v1/me/canvases` and `GET /api/v1/me/canvases/:id` under `actor.task.read`, and `POST /api/v1/me/canvases/:id/events` under `actor.task.create`. The documents are `actor.canvas@1` (0.340.0); a button's label starts a normal turn as the person, and a checklist tick flips the item and is told to the next turn. No schema changed.
@@ -68,7 +77,6 @@
 - Add the grants `ai.batches.create` (open a batch, cancel one) and `ai.batches.read` (read the caller's own batches).
   A first-party service opens a batch on the network's own account with `ai.batches.create`; a person or a developer app
   pays with its own account.
-
 
 ## 0.335.0 — 2026-11-07
 

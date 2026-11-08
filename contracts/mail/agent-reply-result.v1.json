@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/mail/agent-reply-result.v1.json",
+  "title": "MailAgentReplyResult",
+  "description": "mail.agent.reply-result@1: what mail.agent.reply answers once the mail server took the message. `sent` is false when the mail server refused it (the answer's `reason` says why in plain words) and true when it accepted it — a relay's later bounce is not knowable here and is not claimed. `message_id` is the mail server's id for the sent message when it answers with one; `rfc_message_id` is the Message-ID header the reply carries, which a later letter in the thread will name in its In-Reply-To.",
+  "type": "object",
+  "required": ["sent"],
+  "additionalProperties": false,
+  "properties": {
+    "sent": {
+      "type": "boolean",
+      "description": "True when the mail server accepted the reply, false when it did not."
+    },
+    "message_id": {
+      "type": ["string", "null"],
+      "maxLength": 512,
+      "description": "The mail server's id for the sent message."
+    },
+    "rfc_message_id": {
+      "type": ["string", "null"],
+      "maxLength": 998,
+      "description": "The Message-ID header of the reply, without angle brackets."
+    },
+    "reason": {
+      "type": ["string", "null"],
+      "maxLength": 300,
+      "description": "Why the reply was not sent, in plain words. Null when sent is true."
+    }
+  }
+}

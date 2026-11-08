@@ -1,0 +1,14 @@
+{
+  "message_id": "m-4711",
+  "inbox": "helper.alice@openvibe.email",
+  "agent_id": "helper",
+  "owner": "usr_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "from": ["dana@example.net"],
+  "to": ["helper.alice@openvibe.email"],
+  "subject": "Could you check Tuesday?",
+  "text": "Hi — are we still on for Tuesday at 10? I can move it if that is easier.\n\nThanks,\nDana",
+  "in_reply_to": null,
+  "references": [],
+  "received_at": "2026-11-07T12:00:00Z",
+  "spam": false
+}
