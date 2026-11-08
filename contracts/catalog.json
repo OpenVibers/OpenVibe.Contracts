@@ -10198,6 +10198,16 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "actor.task-view-ticket",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/task-view-ticket.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
     }
   ]
 }

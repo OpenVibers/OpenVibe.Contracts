@@ -1,0 +1,21 @@
+{
+  "id": "actor.task.view_ticket",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "description": "Mint a 15-minute reusable read-only task embed ticket. Only the person's own Bearer token and their own task are accepted; session cookies, service and delegated tokens cannot mint. Another person's task returns 404. Tickets work only on /embed/task/:id and its events/still reads, never on a write route. Wrong-task or expired tickets return 403. Stored only as SHA-256 hashes, bound to task and requester.",
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "actor.task-view-ticket@1",
+  "permissions": [
+    "actor:tasks:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "actor-read",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/tasks/:id/view-ticket"
+  ]
+}
