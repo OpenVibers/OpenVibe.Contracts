@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/website/share-connect-request.v1.json",
   "title": "WebsiteShareConnectRequest",
-  "description": "website.share-connect-request@1: what a Node presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Node proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.",
+  "description": "website.share-connect-request@1: what a Link presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Link proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -32,17 +32,17 @@
         "http2-ws"
       ],
       "default": "quic",
-      "description": "The data-plane transport the Node is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked."
+      "description": "The data-plane transport the Link is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked."
     },
     "node_version": {
       "type": "string",
       "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$",
-      "description": "The Node release, for posture and diagnostics; never used for authorization."
+      "description": "The Link release, for posture and diagnostics; never used for authorization."
     },
     "region": {
       "type": "string",
       "maxLength": 40,
-      "description": "The edge region the Node is dialing; the edge refuses a region it does not serve."
+      "description": "The edge region the Link is dialing; the edge refuses a region it does not serve."
     }
   }
 }

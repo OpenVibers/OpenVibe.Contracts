@@ -151,8 +151,8 @@
   "/api/v1/jobs": {
    "post": {
     "operationId": "post_api_v1_jobs",
-    "summary": "OpenVibe.Run hands a platform.job@1 to a paired Node over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 ",
-    "description": "**bot.job.dispatch** (internal): OpenVibe.Run hands a platform.job@1 to a paired Node over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 bot.class_unadvertised when the device does not advertise the job's class), POST /api/v1/jobs/:id/cancel cancels it, GET /api/v1/jobs/:id returns its state with the captured stdout. project_id is required (422 without it): the dispatch carries the project, and Run is the payer. Service-to-service only (OpenVibe.Run's Network service token); never granted to an app or mod and never delegated to people.",
+    "summary": "OpenVibe.Run hands a platform.job@1 to a paired Link over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 ",
+    "description": "**bot.job.dispatch** (internal): OpenVibe.Run hands a platform.job@1 to a paired Link over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 bot.class_unadvertised when the device does not advertise the job's class), POST /api/v1/jobs/:id/cancel cancels it, GET /api/v1/jobs/:id returns its state with the captured stdout. project_id is required (422 without it): the dispatch carries the project, and Run is the payer. Service-to-service only (OpenVibe.Run's Network service token); never granted to an app or mod and never delegated to people.",
     "tags": [
      "bot.job"
     ],
@@ -207,8 +207,8 @@
   "/api/v1/jobs/{id}": {
    "get": {
     "operationId": "get_api_v1_jobs_id",
-    "summary": "OpenVibe.Run hands a platform.job@1 to a paired Node over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 ",
-    "description": "**bot.job.dispatch** (internal): OpenVibe.Run hands a platform.job@1 to a paired Node over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 bot.class_unadvertised when the device does not advertise the job's class), POST /api/v1/jobs/:id/cancel cancels it, GET /api/v1/jobs/:id returns its state with the captured stdout. project_id is required (422 without it): the dispatch carries the project, and Run is the payer. Service-to-service only (OpenVibe.Run's Network service token); never granted to an app or mod and never delegated to people.",
+    "summary": "OpenVibe.Run hands a platform.job@1 to a paired Link over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 ",
+    "description": "**bot.job.dispatch** (internal): OpenVibe.Run hands a platform.job@1 to a paired Link over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 bot.class_unadvertised when the device does not advertise the job's class), POST /api/v1/jobs/:id/cancel cancels it, GET /api/v1/jobs/:id returns its state with the captured stdout. project_id is required (422 without it): the dispatch carries the project, and Run is the payer. Service-to-service only (OpenVibe.Run's Network service token); never granted to an app or mod and never delegated to people.",
     "tags": [
      "bot.job"
     ],
@@ -339,9 +339,9 @@
         "openvibe-only"
        ],
        "default": "deny",
-       "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
+       "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe Link's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
       },
-      "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
+      "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe Link's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
      },
      {
       "name": "inputs",
@@ -409,8 +409,8 @@
   "/api/v1/jobs/{id}/cancel": {
    "post": {
     "operationId": "post_api_v1_jobs_id_cancel",
-    "summary": "OpenVibe.Run hands a platform.job@1 to a paired Node over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 ",
-    "description": "**bot.job.dispatch** (internal): OpenVibe.Run hands a platform.job@1 to a paired Node over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 bot.class_unadvertised when the device does not advertise the job's class), POST /api/v1/jobs/:id/cancel cancels it, GET /api/v1/jobs/:id returns its state with the captured stdout. project_id is required (422 without it): the dispatch carries the project, and Run is the payer. Service-to-service only (OpenVibe.Run's Network service token); never granted to an app or mod and never delegated to people.",
+    "summary": "OpenVibe.Run hands a platform.job@1 to a paired Link over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 ",
+    "description": "**bot.job.dispatch** (internal): OpenVibe.Run hands a platform.job@1 to a paired Link over the device link and reads its state: POST /api/v1/jobs {node_id, job, project_id, subject, provider} dispatches it (idempotent by job id; 409 bot.class_unadvertised when the device does not advertise the job's class), POST /api/v1/jobs/:id/cancel cancels it, GET /api/v1/jobs/:id returns its state with the captured stdout. project_id is required (422 without it): the dispatch carries the project, and Run is the payer. Service-to-service only (OpenVibe.Run's Network service token); never granted to an app or mod and never delegated to people.",
     "tags": [
      "bot.job"
     ],
@@ -648,7 +648,7 @@
    "post": {
     "operationId": "post_api_v1_machines_id_desk_leases",
     "summary": "OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject.",
-    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Node sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.",
+    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Link sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.",
     "tags": [
      "bot.desk"
     ],
@@ -714,7 +714,7 @@
    "delete": {
     "operationId": "delete_api_v1_machines_id_desk_leases_desk",
     "summary": "OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject.",
-    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Node sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.",
+    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Link sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.",
     "tags": [
      "bot.desk"
     ],
@@ -815,7 +815,7 @@
    "get": {
     "operationId": "get_api_v1_machines_id_desk_leases_desk",
     "summary": "OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject.",
-    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Node sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.",
+    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Link sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.",
     "tags": [
      "bot.desk"
     ],
@@ -918,7 +918,7 @@
    "post": {
     "operationId": "post_api_v1_machines_id_desk_leases_desk_commands",
     "summary": "OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject.",
-    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Node sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.\n\nRoute note: bot.command@1, answered by bot.command-result@1",
+    "description": "**bot.desk.session** (first-party): OpenVibe.Run's sessions on machines (the Desks plan's D6): lease one desk for one session and act on it, with a Run service token naming the session's person in X-OV-Subject. POST /api/v1/machines/:id/desk-leases (bot.desk-lease-create-request@1, answered by bot.desk-lease@1) starts a browser desk on the person's own machine where they let agents use it, or on a desk host whose owner offers its desks to other people and whose Link sandboxes every desk; POST /api/v1/machines/:id/desk-leases/:desk/commands carries screen, input and browser (bot.command@1 without desk) to that desk alone; DELETE /api/v1/machines/:id/desk-leases/:desk stops it. Bot takes it only from Run, never reaches another desk or the machine itself, and on a shared host keeps even its owner off a leased desk.\n\nRoute note: bot.command@1, answered by bot.command-result@1",
     "tags": [
      "bot.desk"
     ],
@@ -2300,7 +2300,7 @@
    },
    "bot.desk-lease.v1": {
     "title": "BotDeskLease",
-    "description": "bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe.Node runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).",
+    "description": "bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe Link runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -2482,7 +2482,7 @@
    },
    "bot.job-dispatch-result.v1": {
     "title": "BotJobDispatchResult",
-    "description": "bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Node is away; it is resent on every reconnect until the Node acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Node sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Node acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.",
+    "description": "bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Link is away; it is resent on every reconnect until the Link acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Link sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Link acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.",
     "oneOf": [
      {
       "$ref": "#/components/schemas/bot.job-dispatch-result.v1/$defs/dispatched"
@@ -2527,7 +2527,7 @@
        "node_id": {
         "type": "string",
         "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
-        "description": "The paired device the job was sent to; a Node never reads another device's job."
+        "description": "The paired device the job was sent to; a Link never reads another device's job."
        },
        "class": {
         "$ref": "#/components/schemas/platform.runtime-class.v1"
@@ -2542,7 +2542,7 @@
          "cancelled",
          "expired"
         ],
-        "description": "queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl)."
+        "description": "queued (stored; sent and resent until acked), placed (the Link acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl)."
        },
        "project_id": {
         "type": "string",
@@ -2575,7 +2575,7 @@
          "null"
         ],
         "maxLength": 64,
-        "description": "The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
+        "description": "The Link's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
        },
        "sent_at": {
         "type": [
@@ -2591,7 +2591,7 @@
          "null"
         ],
         "minimum": 0,
-        "description": "The Node's job_started started_ms: the anchor of every usage second; null until it started."
+        "description": "The Link's job_started started_ms: the anchor of every usage second; null until it started."
        },
        "finished_at": {
         "type": [
@@ -2718,7 +2718,7 @@
      "state": {
       "type": "object",
       "additionalProperties": false,
-      "description": "The answer of GET /api/v1/jobs/:id (200): the row and the job's held stdout (null when the Node sent none).",
+      "description": "The answer of GET /api/v1/jobs/:id (200): the row and the job's held stdout (null when the Link sent none).",
       "required": [
        "job",
        "stdout"
@@ -3833,7 +3833,7 @@
      "id": {
       "type": "string",
       "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
-      "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Node command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
+      "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Link command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
      },
      "class": {
       "$ref": "#/components/schemas/platform.runtime-class.v1"
@@ -3903,7 +3903,7 @@
        "openvibe-only"
       ],
       "default": "deny",
-      "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
+      "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe Link's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
      },
      "inputs": {
       "type": "array",
@@ -4009,7 +4009,7 @@
    },
    "platform.runtime-class.v1": {
     "title": "RuntimeClass",
-    "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.",
+    "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe Link's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.",
     "$comment": "Additive: a class may be added to v1; none is removed, renamed or reordered.",
     "type": "string",
     "oneOf": [
@@ -4045,7 +4045,7 @@
    },
    "run.session.v1": {
     "title": "RunSession",
-    "description": "run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe.Node runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).",
+    "description": "run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe Link runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).",
     "type": "object",
     "additionalProperties": false,
     "required": [

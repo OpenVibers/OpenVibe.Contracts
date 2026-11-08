@@ -45,7 +45,7 @@
   ordinary text resource (`.js`, at most 64 KiB) in the same integrity hash. `requires.kinds` gains `skill.run`.
   The v2 listing pins each code resource's Media id and sha256 and lets a scan finding name the tool it is about.
   Code never runs on an OpenVibe server, never outside a sandbox and never with a secret: it runs as a Run
-  `function` job on a Node that declared the skill runner. `actor.skill@1` and `actor.skill-listing@1` are
+  `function` job on a Link that declared the skill runner. `actor.skill@1` and `actor.skill-listing@1` are
   unchanged and remain what a prompt-only skill publishes.
 
 ## 0.342.0 — 2026-11-07
@@ -272,7 +272,7 @@
 ## 0.312.0 — 2026-11-07
 
 - Add the Codes skills-hub records (the Compute plan §5, E6). `codes.skill@1` is one skill, rule, MCP server, command or hook: its owner, kind, stable slug, title, summary, the four sharing audiences (`private`, `people`, `link`, `public`), the harnesses it is written for, the newest version and that version's body. A `private`, `people` or `link` record is never in the gallery; only `public` is. The body is untrusted Markdown and the page renders it through the markup gate.
-- Add `codes.skill-version@1`: one immutable version of a record, keyed by `skill_id` and a growing `version`, with the body, summary, tools, audience, author and the note that says why it was written. A rollback copies the chosen version into a new one rather than rewriting history, so a Node that synced version 3 can still name it.
+- Add `codes.skill-version@1`: one immutable version of a record, keyed by `skill_id` and a growing `version`, with the body, summary, tools, audience, author and the note that says why it was written. A rollback copies the chosen version into a new one rather than rewriting history, so a Link that synced version 3 can still name it.
 - Valid and invalid fixtures cover a public skill, a private rule, a people-shared MCP record, versions 1 and 4, and the bad ids, kinds, audiences, tools, bodies and authors.
 
 ## 0.311.0 — 2026-11-07
@@ -577,7 +577,7 @@
   and none is served or granted.
 - **ADR-057's review** decides v0: the WebSocket fallback through Cloudflare inside Connect (no UDP, no DNS-only
   record), names `<label>--<user>.openvibe.website` (Space names never contain "--"), a share-scoped connect key until
-  the Node plugin, the gate's host-only signed cookie, modes owner/named and staff-first signin, no public shares
+  the Link plugin, the gate's host-only signed cookie, modes owner/named and staff-first signin, no public shares
   until CON-9 and CON-21.
 
 ## 0.278.0 — 2026-11-02
@@ -593,8 +593,8 @@
   may add `tools` (up to 64 OpenAI Chat Completions function definitions) and `tool_choice` (`auto` | `none`);
   messages may be `role: tool` with `tool_call_id`, and an assistant message may carry the `tool_calls` the model
   asked for in an earlier answer. The answer's data adds `message.tool_calls` and `finish_reason`. The machine passes
-  the tools to its model server and hands back the calls; it never runs one. A machine whose Node can pass them says
-  `ai.tools: true` in its capabilities (Node v0.36.0), so a caller sends tools only to such a machine. Older commands
+  the tools to its model server and hands back the calls; it never runs one. A machine whose Link can pass them says
+  `ai.tools: true` in its capabilities (Link v0.36.0), so a caller sends tools only to such a machine. Older commands
   validate as before. Fixtures: `ai-chat-tools` (valid), `ai-tool-without-call-id` and `ai-tool-bad-name` (invalid).
 
 ## 0.276.0 — 2026-11-02
@@ -911,7 +911,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 - **`bot.device-message@1`'s heartbeat gains an optional `fleet`** (Codes C9c): what the machine's coding agents have
   left — each agent's id, whether it is installed and signed in, and each limit window's label, used and limit and
-  when it frees. OpenVibe.Node reads it with OpenVibe.Codes' own logins probe as the machine's user and reports labels,
+  when it frees. OpenVibe Link reads it with OpenVibe.Codes' own logins probe as the machine's user and reports labels,
   numbers and times only (no key, token or account name); absent means no reading yet, never "nothing installed".
   Additive: no field changed or removed, and a heartbeat without `fleet` validates unchanged.
 - **`run.job-create-request@1` gains an optional `node`** (Codes C9c): the device id (`dev_…`) of the job's own
@@ -1287,8 +1287,8 @@ the notes were in the tag and commit messages (`git tag -n1`).
     idempotency key `run:<session>:<minute>`).
 - **Desk leases on Bot**: `bot.desk-lease@1` and `bot.desk-lease-create-request@1`, with the capability
   **`bot.desk.session`** (first-party, sensitive): Run leases one named desk for one session on the person's own machine
-  (where they let agents use it) or on a desk host whose owner offers it to other people and whose OpenVibe.Node runs
-  every desk in its own sandbox (Node v0.32.0, `desk_isolation: sandbox`); only that session's commands reach the desk,
+  (where they let agents use it) or on a desk host whose owner offers it to other people and whose OpenVibe Link runs
+  every desk in its own sandbox (Link v0.32.0, `desk_isolation: sandbox`); only that session's commands reach the desk,
   never the machine itself.
 - Fixtures for each, and `test/platform-run.test.js` holds the two sides together (ids, desk names, sizes, kinds).
 
@@ -1308,7 +1308,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 - **Any of your own machines** (AI on your own machines). A node credential's `machine`, in `ai.credential-put@1` and
   `ai.credential@1`, may be **`any`**: whichever of the person's machines is on, lets their AI use its models and offers
   the model.
-  - The fastest goes first, by the speed OpenVibe.Bot reports (`computer.ai_speed`, OpenVibe.Node v0.29.0).
+  - The fastest goes first, by the speed OpenVibe.Bot reports (`computer.ai_speed`, OpenVibe Link v0.29.0).
   - The next one is tried when one is busy or away.
   - It is never anyone else's machine, and never another provider.
 - Fixtures: a valid `any`, and an invalid machine that is neither a `dev_` id nor `any`.
@@ -1327,7 +1327,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 - **AI on your own machines** (the roadmap's user-owned GPU route; `OpenVibe_AI_On_Your_Machines_Plan_2026-10-27.md`).
   `bot.command@1` gains kind `ai`: one chat completion (`model`, `messages`, `max_tokens`, `temperature`) on the
-  person's own machine. OpenVibe.Node v0.27.0's `ai` plugin relays it to a local model server (Ollama, llama.cpp,
+  person's own machine. OpenVibe Link v0.27.0's `ai` plugin relays it to a local model server (Ollama, llama.cpp,
   LM Studio) and answers `{ model, message, usage? }`.
 - New capability **`bot.machine.ai`** (first-party, sensitive, owned by `bot`). A service, OpenVibe.AI, runs a model on a
   person's own machine for that person, where they turned on "Let my AI use this computer's models". It never places
@@ -1336,7 +1336,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.218.0 — 2026-10-27
 
-- **Programs on a desk** (the Desks plan's desk templates; OpenVibe.Node v0.26.0). `bot.command@1`'s `exec` takes:
+- **Programs on a desk** (the Desks plan's desk templates; OpenVibe Link v0.26.0). `bot.command@1`'s `exec` takes:
   - `desk`: the program runs in that desk's session (its display, session bus and temp folder), so a program with
     windows opens on the desk.
   - `detach`: on a whole desk only. It starts a program that keeps running, such as an office suite, a terminal or an
@@ -1347,7 +1347,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.217.0 — 2026-10-27
 
-- **Kept desk profiles** (the Desks plan's step D7, on one machine; OpenVibe.Node v0.24.0). On `start`, kind `desk`
+- **Kept desk profiles** (the Desks plan's step D7, on one machine; OpenVibe Link v0.24.0). On `start`, kind `desk`
   takes `profile`: a browser profile kept on the machine by that name.
   - The desk's browser starts from that profile, with its cookies and site storage, so a person signs in once, on any
     desk (an agent's "Needs you" sign-in carries over to the next task).
@@ -1358,7 +1358,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.216.0 — 2026-10-27
 
-- **Browser desks** (the Desks plan's step D2; OpenVibe.Node v0.23.0). Kind `desk` takes `kind` on start:
+- **Browser desks** (the Desks plan's step D2; OpenVibe Link v0.23.0). Kind `desk` takes `kind` on start:
   - `desktop` (the default) is a whole screen: a display, a window manager and a browser shown on it. It needs Linux
     with Xvfb.
   - `browser` is a browser alone, with no display, at about half the cost. Its screen, mouse and keyboard, and its live
@@ -1368,7 +1368,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.215.0 — 2026-10-27
 
-- **Several desks per machine** (the Desks plan's step D1, `OpenVibe_Agent_Desks_Plan_2026-10-27.md`; OpenVibe.Node
+- **Several desks per machine** (the Desks plan's step D1, `OpenVibe_Agent_Desks_Plan_2026-10-27.md`; OpenVibe Link
   v0.19.0). `bot.command@1`'s `desk` on `screen`, `input` and `browser` takes a named desk, `desk-<name>` (lower-case
   letters, digits and dashes, up to 24 after `desk-`), besides `main` and `private`. Kind `desk` takes `desk` (which
   desk; `private` by default) and the action `list` (the desks that run). Each desk is a separate computer for its
@@ -1932,7 +1932,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.182.0 — 2026-10-15
 
-- **The live screen** (plan T14, OpenVibe.Node v0.12.0): `bot.device-message@1` commands take the kind `screen_stream`.
+- **The live screen** (plan T14, OpenVibe Link v0.12.0): `bot.device-message@1` commands take the kind `screen_stream`.
   Its value is `{ action: 'start', whip_url, publish_key, seconds?, fps? }` or `{ action: 'stop' }`. It shows the machine's
   screen live to its owner on the machine's own OpenRestream stream: playback private, no recording, never mirrored to
   Live.
@@ -2040,7 +2040,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.174.0 — 2026-10-14
 
-- **`browser`, a computer kind** (plan T14/T17 next step; OpenVibe.Node's computer plugin 0.5.0). `bot.command@1` takes
+- **`browser`, a computer kind** (plan T14/T17 next step; OpenVibe Link's computer plugin 0.5.0). `bot.command@1` takes
   `{ action, url, selector, text, key, max_width }`:
   - `open` an http(s) `url`;
   - `click` a CSS `selector` or the button or link showing `text`;
@@ -2098,7 +2098,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
   `{ action, x, y, width, height, dy, text, keys }`. move, click, double_click and right_click go to a point, scroll
   by `dy` clicks, type text into whatever has focus, or press one key or chord (`keys`: letters, digits, `+`, `-` and
   `_` only, for example `ctrl+s`). Coordinates are in the space of the screen picture the caller last saw (`width` and
-  `height`, the `screen` kind's answer); the Node scales them to the real screen. The machine's level decides: refused
+  `height`, the `screen` kind's answer); the Link scales them to the real screen. The machine's level decides: refused
   at observe, approved one by one at ask. `bot.computer.control` lists it for a person's agent; the device frame
   lists it.
 - Fixtures: valid `input-click` and `input-key`, invalid `input-key-shell`. Additive.
@@ -2143,7 +2143,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.166.0 — 2026-10-14
 
-- **Computer control (plan T14/T17, OpenVibe.Node's `computer` plugin, Node#41).** `bot.command@1` takes the kinds
+- **Computer control (plan T14/T17, OpenVibe Link's `computer` plugin, Node#41).** `bot.command@1` takes the kinds
   `exec` (argv, cwd, timeout_s, stdin), `fs` (op list|stat|read|write|mkdir, path, offset, length, content_b64, mode) and
   `screen` (max_width), each with its value's shape. `bot.command-result@1` and the device `ack` of
   `bot.device-message@1` gain `data`: the machine's answer. The device `command` frame lists button, point and the
@@ -2202,7 +2202,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 ## 0.160.0 — 2026-10-14
 
 - **`bot.robot-profile@1`: `mapping.driver` may be `plugin`** (plan T15 "community-submitted profiles and drivers"): the
-  robot is driven by a third-party OpenVibe Node plugin, named in `mapping.plugin`, that its owner installs on their
+  robot is driven by a third-party OpenVibe Link plugin, named in `mapping.plugin`, that its owner installs on their
   Node. A community driver no longer needs a contract release of its own (as `looi` did); OpenVibe.Bot reviews and signs
   community profiles before robots can use them. New valid fixture `community-plugin.json`. Additive only: every
   existing profile stays valid.
@@ -2229,7 +2229,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 - **`bot.robot-profile@1`: `mapping.driver` may be `phone`** (plan T15 "an Android phone as the robot's brain"). A
   phone joins OpenVibe.Bot as a device from its own browser, with nothing to install: it pairs with a one-time code
   (or a QR code), publishes its camera over WHIP, speaks, shows a face or text, and reports its battery and tilt. The
-  driver runs in the page (OpenVibe.Bot `public/phone-device.js`), not as a Node plugin. Additive only: every
+  driver runs in the page (OpenVibe.Bot `public/phone-device.js`), not as a Link plugin. Additive only: every
   existing profile stays valid.
 
 ## 0.156.0 — 2026-10-13
@@ -2392,7 +2392,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 ## 0.137.0 — 2026-10-11
 
 - `bot.robot-profile@1`: `mapping.driver` may be `looi`, the community's Generic LOOI driver (a Bluetooth bridge
-  plugin for the OpenVibe Node; OpenVibe.Node `docs/hardware-looi.md`). OpenVibe.Bot ships the matching `looi` profile.
+  plugin for the OpenVibe Link; OpenVibe Link `docs/hardware-looi.md`). OpenVibe.Bot ships the matching `looi` profile.
 - Service manifests name their PostgreSQL databases (no service declares SQLite any more).
 
 ## 0.136.1 — 2026-10-10
@@ -2750,8 +2750,8 @@ openvibe.codes now answers those paths with permanent redirects.
 ## 0.112.0 — 2026-10-07
 
 **Robots driven through the relay plugin.** `bot.robot-profile@1` is 1.1.0: `mapping.driver` gains `relay`, the
-OpenVibe.Node plugin that forwards `button` and `point` commands to an owner's own script in OpenVibe.Live's
-hardware-client messages (OpenVibe.Node #33; plan T15 R9 steps 4-5). Bot's catalogue profile `relay.generic` uses it
+OpenVibe Link plugin that forwards `button` and `point` commands to an owner's own script in OpenVibe.Live's
+hardware-client messages (OpenVibe Link #33; plan T15 R9 steps 4-5). Bot's catalogue profile `relay.generic` uses it
 for the robots converted from Live's stream controls. Additive: every existing profile stays valid.
 
 ## 0.111.0 — 2026-10-07
@@ -3021,10 +3021,10 @@ depends on this one; there is no consumer yet. Additive.
 
 ## 0.97.0 — 2026-10-04
 
-**The job contract matches the Node again, and Bot's dispatch answer has a contract** (plan T14 step 6 follow-up).
+**The job contract matches the Link again, and Bot's dispatch answer has a contract** (plan T14 step 6 follow-up).
 - `platform.job@1`: `artifact` is required for class `code` as well as `function` again — the allOf `if` names both
   classes and the `artifact` description says so — and the invalid fixture `code-without-artifact` is back.
-  OpenVibe.Node already refuses a code job without an exact-version artifact (its `internal/protocol/protocol.go`
+  OpenVibe Link already refuses a code job without an exact-version artifact (its `internal/protocol/protocol.go`
   `JobNoArtifact`), and `run.job-create-request@1` already required it; b88849c had dropped the `code` case from
   this contract alone. A correction to match the implementations, not a new rule.
 - `bot.job-dispatch-result@1` (new, owner bot, ADR-034): what OpenVibe.Bot answers OpenVibe.Run's `bot.job.dispatch`
@@ -3037,7 +3037,7 @@ depends on this one; there is no consumer yet. Additive.
 
 ## 0.96.0 — 2026-10-04
 
-**OpenVibe.Bot's job dispatch for OpenVibe.Run** (plan T14 step 6, R1c): Run hands a job to a paired Node through Bot.
+**OpenVibe.Bot's job dispatch for OpenVibe.Run** (plan T14 step 6, R1c): Run hands a job to a paired Link through Bot.
 Additive, no breaking changes. One new internal, sensitive capability owned by bot, added to
 `manifests/services/bot.json`: `bot.job.dispatch` (permission `bot:jobs`, resource constraint `project`, input
 `platform.job@1`, events `run.job.*`). Service-to-service only (Run's service token); never granted to an app or mod and
@@ -3108,7 +3108,7 @@ test `test/usage-topics.test.js`: only network, codes and zone may list a `*.usa
 
 **OpenVibe.Bot's profiles, device protocol, operator commands, pairing and events** (plan T15 R7; ADR-043). The Bot
 manifest and its capabilities came in 0.85.0; this adds the contracts Bot's code already speaks, taken from Bot
-`155accc` and OpenVibe.Node `1ebf1a7`. Additive: every contract id is new.
+`155accc` and OpenVibe Link `1ebf1a7`. Additive: every contract id is new.
 - `bot.robot-profile@1` (public): a profile as `server/profiles/*.json` ships it and `GET /api/v1/profiles` serves it
   (null vendor, kind, description, variants and camera; defaulted limits; `halt` always in `commands`). The per-kind
   `commands` schema is Bot's (`drive`/`ptz` axes, `actuator` number, rgb, tone and bool, `say`, `display`); capability
@@ -3224,7 +3224,7 @@ planned (Run's repository does not exist yet) and additive.
 adaptive fabric" (Proposed, for the owner) ties `platform.resource-offer@1`, `workload-requirements@1`,
 `placement-result@1`, `placement-plan@1`, `provider-state@1`, `rate-card@1`, `cost-snapshot@1`, `telemetry-sample@1`
 and `usage-sample@1` to one placer (`openvibe-sdk/placement`), names the five trust classes, the `worker:<class>`
-capabilities a Node advertises (`worker:function`, `worker:code`, …) and the plane rule: the data plane keeps running
+capabilities a Link advertises (`worker:function`, `worker:code`, …) and the plane rule: the data plane keeps running
 on the last valid signed plan (`signature`, `epoch`, `expires_at`, checked by `placement.verifyPlan`). It records that
 `user-owned` is **not** in the default trust set: a user-owned offer is eligible only for a workload whose requirements
 name `user-owned`, so the SDK's default trust list stays the other four (this replaces the 0.87.0 note that the SDK
@@ -3358,7 +3358,7 @@ path.
   all `planned`, with fixtures. `contracts.zones.checkObjectZone` also checks that a zone's OVRN and Media namespace
   name its own project and id. Additive; no active contract changes.
 
-**Reserved worker capability names for OpenVibe.Node** (plan T14 groundwork, additive): a Node advertises its runtimes
+**Reserved worker capability names for OpenVibe Link** (plan T14 groundwork, additive): a Link advertises its runtimes
 as `worker:` capabilities in `platform.resource-offer@1`. The names are reserved in the contract now, not only by the
 `capabilities` pattern: `platform.resource-offer@1` gains `$defs.reservedWorkerCapabilities`, the six names
 `worker:function`, `worker:code`, `worker:browser`, `worker:linux`, `worker:desktop` and `worker:gpu` — one per
@@ -3383,7 +3383,7 @@ as `worker:` capabilities in `platform.resource-offer@1`. The names are reserved
   `task:edit`, `task:review`, `task:browse`, `task:run`, `task:test`, `task:plan`, `harness:mcp`, `harness:resume`,
   `harness:host-access`, `harness:long-autonomy`. New valid fixture `harness-task-routing`. Additive.
 
-**Run jobs and their metering** (plan T14 lane G, follow-up 1 of the Node gap audit):
+**Run jobs and their metering** (plan T14 lane G, follow-up 1 of the Link gap audit):
 - New `platform.runtime-class@1`: the classes `function`, `code`, `browser`, `linux`, `desktop` and `gpu`, names
   only; `function` is the first one implemented.
 - New `platform.job@1`: `id` (`job_<ULID>`, the idempotency and ack key), `class`, `artifact` {`name`, `version`}

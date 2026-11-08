@@ -17,7 +17,7 @@
     "id": {
       "type": "string",
       "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
-      "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Node command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
+      "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Link command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
     },
     "class": {
       "$ref": "runtime-class.v1.json"
@@ -87,7 +87,7 @@
         "openvibe-only"
       ],
       "default": "deny",
-      "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
+      "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe Link's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
     },
     "inputs": {
       "type": "array",

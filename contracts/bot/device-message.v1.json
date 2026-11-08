@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/device-message.v1.json",
   "title": "BotDeviceMessage",
-  "description": "bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).",
+  "description": "bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe Link internal/protocol/protocol.go (the Go structs of the device agent).",
   "oneOf": [
     {
       "description": "Server to device, once authenticated.",
@@ -190,7 +190,7 @@
         },
         "value": {
           "type": "object",
-          "description": "The command's value. screen_stream (OpenVibe.Node v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind."
+          "description": "The command's value. screen_stream (OpenVibe Link v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind."
         },
         "deadline_ms": {
           "type": "integer",
@@ -225,7 +225,7 @@
         },
         "target": {
           "type": "string",
-          "description": "OpenVibe.Node only: the driver to send it to."
+          "description": "OpenVibe Link only: the driver to send it to."
         }
       }
     },
@@ -521,7 +521,7 @@
       }
     },
     {
-      "description": "Device to server: what the agent runs; OpenVibe.Node sends drivers as objects, older agents as names.",
+      "description": "Device to server: what the agent runs; OpenVibe Link sends drivers as objects, older agents as names.",
       "type": "object",
       "required": [
         "v",
@@ -756,12 +756,12 @@
         },
         "data": {
           "type": "object",
-          "description": "OpenVibe.Node: a computer command's answer (exec, fs, screen), at most 512 KB of JSON."
+          "description": "OpenVibe Link: a computer command's answer (exec, fs, screen), at most 512 KB of JSON."
         }
       }
     },
     {
-      "description": "Device to server: the command was refused, with OpenVibe.Node's fault code (bad_value, estopped, local_stop, expired, …).",
+      "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, estopped, local_stop, expired, …).",
       "type": "object",
       "required": [
         "v",
@@ -835,7 +835,7 @@
         "fleet": {
           "type": "array",
           "maxItems": 16,
-          "description": "What this machine's coding agents have left (Codes C9c): each agent's id, whether it is installed and signed in, and each limit window's label, what it has used of its limit, and when it frees (RFC 3339 or empty when the agent's login file does not say). OpenVibe.Node reads it with the OpenVibe.Codes runner's own logins probe as the machine's own user and reports labels, numbers and times only: no key, token or account name. Absent means the machine has no reading (no OpenVibe.Codes runner, or its probe has not answered yet), never that nothing is installed.",
+          "description": "What this machine's coding agents have left (Codes C9c): each agent's id, whether it is installed and signed in, and each limit window's label, what it has used of its limit, and when it frees (RFC 3339 or empty when the agent's login file does not say). OpenVibe Link reads it with the OpenVibe.Codes runner's own logins probe as the machine's own user and reports labels, numbers and times only: no key, token or account name. Absent means the machine has no reading (no OpenVibe.Codes runner, or its probe has not answered yet), never that nothing is installed.",
           "items": {
             "type": "object",
             "required": ["agent", "installed", "signed_in"],

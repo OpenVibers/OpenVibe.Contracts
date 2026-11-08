@@ -2,7 +2,7 @@
 
 **Status:** Accepted 2026-11-02 with the OQ-13 review below, which decides what v0 ships (proposed 2026-10-29, CON-1; plan 2026-10-28 §5.9b; research
 `research-2026-10-29/website-connect.md` §3.3, §4.3, §4.4 and §4.12). For the owner's review. Builds on ADR-053
-(the Website/Host boundary), ADR-045 (the Node is the universal runtime), ADR-042 (the events fabric), ADR-048 (one
+(the Website/Host boundary), ADR-045 (the Link is the universal runtime), ADR-042 (the events fabric), ADR-048 (one
 authority per resource) and ADR-056 (project secrets: write-only, used by name).
 
 ## Context and evidence
@@ -18,7 +18,7 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
   verdict is one path per pillar: build a focused relay on `quic-go` for Share, adopt headscale + `tsnet` with a
   tenant boundary for Connect, build the policy/abuse layer on top of Cloudflare and Network identity, and extend
   Events for hooks. §3.3 and §3.4 name what to build and what not to reuse.
-- **The data plane is Go; the control plane is Node.** The Node agent is Go (ADR-045). QUIC, HTTP/3, datagrams,
+- **The data plane is Go; the control plane is Node.** The Link agent is Go (ADR-045). QUIC, HTTP/3, datagrams,
   half-close and backpressure are native there and awkward in Node.js. The control API can stay Node/Express, like
   every other network service. The edge is a separate, exposed, bandwidth-heavy tier and must not share a host with
   the control plane (research §4.1).
@@ -45,7 +45,7 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
 
 ## Decision
 
-1. **Share is a focused Go edge relay, `openvibe-edge`, plus a Node `connect` core in OpenVibe.Node.** The relay is
+1. **Share is a focused Go edge relay, `openvibe-edge`, plus a Link `connect` core in OpenVibe Link.** The relay is
    built on `quic-go` (MIT): one QUIC connection per Node, ALPN `ovconnect/1`, TLS 1.3, streams for HTTP/WebSocket/TCP,
    datagrams for UDP, and an HTTP/2 + WebSocket fallback on 443 for networks that block UDP. It routes by SNI/Host to a
    `share_id` from Connect's name registry, never from a user-controlled header, checks the signed policy, and then
@@ -67,7 +67,7 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
    custom control server on every platform; for v1 the phone reaches services through Share in a browser, and Connect
    is for PCs, NAS and servers. DERP is self-hosted (`derper`) so relay traffic stays on OpenVibe infrastructure;
    Live's TURN is for WebRTC and is not a WireGuard relay.
-4. **Identity and the tunnel handshake use two credentials, both checked.** The Node presents a Network
+4. **Identity and the tunnel handshake use two credentials, both checked.** The Link presents a Network
    client-credentials token whose subject is its node principal (`node:nod_…`) and whose audience is
    `openvibe.website`; the request body is `website.share-connect-request@1` with the `share_id`, the same `node_id`
    and a short-lived, single-use, share-scoped `tunnel_token` minted by Connect. The edge validates the token against
@@ -77,7 +77,7 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
    never stored, logged, audited or published in an event. OIDC at the share host uses Authorization Code + PKCE
    against Network; the session is a host-only `__Host-ov_session` (Secure, Path `=`, no `Domain`) carrying
    `share_id`, `sub` and `policy_version`.
-   `POST /api/v1/shares` returns only `website.share@1`; its response has no tunnel token. The Node obtains the
+   `POST /api/v1/shares` returns only `website.share@1`; its response has no tunnel token. The Link obtains the
    short-lived, single-use token through a separate authenticated credential exchange before connecting. CON-5
    defines that exchange's endpoint, request and response schemas, authorization, and delivery to the Node.
 5. **Revocation is immediate and has one owner per trigger.** `DELETE /api/v1/shares/:id` writes
@@ -88,7 +88,7 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
 6. **Policy is enforced at the edge, authored and audited by Connect, and fronted by Cloudflare.** Cloudflare
    terminates TLS for HTTP/WS and applies DDoS/WAF/bot rules; the edge performs share lookup, auth, the
    `website.policy@1` decision (public, signin, named, password, one_time, expiry, IP/CIDR, country, rate limits, bot
-   check, WAF preset, posture), request size/timeouts and audit; the Node restricts the local target to the owner's
+   check, WAF preset, posture), request size/timeouts and audit; the Link restricts the local target to the owner's
    chosen loopback/LAN port and never proxies arbitrary hosts. Connect owns ownership, policy CRUD, abuse review,
    quotas and revocation. Passwords are Argon2id hashes stored beside the policy and never in the contract; audit
    entries never carry bodies, headers, cookies, tokens, query strings or passwords. Public shares require a
@@ -101,7 +101,7 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
    the hook's own share host (`https://<share>/__ov/hook/<id>`), never an arbitrary URL, and mints a `whsec_…` secret
    shown once. `hooks.openvibe.website/h/<id>` is a thin ingress: size cap, rate limit, optional provider signature
    check, raw body stored at rest by reference, and an event published; Events stores the event, signs every attempt
-   with v2, retries for up to seven days while the laptop is offline, dead-letters and replays. The Node verifies the
+   with v2, retries for up to seven days while the laptop is offline, dead-letters and replays. The Link verifies the
    signature and 300-second timestamp tolerance, dedupes on `event_id`, acks 2xx and may buffer locally; a 503 asks
    Events to retry. Events produces `events.hook.received|delivered|dead`; Connect writes none of them. No smee or
    Hookdeck is adopted.
@@ -129,12 +129,12 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
 |---|---|---|
 | Share record, name registry, policy, tunnel token, inspector metadata, audit | OpenVibe.Connect (Node control API, `ov_connect`) | the edge keeps active session state and a signed policy cache only |
 | Public QUIC/HTTP/WS/SSE/TCP/UDP ingress, routing, edge policy check, rate limits | `openvibe-edge` (Go, `quic-go`) | it does not own users, shares, policies, audit or hooks |
-| Node tunnel, local forwarding, `ov share`, `tsnet` | OpenVibe.Node (`internal/connect`) | it does not decide policy or open arbitrary hosts |
+| Node tunnel, local forwarding, `ov share`, `tsnet` | OpenVibe Link (`internal/connect`) | it does not decide policy or open arbitrary hosts |
 | Account, node principal, OIDC, grants, revocation event | OpenVibe.Network | Connect never mints identity |
 | DNS proposal, TXT/CNAME, certificate path | OpenVibe.Domains | Connect never writes DNS or holds a provider credential |
 | Durable event store, v2 signature, retries, DLQ, replay | OpenVibe.Events | Connect creates the subscription; the edge does not queue |
 | Usage, abuse analytics, billing | OpenVibe.Report / OpenVibe.Billing | Connect emits usage; it does not price or bill |
-| Firewall helper, local posture read | OpenVibe.Node, local approval | no remote "open this port" API |
+| Firewall helper, local posture read | OpenVibe Link, local approval | no remote "open this port" API |
 | Thin client for apps | `openvibe-sdk/connect` (MIT) | no tunnel or mesh code in the SDK |
 
 ## Rejected reuse paths
@@ -238,7 +238,7 @@ OpenVibe sign-in) and from what the network runs on today: one host, every name 
    Connect, and Space's server_name leaves those hosts out. `connect` is reserved in Space.
 3. **The computer's credential in v0 is a share-scoped connect key** (`ovc_` + 32 random bytes, stored as a SHA-256
    hash, shown once, replaced on demand, which disconnects the old computer). Decision 4's two credentials (a node
-   principal token plus a single-use tunnel token) need the OpenVibe Node plugin (CON-4); the standalone client cannot
+   principal token plus a single-use tunnel token) need the OpenVibe Link plugin (CON-4); the standalone client cannot
    hold a node principal. The key opens one share's tunnel and nothing else.
 4. **The gate is Connect's, and every cookie is host-only.** `/grant` on connect.openvibe.website signs the visitor
    in with OpenVibe, checks the share's policy, and hands the share host a one-time code (60 s, one use, bound to the
@@ -254,6 +254,6 @@ OpenVibe sign-in) and from what the network runs on today: one host, every name 
    live), owning the `website.*` and `connect.*` namespaces. The 20 capabilities stay `planned` and owned by
    `connect`; v0's API is a person's own (session or Network user token) and serves none of them. The share API's
    shapes are Connect's own in v0; `website.share@1` conformance comes with CON-5.
-7. **What waits:** the QUIC edge (CON-3), the Node plugin and node principals (CON-4), custom domains (CON-7), the
+7. **What waits:** the QUIC edge (CON-3), the Link plugin and node principals (CON-4), custom domains (CON-7), the
    inspector (CON-8), the abuse gate (CON-9), TCP/UDP shares (CON-11/12), the mesh (CON-13; the headscale tenant proof
    stands), hooks (CON-15) and the launch gate for public shares (CON-21).

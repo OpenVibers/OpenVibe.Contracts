@@ -29,7 +29,7 @@
       "type": "string",
       "minLength": 3,
       "maxLength": 300,
-      "description": "The local port the Node exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host."
+      "description": "The local port the Link exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host."
     },
     "policy": {
       "allOf": [

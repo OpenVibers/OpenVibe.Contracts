@@ -123,7 +123,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 40,
-      "description": "The Node release running on the device."
+      "description": "The Link release running on the device."
     },
     "addresses": {
       "type": "array",

@@ -5,7 +5,7 @@
   "icon": "fa-user-astronaut",
   "accent": "#a78bfa",
   "tagline": "Every AI agent, every device, one command console",
-  "description": "OpenVibe.Actor sends each task to the best agent for it, across hosted agent platforms, open-source runtimes, coding agents and OpenVibe's own, balanced live on price, speed and success. Install the OpenVibe Node on your computers, servers, Raspberry Pis and robots, and your agents can work on them for real, at the control level you choose, with a kill switch you hold. Run everything from one console, or host the whole thing yourself.",
+  "description": "OpenVibe.Actor sends each task to the best agent for it, across hosted agent platforms, open-source runtimes, coding agents and OpenVibe's own, balanced live on price, speed and success. Install the OpenVibe Link on your computers, servers, Raspberry Pis and robots, and your agents can work on them for real, at the control level you choose, with a kill switch you hold. Run everything from one console, or host the whole thing yourself.",
   "pillars": [
     {
       "title": "Your agents",
@@ -51,7 +51,7 @@
     },
     {
       "question": "Can I run Actor myself?",
-      "answer": "Yes. The router, the runtime, the console and the Node are open source and run on your own server with local models, and can link to openvibe.actor when you want hosted agents or the rest of the network."
+      "answer": "Yes. The router, the runtime, the console and the Link are open source and run on your own server with local models, and can link to openvibe.actor when you want hosted agents or the rest of the network."
     },
     {
       "question": "What does it cost?",
@@ -204,7 +204,7 @@
       {
         "id": "devices",
         "title": "Your devices, under control",
-        "lead": "Install the OpenVibe Node on a computer, a server, a Raspberry Pi or a phone. No open ports: it connects out. You decide how much an agent may do.",
+        "lead": "Install the OpenVibe Link on a computer, a server, a Raspberry Pi or a phone. No open ports: it connects out. You decide how much an agent may do.",
         "cards": [
           [
             "fa-terminal",

@@ -5,7 +5,7 @@
   "status": "planned",
   "visibility": "public",
   "sensitive": true,
-  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): create a Share with POST /api/v1/shares from a website.share-create-request@1 — one DNS label, protocol, local target and policy. The POST returns only website.share@1 in draft, with no tunnel token. CON-5 defines the separate authenticated exchange that gives the Node a short-lived, single-use, share-scoped tunnel token; it is never stored, logged or put in an event. A public share stays in review until the abuse screen passes; no capability is granted by this contract.",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): create a Share with POST /api/v1/shares from a website.share-create-request@1 — one DNS label, protocol, local target and policy. The POST returns only website.share@1 in draft, with no tunnel token. CON-5 defines the separate authenticated exchange that gives the Link a short-lived, single-use, share-scoped tunnel token; it is never stored, logged or put in an event. A public share stays in review until the abuse screen passes; no capability is granted by this contract.",
   "permissions": [
     "website:shares:create"
   ],

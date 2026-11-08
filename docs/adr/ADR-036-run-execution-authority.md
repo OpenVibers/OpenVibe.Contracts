@@ -32,9 +32,9 @@ isolation belongs to Stage C) and ADR-046 (offers, requirements, placement, sign
   `platform.runtime-offer.v1.json` is the execution-capacity offer (its `kind` is `container`/`process`/`wasm`/`vm`/`function`,
   with `limits`, `price`, `availability` and `constraints`); `platform.resource-offer.v1.json` carries the
   capabilities, trust, latency and health the placer filters and ranks on.
-- **The first executor exists.** OpenVibe.Node's job worker runs `platform.job@1` jobs and emits per-second
+- **The first executor exists.** OpenVibe Link's job worker runs `platform.job@1` jobs and emits per-second
   `job_usage`, folded into `platform.usage-sample@1` readings keyed `run:<job id>:<n>` (`test/platform-run.test.js`;
-  OpenVibe.Node `docs/protocol.md` and `docs/worker.md`). The Node advertises `worker:function` (and `worker:code`)
+  OpenVibe Link `docs/protocol.md` and `docs/worker.md`). The Link advertises `worker:function` (and `worker:code`)
   in `platform.resource-offer@1.capabilities`.
 
 ## Decision
@@ -63,7 +63,7 @@ isolation belongs to Stage C) and ADR-046 (offers, requirements, placement, sign
 
 ### 3. Provider adapters are Fabric offers, not code paths in Run
 
-The adapters the plan names (T14, lines 567–569) — OpenVibe official worker, OpenVibe Node worker, self-hosted Run
+The adapters the plan names (T14, lines 567–569) — OpenVibe official worker, OpenVibe Link worker, self-hosted Run
 worker, managed browser providers, external sandbox providers, external GPU providers — are **offers**, not branches
 inside Run. Each reports:
 
@@ -77,8 +77,8 @@ Run states `platform.workload-requirements@1` and reads the `platform.placement-
 Run writes no placer of its own (ADR-046: "A service states requirements and reads results; it does not rank
 offers."). The plan's §2.1.11 cross-reference is the Fabric section as written in ADR-046/T1, not a separate scheme.
 
-**Node descriptor → offers.** When Run turns an OpenVibe.Node into Fabric offers it applies the mapping the Node
-protocol already fixes (OpenVibe.Node `docs/protocol.md:310–321`):
+**Node descriptor → offers.** When Run turns an OpenVibe Link into Fabric offers it applies the mapping the Node
+protocol already fixes (OpenVibe Link `docs/protocol.md:310–321`):
 
 | Node descriptor field | Fabric offer | Example |
 | --- | --- | --- |
@@ -105,7 +105,7 @@ Every job, on every adapter, is held to the same guarantees (plan T14, lines 572
 - **TTL, idle suspend, cancel, snapshot/resume** — a job has a lifetime from creation (wait plus run); an idle
   environment may be suspended and later resumed; `job_cancel` kills the process group and a job cancelled before it
   starts never starts.
-- **Streaming stdout** — stdout is streamed as chunks (`job_stdout` on the Node link; `run.job-stream-event@1` and a
+- **Streaming stdout** — stdout is streamed as chunks (`job_stdout` on the Link link; `run.job-stream-event@1` and a
   stream ticket over the API), best effort, bounded.
 - **Artifacts via Media** — inputs are Media objects pinned by sha256; outputs are Media objects. Run never fetches a
   caller-chosen URL.
@@ -121,7 +121,7 @@ Every job, on every adapter, is held to the same guarantees (plan T14, lines 572
 - One execution authority and one placement vocabulary. A new runtime class or provider is a new offer (and, for a
   class, a reserved capability name), not new code in Run.
 - Host and Run can share a cell's machines without sharing authority; deleting either leaves the other's rows alone.
-- The Node job worker is the first execution worker Run places; its per-second frames are already the metering
+- The Link job worker is the first execution worker Run places; its per-second frames are already the metering
   contract Billing consumes.
 - The `run.*` contracts are the authority's API; they stay PLANNED until the owner unblocks the service.
 
@@ -129,7 +129,7 @@ Every job, on every adapter, is held to the same guarantees (plan T14, lines 572
 
 1. **Isolation mechanism.** The plan requires more than a container for hostile arbitrary code but names no
    mechanism. Micro-VM (Firecracker/Kata), a userspace kernel (gVisor) and namespace/seccomp sandboxes are all open;
-   the Node worker's current `function` isolation is namespaces plus a seccomp allowlist.
+   the Link worker's current `function` isolation is namespaces plus a seccomp allowlist.
 2. **Snapshot/resume backend.** Whether a resumed environment's state lives in Media, a Node-local disk, or a
    provider's own snapshot is open.
 3. **Idle-suspend policy.** Who decides to suspend — Run, the node's local policy, or a placement objective — is
@@ -143,7 +143,7 @@ Every job, on every adapter, is held to the same guarantees (plan T14, lines 572
 
 - No OpenVibe.Run repository exists on `origin/main`; `run` is a placeholder service and `openvibe.run` has no
   repository. Every `run.*` contract is PLANNED and nothing serves them.
-- Only `function` (and, per the worker's own docs, `code`) exists as a worker class, in OpenVibe.Node; `browser`,
+- Only `function` (and, per the worker's own docs, `code`) exists as a worker class, in OpenVibe Link; `browser`,
   `linux`, `desktop` and `gpu` are reserved names with no worker.
 - Cells are a single host (`cell = wnam-1`) today; O24's second physical cell, the WireGuard mesh and geo placement
   are not built (plan T14, lines 580–581).

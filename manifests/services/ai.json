@@ -102,7 +102,7 @@
     {
       "id": "ai.host",
       "name": "AI host",
-      "installs": "the local model server (Ollama, LM Studio) as OpenVibe Node's ai plugin",
+      "installs": "the local model server (Ollama, LM Studio) as OpenVibe Link's ai plugin",
       "shows": "Serves your own AI models, on your own machine."
     }
   ]
