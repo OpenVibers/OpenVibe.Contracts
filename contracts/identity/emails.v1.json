@@ -13,6 +13,20 @@
       "maxItems": 11
     }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "emails": { "minItems": 1 } }, "required": ["emails"] },
+      "then": {
+        "properties": {
+          "emails": {
+            "contains": { "type": "object", "properties": { "primary": { "const": true } }, "required": ["primary"] },
+            "minContains": 1,
+            "maxContains": 1
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "email": {
       "type": "object",
