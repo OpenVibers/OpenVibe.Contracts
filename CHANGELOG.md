@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.345.0 — 2026-11-08
+
+- Add `actor.approval-answer@1` (plan HO12, the phone as the agent's eyes and hands): the person's answer to an
+  approval that asked for the phone's camera or its location. The person does the thing themselves, and the answer
+  carries the result back to the step as untrusted input. `decision` is `answer`, and exactly one of:
+  - `photo`: `media_id`, a private Media object the person took in the system camera (JPEG, PNG or WebP, at most
+    10 MB, EXIF stripped by Actor); the step reaches it through a short-lived signed URL;
+  - `location`: `lat` -90 to 90, `lng` -180 to 180, `accuracy_m` 0 to 100000 metres and `precise`. A coarse answer
+    (`precise` false) carries `lat` and `lng` to at most two decimals; JSON Schema cannot count decimal places, so
+    Actor rounds the share and the repository's suite checks the rule.
+  The answer has no `secret`, `token` or `url` field, and a decline stays the ordinary denial.
+- `actor.skill@1` (1.1.0) and `actor.skill@2` (2.1.0) gain `device.camera`, `device.location` and `device.notify` in
+  `requires.kinds`, so a skill's steps may be one of those approvals like any other HO1 kind. Additive: nothing that
+  exists today changes shape.
+
 ## 0.344.0 — 2026-11-08
 
 - `actor.trigger@1` (1.2.0) gains the mention kind (plan HO13, standing intents): a trigger that waits for the person

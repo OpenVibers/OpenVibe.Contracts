@@ -89,7 +89,7 @@
       "properties": {
         "kinds": {
           "type": "array",
-          "maxItems": 15,
+          "maxItems": 18,
           "uniqueItems": true,
           "items": {
             "type": "string",
@@ -108,7 +108,10 @@
               "send",
               "install",
               "routine",
-              "money"
+              "money",
+              "device.camera",
+              "device.location",
+              "device.notify"
             ]
           },
           "description": "The kinds of act (actor approvals, HO1) its steps may be."

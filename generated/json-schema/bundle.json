@@ -110942,7 +110942,7 @@
       }
     },
     "actor.skill@1": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "actor",
       "status": "active",
       "schema": {
@@ -111036,7 +111036,7 @@
             "properties": {
               "kinds": {
                 "type": "array",
-                "maxItems": 15,
+                "maxItems": 18,
                 "uniqueItems": true,
                 "items": {
                   "type": "string",
@@ -111055,7 +111055,10 @@
                     "send",
                     "install",
                     "routine",
-                    "money"
+                    "money",
+                    "device.camera",
+                    "device.location",
+                    "device.notify"
                   ]
                 },
                 "description": "The kinds of act (actor approvals, HO1) its steps may be."
@@ -111138,7 +111141,7 @@
       }
     },
     "actor.skill@2": {
-      "version": "2.0.0",
+      "version": "2.1.0",
       "owner": "actor",
       "status": "active",
       "schema": {
@@ -111414,7 +111417,7 @@
             "properties": {
               "kinds": {
                 "type": "array",
-                "maxItems": 16,
+                "maxItems": 19,
                 "uniqueItems": true,
                 "items": {
                   "type": "string",
@@ -111434,6 +111437,9 @@
                     "install",
                     "routine",
                     "money",
+                    "device.camera",
+                    "device.location",
+                    "device.notify",
                     "skill.run"
                   ]
                 },
@@ -111717,6 +111723,90 @@
             }
           }
         }
+      }
+    },
+    "actor.approval-answer": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/approval-answer.v1.json",
+        "title": "ActorApprovalAnswer",
+        "description": "actor.approval-answer@1: the person's answer to a device approval (plan HO12, the phone as the agent's eyes and hands). The agent asked for the phone's camera or its location, the person did the thing themselves after reading why, and this document carries the result back to the step as untrusted input, never as an instruction. DECISION is \"answer\"; declining an approval stays the ordinary denial and is not this document. Exactly one of PHOTO and LOCATION is present. PHOTO is a private Media object the person took in the system camera (JPEG, PNG or WebP, at most 10 MB, EXIF stripped by Actor): a picture of the world, not a secret, a token or a URL. LOCATION is shared once, after the person allowed it: LAT is -90 to 90, LNG -180 to 180 and ACCURACY_M is 0 to 100000 metres. PRECISE is true only when the step asked for precise and the person allowed it; when it is false the share is coarse and LAT and LNG carry at most two decimals (about a kilometre). JSON Schema cannot count decimal places, so the two-decimal rule lives in the description, is enforced by Actor and is checked by this repository's suite.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "decision"
+        ],
+        "properties": {
+          "decision": {
+            "const": "answer",
+            "description": "The only decision this document carries: the person answered the ask. A decline is the approval's ordinary denial, not a data-carrying answer."
+          },
+          "photo": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "media_id"
+            ],
+            "description": "The photo the person took in the system camera after reading why. It is stored as a private Media object in Actor's tenant, and the step reaches it through a short-lived signed URL; this document carries only the object's id.",
+            "properties": {
+              "media_id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The private Media object holding the photo (media.object@1's id: med_<ULID>)."
+              }
+            }
+          },
+          "location": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "lat",
+              "lng",
+              "accuracy_m",
+              "precise"
+            ],
+            "description": "The place the person shared once. When PRECISE is false, LAT and LNG carry at most two decimals (about a kilometre); JSON Schema cannot count decimal places, so Actor enforces the rounding and the repository's suite holds it. A precise location is shared only when the step asked for it and the person allowed it.",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90,
+                "description": "Latitude in degrees, -90 to 90."
+              },
+              "lng": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180,
+                "description": "Longitude in degrees, -180 to 180."
+              },
+              "accuracy_m": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100000,
+                "description": "The device's accuracy radius in metres, 0 to 100000."
+              },
+              "precise": {
+                "type": "boolean",
+                "description": "True only when the step asked for a precise location and the person allowed it; false for a one-time coarse share (LAT and LNG at most two decimals)."
+              }
+            }
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "photo"
+            ]
+          },
+          {
+            "required": [
+              "location"
+            ]
+          }
+        ]
       }
     },
     "frame.menu-card": {

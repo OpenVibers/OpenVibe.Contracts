@@ -84,6 +84,20 @@ const FULL_CHECK = {
             ? { valid: false, errors: missing.map((t) => ({ path: '/tools', message: `entry ${t.entry} names no resource` })) }
             : r;
     },
+    // A coarse device answer carries at most two decimals of lat and lng (HO12). JSON Schema cannot count
+    // decimal places, so the description says it, Actor rounds the share and this suite holds the fixtures to it.
+    'actor.approval-answer': (v, ref) => {
+        const r = contracts.validate(ref, v);
+        if (!r.valid || !v.location || v.location.precise !== false) return r;
+        const places = (x) => {
+            const s = String(x);
+            return /[eE]/.test(s) ? 99 : (s.split('.')[1] || '').length;
+        };
+        const coarse = ['lat', 'lng'].filter((k) => places(v.location[k]) > 2);
+        return coarse.length
+            ? { valid: false, errors: coarse.map((k) => ({ path: `/location/${k}`, message: 'a coarse location carries at most two decimals' })) }
+            : r;
+    },
 };
 /** The ref a fixture names itself (`skill: actor.skill@2`) or the bare id (newest major) when it names none. */
 const majorRef = (id, value) => {
@@ -1137,7 +1151,7 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     ok(!skill.required.includes('author'), 'the author is a claim: a skill may name nobody');
     ok(!/signature|signed/i.test(skill.description.replace(/not a signature/gi, '')), 'actor.skill@1 does not call the hash a signature');
     const HO1 = ['codes.task', 'actor.action', 'computer.run', 'computer.write', 'computer.input', 'computer.browser', 'computer.desk',
-        'robot.move', 'space', 'publish', 'post', 'send', 'install', 'routine', 'money'];
+        'robot.move', 'space', 'publish', 'post', 'send', 'install', 'routine', 'money', 'device.camera', 'device.location', 'device.notify'];
     ok(JSON.stringify(skill.properties.requires.properties.kinds.items.enum) === JSON.stringify(HO1), 'requires.kinds is exactly the approval kinds (HO1)');
     const types = skill.properties.resources.items.properties.media_type.enum;
     ok(types.every((t) => /^text\/|^application\/json$/.test(t)), 'a resource is text, never a binary or a script');
@@ -1184,6 +1198,46 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     const resource = pinned.skill.resources.find((r) => r.path === code.name);
     ok(resource && crypto.createHash('sha256').update(resource.text, 'utf8').digest('hex') === code.sha256, 'the bytes a listing pins are the bytes in the document');
     ok(pinned.skill.tools.every((t) => pinned.code.some((c) => c.name === t.entry)), 'every tool of a sandbox listing has a code object');
+}
+
+// ── actor.approval-answer@1 (HO12): the person's answer to a device ask ─────
+// The agent asks for the phone's camera or its location; the person does the thing themselves and the answer
+// carries the result. Exactly one of photo or location. A coarse location carries at most two decimals of lat
+// and lng, which JSON Schema cannot count: the description says it, Actor rounds it and this block holds it.
+{
+    const ref = 'actor.approval-answer@1';
+    const s = contracts.schema(ref);
+    ok(s.properties.decision.const === 'answer', 'a device answer is the "answer" decision; a decline is the ordinary denial');
+    const photo = s.properties.photo;
+    ok(photo.properties.media_id.pattern === contracts.schema('media.object@1').properties.id.pattern, 'photo.media_id is a Media object id (med_<ULID>)');
+    const loc = s.properties.location;
+    ok(JSON.stringify(loc.required) === JSON.stringify(['lat', 'lng', 'accuracy_m', 'precise']), 'a location always says where, how accurate and whether it is precise');
+    ok(loc.properties.lat.minimum === -90 && loc.properties.lat.maximum === 90 && loc.properties.lng.minimum === -180 && loc.properties.lng.maximum === 180, 'lat and lng are real coordinates');
+    ok(loc.properties.accuracy_m.minimum === 0 && loc.properties.accuracy_m.maximum === 100000, 'accuracy_m is 0 to 100000 metres');
+    ok(/at most two decimals/.test(loc.description) && /cannot count/.test(loc.description), 'the schema says a coarse location carries at most two decimals and that JSON Schema cannot count them');
+    const names = [];
+    (function walk(node) {
+        if (!node || typeof node !== 'object') return;
+        for (const [k, v] of Object.entries(node.properties || {})) { names.push(k); walk(v); }
+    })(s);
+    ok(!names.some((k) => /^(secret|token|url)$/i.test(k)), 'an answer has no secret, token or url field');
+    const dir = path.join(ROOT, 'fixtures', 'actor.approval-answer');
+    const read = (kind, f) => JSON.parse(fs.readFileSync(path.join(dir, kind, f), 'utf8'));
+    const photoOnly = read('valid', 'photo.json');
+    const coarse = read('valid', 'location-coarse.json');
+    const precise = read('valid', 'location-precise.json');
+    ok(contracts.validate(ref, photoOnly).valid && contracts.validate(ref, coarse).valid && contracts.validate(ref, precise).valid, 'a photo, a coarse location and a precise location are each a valid answer');
+    ok(!contracts.validate(ref, { decision: 'answer' }).valid, 'an answer with neither photo nor location is refused');
+    ok(!contracts.validate(ref, { ...photoOnly, location: coarse.location }).valid, 'an answer with both photo and location is refused');
+    ok(!contracts.validate(ref, { ...photoOnly, note: 'extra' }).valid, 'an extra field is refused');
+    ok(!contracts.validate(ref, { decision: 'answer', photo: { media_id: 'file_123' } }).valid, 'a photo is a Media object, not an arbitrary id');
+    ok(!contracts.validate(ref, { ...coarse, location: { ...coarse.location, lng: -181 } }).valid, 'lng -181 is not a coordinate');
+    ok(!contracts.validate(ref, { ...coarse, location: { ...coarse.location, accuracy_m: 100001 } }).valid, 'an accuracy over 100 km is refused');
+    const four = read('invalid', 'coarse-four-decimals.json');
+    ok(contracts.validate(ref, four).valid, 'JSON Schema alone accepts a coarse location with four decimals: the two-decimal rule lives in the description, Actor and this block');
+    const refused = FULL_CHECK['actor.approval-answer'](four, ref);
+    ok(!refused.valid && refused.errors.some((e) => /two decimals/.test(e.message)), 'the suite refuses a coarse location with four decimals');
+    ok(FULL_CHECK['actor.approval-answer']({ ...four, location: { ...four.location, precise: true } }, ref).valid, 'a precise location may carry more than two decimals');
 }
 
 // ── actor.voice@1: the integrity hash ─────────────────────────────────────
