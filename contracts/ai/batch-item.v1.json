@@ -78,7 +78,7 @@
         "string",
         "null"
       ],
-      "description": "Why the item ended without an answer (it expired, it was cancelled)."
+      "description": "The plain note about the prompt: it expired (it was not charged), it was cancelled before it ran (it was not charged), or it was already sent to the provider (it finishes and is charged)."
     },
     "capacity": {
       "type": [
