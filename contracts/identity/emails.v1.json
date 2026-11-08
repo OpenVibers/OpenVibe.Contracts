@@ -19,6 +19,7 @@
       "then": {
         "properties": {
           "emails": {
+            "type": "array",
             "contains": { "type": "object", "properties": { "primary": { "const": true } }, "required": ["primary"] },
             "minContains": 1,
             "maxContains": 1
