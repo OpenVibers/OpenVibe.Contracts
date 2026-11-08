@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/ai/batch-create-result.v1.json",
   "title": "AiBatchCreateResult",
-  "description": "ai.batch-create-result@1: the answers of ai.batches.create on OpenVibe.AI. POST /api/v1/batches → 201 { batch }; POST /api/v1/batches/:id/cancel → { batch } (the batch is cancelled: the items that had not run are cancelled and nothing is charged for them).",
+  "description": "ai.batch-create-result@1: the answers of ai.batches.create on OpenVibe.AI. POST /api/v1/batches → 201 { batch }; POST /api/v1/batches/:id/cancel → { batch }. Cancelling only touches the prompts that never had a run: they are cancelled and are not charged for. A prompt that already has a run (the provider is working on it) goes on and settles on its own path: it keeps its status, the answer says so, and nobody is told it was not charged. The batch itself is cancelled only when nothing is left in flight.",
   "type": "object",
   "required": [
     "batch"

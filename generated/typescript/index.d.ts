@@ -159900,7 +159900,7 @@ export type AiRunCreateResult =
 export interface AiBatch {
   id: string;
   /**
-   * queued (asked for), running (items are being answered), succeeded, failed (an item failed), expired (the deadline passed with nothing answered), cancelled (the caller cancelled it).
+   * queued (asked for), running (items are being answered), succeeded, failed (an item failed), expired (the deadline passed with nothing answered), cancelled (the caller cancelled it and nothing is left in flight: a prompt that already has a run goes on and settles on its own path, and the batch keeps running).
    */
   status: "queued" | "running" | "succeeded" | "failed" | "expired" | "cancelled";
   /**
@@ -159969,7 +159969,7 @@ export interface AiBatchItem {
   error_code: string | null;
   error_detail: string | null;
   /**
-   * Why the item ended without an answer (it expired, it was cancelled).
+   * The plain note about the prompt: it expired (it was not charged), it was cancelled before it ran (it was not charged), or it was already sent to the provider (it finishes and is charged).
    */
   reason: string | null;
   /**
@@ -160039,7 +160039,7 @@ export interface AiBatchCreateRequest {
 
 /** ai.batch-create-result@1.0.0 (owner: ai) */
 /**
- * ai.batch-create-result@1: the answers of ai.batches.create on OpenVibe.AI. POST /api/v1/batches → 201 { batch }; POST /api/v1/batches/:id/cancel → { batch } (the batch is cancelled: the items that had not run are cancelled and nothing is charged for them).
+ * ai.batch-create-result@1: the answers of ai.batches.create on OpenVibe.AI. POST /api/v1/batches → 201 { batch }; POST /api/v1/batches/:id/cancel → { batch }. Cancelling only touches the prompts that never had a run: they are cancelled and are not charged for. A prompt that already has a run (the provider is working on it) goes on and settles on its own path: it keeps its status, the answer says so, and nobody is told it was not charged. The batch itself is cancelled only when nothing is left in flight.
  */
 export interface AiBatchCreateResult {
   batch: AiBatch;

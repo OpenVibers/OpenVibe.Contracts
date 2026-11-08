@@ -32,7 +32,7 @@
         "expired",
         "cancelled"
       ],
-      "description": "queued (asked for), running (items are being answered), succeeded, failed (an item failed), expired (the deadline passed with nothing answered), cancelled (the caller cancelled it)."
+      "description": "queued (asked for), running (items are being answered), succeeded, failed (an item failed), expired (the deadline passed with nothing answered), cancelled (the caller cancelled it and nothing is left in flight: a prompt that already has a run goes on and settles on its own path, and the batch keeps running)."
     },
     "owner_type": {
       "enum": [

@@ -79,6 +79,15 @@ assert.ok(!c.validate('ai.batch-create-request@1', { items: ['a prompt'], deadli
 assert.ok(!c.validate('ai.batch-create-request@1', { items: [] }).valid, 'a batch without prompts is refused');
 assert.ok(c.validate('ai.batch-create-result@1', { batch: batchDoc }).valid, 'opening a batch answers with the batch');
 
+// The contract says what cancelling does: only the prompts that never had a run are cancelled, and a
+// prompt that is already with the provider is not told it was not charged.
+const cancelDoc = load('ai/batch-create-result.v1.json').description;
+assert.match(cancelDoc, /never had a run/, 'cancelling touches only the prompts without a run');
+assert.match(cancelDoc, /nobody is told it was not charged/, 'and nobody is told a prompt that goes on was not charged');
+assert.match(load('ai/batch-item.v1.json').properties.reason.description, /already sent to the provider/,
+    'the item may say that it is already with the provider');
+assert.match(load('ai/batch.v1.json').properties.status.description, /nothing is left in flight/,
+    'the batch is cancelled only when nothing is left in flight');
 // ── The catalog and the grants ─────────────────────────────────────────────
 for (const id of ['ai.batch', 'ai.batch-item', 'ai.batch-create-request', 'ai.batch-create-result', 'ai.batch-read-result']) {
     assert.ok(c.catalog.some(e => e.id === id), id + ' is in the catalog');

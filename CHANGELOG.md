@@ -1,4 +1,13 @@
 # Changelog
+## 0.339.0 — 2026-11-08
+
+- The batches contract says what cancelling does. Only the prompts that never had a run are cancelled, and
+  nothing is charged for them. A prompt that already has a run (the provider is working on it) goes on and
+  settles on its own path: it keeps its status, the answer says so, and nobody is told it was not charged. The
+  batch itself is cancelled only when nothing is left in flight.
+- The prompt's `reason` now names the three notes a customer can read: it expired (it was not charged), it was
+  cancelled before it ran (it was not charged), or it was already sent to the provider (it finishes and is charged).
+
 
 ## 0.338.0 — 2026-11-08
 
