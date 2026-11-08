@@ -6,6 +6,8 @@
   `identity.trust.read` capability.
   Responses contain coarse age bands and aggregate counts only; IPs, emails, last-seen timestamps, service user ids and
   linked account identities are forbidden by the schema and fixtures.
+- Service manifests: `locker` (OpenVibe.Locker at openvibe.locker, live; it owns the `locker` namespace), and
+  `computer` is live (its exposure was still "repository").
 
 ## 0.346.0 — 2026-11-08
 
