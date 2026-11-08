@@ -245,6 +245,55 @@ export type IdentityResolveResult =
       };
     };
 
+/** identity.trust@1.0.0 (owner: network) */
+/**
+ * identity.trust@1: privacy-limited age and abuse signals for an account or guest. Never includes an IP address, email, last-seen timestamp, service user id, or linked account identities. Only coarse age bands and aggregate counts are exposed.
+ */
+export type IdentityTrust =
+  | {
+      kind: "account";
+      age_band: "under_1h" | "under_1d" | "under_7d" | "under_30d" | "30d_plus";
+      account_age_hours: number;
+      account_age_days: number;
+      passkey: boolean;
+      linked_accounts: number;
+      active_30d: boolean;
+      email_verified: boolean;
+      verified: boolean;
+      verified_by: ("passkey" | "linked_account" | "30_days_active")[];
+    }
+  | {
+      kind: "guest";
+      age_band: "under_1h" | "under_1d" | "under_7d" | "under_30d" | "30d_plus";
+      age_hours: number;
+      age_days: number;
+      /**
+       * Distinct days seen, included only when the server tracks session days.
+       */
+      sessions?: number;
+      /**
+       * Count of distinct network identifiers seen; identifiers are never returned.
+       */
+      networks_seen: number;
+      /**
+       * Count of other guests first seen from any of this guest's networks in the last 24 hours; no network identifiers are returned.
+       */
+      guests_from_same_networks_24h: number;
+      banned?: boolean;
+      restricted?: boolean;
+      converted: boolean;
+    };
+
+/** identity.trust-request@1.0.0 (owner: network) */
+/**
+ * identity.trust-request@1: GET /api/v1/trust/{subject} names the account or guest subject in the path; GET /api/v1/me/trust takes no subject and derives it from the caller's own token.
+ */
+export type IdentityTrustRequest =
+  | {
+      subject: string;
+    }
+  | NoBody;
+
 /** identity.subject-projection@1.0.0 (owner: network) */
 /**
  * identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.

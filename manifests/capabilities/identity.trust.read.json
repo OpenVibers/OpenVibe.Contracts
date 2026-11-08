@@ -1,0 +1,15 @@
+{
+  "id": "identity.trust.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read privacy-limited trust signals for an account or guest by Network subject. The caller receives only age bands, booleans and aggregate counts, never an IP, email, last-seen timestamp, service user id or linked account identities. Services may use the capability; an app needs the owner's explicit capability grant.",
+  "inputSchema": "identity.trust-request@1",
+  "outputSchema": "identity.trust@1",
+  "permissions": ["identity:read"],
+  "resourceConstraints": ["none"],
+  "quotaClass": "identity-read",
+  "events": [],
+  "implementedBy": ["GET /api/v1/trust/{subject}", "GET /api/v1/me/trust"]
+}

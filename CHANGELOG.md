@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.347.0 — 2026-11-08
+
+- Add `identity.trust@1` and `identity.trust-request@1` for account and guest abuse signals, plus the app-grantable
+  `identity.trust.read` capability.
+  Responses contain coarse age bands and aggregate counts only; IPs, emails, last-seen timestamps, service user ids and
+  linked account identities are forbidden by the schema and fixtures.
+
 ## 0.346.0 — 2026-11-08
 
 - `actor.skill-listing@2` (2.1.0) gains `visibility` (plan HO11, the agent writes its own skills): `public` (the

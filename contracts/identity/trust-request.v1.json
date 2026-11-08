@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/identity/trust-request.v1.json",
+  "title": "IdentityTrustRequest",
+  "description": "identity.trust-request@1: GET /api/v1/trust/{subject} names the account or guest subject in the path; GET /api/v1/me/trust takes no subject and derives it from the caller's own token.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["subject"],
+      "properties": {
+        "subject": { "type": "string", "pattern": "^(usr|gst)_[0-9A-HJKMNP-TV-Z]{26}$" }
+      },
+      "additionalProperties": false
+    },
+    { "$ref": "../common/no-body.v1.json" }
+  ]
+}

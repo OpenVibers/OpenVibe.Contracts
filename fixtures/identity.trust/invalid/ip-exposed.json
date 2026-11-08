@@ -1,0 +1,10 @@
+{
+  "kind": "guest",
+  "age_band": "under_1d",
+  "age_hours": 3,
+  "age_days": 0,
+  "networks_seen": 1,
+  "guests_from_same_networks_24h": 0,
+  "converted": false,
+  "ip": "192.0.2.1"
+}
