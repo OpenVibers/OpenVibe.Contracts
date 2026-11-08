@@ -136,6 +136,62 @@
     }
    }
   },
+  "/api/v1/identity/emails/verified-check": {
+   "post": {
+    "operationId": "post_api_v1_identity_emails_verified_check",
+    "summary": "Read the one verified email address a person has shared with this app, or check whether one supplied address is verified for a supplied subject.",
+    "description": "**identity.emails.read** (public): Read the one verified email address a person has shared with this app, or check whether one supplied address is verified for a supplied subject. The full address list is only available to the person in their own account hub.",
+    "tags": [
+     "identity.emails"
+    ],
+    "x-openvibe-capabilities": [
+     "identity.emails.read"
+    ],
+    "x-openvibe-visibility": [
+     "public"
+    ],
+    "x-openvibe-quota-class": "identity-read",
+    "security": [
+     {
+      "openvibeToken": [
+       "identity.emails.read"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/identity.emails-request.v1"
+       }
+      }
+     }
+    },
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/identity.emails.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/v1/machines": {
    "get": {
     "operationId": "get_api_v1_machines",
@@ -1283,8 +1339,8 @@
   "/api/v1/me/emails": {
    "get": {
     "operationId": "get_api_v1_me_emails",
-    "summary": "Read the one verified primary email address the authenticated person has shared with this app or service.",
-    "description": "**identity.emails.read** (public): Read the one verified primary email address the authenticated person has shared with this app or service. The full address list is only available to the person in their own account hub.",
+    "summary": "Read the one verified email address a person has shared with this app, or check whether one supplied address is verified for a supplied subject.",
+    "description": "**identity.emails.read** (public): Read the one verified email address a person has shared with this app, or check whether one supplied address is verified for a supplied subject. The full address list is only available to the person in their own account hub.",
     "tags": [
      "identity.emails"
     ],
@@ -4470,7 +4526,7 @@
    },
    "identity.emails.v1": {
     "title": "Verified email addresses for the authenticated person",
-    "description": "The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the currently selected primary address.",
+    "description": "The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the single address selected for that app; primary reflects whether it is the account's primary address.",
     "type": "object",
     "additionalProperties": false,
     "required": [
@@ -4513,7 +4569,6 @@
            "primary"
           ]
          },
-         "minContains": 1,
          "maxContains": 1
         }
        }

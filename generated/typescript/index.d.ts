@@ -296,7 +296,7 @@ export type IdentityTrustRequest =
 
 /** identity.emails@1.0.0 (owner: network) */
 /**
- * The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the currently selected primary address.
+ * The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the single address selected for that app; primary reflects whether it is the account's primary address.
  */
 export type VerifiedEmailAddressesForTheAuthenticatedPerson = {
   [k: string]: unknown | undefined;
@@ -870,6 +870,23 @@ export interface ReadTheAuthenticatedPersonSSharedVerifiedEmailAddresses {}
  */
 export interface AddAnEmailAddressToTheAuthenticatedPersonSAccount {
   email: string;
+}
+
+/** identity.email-verified-check-request@1.0.0 (owner: network) */
+/**
+ * A service with identity.emails.read asks whether one supplied email address is verified for one Network subject. The response never reveals address lists or whether an unknown subject exists.
+ */
+export interface CheckAPersonSVerifiedEmailAddress {
+  subject: string;
+  email: string;
+}
+
+/** identity.email-verified-check-result@1.0.0 (owner: network) */
+/**
+ * Whether the supplied email address is verified for the supplied subject. Unknown subjects and addresses both return false.
+ */
+export interface VerifiedEmailCheckResult {
+  verified: boolean;
 }
 
 /** identity.subject-projection@1.0.0 (owner: network) */

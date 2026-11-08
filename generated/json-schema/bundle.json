@@ -786,7 +786,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/identity/emails.v1.json",
         "title": "Verified email addresses for the authenticated person",
-        "description": "The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the currently selected primary address.",
+        "description": "The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the single address selected for that app; primary reflects whether it is the account's primary address.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -829,7 +829,6 @@
                       "primary"
                     ]
                   },
-                  "minContains": 1,
                   "maxContains": 1
                 }
               }
@@ -909,6 +908,55 @@
             "type": "string",
             "format": "email",
             "maxLength": 254
+          }
+        }
+      }
+    },
+    "identity.email-verified-check-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/email-verified-check-request.v1.json",
+        "title": "Check a person's verified email address",
+        "description": "A service with identity.emails.read asks whether one supplied email address is verified for one Network subject. The response never reveals address lists or whether an unknown subject exists.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "email"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254
+          }
+        }
+      }
+    },
+    "identity.email-verified-check-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/email-verified-check-result.v1.json",
+        "title": "Verified email check result",
+        "description": "Whether the supplied email address is verified for the supplied subject. Unknown subjects and addresses both return false.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "verified"
+        ],
+        "properties": {
+          "verified": {
+            "type": "boolean"
           }
         }
       }

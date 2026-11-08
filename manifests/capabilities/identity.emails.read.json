@@ -4,12 +4,12 @@
   "owner": "network",
   "status": "active",
   "visibility": "public",
-  "description": "Read the one verified primary email address the authenticated person has shared with this app or service. The full address list is only available to the person in their own account hub.",
+  "description": "Read the one verified email address a person has shared with this app, or check whether one supplied address is verified for a supplied subject. The full address list is only available to the person in their own account hub.",
   "inputSchema": "identity.emails-request@1",
   "outputSchema": "identity.emails@1",
   "permissions": ["identity:read"],
-  "resourceConstraints": ["owner"],
+  "resourceConstraints": ["none"],
   "quotaClass": "identity-read",
   "events": [],
-  "implementedBy": ["GET /api/v1/me/emails"]
+  "implementedBy": ["GET /api/v1/me/emails", "POST /api/v1/identity/emails/verified-check"]
 }
