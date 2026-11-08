@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/network/machine.v1.json",
   "title": "NetworkMachine",
-  "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
+  "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Link install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
   "type": "object",
   "required": ["id", "kind", "online", "roles", "running"],
   "additionalProperties": false,
@@ -22,10 +22,10 @@
       "enum": ["onboard", "bridge", "server"],
       "description": "What the machine is, as Bot's device record says: onboard (the robot's own machine), bridge (a machine that drives a robot over the robot's own link), server (a machine that runs its owner's jobs)."
     },
-    "os": { "type": "string", "maxLength": 40, "description": "The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in." },
+    "os": { "type": "string", "maxLength": 40, "description": "The operating system the Link reports (linux, darwin, windows). Absent until the machine has checked in." },
     "online": { "type": "boolean", "description": "Whether the machine is connected to Bot right now." },
     "last_seen_at": { "type": "string", "format": "date-time", "description": "When the machine was last seen. Absent before its first check-in." },
-    "node_version": { "type": "string", "maxLength": 40, "description": "The OpenVibe Node version the machine reports. Absent until it has checked in." },
+    "node_version": { "type": "string", "maxLength": 40, "description": "The OpenVibe Link version the machine reports. Absent until it has checked in." },
     "roles": {
       "type": "array",
       "uniqueItems": true,

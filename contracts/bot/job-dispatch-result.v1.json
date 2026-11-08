@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/job-dispatch-result.v1.json",
   "title": "BotJobDispatchResult",
-  "description": "bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Node is away; it is resent on every reconnect until the Node acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Node sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Node acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.",
+  "description": "bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Link is away; it is resent on every reconnect until the Link acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Link sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Link acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.",
   "oneOf": [
     { "$ref": "#/$defs/dispatched" },
     { "$ref": "#/$defs/state" }
@@ -43,7 +43,7 @@
         "node_id": {
           "type": "string",
           "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
-          "description": "The paired device the job was sent to; a Node never reads another device's job."
+          "description": "The paired device the job was sent to; a Link never reads another device's job."
         },
         "class": {
           "$ref": "../platform/runtime-class.v1.json"
@@ -58,7 +58,7 @@
             "cancelled",
             "expired"
           ],
-          "description": "queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl)."
+          "description": "queued (stored; sent and resent until acked), placed (the Link acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl)."
         },
         "project_id": {
           "type": "string",
@@ -91,7 +91,7 @@
             "null"
           ],
           "maxLength": 64,
-          "description": "The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
+          "description": "The Link's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
         },
         "sent_at": {
           "type": [
@@ -107,7 +107,7 @@
             "null"
           ],
           "minimum": 0,
-          "description": "The Node's job_started started_ms: the anchor of every usage second; null until it started."
+          "description": "The Link's job_started started_ms: the anchor of every usage second; null until it started."
         },
         "finished_at": {
           "type": [
@@ -230,7 +230,7 @@
     "state": {
       "type": "object",
       "additionalProperties": false,
-      "description": "The answer of GET /api/v1/jobs/:id (200): the row and the job's held stdout (null when the Node sent none).",
+      "description": "The answer of GET /api/v1/jobs/:id (200): the row and the job's held stdout (null when the Link sent none).",
       "required": [
         "job",
         "stdout"

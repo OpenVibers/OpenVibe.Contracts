@@ -1,0 +1,53 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.346.0 <1.0.0"
+  },
+  "id": "computer",
+  "name": "OpenVibe.Computer",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Computer",
+  "domains": [
+    "openvibe.computer"
+  ],
+  "publicOrigin": "https://openvibe.computer",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "openvibe.computer is live (launched 2026-11-08): a front door over OpenVibe.Run."
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP"
+    },
+    "shutdown": {
+      "none": "Computer has no running host process yet."
+    },
+    "startupRecovery": {
+      "none": "Computer has no running host process or local state yet."
+    },
+    "rollback": {
+      "none": "Host deployment is pending review."
+    },
+    "contracts": {
+      "range": ">=0.346.0 <1.0.0"
+    },
+    "leases": {
+      "none": "Computer keeps no sessions; OpenVibe.Run owns session state and placement."
+    }
+  },
+  "site": {
+    "name": "Computer",
+    "icon": "computer",
+    "tagline": "A computer for you, your AI, or both",
+    "what": "Start and manage computer sessions over OpenVibe.Run, with your own Link machines and cloud computers in one place.",
+    "legalProfile": "hosting",
+    "position": 53,
+    "neighbourhood": "make"
+  }
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/codes/skill-version.v1.json",
   "title": "CodesSkillVersion",
-  "description": "codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Node's state can name the version it wrote.",
+  "description": "codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Link's state can name the version it wrote.",
   "type": "object",
   "additionalProperties": false,
   "required": [

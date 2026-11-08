@@ -31,7 +31,8 @@
     "actor.config.manage",
     "actor.timeline.read",
     "actor.assignment.read",
-    "actor.assignment.cancel"
+    "actor.assignment.cancel",
+    "actor.task.view_ticket"
   ],
   "eventsProduced": [
     "agent.step.started",

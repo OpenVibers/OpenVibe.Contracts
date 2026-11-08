@@ -156,7 +156,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 3600,
-          "description": "How far a signed timestamp may drift before the Node refuses it; 300 is the default."
+          "description": "How far a signed timestamp may drift before the Link refuses it; 300 is the default."
         }
       }
     },

@@ -84,7 +84,7 @@ checks++;
 assert.strictEqual(contracts.validate('platform.workload-requirements', { ...userRequirement, trust: ['other'] }).valid, false, 'an unknown requirement trust is refused');
 checks++;
 
-// The fixtures (ADR-046): a user-owned node advertises the Node job worker's worker:function, and the
+// The fixtures (ADR-046): a user-owned node advertises the Link job worker's worker:function, and the
 // unknown-trust offer is refused for its trust alone.
 const fixture = (p) => require(`../fixtures/platform.resource-offer/${p}.json`);
 const userNode = fixture('valid/user-owned-node');

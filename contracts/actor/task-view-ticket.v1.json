@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/task-view-ticket.v1.json",
+  "title": "ActorTaskViewTicket",
+  "description": "actor.task-view-ticket@1: a reusable read-only view of one task for its owner, valid for 15 minutes. The URL contains a bearer credential; never log it or forward it in a referrer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "url",
+    "expires_at"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://[^/?#]+/embed/task/[^/?#]+\\?t=tvt_[A-Za-z0-9_-]{43}$"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

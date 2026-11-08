@@ -87075,7 +87075,7 @@ export interface CodesModerationActionPayload {
 
 /** codes.skill@1.0.0 (owner: codes) */
 /**
- * codes.skill@1: one skill, rule, MCP server, command or hook in the OpenVibe.Codes hub (the Compute plan §5, E6). KIND says what it is: a skill is a SKILL.md folder the agent tools load, a rule is text for the tools' AGENTS.md/CLAUDE.md files, an mcp record is one MCP server definition, and command/hook are a slash command and a hook. SLUG is the folder name (lowercase letters, digits and hyphens) and is stable within one owner. VERSION is the newest record in codes.skill-version@1; BODY is that version's content. AUDIENCE is the four sharing audiences of openvibe-sdk/share: private (the owner only), people (the owner and the members listed in codes_skill_members), link (anyone with the link, not in the gallery) and public (the gallery, search and agents). A private, people or link record is never in the gallery. OFFICIAL marks OpenVibe's own skills. TOOLS names the harnesses the skill is written for; an empty list means every tool the Node knows. The body is untrusted text: the page renders it through the markup gate (escape first, then a small Markdown subset), never as HTML.
+ * codes.skill@1: one skill, rule, MCP server, command or hook in the OpenVibe.Codes hub (the Compute plan §5, E6). KIND says what it is: a skill is a SKILL.md folder the agent tools load, a rule is text for the tools' AGENTS.md/CLAUDE.md files, an mcp record is one MCP server definition, and command/hook are a slash command and a hook. SLUG is the folder name (lowercase letters, digits and hyphens) and is stable within one owner. VERSION is the newest record in codes.skill-version@1; BODY is that version's content. AUDIENCE is the four sharing audiences of openvibe-sdk/share: private (the owner only), people (the owner and the members listed in codes_skill_members), link (anyone with the link, not in the gallery) and public (the gallery, search and agents). A private, people or link record is never in the gallery. OFFICIAL marks OpenVibe's own skills. TOOLS names the harnesses the skill is written for; an empty list means every tool the Link knows. The body is untrusted text: the page renders it through the markup gate (escape first, then a small Markdown subset), never as HTML.
  */
 export interface CodesSkill {
   /**
@@ -87170,7 +87170,7 @@ export interface CodesSkill {
 
 /** codes.skill-version@1.0.0 (owner: codes) */
 /**
- * codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Node's state can name the version it wrote.
+ * codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Link's state can name the version it wrote.
  */
 export interface CodesSkillVersion {
   skill_id: string;
@@ -158316,11 +158316,11 @@ export type AiCredentialPut = {
   [k: string]: unknown | undefined;
 } & {
   /**
-   * openai = any OpenAI-compatible endpoint. node = the person's own machine: a model on their own model server, through their OpenVibe Node and OpenVibe.Bot (no key, no base_url, no cost).
+   * openai = any OpenAI-compatible endpoint. node = the person's own machine: a model on their own model server, through their OpenVibe Link and OpenVibe.Bot (no key, no base_url, no cost).
    */
   provider: "openai" | "anthropic" | "node";
   /**
-   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine.
+   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine.
    */
   machine?: string;
   base_url?: string;
@@ -158368,7 +158368,7 @@ export type AiCredentialPutV2 = {
    */
   base_url?: string;
   /**
-   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model, or `any` of their own.
+   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model, or `any` of their own.
    */
   machine?: string;
   /**
@@ -196595,7 +196595,7 @@ export interface Watch {
               mem_bytes: number;
             };
             /**
-             * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+             * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
              */
             egress?: "none" | "public" | "openvibe-only";
             ttl_ms?: number;
@@ -196682,7 +196682,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -196768,7 +196768,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -196856,7 +196856,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -196942,7 +196942,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197028,7 +197028,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197116,7 +197116,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197202,7 +197202,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197288,7 +197288,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197374,7 +197374,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197462,7 +197462,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197548,7 +197548,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197634,7 +197634,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197720,7 +197720,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197806,7 +197806,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197894,7 +197894,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -197980,7 +197980,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198066,7 +198066,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198152,7 +198152,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198238,7 +198238,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198324,7 +198324,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198412,7 +198412,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198498,7 +198498,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198584,7 +198584,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198670,7 +198670,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198756,7 +198756,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198842,7 +198842,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -198928,7 +198928,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199016,7 +199016,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199102,7 +199102,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199188,7 +199188,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199274,7 +199274,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199360,7 +199360,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199446,7 +199446,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199532,7 +199532,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199618,7 +199618,7 @@ export interface Watch {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -199845,7 +199845,7 @@ export interface WatchRequest {
               mem_bytes: number;
             };
             /**
-             * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+             * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
              */
             egress?: "none" | "public" | "openvibe-only";
             ttl_ms?: number;
@@ -199932,7 +199932,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200018,7 +200018,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200106,7 +200106,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200192,7 +200192,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200278,7 +200278,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200366,7 +200366,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200452,7 +200452,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200538,7 +200538,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200624,7 +200624,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200712,7 +200712,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200798,7 +200798,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200884,7 +200884,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -200970,7 +200970,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201056,7 +201056,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201144,7 +201144,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201230,7 +201230,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201316,7 +201316,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201402,7 +201402,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201488,7 +201488,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201574,7 +201574,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201662,7 +201662,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201748,7 +201748,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201834,7 +201834,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -201920,7 +201920,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202006,7 +202006,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202092,7 +202092,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202178,7 +202178,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202266,7 +202266,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202352,7 +202352,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202438,7 +202438,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202524,7 +202524,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202610,7 +202610,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202696,7 +202696,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202782,7 +202782,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -202868,7 +202868,7 @@ export interface WatchRequest {
                 mem_bytes: number;
               };
               /**
-               * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+               * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
                */
               egress?: "none" | "public" | "openvibe-only";
               ttl_ms?: number;
@@ -209320,7 +209320,7 @@ export interface NetworkNodeListResult {
 
 /** network.machine@1.0.0 (owner: network) */
 /**
- * network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.
+ * network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Link install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.
  */
 export interface NetworkMachine {
   /**
@@ -209340,7 +209340,7 @@ export interface NetworkMachine {
    */
   kind: "onboard" | "bridge" | "server";
   /**
-   * The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in.
+   * The operating system the Link reports (linux, darwin, windows). Absent until the machine has checked in.
    */
   os?: string;
   /**
@@ -209352,7 +209352,7 @@ export interface NetworkMachine {
    */
   last_seen_at?: string;
   /**
-   * The OpenVibe Node version the machine reports. Absent until it has checked in.
+   * The OpenVibe Link version the machine reports. Absent until it has checked in.
    */
   node_version?: string;
   /**
@@ -209449,7 +209449,7 @@ export interface NetworkMachineRole {
 
 /** network.machine-roles@1.0.0 (owner: network) */
 /**
- * network.machine-roles@1: the catalogue of machine roles (plan L34, step M4). A product declares a role — a name, what it installs on the machine and what the hub shows — and the Node turns it on at its next check-in. The first roles are Codes' worker, Desks' host, AI's local models and Bot's robot. A role outside this catalogue is refused (network.machine-roles-put@1).
+ * network.machine-roles@1: the catalogue of machine roles (plan L34, step M4). A product declares a role — a name, what it installs on the machine and what the hub shows — and the Link turns it on at its next check-in. The first roles are Codes' worker, Desks' host, AI's local models and Bot's robot. A role outside this catalogue is refused (network.machine-roles-put@1).
  */
 export interface NetworkMachineRoles {
   /**
@@ -209701,7 +209701,7 @@ export type ResourceOffer = {
    */
   owner?: string;
   /**
-   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers.
+   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe Link's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers.
    */
   capabilities: string[];
   capacity?: {
@@ -210447,7 +210447,7 @@ export interface HarnessOffer {
 
 /** platform.runtime-class@1.0.0 (owner: network) */
 /**
- * platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.
+ * platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe Link's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.
  */
 export type RuntimeClass = ("function" | "code" | "browser" | "linux" | "desktop" | "gpu") & string;
 
@@ -210459,7 +210459,7 @@ export type Job = {
   [k: string]: unknown | undefined;
 } & {
   /**
-   * Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Node command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`).
+   * Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Link command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`).
    */
   id: string;
   class: RuntimeClass;
@@ -210499,7 +210499,7 @@ export type Job = {
     mem_bytes: number;
   };
   /**
-   * Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker.
+   * Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe Link's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker.
    */
   net?: "deny" | "none" | "public" | "openvibe-only";
   /**
@@ -210517,7 +210517,7 @@ export type Job = {
 
 /** platform.job-frame@1.0.0 (owner: network) */
 /**
- * platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe.Node's WebSocket to OpenVibe.Bot (Node docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.
+ * platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe Link's WebSocket to OpenVibe.Bot (Link docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.
  */
 export type JobFrame =
   | {
@@ -212211,7 +212211,7 @@ export interface BotRobotProfile {
 
 /** bot.device-message@1.0.0 (owner: bot) */
 /**
- * bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).
+ * bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe Link internal/protocol/protocol.go (the Go structs of the device agent).
  */
 export type BotDeviceMessage =
   | {
@@ -212271,7 +212271,7 @@ export type BotDeviceMessage =
         | "browser"
         | "screen_stream";
       /**
-       * The command's value. screen_stream (OpenVibe.Node v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind.
+       * The command's value. screen_stream (OpenVibe Link v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind.
        */
       value?: {};
       /**
@@ -212288,7 +212288,7 @@ export type BotDeviceMessage =
       turn_epoch?: number;
       robot_id?: string;
       /**
-       * OpenVibe.Node only: the driver to send it to.
+       * OpenVibe Link only: the driver to send it to.
        */
       target?: string;
     }
@@ -212419,7 +212419,7 @@ export type BotDeviceMessage =
       id: string;
       latency_ms?: number;
       /**
-       * OpenVibe.Node: a computer command's answer (exec, fs, screen), at most 512 KB of JSON.
+       * OpenVibe Link: a computer command's answer (exec, fs, screen), at most 512 KB of JSON.
        */
       data?: {};
     }
@@ -212440,7 +212440,7 @@ export type BotDeviceMessage =
       t?: number;
       rtt_ms?: number;
       /**
-       * What this machine's coding agents have left (Codes C9c): each agent's id, whether it is installed and signed in, and each limit window's label, what it has used of its limit, and when it frees (RFC 3339 or empty when the agent's login file does not say). OpenVibe.Node reads it with the OpenVibe.Codes runner's own logins probe as the machine's own user and reports labels, numbers and times only: no key, token or account name. Absent means the machine has no reading (no OpenVibe.Codes runner, or its probe has not answered yet), never that nothing is installed.
+       * What this machine's coding agents have left (Codes C9c): each agent's id, whether it is installed and signed in, and each limit window's label, what it has used of its limit, and when it frees (RFC 3339 or empty when the agent's login file does not say). OpenVibe Link reads it with the OpenVibe.Codes runner's own logins probe as the machine's own user and reports labels, numbers and times only: no key, token or account name. Absent means the machine has no reading (no OpenVibe.Codes runner, or its probe has not answered yet), never that nothing is installed.
        *
        * @maxItems 16
        */
@@ -261502,7 +261502,7 @@ export type BotDeviceMessage =
 
 /** bot.command@1.0.0 (owner: bot) */
 /**
- * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input, browser; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Node scales them to the real screen): refused at level observe, approved one by one at ask. browser (added in 0.174.0) drives a Chromium-family browser the agent uses on the machine, in a profile of its own: open an http(s) URL, click a CSS selector or the button or link showing a text, fill a field, press a named key, go back, read the page, take a screenshot, or close it. read, screenshot and close run at every level; the rest act (refused at observe, approved one by one at ask), and below level full open refuses an address on the machine's own network. desk (added in 0.214.0; plan track K, Vibe's desk) starts, stops or reports a private desk on the machine: a display of its own (Xvfb, a window manager, its own session and browser profile) where an agent works without touching the person's screen, which the person can watch and take over; screen, input and browser take desk: private to act there instead of on the person's screen (main, the default). Starting and stopping a desk act (refused at observe, approved one by one at ask); status runs at every level.
+ * bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input, browser; OpenVibe Link's computer plugin, Link docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Link scales them to the real screen): refused at level observe, approved one by one at ask. browser (added in 0.174.0) drives a Chromium-family browser the agent uses on the machine, in a profile of its own: open an http(s) URL, click a CSS selector or the button or link showing a text, fill a field, press a named key, go back, read the page, take a screenshot, or close it. read, screenshot and close run at every level; the rest act (refused at observe, approved one by one at ask), and below level full open refuses an address on the machine's own network. desk (added in 0.214.0; plan track K, Vibe's desk) starts, stops or reports a private desk on the machine: a display of its own (Xvfb, a window manager, its own session and browser profile) where an agent works without touching the person's screen, which the person can watch and take over; screen, input and browser take desk: private to act there instead of on the person's screen (main, the default). Starting and stopping a desk act (refused at observe, approved one by one at ask); status runs at every level.
  */
 export type BotCommand = {
   [k: string]: unknown | undefined;
@@ -261556,7 +261556,7 @@ export interface BotCommandResult {
 
 /** bot.job-dispatch-result@1.0.0 (owner: bot) */
 /**
- * bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Node is away; it is resent on every reconnect until the Node acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Node sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Node acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.
+ * bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Link is away; it is resent on every reconnect until the Link acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Link sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Link acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.
  */
 export type BotJobDispatchResult =
   | {
@@ -261569,12 +261569,12 @@ export type BotJobDispatchResult =
          */
         id: string;
         /**
-         * The paired device the job was sent to; a Node never reads another device's job.
+         * The paired device the job was sent to; a Link never reads another device's job.
          */
         node_id: string;
         class: RuntimeClass;
         /**
-         * queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl).
+         * queued (stored; sent and resent until acked), placed (the Link acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl).
          */
         state: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
         /**
@@ -261594,7 +261594,7 @@ export type BotJobDispatchResult =
          */
         cancel_requested: boolean;
         /**
-         * The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable.
+         * The Link's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable.
          */
         fault_code: string | null;
         /**
@@ -261602,7 +261602,7 @@ export type BotJobDispatchResult =
          */
         sent_at: number | null;
         /**
-         * The Node's job_started started_ms: the anchor of every usage second; null until it started.
+         * The Link's job_started started_ms: the anchor of every usage second; null until it started.
          */
         started_ms: number | null;
         /**
@@ -261659,12 +261659,12 @@ export type BotJobDispatchResult =
          */
         id: string;
         /**
-         * The paired device the job was sent to; a Node never reads another device's job.
+         * The paired device the job was sent to; a Link never reads another device's job.
          */
         node_id: string;
         class: RuntimeClass;
         /**
-         * queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl).
+         * queued (stored; sent and resent until acked), placed (the Link acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl).
          */
         state: "queued" | "placed" | "running" | "succeeded" | "failed" | "cancelled" | "expired";
         /**
@@ -261684,7 +261684,7 @@ export type BotJobDispatchResult =
          */
         cancel_requested: boolean;
         /**
-         * The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable.
+         * The Link's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable.
          */
         fault_code: string | null;
         /**
@@ -261692,7 +261692,7 @@ export type BotJobDispatchResult =
          */
         sent_at: number | null;
         /**
-         * The Node's job_started started_ms: the anchor of every usage second; null until it started.
+         * The Link's job_started started_ms: the anchor of every usage second; null until it started.
          */
         started_ms: number | null;
         /**
@@ -261870,7 +261870,7 @@ export interface BotCommandRefusedPayload {
 
 /** browser-provider.job-create-request@1.0.0 (owner: run) */
 /**
- * browser-provider.job-create-request@1 (PLANNED; plan T14 R4a, ADR-034): the body OpenVibe.Run POSTs to an external managed-browser provider's job endpoint (capability browser_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is always browser. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is browser-provider.job-create-result@1.
+ * browser-provider.job-create-request@1 (PLANNED; plan T14 R4a, ADR-034): the body OpenVibe.Run POSTs to an external managed-browser provider's job endpoint (capability browser_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is always browser. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe Link's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is browser-provider.job-create-result@1.
  */
 export interface BrowserProviderJobCreateRequest {
   /**
@@ -261917,7 +261917,7 @@ export interface BrowserProviderJobCreateRequest {
     mem_bytes?: number;
   };
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
 }
@@ -261996,7 +261996,7 @@ export interface BrowserProviderJobState {
 
 /** sandbox-provider.job-create-request@1.0.0 (owner: run) */
 /**
- * sandbox-provider.job-create-request@1 (PLANNED; plan T14 R4b, ADR-034): the body OpenVibe.Run POSTs to an external sandbox provider's (such as E2B or Fly Machines) job endpoint (capability sandbox_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is code or linux, the platform.runtime-class@1 classes a sandbox hosts. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is sandbox-provider.job-create-result@1.
+ * sandbox-provider.job-create-request@1 (PLANNED; plan T14 R4b, ADR-034): the body OpenVibe.Run POSTs to an external sandbox provider's (such as E2B or Fly Machines) job endpoint (capability sandbox_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is code or linux, the platform.runtime-class@1 classes a sandbox hosts. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe Link's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is sandbox-provider.job-create-result@1.
  */
 export interface SandboxProviderJobCreateRequest {
   /**
@@ -262043,7 +262043,7 @@ export interface SandboxProviderJobCreateRequest {
     mem_bytes?: number;
   };
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
 }
@@ -262122,7 +262122,7 @@ export interface SandboxProviderJobState {
 
 /** run.job-create-request@1.0.0 (owner: run) */
 /**
- * run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names, or, for a first-party service acting for a person (X-OV-Subject), the project it names with X-OV-Project once Network confirms the person is an admin or owner of it (ADR-003 amendment 2026-10-12); the person is then the requester and the service is recorded as via. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict. NODE pins the machine: the device id (dev_…) of the job's own machine in Run's placement (platform.resource-offer@1 node_id, as GET /api/v1/machines on OpenVibe.Bot names it), answered by 409 run.job.node_offline when that machine is not connected, never moved to another one (Codes C9c).
+ * run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names, or, for a first-party service acting for a person (X-OV-Subject), the project it names with X-OV-Project once Network confirms the person is an admin or owner of it (ADR-003 amendment 2026-10-12); the person is then the requester and the service is recorded as via. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe Link's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict. NODE pins the machine: the device id (dev_…) of the job's own machine in Run's placement (platform.resource-offer@1 node_id, as GET /api/v1/machines on OpenVibe.Bot names it), answered by 409 run.job.node_offline when that machine is not connected, never moved to another one (Codes C9c).
  */
 export type RunJobCreateRequest = {
   [k: string]: unknown | undefined;
@@ -262181,7 +262181,7 @@ export type RunJobCreateRequest = {
    */
   ttl_ms?: number;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress?: "none" | "public" | "openvibe-only";
   requirements?: WorkloadRequirements;
@@ -262266,7 +262266,7 @@ export type RunJobReadResult = {
    */
   ttl_ms: number;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
   requirements: WorkloadRequirements;
@@ -262441,7 +262441,7 @@ export interface RunJobQueuedPayload {
     version: string;
   } | null;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
   placement: null;
@@ -262491,7 +262491,7 @@ export interface RunJobStartedPayload {
     version: string;
   } | null;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
   placement: {
@@ -262551,7 +262551,7 @@ export interface RunJobSucceededPayload {
     version: string;
   } | null;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
   placement: {
@@ -262623,7 +262623,7 @@ export interface RunJobFailedPayload {
     version: string;
   } | null;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
   placement: {
@@ -262698,7 +262698,7 @@ export interface RunJobCancelledPayload {
     version: string;
   } | null;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
   placement: {
@@ -262767,7 +262767,7 @@ export interface RunJobExpiredPayload {
     version: string;
   } | null;
   /**
-   * OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
+   * OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only).
    */
   egress: "none" | "public" | "openvibe-only";
   placement: {
@@ -274400,7 +274400,7 @@ export interface ChatInboxConversationsResult {
 
 /** run.session@1.0.0 (owner: run) */
 /**
- * run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe.Node runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).
+ * run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe Link runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).
  */
 export type RunSession = {
   [k: string]: unknown | undefined;
@@ -274769,7 +274769,7 @@ export interface RunSessionEndedPayload {
 
 /** bot.desk-lease@1.0.0 (owner: bot) */
 /**
- * bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe.Node runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).
+ * bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe Link runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).
  */
 export interface BotDeskLease {
   machine_id: string;
@@ -293146,7 +293146,7 @@ export interface AiMemoryItem {
   created_at: string;
   updated_at: string;
   /**
-   * The Node machine id it came from, when it came from one.
+   * The Link machine id it came from, when it came from one.
    */
   machine?: string | null;
   /**
@@ -293272,7 +293272,7 @@ export interface AiMemoryExportV1 {
     status?: "active" | "suggested" | "archived" | "conflict";
     confidence?: number;
     /**
-     * The Node machine id the item came from, when it came from one.
+     * The Link machine id the item came from, when it came from one.
      */
     machine?: string | null;
     seen_at?: string;
@@ -293557,7 +293557,7 @@ export interface WebsiteShare {
    */
   protocol: "http" | "https" | "tcp" | "udp";
   /**
-   * The local target the Node may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally.
+   * The local target the Link may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally.
    */
   local_target: string;
   /**
@@ -293602,7 +293602,7 @@ export interface WebsiteShareCreateRequest {
   name: string;
   protocol: "http" | "https" | "tcp" | "udp";
   /**
-   * The local port the Node exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host.
+   * The local port the Link exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host.
    */
   local_target: string;
   /**
@@ -293628,7 +293628,7 @@ export interface WebsiteShareCreateRequest {
 
 /** website.share-connect-request@1.0.0 (owner: connect) */
 /**
- * website.share-connect-request@1: what a Node presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Node proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.
+ * website.share-connect-request@1: what a Link presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Link proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.
  */
 export interface WebsiteShareConnectRequest {
   share_id: string;
@@ -293641,15 +293641,15 @@ export interface WebsiteShareConnectRequest {
    */
   tunnel_token: string;
   /**
-   * The data-plane transport the Node is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked.
+   * The data-plane transport the Link is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked.
    */
   transport?: "quic" | "http2-ws";
   /**
-   * The Node release, for posture and diagnostics; never used for authorization.
+   * The Link release, for posture and diagnostics; never used for authorization.
    */
   node_version?: string;
   /**
-   * The edge region the Node is dialing; the edge refuses a region it does not serve.
+   * The edge region the Link is dialing; the edge refuses a region it does not serve.
    */
   region?: string;
 }
@@ -293917,7 +293917,7 @@ export interface ConnectDevice {
   os: "linux" | "macos" | "windows" | "ios" | "android" | "other";
   arch?: "amd64" | "arm64" | "386" | "arm" | "other";
   /**
-   * The Node release running on the device.
+   * The Link release running on the device.
    */
   version: string;
   /**
@@ -295762,7 +295762,7 @@ export interface EventsHook {
   signature: {
     version: "v2";
     /**
-     * How far a signed timestamp may drift before the Node refuses it; 300 is the default.
+     * How far a signed timestamp may drift before the Link refuses it; 300 is the default.
      */
     tolerance_seconds: number;
   };
@@ -296589,7 +296589,7 @@ export interface LiveAgentStream {
 
 /** live.agent-stream-create-request@1.0.0 (owner: live) */
 /**
- * live.agent-stream-create-request@1 (the Agent Streams plan, S1): the body of POST /api/streams/agent on OpenVibe.Live (capability live.agent_stream.publish). It answers 201 with the stream (live.agent-stream@1) and the publish part (live.agent-stream-publish@1): { stream, publish }. The caller is the person's own session token, or a first-party service token acting for that person (a Node principal acting for its owner, Codes or Actor) that holds live.agent_stream.publish for the audience openvibe.live; Network grants it to exactly those principals. Never a developer-app token, never another person's stream. TITLE is the card's title, TASK says what the agent is doing and where that task lives, VISIBILITY says who may watch, and ALLOW_SITES is the optional list of hosts a browser desk may navigate to (a desk that leaves the list raises the curtain).
+ * live.agent-stream-create-request@1 (the Agent Streams plan, S1): the body of POST /api/streams/agent on OpenVibe.Live (capability live.agent_stream.publish). It answers 201 with the stream (live.agent-stream@1) and the publish part (live.agent-stream-publish@1): { stream, publish }. The caller is the person's own session token, or a first-party service token acting for that person (a Link principal acting for its owner, Codes or Actor) that holds live.agent_stream.publish for the audience openvibe.live; Network grants it to exactly those principals. Never a developer-app token, never another person's stream. TITLE is the card's title, TASK says what the agent is doing and where that task lives, VISIBILITY says who may watch, and ALLOW_SITES is the optional list of hosts a browser desk may navigate to (a desk that leaves the list raises the curtain).
  */
 export interface LiveAgentStreamCreateRequest {
   title: string;
@@ -299286,7 +299286,7 @@ export interface ChatParty {
 
 /** bot.machine-pool@1.0.0 (owner: bot) */
 /**
- * bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Node generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.
+ * bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Link generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.
  */
 export interface BotMachinePool {
   /**
@@ -300961,7 +300961,7 @@ export interface AiOfferPool {
 
 /** ai.offer@1.0.0 (owner: ai) */
 /**
- * ai.offer@1: one community AI offer, a person's machine (OpenVibe.Node's ai plugin, "Offer to the network") serving its local models to requests that opt in to community capacity. OpenVibe.Bot reports these fields (POST /internal/ai/offers/report on Network, network.resource.report; a report with any other field is refused whole), and OpenVibe.AI reads them from Network (GET /internal/ai/offers, network.registry.read, { offers, generated_at, count }). Network adds `pool` (ai.offer-pool@1) to the head's offer when the machine is the head of an approved pool (bot.machine-pool@1), and leaves a pool member's own offer out of the list while it is in a pool. For a pool the hours, audience, price, readiness, idle-only and verification apply to the whole pool: it is ready only while every member has approved, renewed its readiness in the last few seconds, and is still the owner's. Nothing here is public: AI shows Exchange a hashed offer id and no owner or machine id.
+ * ai.offer@1: one community AI offer, a person's machine (OpenVibe Link's ai plugin, "Offer to the network") serving its local models to requests that opt in to community capacity. OpenVibe.Bot reports these fields (POST /internal/ai/offers/report on Network, network.resource.report; a report with any other field is refused whole), and OpenVibe.AI reads them from Network (GET /internal/ai/offers, network.registry.read, { offers, generated_at, count }). Network adds `pool` (ai.offer-pool@1) to the head's offer when the machine is the head of an approved pool (bot.machine-pool@1), and leaves a pool member's own offer out of the list while it is in a pool. For a pool the hours, audience, price, readiness, idle-only and verification apply to the whole pool: it is ready only while every member has approved, renewed its readiness in the last few seconds, and is still the owner's. Nothing here is public: AI shows Exchange a hashed offer id and no owner or machine id.
  */
 export interface AiOffer {
   /**
@@ -307136,7 +307136,7 @@ export interface ActorSkill {
 
 /** actor.skill@2.1.0 (owner: actor) */
 /**
- * actor.skill@2: a skill, the document an agent loads to do one kind of job well (ADR-058, ADR-060). It keeps every field and meaning of actor.skill@1 and adds a way for the skill to bring CODE that runs in a sandbox: RUNS is prompt (as @1, text and instructions only) or sandbox. A sandbox skill carries its code as ordinary TEXT resources (a .js path with media_type text/javascript, at most 64 KiB each, in the integrity hash); TOOLS (1 to 5, only when runs is sandbox) say what an agent may call: a name, a description the agent reads, language javascript (the only one in v1), an ENTRY naming one of the skill's own .js resources, ARGS as a JSON Schema subset (an object whose properties are string, number, integer, boolean or an array of those; enum, maxLength, and pattern at most 200 characters; no $ref and no nested object), NET (deny by default, openvibe-only, public) and LIMITS (wall_ms at most 30000, default 10000; mem_bytes at most 268435456, default 134217728). A sandbox skill's requires.kinds names skill.run; a prompt skill declares no tools. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@2). Code never runs on an OpenVibe server and never sees a secret: it runs as a Run job of class function on a Node that declared the skill runner, with the network its tool declared and the exact bytes the registry scanned. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, tools, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; tools are [{ name, description, language, entry, args, net, limits }] in the document's order, with an absent net or limits (and each absent limits field) left out and args as the object the document wrote; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.
+ * actor.skill@2: a skill, the document an agent loads to do one kind of job well (ADR-058, ADR-060). It keeps every field and meaning of actor.skill@1 and adds a way for the skill to bring CODE that runs in a sandbox: RUNS is prompt (as @1, text and instructions only) or sandbox. A sandbox skill carries its code as ordinary TEXT resources (a .js path with media_type text/javascript, at most 64 KiB each, in the integrity hash); TOOLS (1 to 5, only when runs is sandbox) say what an agent may call: a name, a description the agent reads, language javascript (the only one in v1), an ENTRY naming one of the skill's own .js resources, ARGS as a JSON Schema subset (an object whose properties are string, number, integer, boolean or an array of those; enum, maxLength, and pattern at most 200 characters; no $ref and no nested object), NET (deny by default, openvibe-only, public) and LIMITS (wall_ms at most 30000, default 10000; mem_bytes at most 268435456, default 134217728). A sandbox skill's requires.kinds names skill.run; a prompt skill declares no tools. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@2). Code never runs on an OpenVibe server and never sees a secret: it runs as a Run job of class function on a Link that declared the skill runner, with the network its tool declared and the exact bytes the registry scanned. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, tools, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; tools are [{ name, description, language, entry, args, net, limits }] in the document's order, with an absent net or limits (and each absent limits field) left out and args as the object the document wrote; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.
  */
 export type ActorSkillV2 = {
   [k: string]: unknown | undefined;
@@ -316651,4 +316651,13 @@ export interface MailInboxAnswering {
    * When the person last turned it on or off; null when they never have (it has been off since the address was made).
    */
   changed_at: string | null;
+}
+
+/** actor.task-view-ticket@1.0.0 (owner: actor) */
+/**
+ * actor.task-view-ticket@1: a reusable read-only view of one task for its owner, valid for 15 minutes. The URL contains a bearer credential; never log it or forward it in a referrer.
+ */
+export interface ActorTaskViewTicket {
+  url: string;
+  expires_at: string;
 }
