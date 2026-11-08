@@ -778,6 +778,141 @@
         ]
       }
     },
+    "identity.emails": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/emails.v1.json",
+        "title": "Verified email addresses for the authenticated person",
+        "description": "The verified email addresses the authenticated person has shared. An app with identity.emails.read receives only the currently selected primary address.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "emails"
+        ],
+        "properties": {
+          "emails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/email"
+            },
+            "maxItems": 11
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "emails": {
+                  "type": "array",
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "emails"
+              ]
+            },
+            "then": {
+              "properties": {
+                "emails": {
+                  "type": "array",
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "primary": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "primary"
+                    ]
+                  },
+                  "minContains": 1,
+                  "maxContains": 1
+                }
+              }
+            }
+          }
+        ],
+        "$defs": {
+          "email": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "email",
+              "verified",
+              "primary",
+              "created_at"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "verified": {
+                "type": "boolean"
+              },
+              "primary": {
+                "type": "boolean"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "verified_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "identity.emails-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/emails-request.v1.json",
+        "title": "Read the authenticated person's shared verified email addresses",
+        "description": "An empty request body for reading the authenticated person's verified email address.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "identity.email-add-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/identity/email-add-request.v1.json",
+        "title": "Add an email address to the authenticated person's account",
+        "description": "A single email address the account owner wants to verify and attach to their own account.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254
+          }
+        }
+      }
+    },
     "identity.subject-projection": {
       "version": "1.0.0",
       "owner": "network",
