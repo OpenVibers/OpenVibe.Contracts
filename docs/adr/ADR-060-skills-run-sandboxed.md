@@ -1,6 +1,6 @@
 # ADR-060: Skills that run code — never on our server, always in a sandbox
 
-- **Status:** Proposed 2026-11-08 (plan track HO, wave 3: HO8), for Opus's security review.
+- **Status:** Accepted 2026-11-08 (plan track HO, wave 3: HO8), after Opus's security review.
 - **Owner:** OpenVibe.Actor (the registry and the `skill.run` step) and OpenVibe.Node (the runner).
 - **Contracts:** `actor.skill@2`, `actor.skill-listing@2`; `skill.run` joins the HO1 approval kinds.
 - **Supersedes:** ADR-058 decision 2's "no code" for `runs: "sandbox"`. `actor.skill@1` stays valid and is still
