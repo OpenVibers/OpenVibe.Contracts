@@ -1198,6 +1198,18 @@ sub(path.join(__dirname, 'changelog-history.test.js'));
     const resource = pinned.skill.resources.find((r) => r.path === code.name);
     ok(resource && crypto.createHash('sha256').update(resource.text, 'utf8').digest('hex') === code.sha256, 'the bytes a listing pins are the bytes in the document');
     ok(pinned.skill.tools.every((t) => pinned.code.some((c) => c.name === t.entry)), 'every tool of a sandbox listing has a code object');
+    // actor.skill-listing@2 (HO11): VISIBILITY is public (the default) or private, and a private listing is a
+    // person's alone. JSON Schema can say both: the enum, and the publisher rule in the listing's allOf.
+    ok(JSON.stringify(listing2.properties.visibility.enum) === JSON.stringify(['public', 'private']) && listing2.properties.visibility.default === 'public', 'visibility is public or private, and public by default');
+    ok(!listing2.required.includes('visibility'), 'visibility stays optional: every listing without it is public, and nothing that exists today changes shape');
+    const listingDir = path.join(ROOT, 'fixtures', 'actor.skill-listing');
+    const readListing = (kind, f) => JSON.parse(fs.readFileSync(path.join(listingDir, kind, f), 'utf8'));
+    const privatePerson = readListing('valid', 'private-person.json');
+    ok(contracts.validate('actor.skill-listing@2', privatePerson).valid, 'a private listing from a person is valid');
+    ok(contracts.validate('actor.skill-listing@2', pinned).valid && pinned.visibility === undefined, 'a listing with no visibility is a public listing, as every listing is today');
+    ok(!contracts.validate('actor.skill-listing@2', readListing('invalid', 'private-openvibe.json')).valid, "a private listing published by OpenVibe is refused: private is a person's alone");
+    ok(!contracts.validate('actor.skill-listing@2', readListing('invalid', 'unknown-visibility.json')).valid, 'a visibility other than public or private is refused');
+    ok(contracts.validate('actor.skill-listing@2', { ...privatePerson, visibility: 'public' }).valid, 'a person may publish the same listing publicly');
 }
 
 // ── actor.approval-answer@1 (HO12): the person's answer to a device ask ─────

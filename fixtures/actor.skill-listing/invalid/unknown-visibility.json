@@ -1,0 +1,46 @@
+{
+  "listing": "actor.skill-listing@2",
+  "id": "skl_01JAB2C3D4E5F6G7H8J9K0MNPY",
+  "skill": {
+    "skill": "actor.skill@2",
+    "slug": "summarize-a-stream",
+    "name": "Summarize a stream",
+    "description": "Use when someone asks what happened in a stream recording: a short summary with the moments that mattered.",
+    "version": "1.0.0",
+    "instructions": "Read the transcript. Write five bullets, each with its time. Name nobody who did not speak.",
+    "resources": [
+      {
+        "path": "outline.md",
+        "media_type": "text/markdown",
+        "text": "# Summary\n\n- <time> <moment>"
+      }
+    ],
+    "requires": {
+      "kinds": [
+        "post"
+      ]
+    },
+    "runs": "prompt",
+    "license": "MIT",
+    "integrity": {
+      "alg": "sha256",
+      "hash": "4a3e9e27aff7547cdbd9ad085faa6fa9ea4c523e87df3cdcc491d75e35b590d2"
+    }
+  },
+  "publisher": {
+    "kind": "person",
+    "subject": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "name": "Ann"
+  },
+  "visibility": "shared",
+  "scan": {
+    "state": "passed",
+    "scanner": "openvibe-skill-scan 1.1.0",
+    "scanned_at": "2026-11-08T03:01:00.000Z",
+    "findings": []
+  },
+  "curator": {
+    "state": "active"
+  },
+  "listed_at": "2026-11-08T03:01:00.000Z"
+}
