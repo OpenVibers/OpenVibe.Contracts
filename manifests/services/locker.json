@@ -1,0 +1,78 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.346.0 <1.0.0"
+  },
+  "id": "locker",
+  "name": "OpenVibe.Locker",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe.Locker",
+  "domains": [
+    "openvibe.locker"
+  ],
+  "publicOrigin": "https://openvibe.locker",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service",
+    "note": "openvibe.locker serves Drive, Sends and the recovery kit once Locker's vhost replaces the parked 302 to openvibe.download (Network #678, the same step)."
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "locker"
+  ],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 1800,
+      "drains": [
+        "uploads in flight finish or keep their resumable parts",
+        "the cleanup timer stops after its batch",
+        "HTTP server closed and in-flight requests drained",
+        "PostgreSQL pool closed, then the process exits"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "items, Sends, reservations and upload sessions in ov_locker survive a stop; ciphertext lives in Media's locker tenant"
+        },
+        {
+          "kind": "schedule",
+          "what": "the cleanup is due-based: its first run after a stop expires Sends, releases abandoned uploads and retries Media erasure"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations are expand only; an earlier release reads none of what a later one added"
+      }
+    },
+    "contracts": {
+      "range": ">=0.346.0 <1.0.0"
+    },
+    "leases": {
+      "none": "Locker holds no cross-service leases; quota reservations are rows in its own database."
+    }
+  },
+  "site": {
+    "name": "Locker",
+    "icon": "lock",
+    "tagline": "Files only you can open",
+    "what": "End-to-end encrypted files and expiring Sends: OpenVibe stores only ciphertext and cannot read what is inside.",
+    "legalProfile": "hosting",
+    "position": 54,
+    "neighbourhood": "make"
+  }
+}
