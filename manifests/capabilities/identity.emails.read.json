@@ -4,7 +4,7 @@
   "owner": "network",
   "status": "active",
   "visibility": "public",
-  "description": "Read the verified email addresses the authenticated person has shared with this app or service. Never returns another person's addresses or the account's unshared list.",
+  "description": "Read the one verified primary email address the authenticated person has shared with this app or service. The full address list is only available to the person in their own account hub.",
   "inputSchema": "identity.emails-request@1",
   "outputSchema": "identity.emails@1",
   "permissions": ["identity:read"],
