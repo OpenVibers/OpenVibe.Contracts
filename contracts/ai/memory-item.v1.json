@@ -102,7 +102,7 @@
         "null"
       ],
       "maxLength": 100,
-      "description": "The Node machine id it came from, when it came from one."
+      "description": "The Link machine id it came from, when it came from one."
     },
     "no_looks": {
       "type": "boolean",

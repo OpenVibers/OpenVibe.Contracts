@@ -1,7 +1,7 @@
 # ADR-060: Skills that run code — never on our server, always in a sandbox
 
 - **Status:** Accepted 2026-11-08 (plan track HO, wave 3: HO8), after Opus's security review.
-- **Owner:** OpenVibe.Actor (the registry and the `skill.run` step) and OpenVibe.Node (the runner).
+- **Owner:** OpenVibe.Actor (the registry and the `skill.run` step) and OpenVibe Link (the runner).
 - **Contracts:** `actor.skill@2`, `actor.skill-listing@2`; `skill.run` joins the HO1 approval kinds.
 - **Supersedes:** ADR-058 decision 2's "no code" for `runs: "sandbox"`. `actor.skill@1` stays valid and is still
   what a prompt-only skill publishes.
@@ -13,15 +13,15 @@
   not only describe it, and both show the danger: OpenClaw's ClawHub needed a scan and a trust envelope because a
   skill that steals credentials is what people fear.
 - OpenVibe already has the trust spine: HO1 gives every consequential act a kind and an approval, HO2 made a skill a
-  document whose `requires` grants nothing, and Run already executes a registered artifact as a job on a Node with
+  document whose `requires` grants nothing, and Run already executes a registered artifact as a job on a Link with
   pinned input bytes and per-job network egress.
 - What OpenVibe did not have is a way to run a person's (or an agent's) code without putting it on our servers or
-  trusting the person's laptop. A Node that declares the skill runner, and Run's `function` class, is that place.
+  trusting the person's laptop. A Link that declares the skill runner, and Run's `function` class, is that place.
 
 ## Decision
 
 1. **The rule.** A skill's code never runs on an OpenVibe server, never on the person's machine outside a sandbox,
-   and never sees a secret. It runs as a Run job of class `function` on a Node that declared the skill runner, with
+   and never sees a secret. It runs as a Run job of class `function` on a Link that declared the skill runner, with
    the network denied unless the skill declared otherwise and the person approved it, and with the exact bytes the
    registry scanned.
 2. **The contracts.** `actor.skill@2` adds:
@@ -38,7 +38,7 @@
    `actor.skill-listing@2` carries, per code resource, `{ name, media_id, sha256 }`, so the bytes that run are the
    bytes that were scanned, and its scan findings may name the `tool` they are about. `actor.skill@1` and
    `actor.skill-listing@1` are unchanged.
-3. **The Node runner** (`openvibe-skill-runner@1.0.0`, a declared function like `openvibe-codes@1.0.0`):
+3. **The Link runner** (`openvibe-skill-runner@1.0.0`, a declared function like `openvibe-codes@1.0.0`):
    - off unless the owner turns it on (`worker.functions`, `openvibe node skills on`);
    - takes `{ tool, entry, input }` and the code as job `inputs` (Media objects pinned by sha256; a mismatch ends the
      job before anything runs);
@@ -103,5 +103,5 @@ the `skill.run` kind, and nothing ever ran on our servers, so there is no server
   `secret`, `token`, `env` or `key`;
 - a @2 listing pins each code resource's Media id and sha256, the pinned sha256 is the document's own bytes, and a
   sandbox listing without code is invalid.
-Node's own tests (in OpenVibe.Node) prove the runner: a tool cannot read env, spawn, write a file, open a socket
+Node's own tests (in OpenVibe Link) prove the runner: a tool cannot read env, spawn, write a file, open a socket
 under `deny`, or exceed its output.

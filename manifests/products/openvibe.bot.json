@@ -43,7 +43,7 @@
     },
     {
       "question": "What hardware works?",
-      "answer": "A Raspberry Pi or another Linux board running the OpenVibe Node, with a driver for your model; a ROS 2 robot; a Cozmo or a LOOI through a computer next to it; or any phone, in its browser, with nothing to install. Anything else joins through the generic relay and your own script, or a driver you write and submit for others to use. The Adeept kit's page lists its parts; OpenVibe does not sell hardware."
+      "answer": "A Raspberry Pi or another Linux board running the OpenVibe Link, with a driver for your model; a ROS 2 robot; a Cozmo or a LOOI through a computer next to it; or any phone, in its browser, with nothing to install. Anything else joins through the generic relay and your own script, or a driver you write and submit for others to use. The Adeept kit's page lists its parts; OpenVibe does not sell hardware."
     },
     {
       "question": "How does it keep the robot safe?",

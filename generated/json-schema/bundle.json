@@ -6554,7 +6554,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/codes/skill.v1.json",
         "title": "CodesSkill",
-        "description": "codes.skill@1: one skill, rule, MCP server, command or hook in the OpenVibe.Codes hub (the Compute plan §5, E6). KIND says what it is: a skill is a SKILL.md folder the agent tools load, a rule is text for the tools' AGENTS.md/CLAUDE.md files, an mcp record is one MCP server definition, and command/hook are a slash command and a hook. SLUG is the folder name (lowercase letters, digits and hyphens) and is stable within one owner. VERSION is the newest record in codes.skill-version@1; BODY is that version's content. AUDIENCE is the four sharing audiences of openvibe-sdk/share: private (the owner only), people (the owner and the members listed in codes_skill_members), link (anyone with the link, not in the gallery) and public (the gallery, search and agents). A private, people or link record is never in the gallery. OFFICIAL marks OpenVibe's own skills. TOOLS names the harnesses the skill is written for; an empty list means every tool the Node knows. The body is untrusted text: the page renders it through the markup gate (escape first, then a small Markdown subset), never as HTML.",
+        "description": "codes.skill@1: one skill, rule, MCP server, command or hook in the OpenVibe.Codes hub (the Compute plan §5, E6). KIND says what it is: a skill is a SKILL.md folder the agent tools load, a rule is text for the tools' AGENTS.md/CLAUDE.md files, an mcp record is one MCP server definition, and command/hook are a slash command and a hook. SLUG is the folder name (lowercase letters, digits and hyphens) and is stable within one owner. VERSION is the newest record in codes.skill-version@1; BODY is that version's content. AUDIENCE is the four sharing audiences of openvibe-sdk/share: private (the owner only), people (the owner and the members listed in codes_skill_members), link (anyone with the link, not in the gallery) and public (the gallery, search and agents). A private, people or link record is never in the gallery. OFFICIAL marks OpenVibe's own skills. TOOLS names the harnesses the skill is written for; an empty list means every tool the Link knows. The body is untrusted text: the page renders it through the markup gate (escape first, then a small Markdown subset), never as HTML.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6665,7 +6665,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/codes/skill-version.v1.json",
         "title": "CodesSkillVersion",
-        "description": "codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Node's state can name the version it wrote.",
+        "description": "codes.skill-version@1: one immutable version of a codes.skill@1 record in the OpenVibe.Codes skills hub. Every save writes a new version; VERSION starts at 1 and only grows, and SKILL_ID plus VERSION is the key. BODY and SUMMARY are the content at that version, TOOLS and AUDIENCE the settings it had, and NOTE says why it was written (created, edited, published, or rolled back to N). A rollback never rewrites an old row: it copies the chosen version into a new one, so the history of what every machine synced stays exact and the Link's state can name the version it wrote.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -14614,12 +14614,12 @@
               "anthropic",
               "node"
             ],
-            "description": "openai = any OpenAI-compatible endpoint. node = the person's own machine: a model on their own model server, through their OpenVibe Node and OpenVibe.Bot (no key, no base_url, no cost)."
+            "description": "openai = any OpenAI-compatible endpoint. node = the person's own machine: a model on their own model server, through their OpenVibe Link and OpenVibe.Bot (no key, no base_url, no cost)."
           },
           "machine": {
             "type": "string",
             "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
-            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine."
+            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine."
           },
           "base_url": {
             "type": "string",
@@ -14755,7 +14755,7 @@
           "machine": {
             "type": "string",
             "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
-            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Node runs the model, or `any` of their own."
+            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model, or `any` of their own."
           },
           "models": {
             "type": "object",
@@ -71535,7 +71535,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/network/machine.v1.json",
         "title": "NetworkMachine",
-        "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
+        "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Link install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
         "type": "object",
         "required": [
           "id",
@@ -71572,7 +71572,7 @@
           "os": {
             "type": "string",
             "maxLength": 40,
-            "description": "The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in."
+            "description": "The operating system the Link reports (linux, darwin, windows). Absent until the machine has checked in."
           },
           "online": {
             "type": "boolean",
@@ -71586,7 +71586,7 @@
           "node_version": {
             "type": "string",
             "maxLength": 40,
-            "description": "The OpenVibe Node version the machine reports. Absent until it has checked in."
+            "description": "The OpenVibe Link version the machine reports. Absent until it has checked in."
           },
           "roles": {
             "type": "array",
@@ -71789,7 +71789,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/network/machine-roles.v1.json",
         "title": "NetworkMachineRoles",
-        "description": "network.machine-roles@1: the catalogue of machine roles (plan L34, step M4). A product declares a role — a name, what it installs on the machine and what the hub shows — and the Node turns it on at its next check-in. The first roles are Codes' worker, Desks' host, AI's local models and Bot's robot. A role outside this catalogue is refused (network.machine-roles-put@1).",
+        "description": "network.machine-roles@1: the catalogue of machine roles (plan L34, step M4). A product declares a role — a name, what it installs on the machine and what the hub shows — and the Link turns it on at its next check-in. The first roles are Codes' worker, Desks' host, AI's local models and Bot's robot. A role outside this catalogue is refused (network.machine-roles-put@1).",
         "type": "object",
         "required": [
           "roles"
@@ -72334,7 +72334,7 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9-]*:[a-z0-9.-]+$"
             },
-            "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe.Node's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers."
+            "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe Link's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers."
           },
           "capacity": {
             "type": "object",
@@ -72672,7 +72672,7 @@
         ],
         "$defs": {
           "reservedWorkerCapabilities": {
-            "description": "The reserved Fabric capability names of OpenVibe.Node's job worker, one per platform.runtime-class@1 value: `worker:` + the class. These six names are reserved in this contract — the `capabilities` pattern alone accepted any `worker:` name — and a node advertises only the classes it actually runs, in class order.",
+            "description": "The reserved Fabric capability names of OpenVibe Link's job worker, one per platform.runtime-class@1 value: `worker:` + the class. These six names are reserved in this contract — the `capabilities` pattern alone accepted any `worker:` name — and a node advertises only the classes it actually runs, in class order.",
             "type": "string",
             "enum": [
               "worker:function",
@@ -74901,7 +74901,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/platform/runtime-class.v1.json",
         "title": "RuntimeClass",
-        "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe.Node's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.",
+        "description": "platform.runtime-class@1: the kind of execution environment a platform.job@1 asks for (plan T14 Run; ADR-034 proposed). A name only: this contract defines no behavior, and a worker runs only the classes it advertises and refuses every other one (`nack`). `function` is the first class implemented (OpenVibe Link's function worker); the others are reserved names. Each class names one reserved Fabric capability in platform.resource-offer@1.capabilities — `worker:` + the class (worker:function, worker:code, worker:browser, worker:linux, worker:desktop, worker:gpu) — and a node advertises the name of each class it runs.",
         "$comment": "Additive: a class may be added to v1; none is removed, renamed or reordered.",
         "type": "string",
         "oneOf": [
@@ -74959,7 +74959,7 @@
           "id": {
             "type": "string",
             "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Node command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
+            "description": "Minted by the dispatcher (job_<ULID>): the idempotency and ack key, as a Link command `id` is. A worker that already holds or ran this id never runs it again: a resent `job` is acked again while it runs and answered with its `job_exit` once it ended. Never reused: it is the stem of every usage reading's key (`run:<id>:<second>`)."
           },
           "class": {
             "$ref": "runtime-class.v1.json"
@@ -75029,7 +75029,7 @@
               "openvibe-only"
             ],
             "default": "deny",
-            "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe.Node's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
+            "description": "Network policy; absent means `deny`. `none` is `deny` spelled as OpenVibe Link's worker.egress names it; `public` and `openvibe-only` ask for egress the host must already allow (ADR-046): a worker whose host policy is stricter runs the stricter one, and a worker that cannot enforce what is asked refuses the job (`nack`) rather than running it weaker."
           },
           "inputs": {
             "type": "array",
@@ -75142,7 +75142,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/platform/job-frame.v1.json",
         "title": "JobFrame",
-        "description": "platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe.Node's WebSocket to OpenVibe.Bot (Node docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.",
+        "description": "platform.job-frame@1: one job lifecycle frame on the device control link (plan T14 Run; ADR-034 proposed). The link is OpenVibe Link's WebSocket to OpenVibe.Bot (Link docs/protocol.md section 2); Fabric may terminate it later. Each frame is one JSON object in one text message, with the link's envelope at the top level: `v` (1), `seq` (per-direction counter from 1 on each connection), `ts` (sender's clock, Unix ms) and `type`. Server to device: `job`, `job_cancel`, `job_exit_ack`. Device to server: `job_started`, `job_stdout`, `job_usage`, `job_exit`. The link's existing `ack`/`nack` frames, keyed by the job id, accept or refuse a `job`; a worker that runs jobs advertises its classes in `status.capabilities`. A running `function` job is metered per wall-clock second into platform.usage-sample@1 readings: see `job_usage` and `job_exit`.",
         "$comment": "Additive: new frame types and optional fields may extend this v1 contract; a receiver ignores frame types it does not know.",
         "oneOf": [
           {
@@ -75533,7 +75533,7 @@
         "$id": "https://openvibe.network/contracts/platform/task.v1.json",
         "title": "Task",
         "description": "platform.task@1 (plan T17, ADR-044): one task at OpenVibe.Actor's task router. POST /api/v1/tasks (actor.task.create) creates it from a plain-language `task` plus a `mode` and a `budget`; the router mints `id`, sets `state` and `created_at`, picks a backend from the registered agent systems, runs the task, verifies the result, escalates or fails over, and answers with `result`, `cost` and `explanation`. GET /api/v1/tasks/{id} (actor.task.read) reads the same resource. Progress streams as server-sent events from `progress.stream_url` (actor.task-event@1; the task's own counter in `progress.last_seq`); `cancel` records that a cancel was requested (POST /api/v1/tasks/{id}/cancel), `error` says why a task failed, and `webhooks` are the registered endpoints the router delivers each state change to (actor.task-webhook@1, signed with `webhook_secret`, which only the creating answer carries). Owned by `network` like every other platform.* contract and implemented by OpenVibe.Actor (manifests/services/actor.json). This v1 contract may grow optional fields. A-1 adds AGENT_ID (the agent contact the task runs as; absent means the person's Vibe), LEVEL (the thread's own approval level), EFFECTIVE_LEVEL (max of the agent level and the person's own inherited line) and AGENT_LEVEL (the agent contact's own level), so a reader never has to guess why a step did or did not ask.",
-        "$comment": "Additive optional fields may extend this v1 contract. It is the task resource, not a device frame: Actor's link is HTTP/SSE where Run's is the Node WebSocket.",
+        "$comment": "Additive optional fields may extend this v1 contract. It is the task resource, not a device frame: Actor's link is HTTP/SSE where Run's is the Link WebSocket.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -78491,7 +78491,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/device-message.v1.json",
         "title": "BotDeviceMessage",
-        "description": "bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe.Node internal/protocol/protocol.go (the Go structs of the device agent).",
+        "description": "bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe Link internal/protocol/protocol.go (the Go structs of the device agent).",
         "oneOf": [
           {
             "description": "Server to device, once authenticated.",
@@ -78679,7 +78679,7 @@
               },
               "value": {
                 "type": "object",
-                "description": "The command's value. screen_stream (OpenVibe.Node v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind."
+                "description": "The command's value. screen_stream (OpenVibe Link v0.12.0): {action: 'start', whip_url, publish_key, seconds? (30-1800, default 600), fps? (1-5, default 2)} or {action: 'stop'}: the machine's screen shown live on its own private OpenRestream stream. Bot alone fills in whip_url and publish_key (the machine's stream, playback private, never recorded); no operator, agent or service sends this kind."
               },
               "deadline_ms": {
                 "type": "integer",
@@ -78714,7 +78714,7 @@
               },
               "target": {
                 "type": "string",
-                "description": "OpenVibe.Node only: the driver to send it to."
+                "description": "OpenVibe Link only: the driver to send it to."
               }
             }
           },
@@ -79010,7 +79010,7 @@
             }
           },
           {
-            "description": "Device to server: what the agent runs; OpenVibe.Node sends drivers as objects, older agents as names.",
+            "description": "Device to server: what the agent runs; OpenVibe Link sends drivers as objects, older agents as names.",
             "type": "object",
             "required": [
               "v",
@@ -79245,12 +79245,12 @@
               },
               "data": {
                 "type": "object",
-                "description": "OpenVibe.Node: a computer command's answer (exec, fs, screen), at most 512 KB of JSON."
+                "description": "OpenVibe Link: a computer command's answer (exec, fs, screen), at most 512 KB of JSON."
               }
             }
           },
           {
-            "description": "Device to server: the command was refused, with OpenVibe.Node's fault code (bad_value, estopped, local_stop, expired, …).",
+            "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, estopped, local_stop, expired, …).",
             "type": "object",
             "required": [
               "v",
@@ -79324,7 +79324,7 @@
               "fleet": {
                 "type": "array",
                 "maxItems": 16,
-                "description": "What this machine's coding agents have left (Codes C9c): each agent's id, whether it is installed and signed in, and each limit window's label, what it has used of its limit, and when it frees (RFC 3339 or empty when the agent's login file does not say). OpenVibe.Node reads it with the OpenVibe.Codes runner's own logins probe as the machine's own user and reports labels, numbers and times only: no key, token or account name. Absent means the machine has no reading (no OpenVibe.Codes runner, or its probe has not answered yet), never that nothing is installed.",
+                "description": "What this machine's coding agents have left (Codes C9c): each agent's id, whether it is installed and signed in, and each limit window's label, what it has used of its limit, and when it frees (RFC 3339 or empty when the agent's login file does not say). OpenVibe Link reads it with the OpenVibe.Codes runner's own logins probe as the machine's own user and reports labels, numbers and times only: no key, token or account name. Absent means the machine has no reading (no OpenVibe.Codes runner, or its probe has not answered yet), never that nothing is installed.",
                 "items": {
                   "type": "object",
                   "required": [
@@ -79570,7 +79570,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/command.v1.json",
         "title": "BotCommand",
-        "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input, browser; OpenVibe.Node's computer plugin, Node docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Node scales them to the real screen): refused at level observe, approved one by one at ask. browser (added in 0.174.0) drives a Chromium-family browser the agent uses on the machine, in a profile of its own: open an http(s) URL, click a CSS selector or the button or link showing a text, fill a field, press a named key, go back, read the page, take a screenshot, or close it. read, screenshot and close run at every level; the rest act (refused at observe, approved one by one at ask), and below level full open refuses an address on the machine's own network. desk (added in 0.214.0; plan track K, Vibe's desk) starts, stops or reports a private desk on the machine: a display of its own (Xvfb, a window manager, its own session and browser profile) where an agent works without touching the person's screen, which the person can watch and take over; screen, input and browser take desk: private to act there instead of on the person's screen (main, the default). Starting and stopping a desk act (refused at observe, approved one by one at ask); status runs at every level.",
+        "description": "bot.command@1: an operator's command frame on OpenVibe.Bot's operator WebSocket (wss://openvibe.bot/control, after join; server/realtime.js onOperatorCommand). id is the operator's idempotency key (at most 64 characters; Bot mints one when it is missing): a repeated id answers with the first result. Bot's gate stamps the robot, the operator and the role, builds the value from the robot profile's commands (clamped by the owner's limits) and sets the deadline; ms asks for a duration within max_command_ms. Answered by one command_result frame (bot.command-result@1). The kinds button (a profile button by name, with an optional state for a hold button) and point (a normalised x, y video click) were added in 0.109.0 (plan T15 R9). The computer kinds (exec, fs, screen, input, browser; OpenVibe Link's computer plugin, Link docs/computer.md) are taken only for a person's own machine, from its owner or an agent the owner let use it (bot.computer.control); the machine's owner sets on the machine what they may do, and the answer comes back in bot.command-result@1's data. probe (a read-only check of something on the machine's own network) is the one computer kind OpenVibe.Watch may send, for owners who let their watches use the computer. input (added in 0.171.0) moves the mouse, clicks, scrolls, types or presses keys on the machine's screen, at coordinates in the space of the screen picture the caller last saw (its width and height; the Link scales them to the real screen): refused at level observe, approved one by one at ask. browser (added in 0.174.0) drives a Chromium-family browser the agent uses on the machine, in a profile of its own: open an http(s) URL, click a CSS selector or the button or link showing a text, fill a field, press a named key, go back, read the page, take a screenshot, or close it. read, screenshot and close run at every level; the rest act (refused at observe, approved one by one at ask), and below level full open refuses an address on the machine's own network. desk (added in 0.214.0; plan track K, Vibe's desk) starts, stops or reports a private desk on the machine: a display of its own (Xvfb, a window manager, its own session and browser profile) where an agent works without touching the person's screen, which the person can watch and take over; screen, input and browser take desk: private to act there instead of on the person's screen (main, the default). Starting and stopping a desk act (refused at observe, approved one by one at ask); status runs at every level.",
         "type": "object",
         "required": [
           "type",
@@ -79758,11 +79758,11 @@
                     "desk": {
                       "type": "string",
                       "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
-                      "description": "which session it runs in (Node v0.26.0): the person's own (main, the default), or a desk's (private or desk-<name>): the desk's display, session bus and temp folder, so a program with windows opens on that desk; start the desk first"
+                      "description": "which session it runs in (Link v0.26.0): the person's own (main, the default), or a desk's (private or desk-<name>): the desk's display, session bus and temp folder, so a program with windows opens on that desk; start the desk first"
                     },
                     "detach": {
                       "type": "boolean",
-                      "description": "on a whole desk only (Node v0.26.0): start a program that keeps running (an office suite, a terminal, an editor) and answer at once with its pid; it runs until the desk stops. Never on the person's own session or a browser desk"
+                      "description": "on a whole desk only (Link v0.26.0): start a program that keeps running (an office suite, a terminal, an editor) and answer at once with its pid; it runs until the desk stops. Never on the person's own session or a browser desk"
                     }
                   }
                 }
@@ -79863,7 +79863,7 @@
                     "desk": {
                       "type": "string",
                       "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
-                      "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Node v0.19.0: one per agent task); start the desk first"
+                      "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Link v0.19.0: one per agent task); start the desk first"
                     }
                   }
                 }
@@ -79990,7 +79990,7 @@
                     "desk": {
                       "type": "string",
                       "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
-                      "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Node v0.19.0: one per agent task); start the desk first"
+                      "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Link v0.19.0: one per agent task); start the desk first"
                     }
                   }
                 }
@@ -80078,7 +80078,7 @@
                     "desk": {
                       "type": "string",
                       "pattern": "^(main|private|desk-[a-z0-9][a-z0-9-]{0,23})$",
-                      "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Node v0.19.0: one per agent task); start the desk first"
+                      "description": "which display: the person's own screen (main, the default), the machine's first private desk (private) or a named desk (desk-<name>, Link v0.19.0: one per agent task); start the desk first"
                     }
                   },
                   "allOf": [
@@ -80195,24 +80195,24 @@
                         "status",
                         "list"
                       ],
-                      "description": "start a desk (a no-op when it runs), stop it, report it, or list the desks that run (list, Node v0.19.0)"
+                      "description": "start a desk (a no-op when it runs), stop it, report it, or list the desks that run (list, Link v0.19.0)"
                     },
                     "desk": {
                       "type": "string",
                       "pattern": "^(private|desk-[a-z0-9][a-z0-9-]{0,23})$",
-                      "description": "which desk (Node v0.19.0): private (the default, the first desk) or desk-<name>; each desk has its own display, browser profile, downloads and temp folder, and a machine runs at most its max_desks at once"
+                      "description": "which desk (Link v0.19.0): private (the default, the first desk) or desk-<name>; each desk has its own display, browser profile, downloads and temp folder, and a machine runs at most its max_desks at once"
                     },
                     "kind": {
                       "enum": [
                         "desktop",
                         "browser"
                       ],
-                      "description": "start only (Node v0.23.0, Desks plan D2): what the desk is. desktop (the default) is a whole screen: a display, a window manager and a browser shown on it (Linux with Xvfb). browser is a browser alone with no display (Linux or macOS with Chromium), about half the cost: its screen, mouse and keyboard and its live view are the page's own. A machine says which it runs in its computer capabilities (desk.kinds)"
+                      "description": "start only (Link v0.23.0, Desks plan D2): what the desk is. desktop (the default) is a whole screen: a display, a window manager and a browser shown on it (Linux with Xvfb). browser is a browser alone with no display (Linux or macOS with Chromium), about half the cost: its screen, mouse and keyboard and its live view are the page's own. A machine says which it runs in its computer capabilities (desk.kinds)"
                     },
                     "profile": {
                       "type": "string",
                       "pattern": "^[a-z0-9][a-z0-9-]{0,23}$",
-                      "description": "start only, a named desk (Node v0.24.0): a browser profile kept on the machine by that name. The desk's browser starts from it (its cookies and site storage: the person signs in once, on any desk) and the desk saves it back when it stops (the last desk to stop wins); caches are never kept. The private desk keeps its own profile. A machine that keeps profiles says so in its computer capabilities (desk.profiles)"
+                      "description": "start only, a named desk (Link v0.24.0): a browser profile kept on the machine by that name. The desk's browser starts from it (its cookies and site storage: the person signs in once, on any desk) and the desk saves it back when it stops (the last desk to stop wins); caches are never kept. The private desk keeps its own profile. A machine that keeps profiles says so in its computer capabilities (desk.profiles)"
                     },
                     "width": {
                       "type": "integer",
@@ -80254,7 +80254,7 @@
                     "messages"
                   ],
                   "additionalProperties": false,
-                  "description": "one chat completion on the person's own machine (OpenVibe.Node v0.27.0's ai plugin, relayed to a local OpenAI-compatible model server: Ollama, llama.cpp, LM Studio); the answer's data is { model, message: { role, content, tool_calls? }, finish_reason?, usage? }. It reads nothing on the machine and changes nothing there. TOOLS (since 0.277.0, Node v0.36.0's ai plugin; a machine that can pass them says so with ai.tools: true in its capabilities) are the functions the model may ask for: the machine passes them to its model server and hands back the calls the model asked for in message.tool_calls; it never runs one. The caller runs them and sends the next command with the assistant's message (its tool_calls) and one tool message per call (TOOL_CALL_ID)",
+                  "description": "one chat completion on the person's own machine (OpenVibe Link v0.27.0's ai plugin, relayed to a local OpenAI-compatible model server: Ollama, llama.cpp, LM Studio); the answer's data is { model, message: { role, content, tool_calls? }, finish_reason?, usage? }. It reads nothing on the machine and changes nothing there. TOOLS (since 0.277.0, Link v0.36.0's ai plugin; a machine that can pass them says so with ai.tools: true in its capabilities) are the functions the model may ask for: the machine passes them to its model server and hands back the calls the model asked for in message.tool_calls; it never runs one. The caller runs them and sends the next command with the assistant's message (its tool_calls) and one tool message per call (TOOL_CALL_ID)",
                   "properties": {
                     "model": {
                       "type": "string",
@@ -80550,7 +80550,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/job-dispatch-result.v1.json",
         "title": "BotJobDispatchResult",
-        "description": "bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Node is away; it is resent on every reconnect until the Node acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Node sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Node acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.",
+        "description": "bot.job-dispatch-result@1: what OpenVibe.Bot answers OpenVibe.Run's bot.job.dispatch calls (server/api/v1.js and server/jobs/index.js). POST /api/v1/jobs is 201 { job, sent }: `job` is Bot's run_jobs record and `sent` says whether the `job` frame went out on the device link now (false while the paired Link is away; it is resent on every reconnect until the Link acks it). POST /api/v1/jobs/:id/cancel is 200 { job, sent } with the same shape: `sent` says whether a `job_cancel` frame went out. GET /api/v1/jobs/:id is 200 { job, stdout }: the record plus the last 1 MiB of the job's captured stdout, or null when the Link sent none. The record's `state` follows the run_jobs lifecycle queued -> placed (the Link acked) -> running (job_started) -> one end state, and its `job` field is the platform.job@1 body Run dispatched, stored and resent verbatim. A refused dispatch answers a problem instead (422 bot.invalid_job, 404 bot.device_not_found, 409 bot.class_unadvertised, 409 bot.job_id_reused), never this contract.",
         "oneOf": [
           {
             "$ref": "#/$defs/dispatched"
@@ -80595,7 +80595,7 @@
               "node_id": {
                 "type": "string",
                 "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
-                "description": "The paired device the job was sent to; a Node never reads another device's job."
+                "description": "The paired device the job was sent to; a Link never reads another device's job."
               },
               "class": {
                 "$ref": "../platform/runtime-class.v1.json"
@@ -80610,7 +80610,7 @@
                   "cancelled",
                   "expired"
                 ],
-                "description": "queued (stored; sent and resent until acked), placed (the Node acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl)."
+                "description": "queued (stored; sent and resent until acked), placed (the Link acked it), running (job_started), then one end state from job_exit: succeeded (exited 0), failed (another exit code, or reason limit, stopped or failed, or a nack), cancelled (a cancel before start, or reason cancelled), expired (reason ttl)."
               },
               "project_id": {
                 "type": "string",
@@ -80643,7 +80643,7 @@
                   "null"
                 ],
                 "maxLength": 64,
-                "description": "The Node's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
+                "description": "The Link's nack fault code, or why Bot stopped sending the job (bot.class_unadvertised); null while it is still sendable."
               },
               "sent_at": {
                 "type": [
@@ -80659,7 +80659,7 @@
                   "null"
                 ],
                 "minimum": 0,
-                "description": "The Node's job_started started_ms: the anchor of every usage second; null until it started."
+                "description": "The Link's job_started started_ms: the anchor of every usage second; null until it started."
               },
               "finished_at": {
                 "type": [
@@ -80786,7 +80786,7 @@
           "state": {
             "type": "object",
             "additionalProperties": false,
-            "description": "The answer of GET /api/v1/jobs/:id (200): the row and the job's held stdout (null when the Node sent none).",
+            "description": "The answer of GET /api/v1/jobs/:id (200): the row and the job's held stdout (null when the Link sent none).",
             "required": [
               "job",
               "stdout"
@@ -81188,7 +81188,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/browser-provider/job-create-request.v1.json",
         "title": "BrowserProviderJobCreateRequest",
-        "description": "browser-provider.job-create-request@1 (PLANNED; plan T14 R4a, ADR-034): the body OpenVibe.Run POSTs to an external managed-browser provider's job endpoint (capability browser_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is always browser. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is browser-provider.job-create-result@1.",
+        "description": "browser-provider.job-create-request@1 (PLANNED; plan T14 R4a, ADR-034): the body OpenVibe.Run POSTs to an external managed-browser provider's job endpoint (capability browser_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is always browser. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe Link's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is browser-provider.job-create-result@1.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -81469,7 +81469,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/sandbox-provider/job-create-request.v1.json",
         "title": "SandboxProviderJobCreateRequest",
-        "description": "sandbox-provider.job-create-request@1 (PLANNED; plan T14 R4b, ADR-034): the body OpenVibe.Run POSTs to an external sandbox provider's (such as E2B or Fly Machines) job endpoint (capability sandbox_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is code or linux, the platform.runtime-class@1 classes a sandbox hosts. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is sandbox-provider.job-create-result@1.",
+        "description": "sandbox-provider.job-create-request@1 (PLANNED; plan T14 R4b, ADR-034): the body OpenVibe.Run POSTs to an external sandbox provider's (such as E2B or Fly Machines) job endpoint (capability sandbox_provider.job.dispatch). ID is the platform.job@1 id (job_<ULID>) and is also the idempotency key: a repeat POST with the same id answers the first job (200, created false) and never starts a second. CLASS is code or linux, the platform.runtime-class@1 classes a sandbox hosts. ARGS is the job's declared input as JSON (Run refuses more than 512 KiB serialized before it ever sends). INPUTS are files, each an OpenVibe.Media object pinned by sha256; never a URL, so the provider fetches nothing a caller chose. LIMITS are the hard caps of platform.job@1 (wall_ms required; cpu_ms and mem_bytes when the provider can enforce them). EGRESS is the network the job may reach, the values of OpenVibe Link's worker.egress, as platform.job@1 `net` carries it. The request carries no project, subject, requester, token or other credential: the provider never learns who pays, and Run authenticates to it with a key from Run's own environment, sent in a header and never in this body. The provider's answer is sandbox-provider.job-create-result@1.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -81752,7 +81752,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/run/job-create-request.v1.json",
         "title": "RunJobCreateRequest",
-        "description": "run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names, or, for a first-party service acting for a person (X-OV-Subject), the project it names with X-OV-Project once Network confirms the person is an admin or owner of it (ADR-003 amendment 2026-10-12); the person is then the requester and the service is recorded as via. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe.Node's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict. NODE pins the machine: the device id (dev_…) of the job's own machine in Run's placement (platform.resource-offer@1 node_id, as GET /api/v1/machines on OpenVibe.Bot names it), answered by 409 run.job.node_offline when that machine is not connected, never moved to another one (Codes C9c).",
+        "description": "run.job-create-request@1 (PLANNED; plan T14 R1, ADR-034): the body of POST /api/v1/jobs on OpenVibe.Run (capability run.job.submit). The job belongs to the project the caller's token names, or, for a first-party service acting for a person (X-OV-Subject), the project it names with X-OV-Project once Network confirms the person is an admin or owner of it (ADR-003 amendment 2026-10-12); the person is then the requester and the service is recorded as via. CLASS is a platform.runtime-class@1 name; Run accepts any of them but places a job only on a node that advertises worker:<class> (platform.resource-offer@1), so a class no node runs today (browser, linux, desktop, gpu) ends expired with run.job.unplaceable. ARTIFACT is the pre-registered artifact to run (name and one exact version), required for function and code, as platform.job@1 carries it. ARGS is the artifact's declared input as JSON (at most 512 KiB serialized, else 413). INPUTS are files placed in the job directory before the process starts, each an OpenVibe.Media object pinned by its sha256: a size or digest mismatch fails the job (run.job.input_digest_mismatch) before the process ever runs; Run never fetches a caller-chosen URL. LIMITS are hard caps merged stricter with the node's own (platform.job@1 limits); a request over the project's tier cap is refused 422 run.limits.exceeded, never silently lowered. EGRESS is the network the job may reach, the values of OpenVibe Link's worker.egress, carried per job as the same-named platform.job@1 net: none (default; no network), public or openvibe-only. A job asking for public or openvibe-only is placed only on a node whose worker.egress allows it; a worker whose host policy is stricter runs the stricter one. REQUIREMENTS (platform.workload-requirements@1) narrow placement; absent means { kind: run.<class>, mobility: job, latency_class: background, objective: balanced }. IDEMPOTENCY_KEY: a repeat from the same project within 24 h with an identical body answers the first job (200, created false); with a different body 409 run.idempotency.conflict. NODE pins the machine: the device id (dev_…) of the job's own machine in Run's placement (platform.resource-offer@1 node_id, as GET /api/v1/machines on OpenVibe.Bot names it), answered by 409 run.job.node_offline when that machine is not connected, never moved to another one (Codes C9c).",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -81910,7 +81910,7 @@
               "openvibe-only"
             ],
             "default": "none",
-            "description": "OpenVibe.Node worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only)."
+            "description": "OpenVibe Link worker.egress values: none (no network), public (the internet without private, link-local or the network's own ranges), openvibe-only (the network's own endpoints only)."
           },
           "idempotency_key": {
             "type": "string",
@@ -93517,7 +93517,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/run/session.v1.json",
         "title": "RunSession",
-        "description": "run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe.Node runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).",
+        "description": "run.session@1 (the Desks plan's D6): one session on OpenVibe.Run, a browser desk held for one person, as GET /api/v1/sessions/{id} answers it (capability run.session.read) and run.session-list-result@1, POST /api/v1/sessions (run.session.create) and POST /api/v1/sessions/{id}/end (run.session.control) carry it. A session is a desk (bot.command@1 kind desk, kind browser) that Run places on a machine and OpenVibe.Bot leases to it (bot.desk-lease@1): on one of the person's own machines where they let agents use it (trust user-owned, never another person's), or on a desk host that serves other people (trust first-party or community: the host's OpenVibe Link runs every desk in its own sandbox, desk_isolation sandbox, and offers nothing else of the machine). STATES: placing (stored, looking for a machine) -> starting (the desk is leased and starting) -> running (the desk answered) -> ended. An ended session never changes; end.reason says why: ended (POST /api/v1/sessions/{id}/end), ttl (ttl_s ran out), idle (no command for idle_s), host_lost (its machine went away or stopped the desk), unplaceable (no machine had room before ttl_s, or none at all) or failed (the desk would not start). USAGE: desk_seconds counts from started_at to ended_at (or now while running), metered to OpenVibe.Billing as one platform.usage-sample@1 per minute (service run, operation browser.desk, unit s, idempotency_key run:<session id>:<minute>). Run mints the id (ses_<ULID>).",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -94304,7 +94304,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/desk-lease.v1.json",
         "title": "BotDeskLease",
-        "description": "bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe.Node runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).",
+        "description": "bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe Link runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -101998,7 +101998,7 @@
               "null"
             ],
             "maxLength": 100,
-            "description": "The Node machine id it came from, when it came from one."
+            "description": "The Link machine id it came from, when it came from one."
           },
           "no_looks": {
             "type": "boolean",
@@ -102310,7 +102310,7 @@
                     "null"
                   ],
                   "maxLength": 100,
-                  "description": "The Node machine id the item came from, when it came from one."
+                  "description": "The Link machine id the item came from, when it came from one."
                 },
                 "seen_at": {
                   "type": "string",
@@ -103014,7 +103014,7 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 300,
-            "description": "The local target the Node may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally."
+            "description": "The local target the Link may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally."
           },
           "status": {
             "enum": [
@@ -103125,7 +103125,7 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 300,
-            "description": "The local port the Node exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host."
+            "description": "The local port the Link exposes, e.g. 127.0.0.1:3000; never an arbitrary internet host."
           },
           "policy": {
             "allOf": [
@@ -103167,7 +103167,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/website/share-connect-request.v1.json",
         "title": "WebsiteShareConnectRequest",
-        "description": "website.share-connect-request@1: what a Node presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Node proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.",
+        "description": "website.share-connect-request@1: what a Link presents to open the tunnel for one share (POST /api/v1/shares/:id/tunnel, capability website.share.connect). The Link proves its Network node principal with a client-credentials token whose audience is openvibe.website, and this short-lived, single-use tunnel_token minted by Connect binds the connection to one share. The edge checks both; neither alone opens the route. The token is presented once and never stored, logged or returned.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -103197,17 +103197,17 @@
               "http2-ws"
             ],
             "default": "quic",
-            "description": "The data-plane transport the Node is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked."
+            "description": "The data-plane transport the Link is trying. quic is ALPN ovconnect/1; http2-ws is the 443 fallback when UDP is blocked."
           },
           "node_version": {
             "type": "string",
             "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$",
-            "description": "The Node release, for posture and diagnostics; never used for authorization."
+            "description": "The Link release, for posture and diagnostics; never used for authorization."
           },
           "region": {
             "type": "string",
             "maxLength": 40,
-            "description": "The edge region the Node is dialing; the edge refuses a region it does not serve."
+            "description": "The edge region the Link is dialing; the edge refuses a region it does not serve."
           }
         }
       }
@@ -103728,7 +103728,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 40,
-            "description": "The Node release running on the device."
+            "description": "The Link release running on the device."
           },
           "addresses": {
             "type": "array",
@@ -104294,7 +104294,7 @@
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 3600,
-                "description": "How far a signed timestamp may drift before the Node refuses it; 300 is the default."
+                "description": "How far a signed timestamp may drift before the Link refuses it; 300 is the default."
               }
             }
           },
@@ -106712,7 +106712,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/live/agent-stream-create-request.v1.json",
         "title": "LiveAgentStreamCreateRequest",
-        "description": "live.agent-stream-create-request@1 (the Agent Streams plan, S1): the body of POST /api/streams/agent on OpenVibe.Live (capability live.agent_stream.publish). It answers 201 with the stream (live.agent-stream@1) and the publish part (live.agent-stream-publish@1): { stream, publish }. The caller is the person's own session token, or a first-party service token acting for that person (a Node principal acting for its owner, Codes or Actor) that holds live.agent_stream.publish for the audience openvibe.live; Network grants it to exactly those principals. Never a developer-app token, never another person's stream. TITLE is the card's title, TASK says what the agent is doing and where that task lives, VISIBILITY says who may watch, and ALLOW_SITES is the optional list of hosts a browser desk may navigate to (a desk that leaves the list raises the curtain).",
+        "description": "live.agent-stream-create-request@1 (the Agent Streams plan, S1): the body of POST /api/streams/agent on OpenVibe.Live (capability live.agent_stream.publish). It answers 201 with the stream (live.agent-stream@1) and the publish part (live.agent-stream-publish@1): { stream, publish }. The caller is the person's own session token, or a first-party service token acting for that person (a Link principal acting for its owner, Codes or Actor) that holds live.agent_stream.publish for the audience openvibe.live; Network grants it to exactly those principals. Never a developer-app token, never another person's stream. TITLE is the card's title, TASK says what the agent is doing and where that task lives, VISIBILITY says who may watch, and ALLOW_SITES is the optional list of hosts a browser desk may navigate to (a desk that leaves the list raises the curtain).",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -109169,7 +109169,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/machine-pool.v1.json",
         "title": "BotMachinePool",
-        "description": "bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Node generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.",
+        "description": "bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Link generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -109328,7 +109328,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/ai/offer.v1.json",
         "title": "AiOffer",
-        "description": "ai.offer@1: one community AI offer, a person's machine (OpenVibe.Node's ai plugin, \"Offer to the network\") serving its local models to requests that opt in to community capacity. OpenVibe.Bot reports these fields (POST /internal/ai/offers/report on Network, network.resource.report; a report with any other field is refused whole), and OpenVibe.AI reads them from Network (GET /internal/ai/offers, network.registry.read, { offers, generated_at, count }). Network adds `pool` (ai.offer-pool@1) to the head's offer when the machine is the head of an approved pool (bot.machine-pool@1), and leaves a pool member's own offer out of the list while it is in a pool. For a pool the hours, audience, price, readiness, idle-only and verification apply to the whole pool: it is ready only while every member has approved, renewed its readiness in the last few seconds, and is still the owner's. Nothing here is public: AI shows Exchange a hashed offer id and no owner or machine id.",
+        "description": "ai.offer@1: one community AI offer, a person's machine (OpenVibe Link's ai plugin, \"Offer to the network\") serving its local models to requests that opt in to community capacity. OpenVibe.Bot reports these fields (POST /internal/ai/offers/report on Network, network.resource.report; a report with any other field is refused whole), and OpenVibe.AI reads them from Network (GET /internal/ai/offers, network.registry.read, { offers, generated_at, count }). Network adds `pool` (ai.offer-pool@1) to the head's offer when the machine is the head of an approved pool (bot.machine-pool@1), and leaves a pool member's own offer out of the list while it is in a pool. For a pool the hours, audience, price, readiness, idle-only and verification apply to the whole pool: it is ready only while every member has approved, renewed its readiness in the last few seconds, and is still the owner's. Nothing here is public: AI shows Exchange a hashed offer id and no owner or machine id.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -111182,7 +111182,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/actor/skill.v2.json",
         "title": "ActorSkillV2",
-        "description": "actor.skill@2: a skill, the document an agent loads to do one kind of job well (ADR-058, ADR-060). It keeps every field and meaning of actor.skill@1 and adds a way for the skill to bring CODE that runs in a sandbox: RUNS is prompt (as @1, text and instructions only) or sandbox. A sandbox skill carries its code as ordinary TEXT resources (a .js path with media_type text/javascript, at most 64 KiB each, in the integrity hash); TOOLS (1 to 5, only when runs is sandbox) say what an agent may call: a name, a description the agent reads, language javascript (the only one in v1), an ENTRY naming one of the skill's own .js resources, ARGS as a JSON Schema subset (an object whose properties are string, number, integer, boolean or an array of those; enum, maxLength, and pattern at most 200 characters; no $ref and no nested object), NET (deny by default, openvibe-only, public) and LIMITS (wall_ms at most 30000, default 10000; mem_bytes at most 268435456, default 134217728). A sandbox skill's requires.kinds names skill.run; a prompt skill declares no tools. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@2). Code never runs on an OpenVibe server and never sees a secret: it runs as a Run job of class function on a Node that declared the skill runner, with the network its tool declared and the exact bytes the registry scanned. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, tools, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; tools are [{ name, description, language, entry, args, net, limits }] in the document's order, with an absent net or limits (and each absent limits field) left out and args as the object the document wrote; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.",
+        "description": "actor.skill@2: a skill, the document an agent loads to do one kind of job well (ADR-058, ADR-060). It keeps every field and meaning of actor.skill@1 and adds a way for the skill to bring CODE that runs in a sandbox: RUNS is prompt (as @1, text and instructions only) or sandbox. A sandbox skill carries its code as ordinary TEXT resources (a .js path with media_type text/javascript, at most 64 KiB each, in the integrity hash); TOOLS (1 to 5, only when runs is sandbox) say what an agent may call: a name, a description the agent reads, language javascript (the only one in v1), an ENTRY naming one of the skill's own .js resources, ARGS as a JSON Schema subset (an object whose properties are string, number, integer, boolean or an array of those; enum, maxLength, and pattern at most 200 characters; no $ref and no nested object), NET (deny by default, openvibe-only, public) and LIMITS (wall_ms at most 30000, default 10000; mem_bytes at most 268435456, default 134217728). A sandbox skill's requires.kinds names skill.run; a prompt skill declares no tools. A skill GRANTS NOTHING: requires only declares; the agent's level and approvals decide every step (actor approvals, HO1), and a step of a kind the skill did not declare is a scan finding (actor.skill-listing@2). Code never runs on an OpenVibe server and never sees a secret: it runs as a Run job of class function on a Link that declared the skill runner, with the network its tool declared and the exact bytes the registry scanned. The INTEGRITY block is a sha256 over the canonical JSON of the document: it shows the file was not edited after it was written and says nothing about who wrote it, so the AUTHOR is a claim; the registry's listing is the only place a publisher is vouched for. The canonical JSON is the document's own fields, in this order: skill, slug, name, description, version, instructions, resources, tools, requires, runs, license, author; an optional field that is absent or empty is left out; resources are [{ path, media_type, text }] in the document's order; tools are [{ name, description, language, entry, args, net, limits }] in the document's order, with an absent net or limits (and each absent limits field) left out and args as the object the document wrote; requires is { kinds, apps, hosts } with empty lists left out; author is { subject } or { subject, name }; the value is the compact JSON of that object (no spaces). CREATED_AT is not hashed.",
         "type": "object",
         "additionalProperties": false,
         "required": [

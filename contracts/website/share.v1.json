@@ -71,7 +71,7 @@
       "type": "string",
       "minLength": 3,
       "maxLength": 300,
-      "description": "The local target the Node may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally."
+      "description": "The local target the Link may forward to, e.g. 127.0.0.1:3000, tcp://127.0.0.1:25565 or udp://127.0.0.1:19132. Loopback by default; a LAN target is allowed only when the owner enabled it locally."
     },
     "status": {
       "enum": [

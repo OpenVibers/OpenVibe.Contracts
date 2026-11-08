@@ -6007,7 +6007,7 @@
    },
    "network.machine.v1": {
     "title": "NetworkMachine",
-    "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Node install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
+    "description": "network.machine@1: one machine of a person, as the network's machines hub shows it (plan L34, steps M2 and M4). A machine is a Bot device of kind machine: an OpenVibe Link install that paired with the person's account. Bot stays the registry underneath (the device id is its dev_…); Network fronts it for the person and for apps the person consented. The roles are what the machine does for the network (the catalogue: network.machine-roles@1), and running is what it does right now. Nothing here is a secret: no credential, no hash, no address.",
     "type": "object",
     "required": [
      "id",
@@ -6044,7 +6044,7 @@
      "os": {
       "type": "string",
       "maxLength": 40,
-      "description": "The operating system the Node reports (linux, darwin, windows). Absent until the machine has checked in."
+      "description": "The operating system the Link reports (linux, darwin, windows). Absent until the machine has checked in."
      },
      "online": {
       "type": "boolean",
@@ -6058,7 +6058,7 @@
      "node_version": {
       "type": "string",
       "maxLength": 40,
-      "description": "The OpenVibe Node version the machine reports. Absent until it has checked in."
+      "description": "The OpenVibe Link version the machine reports. Absent until it has checked in."
      },
      "roles": {
       "type": "array",

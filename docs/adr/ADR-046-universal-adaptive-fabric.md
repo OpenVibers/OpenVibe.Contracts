@@ -63,7 +63,7 @@ to run the work:
 | Class | Meaning |
 | --- | --- |
 | `first-party` | Hosts and accounts the OpenVibe network operates itself (its own servers and provider accounts). |
-| `user-owned` | A person's own node or machine (an OpenVibe.Node they run), offered for their own workloads. |
+| `user-owned` | A person's own node or machine (an OpenVibe Link they run), offered for their own workloads. |
 | `partner` | An organisation under a written agreement with the network, bound by its data and uptime terms. |
 | `community` | Capacity volunteered by community members, without a contract; best effort, no private data. |
 | `external` | A third-party provider used through its public API under its own terms (a cloud or AI vendor). |
@@ -73,12 +73,12 @@ to run the work:
 for a workload whose requirements list `"user-owned"` explicitly. Adding the class to the contracts therefore widens
 no existing caller's eligible set, and the SDK must not add it to its default list.
 
-### 5. Worker capability names a Node advertises
+### 5. Worker capability names a Link advertises
 
-An OpenVibe.Node that runs jobs advertises one `worker:<class>` capability in its `resource-offer.capabilities` for
+An OpenVibe Link that runs jobs advertises one `worker:<class>` capability in its `resource-offer.capabilities` for
 each `platform.runtime-class@1` class it runs: `worker:function` (a declared function artifact) and `worker:code`
 (submitted code in a sandbox) today, and `worker:browser`, `worker:linux`, `worker:desktop` and `worker:gpu` as Node
-gains them. These six names are reserved for the Node job worker (`$defs.reservedWorkerCapabilities` in
+gains them. These six names are reserved for the Link job worker (`$defs.reservedWorkerCapabilities` in
 `platform.resource-offer@1`); every other `worker:` name (`worker:ffmpeg`, `worker:ai-gpu`) is an ordinary capability.
 A requirement asks for a class by listing the same name in its `capabilities`.
 
@@ -104,7 +104,7 @@ placement result, telemetry and usage samples for every run. Other services adop
 - One vocabulary and one placer for every placed workload; a new kind of capacity is a new offer, not new code.
 - Routing survives the control plane: plans are signed, epoch-ordered and verified where they are used.
 - A person can run their own work on their own machine without that machine joining anyone else's default pool.
-- The SDK placer, the T2 resource registry and OpenVibe.Node must agree on the trust rule; this ADR is that rule.
+- The SDK placer, the T2 resource registry and OpenVibe Link must agree on the trust rule; this ADR is that rule.
 
 ## Open questions for the owner
 

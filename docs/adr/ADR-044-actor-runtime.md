@@ -33,7 +33,7 @@ levels and the local kill switch). For the owner's review.
   `platform.telemetry-sample@1` and `platform.usage-sample@1` are the cost and signal vocabulary (ADR-046 §§2–3);
   `platform.runtime-class@1`, `platform.job@1` and `platform.job-frame@1` are Run's execution shape (T14); the
   `agent` subject is already in `identity/subject-ref@1`.
-- **Actor's backend classes** are fixed by the plan: "agent platform, OpenVibe runtime, **Codes**, **Node**, **Run**.
+- **Actor's backend classes** are fixed by the plan: "agent platform, OpenVibe runtime, **Codes**, **Link**, **Run**.
   Coding work is exposed to Actor **through Codes** — one coding-harness router in the estate, not two."
 
 ## Decision
@@ -49,7 +49,7 @@ the `progress` descriptor, the `cancel` record and the registered `webhooks`.
 - **`POST /v1/tasks` takes the task's creation subset** — `task`, `mode`, `budget`, and optionally `webhooks`. The
   router mints `id`, sets `project_id` and `requester` from the token, and answers `state: queued`.
 - **It is the resource, not a device frame.** Run's `platform.job@1` is handed to a worker inside a
-  `platform.job-frame@1` link message because the link is OpenVibe.Node's WebSocket. Actor's link is HTTP and
+  `platform.job-frame@1` link message because the link is OpenVibe Link's WebSocket. Actor's link is HTTP and
   server-sent events, so the frame vocabulary is not reused as a message type; `progress` and `explanation` carry
   what the frames carry for a job. This is the shape, and whether Actor later needs an explicit stream-event contract
   of its own (as `run.job-stream-event@1` is Run's) is left to the router's implementation.
@@ -111,7 +111,7 @@ ADR-046 §4's five classes apply unchanged: `first-party`, `user-owned`, `partne
 `user-owned` eligible only when the task names it. `private` mode narrows the eligible set to backends that keep the
 data on OpenVibe — `first-party`, and a `user-owned` node only when the deployment allows it — which the plan
 describes as "only agents that keep your data on OpenVibe: its own runtime and open models on its hardware". Local
-execution on a person's own machine goes through OpenVibe.Node under ADR-043's control levels (Observe / Ask /
+execution on a person's own machine goes through OpenVibe Link under ADR-043's control levels (Observe / Ask /
 Trusted / Full control), a local indicator and a kill switch the owner holds; Node's local policy always overrides a
 cloud command (plan T14).
 
@@ -121,7 +121,7 @@ cloud command (plan T14).
   (`output`, `state`, `end`, the same three as `run.job-stream-event@1`). The stream is best-effort, as a job's stdout
   is; the task record is the source of truth.
 - **Cancel** is `cancel`: `POST /v1/tasks/{id}/cancel` records who asked and when, the running backend is stopped as
-  its own contract allows (a Run job through `run.job.cancel`, a Node task through its link, an external platform
+  its own contract allows (a Run job through `run.job.cancel`, a Link task through its link, an external platform
   through its API), and the task ends `cancelled` with `finished_at` set. Cancel is not a promise that money already
   spent is returned.
 - **Webhooks** are registered at creation: an HTTPS URL, the state changes to deliver, and an optional `secret_ref`

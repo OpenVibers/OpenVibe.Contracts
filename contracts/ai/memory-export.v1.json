@@ -101,7 +101,7 @@
               "null"
             ],
             "maxLength": 100,
-            "description": "The Node machine id the item came from, when it came from one."
+            "description": "The Link machine id the item came from, when it came from one."
           },
           "seen_at": {
             "type": "string",
