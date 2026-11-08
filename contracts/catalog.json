@@ -7334,7 +7334,7 @@
     },
     {
       "id": "actor.trigger",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "actor",
       "schema": "actor/trigger.v1.json",
       "visibility": "public",

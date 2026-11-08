@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.344.0 — 2026-11-08
+
+- `actor.trigger@1` (1.2.0) gains the mention kind (plan HO13, standing intents): a trigger that waits for the person
+  to say one of their phrases in their own conversation with their own agent. Additive:
+  - `kind` may now be `mention`; `when.mention` holds `phrases` (one to five, 2 to 80 characters each, trimmed) and
+    `match` (`any` or `all`), while `when.words` stays the card's line ("When you mention the release");
+  - `fires` may only be `once_per_conversation`: the trigger fires at most once in each conversation;
+  - `expires_at` is required for this kind and at most 90 days after `created_at` (the default is 30). JSON Schema
+    cannot compare two dates, so Actor enforces the cap, and the repository's suite checks the fixtures and the rule.
+- A mention trigger listens only to the person's own words to their own agent: never anyone else's messages, never a
+  room or a stream chat, and never the agent's own answers. Matching is case-insensitive, on word boundaries, after
+  Unicode normalisation. Nothing that exists today changes shape.
+
 ## 0.343.0 — 2026-11-08
 
 - Add `actor.skill@2` and `actor.skill-listing@2` (ADR-060, plan HO8): a skill may now bring code that runs in a
