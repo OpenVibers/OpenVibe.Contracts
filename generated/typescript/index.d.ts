@@ -316603,3 +316603,12 @@ export interface MailInboxAnswering {
    */
   changed_at: string | null;
 }
+
+/** actor.task-view-ticket@1.0.0 (owner: actor) */
+/**
+ * actor.task-view-ticket@1: a reusable read-only view of one task for its owner, valid for 15 minutes. The URL contains a bearer credential; never log it or forward it in a referrer.
+ */
+export interface ActorTaskViewTicket {
+  url: string;
+  expires_at: string;
+}
