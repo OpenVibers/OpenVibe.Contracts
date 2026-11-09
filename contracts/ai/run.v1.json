@@ -338,8 +338,69 @@
             "type": "object"
           },
           "description": "The billing readings of the run, when it has any."
+        },
+        "task_choice": {
+          "type": "object",
+          "description": "A run started from an AI task (ai.task@1): the task it read, the choice it resolved, why that choice won and which fallback answered.",
+          "required": [
+            "task",
+            "requested",
+            "answered",
+            "why",
+            "fallback_index"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "task": {
+              "type": "string",
+              "description": "The task's name."
+            },
+            "requested": {
+              "$ref": "choice.v1.json"
+            },
+            "answered": {
+              "$ref": "choice.v1.json"
+            },
+            "why": {
+              "enum": [
+                "run",
+                "saved",
+                "kind",
+                "owner",
+                "builtin"
+              ],
+              "description": "Which resolution step picked it: the run's own choice (run), the person's saved choice (saved), their kind default (kind), the owner's task default (owner) or the built-in."
+            },
+            "fallback_index": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "0 when the chosen model answered; otherwise the position of the fallback that did."
+            }
+          }
         }
       }
+    },
+    "choice": {
+      "anyOf": [
+        {
+          "$ref": "choice.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "The choice the run was started with, when it was started from a task or a choice; null otherwise."
+    },
+    "answered": {
+      "anyOf": [
+        {
+          "$ref": "choice.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "What actually answered: the model and its source, and the machine when one did; null for a run outside a task."
     }
   }
 }

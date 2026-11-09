@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/task.v1.json",
+  "title": "AiTaskV1",
+  "description": "A named piece of AI work in OpenVibe.AI's catalogue: the service that registered it, its kind (text, code, vision, image or search), one sentence saying what it does, the built-in default choice and the workflow that runs it. Services register their own namespace with POST /api/v1/tasks; the catalogue lists every task at GET /api/v1/tasks.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*\\.[a-z0-9_.-]{1,100}$"
+    },
+    "kind": {
+      "enum": [
+        "text",
+        "code",
+        "vision",
+        "image",
+        "search"
+      ]
+    },
+    "sentence": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "default": {
+      "$ref": "choice.v1.json"
+    },
+    "service": {
+      "type": "string"
+    },
+    "workflow": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "kind",
+    "sentence",
+    "default"
+  ]
+}

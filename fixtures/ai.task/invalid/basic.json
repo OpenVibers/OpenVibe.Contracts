@@ -1,0 +1,9 @@
+{
+  "name": "design.icon",
+  "kind": "other",
+  "sentence": "Draw.",
+  "default": {
+    "model": "auto",
+    "source": "openvibe"
+  }
+}

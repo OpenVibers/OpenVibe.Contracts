@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.372.0 — 2026-11-09
+
+- AI tasks and choices: `ai.task@1`, `ai.choice@1`, `ai.task-defaults@1`; a run accepts `task` or `choice` beside `workflow`, and `run.explain.task_choice` says what answered. `ai.me-preferences@1` gains `defaults.search`.
+
 ## 0.371.0 — 2026-11-09
 
 - Exchange API platform and search: exchange.key@1, exchange.key-created@1, exchange.usage@1, exchange.deployments@1, exchange.search-result@1, exchange.image-result@1, and the Exchange manifest's routes

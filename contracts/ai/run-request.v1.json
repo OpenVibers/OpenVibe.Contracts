@@ -4,11 +4,17 @@
   "title": "AiRunRequest",
   "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).",
   "type": "object",
-  "required": [
-    "workflow"
-  ],
+  "required": [],
   "additionalProperties": false,
   "properties": {
+    "task": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*\\.[a-z0-9_.-]{1,100}$",
+      "description": "A registered AI task (ai.task@1, GET /api/v1/tasks). Its workflow runs with the task's resolved choice; choice overrides it for this run."
+    },
+    "choice": {
+      "$ref": "choice.v1.json"
+    },
     "workflow": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)+$",
@@ -78,5 +84,17 @@
       },
       "description": "Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision)."
     }
-  }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "workflow"
+      ]
+    },
+    {
+      "required": [
+        "task"
+      ]
+    }
+  ]
 }
