@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/fill-request.v1.json",
+  "title": "RunFillRequest",
+  "description": "Metadata for a person's pending blind sign-in approval. Never contains credentials. The Companion must take the machine's public key from Network's list of the person's own machines by machine_node_id and show its thumbprint; it must never accept a key from Run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "session_id", "machine_node_id", "origin", "created_at", "expires_at", "agent", "computer"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^fr_[A-Za-z0-9_-]{16,64}$"},
+    "session_id": {"$ref": "session.v1.json#/$defs/session_id"},
+    "machine_node_id": {"type": "string", "minLength": 1, "maxLength": 200},
+    "origin": {"type": "string", "pattern": "^https://[a-z0-9.-]+(:[0-9]{1,5})?$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "agent": {"type": "string", "maxLength": 200},
+    "computer": {"type": "string", "maxLength": 200}
+  }
+}

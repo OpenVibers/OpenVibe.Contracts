@@ -8473,6 +8473,60 @@
       "status": "active"
     },
     {
+      "id": "run.fill-request",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/fill-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.fill-grant",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/fill-grant.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.fill-outcome",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/fill-outcome.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.fill-request-create",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/fill-request-create.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.fill-request-created",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/fill-request-created.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "run.fill-command",
+      "version": "1.0.0",
+      "owner": "run",
+      "schema": "run/fill-command.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "bot.desk-lease",
       "version": "1.0.0",
       "owner": "bot",
