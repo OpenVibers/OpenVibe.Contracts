@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/home-screen.v1.json",
+  "title": "NetworkHomeScreen",
+  "description": "network.home-screen@1: a person's ordered Home icons and folders. GET and PUT /api/v1/me/home-screen use a Bearer user session.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["home", "folders", "updated_at"],
+  "properties": {
+    "home": { "type": "array", "maxItems": 40, "uniqueItems": true, "items": { "type": "string", "pattern": "^(?:[a-z0-9-]{1,40}|folder:[a-z0-9-]{1,40}|tools:[a-z0-9-]{1,40})$" } },
+    "folders": { "type": "array", "maxItems": 40, "items": { "type": "object", "additionalProperties": false, "required": ["id", "name", "apps"], "properties": {
+      "id": { "type": "string", "pattern": "^[a-z0-9-]{1,40}$" },
+      "name": { "type": "string", "minLength": 1, "maxLength": 60 },
+      "apps": { "type": "array", "maxItems": 40, "uniqueItems": true, "items": { "type": "string", "pattern": "^(?:[a-z0-9-]{1,40}|tools:[a-z0-9-]{1,40})$" } }
+    } } },
+    "updated_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

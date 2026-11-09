@@ -62,7 +62,7 @@
       "name": "OpenVibe.Community",
       "origin": "https://openvibe.community",
       "operations": 40,
-      "capabilities": 13
+      "capabilities": 14
     },
     {
       "service": "connect",

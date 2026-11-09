@@ -1,9 +1,22 @@
 # Changelog
 
+## 0.354.0 — 2026-11-09
+
+- Vibe compare and Exchange chat export contracts (the Chat move)
+
+## 0.353.0 — 2026-11-09
+
+- Add `actor.ask@1`: durable approvals, questions, personal steps and sign-in hand-offs, linked to the person’s Actor and goal, with evidence and an answer or decline.
+
+## 0.352.0 — 2026-11-09
+
+- The menu's home screen and wall (M1): `network.home-screen@1`, `network.menu-feeds@2` (order and off; v1's on reads as
+  the start of the order), `network.frame-today@1`, `community.status@1`, `community.pulse-contribute-request@1` and the
+  person-granted capability `community.pulse.contribute`, with fixtures and the manifests' routes.
+
 ## 0.351.0 — 2026-11-09
 
-- Define `chat.vibe-answer@2`, Exchange's scoped chat export request and result, and the `exchange.chat.export` capability for moving a person's chats into Vibe.
-- List the new Vibe model comparison and import routes in Chat's service manifest.
+- Add the five public Report AI comparison response contracts and fixtures, and list their cached public routes in the Report service manifest.
 
 ## 0.350.0 — 2026-11-09
 

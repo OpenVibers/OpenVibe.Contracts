@@ -119,12 +119,16 @@ for (const c of [...new Map(contracts.catalog.map((e) => [e.id, e])).values()]) 
         ok(list.length > 0, `${c.id} has ${kind} fixtures`);
         for (const f of list) {
             const value = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-            const ref = majorRef(c.id, value);
+            const ref = c.id === 'network.menu-feeds' ? 'network.menu-feeds@1' : majorRef(c.id, value);
             const r = FULL_CHECK[c.id] ? FULL_CHECK[c.id](value, ref) : contracts.validate(ref, value);
             ok(r.valid === (kind === 'valid'), `${c.id} ${kind}/${f}: ${r.valid ? 'passed' : JSON.stringify(r.errors)}`);
         }
     }
 }
+ok(contracts.validate('network.menu-feeds@2', { order: ['today:today'], off: [], updated_at: null }).valid,
+    'menu-feeds v2 keeps an ordered default-on choice');
+ok(!contracts.validate('network.menu-feeds@2', { order: ['today:today', 'today:today'], off: [], updated_at: null }).valid,
+    'menu-feeds v2 refuses duplicate order ids');
 assert.throws(() => contracts.resolve('identity.subject-ref@2'), /not @2/);
 ok(contracts.resolve('ai.credential-put@1').schema === 'ai/credential-put.v1.json' && contracts.resolve('ai.credential-put@2').schema === 'ai/credential-put.v2.json'
     && contracts.resolve('ai.credential-put').version === '2.0.0', 'a contract with two majors resolves by id (newest) or by major');
@@ -997,6 +1001,7 @@ sub(path.join(__dirname, 'billing-grace.test.js'));
 sub(path.join(__dirname, 'resources.test.js'));
 // The wait record (plan A2): a wait is a record, not a running loop.
 sub(path.join(__dirname, 'actor-wait.test.js'));
+sub(path.join(__dirname, 'actor-ask.test.js'));
 sub(path.join(__dirname, 'batching-latency.test.js'));
 sub(path.join(__dirname, 'network-consent.test.js'));
 // The machines hub (plan L34): one catalogue of roles, declared by the products that own them.

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/status.v1.json",
+  "title": "CommunityStatus",
+  "description": "community.status@1: a public status written by POST /api/v1/me/status. At most one https link may appear across text and link; Community checks this after validating the schema. The opening post id supports the existing post reaction and reply routes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["text"],
+  "properties": {
+    "text": { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "\\S" },
+    "link": { "type": ["string", "null"], "maxLength": 2000, "pattern": "^https://" },
+    "id": { "type": "integer" },
+    "post_id": { "type": "integer" },
+    "url": { "type": "string", "pattern": "^https://" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

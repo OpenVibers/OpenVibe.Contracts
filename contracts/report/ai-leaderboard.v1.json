@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/report/ai-leaderboard.v1.json",
+  "title": "ReportAiLeaderboard",
+  "type": "object",
+  "required": [
+    "$schema",
+    "generated_at",
+    "count",
+    "rows",
+    "next_cursor"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "report.ai-leaderboard@1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "rating",
+          "benchmark",
+          "rank",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "maker": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "weights": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rating": {
+            "type": "object"
+          },
+          "benchmark": {
+            "type": "object"
+          },
+          "rank": {
+            "type": "object"
+          },
+          "source": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "next_cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true,
+  "description": "report.ai-leaderboard@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
+}

@@ -1,0 +1,16 @@
+{
+  "home": [
+    "live",
+    "folder:tools"
+  ],
+  "folders": [
+    {
+      "id": "tools",
+      "name": "Tools",
+      "apps": [
+        "tools:qr"
+      ]
+    }
+  ],
+  "updated_at": "2026-11-09T12:00:00Z"
+}

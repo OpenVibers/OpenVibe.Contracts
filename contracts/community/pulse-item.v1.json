@@ -52,12 +52,10 @@
       ]
     },
     "label": {
-      "enum": [
-        "AI",
-        "System",
-        null
-      ]
+      "enum": ["AI", "System", null]
     },
+    "via": { "type": "string", "maxLength": 120, "description": "A third-party contribution is shown as via <app>." },
+    "picture_url": { "type": "string", "maxLength": 2000, "pattern": "^https://openvibe\\.media/(t|o)/" },
     "actor": {
       "type": [
         "object",
