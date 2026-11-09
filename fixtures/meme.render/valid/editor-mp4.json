@@ -1,0 +1,16 @@
+{
+  "template_id": "tpl_classic",
+  "lines": ["Ship the fix", "then celebrate"],
+  "format": "mp4",
+  "editor": {
+    "font_style": "impact",
+    "font_size": 30,
+    "color": "#ffffff",
+    "outline": "#000000",
+    "outline_width": 3,
+    "crop_x": 50,
+    "crop_y": 50,
+    "boxes": [{ "x": 5, "y": 7, "w": 90, "h": 24 }, { "x": 5, "y": 68, "w": 90, "h": 24 }],
+    "stickers": [{ "emoji": "🔥", "x": 52, "y": 54 }]
+  }
+}

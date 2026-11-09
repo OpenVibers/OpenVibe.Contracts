@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/exchange/chat-export-request.v1.json",
+  "title": "ExchangeChatExportRequest",
+  "description": "The x-ov-subject header on Chat's authenticated export request.",
+  "type": "object",
+  "required": ["subject"],
+  "additionalProperties": false,
+  "properties": { "subject": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" } }
+}

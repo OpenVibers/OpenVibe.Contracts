@@ -1,0 +1,15 @@
+{
+  "upload_id": "mup_01K5WZX7S7Q4D2B8N3M6V1C9TZ",
+  "object_id": "med_01K5WZX7S7Q4D2B8N3M6V1C9TZ",
+  "status": "active",
+  "part_size": 8388608,
+  "total_size": 8388608,
+  "parts_expected": 1,
+  "expires_at": "2026-11-10T00:00:00Z",
+  "created_at": "2026-11-09 00:00:00",
+  "parts": [],
+  "received_bytes": 0,
+  "missing": [
+    1
+  ]
+}

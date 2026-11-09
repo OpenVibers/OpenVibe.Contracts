@@ -1,0 +1,50 @@
+{
+  "map": "ai.run-error@1",
+  "codes": {
+    "route.unavailable": {
+      "words": "No model could take this task.",
+      "next": "Pick a model or add an AI key, then retry.",
+      "action": "pick_model"
+    },
+    "provider.unavailable": {
+      "words": "The model provider is unavailable.",
+      "next": "Retry when the provider is back.",
+      "action": "retry"
+    },
+    "provider.rate_limited": {
+      "words": "The model provider reached its limit.",
+      "next": "Retry after the limit resets.",
+      "action": "retry_later"
+    },
+    "credentials.unavailable": {
+      "words": "Your AI key is unavailable.",
+      "next": "Add or check your AI key.",
+      "action": "add_key"
+    },
+    "quota.refused": {
+      "words": "Your AI allowance is used up.",
+      "next": "Pick another model or retry when the allowance resets.",
+      "action": "pick_model"
+    },
+    "queue.full": {
+      "words": "AI is busy right now.",
+      "next": "Retry in a moment.",
+      "action": "retry_later"
+    },
+    "run.interrupted": {
+      "words": "This run stopped during a service restart.",
+      "next": "Retry the task.",
+      "action": "retry"
+    },
+    "task.failed": {
+      "words": "This task could not finish.",
+      "next": "Open the task to review it, then retry.",
+      "action": "open"
+    },
+    "unknown": {
+      "words": "This run could not finish.",
+      "next": "Open its details or retry.",
+      "action": "open"
+    }
+  }
+}

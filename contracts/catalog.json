@@ -2,6 +2,15 @@
   "_about": "Every contract this repository publishes. A contract id is stable forever; a breaking change is a new major (new file .v2.json, new catalog entry) while the old one is deprecated with a replacement and a window. Minor versions only add optional fields.",
   "contracts": [
     {
+      "id": "cam.settings",
+      "version": "1.0.0",
+      "owner": "cam",
+      "schema": "cam/settings.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "identity.subject-ref",
       "version": "1.0.0",
       "owner": "network",
@@ -179,6 +188,15 @@
       "status": "active"
     },
     {
+      "id": "shoes.product",
+      "version": "1.0.0",
+      "owner": "shoes",
+      "schema": "shoes/product.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "capabilities.capability",
       "version": "1.0.0",
       "owner": "network",
@@ -344,6 +362,51 @@
       "owner": "media",
       "schema": "media/file-upload.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-create",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-create.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-init",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-init.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-part",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-part.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-complete",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-complete.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },
@@ -1507,6 +1570,15 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-015"
+    },
+    {
+      "id": "ai.run-error",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-error.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "ai.call.recorded",
@@ -5595,6 +5667,33 @@
       "status": "active"
     },
     {
+      "id": "exchange.chat-export-request",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/chat-export-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "exchange.chat-export-result",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/chat-export-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.vibe-answer",
+      "version": "2.0.0",
+      "owner": "chat",
+      "schema": "chat/vibe-answer.v2.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.vibe-ask-request",
       "version": "1.0.0",
       "owner": "chat",
@@ -5609,6 +5708,15 @@
       "owner": "chat",
       "schema": "chat/vibe-ask-result.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.vibe-conversations-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/vibe-conversations-result.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },
@@ -5944,6 +6052,15 @@
       "owner": "community",
       "schema": "community/pulse-item.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.feed-item",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-item.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },
@@ -8365,6 +8482,42 @@
       "adr": "ADR-031"
     },
     {
+      "id": "quest.daily",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/daily.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.daily-progress",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/daily-progress.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.step-type",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/step-type.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.step-type-request",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/step-type-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "quest.app-quest-request",
       "version": "1.0.0",
       "owner": "quest",
@@ -8575,7 +8728,7 @@
     },
     {
       "id": "common.action-item",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/action-item.v1.json",
       "visibility": "public",
@@ -8584,7 +8737,7 @@
     },
     {
       "id": "common.action-list-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/action-list-result.v1.json",
       "visibility": "public",
@@ -8593,7 +8746,7 @@
     },
     {
       "id": "network.me-actions-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "network/me-actions-result.v1.json",
       "visibility": "public",
@@ -8602,7 +8755,7 @@
     },
     {
       "id": "network.dock-state",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "network/dock-state.v1.json",
       "visibility": "public",
@@ -9951,6 +10104,24 @@
       "status": "active"
     },
     {
+      "id": "report.me-stats",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.me-stats-publish",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats-publish.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.tts-speak-request",
       "version": "1.0.0",
       "owner": "chat",
@@ -10134,6 +10305,24 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-058"
+    },
+    {
+      "id": "actor.skill-run-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill-run-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.skill-run-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill-run-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "actor.skill",
@@ -10422,6 +10611,70 @@
       "owner": "community",
       "schema": "community/pulse-contribute-request.v1.json",
       "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.ask",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/ask.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.view-pref",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/view-pref.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
+      "id": "meme.entry",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/entry.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.template",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/template.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.render",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/render.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-request",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-result",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-result.v1.json",
+      "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
     }

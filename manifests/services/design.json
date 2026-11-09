@@ -16,7 +16,8 @@
     "publicSite": "service"
   },
   "capabilities": [
-    "design.config.manage"
+    "design.config.manage",
+    "design.glyph.draft"
   ],
   "eventsProduced": [
     "design.index_document.deleted",

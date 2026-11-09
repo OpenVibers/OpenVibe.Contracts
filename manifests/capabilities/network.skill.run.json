@@ -1,0 +1,21 @@
+{
+  "id": "network.skill.run",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "public",
+  "description": "Start one of Actor's catalogue skills as the signed-in person (plan 2026-11-09 §7): POST /api/v1/me/actions/skills/:id/run asks Actor to run that skill for them, with the input and the choice. Network never runs the skill itself; Actor does, under the person's own approvals and budget.",
+  "inputSchema": "actor.skill-run-request@1",
+  "outputSchema": "actor.skill-run-result@1",
+  "permissions": [
+    "network:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/me/actions/skills/:id/run"
+  ]
+}
