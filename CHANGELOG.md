@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.377.0 — 2026-11-09
+## 0.378.0 — 2026-11-09
 
 - Wiki's rich articles: the page write request and the page read result carry `blocks` (`publishing.block@1`) next to the Markdown, and `wiki.images-suggest-request@1`/`-result@1` and `wiki.article-draft-request@1`/`-result@1` describe the image suggestions (`wiki.article.images`) and the `content.wiki` draft revision that waits for a person.
+
+## 0.377.0 — 2026-11-09
+
+- community.feed-item@1: live_now on a live stream's row
 
 ## 0.376.0 — 2026-11-09
 

@@ -211533,6 +211533,10 @@ export interface CommunityFeedItem {
     comments?: number;
   };
   /**
+   * Present on live and stream cards: true only while the channel is currently on air. A past broadcast has kind stream and live_now false.
+   */
+  live_now?: boolean;
+  /**
    * Present only when the card needs one.
    */
   label?: "Trending" | "AI" | "System";
