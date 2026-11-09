@@ -1,0 +1,79 @@
+{
+  "$schema": "exchange.market@1",
+  "generated_at": "2026-11-09T00:00:00.000Z",
+  "metadata": {
+    "source": "https://models.dev/api.json",
+    "checked_at": null,
+    "stale": true
+  },
+  "total_models": 29,
+  "total_offers": 38,
+  "offers": [
+    {
+      "model": "abliteration/abliterated-model",
+      "provider": "abliteration",
+      "provider_name": "Abliteration.ai (the uncensored tier)",
+      "provider_model": "abliterated-model",
+      "name": "Abliterated Model",
+      "kind": "chat",
+      "price": {
+        "in": 1,
+        "out": 3,
+        "cached": 0.1,
+        "currency": "USD",
+        "per": "1M tokens"
+      },
+      "price_source": "https://docs.abliteration.ai/pricing.md",
+      "price_checked_at": "2026-11-06",
+      "routed": false,
+      "uncensored": true,
+      "provider_access": "UNVERIFIED",
+      "field_sources": {
+        "context": "https://docs.abliteration.ai/pricing.md",
+        "max_output": "https://docs.abliteration.ai/pricing.md"
+      },
+      "maker": null,
+      "context": 262144,
+      "max_output": 262134,
+      "open_weights": null,
+      "licence": null,
+      "release_date": null,
+      "knowledge_cutoff": null,
+      "modalities": null,
+      "account_id": "must-not-be-public"
+    },
+    {
+      "model": "abliteration/abliterated-model-large-flash",
+      "provider": "abliteration",
+      "provider_name": "Abliteration.ai (the uncensored tier)",
+      "provider_model": "abliterated-model-large-flash",
+      "name": "Abliterated Large Flash",
+      "kind": "chat",
+      "price": {
+        "in": 1,
+        "out": 2,
+        "cached": 0.1,
+        "currency": "USD",
+        "per": "1M tokens"
+      },
+      "price_source": "https://docs.abliteration.ai/pricing.md",
+      "price_checked_at": "2026-11-06",
+      "routed": false,
+      "uncensored": true,
+      "provider_access": "UNVERIFIED",
+      "field_sources": {
+        "context": "https://docs.abliteration.ai/pricing.md",
+        "max_output": "https://docs.abliteration.ai/pricing.md"
+      },
+      "maker": null,
+      "context": 1048576,
+      "max_output": 262144,
+      "open_weights": null,
+      "licence": null,
+      "release_date": null,
+      "knowledge_cutoff": null,
+      "modalities": null
+    }
+  ],
+  "next_cursor": "2"
+}

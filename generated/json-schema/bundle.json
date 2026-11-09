@@ -120057,6 +120057,311 @@
           }
         }
       }
+    },
+    "exchange.market": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/market.v1.json",
+        "title": "ExchangeMarket",
+        "description": "Public own-page provider offers, enabled or not; prices are observations, not routing quotes. Paged by limit (1-500) and cursor, filterable by maker, open_weights and kind. No credentials or account identifiers. Model metadata preserves per-field provenance and stale state.",
+        "type": "object",
+        "required": [
+          "$schema",
+          "generated_at",
+          "metadata",
+          "total_models",
+          "total_offers",
+          "offers",
+          "next_cursor"
+        ],
+        "properties": {
+          "$schema": {
+            "const": "exchange.market@1"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object",
+            "required": [
+              "source",
+              "checked_at",
+              "stale"
+            ],
+            "properties": {
+              "source": {
+                "const": "https://models.dev/api.json"
+              },
+              "checked_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "stale": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "total_models": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_offers": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "offers": {
+            "type": "array",
+            "maxItems": 500,
+            "items": {
+              "type": "object",
+              "required": [
+                "maker",
+                "licence",
+                "release_date",
+                "knowledge_cutoff",
+                "price_checked_at",
+                "model",
+                "provider",
+                "provider_name",
+                "provider_model",
+                "name",
+                "routed",
+                "uncensored",
+                "context",
+                "max_output",
+                "kind",
+                "provider_access",
+                "open_weights",
+                "price_source",
+                "price",
+                "field_sources",
+                "modalities"
+              ],
+              "properties": {
+                "maker": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "licence": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "release_date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "knowledge_cutoff": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "price_checked_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "provider": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "provider_name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "provider_model": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "routed": {
+                  "type": "boolean"
+                },
+                "uncensored": {
+                  "type": "boolean"
+                },
+                "context": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "max_output": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "kind": {
+                  "enum": [
+                    "chat",
+                    "embedding",
+                    "stt",
+                    "image"
+                  ]
+                },
+                "provider_access": {
+                  "enum": [
+                    "OWN_DEPLOYMENT",
+                    "AUTHORIZED_WHOLESALE",
+                    "CUSTOMER_BYOK",
+                    "UNVERIFIED",
+                    "RESTRICTED"
+                  ]
+                },
+                "open_weights": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "price_source": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "price": {
+                  "type": "object",
+                  "required": [
+                    "in",
+                    "out",
+                    "cached",
+                    "currency",
+                    "per"
+                  ],
+                  "properties": {
+                    "in": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "out": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "cached": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "currency": {
+                      "const": "USD"
+                    },
+                    "per": {
+                      "const": "1M tokens"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "field_sources": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "maker": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "context": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "max_output": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "open_weights": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "licence": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "release_date": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "knowledge_cutoff": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "modalities": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                },
+                "modalities": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "required": [
+                    "input",
+                    "output"
+                  ],
+                  "properties": {
+                    "input": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "output": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
     }
   }
 }

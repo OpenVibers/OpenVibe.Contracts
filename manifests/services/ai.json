@@ -105,5 +105,14 @@
       "installs": "the local model server (Ollama, LM Studio) as OpenVibe Link's ai plugin",
       "shows": "Serves your own AI models, on your own machine."
     }
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/v1/exchange/market",
+      "contract": "exchange.market@1",
+      "cacheSeconds": 60,
+      "cors": "*"
+    }
   ]
 }

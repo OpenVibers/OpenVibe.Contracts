@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.381.0 — 2026-11-09
+
+- Add `exchange.market@1`: paginated own-page market offers, routing flags and per-field model metadata provenance.
+
 ## 0.377.0 — 2026-11-09
 
 - community.feed-item@1: live_now on a live stream's row

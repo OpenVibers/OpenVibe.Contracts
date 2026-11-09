@@ -324101,3 +324101,64 @@ export interface GitIssue {
         string
       ];
 }
+
+/** exchange.market@1.0.0 (owner: ai) */
+/**
+ * Public own-page provider offers, enabled or not; prices are observations, not routing quotes. Paged by limit (1-500) and cursor, filterable by maker, open_weights and kind. No credentials or account identifiers. Model metadata preserves per-field provenance and stale state.
+ */
+export interface ExchangeMarket {
+  $schema: "exchange.market@1";
+  generated_at: string;
+  metadata: {
+    source: "https://models.dev/api.json";
+    checked_at: string | null;
+    stale: boolean;
+  };
+  total_models: number;
+  total_offers: number;
+  next_cursor: string | null;
+  /**
+   * @maxItems 500
+   */
+  offers: {
+    maker: string | null;
+    licence: string | null;
+    release_date: string | null;
+    knowledge_cutoff: string | null;
+    price_checked_at: string | null;
+    model: string;
+    provider: string;
+    provider_name: string;
+    provider_model: string;
+    name: string;
+    routed: boolean;
+    uncensored: boolean;
+    context: number | null;
+    max_output: number | null;
+    kind: "chat" | "embedding" | "stt" | "image";
+    provider_access: "OWN_DEPLOYMENT" | "AUTHORIZED_WHOLESALE" | "CUSTOMER_BYOK" | "UNVERIFIED" | "RESTRICTED";
+    open_weights: boolean | null;
+    price_source: string | null;
+    price: {
+      in: number | null;
+      out: number | null;
+      cached: number | null;
+      currency: "USD";
+      per: "1M tokens";
+    };
+    field_sources: {
+      maker?: string;
+      context?: string;
+      max_output?: string;
+      open_weights?: string;
+      licence?: string;
+      release_date?: string;
+      knowledge_cutoff?: string;
+      modalities?: string;
+    };
+    modalities: {
+      input: string[];
+      output: string[];
+    } | null;
+  }[];
+}
