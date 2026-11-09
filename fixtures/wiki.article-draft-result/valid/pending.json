@@ -1,0 +1,31 @@
+{
+  "proposal": {
+    "id": "prp_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "page_id": "pg_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "space_id": "spc_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "revision": 4,
+    "base_revision": 3,
+    "workflow_id": "content.wiki",
+    "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPS",
+    "status": "pending",
+    "proposed_by": "svc:wiki"
+  },
+  "revision": {
+    "number": 4,
+    "id": "rev_01JAB2C3D4E5F6G7H8J9K0MNPR",
+    "kind": "edit",
+    "parent_number": 3,
+    "title": "Restreaming",
+    "summary": "Sending one stream to several platforms, with its sources.",
+    "infobox": [],
+    "body": "Restreaming sends one encoder feed to several platforms. It keeps the chat in one place.",
+    "authorship": { "mode": "ai", "workflow": { "id": "content.wiki", "runId": "run_01JAB2C3D4E5F6G7H8J9K0MNPS" } },
+    "author": "svc:wiki",
+    "message": "AI proposal",
+    "created_at": "2026-11-09T10:00:00.000Z"
+  },
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "model": "openvibe/auto",
+  "provider": "openvibe",
+  "sources": [ { "url": "https://docs.example.com/rtmp", "title": "RTMP spec", "author": null, "retrieved_at": "2026-11-09T09:00:00.000Z", "license": null } ]
+}

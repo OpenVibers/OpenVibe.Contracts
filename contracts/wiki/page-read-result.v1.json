@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/wiki/page-read-result.v1.json",
   "title": "WikiPageReadResult",
-  "description": "wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] → { page, revision, citations, infobox, attachments, links, indexability, discussion_thread }; GET …/revisions?before=&limit= → { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET …/revisions/:n → { revision, citations, infobox }; GET …/diff?from=&to=&mode= → { diff }; GET …/revisions/:n/citations → { citations }; GET /api/v1/proposals/:id → { proposal }.",
+  "description": "wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] \u2192 { page, revision, citations, infobox, attachments, links, indexability, discussion_thread, blocks } (blocks is the revision's body as a publishing.block@1 tree, next to the Markdown in revision.body); GET \u2026/revisions?before=&limit= \u2192 { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET \u2026/revisions/:n \u2192 { revision, citations, infobox, blocks }; GET \u2026/diff?from=&to=&mode= \u2192 { diff }; GET \u2026/revisions/:n/citations \u2192 { citations }; GET /api/v1/proposals/:id \u2192 { proposal }.",
   "anyOf": [
     {
       "type": "object",
@@ -66,7 +66,10 @@
             }
           }
         },
-        "discussion_thread": {}
+        "discussion_thread": {},
+        "blocks": {
+          "$ref": "../publishing/block.v1.json"
+        }
       }
     },
     {
@@ -99,7 +102,10 @@
             "$ref": "citation.v1.json"
           }
         },
-        "infobox": {}
+        "infobox": {},
+        "blocks": {
+          "$ref": "../publishing/block.v1.json"
+        }
       }
     },
     {
