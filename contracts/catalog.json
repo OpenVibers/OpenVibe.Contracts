@@ -10995,6 +10995,15 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.market",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "exchange/market.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
