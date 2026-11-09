@@ -596,7 +596,7 @@
    "get": {
     "operationId": "get_api_v1_me_actions",
     "summary": "The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and f",
-    "description": "**network.actions.read** (public): The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and failed (network.me-actions-result@1); POST /api/v1/me/actions/:service/:id/:action approves, declines or cancels through the owning authority. Readable from every OpenVibe site with the person's Network token, like the bell.",
+    "description": "**network.actions.read** (public): The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and failed (network.me-actions-result@1); POST /api/v1/me/actions/:service/:id/:action approves, declines, cancels or retries through the owning authority. Readable from every OpenVibe site with the person's Network token, like the bell.",
     "tags": [
      "network.actions"
     ],
@@ -642,7 +642,7 @@
    "post": {
     "operationId": "post_api_v1_me_actions_service_id_action",
     "summary": "The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and f",
-    "description": "**network.actions.read** (public): The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and failed (network.me-actions-result@1); POST /api/v1/me/actions/:service/:id/:action approves, declines or cancels through the owning authority. Readable from every OpenVibe site with the person's Network token, like the bell.",
+    "description": "**network.actions.read** (public): The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and failed (network.me-actions-result@1); POST /api/v1/me/actions/:service/:id/:action approves, declines, cancels or retries through the owning authority. Readable from every OpenVibe site with the person's Network token, like the bell.",
     "tags": [
      "network.actions"
     ],
@@ -693,6 +693,72 @@
        "application/json": {
         "schema": {
          "$ref": "#/components/schemas/network.me-actions-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/actions/skills/{id}/run": {
+   "post": {
+    "operationId": "post_api_v1_me_actions_skills_id_run",
+    "summary": "Start one of Actor's catalogue skills as the signed-in person (plan 2026-11-09 §7): POST /api/v1/me/actions/skills/:id/run asks Actor to run that skill for them, with the input and the choice.",
+    "description": "**network.skill.run** (public): Start one of Actor's catalogue skills as the signed-in person (plan 2026-11-09 §7): POST /api/v1/me/actions/skills/:id/run asks Actor to run that skill for them, with the input and the choice. Network never runs the skill itself; Actor does, under the person's own approvals and budget.",
+    "tags": [
+     "network.skill"
+    ],
+    "x-openvibe-capabilities": [
+     "network.skill.run"
+    ],
+    "x-openvibe-visibility": [
+     "public"
+    ],
+    "x-openvibe-quota-class": "standard",
+    "security": [
+     {
+      "openvibeToken": [
+       "network.skill.run"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/actor.skill-run-request.v1"
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/actor.skill-run-result.v1"
         }
        }
       }
@@ -4138,6 +4204,74 @@
  },
  "components": {
   "schemas": {
+   "actor.skill-run-request.v1": {
+    "title": "ActorSkillRunRequest",
+    "description": "actor.skill-run-request@1: POST /api/v1/runs starts a public prompt skill as this person, using normal task approvals and budget.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "skill"
+    ],
+    "properties": {
+     "skill": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+     },
+     "input": {
+      "type": "object",
+      "additionalProperties": true,
+      "maxProperties": 30
+     },
+     "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "mode": {
+        "enum": [
+         "cheapest",
+         "balanced",
+         "best",
+         "fastest",
+         "private"
+        ]
+       }
+      }
+     }
+    }
+   },
+   "actor.skill-run-result.v1": {
+    "title": "ActorSkillRunResult",
+    "description": "actor.skill-run-result@1: a catalogue run is an ordinary Actor task, with its skill and subject labelled.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "run"
+    ],
+    "properties": {
+     "run": {
+      "type": "object",
+      "required": [
+       "id",
+       "skill",
+       "subject"
+      ],
+      "additionalProperties": true,
+      "properties": {
+       "id": {
+        "type": "string",
+        "pattern": "^tsk_"
+       },
+       "skill": {
+        "type": "string"
+       },
+       "subject": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   },
    "ai.run-error.v1": {
     "title": "AiRunError",
     "description": "ai.run-error@1: safe, actionable words for an AI or Actor run. Raw provider responses are never display text. The code map is shared across products.",

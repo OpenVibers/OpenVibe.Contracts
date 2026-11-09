@@ -7,6 +7,9 @@
   the subject, the model, the maker, the cost, the duration and the live step), `network.dock-state@1` at 1.1.0
   (the Vibe conversation and the Agents filter a person chose, synced across sites), `chat.vibe-conversations-result@1`
   and `actor.skill-run-request@1` with `actor.skill-run-result@1`.
+- The routes behind them: `GET /api/vibe/conversations` (Chat), `POST /api/v1/runs` and `POST /api/v1/tasks/:id/retry`
+  (Actor, under the new `actor.skill.run` capability) and `POST /api/v1/me/actions/skills/:id/run` (Network, under
+  `network.skill.run`).
 
 ## 0.355.0 — 2026-11-09
 
