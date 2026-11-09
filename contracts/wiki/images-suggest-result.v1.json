@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/images-suggest-result.v1.json",
+  "title": "WikiImagesSuggestResult",
+  "description": "wiki.images-suggest-result@1: what wiki.images.suggest answers. Each suggestion says where a picture came from and keeps its licence and author (Commons and Openverse), the OpenVibe.Pics page and its uploader, the page's own Media object, or — only when nothing real exists and the subject is not a real person — an AI illustration labelled 'Illustration made with <model>'. A suggestion is a candidate, not an attachment: the editor chooses one, the file goes to Media, and only then does it become a page attachment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "article_id",
+    "task",
+    "suggestions"
+  ],
+  "properties": {
+    "article_id": {
+      "type": "string",
+      "pattern": "^pg_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "task": {
+      "const": "wiki.article.images",
+      "description": "The AI task that found the pictures."
+    },
+    "query": {
+      "type": "string",
+      "maxLength": 300
+    },
+    "subject_is_person": {
+      "type": "boolean",
+      "description": "True when the article is about a real person: no AI illustration is suggested."
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 300,
+      "description": "Why nothing more was suggested (no licensed picture found, the AI is not configured, the subject is a person)."
+    },
+    "suggestions": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "provider",
+          "role"
+        ],
+        "properties": {
+          "provider": {
+            "enum": [
+              "commons",
+              "openverse",
+              "pics",
+              "media",
+              "ai"
+            ]
+          },
+          "role": {
+            "enum": [
+              "lead",
+              "figure"
+            ]
+          },
+          "media_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Set for provider media, or once a chosen suggestion is in Media."
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048,
+            "description": "The picture file to fetch (https) or to show when Media already serves it."
+          },
+          "page_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048,
+            "description": "The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object)."
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "The author or uploader, kept for the credit line."
+          },
+          "license": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "license_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048
+          },
+          "width": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "height": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "alt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 400
+          },
+          "caption": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 400
+          },
+          "credit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 400,
+            "description": "The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image."
+          },
+          "ai": {
+            "type": "boolean"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "data_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 8000000,
+            "description": "An AI illustration's bytes as a data: URL when the provider returned no hosted URL."
+          }
+        }
+      }
+    }
+  }
+}
