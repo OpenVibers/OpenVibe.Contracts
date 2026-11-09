@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.360.0 — 2026-11-09
+
+- Meme entry and render contracts
+
 ## 0.359.0 — 2026-11-09
 
 - Media multipart uploads in contracts and OpenAPI

@@ -115481,6 +115481,457 @@
           }
         }
       }
+    },
+    "meme.entry": {
+      "version": "1.0.0",
+      "owner": "meme",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/meme/entry.v1.json",
+        "title": "MemeEntry",
+        "description": "meme.entry@1: a cited, public entry in the OpenVibe.Meme internet-meme encyclopedia, including its origin, timeline, variations, examples and related entries.",
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "scope",
+          "kind",
+          "status",
+          "summary",
+          "meaning",
+          "usage",
+          "first_seen_at",
+          "last_seen_at",
+          "visibility",
+          "revision",
+          "origin",
+          "web_origin",
+          "citations",
+          "timeline",
+          "spread",
+          "variations",
+          "examples",
+          "related"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mem_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "maxLength": 80
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "scope": {
+            "const": "internet"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "classic",
+              "format",
+              "meme"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "rising",
+              "peaked",
+              "classic",
+              "dead"
+            ]
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 600
+          },
+          "meaning": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 4000
+          },
+          "usage": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 4000
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "maxItems": 20
+          },
+          "first_seen_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_seen_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "visibility": {
+            "const": "public"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "origin": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "web_origin": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 1000
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 1000
+          },
+          "spread": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 100
+          },
+          "variations": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 100
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 100
+          },
+          "related": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 30
+          },
+          "revisions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 200
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "meme.template": {
+      "version": "1.0.0",
+      "owner": "meme",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/meme/template.v1.json",
+        "title": "MemeTemplate",
+        "description": "meme.template@1: a reusable meme image with its source, reuse licence and caption layout. Public templates have passed any required review.",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "image_url",
+          "box_count",
+          "source",
+          "license",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri-reference",
+            "maxLength": 2048
+          },
+          "box_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "license": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "credit": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "attribution": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "layout": {
+            "type": "object",
+            "required": [
+              "width",
+              "height",
+              "boxes"
+            ],
+            "properties": {
+              "width": {
+                "type": "integer",
+                "minimum": 64,
+                "maximum": 4096
+              },
+              "height": {
+                "type": "integer",
+                "minimum": 64,
+                "maximum": 4096
+              },
+              "boxes": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "additionalProperties": true
+          },
+          "captions": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "uses_today": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "meme.render": {
+      "version": "1.0.0",
+      "owner": "meme",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/meme/render.v1.json",
+        "title": "MemeRenderRequest",
+        "description": "meme.render@1: a request to render 1–4 caption lines over an approved template. PNG is the default; GIF and MP4 return short, looped exports. Editor positions and crop coordinates are percentages of the canvas.",
+        "type": "object",
+        "required": [
+          "template_id",
+          "lines"
+        ],
+        "properties": {
+          "template_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "lines": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "png",
+              "gif",
+              "mp4"
+            ],
+            "default": "png"
+          },
+          "editor": {
+            "type": "object",
+            "properties": {
+              "font_style": {
+                "type": "string",
+                "enum": [
+                  "impact",
+                  "modern",
+                  "soft"
+                ]
+              },
+              "font_size": {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 64
+              },
+              "color": {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              "outline": {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              "outline_width": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 8
+              },
+              "crop_x": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "crop_y": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "boxes": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y",
+                    "w",
+                    "h"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "w": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 100
+                    },
+                    "h": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "stickers": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "emoji",
+                    "x",
+                    "y"
+                  ],
+                  "properties": {
+                    "emoji": {
+                      "type": "string",
+                      "enum": [
+                        "✨",
+                        "😂",
+                        "🔥",
+                        "💀",
+                        "👀",
+                        "❤️",
+                        "🙌"
+                      ]
+                    },
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
     }
   }
 }
