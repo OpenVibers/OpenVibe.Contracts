@@ -128,6 +128,13 @@
       "capabilities": 9
     },
     {
+      "service": "git",
+      "name": "OpenVibe.Git",
+      "origin": "https://git.openvibe.codes",
+      "operations": 18,
+      "capabilities": 2
+    },
+    {
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",

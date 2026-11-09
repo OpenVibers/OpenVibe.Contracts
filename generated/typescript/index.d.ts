@@ -323456,3 +323456,57 @@ export interface ExchangeKeyCreated {
   key: ExchangeKey;
   secret: string;
 }
+
+/** git.access-request@1.0.0 (owner: git) */
+/**
+ * git.access-request@1: the common request of git.read and git.write on OpenVibe.Git. owner and name name the repository at git.openvibe.codes; ref and path pick what is read; branch, message and files describe a contents write without a clone. A service names the person it acts for in X-OV-Subject, not in this body.
+ */
+export interface GitAccessRequest {
+  /**
+   * The repository owner's lower-case OpenVibe username.
+   */
+  owner: string;
+  /**
+   * The repository name, lower-case and never ending in .git.
+   */
+  name: string;
+  /**
+   * A branch or tag to read at; the default branch when absent.
+   */
+  ref?: string;
+  /**
+   * A path inside the tree or a blob's path.
+   */
+  path?: string;
+  /**
+   * The branch a contents write goes on.
+   */
+  branch?: string;
+  /**
+   * The commit message of a contents write.
+   */
+  message?: string;
+  /**
+   * The files a contents write changes, by path and full content.
+   *
+   * @maxItems 200
+   */
+  files?: {
+    path: string;
+    content: string;
+  }[];
+}
+
+/** git.access-result@1.0.0 (owner: git) */
+/**
+ * git.access-result@1: the common result of git.read and git.write on OpenVibe.Git. A repository names its full name, its page and clone addresses, its visibility and default branch; a contents write or a token also carries the branch or commit it made.
+ */
+export interface GitAccessResult {
+  full_name: string;
+  html_url?: string;
+  clone_url?: string;
+  visibility?: "public" | "private";
+  default_branch?: string;
+  branch?: string;
+  sha?: string;
+}

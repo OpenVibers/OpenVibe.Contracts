@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.373.0 — 2026-11-09
+
+- The git service: its manifest, git.repo.read and git.repo.write, git.access-request@1 and git.access-result@1 (OpenVibe.Git)
+
 ## 0.372.0 — 2026-11-09
 
 - The machine product Node became OpenVibe Link. The network registry contracts are `network.link@1`,
