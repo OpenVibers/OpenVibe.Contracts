@@ -318504,3 +318504,35 @@ export interface MemeRenderRequest {
         ];
   };
 }
+
+/** design.glyph-draft-request@1.0.0 (owner: design) */
+/**
+ * A first-party service asks Design to draw an icon candidate. Design verifies the caller's service token, deduplicates by caller and name, and keeps every candidate in staff review before any site shows it.
+ */
+export interface DesignGlyphDraftRequest {
+  name: string;
+  sentence: string;
+}
+
+/** design.glyph-draft-result@1.0.0 (owner: design) */
+/**
+ * A glyph request's review state. A draft is never a public icon until staff approval; approved drawings may then be imported into openvibe-shared.
+ */
+export interface DesignGlyphDraftResult {
+  name: string;
+  status: "pending" | "approved";
+  /**
+   * @maxItems 8
+   */
+  draft_ids:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  created: boolean;
+}

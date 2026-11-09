@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.361.0 — 2026-11-09
+
+- Reviewed glyph draft service
+
 ## 0.360.0 — 2026-11-09
 
 - Meme entry and render contracts
