@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.382.0 — 2026-11-09
+
+- Add `exchange.market@1`: paginated own-page market offers, routing flags and per-field model metadata provenance.
+
 ## 0.381.0 — 2026-11-09
 
 - blog.changelog-entry@2: a shipped change with its plain words, kind (new, better, fixed or internal) and one to three areas from Blog's fixed list, with the commit and pull request for the row's fold
