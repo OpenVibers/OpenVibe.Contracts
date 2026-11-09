@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/upload.v1.json",
+  "title": "MediaUpload",
+  "description": "media.upload@1: a resumable multipart session. Store upload_id and object_id to resume after a reload; GET status lists received and missing parts. URLs contain a short-lived upload token and should not be logged.",
+  "type": "object",
+  "required": ["upload_id", "object_id", "status", "part_size", "total_size", "parts_expected", "expires_at", "created_at"],
+  "additionalProperties": true,
+  "properties": {
+    "upload_id": { "type": "string", "pattern": "^mup_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "object_id": { "type": "string", "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "status": { "type": "string", "enum": ["active", "completing", "completed", "aborted", "expired"] },
+    "part_size": { "type": "integer", "minimum": 5242880 },
+    "total_size": { "type": "integer", "minimum": 1 },
+    "parts_expected": { "type": "integer", "minimum": 1, "maximum": 10000 },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "created_at": { "type": "string" },
+    "parts": { "type": "array", "items": { "$ref": "upload-part.v1.json" } },
+    "received_bytes": { "type": "integer", "minimum": 0 },
+    "missing": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+    "token": { "type": "string" },
+    "part_url_template": { "type": "string" },
+    "status_url": { "type": "string" },
+    "complete_url": { "type": "string" },
+    "abort_url": { "type": "string" }
+  }
+}

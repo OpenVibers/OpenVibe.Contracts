@@ -1,0 +1,22 @@
+{
+  "id": "actor.skill.run",
+  "version": "1.0",
+  "owner": "actor",
+  "status": "active",
+  "visibility": "public",
+  "description": "Start a catalogue skill as this person (plan 2026-11-09 §7): POST /api/v1/runs with the skill key, its input and a choice (cheapest, balanced, best, fastest, private). The run is an ordinary Actor task with the skill's instructions pinned to it, so editing the catalogue later never changes a task already under way. A skill that needs a sandbox runner cannot start here, and the person still approves what it does.",
+  "inputSchema": "actor.skill-run-request@1",
+  "outputSchema": "actor.skill-run-result@1",
+  "permissions": [
+    "actor:tasks:create"
+  ],
+  "resourceConstraints": [
+    "owner",
+    "project"
+  ],
+  "quotaClass": "actor-task",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/runs"
+  ]
+}

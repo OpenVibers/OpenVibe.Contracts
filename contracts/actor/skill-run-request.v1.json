@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/skill-run-request.v1.json",
+  "title": "ActorSkillRunRequest",
+  "description": "actor.skill-run-request@1: POST /api/v1/runs starts a public prompt skill as this person, using normal task approvals and budget.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "skill"
+  ],
+  "properties": {
+    "skill": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": true,
+      "maxProperties": 30
+    },
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "cheapest",
+            "balanced",
+            "best",
+            "fastest",
+            "private"
+          ]
+        }
+      }
+    }
+  }
+}

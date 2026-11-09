@@ -143,6 +143,85 @@
           "retry"
         ]
       }
+    },
+    "skill": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120,
+      "description": "Catalogue skill key, when this run came from a skill."
+    },
+    "subject": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "title",
+        "url"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      },
+      "description": "The content this run is about, with its canonical page when known."
+    },
+    "model": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "maker": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    },
+    "duration_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "run_error": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "../ai/run-error.v1.json"
+        }
+      ],
+      "description": "Safe error words and the next useful action. Never a raw provider response."
+    },
+    "step": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 240,
+      "description": "The latest live step in plain words."
     }
   }
 }
