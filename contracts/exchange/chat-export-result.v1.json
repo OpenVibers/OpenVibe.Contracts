@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/exchange/chat-export-result.v1.json",
+  "title": "ExchangeChatExportResult",
+  "description": "Unsealed chats and messages of exactly the named person, for their import into Chat.",
+  "type": "object",
+  "required": ["count", "chats"],
+  "additionalProperties": false,
+  "properties": {
+    "count": { "type": "integer", "minimum": 0 },
+    "chats": { "type": "array", "items": {
+      "type": "object", "required": ["id", "title", "models", "messages"], "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" }, "title": { "type": "string" },
+        "models": { "type": "array", "maxItems": 3, "items": { "type": "string" } },
+        "created_at": { "type": "string" }, "updated_at": { "type": "string" },
+        "messages": { "type": "array", "items": { "type": "object", "required": ["role"], "additionalProperties": false,
+          "properties": { "role": { "type": "string" }, "model": { "type": ["string", "null"] },
+            "content": { "type": ["string", "null"] }, "created_at": { "type": "string" }, "meta": { "type": "object" } } } }
+      }
+    } }
+  }
+}

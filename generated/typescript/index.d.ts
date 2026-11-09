@@ -963,6 +963,14 @@ export interface ServiceManifest {
   repository: string;
   domains: string[];
   publicOrigin?: string;
+  /**
+   * Public service routes whose access comes from a person's session or token, rather than a service capability.
+   */
+  apiRoutes?: {
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    path: string;
+    responseSchema?: string;
+  }[];
   health?: string;
   /**
    * Public HTTP routes implemented by this service, with their response contract where one exists.
@@ -206552,6 +206560,54 @@ export interface ChatTicketConversation {
      */
     created_at: string;
   };
+}
+
+/** exchange.chat-export-request@1.0.0 (owner: exchange) */
+/**
+ * The x-ov-subject header on Chat's authenticated export request.
+ */
+export interface ExchangeChatExportRequest {
+  subject: string;
+}
+
+/** exchange.chat-export-result@1.0.0 (owner: exchange) */
+/**
+ * Unsealed chats and messages of exactly the named person, for their import into Chat.
+ */
+export interface ExchangeChatExportResult {
+  count: number;
+  chats: {
+    id: string;
+    title: string;
+    /**
+     * @maxItems 3
+     */
+    models: [] | [string] | [string, string] | [string, string, string];
+    created_at?: string;
+    updated_at?: string;
+    messages: {
+      role: string;
+      model?: string | null;
+      content?: string | null;
+      created_at?: string;
+      meta?: {};
+    }[];
+  }[];
+}
+
+/** chat.vibe-answer@2.0.0 (owner: chat) */
+/**
+ * chat.vibe-answer@2: one answer to a person's Vibe question, from an explicit model selection. A question may carry one to three of these independently.
+ */
+export interface ChatVibeAnswerV2 {
+  model: string;
+  status: "writing" | "finished" | "failed";
+  text: string;
+  provider?: string | null;
+  cost_usd?: number | null;
+  ms?: number | null;
+  run_id?: string | null;
+  error?: string;
 }
 
 /** chat.vibe-ask-request@1.0.0 (owner: chat) */

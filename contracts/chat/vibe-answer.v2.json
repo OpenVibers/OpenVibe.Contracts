@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/vibe-answer.v2.json",
+  "title": "ChatVibeAnswerV2",
+  "description": "chat.vibe-answer@2: one answer to a person's Vibe question, from an explicit model selection. A question may carry one to three of these independently.",
+  "type": "object",
+  "required": ["model", "status", "text"],
+  "additionalProperties": false,
+  "properties": {
+    "model": { "type": "string", "minLength": 2, "maxLength": 256 },
+    "status": { "enum": ["writing", "finished", "failed"] },
+    "text": { "type": "string", "maxLength": 8000 },
+    "provider": { "type": ["string", "null"] },
+    "cost_usd": { "type": ["number", "null"], "minimum": 0 },
+    "ms": { "type": ["integer", "null"], "minimum": 0 },
+    "run_id": { "type": ["string", "null"] },
+    "error": { "type": "string", "maxLength": 250 }
+  }
+}

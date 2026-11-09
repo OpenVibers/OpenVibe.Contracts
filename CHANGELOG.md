@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.354.0 — 2026-11-09
+
+- Vibe compare and Exchange chat export contracts (the Chat move)
+
 ## 0.353.0 — 2026-11-09
 
 - Add `actor.ask@1`: durable approvals, questions, personal steps and sign-in hand-offs, linked to the person’s Actor and goal, with evidence and an answer or decline.
