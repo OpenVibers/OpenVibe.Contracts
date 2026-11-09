@@ -1,8 +1,28 @@
 # Changelog
 
-## Unreleased
+## 0.360.0 — 2026-11-09
 
-- Add `meme.entry@1`, `meme.template@1` and `meme.render@1` schemas with valid and invalid fixtures.
+- Meme entry and render contracts
+
+## 0.359.0 — 2026-11-09
+
+- Media multipart uploads in contracts and OpenAPI
+
+## 0.358.0 — 2026-11-09
+
+- Chat view preference (bubbles or room)
+
+## 0.357.0 — 2026-11-09
+
+- Cam camera settings (cam.settings@1)
+
+## 0.356.0 — 2026-11-09
+
+- Shoes product contract (shoes.product@1)
+
+## 0.355.0 — 2026-11-09
+
+- Daily quest contracts and step contribution
 
 ## 0.354.0 — 2026-11-09
 

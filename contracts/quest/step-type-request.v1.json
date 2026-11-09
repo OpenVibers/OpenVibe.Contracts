@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/quest/step-type-request.v1.json",
+  "title": "QuestStepTypeRequest",
+  "description": "A developer app's proposed daily step. Quest accepts only topics in its known Events catalog, verifies the site's host and queues the proposal for staff review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "event_type", "site", "sentence", "href"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,47}$" },
+    "event_type": { "type": "string", "minLength": 3, "maxLength": 160 },
+    "site": { "type": "string", "format": "hostname" },
+    "sentence": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "href": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "weight": { "type": "integer", "minimum": 1, "maximum": 5 }
+  }
+}

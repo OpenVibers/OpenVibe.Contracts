@@ -1,0 +1,7 @@
+{
+  "id": "quest.daily_progress.read", "version": "1.0", "owner": "quest", "status": "active", "visibility": "first-party",
+  "description": "Read the signed-in person's daily checklist, completion and streak, verified from Events in their time zone.",
+  "inputSchema": "common.no-body@1", "outputSchema": "quest.daily-progress@1", "permissions": ["quest:daily:read-own"],
+  "resourceConstraints": ["owner"], "quotaClass": "quest-read", "events": [],
+  "implementedBy": ["GET /api/v1/me/daily"]
+}
