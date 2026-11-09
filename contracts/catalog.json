@@ -10370,6 +10370,51 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.home-screen",
+      "version": "1.0.0",
+      "schema": "network/home-screen.v1.json",
+      "owner": "network",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.menu-feeds",
+      "version": "2.0.0",
+      "schema": "network/menu-feeds.v2.json",
+      "owner": "network",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.frame-today",
+      "version": "1.0.0",
+      "schema": "network/frame-today.v1.json",
+      "owner": "network",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.status",
+      "version": "1.0.0",
+      "schema": "community/status.v1.json",
+      "owner": "community",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.pulse-contribute-request",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/pulse-contribute-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

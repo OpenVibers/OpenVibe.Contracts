@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/frame-today.v1.json",
+  "title": "NetworkFrameToday",
+  "description": "network.frame-today@1: public UTC-day totals from Report's stats, with a fourteen-day series. People counts new accounts. A null count means Report does not publish a daily number for that metric.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["day", "people_today", "streams_today", "posts_today", "new_videos_today", "series", "updated_at"],
+  "properties": {
+    "day": { "type": "string", "format": "date" },
+    "people_today": { "type": ["integer", "null"], "minimum": 0, "description": "New accounts today, from Report's accounts.daily series." },
+    "streams_today": { "type": ["integer", "null"], "minimum": 0 },
+    "posts_today": { "type": ["integer", "null"], "minimum": 0 },
+    "new_videos_today": { "type": ["integer", "null"], "minimum": 0 },
+    "series": { "type": "array", "minItems": 14, "maxItems": 14, "items": { "type": "object", "additionalProperties": false, "required": ["day", "people", "streams", "posts", "new_videos"], "properties": {
+      "day": { "type": "string", "format": "date" }, "people": { "type": ["integer", "null"], "minimum": 0 }, "streams": { "type": ["integer", "null"], "minimum": 0 }, "posts": { "type": ["integer", "null"], "minimum": 0 }, "new_videos": { "type": ["integer", "null"], "minimum": 0 }
+    } } },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

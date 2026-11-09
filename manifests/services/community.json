@@ -20,6 +20,7 @@
     "community.comment.write",
     "community.comment.moderate",
     "community.pulse.write",
+    "community.pulse.contribute",
     "community.space.read",
     "community.space.manage",
     "community.thread.read",

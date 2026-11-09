@@ -1,0 +1,16 @@
+{
+  "id": "community.pulse.contribute",
+  "version": "1.0",
+  "owner": "community",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "A person grants an app permission to publish and retract public text and https links in Pulse about that person. Community labels each item via the app and limits each app separately; pictures must use Media's public HTTPS thumbnail or object paths.",
+  "inputSchema": "community.pulse-contribute-request@1",
+  "outputSchema": "community.pulse-write-result@1",
+  "permissions": ["community:write"],
+  "resourceConstraints": ["owner"],
+  "quotaClass": "community-write",
+  "events": ["community.pulse.item_recorded"],
+  "implementedBy": ["POST /api/v1/pulse/items", "DELETE /api/v1/pulse/items/:service/:type/:id"]
+}
