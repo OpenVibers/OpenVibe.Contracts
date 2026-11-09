@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.368.0 — 2026-11-09
+
+- The wallet and the reviewed store: billing.wallet@1, inventory.store@1, inventory.store-listing@1, inventory.purchase@1
+
 ## 0.367.0 — 2026-11-09
 
 - publishing.block@1: the rich content block of a post or an article body

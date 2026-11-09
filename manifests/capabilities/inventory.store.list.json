@@ -1,0 +1,21 @@
+{
+  "id": "inventory.store.list",
+  "version": "1.0",
+  "owner": "inventory",
+  "status": "active",
+  "visibility": "public",
+  "description": "Submit a published cosmetic issued by this app for store listing, with positive whole Vibes/OpenCoins prices. Every new listing and price change requires staff review before it is visible. The issuer is verified from the token; this capability does not grant review or purchase authority.",
+  "permissions": [
+    "inventory:store:list"
+  ],
+  "resourceConstraints": [
+    "namespace"
+  ],
+  "quotaClass": "inventory-write",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/store/:id/list"
+  ],
+  "inputSchema": "inventory.store-listing-request@1",
+  "outputSchema": "inventory.store-listing@1"
+}

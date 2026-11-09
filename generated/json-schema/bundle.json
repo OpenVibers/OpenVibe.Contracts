@@ -117113,6 +117113,659 @@
           }
         }
       }
+    },
+    "billing.wallet": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/wallet.v1.json",
+        "title": "BillingWallet",
+        "description": "Universal wallet: billing.wallet. Personal bearer reads and purchases; server-side reviewed prices.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "user"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ]
+          },
+          "currency": {
+            "const": "USD"
+          },
+          "money_writes_frozen": {
+            "type": "boolean"
+          },
+          "used_ai_this_month": {
+            "type": "boolean"
+          },
+          "balances": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "coins": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "enum": [
+                      "opencoins",
+                      "vibes-bits",
+                      "USD"
+                    ]
+                  },
+                  "scale": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      9
+                    ]
+                  },
+                  "purpose": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "held": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$"
+                  }
+                },
+                "required": [
+                  "label",
+                  "amount",
+                  "currency",
+                  "scale",
+                  "purpose",
+                  "action"
+                ]
+              },
+              "vibes": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "enum": [
+                      "opencoins",
+                      "vibes-bits",
+                      "USD"
+                    ]
+                  },
+                  "scale": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      9
+                    ]
+                  },
+                  "purpose": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "held": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$"
+                  }
+                },
+                "required": [
+                  "label",
+                  "amount",
+                  "currency",
+                  "scale",
+                  "purpose",
+                  "action"
+                ]
+              },
+              "balance": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "enum": [
+                      "opencoins",
+                      "vibes-bits",
+                      "USD"
+                    ]
+                  },
+                  "scale": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      9
+                    ]
+                  },
+                  "purpose": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "held": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$"
+                  }
+                },
+                "required": [
+                  "label",
+                  "amount",
+                  "currency",
+                  "scale",
+                  "purpose",
+                  "action"
+                ]
+              }
+            },
+            "required": [
+              "coins",
+              "vibes",
+              "balance"
+            ]
+          },
+          "bits_per_usd": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "recent_activity": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "coins",
+                    "vibes",
+                    "balance"
+                  ]
+                },
+                "amount": {
+                  "type": "string",
+                  "pattern": "^-?[0-9]+$"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                },
+                "site": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "at",
+                "kind",
+                "amount",
+                "label",
+                "detail",
+                "site"
+              ]
+            },
+            "maxItems": 5
+          },
+          "checkout": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "providers": {
+                "type": "array",
+                "description": "The checkout providers on offer, each with the hosts its hosted checkout may use. The wallet follows a checkout_url only to one of these hosts or to Billing itself.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "hosts"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "hosts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 253
+                      }
+                    }
+                  }
+                }
+              },
+              "vibes": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "minimum": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "maximum": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "price_tiers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "usd_per_bit": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "usd_per_bit"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "minimum",
+                  "maximum",
+                  "price_tiers"
+                ]
+              },
+              "topup": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "amounts_cents": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "fee_bps": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 10000
+                  }
+                },
+                "required": [
+                  "enabled",
+                  "amounts_cents",
+                  "fee_bps"
+                ]
+              }
+            },
+            "required": [
+              "providers",
+              "vibes",
+              "topup"
+            ]
+          }
+        },
+        "required": [
+          "subject",
+          "currency",
+          "money_writes_frozen",
+          "used_ai_this_month",
+          "balances",
+          "bits_per_usd",
+          "recent_activity",
+          "checkout"
+        ]
+      }
+    },
+    "inventory.store": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/store.v1.json",
+        "title": "InventoryStore",
+        "description": "Universal wallet: inventory.store. Personal bearer reads and purchases; server-side reviewed prices.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "issuer": {
+                  "type": "string"
+                },
+                "prices": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "vibes": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "coins": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [],
+                  "minProperties": 1
+                },
+                "preview": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "emoji": {
+                      "type": "string",
+                      "maxLength": 64
+                    },
+                    "token": {
+                      "type": "string",
+                      "maxLength": 120
+                    },
+                    "media_id": {
+                      "type": "string",
+                      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  },
+                  "required": []
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "slots": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "surfaces": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "surface": {
+                        "type": "string"
+                      },
+                      "renderer": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "surface"
+                    ]
+                  }
+                },
+                "owned": {
+                  "type": "boolean"
+                },
+                "available": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "issuer",
+                "prices",
+                "preview",
+                "kind",
+                "slots",
+                "surfaces",
+                "owned",
+                "available"
+              ]
+            },
+            "maxItems": 200
+          }
+        },
+        "required": [
+          "items"
+        ]
+      }
+    },
+    "inventory.purchase": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/purchase.v1.json",
+        "title": "InventoryPurchase",
+        "description": "Universal wallet: inventory.purchase. Personal bearer reads and purchases; server-side reviewed prices.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^isp_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "item_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "vibes",
+              "coins"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "fulfilled"
+            ]
+          },
+          "instance_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "payment_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "subject",
+          "item_id",
+          "name",
+          "issuer",
+          "currency",
+          "amount",
+          "status",
+          "instance_id",
+          "payment_id"
+        ]
+      }
+    },
+    "inventory.store-listing-request": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/store-listing-request.v1.json",
+        "title": "InventoryStoreListingRequest",
+        "description": "Universal wallet: inventory.store-listing-request. Personal bearer reads and purchases; server-side reviewed prices.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prices": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "vibes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "coins": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [],
+            "minProperties": 1
+          }
+        },
+        "required": [
+          "prices"
+        ]
+      }
+    },
+    "inventory.store-listing": {
+      "version": "1.0.0",
+      "owner": "inventory",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/inventory/store-listing.v1.json",
+        "title": "InventoryStoreListing",
+        "description": "Universal wallet: inventory.store-listing-request. Personal bearer reads and purchases; server-side reviewed prices.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "definition_id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "prices": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "vibes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "coins": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [],
+            "minProperties": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "in_review",
+              "published",
+              "rejected"
+            ]
+          }
+        },
+        "required": [
+          "definition_id",
+          "issuer",
+          "prices",
+          "status"
+        ]
+      }
     }
   }
 }

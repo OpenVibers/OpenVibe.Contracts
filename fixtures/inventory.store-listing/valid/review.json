@@ -1,0 +1,8 @@
+{
+  "definition_id": "itd_00000000000000000000000001",
+  "issuer": "service:live",
+  "prices": {
+    "vibes": 50
+  },
+  "status": "in_review"
+}
