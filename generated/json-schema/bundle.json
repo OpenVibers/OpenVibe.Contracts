@@ -16494,6 +16494,20 @@
           "rung": {
             "type": "integer",
             "minimum": 0
+          },
+          "agent_role": {
+            "enum": [
+              "router",
+              "gate",
+              "assessor",
+              "worker",
+              "subagent",
+              "reviewer"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]{0,99}$"
           }
         },
         "anyOf": [
@@ -119841,7 +119855,7 @@
       }
     },
     "ai.task-defaults": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "status": "active",
       "schema": {
@@ -119903,6 +119917,15 @@
             ],
             "minimum": 0,
             "maximum": 1000
+          },
+          "effort": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "max"
+            ],
+            "description": "Concrete effort used when a request selects auto. Omitted uses the workflow default, then medium."
           }
         },
         "required": [

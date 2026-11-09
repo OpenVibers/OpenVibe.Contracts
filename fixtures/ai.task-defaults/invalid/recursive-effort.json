@@ -1,0 +1,15 @@
+{
+  "signed_out": {
+    "model": "openvibe/cheapest",
+    "source": "openvibe"
+  },
+  "signed_in": {
+    "model": "anthropic/claude-opus-5-5",
+    "source": "openvibe"
+  },
+  "fallbacks": [],
+  "image_model": null,
+  "search_engines": [],
+  "max_cost_usd": 0.5,
+  "effort": "auto"
+}

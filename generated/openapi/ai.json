@@ -7652,6 +7652,20 @@
      "rung": {
       "type": "integer",
       "minimum": 0
+     },
+     "agent_role": {
+      "enum": [
+       "router",
+       "gate",
+       "assessor",
+       "worker",
+       "subagent",
+       "reviewer"
+      ]
+     },
+     "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.-]{0,99}$"
      }
     },
     "anyOf": [

@@ -159445,6 +159445,8 @@ export type AiRunRequest = {
   effort?: AiEffort;
   ladder_id?: string;
   rung?: number;
+  agent_role?: "router" | "gate" | "assessor" | "worker" | "subagent" | "reviewer";
+  kind?: string;
 };
 
 /** ai.run@1.2.0 (owner: ai) */
@@ -323656,7 +323658,7 @@ export interface AiTaskV1 {
   workflow?: string;
 }
 
-/** ai.task-defaults@1.0.0 (owner: ai) */
+/** ai.task-defaults@1.1.0 (owner: ai) */
 /**
  * The owner's default for one task (GET|PUT /api/v1/admin/task-defaults, owner or admin role): the choice signed out and signed in, an ordered list of fallbacks, the image model for image tasks, the search engines in order for search tasks, and a per-run cost ceiling in USD. A change is audited and reaches services within a minute.
  */
@@ -323936,6 +323938,10 @@ export interface AiTaskDefaultsV1 {
         }
       ];
   max_cost_usd: number | null;
+  /**
+   * Concrete effort used when a request selects auto. Omitted uses the workflow default, then medium.
+   */
+  effort?: "low" | "medium" | "high" | "max";
 }
 
 /** git.change@1.0.0 (owner: git) */

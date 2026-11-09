@@ -42,7 +42,7 @@ input releases blocked/failed work to the next matching stage. Table semantics f
 
 ## Portable effort and receipts
 
-`ai.effort@1`: auto, low, medium, high, max. Auto selects the task default. A provider
+`ai.effort@1`: auto, low, medium, high, max. Auto selects the concrete effort in ai.task-defaults@1, then the workflow default, then medium. An explicit agent_role selects that role default. A provider
 without a supported control ignores the request and records `effort_applied: null`.
 `ai.run-request@1` accepts effort and optional ladder_id/rung. `ai.run@1` adds optional
 `effort_requested`, `effort_applied`, zero-based `effort_rung`, `ladder_id`, and `ladder`
