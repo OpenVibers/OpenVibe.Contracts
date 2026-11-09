@@ -1,0 +1,17 @@
+{
+  "id": "darn-tough-hiker-micro-crew",
+  "kind": "socks",
+  "title": "Hiker Micro Crew Socks",
+  "brand": "Darn Tough",
+  "model": null,
+  "url": "https://darntough.com/products/hiker-micro-crew",
+  "image": null,
+  "sizes": ["S", "M", "L"],
+  "materials": ["merino wool"],
+  "uses": ["hiking"],
+  "source": { "name": "Darn Tough", "url": "https://darntough.com/pages/size-chart" },
+  "checked_at": "2026-11-09T12:00:00Z",
+  "facts": [
+    { "name": "sock size chart", "value": "shoe size maps to a brand sock-size range", "source": { "name": "Darn Tough", "url": "https://darntough.com/pages/size-chart" } }
+  ]
+}

@@ -2237,6 +2237,164 @@
         }
       }
     },
+    "shoes.product": {
+      "version": "1.0.0",
+      "owner": "shoes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/shoes/product.v1.json",
+        "title": "Shoes catalog product",
+        "description": "shoes.product@1: a shoes, socks, laces, care, insoles or kids catalog line with source-cited facts. Offers are attached separately so catalogs can be shared without duplicating prices.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "brand",
+          "source",
+          "checked_at",
+          "facts"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "kind": {
+            "enum": [
+              "shoe",
+              "laces",
+              "socks",
+              "care",
+              "insoles",
+              "kids"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "brand": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "maxLength": 2000
+          },
+          "image": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "maxLength": 2000
+          },
+          "sizes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "maxItems": 500
+          },
+          "materials": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "maxItems": 40
+          },
+          "uses": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "maxItems": 40
+          },
+          "source": {
+            "$ref": "#/$defs/source"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "facts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/fact"
+            },
+            "maxItems": 100
+          }
+        },
+        "$defs": {
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "url"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2000
+              }
+            }
+          },
+          "fact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "value",
+              "source"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              },
+              "source": {
+                "$ref": "#/$defs/source"
+              }
+            }
+          }
+        }
+      }
+    },
     "capabilities.capability": {
       "version": "1.0.0",
       "owner": "network",

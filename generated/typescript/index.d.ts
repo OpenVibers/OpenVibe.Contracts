@@ -4786,6 +4786,48 @@ export interface Product {
   };
 }
 
+/** shoes.product@1.0.0 (owner: shoes) */
+/**
+ * shoes.product@1: a shoes, socks, laces, care, insoles or kids catalog line with source-cited facts. Offers are attached separately so catalogs can be shared without duplicating prices.
+ */
+export interface ShoesCatalogProduct {
+  id: string;
+  kind: "shoe" | "laces" | "socks" | "care" | "insoles" | "kids";
+  title: string;
+  brand: string | null;
+  model?: string | null;
+  url?: string | null;
+  image?: string | null;
+  /**
+   * @maxItems 500
+   */
+  sizes?: string[];
+  /**
+   * @maxItems 40
+   */
+  materials?: string[];
+  /**
+   * @maxItems 40
+   */
+  uses?: string[];
+  source: {
+    name: string;
+    url: string;
+  };
+  checked_at: string;
+  /**
+   * @maxItems 100
+   */
+  facts: {
+    name: string;
+    value: string;
+    source: {
+      name: string;
+      url: string;
+    };
+  }[];
+}
+
 /** capabilities.capability@1.0.0 (owner: network) */
 /**
  * An action a principal may invoke. Authorization is checked at the owner's boundary against the grant, never inferred from the caller's route.

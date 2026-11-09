@@ -188,6 +188,15 @@
       "status": "active"
     },
     {
+      "id": "shoes.product",
+      "version": "1.0.0",
+      "owner": "shoes",
+      "schema": "shoes/product.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "capabilities.capability",
       "version": "1.0.0",
       "owner": "network",
