@@ -156726,6 +156726,10 @@ export interface WikiPagePublishedPayload {
    */
   slug: string;
   /**
+   * The page's title as readers see it (optional, 0.366.0): the network's Feed names the page by it, not by its slug.
+   */
+  title?: string;
+  /**
    * Effective visibility (the page's, narrowed by its space's).
    */
   visibility: "public" | "members" | "vip" | "private";
@@ -156885,6 +156889,10 @@ export interface WikiPageUpdatedPayload {
    * Page slug inside the space.
    */
   slug: string;
+  /**
+   * The page's title as readers see it (optional, 0.366.0): the network's Feed names the page by it, not by its slug.
+   */
+  title?: string;
   /**
    * Effective visibility (the page's, narrowed by its space's).
    */
