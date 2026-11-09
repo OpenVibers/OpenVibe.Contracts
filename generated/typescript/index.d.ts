@@ -4795,6 +4795,17 @@ export interface Capability {
    */
   implementedBy?: string[];
   /**
+   * Input and output contract overrides for a route when one capability covers several operations.
+   */
+  routeSchemas?: {
+    [k: string]:
+      | {
+          inputSchema?: string;
+          outputSchema?: string;
+        }
+      | undefined;
+  };
+  /**
    * The action has an external side effect (money, sending as the person, publishing, applying, deleting, physical control): an agent needs its owner's confirmation unless a standing rule covers it (roadmap WS-Z2).
    */
   sensitive?: boolean;
@@ -6631,6 +6642,92 @@ export interface MediaFileUpload {
    */
   file: string;
   [k: string]: unknown | undefined;
+}
+
+/** media.upload@1.0.0 (owner: media) */
+/**
+ * media.upload@1: a resumable multipart session. Store upload_id and object_id to resume after a reload; GET status lists received and missing parts. URLs contain a short-lived upload token and should not be logged.
+ */
+export interface MediaUpload {
+  upload_id: string;
+  object_id: string;
+  status: "active" | "completing" | "completed" | "aborted" | "expired";
+  part_size: number;
+  total_size: number;
+  parts_expected: number;
+  expires_at: string;
+  created_at: string;
+  parts?: MediaUploadPart[];
+  received_bytes?: number;
+  missing?: number[];
+  token?: string;
+  part_url_template?: string;
+  status_url?: string;
+  complete_url?: string;
+  abort_url?: string;
+  [k: string]: unknown | undefined;
+}
+
+/** media.upload-create@1.0.0 (owner: media) */
+/**
+ * Create a Media object with a multipart upload session. The caller needs media.object.upload for the tenant namespace; the upload token then authorizes parts and completion.
+ */
+export interface MediaUploadCreate {
+  kind: "vod" | "clip" | "file" | "thumbnail" | "screenshot" | "avatar" | "asset";
+  size_bytes: number;
+  multipart: true;
+  /**
+   * Use 8388608 for 8 MiB parts; the service may increase it to stay below 10000 parts.
+   */
+  part_size?: number;
+  visibility?: "public" | "unlisted" | "private";
+  mime_type?: string;
+  filename?: string;
+  content_hash?: string;
+  namespace?: string;
+  user_id?: string | number;
+  metadata?: {};
+  [k: string]: unknown | undefined;
+}
+
+/** media.upload-init@1.0.0 (owner: media) */
+/**
+ * The object and its presigned multipart session after POST /api/v2/:app/objects. Send parts to part_url_template in any order, then complete.
+ */
+export interface MediaUploadInit {
+  id: string;
+  object: MediaObject;
+  upload: {
+    method: "multipart";
+    multipart: MediaUpload;
+    complete_url: string;
+    multipart_url?: string;
+    [k: string]: unknown | undefined;
+  };
+  [k: string]: unknown | undefined;
+}
+
+/** media.upload-part@1.0.0 (owner: media) */
+/**
+ * A verified part received by Media. PUT the raw bytes to the presigned URL; X-Content-SHA256 is optional.
+ */
+export interface MediaUploadPart {
+  part_number: number;
+  size_bytes: number;
+  sha256: string;
+  [k: string]: unknown | undefined;
+}
+
+/** media.upload-complete@1.0.0 (owner: media) */
+/**
+ * Complete an upload after all parts arrive. Media assembles the bytes, verifies the optional hashes and content type, and returns the ready object.
+ */
+export interface MediaUploadComplete {
+  content_hash?: string;
+  parts?: {
+    part_number: number;
+    sha256: string;
+  }[];
 }
 
 /** search.index-document@1.0.0 (owner: search) */

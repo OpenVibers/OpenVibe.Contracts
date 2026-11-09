@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/upload-part.v1.json",
+  "title": "MediaUploadPart",
+  "description": "A verified part received by Media. PUT the raw bytes to the presigned URL; X-Content-SHA256 is optional.",
+  "type": "object",
+  "required": ["part_number", "size_bytes", "sha256"],
+  "additionalProperties": true,
+  "properties": {
+    "part_number": { "type": "integer", "minimum": 1 },
+    "size_bytes": { "type": "integer", "minimum": 1 },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}
