@@ -18,7 +18,19 @@
     "media.object.uploaded"
   ],
   "implementedBy": [
-    "POST /api/v1/:app/files"
+    "POST /api/v1/:app/files",
+    "POST /api/v2/:app/objects",
+    "GET /api/v2/:app/objects/:id/multipart/:uploadId",
+    "PUT /api/v2/:app/objects/:id/multipart/:uploadId/parts/:n",
+    "POST /api/v2/:app/objects/:id/multipart/:uploadId/complete",
+    "DELETE /api/v2/:app/objects/:id/multipart/:uploadId"
   ],
-  "inputSchema": "media.file-upload@1"
+  "inputSchema": "media.file-upload@1",
+  "routeSchemas": {
+    "POST /api/v2/:app/objects": { "inputSchema": "media.upload-create@1", "outputSchema": "media.upload-init@1" },
+    "GET /api/v2/:app/objects/:id/multipart/:uploadId": { "inputSchema": "common.no-body@1", "outputSchema": "media.upload@1" },
+    "PUT /api/v2/:app/objects/:id/multipart/:uploadId/parts/:n": { "inputSchema": "common.binary@1", "outputSchema": "media.upload-part@1" },
+    "POST /api/v2/:app/objects/:id/multipart/:uploadId/complete": { "inputSchema": "media.upload-complete@1", "outputSchema": "media.object@1" },
+    "DELETE /api/v2/:app/objects/:id/multipart/:uploadId": { "inputSchema": "common.no-body@1", "outputSchema": "media.upload@1" }
+  }
 }

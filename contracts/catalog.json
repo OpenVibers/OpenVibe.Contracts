@@ -2,6 +2,15 @@
   "_about": "Every contract this repository publishes. A contract id is stable forever; a breaking change is a new major (new file .v2.json, new catalog entry) while the old one is deprecated with a replacement and a window. Minor versions only add optional fields.",
   "contracts": [
     {
+      "id": "cam.settings",
+      "version": "1.0.0",
+      "owner": "cam",
+      "schema": "cam/settings.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "identity.subject-ref",
       "version": "1.0.0",
       "owner": "network",
@@ -179,6 +188,15 @@
       "status": "active"
     },
     {
+      "id": "shoes.product",
+      "version": "1.0.0",
+      "owner": "shoes",
+      "schema": "shoes/product.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "capabilities.capability",
       "version": "1.0.0",
       "owner": "network",
@@ -344,6 +362,51 @@
       "owner": "media",
       "schema": "media/file-upload.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-create",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-create.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-init",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-init.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-part",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-part.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-complete",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-complete.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },
@@ -10521,6 +10584,61 @@
       "owner": "actor",
       "schema": "actor/ask.v1.json",
       "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.view-pref",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/view-pref.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
+      "id": "meme.entry",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/entry.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.template",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/template.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.render",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/render.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-request",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-result",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-result.v1.json",
+      "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
     }
