@@ -275364,7 +275364,7 @@ export interface RunSessionEndedPayload {
 
 /** run.fill-request@1.0.0 (owner: run) */
 /**
- * Metadata for a person's pending blind sign-in approval. Never contains credentials.
+ * Metadata for a person's pending blind sign-in approval. Never contains credentials. The Companion must take the machine's public key from Network's list of the person's own machines by machine_node_id and show its thumbprint; it must never accept a key from Run.
  */
 export interface RunFillRequest {
   id: string;
@@ -275383,9 +275383,7 @@ export interface RunFillRequest {
  */
 export interface RunFillGrant {
   request_id: string;
-  envelope: {
-    [k: string]: unknown | undefined;
-  };
+  envelope: string;
 }
 
 /** run.fill-outcome@1.0.0 (owner: run) */
@@ -275395,7 +275393,44 @@ export interface RunFillGrant {
 export interface RunFillOutcome {
   request_id: string;
   outcome: "ok" | "failed";
-  reason?: string | null;
+  reason?:
+    | "origin_changed"
+    | "expired"
+    | "reused"
+    | "not_owned"
+    | "no_fields"
+    | "iframe"
+    | "decrypt_failed"
+    | "navigation"
+    | "refused"
+    | "timeout"
+    | null;
+}
+
+/** run.fill-request-create@1.0.0 (owner: run) */
+/**
+ * Agent request to ask the person for a blind sign-in fill. The response contains only request_id and status.
+ */
+export interface RunFillRequestCreate {
+  origin: string;
+}
+
+/** run.fill-request-created@1.0.0 (owner: run) */
+/**
+ * Credential-free acknowledgement of an agent's blind fill request.
+ */
+export interface RunFillRequestCreated {
+  request_id: string;
+  status: "pending";
+}
+
+/** run.fill-command@1.0.0 (owner: run) */
+/**
+ * Machine-side blind fill command. Contains only the request id and sealed bytes.
+ */
+export interface RunFillCommand {
+  request_id: string;
+  envelope: string;
 }
 
 /** bot.desk-lease@1.0.0 (owner: bot) */

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/fill-request-created.v1.json",
+  "title": "RunFillRequestCreated",
+  "description": "Credential-free acknowledgement of an agent's blind fill request.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "status"],
+  "properties": {
+    "request_id": {"type": "string", "pattern": "^fr_[A-Za-z0-9_-]{16,64}$"},
+    "status": {"const": "pending"}
+  }
+}

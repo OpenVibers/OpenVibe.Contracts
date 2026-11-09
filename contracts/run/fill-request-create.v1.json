@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/fill-request-create.v1.json",
+  "title": "RunFillRequestCreate",
+  "description": "Agent request to ask the person for a blind sign-in fill. The response contains only request_id and status.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["origin"],
+  "properties": {
+    "origin": {"type": "string", "pattern": "^https://[a-z0-9.-]+(:[0-9]{1,5})?$"}
+  }
+}
