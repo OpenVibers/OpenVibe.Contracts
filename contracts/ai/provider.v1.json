@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/ai/provider.v1.json",
   "title": "AiProvider",
-  "description": "ai.provider@1: one model provider as OpenVibe.AI's registry API shows it (server/registry.js publicProvider): never a secret value, only the secret reference name (env:NAME) and whether it resolves (credentials), plus the circuit-breaker health.",
+  "description": "ai.provider@1: one model provider as OpenVibe.AI's registry API shows it (server/registry.js publicProvider): never a secret value, only the secret reference name (env:NAME) and whether it resolves (credentials), plus the measured circuit-breaker health. health.state is the provider roll-up; health.circuits is one entry per provider+model offer, with the failure class and the plain reason.",
   "type": "object",
   "required": [
     "key",
@@ -139,6 +139,179 @@
         },
         "consecutive_failures": {
           "type": "integer"
+        },
+        "model_key": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The offer this circuit belongs to; absent on the provider roll-up."
+        },
+        "failure_class": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "balance",
+            "auth",
+            "rate_limit",
+            "transient",
+            "request",
+            null
+          ],
+          "description": "Why the offer's circuit opened, or its last failure: balance, auth, rate_limit, transient or request."
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "up",
+            "degraded",
+            "down",
+            null
+          ],
+          "description": "The measured status: down while the circuit is open, degraded when over 5% of at least 10 requests in the last hour failed, up otherwise."
+        },
+        "status_reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Plain words for a degraded or down offer: 'the provider says the account is out of credit', 'the key was refused' or 'too many errors in the last hour'."
+        },
+        "status_since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "When the current status began (ISO 8601)."
+        },
+        "retry_at": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Epoch ms a half-open probe may run; after a failed probe the pause starts again."
+        },
+        "backoff_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The current transient backoff: 30 s doubling to 10 min. 0 for balance/auth."
+        },
+        "opened_at": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "exhausted_at": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "last_success_at": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "last_failure_at": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "notified_at": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "When the one owner alert for this open balance/auth circuit was sent; absent when none was sent."
+        },
+        "circuits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "provider_key": {
+                "type": "string"
+              },
+              "model_key": {
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "closed",
+                  "open",
+                  "half_open"
+                ]
+              },
+              "failure_class": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "consecutive_failures": {
+                "type": "integer"
+              },
+              "opened_at": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "retry_at": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "backoff_ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "up",
+                  "degraded",
+                  "down",
+                  null
+                ]
+              },
+              "status_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status_since": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "last_error": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "description": "One entry per provider+model circuit (server/providers/index.js, migrations/0057). A model without a failure of its own stays served while another model's circuit is open."
         }
       }
     }

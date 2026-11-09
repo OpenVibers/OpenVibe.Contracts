@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/ai/run-read-result.v1.json",
   "title": "AiRunReadResult",
-  "description": "ai.run-read-result@1: answers of ai.run.read on OpenVibe.AI (the caller's own runs; usage readers may ask for all). GET /api/v1/runs?status=&workflow=&target=&limit=&before= → { runs }; GET /api/v1/runs/:id → { run, citations, requests } (the request log is metadata only: hashes, tokens, cost, latency, never prompts); GET /api/v1/runs/:id/citations → { citations }. Someone else's run is 404 run.not_found.",
+  "description": "ai.run-read-result@1: answers of ai.run.read on OpenVibe.AI (the caller's own runs; usage readers may ask for all). GET /api/v1/runs?status=&workflow=&target=&limit=&before= \u2192 { runs }; GET /api/v1/runs/:id \u2192 { run, citations, requests } (the request log is metadata only: hashes, tokens, cost, latency, never prompts); GET /api/v1/runs/:id/citations \u2192 { citations }. Someone else's run is 404 run.not_found.",
   "anyOf": [
     {
       "type": "object",
@@ -96,6 +96,21 @@
                   "integer",
                   "null"
                 ]
+              },
+              "error_class": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "balance",
+                  "auth",
+                  "rate_limit",
+                  "transient",
+                  "request",
+                  null
+                ],
+                "description": "The class of a failed attempt (balance, auth, rate_limit, transient, request); the provider's message is in error, never the body."
               }
             }
           }
