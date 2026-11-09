@@ -1,11 +1,15 @@
 # Changelog
 
-## 0.356.0 — 2026-11-09
+## 0.357.0 — 2026-11-09
 
 - Add `community.feed-item@1`, one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed): its kind
   (live, clip, video, pic, post, meme, game, update, wiki, quest, chat, event, member), text, picture, actor and
   Community's views/likes/comments, with fixtures. `community.pulse-item@1` gains the optional `text` and
   `picture_url` the Feed reads.
+
+## 0.356.0 — 2026-11-09
+
+- Shoes product contract (shoes.product@1)
 
 ## 0.355.0 — 2026-11-09
 
