@@ -52,6 +52,20 @@
       "type": "string",
       "format": "uri"
     },
+    "apiRoutes": {
+      "type": "array",
+      "description": "Public service routes whose access comes from a person's session or token, rather than a service capability.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["method", "path"],
+        "properties": {
+          "method": { "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+          "path": { "type": "string", "pattern": "^/" },
+          "responseSchema": { "type": "string" }
+        }
+      }
+    },
     "health": {
       "type": "string",
       "pattern": "^/"

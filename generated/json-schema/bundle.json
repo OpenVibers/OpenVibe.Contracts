@@ -1201,6 +1201,36 @@
             "type": "string",
             "format": "uri"
           },
+          "apiRoutes": {
+            "type": "array",
+            "description": "Public service routes whose access comes from a person's session or token, rather than a service capability.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "method",
+                "path"
+              ],
+              "properties": {
+                "method": {
+                  "enum": [
+                    "GET",
+                    "POST",
+                    "PUT",
+                    "PATCH",
+                    "DELETE"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "pattern": "^/"
+                },
+                "responseSchema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "health": {
             "type": "string",
             "pattern": "^/"
@@ -62605,6 +62635,184 @@
             }
           }
         ]
+      }
+    },
+    "exchange.chat-export-request": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/chat-export-request.v1.json",
+        "title": "ExchangeChatExportRequest",
+        "description": "The x-ov-subject header on Chat's authenticated export request.",
+        "type": "object",
+        "required": [
+          "subject"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          }
+        }
+      }
+    },
+    "exchange.chat-export-result": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/chat-export-result.v1.json",
+        "title": "ExchangeChatExportResult",
+        "description": "Unsealed chats and messages of exactly the named person, for their import into Chat.",
+        "type": "object",
+        "required": [
+          "count",
+          "chats"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "chats": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "models",
+                "messages"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "models": {
+                  "type": "array",
+                  "maxItems": 3,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "type": "string"
+                },
+                "messages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "role"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "role": {
+                        "type": "string"
+                      },
+                      "model": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "content": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "chat.vibe-answer": {
+      "version": "2.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/vibe-answer.v2.json",
+        "title": "ChatVibeAnswerV2",
+        "description": "chat.vibe-answer@2: one answer to a person's Vibe question, from an explicit model selection. A question may carry one to three of these independently.",
+        "type": "object",
+        "required": [
+          "model",
+          "status",
+          "text"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "model": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 256
+          },
+          "status": {
+            "enum": [
+              "writing",
+              "finished",
+              "failed"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 8000
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "run_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "error": {
+            "type": "string",
+            "maxLength": 250
+          }
+        }
       }
     },
     "chat.vibe-ask-request": {

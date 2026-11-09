@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.351.0 — 2026-11-09
+
+- Define `chat.vibe-answer@2`, Exchange's scoped chat export request and result, and the `exchange.chat.export` capability for moving a person's chats into Vibe.
+- List the new Vibe model comparison and import routes in Chat's service manifest.
+
 ## 0.350.0 — 2026-11-09
 
 - Define credential-free blind fill request, encrypted grant, and outcome contracts, plus the `run.fill.approve` capability.
