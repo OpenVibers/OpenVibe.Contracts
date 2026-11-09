@@ -4,6 +4,14 @@
 
 - Agent work fabric: trigger, decision, immutable ticket mandate and budget, six report states, attention, and ordered stage vocabulary. Portable AI effort and optional effort/ladder receipt metadata.
 
+## 0.379.0 — reserved, not released
+
+- Reserved by [PR #394](https://github.com/OpenVibers/OpenVibe.Contracts/pull/394) for Exchange routing, request presets and generation contracts. Replace this reservation with its release entry when reconciled at merge.
+
+## 0.378.0 — reserved, not released
+
+- Reserved by [PR #393](https://github.com/OpenVibers/OpenVibe.Contracts/pull/393) for Wiki rich article contracts. Replace this reservation with its release entry when reconciled at merge.
+
 ## 0.377.0 — 2026-11-09
 
 - community.feed-item@1: live_now on a live stream's row
