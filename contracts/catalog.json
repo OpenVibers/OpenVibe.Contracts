@@ -10451,6 +10451,33 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "meme.entry",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/entry.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.template",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/template.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.render",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/render.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

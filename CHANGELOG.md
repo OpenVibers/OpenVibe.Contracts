@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `meme.entry@1`, `meme.template@1` and `meme.render@1` schemas with valid and invalid fixtures.
+
 ## 0.354.0 — 2026-11-09
 
 - Vibe compare and Exchange chat export contracts (the Chat move)

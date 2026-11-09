@@ -317701,3 +317701,526 @@ export interface ActorAsk {
     text?: string;
   } | null;
 }
+
+/** meme.entry@1.0.0 (owner: meme) */
+/**
+ * meme.entry@1: a cited, public entry in the OpenVibe.Meme internet-meme encyclopedia, including its origin, timeline, variations, examples and related entries.
+ */
+export interface MemeEntry {
+  id: string;
+  slug: string;
+  title: string;
+  scope: "internet";
+  kind: "classic" | "format" | "meme";
+  status: "rising" | "peaked" | "classic" | "dead";
+  summary: string | null;
+  meaning: string | null;
+  usage: string | null;
+  /**
+   * @maxItems 20
+   */
+  labels?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  first_seen_at: string | null;
+  last_seen_at: string | null;
+  visibility: "public";
+  revision: number;
+  origin: {} | null;
+  web_origin: {} | null;
+  /**
+   * @maxItems 1000
+   */
+  citations: {}[];
+  /**
+   * @maxItems 1000
+   */
+  timeline: {}[];
+  /**
+   * @maxItems 100
+   */
+  spread: {}[];
+  /**
+   * @maxItems 100
+   */
+  variations: {}[];
+  /**
+   * @maxItems 100
+   */
+  examples: {}[];
+  /**
+   * @maxItems 30
+   */
+  related: {}[];
+  /**
+   * @maxItems 200
+   */
+  revisions?: {}[];
+  url?: string;
+  [k: string]: unknown | undefined;
+}
+
+/** meme.template@1.0.0 (owner: meme) */
+/**
+ * meme.template@1: a reusable meme image with its source, reuse licence and caption layout. Public templates have passed any required review.
+ */
+export interface MemeTemplate {
+  id: string;
+  name: string;
+  image_url: string;
+  box_count: number;
+  source: string;
+  license: string;
+  credit?: string;
+  source_url?: string;
+  attribution?: string;
+  created_at: string;
+  layout?: {
+    width: number;
+    height: number;
+    /**
+     * @minItems 1
+     * @maxItems 8
+     */
+    boxes:
+      | [{}]
+      | [{}, {}]
+      | [{}, {}, {}]
+      | [{}, {}, {}, {}]
+      | [{}, {}, {}, {}, {}]
+      | [{}, {}, {}, {}, {}, {}]
+      | [{}, {}, {}, {}, {}, {}, {}]
+      | [{}, {}, {}, {}, {}, {}, {}, {}];
+    [k: string]: unknown | undefined;
+  };
+  captions?: number;
+  uses_today?: number;
+  [k: string]: unknown | undefined;
+}
+
+/** meme.render@1.0.0 (owner: meme) */
+/**
+ * meme.render@1: a request to render 1–4 caption lines over an approved template. PNG is the default; GIF and MP4 return short, looped exports. Editor positions and crop coordinates are percentages of the canvas.
+ */
+export interface MemeRenderRequest {
+  template_id: string;
+  /**
+   * @minItems 1
+   * @maxItems 4
+   */
+  lines: [string] | [string, string] | [string, string, string] | [string, string, string, string];
+  format?: "png" | "gif" | "mp4";
+  editor?: {
+    font_style?: "impact" | "modern" | "soft";
+    font_size?: number;
+    color?: string;
+    outline?: string;
+    outline_width?: number;
+    crop_x?: number;
+    crop_y?: number;
+    /**
+     * @minItems 1
+     * @maxItems 4
+     */
+    boxes?:
+      | [
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        ]
+      | [
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          },
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        ]
+      | [
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          },
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          },
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        ]
+      | [
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          },
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          },
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          },
+          {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        ];
+    /**
+     * @maxItems 8
+     */
+    stickers?:
+      | []
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ]
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ]
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ]
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ]
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ]
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ]
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ]
+      | [
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          },
+          {
+            emoji: "✨" | "😂" | "🔥" | "💀" | "👀" | "❤️" | "🙌";
+            x: number;
+            y: number;
+          }
+        ];
+  };
+}
