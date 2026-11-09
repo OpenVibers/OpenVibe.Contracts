@@ -28,7 +28,8 @@
     "run.job.admin",
     "run.session.create",
     "run.session.read",
-    "run.session.control"
+    "run.session.control",
+    "run.fill.approve"
   ],
   "eventsProduced": [
     "run.job.queued",

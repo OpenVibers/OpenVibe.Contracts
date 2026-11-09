@@ -275362,6 +275362,42 @@ export interface RunSessionEndedPayload {
   curtain?: boolean;
 }
 
+/** run.fill-request@1.0.0 (owner: run) */
+/**
+ * Metadata for a person's pending blind sign-in approval. Never contains credentials.
+ */
+export interface RunFillRequest {
+  id: string;
+  session_id: string;
+  machine_node_id: string;
+  origin: string;
+  created_at: string;
+  expires_at: string;
+  agent: string;
+  computer: string;
+}
+
+/** run.fill-grant@1.0.0 (owner: run) */
+/**
+ * Single-use encrypted grant posted by the Companion. Plaintext is never sent to Run.
+ */
+export interface RunFillGrant {
+  request_id: string;
+  envelope: {
+    [k: string]: unknown | undefined;
+  };
+}
+
+/** run.fill-outcome@1.0.0 (owner: run) */
+/**
+ * Credential-free result of a blind sign-in fill.
+ */
+export interface RunFillOutcome {
+  request_id: string;
+  outcome: "ok" | "failed";
+  reason?: string | null;
+}
+
 /** bot.desk-lease@1.0.0 (owner: bot) */
 /**
  * bot.desk-lease@1 (the Desks plan's D6): one desk OpenVibe.Bot holds for one OpenVibe.Run session, as POST /api/v1/machines/{id}/desk-leases answers it (201, capability bot.desk.session, a Run service token acting for the session's person in X-OV-Subject) and GET /api/v1/machines/{id}/desk-leases/{desk} reads it. The request is bot.desk-lease-create-request@1. Bot leases a desk only on the person's own machine where they turned on 'Let my agent use this computer' (shared false), or on a desk host whose owner offers its desks to other people and whose OpenVibe Link runs each desk in its own sandbox (describe desk.isolation sandbox; shared true). The lease starts the desk (bot.command@1 kind desk, start, kind browser, the lease's size) and from then on only the lease's person, through Run, may act on that desk, with screen, input and browser at POST /api/v1/machines/{id}/desk-leases/{desk}/commands (bot.command@1 without desk, answered by bot.command-result@1): never another desk, never the machine's own screen, files, programs or network, and on a shared host not even its owner's own commands reach a leased desk. DELETE /api/v1/machines/{id}/desk-leases/{desk} stops the desk and ends the lease; so does the machine going away (Run sees the lease gone, 404, and ends the session host_lost).

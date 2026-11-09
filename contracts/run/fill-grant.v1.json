@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/fill-grant.v1.json",
+  "title": "RunFillGrant",
+  "description": "Single-use encrypted grant posted by the Companion. Plaintext is never sent to Run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "envelope"],
+  "properties": {
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 100},
+    "envelope": {"type": "object", "minProperties": 1, "additionalProperties": true}
+  }
+}

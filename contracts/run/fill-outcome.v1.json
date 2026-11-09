@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/run/fill-outcome.v1.json",
+  "title": "RunFillOutcome",
+  "description": "Credential-free result of a blind sign-in fill.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "outcome"],
+  "properties": {
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 100},
+    "outcome": {"enum": ["ok", "failed"]},
+    "reason": {"type": ["string", "null"], "maxLength": 120}
+  }
+}

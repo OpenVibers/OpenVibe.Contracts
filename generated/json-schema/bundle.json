@@ -94645,6 +94645,131 @@
         }
       }
     },
+    "run.fill-request": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/fill-request.v1.json",
+        "title": "RunFillRequest",
+        "description": "Metadata for a person's pending blind sign-in approval. Never contains credentials.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "session_id",
+          "machine_node_id",
+          "origin",
+          "created_at",
+          "expires_at",
+          "agent",
+          "computer"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "session_id": {
+            "$ref": "session.v1.json#/$defs/session_id"
+          },
+          "machine_node_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "origin": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "agent": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "computer": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      }
+    },
+    "run.fill-grant": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/fill-grant.v1.json",
+        "title": "RunFillGrant",
+        "description": "Single-use encrypted grant posted by the Companion. Plaintext is never sent to Run.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request_id",
+          "envelope"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "envelope": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "run.fill-outcome": {
+      "version": "1.0.0",
+      "owner": "run",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/run/fill-outcome.v1.json",
+        "title": "RunFillOutcome",
+        "description": "Credential-free result of a blind sign-in fill.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request_id",
+          "outcome"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "outcome": {
+            "enum": [
+              "ok",
+              "failed"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          }
+        }
+      }
+    },
     "bot.desk-lease": {
       "version": "1.0.0",
       "owner": "bot",
