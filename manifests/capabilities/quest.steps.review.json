@@ -1,0 +1,7 @@
+{
+  "id": "quest.steps.review", "version": "1.0", "owner": "quest", "status": "active", "visibility": "internal",
+  "description": "Staff service review of a contributed daily step type; approved types may enter the generator's registry.",
+  "inputSchema": "common.no-body@1", "outputSchema": "quest.step-type@1", "permissions": ["quest:steps:review"],
+  "resourceConstraints": [], "quotaClass": "quest-step-review", "events": [],
+  "implementedBy": ["POST /api/v1/step-types/:id/review"]
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.355.0 — 2026-11-09
+
+- Daily quest contracts and step contribution
+
 ## 0.354.0 — 2026-11-09
 
 - Vibe compare and Exchange chat export contracts (the Chat move)

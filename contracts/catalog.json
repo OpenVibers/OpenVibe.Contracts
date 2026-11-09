@@ -8392,6 +8392,42 @@
       "adr": "ADR-031"
     },
     {
+      "id": "quest.daily",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/daily.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.daily-progress",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/daily-progress.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.step-type",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/step-type.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "quest.step-type-request",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/step-type-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "quest.app-quest-request",
       "version": "1.0.0",
       "owner": "quest",
