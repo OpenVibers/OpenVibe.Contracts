@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.379.0 — 2026-11-09
+
+- Exchange routing controls, owner request presets and generation accounting schemas, with valid and invalid fixtures.
+
+## 0.378.0 — reserved, 2026-11-09
+
+- Reserved for concurrent Contracts work by the release coordinator; no 0.378.0 schemas or release are included in this PR. Reconcile this entry when that branch merges.
+
 ## 0.377.0 — 2026-11-09
 
 - community.feed-item@1: live_now on a live stream's row

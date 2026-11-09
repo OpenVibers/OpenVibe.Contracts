@@ -1,0 +1,11 @@
+{
+  "id": "run_fixture",
+  "model": "maker/model",
+  "provider": "maker",
+  "cost": 0.001,
+  "total_cost": 0.001,
+  "latency": 10,
+  "tokens_prompt": 12,
+  "tokens_completion": 3,
+  "created_at": "2026-11-09T00:00:00Z"
+}

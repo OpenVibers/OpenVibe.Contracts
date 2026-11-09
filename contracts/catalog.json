@@ -10920,6 +10920,36 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "exchange.compat-routing",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/compat-routing.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.request-preset",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/request-preset.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.generation",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/generation.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
     }
   ]
 }

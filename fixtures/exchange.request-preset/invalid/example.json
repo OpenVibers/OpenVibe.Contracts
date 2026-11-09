@@ -1,0 +1,5 @@
+{
+  "name": "writer",
+  "model": "maker/model",
+  "temperature": 3
+}
