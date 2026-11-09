@@ -4,6 +4,14 @@
 
 - blog.changelog-entry@2: a shipped change with its plain words, kind (new, better, fixed or internal) and one to three areas from Blog's fixed list, with the commit and pull request for the row's fold
 
+## 0.379.0 — 2026-11-09
+
+- Exchange routing, request presets and generation contracts (open PRs #394 and #397; the entry is theirs and reconciles at merge)
+
+## 0.378.0 — 2026-11-09
+
+- Wiki rich articles: blocks, image suggestions and the writer (#393; the entry is theirs and reconciles at merge)
+
 ## 0.377.0 — 2026-11-09
 
 - community.feed-item@1: live_now on a live stream's row
