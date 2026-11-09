@@ -77,7 +77,7 @@ no existing caller's eligible set, and the SDK must not add it to its default li
 
 An OpenVibe Link that runs jobs advertises one `worker:<class>` capability in its `resource-offer.capabilities` for
 each `platform.runtime-class@1` class it runs: `worker:function` (a declared function artifact) and `worker:code`
-(submitted code in a sandbox) today, and `worker:browser`, `worker:linux`, `worker:desktop` and `worker:gpu` as Node
+(submitted code in a sandbox) today, and `worker:browser`, `worker:linux`, `worker:desktop` and `worker:gpu` as Link
 gains them. These six names are reserved for the Link job worker (`$defs.reservedWorkerCapabilities` in
 `platform.resource-offer@1`); every other `worker:` name (`worker:ffmpeg`, `worker:ai-gpu`) is an ordinary capability.
 A requirement asks for a class by listing the same name in its `capabilities`.

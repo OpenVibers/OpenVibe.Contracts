@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/link/compute.v1.json",
+  "title": "LinkCompute",
+  "description": "Where a person's work can run. Only ready candidates may be picked; a missing rental quote is never a price.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sources", "candidates"],
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidate" }
+    }
+  },
+  "$defs": {
+    "kind": { "enum": ["personal", "cloud", "exchange", "community"] },
+    "status": { "enum": ["ready", "unavailable", "coming_soon"] },
+    "price": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["amount_usd", "unit"],
+      "properties": {
+        "amount_usd": { "type": "number", "minimum": 0 },
+        "unit": { "enum": ["hour"] }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "name", "status", "reason"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "principal_id": { "type": "string", "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "kind": { "$ref": "#/$defs/kind" },
+        "name": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/status" },
+        "reason": { "type": ["string", "null"] },
+        "price": { "$ref": "#/$defs/price" },
+        "quoted_at": { "type": "string", "format": "date-time" },
+        "expires_at": { "type": "string", "format": "date-time" }
+      },
+      "if": { "properties": { "kind": { "const": "exchange" }, "status": { "const": "ready" } }, "required": ["kind", "status"] },
+      "then": { "required": ["price", "quoted_at", "expires_at"], "properties": { "price": { "type": "object" } } }
+    },
+    "candidate": {
+      "allOf": [
+        { "$ref": "#/$defs/source" },
+        { "type": "object", "required": ["id", "price"], "properties": { "id": { "type": "string", "minLength": 1 } } }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "sources": [
+        { "kind": "personal", "name": "Your Link machines", "status": "ready", "reason": null },
+        { "kind": "cloud", "name": "OpenVibe cloud machines", "status": "coming_soon", "reason": "No cloud pool is accepting jobs yet." },
+        { "kind": "exchange", "name": "Exchange GPU rentals", "status": "coming_soon", "reason": "A live quote is required.", "price": null },
+        { "kind": "community", "name": "Community machines", "status": "coming_soon", "reason": "Shared placement is being connected." }
+      ],
+      "candidates": [
+        { "id": "dev_01J0000000000000000000000", "kind": "personal", "name": "Studio", "status": "ready", "reason": null, "price": { "amount_usd": 0, "unit": "hour" } }
+      ]
+    }
+  ]
+}

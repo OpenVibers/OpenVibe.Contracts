@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/exchange/usage.v1.json",
+  "title": "ExchangeUsage",
+  "type": "object",
+  "required": [
+    "rows"
+  ],
+  "properties": {
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "day",
+          "key_id",
+          "model",
+          "requests",
+          "tokens_in",
+          "tokens_out",
+          "cost_usd",
+          "status"
+        ],
+        "properties": {
+          "day": {
+            "type": "string"
+          },
+          "key_id": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "requests": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "tokens_in": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "tokens_out": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "description": "Exchange API platform ExchangeUsage response. Private account data is available only to its owner."
+}

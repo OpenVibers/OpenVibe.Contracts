@@ -79,7 +79,7 @@
             "null"
           ],
           "maxLength": 128,
-          "description": "The offer's provider, as Run sent it; null for a first-party node."
+          "description": "The offer's provider, as Run sent it; null for a first-party machine."
         },
         "cancel_requested": {
           "type": "boolean",

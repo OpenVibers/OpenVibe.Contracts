@@ -3,7 +3,7 @@ const assert = require('assert');
 const contracts = require('..');
 
 const names = [
-    'usage-sample', 'telemetry-sample', 'node-capabilities', 'service-instance',
+    'usage-sample', 'telemetry-sample', 'link-capabilities', 'service-instance',
     'runtime-offer', 'storage-offer', 'delivery-offer', 'agent-offer', 'harness-offer', 'job',
 ];
 

@@ -38,7 +38,7 @@ function reading(id, startedMs, n, quantity) {
     return {
         id: key, idempotency_key: key, service: 'run', project: record.project, subject: record.subject, resource: id,
         node: record.node, operation: 'function.invoke', quantity, unit: 's', at: new Date(startedMs + n * 1000).toISOString(),
-        source: 'openvibe-node.worker',
+        source: 'openvibe-link.worker',
     };
 }
 const fromUsage = (f) => reading(f.id, f.started_ms, f.second, 1);

@@ -188,20 +188,20 @@ try {
 
     // A checkout with no service manifest: OpenVibe.* needs a STATUS.json; closed ones and other names are skipped.
     const manifests = [service('lib', 'OpenVibe.Lib')];
-    checkout('OpenVibe.Node', { 'README.md': '# Node\n', 'go.mod': 'module x\n' });
+    checkout('OpenVibe.Link', { 'README.md': '# Link\n', 'go.mod': 'module x\n' });
     checkout('OpenVibe.Realtime', { 'STATUS.json': { repository: 'OpenVibers/OpenVibe.Realtime', stage: 'closed' } });
     checkout('AFResume', { 'README.md': '# CV\n' });
     let all = collect(facts, manifests);
     const byId = (id) => all.find((x) => x.id === id);
-    ok(byId('node') && /STATUS\.json missing/.test(gapsOf(byId('node'))), 'an OpenVibe.* checkout without a STATUS.json is a gap');
+    ok(byId('link') && /STATUS\.json missing/.test(gapsOf(byId('link'))), `an OpenVibe.* checkout without a STATUS.json is a gap: ${JSON.stringify(byId('link'))}`);
     ok(byId('realtime') && byId('realtime').skipped === 'closed', 'a closed repository is skipped');
     ok(!all.some((x) => /afresume/i.test(x.id)), 'a checkout not named OpenVibe.* is not the platform\'s');
     ok(byId('wiki') && byId('wiki').gaps.some((g) => /STATUS\.json missing/.test(g)), 'every unmanifested OpenVibe.* checkout is held to a STATUS.json');
-    checkout('OpenVibe.Node', { 'README.md': '# Node\n', 'STATUS.json': { repository: 'OpenVibers/OpenVibe.Node', stage: 'alpha', version: '0.13.0', deployed: false, features: ['pairing'], updated: '2099-01-01' } });
-    all = collect(facts, manifests, new Set(['node']));
-    ok(all.length === 1 && all[0].id === 'node' && all[0].gaps.length === 0, `--only reaches a repository checkout, and a complete STATUS is current: ${JSON.stringify(all)}`);
-    checkout('OpenVibe.Node', { 'README.md': '# Node\n', 'STATUS.json': { repository: 'OpenVibers/OpenVibe.Node', stage: 'alpha' } });
-    all = collect(facts, manifests, new Set(['node']));
+    checkout('OpenVibe.Link', { 'README.md': '# Link\n', 'STATUS.json': { repository: 'OpenVibers/OpenVibe.Link', stage: 'alpha', version: '0.13.0', deployed: false, features: ['pairing'], updated: '2099-01-01' } });
+    all = collect(facts, manifests, new Set(['link']));
+    ok(all.length === 1 && all[0].id === 'link' && all[0].gaps.length === 0, `--only reaches a repository checkout, and a complete STATUS is current: ${JSON.stringify(all)}`);
+    checkout('OpenVibe.Link', { 'README.md': '# Link\n', 'STATUS.json': { repository: 'OpenVibers/OpenVibe.Link', stage: 'alpha' } });
+    all = collect(facts, manifests, new Set(['link']));
     ok(all[0].gaps.some((g) => /no "features"/.test(g)) && all[0].gaps.some((g) => /no "deployed"/.test(g)), 'a repository STATUS needs deployed and features');
     ok(summarize([{ gaps: [] }, { skipped: 'closed', gaps: [] }]) === '1/1 current, 1 closed skipped', 'the summary counts closed repositories apart');
 

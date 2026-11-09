@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/watch/watch.v1.json",
   "title": "Watch",
-  "description": "watch.watch@1: a user-defined persistent observation (plan T18). It names a source (a push event, a webhook, a conditional HTTP URL, a feed or API, a local Node probe, or an expensive Run check), how a value is extracted, how it is compared with the last observation, the condition that fires, the actions it wakes, its budget and its retention. Carrier preference is binding: an event or webhook source is used when one exists, then ETag/Last-Modified, then a feed, then an API, and browser polling through Run only when none works. A price or stock is 'as of' the observation, null when it stated none.",
+  "description": "watch.watch@1: a user-defined persistent observation (plan T18). It names a source (a push event, a webhook, a conditional HTTP URL, a feed or API, a local Link probe, or an expensive Run check), how a value is extracted, how it is compared with the last observation, the condition that fires, the actions it wakes, its budget and its retention. Carrier preference is binding: an event or webhook source is used when one exists, then ETag/Last-Modified, then a feed, then an API, and browser polling through Run only when none works. A price or stock is 'as of' the observation, null when it stated none.",
   "type": "object",
   "additionalProperties": false,
   "required": [

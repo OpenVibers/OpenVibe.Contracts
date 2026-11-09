@@ -66,7 +66,7 @@ OpenVibe.Tools that day found:
 
 ### Browser-only tools may get server engines
 
-A pure transform whose engine also runs in Node gets an opt-in server engine for the API: JSON,
+A pure transform whose engine also runs in Link gets an opt-in server engine for the API: JSON,
 minify and beautify, case, slug, hash, base64 and the like. Its descriptor then says
 `execution: client` and `api: true`. The page stays browser-only, so "nothing leaves your browser"
 stays true for people using the page. A tool without such an engine says `api: false`.

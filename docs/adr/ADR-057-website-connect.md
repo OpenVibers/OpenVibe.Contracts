@@ -18,12 +18,12 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
   verdict is one path per pillar: build a focused relay on `quic-go` for Share, adopt headscale + `tsnet` with a
   tenant boundary for Connect, build the policy/abuse layer on top of Cloudflare and Network identity, and extend
   Events for hooks. §3.3 and §3.4 name what to build and what not to reuse.
-- **The data plane is Go; the control plane is Node.** The Link agent is Go (ADR-045). QUIC, HTTP/3, datagrams,
-  half-close and backpressure are native there and awkward in Node.js. The control API can stay Node/Express, like
+- **The data plane is Go; the control plane is Link.** The Link agent is Go (ADR-045). QUIC, HTTP/3, datagrams,
+  half-close and backpressure are native there and awkward in Node.js. The control API can stay Link/Express, like
   every other network service. The edge is a separate, exposed, bandwidth-heavy tier and must not share a host with
   the control plane (research §4.1).
-- **Node already has a principal.** Network owns node principals (`nod_…`, `ids.newId('node')`) and pairs machines;
-  `network.node.revoked` already exists in Network's manifest. Connect must reuse that principal, not mint a second
+- **Link already has a principal.** Network owns node principals (`lnk_…`, `ids.newId('link')`) and pairs machines;
+  `network.link.revoked` already exists in Network's manifest. Connect must reuse that principal, not mint a second
   machine identity. Network also owns OIDC, project membership and grants; Domains owns DNS proposals; Events owns
   durable delivery and v2 signatures (ADR-042); Report and Billing consume usage.
 - **Space already uses `<name>.openvibe.website`.** A single-label name is in use for tenant sites. A new share cannot
@@ -46,19 +46,19 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
 ## Decision
 
 1. **Share is a focused Go edge relay, `openvibe-edge`, plus a Link `connect` core in OpenVibe Link.** The relay is
-   built on `quic-go` (MIT): one QUIC connection per Node, ALPN `ovconnect/1`, TLS 1.3, streams for HTTP/WebSocket/TCP,
+   built on `quic-go` (MIT): one QUIC connection per Link, ALPN `ovconnect/1`, TLS 1.3, streams for HTTP/WebSocket/TCP,
    datagrams for UDP, and an HTTP/2 + WebSocket fallback on 443 for networks that block UDP. It routes by SNI/Host to a
    `share_id` from Connect's name registry, never from a user-controlled header, checks the signed policy, and then
-   opens a stream to the Node. It does not own users, shares, policies or audit. No frp, sish, zrok, Pangolin or
+   opens a stream to the Link. It does not own users, shares, policies or audit. No frp, sish, zrok, Pangolin or
    cloudflared code is forked or embedded.
-2. **The control API is a new Node service, OpenVibe.Connect.** It owns shares, share policies, devices, mesh policies,
+2. **The control API is a new Link service, OpenVibe.Connect.** It owns shares, share policies, devices, mesh policies,
    hooks, the name registry, abuse holds, audit and quota counters in `ov_connect` PostgreSQL; it mints tunnel tokens
    and signs the short-lived policy cache the edge reads. It is a peer of Domains, Events, Network, Report and Billing,
    not a module of Bot. Bot keeps robots, the device link and command safety (ADR-043); Connect keeps shares, the mesh,
    policies and hooks.
 3. **Connect mesh is headscale + embedded `tsnet`, with a tenant boundary that must be proven before consumer
    multi-tenancy.** v1 maps one workspace to one headscale tenant: a person's own network for a personal account, a
-   project's network for a team. Node embeds `tsnet` (userspace, no root, no TUN) for the private mesh; the public
+   project's network for a team. Link embeds `tsnet` (userspace, no root, no TUN) for the private mesh; the public
    ingress stays Share. headscale does not implement Funnel or Serve and Connect must not promise Funnel-compatible
    behaviour. The tenant-isolation proof must cover: no cross-tenant MagicDNS resolution, no cross-tenant route or
    exit-node leak, no shared pre-auth key, and revocation in one tenant leaving the others untouched. If the proof
@@ -68,10 +68,10 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
    is for PCs, NAS and servers. DERP is self-hosted (`derper`) so relay traffic stays on OpenVibe infrastructure;
    Live's TURN is for WebRTC and is not a WireGuard relay.
 4. **Identity and the tunnel handshake use two credentials, both checked.** The Link presents a Network
-   client-credentials token whose subject is its node principal (`node:nod_…`) and whose audience is
+   client-credentials token whose subject is its node principal (`link:lnk_…`) and whose audience is
    `openvibe.website`; the request body is `website.share-connect-request@1` with the `share_id`, the same `node_id`
    and a short-lived, single-use, share-scoped `tunnel_token` minted by Connect. The edge validates the token against
-   Network's JWKS, requires the subject to equal `node:<node_id>` (for example `node:nod_…`), redeems the
+   Network's JWKS, requires the subject to equal `link:<node_id>` (for example `link:lnk_…`), redeems the
    tunnel token with Connect exactly once and binds the connection to that share. One credential is never
    enough. The tunnel token is sent once over TLS and is
    never stored, logged, audited or published in an event. OIDC at the share host uses Authorization Code + PKCE
@@ -79,10 +79,10 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
    `share_id`, `sub` and `policy_version`.
    `POST /api/v1/shares` returns only `website.share@1`; its response has no tunnel token. The Link obtains the
    short-lived, single-use token through a separate authenticated credential exchange before connecting. CON-5
-   defines that exchange's endpoint, request and response schemas, authorization, and delivery to the Node.
+   defines that exchange's endpoint, request and response schemas, authorization, and delivery to the Link.
 5. **Revocation is immediate and has one owner per trigger.** `DELETE /api/v1/shares/:id` writes
    `website.share.revoked`, closes the edge route and tunnel, removes the DNS route if Connect added one and makes the
-   public host return 410 within the 5-second budget. `network.node.revoked` closes every share bound to that node.
+   public host return 410 within the 5-second budget. `network.link.revoked` closes every share bound to that node.
    A policy change bumps `policy_version`, so the edge's cached signed policy is stale on the next request. Removing a
    device revokes its mesh key at the control plane. No capability, route or cached policy survives a revoked share.
 6. **Policy is enforced at the edge, authored and audited by Connect, and fronted by Cloudflare.** Cloudflare
@@ -106,8 +106,8 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
    Events to retry. Events produces `events.hook.received|delivered|dead`; Connect writes none of them. No smee or
    Hookdeck is adopted.
 8. **The SDK stays MIT and thin.** `openvibe-sdk` (MIT) gets at most a thin `openvibe-sdk/connect` client that talks
-   to the local Node daemon over HTTP/Unix socket and to the control API over HTTP. The QUIC data plane, the mesh
-   (`tsnet`) and the policy engine stay in the AGPL Node/Connect/edge code. No AGPL/GPL tunnel code is copied into the
+   to the local Link daemon over HTTP/Unix socket and to the control API over HTTP. The QUIC data plane, the mesh
+   (`tsnet`) and the policy engine stay in the AGPL Link/Connect/edge code. No AGPL/GPL tunnel code is copied into the
    SDK or `openvibe-shared` (MIT). This keeps the permissive client boundary and the copyleft in the agent.
 9. **Naming and the first proof use one label.** The first proof is the owner's agent portal at
    `https://agents-<owner>.openvibe.website` (single label), behind OpenVibe sign-in, opened on a phone over 5G with a
@@ -127,9 +127,9 @@ authority per resource) and ADR-056 (project secrets: write-only, used by name).
 
 | Concern | Owner | Not this service |
 |---|---|---|
-| Share record, name registry, policy, tunnel token, inspector metadata, audit | OpenVibe.Connect (Node control API, `ov_connect`) | the edge keeps active session state and a signed policy cache only |
+| Share record, name registry, policy, tunnel token, inspector metadata, audit | OpenVibe.Connect (Link control API, `ov_connect`) | the edge keeps active session state and a signed policy cache only |
 | Public QUIC/HTTP/WS/SSE/TCP/UDP ingress, routing, edge policy check, rate limits | `openvibe-edge` (Go, `quic-go`) | it does not own users, shares, policies, audit or hooks |
-| Node tunnel, local forwarding, `ov share`, `tsnet` | OpenVibe Link (`internal/connect`) | it does not decide policy or open arbitrary hosts |
+| Link tunnel, local forwarding, `ov share`, `tsnet` | OpenVibe Link (`internal/connect`) | it does not decide policy or open arbitrary hosts |
 | Account, node principal, OIDC, grants, revocation event | OpenVibe.Network | Connect never mints identity |
 | DNS proposal, TXT/CNAME, certificate path | OpenVibe.Domains | Connect never writes DNS or holds a provider credential |
 | Durable event store, v2 signature, retries, DLQ, replay | OpenVibe.Events | Connect creates the subscription; the edge does not queue |
@@ -212,7 +212,7 @@ capability id is concrete; `website.abuse.review` stays the moderator queue. Non
 
 - `research-2026-10-29/website-connect.md` §1.1–1.7, §3.2–3.4, §4.1–4.13 (checked 2026-10-29).
 - `OpenVibe_New_Domains_Plan_2026-10-28.md` §5.9b and the CON-1…CON-21 ledger.
-- ADR-053 (Website/Host boundary), ADR-045 (Node runtime), ADR-042 (events fabric), ADR-043 (Bot devices), ADR-048
+- ADR-053 (Website/Host boundary), ADR-045 (Link runtime), ADR-042 (events fabric), ADR-043 (Bot devices), ADR-048
   (control plane), ADR-056 (project secrets), ADR-028 (expand/migrate/contract).
 - `manifests/products/openvibe.website.json` (the distinct product/redirect manifest, preserved), ADR-005 (realtime),
   `manifests/services/events.json` and `manifests/services/network.json` (node revocation and hook events).

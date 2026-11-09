@@ -18,6 +18,78 @@
       "base": "v0.289.0",
       "fixedIn": "0.289.1",
       "reason": "0.289.0 made `project_id` optional on billing.credit-hold-create-request@1 for a personal hold, but billing.credit-hold@1 still required a string, so the answer Billing's presentHold sends for a personal hold (`project_id: null`) did not validate. The string-only rule never described a personal hold's answer; project holds still send a string, and `project_id` widens to optional [string, null]."
+    },
+    {
+      "id": "ai.credential-put",
+      "base": "v0.352.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential-put@1 and @2 is the same provider under its new name. Only our own AI service ever produced it, and it moves to `link` in the same release, so the enum is corrected in place rather than carried as an alias."
+    },
+    {
+      "id": "ai.credential",
+      "base": "v0.352.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential@1 and @2 is the same provider under its new name, produced and read only by our own AI service, which moves to `link` in the same release."
+    },
+    {
+      "id": "identity.service-token-claims",
+      "base": "v0.352.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link: a paired machine's principal actor_type is `link` (sub `link:lnk_…`) instead of `node`. Network mints these tokens and every receiver is ours, updated in the same release; no third party consumed the old value."
+    },
+    {
+      "id": "ai.credential-put",
+      "base": "v0.365.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential-put@1 and @2 is the same provider under its new name. Only our own AI service ever produced it, and it moves to `link` in the same release, so the enum is corrected in place rather than carried as an alias."
+    },
+    {
+      "id": "ai.credential",
+      "base": "v0.365.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential@1 and @2 is the same provider under its new name, produced and read only by our own AI service, which moves to `link` in the same release."
+    },
+    {
+      "id": "identity.service-token-claims",
+      "base": "v0.365.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link: a paired machine's principal actor_type is `link` (sub `link:lnk_…`) instead of `node`. Network mints these tokens and every receiver is ours, updated in the same release; no third party consumed the old value."
+    },
+    {
+      "id": "ai.credential-put",
+      "base": "v0.368.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential-put@1 and @2 is the same provider under its new name. Only our own AI service ever produced it, and it moves to `link` in the same release, so the enum is corrected in place rather than carried as an alias."
+    },
+    {
+      "id": "ai.credential",
+      "base": "v0.368.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential@1 and @2 is the same provider under its new name, produced and read only by our own AI service, which moves to `link` in the same release."
+    },
+    {
+      "id": "identity.service-token-claims",
+      "base": "v0.368.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link: a paired machine's principal actor_type is `link` (sub `link:lnk_…`) instead of `node`. Network mints these tokens and every receiver is ours, updated in the same release; no third party consumed the old value."
+    },
+    {
+      "id": "ai.credential-put",
+      "base": "v0.371.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential-put@1 and @2 is the same provider under its new name. Only our own AI service ever produced it, and it moves to `link` in the same release, so the enum is corrected in place rather than carried as an alias."
+    },
+    {
+      "id": "ai.credential",
+      "base": "v0.371.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link, and the person's own-machine provider is `link`: the `node` value of ai.credential@1 and @2 is the same provider under its new name, produced and read only by our own AI service, which moves to `link` in the same release."
+    },
+    {
+      "id": "identity.service-token-claims",
+      "base": "v0.371.0",
+      "fixedIn": "0.372.0",
+      "reason": "The machine product Node became OpenVibe Link: a paired machine's principal actor_type is `link` (sub `link:lnk_…`) instead of `node`. Network mints these tokens and every receiver is ours, updated in the same release; no third party consumed the old value."
     }
   ]
 }

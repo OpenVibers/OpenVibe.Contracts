@@ -242,7 +242,7 @@ A job moves `queued → placed → running` and ends `succeeded`, `failed`, `can
 `run.job.queued|started|succeeded|failed|cancelled|expired`. Run mints the job id (`job_<ULID>`, `ids.newId('job')`)
 and passes it unchanged as the `platform.job@1` id, so every metering reading is `run:<job id>:<n>` (service `run`,
 operation `function.invoke`, unit `s`) and `usage.seconds` is their sum. Inputs are Media objects pinned by sha256
-(never a URL); `egress` takes Node's `worker.egress` values (`none` by default, `public`, `openvibe-only`).
+(never a URL); `egress` takes Link's `worker.egress` values (`none` by default, `public`, `openvibe-only`).
 
 ## Versioning and compatibility
 

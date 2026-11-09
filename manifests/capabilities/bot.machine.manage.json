@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "first-party",
   "sensitive": true,
-  "description": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.network/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
+  "description": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.link/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
   "permissions": [
     "bot:machine:read",
     "bot:machine:rename",
