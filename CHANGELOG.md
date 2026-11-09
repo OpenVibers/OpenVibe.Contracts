@@ -1,8 +1,20 @@
 # Changelog
 
-## 0.356.0 — 2026-11-09
+## 0.359.0 — 2026-11-09
 
 - Define `design.component@1` for web, Android and iOS component anatomy, props, states, tokens, behavior, accessibility and examples.
+
+## 0.358.0 — 2026-11-09
+
+- Chat view preference (bubbles or room)
+
+## 0.357.0 — 2026-11-09
+
+- Cam camera settings (cam.settings@1)
+
+## 0.356.0 — 2026-11-09
+
+- Shoes product contract (shoes.product@1)
 
 ## 0.355.0 — 2026-11-09
 
