@@ -2,6 +2,15 @@
   "_about": "Every contract this repository publishes. A contract id is stable forever; a breaking change is a new major (new file .v2.json, new catalog entry) while the old one is deprecated with a replacement and a window. Minor versions only add optional fields.",
   "contracts": [
     {
+      "id": "cam.settings",
+      "version": "1.0.0",
+      "owner": "cam",
+      "schema": "cam/settings.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "identity.subject-ref",
       "version": "1.0.0",
       "owner": "network",

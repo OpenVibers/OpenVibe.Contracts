@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.357.0 — 2026-11-09
+
+- Cam camera settings (cam.settings@1)
+
 ## 0.356.0 — 2026-11-09
 
 - Shoes product contract (shoes.product@1)
