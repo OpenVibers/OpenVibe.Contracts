@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.367.0 — 2026-11-09
+
+- publishing.block@1: the rich content block of a post or an article body
+
 ## 0.366.0 — 2026-11-09
 
 - wiki.page.published@1 and wiki.page.updated@1 carry an optional `title` (the page as readers see it), so the network's Feed names a wiki page by its title, not its slug.
