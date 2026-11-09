@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/cam/settings.v1.json",
+  "title": "CamSettings",
+  "description": "cam.settings@1: a person's camera choices. Lens and mic are hints because browser device ids may differ across devices.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["facing", "lens", "mic", "resolution", "mirror", "updated_at"],
+  "properties": {
+    "facing": { "enum": ["user", "environment"] },
+    "lens": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "mic": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "resolution": { "enum": ["480", "720", "1080"] },
+    "mirror": { "type": "boolean" },
+    "updated_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

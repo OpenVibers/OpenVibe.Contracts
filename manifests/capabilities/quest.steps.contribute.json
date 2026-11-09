@@ -1,0 +1,7 @@
+{
+  "id": "quest.steps.contribute", "version": "1.0", "owner": "quest", "status": "active", "visibility": "public",
+  "description": "Suggest a step type on a known OpenVibe.Events topic. A developer app's proposal remains pending until staff review.",
+  "inputSchema": "quest.step-type-request@1", "outputSchema": "quest.step-type@1", "permissions": ["quest:steps:contribute"],
+  "resourceConstraints": ["project"], "quotaClass": "quest-step-write", "events": [],
+  "implementedBy": ["POST /api/v1/step-types"]
+}

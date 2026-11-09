@@ -1,0 +1,11 @@
+{
+  "count": 1,
+  "chats": [{
+    "id": "exc_example", "title": "A chat", "models": ["deepseek/deepseek-chat"],
+    "created_at": "2026-11-01T10:00:00.000Z", "updated_at": "2026-11-01T10:01:00.000Z",
+    "messages": [
+      { "role": "user", "model": null, "content": "Hello", "created_at": "2026-11-01T10:00:00.000Z", "meta": {} },
+      { "role": "assistant", "model": "deepseek/deepseek-chat", "content": "Hi", "created_at": "2026-11-01T10:01:00.000Z", "meta": {} }
+    ]
+  }]
+}

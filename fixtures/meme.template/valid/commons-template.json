@@ -1,0 +1,14 @@
+{
+  "id": "tpl_distracted-boyfriend",
+  "name": "Distracted Boyfriend",
+  "image_url": "https://openvibe.media/o/med_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "box_count": 3,
+  "source": "Wikimedia Commons",
+  "license": "CC BY-SA 4.0",
+  "credit": "Photographer",
+  "source_url": "https://commons.wikimedia.org/wiki/File:Example.jpg",
+  "created_at": "2026-11-08T00:00:00.000Z",
+  "layout": { "width": 440, "height": 280, "boxes": [{ "x": 4, "y": 5, "w": 90, "h": 20 }] },
+  "captions": 10,
+  "uses_today": 2
+}
