@@ -1408,6 +1408,15 @@
       "status": "active"
     },
     {
+      "id": "blog.changelog-entry",
+      "version": "2.0.0",
+      "owner": "blog",
+      "schema": "blog/changelog-entry.v2.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "blog.delete-result",
       "version": "1.0.0",
       "owner": "blog",
