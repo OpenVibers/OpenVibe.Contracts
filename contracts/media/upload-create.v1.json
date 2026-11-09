@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/upload-create.v1.json",
+  "title": "MediaUploadCreate",
+  "description": "Create a Media object with a multipart upload session. The caller needs media.object.upload for the tenant namespace; the upload token then authorizes parts and completion.",
+  "type": "object",
+  "required": ["kind", "size_bytes", "multipart"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": { "type": "string", "enum": ["vod", "clip", "file", "thumbnail", "screenshot", "avatar", "asset"] },
+    "size_bytes": { "type": "integer", "minimum": 1 },
+    "multipart": { "const": true },
+    "part_size": { "type": "integer", "minimum": 5242880, "description": "Use 8388608 for 8 MiB parts; the service may increase it to stay below 10000 parts." },
+    "visibility": { "type": "string", "enum": ["public", "unlisted", "private"] },
+    "mime_type": { "type": "string" },
+    "filename": { "type": "string" },
+    "content_hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "namespace": { "type": "string" },
+    "user_id": { "type": ["string", "integer"] },
+    "metadata": { "type": "object" }
+  }
+}

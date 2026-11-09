@@ -2,6 +2,7 @@
 
 ## 0.359.0 — 2026-11-09
 
+- Media multipart uploads in contracts and OpenAPI
 - Define `design.component@1` for web, Android and iOS component anatomy, props, states, tokens, behavior, accessibility and examples.
 
 ## 0.358.0 — 2026-11-09

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/upload-complete.v1.json",
+  "title": "MediaUploadComplete",
+  "description": "Complete an upload after all parts arrive. Media assembles the bytes, verifies the optional hashes and content type, and returns the ready object.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "content_hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "parts": { "type": "array", "items": { "type": "object", "required": ["part_number", "sha256"], "additionalProperties": false, "properties": { "part_number": { "type": "integer", "minimum": 1 }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" } } } }
+  }
+}
