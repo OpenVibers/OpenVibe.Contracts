@@ -317338,7 +317338,7 @@ export interface ActorAsk {
   id: string;
   actor: string;
   goal: string;
-  kind: "approve_action" | "answer_question" | "do_yourself";
+  kind: "approve_action" | "answer_question" | "do_yourself" | "sign_in";
   text: string;
   /**
    * @maxItems 12
@@ -317363,4 +317363,11 @@ export interface ActorAsk {
     decision: "answer" | "decline";
     text?: string;
   };
+  /**
+   * The Actor page where its person can take over the screen; not a credential.
+   */
+  screen_url?: string | null;
+  evidence?: {
+    text?: string;
+  } | null;
 }

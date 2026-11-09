@@ -3,7 +3,7 @@ const assert = require('assert');
 const c = require('..');
 const pending = require('../fixtures/actor.ask/valid/pending.json');
 assert.ok(c.validate('actor.ask@1', pending).valid);
-for (const kind of ['approve_action', 'answer_question', 'do_yourself']) assert.ok(c.validate('actor.ask@1', { ...pending, kind }).valid);
+for (const kind of ['approve_action', 'answer_question', 'do_yourself', 'sign_in']) assert.ok(c.validate('actor.ask@1', { ...pending, kind }).valid);
 for (const key of ['id', 'actor', 'goal', 'kind', 'text', 'options', 'created', 'answered']) {
     const bad = { ...pending }; delete bad[key];
     assert.ok(!c.validate('actor.ask@1', bad).valid, key + ' is required');

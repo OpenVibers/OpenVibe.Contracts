@@ -113704,7 +113704,8 @@
             "enum": [
               "approve_action",
               "answer_question",
-              "do_yourself"
+              "do_yourself",
+              "sign_in"
             ]
           },
           "text": {
@@ -113756,6 +113757,27 @@
                 }
               }
             ]
+          },
+          "screen_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048,
+            "description": "The Actor page where its person can take over the screen; not a credential."
+          },
+          "evidence": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "maxLength": 2000
+              }
+            }
           }
         }
       }
