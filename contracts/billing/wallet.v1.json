@@ -238,8 +238,15 @@
       "properties": {
         "providers": {
           "type": "array",
+          "description": "The checkout providers on offer, each with the hosts its hosted checkout may use. The wallet follows a checkout_url only to one of these hosts or to Billing itself.",
           "items": {
-            "type": "string"
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "hosts"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1, "maxLength": 40 },
+              "hosts": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 253 } }
+            }
           }
         },
         "vibes": {
