@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.374.0 — 2026-11-09
+
+- Add the Pics public gallery and picture contracts (`pics.gallery@1`, `pics.picture@1`) with valid and invalid fixtures.
+
 ## 0.373.0 — 2026-11-09
 
 - The git service: its manifest, git.repo.read and git.repo.write, git.access-request@1 and git.access-result@1 (OpenVibe.Git)

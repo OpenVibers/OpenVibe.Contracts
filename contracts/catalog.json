@@ -10854,6 +10854,24 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "pics.picture",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "pics/picture.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "pics.gallery",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "pics/gallery.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
