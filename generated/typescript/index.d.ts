@@ -317816,3 +317816,69 @@ export interface ActorAsk {
     text?: string;
   } | null;
 }
+
+/** pics.picture@1.0.0 (owner: media-hub) */
+/**
+ * A Pics picture. Public counts and attribution are returned for opted-in public gallery entries only. Uploads are private by default.
+ */
+export interface PicsPicture {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  mime_type?: string;
+  ext?: "jpg" | "png" | "webp" | "gif" | "avif";
+  width: number;
+  height: number;
+  bytes?: number;
+  animated?: boolean;
+  alt?: string;
+  alt_source?: string | null;
+  ai?: {} | null;
+  content_labels?: {};
+  state?: "active" | "hidden" | "removed";
+  created_at?: string;
+  listed: boolean;
+  /**
+   * @maxItems 10
+   */
+  tags:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string];
+  author?: string;
+  likes?: number;
+  views?: number;
+  published_at?: string | null;
+  report_count?: number;
+  links: {
+    page: string;
+    direct: string;
+    thumb: string;
+    markdown: string;
+    html: string;
+    bbcode: string;
+  };
+  [k: string]: unknown | undefined;
+}
+
+/** pics.gallery@1.0.0 (owner: media-hub) */
+/**
+ * Public, active, explicitly listed pictures; first 30 per page. Opaque next cursor is null at the end. Popular orders likes then views; Rising orders likes in the last day; New orders publication time.
+ */
+export interface PicsGallery {
+  /**
+   * @maxItems 30
+   */
+  pictures: PicsPicture[];
+  next: string | null;
+  sort: "popular" | "new" | "rising";
+}

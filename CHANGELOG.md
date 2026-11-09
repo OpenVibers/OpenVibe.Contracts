@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.356.0 — 2026-11-09
+
+- Add the Pics public gallery and picture contracts (`pics.gallery@1`, `pics.picture@1`) with valid and invalid fixtures.
+
 ## 0.355.0 — 2026-11-09
 
 - Daily quest contracts and step contribution

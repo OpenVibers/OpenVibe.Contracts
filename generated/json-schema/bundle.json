@@ -114920,6 +114920,203 @@
           }
         }
       }
+    },
+    "pics.picture": {
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/pics/picture.v1.json",
+        "title": "PicsPicture",
+        "description": "A Pics picture. Public counts and attribution are returned for opted-in public gallery entries only. Uploads are private by default.",
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "width",
+          "height",
+          "listed",
+          "tags",
+          "links"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pic_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[2-9a-km-zA-HJ-NP-Z]{8}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "ext": {
+            "enum": [
+              "jpg",
+              "png",
+              "webp",
+              "gif",
+              "avif"
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "animated": {
+            "type": "boolean"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ai": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "content_labels": {
+            "type": "object"
+          },
+          "state": {
+            "enum": [
+              "active",
+              "hidden",
+              "removed"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "listed": {
+            "type": "boolean"
+          },
+          "tags": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            }
+          },
+          "author": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "views": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "report_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "page",
+              "direct",
+              "thumb",
+              "markdown",
+              "html",
+              "bbcode"
+            ],
+            "properties": {
+              "page": {
+                "type": "string"
+              },
+              "direct": {
+                "type": "string"
+              },
+              "thumb": {
+                "type": "string"
+              },
+              "markdown": {
+                "type": "string"
+              },
+              "html": {
+                "type": "string"
+              },
+              "bbcode": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "pics.gallery": {
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/pics/gallery.v1.json",
+        "title": "PicsGallery",
+        "description": "Public, active, explicitly listed pictures; first 30 per page. Opaque next cursor is null at the end. Popular orders likes then views; Rising orders likes in the last day; New orders publication time.",
+        "type": "object",
+        "required": [
+          "pictures",
+          "next",
+          "sort"
+        ],
+        "properties": {
+          "pictures": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "$ref": "picture.v1.json"
+            }
+          },
+          "next": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sort": {
+            "enum": [
+              "popular",
+              "new",
+              "rising"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
     }
   }
 }
