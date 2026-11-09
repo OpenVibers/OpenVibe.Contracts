@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.356.0 — 2026-11-09
+
+- The Dock v2's run rows: `ai.run-error@1` (a code, words, the next step and the action, never a raw provider
+  response) with its shared code map, `common.action-item@1` and `network.me-actions-result@1` at 1.1.0 (the skill,
+  the subject, the model, the maker, the cost, the duration and the live step), `network.dock-state@1` at 1.1.0
+  (the Vibe conversation and the Agents filter a person chose, synced across sites), `chat.vibe-conversations-result@1`
+  and `actor.skill-run-request@1` with `actor.skill-run-result@1`.
+
 ## 0.355.0 — 2026-11-09
 
 - Daily quest contracts and step contribution
