@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/attention.v1.json",
+  "title": "AgentAttention",
+  "description": "One structured question awaiting a person. Authorized independent work may continue.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "ticket_id",
+    "question",
+    "state",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ticket_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "open",
+        "answered",
+        "dismissed"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "answer": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

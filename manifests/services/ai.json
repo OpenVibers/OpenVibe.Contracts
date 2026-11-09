@@ -97,7 +97,7 @@
       "none": "no claims: one process owns its PostgreSQL database (ov_ai); a run is taken with a compare-and-set on its status (queued \u2192 running)"
     }
   },
-  "notes": "Providers, models, routing profiles, versioned prompt templates and workflows, runs, request logs, citations, scoped cache, quotas and audit. Workflow output is a draft/evidence package attributed to workflow + model + run. ai.run.queued|succeeded|failed|cached have payload contracts (v0.30.0, status planned): AI publishes them once its Events client is wired in; it publishes none today. ai.run.create takes ai.run-request@1 and returns ai.run@1.",
+  "notes": "Providers, models, routing profiles, versioned prompt templates and workflows, runs, request logs, citations, scoped cache, quotas and audit. Workflow output is a draft/evidence package attributed to workflow + model + run. ai.run.queued|succeeded|failed|cached have payload contracts (v0.30.0, status planned): AI publishes them once its Events client is wired in; it publishes none today. ai.run.create takes ai.run-request@1 and returns ai.run@1. Produces ai.run@1 effort_requested, effort_applied, effort_rung and ladder receipts; consumes ai.effort@1 and ai.run-request@1 effort/ladder metadata. Actor consumes those receipts; AI does not authorize agent tickets.",
   "machineRoles": [
     {
       "id": "ai.host",

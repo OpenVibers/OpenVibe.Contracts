@@ -19,7 +19,7 @@
       "type": "string",
       "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)+$",
       "maxLength": 200,
-      "description": "Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…)."
+      "description": "Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy\u2026)."
     },
     "version": {
       "type": "integer",
@@ -59,7 +59,11 @@
           "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on."
         },
         "latency": {
-          "enum": ["interactive", "background", "batch"],
+          "enum": [
+            "interactive",
+            "background",
+            "batch"
+          ],
           "description": "The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped)."
         },
         "deadline_hours": {
@@ -83,6 +87,17 @@
         }
       },
       "description": "Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision)."
+    },
+    "effort": {
+      "$ref": "effort.v1.json"
+    },
+    "ladder_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rung": {
+      "type": "integer",
+      "minimum": 0
     }
   },
   "anyOf": [

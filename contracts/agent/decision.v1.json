@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/decision.v1.json",
+  "title": "AgentDecision",
+  "description": "Gate and assessment decision. Inferred work defaults to observe: record ignore with would_accept, never launch. Only an explicit human stop withdraws a mandate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "trigger_ids",
+    "policy_version",
+    "decision",
+    "strength",
+    "direction",
+    "rule_assessments"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "enum": [
+        "accept",
+        "stop",
+        "ignore",
+        "unavailable"
+      ]
+    },
+    "strength": {
+      "enum": [
+        "explicit",
+        "inferred"
+      ]
+    },
+    "direction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation_requested",
+        "target_basis",
+        "requires_design_decision",
+        "evidence"
+      ],
+      "properties": {
+        "implementation_requested": {
+          "type": "boolean"
+        },
+        "target_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requires_design_decision": {
+          "type": "boolean"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "trigger_id",
+              "quote"
+            ],
+            "properties": {
+              "trigger_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "rule_assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule",
+          "matched",
+          "reason"
+        ],
+        "properties": {
+          "rule": {
+            "type": "string",
+            "minLength": 1
+          },
+          "matched": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "would_accept": {
+      "type": "boolean"
+    },
+    "ignored_from_card": {
+      "type": "boolean"
+    }
+  }
+}

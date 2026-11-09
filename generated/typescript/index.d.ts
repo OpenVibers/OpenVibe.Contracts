@@ -159387,7 +159387,7 @@ export interface AiAttributionQuota {
   updated_at: string;
 }
 
-/** ai.run-request@1.0.0 (owner: ai) */
+/** ai.run-request@1.1.0 (owner: ai) */
 /**
  * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).
  */
@@ -159442,9 +159442,12 @@ export type AiRunRequest = {
   credential?: {
     subject: string;
   };
+  effort?: AiEffort;
+  ladder_id?: string;
+  rung?: number;
 };
 
-/** ai.run@1.1.0 (owner: ai) */
+/** ai.run@1.2.0 (owner: ai) */
 /**
  * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. latency_class is the class the run really ran in, service_tier the tier it was priced on, and latency_clamped set when the caller asked for a faster class than the workflow allows. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.
  */
@@ -159947,6 +159950,16 @@ export interface AiRun {
    * What actually answered: the model and its source, and the machine when one did; null for a run outside a task.
    */
   answered?: AiChoiceV1 | null;
+  effort_requested?: AiEffort;
+  effort_applied?: ("low" | "medium" | "high" | "max") | null;
+  effort_rung?: number;
+  ladder_id?: string;
+  ladder?: {
+    model: string;
+    effort: AiEffort;
+    cost_usd: number;
+    outcome: string;
+  }[];
 }
 
 /** ai.run-error@1.0.0 (owner: ai) */
@@ -324101,3 +324114,140 @@ export interface GitIssue {
         string
       ];
 }
+
+/** agent.trigger@1.0.0 (owner: actor) */
+/**
+ * Immutable source event. Source-local actor identity grants no cross-source authority. Accepting an id twice creates one ticket.
+ */
+export interface AgentTrigger {
+  id: string;
+  source: string;
+  actor: {
+    source: string;
+    id: string;
+    kind: "person" | "bot" | "system";
+  };
+  source_scope: string;
+  /**
+   * @minItems 1
+   */
+  threads: [string, ...string[]];
+  occurred_at: string;
+  text: string;
+  read_pointer?: string;
+  addresses_agent?: "mention" | "direct" | "none";
+}
+
+/** agent.decision@1.0.0 (owner: actor) */
+/**
+ * Gate and assessment decision. Inferred work defaults to observe: record ignore with would_accept, never launch. Only an explicit human stop withdraws a mandate.
+ */
+export interface AgentDecision {
+  id: string;
+  /**
+   * @minItems 1
+   */
+  trigger_ids: [string, ...string[]];
+  policy_version: string;
+  decision: "accept" | "stop" | "ignore" | "unavailable";
+  strength: "explicit" | "inferred";
+  direction: {
+    implementation_requested: boolean;
+    target_basis: string;
+    requires_design_decision: boolean;
+    evidence: {
+      trigger_id: string;
+      quote: string;
+    }[];
+  };
+  rule_assessments: {
+    rule: string;
+    matched: boolean;
+    reason: string;
+  }[];
+  reason?: string;
+  would_accept?: boolean;
+  ignored_from_card?: boolean;
+}
+
+/** agent.ticket@1.0.0 (owner: actor) */
+/**
+ * Authorized work with an immutable mandate. Policy changes notify, never cancel. Revalidate before resuming an ended ticket; bots and CI cannot resume it. Stage applies to open tickets.
+ */
+export interface AgentTicket {
+  id: string;
+  trigger_id: string;
+  mandate: {
+    policy_version: string;
+    scope: string;
+    strength: "explicit" | "inferred";
+    matched_rules: string[];
+    actor: {
+      source: string;
+      id: string;
+      kind: "person" | "bot" | "system";
+    };
+    source_scope: string;
+    budget: {
+      usd: number;
+      tokens: number;
+      wall_minutes: number;
+    };
+  };
+  state: "open" | "ended";
+  stage: AgentStage;
+  /**
+   * @minItems 1
+   */
+  threads: [string, ...string[]];
+}
+
+/** agent.report@1.0.0 (owner: actor) */
+/**
+ * Executor report. A PR alone is not ready; a draft is blocked. human_action carries exactly one question unchanged to the person.
+ */
+export interface AgentReport {
+  ticket_id: string;
+  assignment_id: string;
+  state: "progress" | "waiting" | "ready" | "blocked" | "failed" | "dropped";
+  summary: string;
+  pr: string | null;
+  tests_run: string[];
+  risks: string[];
+  human_action?: {
+    question: string;
+  };
+}
+
+/** agent.attention@1.0.0 (owner: actor) */
+/**
+ * One structured question awaiting a person. Authorized independent work may continue.
+ */
+export interface AgentAttention {
+  id: string;
+  ticket_id: string;
+  question: string;
+  state: "open" | "answered" | "dismissed";
+  created_at: string;
+  answer?: string;
+}
+
+/** agent.stage@1.0.0 (owner: actor) */
+/**
+ * Closed open-ticket stages. First matching row wins: delivery failure, attention, ready report, blocked/failed report without a later human input, absent/pending assignment, waiting report/ended assignment, working. Labels and conditions: docs/agent-work.md.
+ */
+export type AgentStage =
+  | "person/delivery"
+  | "person/answer"
+  | "person/review"
+  | "person/blocked"
+  | "person/failed"
+  | "working/queued"
+  | "idle"
+  | "working";
+
+/** ai.effort@1.0.0 (owner: ai) */
+/**
+ * Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.
+ */
+export type AiEffort = "auto" | "low" | "medium" | "high" | "max";

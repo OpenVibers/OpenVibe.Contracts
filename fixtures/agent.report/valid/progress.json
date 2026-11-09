@@ -1,0 +1,9 @@
+{
+  "ticket_id": "tkt_1",
+  "assignment_id": "asn_1",
+  "state": "progress",
+  "summary": "Need a target",
+  "pr": null,
+  "tests_run": [],
+  "risks": []
+}

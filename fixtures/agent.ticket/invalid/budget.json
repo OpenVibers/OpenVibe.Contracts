@@ -1,0 +1,26 @@
+{
+  "id": "tkt_1",
+  "trigger_id": "trg_1",
+  "mandate": {
+    "policy_version": "1",
+    "scope": "Fix issue 1",
+    "strength": "explicit",
+    "matched_rules": [],
+    "actor": {
+      "source": "github",
+      "id": "owner",
+      "kind": "person"
+    },
+    "source_scope": "issues",
+    "budget": {
+      "usd": -1,
+      "tokens": 100000,
+      "wall_minutes": 30
+    }
+  },
+  "state": "open",
+  "stage": "working",
+  "threads": [
+    "issue:1"
+  ]
+}

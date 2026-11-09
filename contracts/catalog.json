@@ -1562,7 +1562,7 @@
     },
     {
       "id": "ai.run-request",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "schema": "ai/run-request.v1.json",
       "visibility": "first-party",
@@ -1572,7 +1572,7 @@
     },
     {
       "id": "ai.run",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "ai",
       "schema": "ai/run.v1.json",
       "visibility": "first-party",
@@ -10917,6 +10917,69 @@
       "version": "1.0.0",
       "owner": "git",
       "schema": "git/issue.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.trigger",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/trigger.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.decision",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/decision.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.ticket",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/ticket.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.report",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/report.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.attention",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/attention.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.stage",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/stage.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.effort",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/effort.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/report.v1.json",
+  "title": "AgentReport",
+  "description": "Executor report. A PR alone is not ready; a draft is blocked. human_action carries exactly one question unchanged to the person.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ticket_id",
+    "assignment_id",
+    "state",
+    "summary",
+    "pr",
+    "tests_run",
+    "risks"
+  ],
+  "properties": {
+    "ticket_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assignment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "progress",
+        "waiting",
+        "ready",
+        "blocked",
+        "failed",
+        "dropped"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pr": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "tests_run": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "human_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question"
+      ],
+      "properties": {
+        "question": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

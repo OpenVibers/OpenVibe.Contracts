@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.380.0 — 2026-11-09
+
+- Agent work fabric: trigger, decision, immutable ticket mandate and budget, six report states, attention, and ordered stage vocabulary. Portable AI effort and optional effort/ladder receipt metadata.
+
 ## 0.377.0 — 2026-11-09
 
 - community.feed-item@1: live_now on a live stream's row

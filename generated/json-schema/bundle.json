@@ -16391,7 +16391,7 @@
       }
     },
     "ai.run-request": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "status": "active",
       "schema": {
@@ -16483,6 +16483,17 @@
               }
             },
             "description": "Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision)."
+          },
+          "effort": {
+            "$ref": "effort.v1.json"
+          },
+          "ladder_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rung": {
+            "type": "integer",
+            "minimum": 0
           }
         },
         "anyOf": [
@@ -16500,7 +16511,7 @@
       }
     },
     "ai.run": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "ai",
       "status": "active",
       "schema": {
@@ -17202,6 +17213,62 @@
               }
             ],
             "description": "What actually answered: the model and its source, and the machine when one did; null for a run outside a task."
+          },
+          "effort_requested": {
+            "$ref": "effort.v1.json"
+          },
+          "effort_applied": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "max"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "effort_rung": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ladder_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ladder": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "model",
+                "effort",
+                "cost_usd",
+                "outcome"
+              ],
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "effort": {
+                  "$ref": "effort.v1.json"
+                },
+                "cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "outcome": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
           }
         }
       }
@@ -120056,6 +120123,538 @@
             }
           }
         }
+      }
+    },
+    "agent.trigger": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/trigger.v1.json",
+        "title": "AgentTrigger",
+        "description": "Immutable source event. Source-local actor identity grants no cross-source authority. Accepting an id twice creates one ticket.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "source",
+          "actor",
+          "source_scope",
+          "threads",
+          "occurred_at",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actor": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "id",
+              "kind"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "enum": [
+                  "person",
+                  "bot",
+                  "system"
+                ]
+              }
+            }
+          },
+          "source_scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "threads": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "read_pointer": {
+            "type": "string",
+            "format": "uri"
+          },
+          "addresses_agent": {
+            "enum": [
+              "mention",
+              "direct",
+              "none"
+            ]
+          }
+        }
+      }
+    },
+    "agent.decision": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/decision.v1.json",
+        "title": "AgentDecision",
+        "description": "Gate and assessment decision. Inferred work defaults to observe: record ignore with would_accept, never launch. Only an explicit human stop withdraws a mandate.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "trigger_ids",
+          "policy_version",
+          "decision",
+          "strength",
+          "direction",
+          "rule_assessments"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trigger_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "enum": [
+              "accept",
+              "stop",
+              "ignore",
+              "unavailable"
+            ]
+          },
+          "strength": {
+            "enum": [
+              "explicit",
+              "inferred"
+            ]
+          },
+          "direction": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "implementation_requested",
+              "target_basis",
+              "requires_design_decision",
+              "evidence"
+            ],
+            "properties": {
+              "implementation_requested": {
+                "type": "boolean"
+              },
+              "target_basis": {
+                "type": "string",
+                "minLength": 1
+              },
+              "requires_design_decision": {
+                "type": "boolean"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "trigger_id",
+                    "quote"
+                  ],
+                  "properties": {
+                    "trigger_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "rule_assessments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rule",
+                "matched",
+                "reason"
+              ],
+              "properties": {
+                "rule": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "matched": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "would_accept": {
+            "type": "boolean"
+          },
+          "ignored_from_card": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "agent.ticket": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/ticket.v1.json",
+        "title": "AgentTicket",
+        "description": "Authorized work with an immutable mandate. Policy changes notify, never cancel. Revalidate before resuming an ended ticket; bots and CI cannot resume it. Stage applies to open tickets.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "trigger_id",
+          "mandate",
+          "state",
+          "stage",
+          "threads"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trigger_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mandate": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "policy_version",
+              "scope",
+              "strength",
+              "matched_rules",
+              "actor",
+              "source_scope",
+              "budget"
+            ],
+            "properties": {
+              "policy_version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "strength": {
+                "enum": [
+                  "explicit",
+                  "inferred"
+                ]
+              },
+              "matched_rules": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "actor": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "id",
+                  "kind"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "kind": {
+                    "enum": [
+                      "person",
+                      "bot",
+                      "system"
+                    ]
+                  }
+                }
+              },
+              "source_scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "budget": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "usd",
+                  "tokens",
+                  "wall_minutes"
+                ],
+                "properties": {
+                  "usd": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "wall_minutes": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          },
+          "state": {
+            "enum": [
+              "open",
+              "ended"
+            ]
+          },
+          "stage": {
+            "$ref": "stage.v1.json"
+          },
+          "threads": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "agent.report": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/report.v1.json",
+        "title": "AgentReport",
+        "description": "Executor report. A PR alone is not ready; a draft is blocked. human_action carries exactly one question unchanged to the person.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ticket_id",
+          "assignment_id",
+          "state",
+          "summary",
+          "pr",
+          "tests_run",
+          "risks"
+        ],
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assignment_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "enum": [
+              "progress",
+              "waiting",
+              "ready",
+              "blocked",
+              "failed",
+              "dropped"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pr": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "tests_run": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "risks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "human_action": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "question"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "agent.attention": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/attention.v1.json",
+        "title": "AgentAttention",
+        "description": "One structured question awaiting a person. Authorized independent work may continue.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "ticket_id",
+          "question",
+          "state",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ticket_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "enum": [
+              "open",
+              "answered",
+              "dismissed"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "answer": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "agent.stage": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/stage.v1.json",
+        "title": "AgentStage",
+        "description": "Closed open-ticket stages. First matching row wins: delivery failure, attention, ready report, blocked/failed report without a later human input, absent/pending assignment, waiting report/ended assignment, working. Labels and conditions: docs/agent-work.md.",
+        "type": "string",
+        "enum": [
+          "person/delivery",
+          "person/answer",
+          "person/review",
+          "person/blocked",
+          "person/failed",
+          "working/queued",
+          "idle",
+          "working"
+        ]
+      }
+    },
+    "ai.effort": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/effort.v1.json",
+        "title": "AiEffort",
+        "description": "Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.",
+        "type": "string",
+        "enum": [
+          "auto",
+          "low",
+          "medium",
+          "high",
+          "max"
+        ]
       }
     }
   }
