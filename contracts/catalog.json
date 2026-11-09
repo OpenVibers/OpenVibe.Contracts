@@ -10415,6 +10415,66 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "exchange.key",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/key.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.usage",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/usage.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.deployments",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/deployments.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.search-result",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/search-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.image-result",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/image-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.key-created",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/key-created.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
     }
   ]
 }

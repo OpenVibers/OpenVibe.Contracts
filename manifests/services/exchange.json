@@ -79,10 +79,42 @@
   "site": {
     "name": "Exchange",
     "icon": "exchange",
-    "tagline": "Every AI model, one account",
-    "what": "Every AI model, one account: live prices, speed and uptime of every offer, chat with up to three models side by side, Arena rankings, companions, a private GPU endpoint and one OpenAI- and Anthropic-compatible endpoint. The public pages of OpenVibe.AI live here now.",
+    "tagline": "One API for every model",
+    "what": "Models, keys, usage, search and deployments. Try models in Chat; compare and vote on Report.",
     "legalProfile": "ugc",
     "position": 45,
     "neighbourhood": "shop"
-  }
+  },
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/api/v1/exchange/keys",
+      "contract": "exchange.key-created@1",
+      "cacheSeconds": 0
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/exchange/key-usage",
+      "contract": "exchange.usage@1",
+      "cacheSeconds": 0
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/exchange/deployments",
+      "contract": "exchange.deployments@1",
+      "cacheSeconds": 0
+    },
+    {
+      "method": "POST",
+      "path": "/v1/search",
+      "contract": "exchange.search-result@1",
+      "cacheSeconds": 0
+    },
+    {
+      "method": "POST",
+      "path": "/v1/search/images",
+      "contract": "exchange.image-result@1",
+      "cacheSeconds": 0
+    }
+  ]
 }
