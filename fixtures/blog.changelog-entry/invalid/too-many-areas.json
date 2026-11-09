@@ -1,0 +1,23 @@
+{
+  "service": "live",
+  "repo": "OpenVibers/OpenVibe.Live",
+  "sha": "7b941a0c1d2e3f405162738495a6b7c8d9e0f112",
+  "short": "7b941a0",
+  "subject": "Recent Changes card: show the newest devblog with its art (#714)",
+  "plain": "The Recent Changes card now shows the newest devblog post with its art",
+  "kind": "new",
+  "areas": [
+    "menu",
+    "feed",
+    "video",
+    "chat"
+  ],
+  "author": "OpenVibers",
+  "committed_at": "2026-11-09T18:40:12.000Z",
+  "deployed_at": "2026-11-09T19:07:00.000Z",
+  "major": false,
+  "url": "https://github.com/OpenVibers/OpenVibe.Live/commit/7b941a0c1d2e3f405162738495a6b7c8d9e0f112",
+  "post_id": "pst_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "pr": 714,
+  "pr_url": "https://github.com/OpenVibers/OpenVibe.Live/pull/714"
+}
