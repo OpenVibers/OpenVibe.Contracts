@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/quest/step-type.v1.json",
+  "title": "QuestStepType",
+  "description": "quest.step-type@1: a verified Events action that may be selected for a daily quest. A contributed type stays pending until staff review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "event_type", "site", "sentence", "href", "weight", "status"],
+  "properties": {
+    "id": { "type": "string", "minLength": 2, "maxLength": 90 },
+    "event_type": { "type": "string", "minLength": 3, "maxLength": 160 },
+    "site": { "type": "string", "format": "hostname" },
+    "sentence": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "href": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "weight": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "count": { "type": "integer", "const": 1 },
+    "verification": { "type": "string" },
+    "status": { "enum": ["pending", "approved", "rejected"] },
+    "source": { "type": "string" },
+    "project_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "reviewed_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

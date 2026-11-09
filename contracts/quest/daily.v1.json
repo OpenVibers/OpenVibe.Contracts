@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/quest/daily.v1.json",
+  "title": "QuestDaily",
+  "description": "quest.daily@1: one quest shared by everyone on this UTC date. Progress is private and is not in this answer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["date", "title", "story", "steps", "source", "finished_today"],
+  "properties": {
+    "date": { "type": "string", "format": "date" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "story": { "type": "string", "minLength": 1, "maxLength": 180 },
+    "steps": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "step-type.v1.json" } },
+    "source": { "enum": ["ai", "rotation"] },
+    "finished_today": { "type": "integer", "minimum": 0 }
+  }
+}

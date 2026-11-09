@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.351.0 — 2026-11-09
+
+- Define the shared daily quest, private progress, verified step types and app contribution review capabilities for OpenVibe.Quest.
+
 ## 0.350.0 — 2026-11-09
 
 - Define credential-free blind fill request, encrypted grant, and outcome contracts, plus the `run.fill.approve` capability.
