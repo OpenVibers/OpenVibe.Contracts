@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.375.0 — 2026-11-09
+
+- Add git.change@1 and git.issue@1 for review and repository issues.
+
+## 0.374.0 — reserved
+
+- Reserved by the concurrent Pics PR; its release entry will be reconciled at merge.
+
 ## 0.373.0 — 2026-11-09
 
 - The git service: its manifest, git.repo.read and git.repo.write, git.access-request@1 and git.access-result@1 (OpenVibe.Git)
