@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/git/commit.v1.json",
+  "title": "GitCommit",
+  "description": "One commit on OpenVibe.Git: its sha, message, author and committer, parents, tree, and — for the commit page or a contents write — its diff and per-file counts. api/view/commit.",
+  "type": "object",
+  "required": ["sha", "repo", "message", "author", "committer", "parents", "tree_sha", "date"],
+  "additionalProperties": false,
+  "properties": {
+    "sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$",
+      "description": "The commit id: 40 hex characters (SHA-1) or 64 (SHA-256)."
+    },
+    "repo": { "type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9][a-z0-9._-]{0,99}$" },
+    "message": { "type": "string", "maxLength": 100000 },
+    "subject": { "type": "string", "maxLength": 500, "description": "The first line of the message." },
+    "author": {
+      "type": "object",
+      "required": ["name", "email", "date"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "username": { "type": ["string", "null"], "description": "The OpenVibe username when the email is a verified one." },
+        "date": { "type": "string", "format": "date-time" }
+      }
+    },
+    "committer": {
+      "type": "object",
+      "required": ["name", "email", "date"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" }
+      }
+    },
+    "parents": {
+      "type": "array",
+      "maxItems": 2,
+      "items": { "type": "string", "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$" }
+    },
+    "tree_sha": { "type": "string", "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$" },
+    "date": { "type": "string", "format": "date-time" },
+    "stats": {
+      "type": ["object", "null"],
+      "required": ["files", "additions", "deletions"],
+      "additionalProperties": false,
+      "properties": {
+        "files": { "type": "integer", "minimum": 0 },
+        "additions": { "type": "integer", "minimum": 0 },
+        "deletions": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "files": {
+      "type": "array",
+      "description": "The changed files, when the caller asked for the diff.",
+      "items": {
+        "type": "object",
+        "required": ["path", "status", "additions", "deletions"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string" },
+          "previous_path": { "type": ["string", "null"] },
+          "status": { "enum": ["added", "modified", "deleted", "renamed", "copied"] },
+          "additions": { "type": "integer", "minimum": 0 },
+          "deletions": { "type": "integer", "minimum": 0 },
+          "patch": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "diff": { "type": ["string", "null"], "description": "The unified diff, when the caller asked for it." }
+  }
+}

@@ -322074,3 +322074,1385 @@ export interface InventoryStoreListing {
   };
   status: "in_review" | "published" | "rejected";
 }
+
+/** git.repo@1.0.0 (owner: git) */
+/**
+ * One repository on OpenVibe.Git (git.openvibe.codes): its owner, visibility, default branch, counts, and — when it has one — its GitHub mirror and the cached GitHub card. api/view/repo.
+ */
+export interface GitRepository {
+  /**
+   * The repository's own id (repo_<ULID>), stable across a rename.
+   */
+  id: string;
+  owner: {
+    /**
+     * The OpenVibe username that owns it, lower-case.
+     */
+    username: string;
+    /**
+     * The owner's Network subject; absent when the owner is the organisation account.
+     */
+    subject?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+  };
+  /**
+   * The repository name; lower-case, and never ending in .git.
+   */
+  name: string;
+  /**
+   * <owner>/<name>, the name every API path and clone URL uses.
+   */
+  full_name: string;
+  description: string;
+  visibility: "public" | "private";
+  default_branch: string;
+  /**
+   * @maxItems 20
+   */
+  topics:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  stars: number;
+  watchers: number;
+  forks: number;
+  language: string | null;
+  /**
+   * Language name → share of bytes, 0–100, the largest first.
+   */
+  languages?: {
+    [k: string]: number | undefined;
+  };
+  html_url: string;
+  clone_url: string;
+  /**
+   * A git repository mirrored from somewhere (today: a public GitHub URL).
+   */
+  mirror?: {
+    url: string;
+    state: "ready" | "syncing" | "error";
+    last_synced_at: string | null;
+    error: string | null;
+  } | null;
+  /**
+   * The GitHub card: cached GitHub API readings for the repository's twin.
+   */
+  github?: {
+    full_name: string;
+    html_url: string;
+    stars: number;
+    open_issues: number;
+    open_pull_requests: number;
+    ci_state: "success" | "failure" | "pending" | "unknown";
+    fetched_at: string;
+  } | null;
+  created_at: string;
+  updated_at: string;
+  pushed_at?: string | null;
+}
+
+/** git.commit@1.0.0 (owner: git) */
+/**
+ * One commit on OpenVibe.Git: its sha, message, author and committer, parents, tree, and — for the commit page or a contents write — its diff and per-file counts. api/view/commit.
+ */
+export interface GitCommit {
+  /**
+   * The commit id: 40 hex characters (SHA-1) or 64 (SHA-256).
+   */
+  sha: string;
+  repo: string;
+  message: string;
+  /**
+   * The first line of the message.
+   */
+  subject?: string;
+  author: {
+    name: string;
+    email: string;
+    /**
+     * The OpenVibe username when the email is a verified one.
+     */
+    username?: string | null;
+    date: string;
+  };
+  committer: {
+    name: string;
+    email: string;
+    date: string;
+  };
+  /**
+   * @maxItems 2
+   */
+  parents: [] | [string] | [string, string];
+  tree_sha: string;
+  date: string;
+  stats?: {
+    files: number;
+    additions: number;
+    deletions: number;
+  } | null;
+  /**
+   * The changed files, when the caller asked for the diff.
+   */
+  files?: {
+    path: string;
+    previous_path?: string | null;
+    status: "added" | "modified" | "deleted" | "renamed" | "copied";
+    additions: number;
+    deletions: number;
+    patch?: string | null;
+  }[];
+  /**
+   * The unified diff, when the caller asked for it.
+   */
+  diff?: string | null;
+}
+
+/** git.tree@1.0.0 (owner: git) */
+/**
+ * One directory of a repository at a ref: its entries with mode, size and the last commit that touched each. api/view/tree.
+ */
+export interface GitTree {
+  repo: string;
+  /**
+   * The branch, tag or commit the tree was read at.
+   */
+  ref: string;
+  /**
+   * The directory, empty at the repository root.
+   */
+  path: string;
+  entries: {
+    name: string;
+    path: string;
+    type: "blob" | "tree" | "commit";
+    mode: string;
+    sha: string;
+    size?: number | null;
+    last_commit?: {
+      sha: string;
+      message: string;
+      date: string;
+      author_name: string;
+    } | null;
+  }[];
+}
+
+/** git.insights@1.0.0 (owner: git) */
+/**
+ * A repository's insights over a window: views, unique visitors, clones and stars per day, and commits per week. Public for a public repository, like GitHub's traffic but open. api/view/insights.
+ */
+export interface GitInsights {
+  repo: string;
+  window_days: number;
+  /**
+   * Page views of the repository in the window.
+   */
+  views: number;
+  /**
+   * Distinct visitors per day, summed over the window.
+   */
+  unique_visitors: number;
+  /**
+   * Successful git clones and fetches served in the window.
+   */
+  clones: number;
+  stars: {
+    total: number;
+    in_window: number;
+  };
+  /**
+   * The default branch's commits for each ISO week, oldest first.
+   */
+  commits_per_week: {
+    /**
+     * The week's Monday, YYYY-MM-DD.
+     */
+    week: string;
+    commits: number;
+  }[];
+  /**
+   * One row per day of the window, oldest first.
+   */
+  daily: {
+    day: string;
+    views: number;
+    unique_visitors: number;
+    clones: number;
+    stars: number;
+  }[];
+}
+
+/** design.component@1.0.0 (owner: design) */
+/**
+ * design.component@1: a platform-neutral OpenVibe interface definition served by openvibe.design/api/v1/components.
+ */
+export interface DesignComponent {
+  schema: "design.component@1";
+  name: string;
+  title: string;
+  summary: string;
+  /**
+   * @minItems 1
+   * @maxItems 32
+   */
+  anatomy: [
+    {
+      part: string;
+      role: string;
+    },
+    ...{
+      part: string;
+      role: string;
+    }[]
+  ];
+  props: {
+    [k: string]: string | undefined;
+  };
+  /**
+   * @minItems 1
+   * @maxItems 30
+   */
+  states: [string, ...string[]];
+  /**
+   * @minItems 1
+   * @maxItems 50
+   */
+  tokens: [string, ...string[]];
+  behaviors: {
+    keyboardAware: boolean;
+    outsideTapCloses: boolean;
+    scrollLock: boolean;
+    reducedMotion: string;
+  };
+  accessibility: {
+    name: string;
+    target: string;
+    focus: string;
+  };
+  platforms: {
+    web: {
+      module: string;
+      markup: string;
+      demo: string;
+    };
+    android: {
+      toolkit: "Jetpack Compose";
+      material3: string;
+      specification: string;
+    };
+    ios: {
+      toolkit: "SwiftUI";
+      specification: string;
+    };
+  };
+  /**
+   * @minItems 1
+   * @maxItems 20
+   */
+  examples:
+    | [
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ];
+}
+
+/** exchange.key@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeKey response. Private account data is available only to its owner.
+ */
+export interface ExchangeKey {
+  id: string;
+  name: string;
+  prefix: string;
+  monthly_cap_usd: number;
+  allowed_models: string[];
+  created_at: string;
+  revoked_at: string | null;
+}
+
+/** exchange.usage@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeUsage response. Private account data is available only to its owner.
+ */
+export interface ExchangeUsage {
+  rows: {
+    day: string;
+    key_id: string;
+    model: string;
+    status: string;
+    requests: number | string;
+    tokens_in: number | string;
+    tokens_out: number | string;
+    cost_usd: number;
+  }[];
+}
+
+/** exchange.deployments@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeDeployments response. Private account data is available only to its owner.
+ */
+export interface ExchangeDeployments {
+  endpoints: {}[];
+  status: {};
+}
+
+/** exchange.search-result@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeSearchResult response. Private account data is available only to its owner.
+ */
+export interface ExchangeSearchResult {
+  results: {
+    title: string;
+    url: string;
+    snippet: string;
+    engine: string;
+    published: string | null;
+    [k: string]: unknown | undefined;
+  }[];
+  receipt: {
+    engine: string;
+    cost_usd: number;
+    time_ms: number;
+  };
+}
+
+/** exchange.image-result@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeImageResult response. Private account data is available only to its owner.
+ */
+export interface ExchangeImageResult {
+  results: {
+    title: string;
+    url: string;
+    snippet: string;
+    engine: string;
+    published: string | null;
+    license: string | null;
+    author: string | null;
+    source_page: string | null;
+    attribution: string | null;
+    thumbnail?: string | null;
+    [k: string]: unknown | undefined;
+  }[];
+  receipt: {
+    engine: string;
+    cost_usd: number;
+    time_ms: number;
+  };
+}
+
+/** exchange.key-created@1.0.0 (owner: exchange) */
+/**
+ * An Exchange key and its one-time secret. Never cache or log this response.
+ */
+export interface ExchangeKeyCreated {
+  key: ExchangeKey;
+  secret: string;
+}

@@ -1,0 +1,22 @@
+{
+  "id": "repo_01JQZ8M4T7Y2N5K3B6V9C1X0DA",
+  "owner": { "username": "openvibers", "subject": "usr_01JQZ8M4T7Y2N5K3B6V9C1X0DB", "display_name": "OpenVibers", "avatar_url": "https://openvibe.media/o/med_01JQZ8M4T7Y2N5K3B6V9C1X0DC" },
+  "name": "openvibe.codes",
+  "full_name": "openvibers/openvibe.codes",
+  "description": "Chat with coding agents on your own computers or a cloud desk.",
+  "visibility": "public",
+  "default_branch": "main",
+  "topics": ["agents", "codes"],
+  "stars": 12,
+  "watchers": 4,
+  "forks": 1,
+  "language": "JavaScript",
+  "languages": { "JavaScript": 72.4, "CSS": 19.1, "Shell": 8.5 },
+  "html_url": "https://git.openvibe.codes/openvibers/openvibe.codes",
+  "clone_url": "https://git.openvibe.codes/openvibers/openvibe.codes.git",
+  "mirror": { "url": "https://github.com/OpenVibers/OpenVibe.Codes.git", "state": "ready", "last_synced_at": "2026-11-09T08:47:55Z", "error": null },
+  "github": { "full_name": "OpenVibers/OpenVibe.Codes", "html_url": "https://github.com/OpenVibers/OpenVibe.Codes", "stars": 42, "open_issues": 3, "open_pull_requests": 2, "ci_state": "success", "fetched_at": "2026-11-09T09:00:00Z" },
+  "created_at": "2026-10-15T19:43:04Z",
+  "updated_at": "2026-11-09T08:47:55Z",
+  "pushed_at": "2026-11-09T08:40:00Z"
+}

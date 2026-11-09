@@ -117973,6 +117973,1295 @@
           "status"
         ]
       }
+    },
+    "git.repo": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/repo.v1.json",
+        "title": "GitRepository",
+        "description": "One repository on OpenVibe.Git (git.openvibe.codes): its owner, visibility, default branch, counts, and — when it has one — its GitHub mirror and the cached GitHub card. api/view/repo.",
+        "type": "object",
+        "required": [
+          "id",
+          "owner",
+          "name",
+          "full_name",
+          "description",
+          "visibility",
+          "default_branch",
+          "topics",
+          "stars",
+          "watchers",
+          "forks",
+          "language",
+          "html_url",
+          "clone_url",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^repo_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The repository's own id (repo_<ULID>), stable across a rename."
+          },
+          "owner": {
+            "type": "object",
+            "required": [
+              "username"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "username": {
+                "type": "string",
+                "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}$",
+                "description": "The OpenVibe username that owns it, lower-case."
+              },
+              "subject": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+                "description": "The owner's Network subject; absent when the owner is the organisation account."
+              },
+              "display_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "avatar_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^(?!.*\\.git$)[a-z0-9][a-z0-9._-]{0,99}$",
+            "description": "The repository name; lower-case, and never ending in .git."
+          },
+          "full_name": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}/(?!.*\\.git$)[a-z0-9][a-z0-9._-]{0,99}$",
+            "description": "<owner>/<name>, the name every API path and clone URL uses."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "visibility": {
+            "enum": [
+              "public",
+              "private"
+            ]
+          },
+          "default_branch": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "topics": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,34}$"
+            }
+          },
+          "stars": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "watchers": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "forks": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "language": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "languages": {
+            "type": "object",
+            "description": "Language name → share of bytes, 0–100, the largest first.",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clone_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "mirror": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "A git repository mirrored from somewhere (today: a public GitHub URL).",
+            "required": [
+              "url",
+              "state",
+              "last_synced_at",
+              "error"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "state": {
+                "enum": [
+                  "ready",
+                  "syncing",
+                  "error"
+                ]
+              },
+              "last_synced_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "error": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 500
+              }
+            }
+          },
+          "github": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The GitHub card: cached GitHub API readings for the repository's twin.",
+            "required": [
+              "full_name",
+              "html_url",
+              "stars",
+              "open_issues",
+              "open_pull_requests",
+              "ci_state",
+              "fetched_at"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "full_name": {
+                "type": "string"
+              },
+              "html_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "stars": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "open_issues": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "open_pull_requests": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "ci_state": {
+                "enum": [
+                  "success",
+                  "failure",
+                  "pending",
+                  "unknown"
+                ]
+              },
+              "fetched_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pushed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "git.commit": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/commit.v1.json",
+        "title": "GitCommit",
+        "description": "One commit on OpenVibe.Git: its sha, message, author and committer, parents, tree, and — for the commit page or a contents write — its diff and per-file counts. api/view/commit.",
+        "type": "object",
+        "required": [
+          "sha",
+          "repo",
+          "message",
+          "author",
+          "committer",
+          "parents",
+          "tree_sha",
+          "date"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$",
+            "description": "The commit id: 40 hex characters (SHA-1) or 64 (SHA-256)."
+          },
+          "repo": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+/[a-z0-9][a-z0-9._-]{0,99}$"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 100000
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "The first line of the message."
+          },
+          "author": {
+            "type": "object",
+            "required": [
+              "name",
+              "email",
+              "date"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "username": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The OpenVibe username when the email is a verified one."
+              },
+              "date": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "committer": {
+            "type": "object",
+            "required": [
+              "name",
+              "email",
+              "date"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "parents": {
+            "type": "array",
+            "maxItems": 2,
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+            }
+          },
+          "tree_sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "stats": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "files",
+              "additions",
+              "deletions"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "files": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "additions": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "deletions": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "files": {
+            "type": "array",
+            "description": "The changed files, when the caller asked for the diff.",
+            "items": {
+              "type": "object",
+              "required": [
+                "path",
+                "status",
+                "additions",
+                "deletions"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "previous_path": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "added",
+                    "modified",
+                    "deleted",
+                    "renamed",
+                    "copied"
+                  ]
+                },
+                "additions": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "deletions": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "patch": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "diff": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The unified diff, when the caller asked for it."
+          }
+        }
+      }
+    },
+    "git.tree": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/tree.v1.json",
+        "title": "GitTree",
+        "description": "One directory of a repository at a ref: its entries with mode, size and the last commit that touched each. api/view/tree.",
+        "type": "object",
+        "required": [
+          "repo",
+          "ref",
+          "path",
+          "entries"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "repo": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+/[a-z0-9][a-z0-9._-]{0,99}$"
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "The branch, tag or commit the tree was read at."
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "The directory, empty at the repository root."
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "path",
+                "type",
+                "mode",
+                "sha"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "blob",
+                    "tree",
+                    "commit"
+                  ]
+                },
+                "mode": {
+                  "type": "string",
+                  "pattern": "^[0-7]{6}$"
+                },
+                "sha": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+                },
+                "size": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "last_commit": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "required": [
+                    "sha",
+                    "message",
+                    "date",
+                    "author_name"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "sha": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+                    },
+                    "message": {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "author_name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "git.insights": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/insights.v1.json",
+        "title": "GitInsights",
+        "description": "A repository's insights over a window: views, unique visitors, clones and stars per day, and commits per week. Public for a public repository, like GitHub's traffic but open. api/view/insights.",
+        "type": "object",
+        "required": [
+          "repo",
+          "window_days",
+          "views",
+          "unique_visitors",
+          "clones",
+          "stars",
+          "commits_per_week",
+          "daily"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "repo": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+/[a-z0-9][a-z0-9._-]{0,99}$"
+          },
+          "window_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 90
+          },
+          "views": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Page views of the repository in the window."
+          },
+          "unique_visitors": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Distinct visitors per day, summed over the window."
+          },
+          "clones": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Successful git clones and fetches served in the window."
+          },
+          "stars": {
+            "type": "object",
+            "required": [
+              "total",
+              "in_window"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "in_window": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "commits_per_week": {
+            "type": "array",
+            "description": "The default branch's commits for each ISO week, oldest first.",
+            "items": {
+              "type": "object",
+              "required": [
+                "week",
+                "commits"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "week": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "The week's Monday, YYYY-MM-DD."
+                },
+                "commits": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "daily": {
+            "type": "array",
+            "description": "One row per day of the window, oldest first.",
+            "items": {
+              "type": "object",
+              "required": [
+                "day",
+                "views",
+                "unique_visitors",
+                "clones",
+                "stars"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "day": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "views": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "unique_visitors": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "clones": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stars": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "design.component": {
+      "version": "1.0.0",
+      "owner": "design",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/design/component.v1.json",
+        "title": "DesignComponent",
+        "description": "design.component@1: a platform-neutral OpenVibe interface definition served by openvibe.design/api/v1/components.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "name",
+          "title",
+          "summary",
+          "anatomy",
+          "props",
+          "states",
+          "tokens",
+          "behaviors",
+          "accessibility",
+          "platforms",
+          "examples"
+        ],
+        "properties": {
+          "schema": {
+            "const": "design.component@1"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "anatomy": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "part",
+                "role"
+              ],
+              "properties": {
+                "part": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            }
+          },
+          "props": {
+            "type": "object",
+            "maxProperties": 60,
+            "propertyNames": {
+              "pattern": "^[a-z][a-zA-Z0-9]*$"
+            },
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "states": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 30,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            }
+          },
+          "tokens": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "behaviors": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "keyboardAware",
+              "outsideTapCloses",
+              "scrollLock",
+              "reducedMotion"
+            ],
+            "properties": {
+              "keyboardAware": {
+                "type": "boolean"
+              },
+              "outsideTapCloses": {
+                "type": "boolean"
+              },
+              "scrollLock": {
+                "type": "boolean"
+              },
+              "reducedMotion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          },
+          "accessibility": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "target",
+              "focus"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "focus": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          },
+          "platforms": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "web",
+              "android",
+              "ios"
+            ],
+            "properties": {
+              "web": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "module",
+                  "markup",
+                  "demo"
+                ],
+                "properties": {
+                  "module": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "markup": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "demo": {
+                    "type": "string",
+                    "pattern": "^/components/[a-z0-9-]+$"
+                  }
+                }
+              },
+              "android": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "toolkit",
+                  "material3",
+                  "specification"
+                ],
+                "properties": {
+                  "toolkit": {
+                    "const": "Jetpack Compose"
+                  },
+                  "material3": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "specification": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "ios": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "toolkit",
+                  "specification"
+                ],
+                "properties": {
+                  "toolkit": {
+                    "const": "SwiftUI"
+                  },
+                  "specification": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          },
+          "examples": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "props"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "props": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "exchange.key": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/key.v1.json",
+        "title": "ExchangeKey",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "monthly_cap_usd",
+          "allowed_models",
+          "created_at",
+          "revoked_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "monthly_cap_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "allowed_models": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeKey response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.usage": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/usage.v1.json",
+        "title": "ExchangeUsage",
+        "type": "object",
+        "required": [
+          "rows"
+        ],
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "day",
+                "key_id",
+                "model",
+                "requests",
+                "tokens_in",
+                "tokens_out",
+                "cost_usd",
+                "status"
+              ],
+              "properties": {
+                "day": {
+                  "type": "string"
+                },
+                "key_id": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "tokens_in": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "tokens_out": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeUsage response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.deployments": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/deployments.v1.json",
+        "title": "ExchangeDeployments",
+        "type": "object",
+        "required": [
+          "endpoints",
+          "status"
+        ],
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "status": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeDeployments response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.search-result": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/search-result.v1.json",
+        "title": "ExchangeSearchResult",
+        "type": "object",
+        "required": [
+          "results",
+          "receipt"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "url",
+                "snippet",
+                "engine",
+                "published"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "snippet": {
+                  "type": "string"
+                },
+                "engine": {
+                  "type": "string"
+                },
+                "published": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "required": [
+              "engine",
+              "cost_usd",
+              "time_ms"
+            ],
+            "properties": {
+              "engine": {
+                "type": "string"
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "time_ms": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeSearchResult response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.image-result": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/image-result.v1.json",
+        "title": "ExchangeImageResult",
+        "type": "object",
+        "required": [
+          "results",
+          "receipt"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "url",
+                "snippet",
+                "engine",
+                "published",
+                "license",
+                "author",
+                "source_page",
+                "attribution"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "snippet": {
+                  "type": "string"
+                },
+                "engine": {
+                  "type": "string"
+                },
+                "published": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "license": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "author": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_page": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "attribution": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "thumbnail": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "required": [
+              "engine",
+              "cost_usd",
+              "time_ms"
+            ],
+            "properties": {
+              "engine": {
+                "type": "string"
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "time_ms": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeImageResult response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.key-created": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/key-created.v1.json",
+        "title": "ExchangeKeyCreated",
+        "description": "An Exchange key and its one-time secret. Never cache or log this response.",
+        "type": "object",
+        "required": [
+          "key",
+          "secret"
+        ],
+        "properties": {
+          "key": {
+            "$ref": "key.v1.json"
+          },
+          "secret": {
+            "type": "string",
+            "pattern": "^ovx_[A-Za-z0-9_-]{43}$"
+          }
+        },
+        "additionalProperties": false
+      }
     }
   }
 }

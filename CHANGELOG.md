@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.369.0 — 2026-11-09
+## 0.372.0 — 2026-11-09
 
 - The machine product Node became OpenVibe Link. The network registry contracts are `network.link@1`,
   `network.link-report-request@1` and `network.link-list-result@1`, the event is `network.link.revoked`, and the platform
@@ -10,7 +10,19 @@
 - A paired machine is a `link` principal: identity.service-token-claims actor_type `node` is `link` with sub `link:lnk_…`,
   and `ids.principalSub` mints `link:lnk_…` (the old prefix and ids are gone, no alias). The AI provider `node` is `link`
   in ai.credential-put@1/@2 and ai.credential@1/@2. The old contract ids are deprecated with their Link replacements; the
-  schema corrections are recorded against the current release and the two before it.
+  schema corrections are recorded against the current release and the ones before it.
+
+## 0.371.0 — 2026-11-09
+
+- Exchange API platform and search: exchange.key@1, exchange.key-created@1, exchange.usage@1, exchange.deployments@1, exchange.search-result@1, exchange.image-result@1, and the Exchange manifest's routes
+
+## 0.370.0 — 2026-11-09
+
+- design.component@1: one platform-neutral definition per shared interface (the public registry on openvibe.design)
+
+## 0.369.0 — 2026-11-09
+
+- OpenVibe Git: git.repo@1, git.commit@1, git.tree@1 and git.insights@1
 
 ## 0.368.0 — 2026-11-09
 
@@ -51,6 +63,7 @@
 ## 0.359.0 — 2026-11-09
 
 - Media multipart uploads in contracts and OpenAPI
+- Define `design.component@1` for web, Android and iOS component anatomy, props, states, tokens, behavior, accessibility and examples.
 
 ## 0.358.0 — 2026-11-09
 

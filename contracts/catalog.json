@@ -10731,6 +10731,111 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "git.repo",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/repo.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.commit",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/commit.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.tree",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/tree.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.insights",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/insights.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.component",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/component.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "exchange.key",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/key.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.usage",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/usage.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.deployments",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/deployments.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.search-result",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/search-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.image-result",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/image-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
+    },
+    {
+      "id": "exchange.key-created",
+      "version": "1.0.0",
+      "owner": "exchange",
+      "schema": "exchange/key-created.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-025"
     }
   ]
 }

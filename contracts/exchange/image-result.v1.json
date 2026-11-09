@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/exchange/image-result.v1.json",
+  "title": "ExchangeImageResult",
+  "type": "object",
+  "required": [
+    "results",
+    "receipt"
+  ],
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "url",
+          "snippet",
+          "engine",
+          "published",
+          "license",
+          "author",
+          "source_page",
+          "attribution"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "snippet": {
+            "type": "string"
+          },
+          "engine": {
+            "type": "string"
+          },
+          "published": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "license": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_page": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attribution": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "thumbnail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": [
+        "engine",
+        "cost_usd",
+        "time_ms"
+      ],
+      "properties": {
+        "engine": {
+          "type": "string"
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "time_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "description": "Exchange API platform ExchangeImageResult response. Private account data is available only to its owner."
+}

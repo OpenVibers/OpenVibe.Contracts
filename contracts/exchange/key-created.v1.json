@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/exchange/key-created.v1.json",
+  "title": "ExchangeKeyCreated",
+  "description": "An Exchange key and its one-time secret. Never cache or log this response.",
+  "type": "object",
+  "required": [
+    "key",
+    "secret"
+  ],
+  "properties": {
+    "key": {
+      "$ref": "key.v1.json"
+    },
+    "secret": {
+      "type": "string",
+      "pattern": "^ovx_[A-Za-z0-9_-]{43}$"
+    }
+  },
+  "additionalProperties": false
+}
