@@ -1,0 +1,25 @@
+{
+  "id": "network.link.self.manage",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "A paired machine presents its own capabilities and rotates its own credential, never another machine's. It also announces itself for its owner's machine pools (bot.machine-pool@1), reads, approves and renews the pools it is a member of, and leaves them; it never acts for another machine.",
+  "permissions": [
+    "nodes:self"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "PUT /api/v1/link/self/capabilities",
+    "POST /api/v1/link/self/credential",
+    "POST /api/v1/link/self/pools/announce",
+    "GET /api/v1/link/self/pools/:id",
+    "POST /api/v1/link/self/pools/:id/approve",
+    "POST /api/v1/link/self/pools/:id/status",
+    "POST /api/v1/link/self/pools/:id/leave"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "network.link.report",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Report the machines of the platform (roles, region-level location, beacon, health) to the node registry, which the geo API and every location-aware product read (ADR-034 section 12).",
+  "permissions": [
+    "nodes:write"
+  ],
+  "resourceConstraints": [
+    "none"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/links/report",
+    "POST /internal/registry/instances/report"
+  ],
+  "inputSchema": "network.link-report-request@1",
+  "outputSchema": "network.link-list-result@1"
+}

@@ -106,6 +106,17 @@
         "null"
       ],
       "format": "date-time"
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 280,
+      "description": "Optional: the source's first 280 characters, used by the Feed when Pulse came from a post or a paste."
+    },
+    "picture_url": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2000,
+      "description": "Optional: the first picture of a Community post or paste, or a Media object URL on an app contribution."
     }
   }
 }

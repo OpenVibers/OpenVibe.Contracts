@@ -8,7 +8,7 @@
   "additionalProperties": false,
   "properties": {
     "machine_id": { "type": "string", "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$" },
-    "principal_id": { "type": "string", "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The machine's node principal on Network, when it had one." },
+    "principal_id": { "type": "string", "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The machine's node principal on Network, when it had one." },
     "owner": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$", "description": "The person the machine belonged to." },
     "reason": { "type": "string", "minLength": 1, "maxLength": 500, "description": "Why it was revoked, when the caller gave one. Absent otherwise." },
     "at": { "type": "string", "format": "date-time" }

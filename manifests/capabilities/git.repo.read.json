@@ -1,0 +1,33 @@
+{
+  "id": "git.repo.read",
+  "version": "1.0",
+  "owner": "git",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a repository on OpenVibe.Git (git.openvibe.codes): its row, tree, blob, raw file, commits, one commit with its diff, branches, tags, releases, contributors and insights. A public repository is read without a token. A private one needs its owner's session, a Git token made on the repository page, or a first-party service token (Codes, Run, Link) that holds this capability for the audience openvibe.git and names the person in X-OV-Subject. A private repository answers 404 to anyone who may not see it, never 403.",
+  "inputSchema": "git.access-request@1",
+  "outputSchema": "git.access-result@1",
+  "permissions": [
+    "git:read"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/repos",
+    "GET /api/v1/repos/:owner/:name",
+    "GET /api/v1/repos/:owner/:name/tree",
+    "GET /api/v1/repos/:owner/:name/blob",
+    "GET /api/v1/repos/:owner/:name/raw",
+    "GET /api/v1/repos/:owner/:name/commits",
+    "GET /api/v1/repos/:owner/:name/commit/:sha",
+    "GET /api/v1/repos/:owner/:name/branches",
+    "GET /api/v1/repos/:owner/:name/tags",
+    "GET /api/v1/repos/:owner/:name/releases",
+    "GET /api/v1/repos/:owner/:name/contributors",
+    "GET /api/v1/repos/:owner/:name/insights",
+    "GET /api/v1/profile/:username"
+  ]
+}

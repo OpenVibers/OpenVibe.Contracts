@@ -3,7 +3,7 @@
     {
       "text": "Use the repo's formatter before a commit.",
       "kind": "procedure",
-      "scope": "project:openvibe-node",
+      "scope": "project:openvibe-link",
       "source": "claude-code",
       "source_ref": {
         "path": ".claude/CLAUDE.md",

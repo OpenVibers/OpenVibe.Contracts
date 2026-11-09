@@ -39,11 +39,11 @@
    bytes that were scanned, and its scan findings may name the `tool` they are about. `actor.skill@1` and
    `actor.skill-listing@1` are unchanged.
 3. **The Link runner** (`openvibe-skill-runner@1.0.0`, a declared function like `openvibe-codes@1.0.0`):
-   - off unless the owner turns it on (`worker.functions`, `openvibe node skills on`);
+   - off unless the owner turns it on (`worker.functions`, `openvibe-link skills on`);
    - takes `{ tool, entry, input }` and the code as job `inputs` (Media objects pinned by sha256; a mismatch ends the
      job before anything runs);
    - runs `node --permission --allow-fs-read=<the job's input dir>` with no child process, no worker, no addons and
-     `--disallow-code-generation-from-strings`, inside the function sandbox Node already has (its own root, limits,
+     `--disallow-code-generation-from-strings`, inside the function sandbox Link already has (its own root, limits,
      no credential, network per `net`);
    - the input arrives on stdin as JSON; the tool writes one JSON value (≤ 64 KiB; more fails the job `limit`);
      stderr is kept for the person (≤ 16 KiB).
@@ -74,7 +74,7 @@
 - **Run the code on Actor's server.** Rejected: Actor holds every person's agent, token and registry record; one
   skill's mistake would be a registry-wide incident, and the design rule forbids it outright.
 - **A container on the host that publishes the skill.** Rejected: the host is someone's machine, and a container
-  boundary we do not control is not a sandbox promise we can make to every site. Node already has the sandbox, the
+  boundary we do not control is not a sandbox promise we can make to every site. Link already has the sandbox, the
   limits, the egress policy and the placement; running there needs no second runtime.
 - **Python and npm in v1.** Deferred: both widen the runtime surface (packages, install recipes, dependency
   resolution) before the scan and the sandbox have a release behind them. Each needs its own review, as does
@@ -82,7 +82,7 @@
 
 ## Migration and rollback
 
-Both new contracts are additive majors; nothing parses `actor.skill@2` until Actor's registry and Node's runner
+Both new contracts are additive majors; nothing parses `actor.skill@2` until Actor's registry and Link's runner
 ship, and @1 keeps working for every existing prompt skill. The only data a sandbox listing adds is the Media
 objects that hold the code; they are private to Actor's tenant and can be deleted with the listing. Rollback is
 retiring the @2 listing and turning the runner off: no prompt skill is affected, no job can be submitted without
@@ -103,5 +103,5 @@ the `skill.run` kind, and nothing ever ran on our servers, so there is no server
   `secret`, `token`, `env` or `key`;
 - a @2 listing pins each code resource's Media id and sha256, the pinned sha256 is the document's own bytes, and a
   sandbox listing without code is invalid.
-Node's own tests (in OpenVibe Link) prove the runner: a tool cannot read env, spawn, write a file, open a socket
+Link's own tests (in OpenVibe Link) prove the runner: a tool cannot read env, spawn, write a file, open a socket
 under `deny`, or exceed its output.

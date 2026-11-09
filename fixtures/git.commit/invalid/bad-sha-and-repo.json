@@ -1,0 +1,10 @@
+{
+  "sha": "4f0c2d9a1e8b7c6d5a4f3e2d1c0b9a8f7e6d5c4b",
+  "repo": "openviber",
+  "message": "not a repo name",
+  "author": { "name": "", "email": "sam@example.com", "date": "yesterday" },
+  "committer": { "name": "Sam", "email": "sam@example.com", "date": "2026-11-09T08:40:00Z" },
+  "parents": [],
+  "tree_sha": "xyz",
+  "date": "2026-11-09T08:40:00Z"
+}

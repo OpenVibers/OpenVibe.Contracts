@@ -1,0 +1,18 @@
+{
+  "id": "repo_01JQZ8M4T7Y2N5K3B6V9C1X0DA",
+  "owner": { "username": "openvibers" },
+  "name": "openvibe.codes.git",
+  "full_name": "openvibers/openvibe.codes.git",
+  "description": "A name ending in .git is refused.",
+  "visibility": "public",
+  "default_branch": "main",
+  "topics": [],
+  "stars": 0,
+  "watchers": 1,
+  "forks": 0,
+  "language": null,
+  "html_url": "https://git.openvibe.codes/openvibers/openvibe.codes.git",
+  "clone_url": "https://git.openvibe.codes/openvibers/openvibe.codes.git.git",
+  "created_at": "2026-11-09T09:00:00Z",
+  "updated_at": "2026-11-09T09:00:00Z"
+}

@@ -39,7 +39,7 @@
     },
     "operator": {
       "type": "string",
-      "description": "Operator slug or `owner:<subject_id>` for a private node."
+      "description": "Operator slug or `owner:<subject_id>` for a private machine."
     },
     "host": {
       "type": [

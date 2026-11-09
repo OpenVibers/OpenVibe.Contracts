@@ -19,6 +19,6 @@
   "pairing": {
     "code": "ABCD-EFGH",
     "expires_at": "2026-09-29T19:20:00.000Z",
-    "installer": "curl -fsSL https://openvibe.bot/install.sh | sh -s ABCD-EFGH"
+    "installer": "curl -fsSL https://openvibe.link/install.sh | sh -s ABCD-EFGH"
   }
 }

@@ -5,8 +5,8 @@
       "service": "actor",
       "name": "OpenVibe.Actor",
       "origin": "https://openvibe.actor",
-      "operations": 55,
-      "capabilities": 17
+      "operations": 57,
+      "capabilities": 18
     },
     {
       "service": "ai",
@@ -89,8 +89,8 @@
       "service": "design",
       "name": "OpenVibe.Design",
       "origin": "https://openvibe.design",
-      "operations": 6,
-      "capabilities": 1
+      "operations": 7,
+      "capabilities": 2
     },
     {
       "service": "domains",
@@ -128,6 +128,13 @@
       "capabilities": 9
     },
     {
+      "service": "git",
+      "name": "OpenVibe.Git",
+      "origin": "https://git.openvibe.codes",
+      "operations": 18,
+      "capabilities": 2
+    },
+    {
       "service": "host",
       "name": "OpenVibe.Host",
       "origin": "https://openvibe.host",
@@ -138,8 +145,8 @@
       "service": "inventory",
       "name": "OpenVibe.Inventory",
       "origin": "https://inventory.openvibe.network",
-      "operations": 15,
-      "capabilities": 7
+      "operations": 16,
+      "capabilities": 8
     },
     {
       "service": "live",
@@ -159,7 +166,7 @@
       "service": "media",
       "name": "OpenVibe.Media",
       "origin": "https://openvibe.media",
-      "operations": 19,
+      "operations": 24,
       "capabilities": 14
     },
     {
@@ -173,8 +180,8 @@
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
-      "operations": 67,
-      "capabilities": 38
+      "operations": 68,
+      "capabilities": 39
     },
     {
       "service": "news",

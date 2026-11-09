@@ -1,8 +1,85 @@
 # Changelog
 
+## 0.373.0 — 2026-11-09
+
+- The git service: its manifest, git.repo.read and git.repo.write, git.access-request@1 and git.access-result@1 (OpenVibe.Git)
+
+## 0.372.0 — 2026-11-09
+
+- The machine product Node became OpenVibe Link. The network registry contracts are `network.link@1`,
+  `network.link-report-request@1` and `network.link-list-result@1`, the event is `network.link.revoked`, and the platform
+  carries `platform.link-capabilities@1` and `link.compute@1`. The capabilities `network.node.manage`,
+  `network.node.report` and `network.node.self.manage` are `network.link.manage`, `network.link.report` and
+  `network.link.self.manage`; their internal routes and the manifests follow.
+- A paired machine is a `link` principal: identity.service-token-claims actor_type `node` is `link` with sub `link:lnk_…`,
+  and `ids.principalSub` mints `link:lnk_…` (the old prefix and ids are gone, no alias). The AI provider `node` is `link`
+  in ai.credential-put@1/@2 and ai.credential@1/@2. The old contract ids are deprecated with their Link replacements; the
+  schema corrections are recorded against the current release and the ones before it.
+
+## 0.371.0 — 2026-11-09
+
+- Exchange API platform and search: exchange.key@1, exchange.key-created@1, exchange.usage@1, exchange.deployments@1, exchange.search-result@1, exchange.image-result@1, and the Exchange manifest's routes
+
+## 0.370.0 — 2026-11-09
+
+- design.component@1: one platform-neutral definition per shared interface (the public registry on openvibe.design)
+
+## 0.369.0 — 2026-11-09
+
+- OpenVibe Git: git.repo@1, git.commit@1, git.tree@1 and git.insights@1
+
+## 0.368.0 — 2026-11-09
+
+- The wallet and the reviewed store: billing.wallet@1, inventory.store@1, inventory.store-listing@1, inventory.purchase@1
+
+## 0.367.0 — 2026-11-09
+
+- publishing.block@1: the rich content block of a post or an article body
+
+## 0.366.0 — 2026-11-09
+
+- wiki.page.published@1 and wiki.page.updated@1 carry an optional `title` (the page as readers see it), so the network's Feed names a wiki page by its title, not its slug.
+
+## 0.365.0 — 2026-11-09
+
+- Dock v2: action-item words, ai.run-error@1, skill runs and Vibe conversations
+
+## 0.364.0 — 2026-11-09
+
+- The Feed of everything: community.feed-item@1
+
+## 0.363.0 — 2026-11-09
+
+- npm metadata and CITATION
+
+## 0.362.0 — 2026-11-09
+
+- Your stats: report.me-stats@1 and report.me-stats-publish@1
+
+## 0.361.0 — 2026-11-09
+
+- Reviewed glyph draft service
+
+## 0.360.0 — 2026-11-09
+
+- Meme entry and render contracts
+
+## 0.359.0 — 2026-11-09
+
+- Media multipart uploads in contracts and OpenAPI
+- Define `design.component@1` for web, Android and iOS component anatomy, props, states, tokens, behavior, accessibility and examples.
+
+## 0.358.0 — 2026-11-09
+
+- Chat view preference (bubbles or room)
+
+## 0.357.0 — 2026-11-09
+
+- Cam camera settings (cam.settings@1)
+
 ## 0.356.0 — 2026-11-09
 
-- Add the Pics public gallery and picture contracts (`pics.gallery@1`, `pics.picture@1`) with valid and invalid fixtures.
+- Shoes product contract (shoes.product@1)
 
 ## 0.355.0 — 2026-11-09
 
@@ -790,7 +867,7 @@
 ## 0.261.0 — 2026-10-31
 
 - **The machines hub** (plan L34, steps M2 and M4). A person's computers are the network's: Bot stays the device
-  registry underneath, and Network fronts it on openvibe.network/machines for the person and for apps the person
+  registry underneath, and Network fronts it on openvibe.link/machines for the person and for apps the person
   consented to.
   - **`network.machine@1`:** one machine as the hub shows it — its id (Bot's `dev_…`), name, kind, os, whether it is
     online, when it was last seen, its `roles` and what it does right now (`running`: its Codes jobs, its desks, its
@@ -3058,7 +3135,7 @@ contract changes.
 
 **The node-revoked event contract** (plan T2 follow-up; the deferred item in OpenVibe.Network's
 `docs/t2-cells-and-node-principal.md` section 10, "Revocation latency outside Bot"). Adds
-`network.node.revoked@1` (owner `network`, first-party, active): a node principal (`nod_…`), a person's paired
+`network.link.revoked@1` (owner `network`, first-party, active): a node principal (`lnk_…`), a person's paired
 machine, was revoked through `POST /internal/node-principals/:id/revoke` (`network.node.manage`, the service that
 paired it) or `POST /api/v1/me/nodes/:id/revoke` (the owner's session), or with the owner's account. The payload is
 `{ node_id, principal_id, owner, reason?, at }` (`extra` fields refused): `owner` is the person, project or platform
@@ -3462,9 +3539,9 @@ Network grants for the usage producers follow this release. Additive.
 
 **Node principals, node capabilities and per-kind resource offers** (plan T1 lane A, the contracts brief of
 OpenVibe.Network `docs/t2-cells-and-node-principal.md` §9.1):
-- `lib/ids.js`: `PREFIX.node = 'nod'`; `principalSub({ type: 'node', id })` gives `node:nod_<ULID>`. A node is a
+- `lib/ids.js`: `PREFIX.node = 'nod'`; `principalSub({ type: 'link', id })` gives `link:lnk_<ULID>`. A node is a
   principal only: `node` is not a `SUBJECT_TYPES` entry nor an `identity.subject-ref@1` type.
-- `identity.service-token-claims`: `sub` also accepts `node:nod_<ULID>` and `actor_type` gains `node`, so
+- `identity.service-token-claims`: `sub` also accepts `link:lnk_<ULID>` and `actor_type` gains `link`, so
   `verifyServiceToken` accepts a node token and still rejects a malformed node id. Fixtures `node-token` (valid) and
   `node-bad-id` (invalid).
 - New capabilities `network.node.manage` (a service mints pairing codes and reads or revokes the node principals it

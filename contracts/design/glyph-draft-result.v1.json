@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/design/glyph-draft-result.v1.json",
+  "title": "DesignGlyphDraftResult",
+  "description": "A glyph request's review state. A draft is never a public icon until staff approval; approved drawings may then be imported into openvibe-shared.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "status", "draft_ids", "created"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$" },
+    "status": { "type": "string", "enum": ["pending", "approved"] },
+    "draft_ids": { "type": "array", "items": { "type": "string", "pattern": "^gd_[0-9a-f]{16}$" }, "maxItems": 8 },
+    "created": { "type": "boolean" }
+  }
+}
