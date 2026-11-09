@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.353.0 — 2026-11-09
+
+- Add `actor.ask@1`: durable approvals, questions, personal steps and sign-in hand-offs, linked to the person’s Actor and goal, with evidence and an answer or decline.
+
 ## 0.352.0 — 2026-11-09
 
 - The menu's home screen and wall (M1): `network.home-screen@1`, `network.menu-feeds@2` (order and off; v1's on reads as

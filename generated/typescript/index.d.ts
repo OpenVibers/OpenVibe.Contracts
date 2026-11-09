@@ -317603,3 +317603,45 @@ export interface CommunityPulseContributeRequest {
   url: string;
   picture_url?: string;
 }
+
+/** actor.ask@1.0.0 (owner: actor) */
+/**
+ * One question or action waiting for the owner of a personal Actor. An answer never grants permission for a different action.
+ */
+export interface ActorAsk {
+  id: string;
+  actor: string;
+  goal: string;
+  kind: "approve_action" | "answer_question" | "do_yourself" | "sign_in";
+  text: string;
+  /**
+   * @maxItems 12
+   */
+  options:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string];
+  created: string;
+  answered: null | {
+    at: string;
+    decision: "answer" | "decline";
+    text?: string;
+  };
+  /**
+   * The Actor page where its person can take over the screen; not a credential.
+   */
+  screen_url?: string | null;
+  evidence?: {
+    text?: string;
+  } | null;
+}

@@ -10415,6 +10415,15 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "actor.ask",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/ask.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
