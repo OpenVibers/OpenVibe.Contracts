@@ -4,9 +4,9 @@
 
 - Exchange routing controls, owner request presets and generation accounting schemas, with valid and invalid fixtures.
 
-## 0.378.0 — reserved, 2026-11-09
+## 0.378.0 — 2026-11-09
 
-- Reserved for concurrent Contracts work by the release coordinator; no 0.378.0 schemas or release are included in this PR. Reconcile this entry when that branch merges.
+- Connect's manifest and a relay fixture say OpenVibe Link, not Node (the old-name sweep)
 
 ## 0.377.0 — 2026-11-09
 
