@@ -96,6 +96,10 @@ export type ServiceTokenClaims = {
    */
   on_behalf_of?: string;
   /**
+   * Signed display name of a developer app, for attribution such as via <app>.
+   */
+  app_name?: string;
+  /**
    * App tokens from the authorization-code flow (0.310.0): the purposes the person (on_behalf_of) granted this app at sign-in and that are still active when the token is issued, the claim network.consent-claim@1 defines. Present when the sign-in asked for consent:<purpose> scopes, [] when none is granted, absent otherwise.
    *
    * @maxItems 4
@@ -208022,6 +208026,11 @@ export interface CommunityPulseItem {
   url: string;
   origin: "user" | "ai" | "system";
   label: "AI" | "System" | null;
+  /**
+   * A third-party contribution is shown as via <app>.
+   */
+  via?: string;
+  picture_url?: string;
   actor: {
     subject?: string | null;
     username?: string | null;
@@ -317328,4 +317337,187 @@ export interface MailInboxAnswering {
 export interface ActorTaskViewTicket {
   url: string;
   expires_at: string;
+}
+
+/** network.home-screen@1.0.0 (owner: network) */
+/**
+ * network.home-screen@1: a person's ordered Home icons and folders. GET and PUT /api/v1/me/home-screen use a Bearer user session.
+ */
+export interface NetworkHomeScreen {
+  /**
+   * @maxItems 40
+   */
+  home: string[];
+  /**
+   * @maxItems 40
+   */
+  folders: {
+    id: string;
+    name: string;
+    /**
+     * @maxItems 40
+     */
+    apps: string[];
+  }[];
+  updated_at: string | null;
+}
+
+/** network.menu-feeds@2.0.0 (owner: network) */
+/**
+ * network.menu-feeds@2: every offered feed card is on unless its id is in off. order lists cards the person has positioned; other cards follow in their default order. GET and PUT /api/v1/me/menu-feeds.
+ */
+export interface NetworkMenuFeedsV2 {
+  /**
+   * @maxItems 100
+   */
+  order: string[];
+  /**
+   * @maxItems 100
+   */
+  off: string[];
+  updated_at: string | null;
+}
+
+/** network.frame-today@1.0.0 (owner: network) */
+/**
+ * network.frame-today@1: public UTC-day totals from Report's stats, with a fourteen-day series. People counts new accounts. A null count means Report does not publish a daily number for that metric.
+ */
+export interface NetworkFrameToday {
+  day: string;
+  /**
+   * New accounts today, from Report's accounts.daily series.
+   */
+  people_today: number | null;
+  streams_today: number | null;
+  posts_today: number | null;
+  new_videos_today: number | null;
+  /**
+   * @minItems 14
+   * @maxItems 14
+   */
+  series: [
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    }
+  ];
+  updated_at: string;
+}
+
+/** community.status@1.0.0 (owner: community) */
+/**
+ * community.status@1: a public status written by POST /api/v1/me/status. At most one https link may appear across text and link; Community checks this after validating the schema. The opening post id supports the existing post reaction and reply routes.
+ */
+export interface CommunityStatus {
+  text: string;
+  link?: string | null;
+  id?: number;
+  post_id?: number;
+  url?: string;
+  created_at?: string;
+}
+
+/** community.pulse-contribute-request@1.0.0 (owner: community) */
+/**
+ * An app with a person's community.pulse.contribute grant posts an item about that person. The app token supplies the person and app identity; the body cannot choose either.
+ */
+export interface CommunityPulseContributeRequest {
+  id: string;
+  text: string;
+  url: string;
+  picture_url?: string;
 }

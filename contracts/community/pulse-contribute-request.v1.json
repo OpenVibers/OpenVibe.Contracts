@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/pulse-contribute-request.v1.json",
+  "title": "CommunityPulseContributeRequest",
+  "description": "An app with a person's community.pulse.contribute grant posts an item about that person. The app token supplies the person and app identity; the body cannot choose either.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "text", "url"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,80}$" },
+    "text": { "type": "string", "minLength": 1, "maxLength": 300, "pattern": "\\S" },
+    "url": { "type": "string", "maxLength": 2000, "pattern": "^https://" },
+    "picture_url": { "type": "string", "maxLength": 2000, "pattern": "^https://openvibe\\.media/(t|o)/" }
+  }
+}

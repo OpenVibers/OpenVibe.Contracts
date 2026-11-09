@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/menu-feeds.v2.json",
+  "title": "NetworkMenuFeedsV2",
+  "description": "network.menu-feeds@2: every offered feed card is on unless its id is in off. order lists cards the person has positioned; other cards follow in their default order. GET and PUT /api/v1/me/menu-feeds.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["order", "off", "updated_at"],
+  "properties": {
+    "order": { "type": "array", "maxItems": 100, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9-]{1,30}:[a-z0-9-]{1,30}$" } },
+    "off": { "type": "array", "maxItems": 100, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9-]{1,30}:[a-z0-9-]{1,30}$" } },
+    "updated_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}
