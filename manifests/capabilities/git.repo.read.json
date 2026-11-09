@@ -28,6 +28,13 @@
     "GET /api/v1/repos/:owner/:name/releases",
     "GET /api/v1/repos/:owner/:name/contributors",
     "GET /api/v1/repos/:owner/:name/insights",
-    "GET /api/v1/profile/:username"
+    "GET /api/v1/profile/:username",
+    "GET /api/v1/repos/:owner/:name/compare/:base...:head",
+    "GET /api/v1/repos/:owner/:name/changes",
+    "GET /api/v1/repos/:owner/:name/changes/:number",
+    "GET /api/v1/repos/:owner/:name/issues",
+    "GET /api/v1/repos/:owner/:name/issues/:number",
+    "GET /api/v1/repos/:owner/:name/blame",
+    "GET /api/v1/repos/:owner/:name/search"
   ]
 }

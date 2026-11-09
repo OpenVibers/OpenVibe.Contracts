@@ -10902,6 +10902,24 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-001"
+    },
+    {
+      "id": "git.change",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/change.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.issue",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/issue.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

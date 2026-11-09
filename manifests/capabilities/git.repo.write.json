@@ -20,6 +20,16 @@
     "POST /api/v1/tokens",
     "POST /api/v1/repos/:owner/:name/commits",
     "POST /api/v1/repos/:owner/:name/releases",
-    "POST /api/v1/repos/:owner/:name/star"
+    "POST /api/v1/repos/:owner/:name/star",
+    "POST /api/v1/repos/:owner/:name/changes",
+    "POST /api/v1/repos/:owner/:name/changes/:number/comments",
+    "POST /api/v1/repos/:owner/:name/changes/:number/approve",
+    "POST /api/v1/repos/:owner/:name/changes/:number/merge",
+    "POST /api/v1/repos/:owner/:name/changes/:number/close",
+    "POST /api/v1/repos/:owner/:name/changes/:number/summary",
+    "POST /api/v1/repos/:owner/:name/review-model",
+    "POST /api/v1/repos/:owner/:name/issues",
+    "POST /api/v1/repos/:owner/:name/issues/:number/labels",
+    "POST /api/v1/repos/:owner/:name/issues/:number/close"
   ]
 }
