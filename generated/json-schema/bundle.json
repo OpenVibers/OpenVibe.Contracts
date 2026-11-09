@@ -115134,6 +115134,47 @@
           }
         }
       }
+    },
+    "chat.view-pref": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/view-pref.v1.json",
+        "title": "ChatViewPreference",
+        "description": "chat.view-pref@1: saved rendering choice for a conversation, or the default for a conversation kind. Conversation choices override the matching default.",
+        "type": "object",
+        "required": [
+          "view"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "view": {
+            "type": "string",
+            "enum": [
+              "bubbles",
+              "room"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "one_to_one",
+              "ai",
+              "group",
+              "channel"
+            ]
+          },
+          "conversation_id": {
+            "type": [
+              "string",
+              "integer"
+            ],
+            "description": "Omit for a kind default; otherwise the preference is scoped to this conversation."
+          }
+        }
+      }
     }
   }
 }

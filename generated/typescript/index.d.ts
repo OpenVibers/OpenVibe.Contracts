@@ -317871,3 +317871,16 @@ export interface ActorAsk {
     text?: string;
   } | null;
 }
+
+/** chat.view-pref@1.0.0 (owner: chat) */
+/**
+ * chat.view-pref@1: saved rendering choice for a conversation, or the default for a conversation kind. Conversation choices override the matching default.
+ */
+export interface ChatViewPreference {
+  view: "bubbles" | "room";
+  kind?: "one_to_one" | "ai" | "group" | "channel";
+  /**
+   * Omit for a kind default; otherwise the preference is scoped to this conversation.
+   */
+  conversation_id?: string | number;
+}
