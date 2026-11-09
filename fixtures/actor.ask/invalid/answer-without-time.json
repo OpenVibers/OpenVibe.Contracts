@@ -1,0 +1,15 @@
+{
+  "id": "ask_01K6R3A1B2C3D4E5F6G7H8J9KF",
+  "actor": "act_01K6R3A1B2C3D4E5F6G7H8J9KF",
+  "goal": "agl_01K6R3A1B2C3D4E5F6G7H8J9KF",
+  "kind": "approve_action",
+  "text": "Send this application?",
+  "options": [
+    "Approve",
+    "Decline"
+  ],
+  "created": "2026-11-09T09:00:00.000Z",
+  "answered": {
+    "decision": "answer"
+  }
+}

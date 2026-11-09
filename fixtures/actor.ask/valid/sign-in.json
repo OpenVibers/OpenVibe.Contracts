@@ -1,0 +1,17 @@
+{
+  "id": "ask_01K6R3A1B2C3D4E5F6G7H8J9KF",
+  "actor": "act_01K6R3A1B2C3D4E5F6G7H8J9KF",
+  "goal": "agl_01K6R3A1B2C3D4E5F6G7H8J9KF",
+  "kind": "sign_in",
+  "text": "Send this application?",
+  "options": [
+    "Sign in on its screen",
+    "Done"
+  ],
+  "created": "2026-11-09T09:00:00.000Z",
+  "answered": null,
+  "screen_url": "/you?screen=1",
+  "evidence": {
+    "text": "Sign in to the site on your Actor\u2019s screen."
+  }
+}

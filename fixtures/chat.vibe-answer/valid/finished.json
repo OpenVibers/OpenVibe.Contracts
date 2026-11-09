@@ -1,0 +1,9 @@
+{
+  "model": "deepseek/deepseek-chat",
+  "status": "finished",
+  "text": "Hello.",
+  "provider": "deepseek",
+  "cost_usd": 0.0002,
+  "ms": 420,
+  "run_id": "run_example"
+}

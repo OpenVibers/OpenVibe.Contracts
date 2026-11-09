@@ -1,0 +1,7 @@
+{
+  "generated_at": "2026-11-09T12:00:00.000Z",
+  "person": { "username": "goosely", "display_name": "Goosely" },
+  "window": { "days": 30, "from": "2026-10-11", "to": "2026-11-09" },
+  "published": { "sites": true, "activity": true, "made": true, "ai": false },
+  "sections": {}
+}

@@ -1,0 +1,43 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "hero",
+      "attrs": {
+        "art": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+        "kicker": "Devblog",
+        "date": "2026-11-09"
+      },
+      "children": [
+        { "type": "text", "value": "This month: blueprints rework, the Uzi, our biggest optimisation pass yet." }
+      ]
+    },
+    {
+      "type": "section",
+      "attrs": {
+        "id": "blueprint-rework",
+        "by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+        "react": true
+      },
+      "children": [
+        { "type": "text", "value": "## Blueprint rework\n\nWorkbenches no longer need fragments." },
+        {
+          "type": "figure",
+          "attrs": {
+            "src": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+            "alt": "The channel header"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "patchnotes",
+      "attrs": {
+        "from": "2026-11-02",
+        "to": "2026-11-09"
+      },
+      "children": []
+    }
+  ]
+}

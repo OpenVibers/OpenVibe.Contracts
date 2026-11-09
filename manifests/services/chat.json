@@ -12,6 +12,17 @@
     "openvibe.party"
   ],
   "publicOrigin": "https://openvibe.chat",
+  "apiRoutes": [
+    { "method": "GET", "path": "/api/vibe/models" },
+    { "method": "GET", "path": "/api/vibe/chat", "responseSchema": "chat.vibe-answer@2" },
+    { "method": "GET", "path": "/api/vibe/conversations", "responseSchema": "chat.vibe-conversations-result@1" },
+    { "method": "POST", "path": "/api/vibe/ask" },
+    { "method": "POST", "path": "/api/vibe/pick" },
+    { "method": "POST", "path": "/api/vibe/prefer" },
+    { "method": "GET", "path": "/api/vibe/import" },
+    { "method": "POST", "path": "/api/vibe/import" },
+    { "method": "POST", "path": "/api/vibe/import/dismiss" }
+  ],
   "capabilities": [
     "chat.agent_digest.read",
     "chat.agent_poll.write",
