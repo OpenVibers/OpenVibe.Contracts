@@ -1,0 +1,17 @@
+{
+  "repo": "openvibers/openvibe.codes",
+  "window_days": 30,
+  "views": 2841,
+  "unique_visitors": 412,
+  "clones": 190,
+  "stars": { "total": 12, "in_window": 3 },
+  "commits_per_week": [
+    { "week": "2026-10-19", "commits": 18 },
+    { "week": "2026-10-26", "commits": 27 },
+    { "week": "2026-11-02", "commits": 31 }
+  ],
+  "daily": [
+    { "day": "2026-11-08", "views": 121, "unique_visitors": 18, "clones": 9, "stars": 1 },
+    { "day": "2026-11-09", "views": 96, "unique_visitors": 14, "clones": 7, "stars": 0 }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/git/insights.v1.json",
+  "title": "GitInsights",
+  "description": "A repository's insights over a window: views, unique visitors, clones and stars per day, and commits per week. Public for a public repository, like GitHub's traffic but open. api/view/insights.",
+  "type": "object",
+  "required": ["repo", "window_days", "views", "unique_visitors", "clones", "stars", "commits_per_week", "daily"],
+  "additionalProperties": false,
+  "properties": {
+    "repo": { "type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9][a-z0-9._-]{0,99}$" },
+    "window_days": { "type": "integer", "minimum": 1, "maximum": 90 },
+    "views": { "type": "integer", "minimum": 0, "description": "Page views of the repository in the window." },
+    "unique_visitors": { "type": "integer", "minimum": 0, "description": "Distinct visitors per day, summed over the window." },
+    "clones": { "type": "integer", "minimum": 0, "description": "Successful git clones and fetches served in the window." },
+    "stars": {
+      "type": "object",
+      "required": ["total", "in_window"],
+      "additionalProperties": false,
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "in_window": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "commits_per_week": {
+      "type": "array",
+      "description": "The default branch's commits for each ISO week, oldest first.",
+      "items": {
+        "type": "object",
+        "required": ["week", "commits"],
+        "additionalProperties": false,
+        "properties": {
+          "week": { "type": "string", "format": "date", "description": "The week's Monday, YYYY-MM-DD." },
+          "commits": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "daily": {
+      "type": "array",
+      "description": "One row per day of the window, oldest first.",
+      "items": {
+        "type": "object",
+        "required": ["day", "views", "unique_visitors", "clones", "stars"],
+        "additionalProperties": false,
+        "properties": {
+          "day": { "type": "string", "format": "date" },
+          "views": { "type": "integer", "minimum": 0 },
+          "unique_visitors": { "type": "integer", "minimum": 0 },
+          "clones": { "type": "integer", "minimum": 0 },
+          "stars": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

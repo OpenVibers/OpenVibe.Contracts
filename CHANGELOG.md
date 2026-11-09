@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.369.0 — 2026-11-09
+
+- OpenVibe Git: git.repo@1, git.commit@1, git.tree@1 and git.insights@1
+
 ## 0.368.0 — 2026-11-09
 
 - The wallet and the reviewed store: billing.wallet@1, inventory.store@1, inventory.store-listing@1, inventory.purchase@1
