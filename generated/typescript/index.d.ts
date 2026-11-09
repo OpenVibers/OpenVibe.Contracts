@@ -323920,3 +323920,180 @@ export interface AiTaskDefaultsV1 {
       ];
   max_cost_usd: number | null;
 }
+
+/** git.change@1.0.0 (owner: git) */
+/**
+ * Git G2 change metadata. Community thread is hidden; Git authorizes repository access. PostgreSQL bigint numbers may be decimal strings.
+ */
+export interface GitChange {
+  id: string;
+  number: number | string;
+  repo_id: string;
+  title: string;
+  body: string;
+  author: string;
+  state: "open" | "closed" | "merged";
+  thread_id: string | null;
+  created_at: string;
+  closed_at: string | null;
+  source_repo_id: string;
+  base_ref: string;
+  head_ref: string;
+  head_sha: string;
+  merge_sha: string | null;
+  branch_deleted_at: string | null;
+  diff_base_sha: string | null;
+}
+
+/** git.issue@1.0.0 (owner: git) */
+/**
+ * Git G2 issue metadata. Community thread is hidden; Git authorizes repository access. PostgreSQL bigint numbers may be decimal strings.
+ */
+export interface GitIssue {
+  id: string;
+  number: number | string;
+  repo_id: string;
+  title: string;
+  body: string;
+  author: string;
+  state: "open" | "closed";
+  thread_id: string | null;
+  created_at: string;
+  closed_at: string | null;
+  /**
+   * @maxItems 20
+   */
+  labels:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+}
