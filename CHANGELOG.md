@@ -1,12 +1,16 @@
 # Changelog
 
+## 0.376.0 — 2026-11-09
+
+- git.change@1, git.issue@1 and the review events for OpenVibe.Git's changes and issues (G2)
+
 ## 0.375.0 — 2026-11-09
 
-- Add git.change@1 and git.issue@1 for review and repository issues.
+- AI tasks and choices: `ai.task@1`, `ai.choice@1`, `ai.task-defaults@1`; a run accepts `task` or `choice` beside `workflow`, and `run.explain.task_choice` says what answered. `ai.me-preferences@1` gains `defaults.search`.
 
-## 0.374.0 — reserved
+## 0.374.0 — 2026-11-09
 
-- Reserved by the concurrent Pics PR; its release entry will be reconciled at merge.
+- Add the Pics public gallery and picture contracts (`pics.gallery@1`, `pics.picture@1`) with valid and invalid fixtures.
 
 ## 0.373.0 — 2026-11-09
 

@@ -1,0 +1,25 @@
+{
+  "pictures": [
+    {
+      "id": "pic_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+      "slug": "Abcdef23",
+      "title": "Forest",
+      "width": 800,
+      "height": 600,
+      "listed": true,
+      "tags": [
+        "forest"
+      ],
+      "links": {
+        "page": "https://openvibe.pics/i/Abcdef23",
+        "direct": "https://openvibe.pics/i/Abcdef23",
+        "thumb": "https://openvibe.pics/i/Abcdef23",
+        "markdown": "https://openvibe.pics/i/Abcdef23",
+        "html": "https://openvibe.pics/i/Abcdef23",
+        "bbcode": "https://openvibe.pics/i/Abcdef23"
+      }
+    }
+  ],
+  "next": null,
+  "sort": "new"
+}

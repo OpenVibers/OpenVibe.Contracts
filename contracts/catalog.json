@@ -10856,6 +10856,54 @@
       "status": "active"
     },
     {
+      "id": "pics.picture",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "pics/picture.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "pics.gallery",
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "schema": "pics/gallery.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.choice",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/choice.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
+      "id": "ai.task",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/task.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
+      "id": "ai.task-defaults",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/task-defaults.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
       "id": "git.change",
       "version": "1.0.0",
       "owner": "git",
