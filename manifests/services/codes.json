@@ -32,7 +32,7 @@
       },
       {
         "question": "Can it run on my own machine?",
-        "answer": "Yes. With OpenVibe.Run and the OpenVibe node on your computer, a task can run on your own hardware instead of a server."
+        "answer": "Yes. With OpenVibe.Run and the OpenVibe Link on your computer, a task can run on your own hardware instead of a server."
       },
       {
         "question": "Where is the code?",

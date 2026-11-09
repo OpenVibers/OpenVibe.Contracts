@@ -1,12 +1,12 @@
 {
   "iss": "https://openvibe.network",
-  "sub": "node:nod_01JAB2C3D4E5F6G7H8J9K0MNPQ",
-  "actor_type": "node",
+  "sub": "link:lnk_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "actor_type": "link",
   "aud": [
     "openvibe.bot"
   ],
   "cap": [
-    "network.node.self.manage"
+    "network.link.self.manage"
   ],
   "iat": 1790000000,
   "exp": 1790000300,

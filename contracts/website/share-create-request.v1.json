@@ -52,8 +52,8 @@
     },
     "node_id": {
       "type": "string",
-      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
-      "description": "Optional: bind the share to this Node principal now. Omit to bind it when the first tunnel connects."
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Optional: bind the share to this Link principal now. Omit to bind it when the first tunnel connects."
     },
     "region": {
       "type": "string",

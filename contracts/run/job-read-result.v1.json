@@ -132,7 +132,7 @@
       "required": ["node", "provider", "region"],
       "properties": {
         "node": { "type": "string", "minLength": 1, "maxLength": 128, "description": "The worker's device id (the usage reading's `node`)." },
-        "provider": { "type": ["string", "null"], "maxLength": 128, "description": "The offer's provider (the usage reading's `provider`); null for a first-party node." },
+        "provider": { "type": ["string", "null"], "maxLength": 128, "description": "The offer's provider (the usage reading's `provider`); null for a first-party machine." },
         "region": { "type": ["string", "null"], "maxLength": 64 }
       }
     },

@@ -9,7 +9,7 @@ isolation belongs to Stage C) and ADR-046 (offers, requirements, placement, sign
 
 - **Plan T14** (lines 559–583): *"Finish line: any workload — a function, code, a browser session, a Linux or desktop
   machine, a GPU job — runs in a sandbox with metering, limits, cancellation and streaming, placed by the Fabric on
-  the cheapest capability that works; the Node runtime runs the same workloads on official servers and on users' own
+  the cheapest capability that works; the Link runtime runs the same workloads on official servers and on users' own
   machines under their trust policy."* And: *"**Run is not a Host detail.** Host deploys persistent applications; Run
   executes isolated jobs/environments. They can share machines; they are separate authorities (ADR-036 rewritten
   around this expanded purpose)."*
@@ -77,16 +77,16 @@ Run states `platform.workload-requirements@1` and reads the `platform.placement-
 Run writes no placer of its own (ADR-046: "A service states requirements and reads results; it does not rank
 offers."). The plan's §2.1.11 cross-reference is the Fabric section as written in ADR-046/T1, not a separate scheme.
 
-**Node descriptor → offers.** When Run turns an OpenVibe Link into Fabric offers it applies the mapping the Node
+**Link descriptor → offers.** When Run turns an OpenVibe Link into Fabric offers it applies the mapping the Link
 protocol already fixes (OpenVibe Link `docs/protocol.md:310–321`):
 
-| Node descriptor field | Fabric offer | Example |
+| Link descriptor field | Fabric offer | Example |
 | --- | --- | --- |
 | `capabilities.worker.runtime_classes` | `resource-offer.capabilities` item `worker:<class>` | `worker:function`, `worker:code` |
 | `capabilities.worker.max_jobs` | `runtime-offer.limits.concurrency` | 1 |
 | `capabilities.worker.max_ttl_ms` | `runtime-offer.limits.duration_seconds` | 600 |
 | device `node_id` / cell | `resource-offer.node_id` / `resource-offer.cell` | `node_01H…` / `wnam-1` |
-| worker trust (local policy) | `resource-offer.trust` | `user-owned` for a user's own Node |
+| worker trust (local policy) | `resource-offer.trust` | `user-owned` for a user's own Link |
 
 ### 4. The cost ladder
 
@@ -130,7 +130,7 @@ Every job, on every adapter, is held to the same guarantees (plan T14, lines 572
 1. **Isolation mechanism.** The plan requires more than a container for hostile arbitrary code but names no
    mechanism. Micro-VM (Firecracker/Kata), a userspace kernel (gVisor) and namespace/seccomp sandboxes are all open;
    the Link worker's current `function` isolation is namespaces plus a seccomp allowlist.
-2. **Snapshot/resume backend.** Whether a resumed environment's state lives in Media, a Node-local disk, or a
+2. **Snapshot/resume backend.** Whether a resumed environment's state lives in Media, a Link-local disk, or a
    provider's own snapshot is open.
 3. **Idle-suspend policy.** Who decides to suspend — Run, the node's local policy, or a placement objective — is
    open.
@@ -147,6 +147,6 @@ Every job, on every adapter, is held to the same guarantees (plan T14, lines 572
   `linux`, `desktop` and `gpu` are reserved names with no worker.
 - Cells are a single host (`cell = wnam-1`) today; O24's second physical cell, the WireGuard mesh and geo placement
   are not built (plan T14, lines 580–581).
-- Per-second metering is proven only for Node jobs; no Billing consumer reads Run usage on `origin/main` yet.
+- Per-second metering is proven only for Link jobs; no Billing consumer reads Run usage on `origin/main` yet.
 - The provider adapters above are the plan's list, not deployed adapters; no managed-browser, external-sandbox or
   external-GPU offer producer exists.

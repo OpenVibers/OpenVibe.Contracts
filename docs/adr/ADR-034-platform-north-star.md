@@ -19,7 +19,7 @@ What exists already maps onto the primitives of a cloud:
 | Developer surface | Codes (portal, apps, playgrounds, docs), openvibe-sdk v0.13, Contracts v0.75 | ADR-002, ADR-008 |
 | Extensions | Mods with their own principals, budgets and grants; Tools platform API | ADR-013, ADR-027 |
 
-Everything runs on one host: about 25 Node services, one SQLite database each, as systemd units. Measured load is about 1% of what SQLite handles (ADR-007 amendment, 2026-09-26). Deploys are manual `ovhost deploy` runs.
+Everything runs on one host: about 25 Link services, one SQLite database each, as systemd units. Measured load is about 1% of what SQLite handles (ADR-007 amendment, 2026-09-26). Deploys are manual `ovhost deploy` runs.
 
 At a much larger size, the database engine and the orchestrator are not what is expensive to change. The expensive things are **boundaries**: how tenants are separated, how resources are named, how access is decided, what the API contract is, and how usage is counted. Each of those touches every row, every route and every event, so changing it late means migrating everything. Today they are cheap to set.
 

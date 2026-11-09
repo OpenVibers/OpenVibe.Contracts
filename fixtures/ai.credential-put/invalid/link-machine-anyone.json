@@ -1,0 +1,7 @@
+{
+  "provider": "link",
+  "machine": "anyone",
+  "models": {
+    "chat": "llama3.1:8b"
+  }
+}

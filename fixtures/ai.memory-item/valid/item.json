@@ -1,7 +1,7 @@
 {
   "id": "mem_01JZ0000000000000000000001",
   "owner": "user:usr_01JZ0000000000000000000AAA",
-  "scope": "project:openvibe-node",
+  "scope": "project:openvibe-link",
   "kind": "project_rule",
   "text": "Run the Go tests with go test ./... before a commit.",
   "source": "claude-code",

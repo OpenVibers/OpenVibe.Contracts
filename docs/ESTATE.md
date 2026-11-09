@@ -37,7 +37,7 @@ service id); **Runtime** is `STATUS.json.runtime`; **Database** is inferred from
 | OpenVibe.MediaHub | Video | video.*, pics.*, download.*, mediahub.* | node 22 | PostgreSQL | openvibe.video, openvibe.download, openvibe.pics, openvibe.network | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | live | W20 |
 | OpenVibe.Network | Network | identity.*, network.*, theme.*, notification.* | node 22 | PostgreSQL | openvibe.network, auth.openvibe.network, api.openvibe.network, admin.openvibe.network, my.openvibe.network, themes.openvibe.network | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | live | — |
 | OpenVibe.News | News | news.* | node 22 | PostgreSQL | openvibe.news | contracts v0.222.0, sdk v0.67.0, shared v4.17.0, publishing v1.4.1 | deployed | live | W17 |
-| OpenVibe.Node | — | — | go 1.24 (one static binary per platform) | none | — | — | not deployed | — | T15 |
+| OpenVibe.Link | — | — | go 1.24 (one static binary per platform) | none | — | — | not deployed | — | T15 |
 | OpenVibe.Play | Play | play.* | node 22 | PostgreSQL | play.openvibe.network | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | live | T8 |
 | OpenVibe.Publishing | OpenVibe.Publishing | publishing | node >=20 | none | — | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | not deployed | library | W15 |
 | OpenVibe.Quest | Quest | quest.* | node 22 | PostgreSQL | openvibe.quest | contracts v0.222.0, sdk v0.67.0, shared v4.17.0, publishing v1.4.0 | deployed | live | W20 |

@@ -1,6 +1,6 @@
 {
   "share_id": "shr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
-  "node_id": "nod_01J8Z3Q4R5S6T7V8W9X0Y1Z2A5",
+  "node_id": "lnk_01J8Z3Q4R5S6T7V8W9X0Y1Z2A5",
   "tunnel_token": "ovt_01J8Z3Q4R5S6T7V8W9X0Y1Z2A9_one_time",
   "transport": "quic",
   "node_version": "0.42.0",

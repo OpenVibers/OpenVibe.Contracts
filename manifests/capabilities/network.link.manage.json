@@ -1,0 +1,23 @@
+{
+  "id": "network.link.manage",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "A service mints one-time pairing codes for its users' machines and reads or revokes the node principals it paired. Never grantable to apps.",
+  "permissions": [
+    "nodes:pair",
+    "nodes:read",
+    "nodes:revoke"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": ["network.link.revoked"],
+  "implementedBy": [
+    "POST /internal/link-pairings",
+    "GET /internal/link-principals/:id",
+    "POST /internal/link-principals/:id/revoke"
+  ]
+}

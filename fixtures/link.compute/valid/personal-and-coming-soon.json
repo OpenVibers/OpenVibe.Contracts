@@ -1,0 +1,42 @@
+{
+  "sources": [
+    {
+      "kind": "personal",
+      "name": "Your Link machines",
+      "status": "ready",
+      "reason": null
+    },
+    {
+      "kind": "cloud",
+      "name": "OpenVibe cloud machines",
+      "status": "coming_soon",
+      "reason": "No cloud pool is accepting jobs yet."
+    },
+    {
+      "kind": "exchange",
+      "name": "Exchange GPU rentals",
+      "status": "coming_soon",
+      "reason": "A live quote is required.",
+      "price": null
+    },
+    {
+      "kind": "community",
+      "name": "Community machines",
+      "status": "coming_soon",
+      "reason": "Shared placement is being connected."
+    }
+  ],
+  "candidates": [
+    {
+      "id": "dev_01J0000000000000000000000",
+      "kind": "personal",
+      "name": "Studio",
+      "status": "ready",
+      "reason": null,
+      "price": {
+        "amount_usd": 0,
+        "unit": "hour"
+      }
+    }
+  ]
+}

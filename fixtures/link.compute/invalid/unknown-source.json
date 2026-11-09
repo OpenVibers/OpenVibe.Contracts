@@ -1,0 +1,11 @@
+{
+  "sources": [
+    {
+      "kind": "invalid",
+      "name": "Unknown",
+      "status": "ready",
+      "reason": null
+    }
+  ],
+  "candidates": []
+}

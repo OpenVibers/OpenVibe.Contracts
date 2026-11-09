@@ -5,7 +5,7 @@
   "status": "planned",
   "visibility": "public",
   "sensitive": true,
-  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): revoke and delete a share with DELETE /api/v1/shares/:id. Connect writes website.share.revoked, closes the edge route and tunnel within its 5-second revocation budget and keeps the audit trail; a public hostname returns 410, not a cached page. Deleting a node in Network closes every share for that node through network.node.revoked.",
+  "description": "PLANNED for OpenVibe.Website Connect (audience openvibe.website, owner or project scope): revoke and delete a share with DELETE /api/v1/shares/:id. Connect writes website.share.revoked, closes the edge route and tunnel within its 5-second revocation budget and keeps the audit trail; a public hostname returns 410, not a cached page. Deleting a node in Network closes every share for that node through network.link.revoked.",
   "permissions": [
     "website:shares:delete"
   ],
