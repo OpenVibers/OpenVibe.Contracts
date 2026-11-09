@@ -1,0 +1,71 @@
+{
+  "schema": "design.component@1",
+  "name": "sheet",
+  "title": "Sheet",
+  "summary": "A modal task surface: one heading, one close action and scrollable content.",
+  "anatomy": [
+    {
+      "part": "handle",
+      "role": "touch affordance"
+    },
+    {
+      "part": "header",
+      "role": "title and close"
+    },
+    {
+      "part": "body",
+      "role": "task controls"
+    }
+  ],
+  "props": {
+    "title": "string",
+    "open": "boolean",
+    "body": "content"
+  },
+  "states": [
+    "closed",
+    "opening",
+    "open",
+    "closing"
+  ],
+  "tokens": [
+    "color.bg.card",
+    "color.line.strong",
+    "radius.lg"
+  ],
+  "behaviors": {
+    "keyboardAware": true,
+    "outsideTapCloses": true,
+    "scrollLock": true,
+    "reducedMotion": "Remove movement; keep the state change."
+  },
+  "accessibility": {
+    "name": "Sheet",
+    "target": "At least 44 × 44 dp or pt for every touch action",
+    "focus": "Trap focus while open; Escape closes and returns focus"
+  },
+  "platforms": {
+    "web": {
+      "module": "openvibe-shared/kit",
+      "markup": "kit.sheet({ id, title, body })",
+      "demo": "/components/sheet"
+    },
+    "android": {
+      "toolkit": "Jetpack Compose",
+      "material3": "SurfaceContainerHigh",
+      "specification": "Use ModalBottomSheet with a heading, close control and sheet state."
+    },
+    "ios": {
+      "toolkit": "SwiftUI",
+      "specification": "Use .sheet with a NavigationStack and a toolbar close button."
+    }
+  },
+  "examples": [
+    {
+      "title": "Default",
+      "props": {
+        "title": "Add a site"
+      }
+    }
+  ]
+}

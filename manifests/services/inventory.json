@@ -22,7 +22,8 @@
     "inventory.item.grant",
     "inventory.item.consume",
     "inventory.definition.manage",
-    "inventory.definition.review"
+    "inventory.definition.review",
+    "inventory.store.list"
   ],
   "eventsProduced": [
     "inventory.item.granted",
@@ -84,7 +85,7 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "migration 0001 only creates Inventory's own tables; Live keeps its own cosmetics tables until the switch (ADR-054 §8)"
+        "none": "migration 0001 only creates Inventory's own tables; Live keeps its own cosmetics tables until the switch (ADR-054 \u00a78)"
       }
     },
     "contracts": {

@@ -1,0 +1,16 @@
+{
+  "id": "exchange.chat.export",
+  "version": "1.0",
+  "owner": "exchange",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Chat may import one signed-in person's unsealed Exchange chat history. Only the Chat service receives this capability; Exchange scopes the export to the subject Chat names after authenticating that person.",
+  "permissions": ["exchange:chat:export"],
+  "resourceConstraints": ["none"],
+  "quotaClass": "internal-read",
+  "events": [],
+  "implementedBy": ["GET /internal/exchange/chat/export"],
+  "inputSchema": "exchange.chat-export-request@1",
+  "outputSchema": "exchange.chat-export-result@1"
+}

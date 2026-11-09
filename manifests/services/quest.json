@@ -16,7 +16,12 @@
     "publicSite": "service"
   },
   "capabilities": [
-    "quest.app_quest.manage"
+    "quest.app_quest.manage",
+    "quest.daily.read",
+    "quest.daily_progress.read",
+    "quest.step_types.read",
+    "quest.steps.contribute",
+    "quest.steps.review"
   ],
   "eventsProduced": [
     "quest.index_document.upserted",

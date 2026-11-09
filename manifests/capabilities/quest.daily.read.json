@@ -1,0 +1,7 @@
+{
+  "id": "quest.daily.read", "version": "1.0", "owner": "quest", "status": "active", "visibility": "public",
+  "description": "Read today's shared daily quest or a past day's quest and its public completion count.",
+  "inputSchema": "common.no-body@1", "outputSchema": "quest.daily@1", "permissions": ["none"],
+  "resourceConstraints": [], "quotaClass": "quest-read", "events": [],
+  "implementedBy": ["GET /api/v1/daily", "GET /api/v1/daily/:date"]
+}

@@ -84,6 +84,7 @@
     "network.staff.read",
     "network.status.incident",
     "network.actions.read",
+    "network.skill.run",
     "network.consent.read",
     "network.consent.manage",
     "network.machines.read",

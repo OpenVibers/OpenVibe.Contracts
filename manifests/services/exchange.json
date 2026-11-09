@@ -15,7 +15,7 @@
     "state": "live",
     "publicSite": "service"
   },
-  "capabilities": [],
+  "capabilities": ["exchange.chat.export"],
   "eventsProduced": [],
   "eventsConsumed": [
     "network.account.export_requested",
