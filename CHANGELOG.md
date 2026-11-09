@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.378.0 — 2026-11-09
+
+- Connect's manifest and a relay fixture say OpenVibe Link, not Node (the old-name sweep)
+
 ## 0.377.0 — 2026-11-09
 
 - community.feed-item@1: live_now on a live stream's row
