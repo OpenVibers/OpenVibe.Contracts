@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.356.0 — 2026-11-09
+
+- Add `publishing.block@1`: the rich content block of a post or an article body, as openvibe-publishing/blocks parses it. A body is Markdown plus blocks; the Markdown stays the source of truth and the parsed tree is plain JSON, so a product's API hands it out next to the Markdown. Images are Media object ids, never a URL a product invented.
+
 ## 0.355.0 — 2026-11-09
 
 - Daily quest contracts and step contribution

@@ -161,6 +161,15 @@
       "adr": "ADR-002"
     },
     {
+      "id": "publishing.block",
+      "version": "1.0.0",
+      "owner": "publishing",
+      "schema": "publishing/block.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "registry.service-manifest",
       "version": "1.2.0",
       "owner": "network",

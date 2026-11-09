@@ -951,6 +951,120 @@ export interface Problem {
   [k: string]: unknown | undefined;
 }
 
+/** publishing.block@1.0.0 (owner: publishing) */
+/**
+ * publishing.block@1: one rich content block, as openvibe-publishing/blocks parses a body. A body is Markdown plus blocks: the Markdown stays the source of truth (revisions diff it) and a block is a fenced directive (:::name{attr="value"} ... :::). The parsed tree is plain JSON, so a product's API hands it out next to the Markdown. Every block has a plain-HTML form and renders server-side; images are Media object ids, never a URL a product invented. Blocks nest: a section holds its prose and its own blocks. The schema checks the first two levels of the tree strictly (a block and the block inside it); deeper levels are objects, because a body nests as deep as its author wrote it.
+ */
+export interface PublishingBlock {
+  /**
+   * root is the whole body; text is a run of Markdown; the rest are the blocks.
+   */
+  type:
+    | "root"
+    | "text"
+    | "hero"
+    | "section"
+    | "figure"
+    | "compare"
+    | "gallery"
+    | "clip"
+    | "pic"
+    | "video"
+    | "embed"
+    | "callout"
+    | "stat"
+    | "patchnotes"
+    | "infobox"
+    | "timeline"
+    | "quote";
+  /**
+   * The attributes of the directive. Which ones a block takes is its own: hero (art, kicker, date), section (id, by, react), figure (src, alt, caption, credit, width, height), compare (before, after, caption), gallery (items, caption), clip (id), pic (id), video (id), embed (url), callout (tone, title), stat (value, label), patchnotes (from, to), infobox (title), timeline (title), quote (by). Unknown attributes are ignored.
+   */
+  attrs?: {
+    [k: string]: (string | boolean | number | null) | undefined;
+  };
+  /**
+   * A text node: Markdown, the words between the blocks.
+   */
+  value?: string;
+  /**
+   * The blocks and the prose inside this one. A section holds its prose and its own blocks.
+   */
+  children?: {
+    /**
+     * root is the whole body; text is a run of Markdown; the rest are the blocks.
+     */
+    type:
+      | "root"
+      | "text"
+      | "hero"
+      | "section"
+      | "figure"
+      | "compare"
+      | "gallery"
+      | "clip"
+      | "pic"
+      | "video"
+      | "embed"
+      | "callout"
+      | "stat"
+      | "patchnotes"
+      | "infobox"
+      | "timeline"
+      | "quote";
+    /**
+     * The attributes of the directive. Which ones a block takes is its own: hero (art, kicker, date), section (id, by, react), figure (src, alt, caption, credit, width, height), compare (before, after, caption), gallery (items, caption), clip (id), pic (id), video (id), embed (url), callout (tone, title), stat (value, label), patchnotes (from, to), infobox (title), timeline (title), quote (by). Unknown attributes are ignored.
+     */
+    attrs?: {
+      [k: string]: (string | boolean | number | null) | undefined;
+    };
+    /**
+     * A text node: Markdown, the words between the blocks.
+     */
+    value?: string;
+    /**
+     * The blocks and the prose inside this one. A section holds its prose and its own blocks.
+     */
+    children?: {
+      /**
+       * root is the whole body; text is a run of Markdown; the rest are the blocks.
+       */
+      type:
+        | "root"
+        | "text"
+        | "hero"
+        | "section"
+        | "figure"
+        | "compare"
+        | "gallery"
+        | "clip"
+        | "pic"
+        | "video"
+        | "embed"
+        | "callout"
+        | "stat"
+        | "patchnotes"
+        | "infobox"
+        | "timeline"
+        | "quote";
+      /**
+       * The attributes of the directive. Which ones a block takes is its own: hero (art, kicker, date), section (id, by, react), figure (src, alt, caption, credit, width, height), compare (before, after, caption), gallery (items, caption), clip (id), pic (id), video (id), embed (url), callout (tone, title), stat (value, label), patchnotes (from, to), infobox (title), timeline (title), quote (by). Unknown attributes are ignored.
+       */
+      attrs?: {
+        [k: string]: (string | boolean | number | null) | undefined;
+      };
+      /**
+       * A text node: Markdown, the words between the blocks.
+       */
+      value?: string;
+      /**
+       * The blocks and the prose one level deeper.
+       */
+      children?: {}[];
+    }[];
+  }[];
+}
+
 /** registry.service-manifest@1.2.0 (owner: network) */
 /**
  * What a service is, where it lives and what it offers. The ecosystem registry is built from these, not from hard-coded route maps.
