@@ -964,6 +964,16 @@ export interface ServiceManifest {
   domains: string[];
   publicOrigin?: string;
   health?: string;
+  /**
+   * Public HTTP routes implemented by this service, with their response contract where one exists.
+   */
+  routes?: {
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    path: string;
+    contract?: string;
+    cacheSeconds?: number;
+    cors?: string;
+  }[];
   ready?: string;
   /**
    * Where the service answers on its host (loopback only): the address the registry polls health and readiness from. A host inventory or an OV_<ID>_INTERNAL_URL loopback override may replace it; a service with nothing to run has none.
@@ -317337,6 +317347,78 @@ export interface MailInboxAnswering {
 export interface ActorTaskViewTicket {
   url: string;
   expires_at: string;
+}
+
+/** report.ai-leaderboard@1.0.0 (owner: report) */
+/**
+ * report.ai-leaderboard@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiLeaderboard {
+  $schema: "report.ai-leaderboard@1";
+  generated_at: string;
+  count: number;
+  rows: {
+    id: string;
+    kind: string;
+    maker?: string | null;
+    weights?: string | null;
+    rating: {};
+    benchmark: {};
+    rank: {};
+    source: {};
+    [k: string]: unknown | undefined;
+  }[];
+  next_cursor: string | null;
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-model@1.0.0 (owner: report) */
+/**
+ * report.ai-model@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiModel {
+  $schema: "report.ai-model@1";
+  generated_at: string;
+  model: string;
+  source: {};
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-providers@1.0.0 (owner: report) */
+/**
+ * report.ai-providers@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiProviders {
+  $schema: "report.ai-providers@1";
+  generated_at: string;
+  providers: {}[];
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-compare@1.0.0 (owner: report) */
+/**
+ * report.ai-compare@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiCompare {
+  $schema: "report.ai-compare@1";
+  generated_at: string;
+  models: ({} | null)[];
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-picks@1.0.0 (owner: report) */
+/**
+ * report.ai-picks@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiPicks {
+  $schema: "report.ai-picks@1";
+  generated_at: string;
+  picks: {
+    id: string;
+    model: {} | null;
+    why: string;
+  }[];
+  [k: string]: unknown | undefined;
 }
 
 /** network.home-screen@1.0.0 (owner: network) */
