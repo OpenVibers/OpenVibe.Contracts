@@ -10,7 +10,7 @@
 
 ## 0.378.0 — 2026-11-09
 
-- Wiki rich articles: blocks, image suggestions and the writer (#393; the entry is theirs and reconciles at merge)
+- Connect's manifest and a relay fixture say OpenVibe Link, not Node (the old-name sweep)
 
 ## 0.377.0 — 2026-11-09
 
