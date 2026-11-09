@@ -1,9 +1,9 @@
 {
   "namespace": "chat.preferences",
   "owner": "chat",
-  "version": 2,
-  "migration": "v2 adds agents_read_messages (the Agent Streams plan, S5: 'Agents don't read my messages'). A v1 record upgrades to a v2 record that reads true: joining a Co-pilot room and writing in it is the choice, and the person can take it back.",
-  "description": "How chat looks for this person on every site with OpenVibe chat: timestamps, compact messages, text size, badges and emotes, and whether an AI agent may read their messages (the Co-pilot rooms of the Agent Streams plan, S5).",
+  "version": 3,
+  "migration": "v3 adds view_defaults, the person's preferred rendering for each chat kind. Existing records keep the smart defaults.",
+  "description": "How chat looks for this person on every site with OpenVibe chat: timestamps, compact messages, text size, badges and emotes, AI reading permission, and preferred conversation views.",
   "writers": [
     "owner",
     "user"
@@ -35,6 +35,16 @@
       "agents_read_messages": {
         "type": "boolean",
         "description": "Whether an AI agent may read this person's chat messages. True by default: joining a Co-pilot room and writing in it is the choice, and it can be taken back. When false the digest leaves this person out entirely."
+      },
+      "view_defaults": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "one_to_one": { "type": "string", "enum": ["bubbles", "room"] },
+          "ai": { "type": "string", "enum": ["bubbles", "room"] },
+          "group": { "type": "string", "enum": ["bubbles", "room"] },
+          "channel": { "type": "string", "enum": ["bubbles", "room"] }
+        }
       }
     }
   },
@@ -45,6 +55,11 @@
       "defaults": {
         "agents_read_messages": true
       }
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "defaults": {}
     }
   ]
 }
