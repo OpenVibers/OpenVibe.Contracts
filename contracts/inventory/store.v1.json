@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/store.v1.json",
+  "title": "InventoryStore",
+  "description": "Universal wallet: inventory.store. Personal bearer reads and purchases; server-side reviewed prices.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "prices": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "vibes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "coins": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [],
+            "minProperties": 1
+          },
+          "preview": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "emoji": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "token": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "media_id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "required": []
+          },
+          "kind": {
+            "type": "string"
+          },
+          "slots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "surfaces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "surface": {
+                  "type": "string"
+                },
+                "renderer": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "surface"
+              ]
+            }
+          },
+          "owned": {
+            "type": "boolean"
+          },
+          "available": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "issuer",
+          "prices",
+          "preview",
+          "kind",
+          "slots",
+          "surfaces",
+          "owned",
+          "available"
+        ]
+      },
+      "maxItems": 200
+    }
+  },
+  "required": [
+    "items"
+  ]
+}

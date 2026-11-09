@@ -1,0 +1,59 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_00000000000000000000000001"
+  },
+  "currency": "USD",
+  "money_writes_frozen": false,
+  "used_ai_this_month": true,
+  "balances": {
+    "coins": {
+      "label": "OpenCoins",
+      "amount": "0",
+      "currency": "opencoins",
+      "scale": 0,
+      "purpose": "Earned by taking part",
+      "action": "How to earn OpenCoins"
+    },
+    "vibes": {
+      "label": "Vibes",
+      "amount": "0",
+      "currency": "vibes-bits",
+      "scale": 0,
+      "purpose": "Support creators and buy items",
+      "action": "Buy Vibes"
+    },
+    "balance": {
+      "label": "Balance",
+      "amount": "0",
+      "currency": "USD",
+      "scale": 9,
+      "purpose": "AI and paid features",
+      "action": "Top up"
+    }
+  },
+  "bits_per_usd": 100,
+  "recent_activity": [],
+  "checkout": {
+    "providers": [
+      "stripe"
+    ],
+    "vibes": {
+      "minimum": 100,
+      "maximum": 100000,
+      "price_tiers": [
+        {
+          "min": 100,
+          "usd_per_bit": 0.012
+        }
+      ]
+    },
+    "topup": {
+      "enabled": true,
+      "amounts_cents": [
+        1000
+      ],
+      "fee_bps": 0
+    }
+  }
+}

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — universal wallet and store
+
+- Add billing.wallet@1, inventory.store@1, inventory.purchase@1 and reviewed listing request/result schemas.
+- Add inventory.store.list for issuer-owned submissions; staff approval remains separate from listing authority.
+
 ## 0.352.0 — 2026-11-09
 
 - The menu's home screen and wall (M1): `network.home-screen@1`, `network.menu-feeds@2` (order and off; v1's on reads as

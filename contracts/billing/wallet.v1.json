@@ -1,0 +1,332 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/wallet.v1.json",
+  "title": "BillingWallet",
+  "description": "Universal wallet: billing.wallet. Personal bearer reads and purchases; server-side reviewed prices.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "user"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ]
+    },
+    "currency": {
+      "const": "USD"
+    },
+    "money_writes_frozen": {
+      "type": "boolean"
+    },
+    "used_ai_this_month": {
+      "type": "boolean"
+    },
+    "balances": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "coins": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            },
+            "currency": {
+              "type": "string",
+              "enum": [
+                "opencoins",
+                "vibes-bits",
+                "USD"
+              ]
+            },
+            "scale": {
+              "type": "integer",
+              "enum": [
+                0,
+                9
+              ]
+            },
+            "purpose": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string"
+            },
+            "held": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            }
+          },
+          "required": [
+            "label",
+            "amount",
+            "currency",
+            "scale",
+            "purpose",
+            "action"
+          ]
+        },
+        "vibes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            },
+            "currency": {
+              "type": "string",
+              "enum": [
+                "opencoins",
+                "vibes-bits",
+                "USD"
+              ]
+            },
+            "scale": {
+              "type": "integer",
+              "enum": [
+                0,
+                9
+              ]
+            },
+            "purpose": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string"
+            },
+            "held": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            }
+          },
+          "required": [
+            "label",
+            "amount",
+            "currency",
+            "scale",
+            "purpose",
+            "action"
+          ]
+        },
+        "balance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            },
+            "currency": {
+              "type": "string",
+              "enum": [
+                "opencoins",
+                "vibes-bits",
+                "USD"
+              ]
+            },
+            "scale": {
+              "type": "integer",
+              "enum": [
+                0,
+                9
+              ]
+            },
+            "purpose": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string"
+            },
+            "held": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            }
+          },
+          "required": [
+            "label",
+            "amount",
+            "currency",
+            "scale",
+            "purpose",
+            "action"
+          ]
+        }
+      },
+      "required": [
+        "coins",
+        "vibes",
+        "balance"
+      ]
+    },
+    "bits_per_usd": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "recent_activity": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "coins",
+              "vibes",
+              "balance"
+            ]
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^-?[0-9]+$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "site": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "at",
+          "kind",
+          "amount",
+          "label",
+          "detail",
+          "site"
+        ]
+      },
+      "maxItems": 5
+    },
+    "checkout": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "vibes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "minimum": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maximum": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "price_tiers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "min": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "usd_per_bit": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "min",
+                  "usd_per_bit"
+                ]
+              }
+            }
+          },
+          "required": [
+            "minimum",
+            "maximum",
+            "price_tiers"
+          ]
+        },
+        "topup": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "amounts_cents": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "fee_bps": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 10000
+            }
+          },
+          "required": [
+            "enabled",
+            "amounts_cents",
+            "fee_bps"
+          ]
+        }
+      },
+      "required": [
+        "providers",
+        "vibes",
+        "topup"
+      ]
+    }
+  },
+  "required": [
+    "subject",
+    "currency",
+    "money_writes_frozen",
+    "used_ai_this_month",
+    "balances",
+    "bits_per_usd",
+    "recent_activity",
+    "checkout"
+  ]
+}

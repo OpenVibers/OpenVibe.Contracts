@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": "itd_00000000000000000000000001",
+      "name": "Rainbow",
+      "description": "Name effect",
+      "issuer": "service:live",
+      "prices": {
+        "vibes": 50,
+        "coins": 250
+      },
+      "preview": {
+        "token": "name-fx-rainbow"
+      },
+      "kind": "live.name_effect",
+      "slots": [
+        "name_effect"
+      ],
+      "surfaces": [
+        {
+          "surface": "chat",
+          "renderer": "live.name_effect.css@1"
+        }
+      ],
+      "owned": false,
+      "available": true
+    }
+  ]
+}

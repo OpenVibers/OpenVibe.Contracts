@@ -317603,3 +317603,288 @@ export interface CommunityPulseContributeRequest {
   url: string;
   picture_url?: string;
 }
+
+/** billing.wallet@1.0.0 (owner: billing) */
+/**
+ * Universal wallet: billing.wallet. Personal bearer reads and purchases; server-side reviewed prices.
+ */
+export interface BillingWallet {
+  subject: {
+    type: "user";
+    id: string;
+  };
+  currency: "USD";
+  money_writes_frozen: boolean;
+  used_ai_this_month: boolean;
+  balances: {
+    coins: {
+      label: string;
+      amount: string;
+      currency: "opencoins" | "vibes-bits" | "USD";
+      scale: 0 | 9;
+      purpose: string;
+      action: string;
+      held?: string;
+    };
+    vibes: {
+      label: string;
+      amount: string;
+      currency: "opencoins" | "vibes-bits" | "USD";
+      scale: 0 | 9;
+      purpose: string;
+      action: string;
+      held?: string;
+    };
+    balance: {
+      label: string;
+      amount: string;
+      currency: "opencoins" | "vibes-bits" | "USD";
+      scale: 0 | 9;
+      purpose: string;
+      action: string;
+      held?: string;
+    };
+  };
+  bits_per_usd: number;
+  /**
+   * @maxItems 5
+   */
+  recent_activity:
+    | []
+    | [
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        },
+        {
+          id: string;
+          at: string;
+          kind: "coins" | "vibes" | "balance";
+          amount: string;
+          label: string;
+          detail: string;
+          site: string;
+        }
+      ];
+  checkout: {
+    providers: string[];
+    vibes: {
+      minimum: number;
+      maximum: number;
+      price_tiers: {
+        min: number;
+        usd_per_bit: number;
+      }[];
+    };
+    topup: {
+      enabled: boolean;
+      amounts_cents: number[];
+      fee_bps: number | null;
+    };
+  };
+}
+
+/** inventory.store@1.0.0 (owner: inventory) */
+/**
+ * Universal wallet: inventory.store. Personal bearer reads and purchases; server-side reviewed prices.
+ */
+export interface InventoryStore {
+  /**
+   * @maxItems 200
+   */
+  items: {
+    id: string;
+    name: string;
+    description: string;
+    issuer: string;
+    prices: {
+      vibes?: number;
+      coins?: number;
+    };
+    preview: {
+      emoji?: string;
+      token?: string;
+      media_id?: string;
+    };
+    kind: string;
+    slots: string[];
+    surfaces: {
+      surface: string;
+      renderer?: string;
+    }[];
+    owned: boolean;
+    available: boolean;
+  }[];
+}
+
+/** inventory.purchase@1.0.0 (owner: inventory) */
+/**
+ * Universal wallet: inventory.purchase. Personal bearer reads and purchases; server-side reviewed prices.
+ */
+export interface InventoryPurchase {
+  id: string;
+  subject: string;
+  item_id: string;
+  name: string;
+  issuer: string;
+  currency: "vibes" | "coins";
+  amount: number;
+  status: "pending" | "fulfilled";
+  instance_id: string | null;
+  payment_id: string | null;
+}
+
+/** inventory.store-listing-request@1.0.0 (owner: inventory) */
+/**
+ * Universal wallet: inventory.store-listing-request. Personal bearer reads and purchases; server-side reviewed prices.
+ */
+export interface InventoryStoreListingRequest {
+  prices: {
+    vibes?: number;
+    coins?: number;
+  };
+}
+
+/** inventory.store-listing@1.0.0 (owner: inventory) */
+/**
+ * Universal wallet: inventory.store-listing-request. Personal bearer reads and purchases; server-side reviewed prices.
+ */
+export interface InventoryStoreListing {
+  definition_id: string;
+  issuer: string;
+  prices: {
+    vibes?: number;
+    coins?: number;
+  };
+  status: "in_review" | "published" | "rejected";
+}
