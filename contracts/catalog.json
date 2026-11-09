@@ -10327,6 +10327,51 @@
       "adr": "ADR-044"
     },
     {
+      "id": "report.ai-leaderboard",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-leaderboard.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-model",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-model.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-providers",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-providers.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-compare",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-compare.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-picks",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-picks.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "actor.ask",
       "version": "1.0.0",
       "owner": "actor",

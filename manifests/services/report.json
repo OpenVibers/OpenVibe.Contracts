@@ -70,6 +70,13 @@
   },
   "notes": "Port 5080, unit openvibe-report.service. The Report room (plan 2026-10-28 §5.4): the network's open numbers, The Rundown (what streamers talked about) and each stream's after-show report, in one place. v1 is a stateless front over OpenVibe.Network's open stats (/api/v1/stats) and OpenVibe.Live's Rundown and recap APIs; v2 makes Report the analytics authority (Network's analytics move here, Live's recap and Rundown jobs move here, the external SDK).",
   "health": "/api/health",
+  "routes": [
+    { "method": "GET", "path": "/api/v1/ai/leaderboard", "contract": "report.ai-leaderboard@1", "cacheSeconds": 120, "cors": "*" },
+    { "method": "GET", "path": "/api/v1/ai/models/:id", "contract": "report.ai-model@1", "cacheSeconds": 120, "cors": "*" },
+    { "method": "GET", "path": "/api/v1/ai/providers", "contract": "report.ai-providers@1", "cacheSeconds": 120, "cors": "*" },
+    { "method": "GET", "path": "/api/v1/ai/compare?models=", "contract": "report.ai-compare@1", "cacheSeconds": 120, "cors": "*" },
+    { "method": "GET", "path": "/api/v1/ai/picks", "contract": "report.ai-picks@1", "cacheSeconds": 120, "cors": "*" }
+  ],
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5080",
   "site": {

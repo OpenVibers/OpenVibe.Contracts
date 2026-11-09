@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.352.0 — 2026-11-09
+
+- Add `actor.ask@1`: durable approvals, questions, personal steps and sign-in hand-offs, linked to the person’s Actor and goal, with evidence and an answer or decline.
+
 ## 0.351.0 — 2026-11-09
 
-- Add `actor.ask@1`: an approval, question or step the person does themselves, linked to their Actor and goal, with a durable answer or decline.
+- Add the five public Report AI comparison response contracts and fixtures, and list their cached public routes in the Report service manifest.
 
 ## 0.350.0 — 2026-11-09
 
