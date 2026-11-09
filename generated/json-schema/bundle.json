@@ -119847,6 +119847,216 @@
           "max_cost_usd"
         ]
       }
+    },
+    "git.change": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/change.v1.json",
+        "title": "GitChange",
+        "description": "Git G2 change metadata. Community thread is hidden; Git authorizes repository access. PostgreSQL bigint numbers may be decimal strings.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "number",
+          "repo_id",
+          "title",
+          "body",
+          "author",
+          "state",
+          "thread_id",
+          "created_at",
+          "closed_at",
+          "source_repo_id",
+          "base_ref",
+          "head_ref",
+          "head_sha",
+          "merge_sha",
+          "branch_deleted_at",
+          "diff_base_sha"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^chg_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "number": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "minimum": 1
+          },
+          "repo_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "author": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "open",
+              "closed",
+              "merged"
+            ]
+          },
+          "thread_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "source_repo_id": {
+            "type": "string"
+          },
+          "base_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "head_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "head_sha": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40,64}$"
+          },
+          "merge_sha": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{40,64}$"
+          },
+          "branch_deleted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "diff_base_sha": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{40,64}$"
+          }
+        }
+      }
+    },
+    "git.issue": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/issue.v1.json",
+        "title": "GitIssue",
+        "description": "Git G2 issue metadata. Community thread is hidden; Git authorizes repository access. PostgreSQL bigint numbers may be decimal strings.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "number",
+          "repo_id",
+          "title",
+          "body",
+          "author",
+          "state",
+          "thread_id",
+          "created_at",
+          "closed_at",
+          "labels"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^iss_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "number": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "minimum": 1
+          },
+          "repo_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "author": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "open",
+              "closed"
+            ]
+          },
+          "thread_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "labels": {
+            "type": "array",
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_ -]{1,40}$"
+            }
+          }
+        }
+      }
     }
   }
 }

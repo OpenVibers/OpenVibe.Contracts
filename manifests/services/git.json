@@ -60,7 +60,7 @@
       "none": "no claims: one process serves the site; repository writes take their own file and database locks"
     }
   },
-  "notes": "Port 5270, unit openvibe-git.service. OpenVibe's own code home at git.openvibe.codes (plan OpenVibe_Git_Plan_2026-11-09): bare repositories on disk served by git's own http-backend behind OpenVibe sign-in, our pages and API for browsing, GitHub mirrors, stars, insights and contents writes without a clone. Codes, Run and Link act for a person with a typed service token and X-OV-Subject. It replaces Forgejo (deploy/forgejo in OpenVibe.Codes), whose data was all mirrors.",
+  "notes": "Port 5270, unit openvibe-git.service. OpenVibe's own code home at git.openvibe.codes (plan OpenVibe_Git_Plan_2026-11-09): bare repositories on disk served by git's own http-backend behind OpenVibe sign-in, our pages and API for browsing, GitHub mirrors, stars, insights and contents writes without a clone. Codes, Run and Link act for a person with a typed service token and X-OV-Subject. It replaces Forgejo (deploy/forgejo in OpenVibe.Codes), whose data was all mirrors. G2 consumes Community community.comment.write and community.comment.moderate for hidden entity threads, Network network.notifications.push and identity.subject.resolve, and AI ai.run.create and ai.run.read with the selected model choices API. These are outbound grant requirements, not capabilities Git implements.",
   "health": "/api/health",
   "ready": "/api/ready",
   "internalOrigin": "http://127.0.0.1:5270",

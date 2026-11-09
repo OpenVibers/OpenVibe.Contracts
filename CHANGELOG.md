@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.377.0 — 2026-11-09
+
+- community.feed-item@1: live_now on a live stream's row
+
 ## 0.376.0 — 2026-11-09
 
-- Complete `community.feed-item@1` with the optional `live_now` flag emitted by the Feed; cover on-air and ended streams, invalid live status and negative counts with fixtures.
+- git.change@1, git.issue@1 and the review events for OpenVibe.Git's changes and issues (G2)
 
 ## 0.375.0 — 2026-11-09
 
