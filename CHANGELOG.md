@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.350.0 — 2026-11-08
+
+- Add `actor.ask@1`: an approval, question or step the person does themselves, linked to their Actor and goal, with a durable answer or decline.
+
 ## 0.349.0 — 2026-11-08
 
 - Add `identity.emails@1` and `identity.email-add-request@1` and the `identity.emails.read` capability for a person's verified, privacy-limited email addresses.

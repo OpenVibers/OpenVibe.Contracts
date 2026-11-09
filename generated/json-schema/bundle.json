@@ -113416,6 +113416,100 @@
           }
         }
       }
+    },
+    "actor.ask": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/ask.v1.json",
+        "title": "ActorAsk",
+        "description": "One question or action waiting for the owner of a personal Actor. An answer never grants permission for a different action.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "actor",
+          "goal",
+          "kind",
+          "text",
+          "options",
+          "created",
+          "answered"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ask_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "actor": {
+            "type": "string",
+            "pattern": "^act_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "goal": {
+            "type": "string",
+            "pattern": "^agl_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "kind": {
+            "enum": [
+              "approve_action",
+              "answer_question",
+              "do_yourself"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "options": {
+            "type": "array",
+            "maxItems": 12,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "answered": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "at",
+                  "decision"
+                ],
+                "properties": {
+                  "at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "decision": {
+                    "enum": [
+                      "answer",
+                      "decline"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 4000
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
     }
   }
 }
