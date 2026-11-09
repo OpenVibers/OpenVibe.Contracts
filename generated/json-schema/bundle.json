@@ -277,6 +277,11 @@
             "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The person who authorized an app through the authorization-code flow, or the owner an agent acts for (always present on agent tokens). Also present on a node token that asks for an audience where the machine acts for its owner (Agent Streams S1: openvibe.live and live.agent_stream.publish); absent on every other client_credentials token."
           },
+          "app_name": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "Signed display name of a developer app, for attribution such as via <app>."
+          },
           "consent": {
             "type": "array",
             "maxItems": 4,
@@ -66976,6 +66981,16 @@
               null
             ]
           },
+          "via": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "A third-party contribution is shown as via <app>."
+          },
+          "picture_url": {
+            "type": "string",
+            "maxLength": 2000,
+            "pattern": "^https://openvibe\\.media/(t|o)/"
+          },
           "actor": {
             "type": [
               "object",
@@ -112864,7 +112879,7 @@
         }
       }
     },
-    "network.menu-feeds": {
+    "network.menu-feeds@1": {
       "version": "1.0.0",
       "owner": "network",
       "status": "active",
@@ -113943,6 +113958,317 @@
         },
         "additionalProperties": true,
         "description": "report.ai-picks@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
+      }
+    },
+    "network.home-screen": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/home-screen.v1.json",
+        "title": "NetworkHomeScreen",
+        "description": "network.home-screen@1: a person's ordered Home icons and folders. GET and PUT /api/v1/me/home-screen use a Bearer user session.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "home",
+          "folders",
+          "updated_at"
+        ],
+        "properties": {
+          "home": {
+            "type": "array",
+            "maxItems": 40,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?:[a-z0-9-]{1,40}|folder:[a-z0-9-]{1,40}|tools:[a-z0-9-]{1,40})$"
+            }
+          },
+          "folders": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "name",
+                "apps"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]{1,40}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "apps": {
+                  "type": "array",
+                  "maxItems": 40,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(?:[a-z0-9-]{1,40}|tools:[a-z0-9-]{1,40})$"
+                  }
+                }
+              }
+            }
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.menu-feeds@2": {
+      "version": "2.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/menu-feeds.v2.json",
+        "title": "NetworkMenuFeedsV2",
+        "description": "network.menu-feeds@2: every offered feed card is on unless its id is in off. order lists cards the person has positioned; other cards follow in their default order. GET and PUT /api/v1/me/menu-feeds.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "order",
+          "off",
+          "updated_at"
+        ],
+        "properties": {
+          "order": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,30}:[a-z0-9-]{1,30}$"
+            }
+          },
+          "off": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,30}:[a-z0-9-]{1,30}$"
+            }
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.frame-today": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/frame-today.v1.json",
+        "title": "NetworkFrameToday",
+        "description": "network.frame-today@1: public UTC-day totals from Report's stats, with a fourteen-day series. People counts new accounts. A null count means Report does not publish a daily number for that metric.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "day",
+          "people_today",
+          "streams_today",
+          "posts_today",
+          "new_videos_today",
+          "series",
+          "updated_at"
+        ],
+        "properties": {
+          "day": {
+            "type": "string",
+            "format": "date"
+          },
+          "people_today": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "New accounts today, from Report's accounts.daily series."
+          },
+          "streams_today": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "posts_today": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "new_videos_today": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "series": {
+            "type": "array",
+            "minItems": 14,
+            "maxItems": 14,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "day",
+                "people",
+                "streams",
+                "posts",
+                "new_videos"
+              ],
+              "properties": {
+                "day": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "people": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "streams": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "posts": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "new_videos": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "community.status": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/status.v1.json",
+        "title": "CommunityStatus",
+        "description": "community.status@1: a public status written by POST /api/v1/me/status. At most one https link may appear across text and link; Community checks this after validating the schema. The opening post id supports the existing post reaction and reply routes.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "pattern": "\\S"
+          },
+          "link": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000,
+            "pattern": "^https://"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "post_id": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "community.pulse-contribute-request": {
+      "version": "1.0.0",
+      "owner": "community",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/community/pulse-contribute-request.v1.json",
+        "title": "CommunityPulseContributeRequest",
+        "description": "An app with a person's community.pulse.contribute grant posts an item about that person. The app token supplies the person and app identity; the body cannot choose either.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,80}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "pattern": "\\S"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 2000,
+            "pattern": "^https://"
+          },
+          "picture_url": {
+            "type": "string",
+            "maxLength": 2000,
+            "pattern": "^https://openvibe\\.media/(t|o)/"
+          }
+        }
       }
     },
     "actor.ask": {
