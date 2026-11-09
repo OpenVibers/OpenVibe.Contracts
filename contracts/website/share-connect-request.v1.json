@@ -17,7 +17,7 @@
     },
     "node_id": {
       "type": "string",
-      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
       "description": "Must equal the node principal in the Network token; a mismatch is refused and audited."
     },
     "tunnel_token": {

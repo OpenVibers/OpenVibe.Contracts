@@ -6310,30 +6310,30 @@
       "status": "retired"
     },
     {
-      "id": "network.node",
+      "id": "network.link",
       "version": "1.0.0",
       "owner": "network",
-      "schema": "network/node.v1.json",
+      "schema": "network/link.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-034"
     },
     {
-      "id": "network.node-report-request",
+      "id": "network.link-report-request",
       "version": "1.0.0",
       "owner": "network",
-      "schema": "network/node-report-request.v1.json",
+      "schema": "network/link-report-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-034"
     },
     {
-      "id": "network.node-list-result",
+      "id": "network.link-list-result",
       "version": "1.0.0",
       "owner": "network",
-      "schema": "network/node-list-result.v1.json",
+      "schema": "network/link-list-result.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active",
@@ -6602,10 +6602,19 @@
       "adr": "ADR-034"
     },
     {
-      "id": "platform.node-capabilities",
+      "id": "link.compute",
       "version": "1.0.0",
       "owner": "network",
-      "schema": "platform/node-capabilities.v1.json",
+      "schema": "link/compute.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "platform.link-capabilities",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "platform/link-capabilities.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active",
@@ -7265,10 +7274,10 @@
       "adr": "ADR-048"
     },
     {
-      "id": "network.node.revoked",
+      "id": "network.link.revoked",
       "version": "1.0.0",
       "owner": "network",
-      "schema": "events/payloads/network.node.revoked.v1.json",
+      "schema": "events/payloads/network.link.revoked.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active",

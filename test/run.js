@@ -36,6 +36,9 @@ function sub(file, ...args) {
     for (const line of skipsIn(`${r.stdout}${r.stderr}`)) if (!skips.includes(line)) skips.push(line);
 }
 
+sub(path.join(ROOT, 'test/link-brand.test.js'));
+sub(path.join(ROOT, 'test/link-compute.test.js'));
+
 // ── Catalog integrity ────────────────────────────────────────────────────
 const files = [];
 (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (/\.v\d+\.json$/.test(e.name)) files.push(path.relative(path.join(ROOT, 'contracts'), p)); } })(path.join(ROOT, 'contracts'));
@@ -610,10 +613,10 @@ for (const kind of ['user', 'guest', 'app', 'mod']) {
 ok(ids.newId('user', 1000) < ids.newId('user', 2000), 'ulids sort by time');
 ok(ids.parseSubject('user:42') === null && ids.parseSubject('user') === null && ids.parseSubject('svc:live') === null, 'malformed subjects are rejected');
 ok(ids.principalSub({ type: 'service', id: 'live' }) === 'svc:live', 'service principal sub');
-const nodeId = ids.newId('node');
-ok(nodeId.startsWith('nod_') && ids.principalSub({ type: 'node', id: nodeId }) === `node:${nodeId}`, 'node principal sub is node:nod_<ULID>');
-assert.throws(() => ids.principalSub({ type: 'node', id: 'nod_42' }), /principals/);
-ok(!ids.SUBJECT_TYPES.includes('node') && ids.parseSubject(`node:${nodeId}`) === null, 'a node is a principal, never a subject');
+const nodeId = ids.newId('link');
+ok(nodeId.startsWith('lnk_') && ids.principalSub({ type: 'link', id: nodeId }) === `link:${nodeId}`, 'node principal sub is link:lnk_<ULID>');
+assert.throws(() => ids.principalSub({ type: 'link', id: 'lnk_42' }), /principals/);
+ok(!ids.SUBJECT_TYPES.includes('node') && ids.parseSubject(`link:${nodeId}`) === null, 'a node is a principal, never a subject');
 assert.throws(() => ids.principalSub({ type: 'user', id: ids.newId('user') }), /principals/);
 for (const [kind, prefix] of [['watch', 'wch'], ['observation', 'wco'], ['check', 'ckr'], ['job', 'job'], ['task', 'tsk']]) ok(ids.newId(kind).startsWith(`${prefix}_`), `newId(${kind}) is ${prefix}_<ULID>`);
 ok(contracts.validate('media.media-ref', { media_id: ids.legacyMediaId('live', 'vod', 42) }).valid, 'legacyMediaId is a valid MediaRef');
@@ -678,9 +681,9 @@ ok(V(sandboxTok, { acceptSandbox: true }).ok, 'sandbox app token accepted when t
 ok(V(serviceAuth.signServiceToken({ ...appClaims, env: 'production' }, kp.privateKey)).ok, 'production app token accepted');
 ok(V(serviceAuth.signServiceToken((({ project_id, ...rest }) => rest)(appClaims), kp.privateKey)).code === 'token.invalid_claims', 'an app token needs project_id');
 ok(contracts.ids.newId('project').startsWith('prj_'), 'project ids use the prj prefix');
-const nodeClaims = { ...claims, sub: 'node:nod_01J0000000000000000000000Z', actor_type: 'node' };
+const nodeClaims = { ...claims, sub: 'link:lnk_01J0000000000000000000000Z', actor_type: 'link' };
 ok(V(serviceAuth.signServiceToken(nodeClaims, kp.privateKey)).ok, 'node token accepted');
-ok(V(serviceAuth.signServiceToken({ ...nodeClaims, sub: 'node:nod_42' }, kp.privateKey)).code === 'token.invalid_claims', 'a malformed node id is rejected');
+ok(V(serviceAuth.signServiceToken({ ...nodeClaims, sub: 'link:lnk_42' }, kp.privateKey)).code === 'token.invalid_claims', 'a malformed node id is rejected');
 const agentId = contracts.ids.newId('agent');
 const agentClaims = { ...claims, sub: contracts.ids.principalSub({ type: 'agent', id: agentId }), actor_type: 'agent', cap: ['chat.presence.read'], cap_confirm: ['chat.message.send'], project_id: 'prj_01J0000000000000000000000Z', env: 'production', on_behalf_of: 'usr_01J0000000000000000000000Z', act: { sub: 'svc:actor' } };
 const agentTok = V(serviceAuth.signServiceToken(agentClaims, kp.privateKey));

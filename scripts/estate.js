@@ -15,7 +15,7 @@
  *                  package.json lacks is read from a nested one (apps/server, examples/<name>: at most three levels
  *                  down, never node_modules), then from STATUS.json's prose
  *   STATUS.json    repository, stage, runtime, domain, database, deployed and wave; version when there is no
- *                  package.json (a Go repository such as OpenVibe.Node)
+ *                  package.json (a Go repository such as OpenVibe.Link)
  *   migrations/    the count and the dialect the SQL declares
  *   this repository's manifests/services|products/*.json   the service or product the checkout is
  *

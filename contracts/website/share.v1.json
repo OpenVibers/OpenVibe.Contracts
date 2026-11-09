@@ -44,7 +44,7 @@
         "string",
         "null"
       ],
-      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
       "description": "The Network node principal expected to serve the tunnel; null until one is bound."
     },
     "name": {

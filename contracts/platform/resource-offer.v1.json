@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/platform/resource-offer.v1.json",
   "title": "ResourceOffer",
-  "description": "What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.node@1) deliberately leaves out.",
+  "description": "What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.link@1) deliberately leaves out.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -33,7 +33,7 @@
     },
     "node_id": {
       "type": "string",
-      "description": "network.node@1 id, for kind node"
+      "description": "network.link@1 id, for kind node"
     },
     "provider": {
       "type": "string",

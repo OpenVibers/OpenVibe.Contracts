@@ -1,6 +1,0 @@
-{
-  "provider": "node",
-  "models": {
-    "chat": "llama3.1:8b"
-  }
-}

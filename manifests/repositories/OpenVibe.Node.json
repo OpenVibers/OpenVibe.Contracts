@@ -1,6 +1,6 @@
 {
-  "name": "OpenVibe.Node",
-  "repository": "OpenVibers/OpenVibe.Node",
+  "name": "OpenVibe.Link",
+  "repository": "OpenVibers/OpenVibe.Link",
   "service": null,
   "product": null,
   "stage": "alpha",

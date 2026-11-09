@@ -83,7 +83,7 @@
         "string",
         "null"
       ],
-      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
       "description": "The Network node principal the device presents; null for an agent or server that joins through a pre-auth key."
     },
     "name": {

@@ -1,7 +1,7 @@
 # Locker: end-to-end encryption for anything on OpenVibe
 
 `locker.envelope@1` (`contracts/locker/envelope.v1.json`) is the format. The library that reads and writes it is
-`openvibe-sdk/locker` (Node and the browser); `openvibe-sdk/locker/server` checks an envelope's header without
+`openvibe-sdk/locker` (Link and the browser); `openvibe-sdk/locker/server` checks an envelope's header without
 decrypting it.
 
 Locker sits on top of sharing: sharing decides **who may fetch** a thing, Locker decides **who can read** it. With a

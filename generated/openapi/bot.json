@@ -476,7 +476,7 @@
    "get": {
     "operationId": "get_api_v1_machines",
     "summary": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject).",
-    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.network/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
+    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.link/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
     "tags": [
      "bot.machine"
     ],
@@ -525,7 +525,7 @@
    "get": {
     "operationId": "get_api_v1_machines_id",
     "summary": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject).",
-    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.network/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
+    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.link/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
     "tags": [
      "bot.machine"
     ],
@@ -582,7 +582,7 @@
    "patch": {
     "operationId": "patch_api_v1_machines_id",
     "summary": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject).",
-    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.network/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
+    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.link/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
     "tags": [
      "bot.machine"
     ],
@@ -992,7 +992,7 @@
    "post": {
     "operationId": "post_api_v1_machines_id_revoke",
     "summary": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject).",
-    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.network/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
+    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.link/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
     "tags": [
      "bot.machine"
     ],
@@ -1058,7 +1058,7 @@
    "put": {
     "operationId": "put_api_v1_machines_id_roles",
     "summary": "A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject).",
-    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.network/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
+    "description": "**bot.machine.manage** (first-party): A service acts for a person on their machines through Bot's machines API: it lists, renames, gives roles to and revokes the machines of the person it names (X-OV-Subject). Network holds it for the machines hub (openvibe.link/machines): Bot stays the registry underneath, so Bot checks that the machine is the named person's own. Never grantable to apps.",
     "tags": [
      "bot.machine"
     ],

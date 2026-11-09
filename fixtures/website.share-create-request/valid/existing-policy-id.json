@@ -2,7 +2,7 @@
   "name": "agents-alice",
   "protocol": "http",
   "local_target": "127.0.0.1:3000",
-  "node_id": "nod_01J8Z3Q4R5S6T7V8W9X0Y1Z2A5",
+  "node_id": "lnk_01J8Z3Q4R5S6T7V8W9X0Y1Z2A5",
   "policy": {
     "id": "pol_01J8Z3Q4R5S6T7V8W9X0Y1Z2A4",
     "mode": "signin"

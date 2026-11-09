@@ -325,10 +325,10 @@
 
 ## 0.309.0 — 2026-11-07
 
-- Add `bot.machine-pool@1` (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC (`rpc-server` on the members, `llama-server --rpc` on the head). OpenVibe.Network holds the record: the owner proposes it on /machines with two to eight of their own machines (the default head has the most free VRAM), and each machine reads it with its own node token and approves it on itself. A member's `certificate` is null until it approves; then it is that machine's self-signed Ed25519 public certificate, which the other members pin for the pool's private link. The private key stays on the machine: a certificate slot holding anything with `PRIVATE KEY` in it is refused, and so is any field the schema does not name. A member's `address` is a private RFC 1918 address and prefix (never 0.0.0.0, loopback or a public address) and its `public_ip` is the address Network saw it from. The rules a schema cannot say are written in the description and checked by Network and Node: the head is a member, every member is the owner's today, all share one public address and one private subnet, the head's direct link probe to each passes, every key is its own, and any change of membership, owner, head or key revokes the pool so every machine approves a new one.
+- Add `bot.machine-pool@1` (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC (`rpc-server` on the members, `llama-server --rpc` on the head). OpenVibe.Network holds the record: the owner proposes it on /machines with two to eight of their own machines (the default head has the most free VRAM), and each machine reads it with its own node token and approves it on itself. A member's `certificate` is null until it approves; then it is that machine's self-signed Ed25519 public certificate, which the other members pin for the pool's private link. The private key stays on the machine: a certificate slot holding anything with `PRIVATE KEY` in it is refused, and so is any field the schema does not name. A member's `address` is a private RFC 1918 address and prefix (never 0.0.0.0, loopback or a public address) and its `public_ip` is the address Network saw it from. The rules a schema cannot say are written in the description and checked by Network and Link: the head is a member, every member is the owner's today, all share one public address and one private subnet, the head's direct link probe to each passes, every key is its own, and any change of membership, owner, head or key revokes the pool so every machine approves a new one.
 - Add `ai.offer@1`: one community AI offer as Bot reports it to Network and AI reads it back (the fields Network already stores: machine, owner, models, hours, concurrency, credit price, audience, readiness and health), with the new optional `pool`.
 - Add `ai.offer-pool@1`, the `pool` part of the AI offer: `{ machines, head }`, two to eight machine ids and the head, which is the offer's own machine. Network adds it from its approved pool record, never from what a machine reports, and leaves a member's own offer out while it is in a pool. It names machines only: no address, key or certificate reaches AI. One price, audience, hours, idle-only and verification apply to the whole pool; AI verifies a pool's answers as it would one machine's, keys that verification on the exact membership, keeps a new or failed pool to the free tier only, and labels it "Community pool (N machines)".
-- `network.node.self.manage` names the five pool routes a machine calls with its own token (announce, read, approve, renew readiness, leave) in `implementedBy`.
+- `network.link.self.manage` names the five pool routes a machine calls with its own token (announce, read, approve, renew readiness, leave) in `implementedBy`.
 - Valid and invalid fixtures cover a pool waiting for approvals, an approved pool of three, a single-machine offer, a pool's offer and one still waiting, a group offer, a missing head or owner, a one-machine pool, a repeated member, a private key in the certificate slot, a public, loopback or wildcard address, a port under 1024, and an address, certificate or key smuggled into a field the schema does not name.
 
 ## 0.308.0 — 2026-11-07
@@ -622,7 +622,7 @@
 
 ## 0.277.0 — 2026-11-02
 
-- **`bot.command@1` kind `ai` carries tool calls** (expand only; plan L55 C3, "a local model on your Node"). The value
+- **`bot.command@1` kind `ai` carries tool calls** (expand only; plan L55 C3, "a local model on your Link"). The value
   may add `tools` (up to 64 OpenAI Chat Completions function definitions) and `tool_choice` (`auto` | `none`);
   messages may be `role: tool` with `tool_call_id`, and an assistant message may carry the `tool_calls` the model
   asked for in an earlier answer. The answer's data adds `message.tool_calls` and `finish_reason`. The machine passes
@@ -774,7 +774,7 @@
 ## 0.261.0 — 2026-10-31
 
 - **The machines hub** (plan L34, steps M2 and M4). A person's computers are the network's: Bot stays the device
-  registry underneath, and Network fronts it on openvibe.network/machines for the person and for apps the person
+  registry underneath, and Network fronts it on openvibe.link/machines for the person and for apps the person
   consented to.
   - **`network.machine@1`:** one machine as the hub shows it — its id (Bot's `dev_…`), name, kind, os, whether it is
     online, when it was last seen, its `roles` and what it does right now (`running`: its Codes jobs, its desks, its
@@ -1434,7 +1434,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
   /api/ready): Network's status page showed Run as unknown ("no internal address known to Network") although it runs.
   Its `lifecycle` said "not built yet" throughout; it now says what Run does (shutdown drains, what it resumes at boot,
   rollback, no leases).
-- **Vibe by voice on a person's own machine** (the owner, 2026-10-24: "a call word on Live and on Node"; consumer plan
+- **Vibe by voice on a person's own machine** (the owner, 2026-10-24: "a call word on Live and on Link"; consumer plan
   §8). `bot.device-message@1` gains two frames and two config fields, all additive:
   - `voice_ask` (device to server): `id` and `text`, what the person asked after the machine's call word, transcribed
     on the machine (nothing leaves it before the call word); optional `lang` (BCP 47) and `robot_id`.
@@ -1451,7 +1451,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
   `actor.agent-manage-request@1` and `-result@1` carry `quiet_from` / `quiet_to` (HH:MM UTC, both or neither; the window
   may cross midnight): no scheduled run starts inside it, an hourly run waits until it ends, and a run the owner starts
   still runs. Fixtures for both.
-- **A private desk for agents on a person's own machine** (plan track K, consumer plan step 2: Vibe's desk on Node).
+- **A private desk for agents on a person's own machine** (plan track K, consumer plan step 2: Vibe's desk on Link).
   `bot.command@1` takes kind `desk` (`action`: start | stop | status; `width`, `height` on start): a display of its own
   on the machine (Xvfb, a window manager, its own session and browser profile) where an agent works without touching
   the person's screen, which the person can watch and take over. `screen`, `input` and `browser` take `desk: private`
@@ -1501,7 +1501,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
   reviewers' question A2. It carries the robot's control epoch when Bot decided the command: it rises when a queue turn
   ends, is left or is paused by an owner takeover (OpenVibe.Bot#155), and Bot's halt for that change carries the new
   value. A device or plugin may refuse a command older than the newest halt's epoch. It is milliseconds on Bot's
-  clock, so it keeps rising across Bot restarts. Older devices ignore it (Node's decoder skips unknown fields).
+  clock, so it keeps rising across Bot restarts. Older devices ignore it (Link's decoder skips unknown fields).
 
 ## 0.212.0 — 2026-10-24
 
@@ -2176,7 +2176,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.166.0 — 2026-10-14
 
-- **Computer control (plan T14/T17, OpenVibe Link's `computer` plugin, Node#41).** `bot.command@1` takes the kinds
+- **Computer control (plan T14/T17, OpenVibe Link's `computer` plugin, Link#41).** `bot.command@1` takes the kinds
   `exec` (argv, cwd, timeout_s, stdin), `fs` (op list|stat|read|write|mkdir, path, offset, length, content_b64, mode) and
   `screen` (max_width), each with its value's shape. `bot.command-result@1` and the device `ack` of
   `bot.device-message@1` gain `data`: the machine's answer. The device `command` frame lists button, point and the
@@ -2224,7 +2224,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 ## 0.161.0 — 2026-10-14
 
-- **`platform.resource-offer@1`: `owner` for a user-owned offer** (plan T14, ADR-046). A person's own Node is offered with
+- **`platform.resource-offer@1`: `owner` for a user-owned offer** (plan T14, ADR-046). A person's own Link is offered with
   `owner` (`usr_…`), and such an offer is eligible only for that person's own workloads: a placer must never put a
   user-owned offer without an owner, or with another owner, on anyone's work, and a public projection leaves
   user-owned offers out. Until now nothing tied a user-owned offer to its owner, so a job naming `user-owned` could
@@ -2236,7 +2236,7 @@ the notes were in the tag and commit messages (`git tag -n1`).
 
 - **`bot.robot-profile@1`: `mapping.driver` may be `plugin`** (plan T15 "community-submitted profiles and drivers"): the
   robot is driven by a third-party OpenVibe Link plugin, named in `mapping.plugin`, that its owner installs on their
-  Node. A community driver no longer needs a contract release of its own (as `looi` did); OpenVibe.Bot reviews and signs
+  Link. A community driver no longer needs a contract release of its own (as `looi` did); OpenVibe.Bot reviews and signs
   community profiles before robots can use them. New valid fixture `community-plugin.json`. Additive only: every
   existing profile stays valid.
 
@@ -2970,7 +2970,7 @@ contracts and one planned capability, two capability route lists extended, no ex
 
 **The Watch contracts** (plan T18). Additive: eight new planned contracts, four planned capabilities and the Watch placeholder manifest, no existing schema changed.
 - `watch.watch@1` (new, owner `watch`, first-party, **planned**): a user-defined persistent observation — a source (a push event, a
-  webhook, a conditional HTTP URL, a feed or API, a local Node probe, or a Run check), how a value is extracted, how it is compared with
+  webhook, a conditional HTTP URL, a feed or API, a local Link probe, or a Run check), how a value is extracted, how it is compared with
   the last observation, the condition that fires, the actions it wakes (notification, event, webhook, Actor task, Codes run, Run job),
   its budget and retention. Valid and invalid fixtures in `fixtures/watch.watch/`.
 - `watch.watch-request@1` (the create/patch body), `watch.watch-result@1` (the list/watch and pause/resume/delete answers),
@@ -3042,13 +3042,13 @@ contract changes.
 
 **The node-revoked event contract** (plan T2 follow-up; the deferred item in OpenVibe.Network's
 `docs/t2-cells-and-node-principal.md` section 10, "Revocation latency outside Bot"). Adds
-`network.node.revoked@1` (owner `network`, first-party, active): a node principal (`nod_…`), a person's paired
-machine, was revoked through `POST /internal/node-principals/:id/revoke` (`network.node.manage`, the service that
+`network.link.revoked@1` (owner `network`, first-party, active): a node principal (`lnk_…`), a person's paired
+machine, was revoked through `POST /internal/link-principals/:id/revoke` (`network.link.manage`, the service that
 paired it) or `POST /api/v1/me/nodes/:id/revoke` (the owner's session), or with the owner's account. The payload is
 `{ node_id, principal_id, owner, reason?, at }` (`extra` fields refused): `owner` is the person, project or platform
 the machine belongs to, `reason` the caller's text when one was given, and the credential and its hash are never
 carried. Until now a connected machine learned of a revoke only at its next reauth (≤ 330 s); a consumer can stop it
-at once. Registered in the catalog, in Network's `eventsProduced`, and on `network.node.manage`'s `events`, with valid
+at once. Registered in the catalog, in Network's `eventsProduced`, and on `network.link.manage`'s `events`, with valid
 and invalid fixtures. Network emitting it inside `server/registry/node-principals.js` is a separate follow-up PR and
 depends on this one; there is no consumer yet. Additive.
 
@@ -3149,7 +3149,7 @@ manifest and its capabilities came in 0.85.0; this adds the contracts Bot's code
 - `bot.device-message@1`: one frame on the `/device` WebSocket, `v`, `seq`, `ts` on every frame. Server to device:
   `hello`, `config`, `command`, `estop`, `heartbeat_ack`, `error`, `paired`, `rotate`; device to server: `pair`,
   `status`, `telemetry`, `ack`, `nack`, `heartbeat`, `reauth`, `estop_state`. Job frames stay `platform.job-frame@1`.
-  The description names both implementations (Bot `server/realtime.js`, Node `internal/protocol/protocol.go`).
+  The description names both implementations (Bot `server/realtime.js`, Link `internal/protocol/protocol.go`).
 - `bot.command@1` and `bot.command-result@1`: the `/control` command frame and its `command_result` answer (`ack`,
   `nack`, `refused` with Bot's refusal code, `expired`, `pending`; `cached` for a repeated id).
 - `bot.robot-read-request@1`: the query of `bot.robot.read` (`owner`, and `limit`/`before` for the audit page); it is
@@ -3209,7 +3209,7 @@ planned (Run's repository does not exist yet) and additive.
   capability id has three segments.
 - New contracts under `contracts/run/`: `run.job-create-request@1` (class from `platform.runtime-class@1`, artifact
   required for `function` and `code`, `inputs` as Media objects pinned by sha256, `limits` wall/cpu/mem as
-  `platform.job@1`, `ttl_ms`, `egress` `none | public | openvibe-only` as Node's `worker.egress`,
+  `platform.job@1`, `ttl_ms`, `egress` `none | public | openvibe-only` as Link's `worker.egress`,
   `requirements` as `platform.workload-requirements@1`, `idempotency_key`), `run.job-create-result@1`,
   `run.job-read-result@1` (states `queued | placed | running | succeeded | failed | cancelled | expired`, placement node,
   timings, exit, `usage.seconds`, result, error, with per-state rules), `run.job-list-query@1`, `run.job-list-result@1`
@@ -3220,7 +3220,7 @@ planned (Run's repository does not exist yet) and additive.
 - `ids.newId('job')` mints `job_<ULID>`, the `platform.job@1` id Run passes to the node, so the metering key stays
   `run:<job id>:<n>`.
 - Fixtures: valid and invalid for every new contract; `test/platform-run.test.js` pins the Run job id, artifact,
-  limits and egress to `platform.job@1` and Node, and `usage.seconds` to the sum of the job's readings.
+  limits and egress to `platform.job@1` and Link, and `usage.seconds` to the sum of the job's readings.
 
 ## 0.89.0 — 2026-10-03
 
@@ -3444,27 +3444,27 @@ listed by `manifests/services/billing.json`. `POST /api/v1/usage` takes one `pla
 `principal` and the `reading` itself; fixtures `recorded` (valid) and `reading-without-idempotency-key` (invalid).
 Network grants for the usage producers follow this release. Additive.
 
-**Node principals, node capabilities and per-kind resource offers** (plan T1 lane A, the contracts brief of
+**Link principals, node capabilities and per-kind resource offers** (plan T1 lane A, the contracts brief of
 OpenVibe.Network `docs/t2-cells-and-node-principal.md` §9.1):
-- `lib/ids.js`: `PREFIX.node = 'nod'`; `principalSub({ type: 'node', id })` gives `node:nod_<ULID>`. A node is a
+- `lib/ids.js`: `PREFIX.node = 'nod'`; `principalSub({ type: 'link', id })` gives `link:lnk_<ULID>`. A node is a
   principal only: `node` is not a `SUBJECT_TYPES` entry nor an `identity.subject-ref@1` type.
-- `identity.service-token-claims`: `sub` also accepts `node:nod_<ULID>` and `actor_type` gains `node`, so
+- `identity.service-token-claims`: `sub` also accepts `link:lnk_<ULID>` and `actor_type` gains `node`, so
   `verifyServiceToken` accepts a node token and still rejects a malformed node id. Fixtures `node-token` (valid) and
   `node-bad-id` (invalid).
-- New capabilities `network.node.manage` (a service mints pairing codes and reads or revokes the node principals it
-  paired; `nodes:pair`, `nodes:read`, `nodes:revoke`), `network.node.self.manage` (a paired machine presents its own
+- New capabilities `network.link.manage` (a service mints pairing codes and reads or revokes the node principals it
+  paired; `nodes:pair`, `nodes:read`, `nodes:revoke`), `network.link.self.manage` (a paired machine presents its own
   capabilities and rotates its own credential; `nodes:self`) and `network.resource.report` (a source reports its
   complete set of `platform.resource-offer@1`; `resources:write`), all active, internal and listed by
   `manifests/services/network.json`. Their bodies are Network-local, so they name no schemas and are recorded in
-  `compatibility/capability-schema-gaps.json`. `network.node.report` is also implemented by
+  `compatibility/capability-schema-gaps.json`. `network.link.report` is also implemented by
   `POST /internal/registry/instances/report`.
 - `platform.resource-offer`: `kind` gains `storage`, `delivery`, `runtime`, `agent` and `harness`; the new
   optional `detail` is required for those kinds and validated by the kind's own `platform.<kind>-offer@1`, and is
   forbidden for `node` and `provider`. Fixtures `storage`, `delivery`, `runtime`, `agent`, `harness` (valid, beside
   `owned-node` and `provider`), `storage-without-detail` and `node-with-detail` (invalid).
-- Optional fields: `platform.service-instance` `route_weight` (integer 0-1000); `platform.node-capabilities`
+- Optional fields: `platform.service-instance` `route_weight` (integer 0-1000); `platform.link-capabilities`
   `capabilities` (resource-offer capability form), `agent_version` (at most 40 characters) and `updated_at`
-  (date-time); `network.node` `cell` (`^[a-z]{2,8}-[0-9]{1,3}$`). Fixtures `route-weight`, `agent-report` and
+  (date-time); `network.link` `cell` (`^[a-z]{2,8}-[0-9]{1,3}$`). Fixtures `route-weight`, `agent-report` and
   `with-cell` (valid), `route-weight-over-1000`, `bad-capability` and `bad-cell` (invalid).
 
 Additive.
@@ -3576,9 +3576,9 @@ X-Forwarded-* are refused), its local-only redirects and its SPA fallback. Addit
 ## 0.76.0 — 2026-09-28
 
 **The node registry** (ADR-034 section 12; roadmap WS-X1).
-- `network.node@1`: one machine of the platform as the registry lists it: its roles (web, app, data, media-worker, ingest, edge-probe, edge-relay, edge-cache, gpu, staging, ci), region-level location (region, country, optional city and coordinates), provider, an HTTPS beacon clients time for their round trip, and health. No addresses, capacity or secrets are public.
-- `network.node-report-request@1` and `network.node.report` (internal, held by Host): `POST /internal/nodes/report` sends the complete set of nodes one inventory knows. A node absent from a later report of the same source is marked down, never silently deleted.
-- `network.node-list-result@1`: `GET /api/v1/nodes` (public, `?role=`, `?region=`), the input of openvibe-sdk/geo's `nearest()`.
+- `network.link@1`: one machine of the platform as the registry lists it: its roles (web, app, data, media-worker, ingest, edge-probe, edge-relay, edge-cache, gpu, staging, ci), region-level location (region, country, optional city and coordinates), provider, an HTTPS beacon clients time for their round trip, and health. No addresses, capacity or secrets are public.
+- `network.link-report-request@1` and `network.link.report` (internal, held by Host): `POST /internal/links/report` sends the complete set of nodes one inventory knows. A node absent from a later report of the same source is marked down, never silently deleted.
+- `network.link-list-result@1`: `GET /api/v1/links` (public, `?role=`, `?region=`), the input of openvibe-sdk/geo's `nearest()`.
 
 ## 0.75.0 — 2026-09-28
 
