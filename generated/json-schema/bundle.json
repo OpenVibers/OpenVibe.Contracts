@@ -11861,7 +11861,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/wiki/page-read-result.v1.json",
         "title": "WikiPageReadResult",
-        "description": "wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] → { page, revision, citations, infobox, attachments, links, indexability, discussion_thread }; GET …/revisions?before=&limit= → { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET …/revisions/:n → { revision, citations, infobox }; GET …/diff?from=&to=&mode= → { diff }; GET …/revisions/:n/citations → { citations }; GET /api/v1/proposals/:id → { proposal }.",
+        "description": "wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] → { page, revision, citations, infobox, attachments, links, indexability, discussion_thread, blocks } (blocks is the revision's body as a publishing.block@1 tree, next to the Markdown in revision.body); GET …/revisions?before=&limit= → { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET …/revisions/:n → { revision, citations, infobox, blocks }; GET …/diff?from=&to=&mode= → { diff }; GET …/revisions/:n/citations → { citations }; GET /api/v1/proposals/:id → { proposal }.",
         "anyOf": [
           {
             "type": "object",
@@ -11925,7 +11925,10 @@
                   }
                 }
               },
-              "discussion_thread": {}
+              "discussion_thread": {},
+              "blocks": {
+                "$ref": "../publishing/block.v1.json"
+              }
             }
           },
           {
@@ -11958,7 +11961,10 @@
                   "$ref": "citation.v1.json"
                 }
               },
-              "infobox": {}
+              "infobox": {},
+              "blocks": {
+                "$ref": "../publishing/block.v1.json"
+              }
             }
           },
           {
@@ -12043,7 +12049,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/wiki/page-write-request.v1.json",
         "title": "WikiPageWriteRequest",
-        "description": "wiki.page-write-request@1: bodies of wiki.page.create on OpenVibe.Wiki (editors of the space; a service acts for the person in X-OV-Subject). POST /api/v1/spaces/:space/pages: { title, body, summary?, infobox?, parent_id?, visibility?, citations?, message? } (title at most 200 characters, summary 300, body Markdown up to 200000). POST /api/v1/pages/:id/revisions: { expected_revision, body?, title?, summary?, infobox?, citations?, keep_citations?, message? } (expected_revision is the head you edited; a stale one is 412). PATCH /api/v1/pages/:id: { slug?, parent_id?, visibility?, noindex? } (visibility and noindex by an owner). POST /api/v1/pages/:id/media: { media_id, alt?, caption? } (a Media object the person can read, not private, ready). POST /api/v1/spaces/:space/import: { pages, publish?, on_existing?, source?, original_author?, ai_assisted? } (an owner; all or nothing; unknown keys refused). DELETE /api/v1/pages/:id and POST /api/v1/pages/:id/media/verify take no body.",
+        "description": "wiki.page-write-request@1: bodies of wiki.page.create on OpenVibe.Wiki (editors of the space; a service acts for the person in X-OV-Subject). POST /api/v1/spaces/:space/pages: { title, body?, blocks?, summary?, infobox?, parent_id?, visibility?, citations?, message? } (title at most 200 characters, summary 300, body Markdown up to 200000; blocks is a publishing.block@1 tree and the API writes it back as the Markdown the revision keeps, so body and blocks are alternatives). POST /api/v1/pages/:id/revisions: { expected_revision, body?, blocks?, title?, summary?, infobox?, citations?, keep_citations?, message? } (expected_revision is the head you edited; a stale one is 412). PATCH /api/v1/pages/:id: { slug?, parent_id?, visibility?, noindex? } (visibility and noindex by an owner). POST /api/v1/pages/:id/media: { media_id, alt?, caption? } (a Media object the person can read, not private, ready). POST /api/v1/spaces/:space/import: { pages, publish?, on_existing?, source?, original_author?, ai_assisted? } (an owner; all or nothing; unknown keys refused). DELETE /api/v1/pages/:id and POST /api/v1/pages/:id/media/verify take no body.",
         "anyOf": [
           {
             "type": "object",
@@ -12157,6 +12163,9 @@
                   "string",
                   "null"
                 ]
+              },
+              "blocks": {
+                "$ref": "../publishing/block.v1.json"
               }
             }
           },
@@ -12264,6 +12273,9 @@
                   "string",
                   "null"
                 ]
+              },
+              "blocks": {
+                "$ref": "../publishing/block.v1.json"
               }
             }
           },
@@ -12605,6 +12617,391 @@
             }
           }
         ]
+      }
+    },
+    "wiki.images-suggest-request": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/wiki/images-suggest-request.v1.json",
+        "title": "WikiImagesSuggestRequest",
+        "description": "wiki.images-suggest-request@1: the body of wiki.images.suggest on OpenVibe.Wiki (an editor of the space). POST /api/v1/pages/:id/images/suggest asks the wiki.article.images task for the article's lead picture and figures: Wikimedia Commons and Openverse first, keeping the licence and the author; then OpenVibe.Pics and the page's own Media; an AI illustration only when nothing real exists, never of a real person. Every field is optional; the path names the article.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300,
+            "description": "What to look for; defaults to the article's title and summary."
+          },
+          "section": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "A section heading the pictures should illustrate; omitted, the lead picture is suggested first."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "At most this many suggestions (default 8)."
+          },
+          "allow_ai": {
+            "type": "boolean",
+            "description": "Whether an illustration may be drawn when no real picture exists (default true; never for an article about a real person)."
+          },
+          "choice": {
+            "$ref": "../ai/choice.v1.json",
+            "description": "The search engine (search/commons, search/openverse, …) for the wiki.article.images task; the owner's or person's choice answers when omitted."
+          }
+        }
+      }
+    },
+    "wiki.images-suggest-result": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/wiki/images-suggest-result.v1.json",
+        "title": "WikiImagesSuggestResult",
+        "description": "wiki.images-suggest-result@1: what wiki.images.suggest answers. Each suggestion says where a picture came from and keeps its licence and author (Commons and Openverse), the OpenVibe.Pics page and its uploader, the page's own Media object, or — only when nothing real exists and the subject is not a real person — an AI illustration labelled 'Illustration made with <model>'. A suggestion is a candidate, not an attachment: the editor chooses one, the file goes to Media, and only then does it become a page attachment.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "article_id",
+          "task",
+          "suggestions"
+        ],
+        "properties": {
+          "article_id": {
+            "type": "string",
+            "pattern": "^pg_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "task": {
+            "const": "wiki.article.images",
+            "description": "The AI task that found the pictures."
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "subject_is_person": {
+            "type": "boolean",
+            "description": "True when the article is about a real person: no AI illustration is suggested."
+          },
+          "run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300,
+            "description": "Why nothing more was suggested (no licensed picture found, the AI is not configured, the subject is a person)."
+          },
+          "suggestions": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "provider",
+                "role"
+              ],
+              "properties": {
+                "provider": {
+                  "enum": [
+                    "commons",
+                    "openverse",
+                    "pics",
+                    "media",
+                    "ai"
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "lead",
+                    "figure"
+                  ]
+                },
+                "media_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$",
+                  "description": "Set for provider media, or once a chosen suggestion is in Media."
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2048,
+                  "description": "The picture file to fetch (https) or to show when Media already serves it."
+                },
+                "page_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2048,
+                  "description": "The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object)."
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 300
+                },
+                "author": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200,
+                  "description": "The author or uploader, kept for the credit line."
+                },
+                "license": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "license_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2048
+                },
+                "width": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "height": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "alt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400
+                },
+                "caption": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400
+                },
+                "credit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400,
+                  "description": "The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image."
+                },
+                "ai": {
+                  "type": "boolean"
+                },
+                "model": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "data_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 8000000,
+                  "description": "An AI illustration's bytes as a data: URL when the provider returned no hosted URL."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "wiki.article-draft-request": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/wiki/article-draft-request.v1.json",
+        "title": "WikiArticleDraftRequest",
+        "description": "wiki.article-draft-request@1: the body of the wiki writer on OpenVibe.Wiki (an editor of the space). POST /api/v1/pages/:id/draft runs OpenVibe.AI's content.wiki workflow — research with web search plus the sources the article already cites, a citation on every sentence, and an infobox from structured facts — and files the result as a pending wiki proposal. It never publishes: a person approves it in the review queue.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "instruction": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 4000,
+            "description": "What the editor wants written or improved."
+          },
+          "choice": {
+            "$ref": "../ai/choice.v1.json",
+            "description": "The model for the writer, from the same chip as every AI run."
+          }
+        }
+      }
+    },
+    "wiki.article-draft-result": {
+      "version": "1.0.0",
+      "owner": "wiki",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/wiki/article-draft-result.v1.json",
+        "title": "WikiArticleDraftResult",
+        "description": "wiki.article-draft-result@1: what the wiki writer answers. The draft revision is pending review — status is always 'pending' — with the workflow and run that wrote it, the model that answered, and the sources its sentences cited. Nothing here is published.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "proposal",
+          "revision"
+        ],
+        "properties": {
+          "proposal": {
+            "type": "object",
+            "required": [
+              "id",
+              "page_id",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "page_id": {
+                "type": "string"
+              },
+              "space_id": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "base_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "workflow_id": {
+                "type": "string"
+              },
+              "run_id": {
+                "type": "string"
+              },
+              "status": {
+                "const": "pending"
+              },
+              "proposed_by": {
+                "type": "string"
+              }
+            }
+          },
+          "revision": {
+            "$ref": "revision.v1.json"
+          },
+          "run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "sources": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "object",
+              "required": [
+                "url"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 500
+                },
+                "author": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "retrieved_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "license": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                }
+              }
+            }
+          }
+        }
       }
     },
     "wiki.page": {

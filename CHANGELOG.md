@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.377.0 — 2026-11-09
+
+- Wiki's rich articles: the page write request and the page read result carry `blocks` (`publishing.block@1`) next to the Markdown, and `wiki.images-suggest-request@1`/`-result@1` and `wiki.article-draft-request@1`/`-result@1` describe the image suggestions (`wiki.article.images`) and the `content.wiki` draft revision that waits for a person.
+
 ## 0.376.0 — 2026-11-09
 
 - git.change@1, git.issue@1 and the review events for OpenVibe.Git's changes and issues (G2)

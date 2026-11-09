@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/wiki/page-write-request.v1.json",
   "title": "WikiPageWriteRequest",
-  "description": "wiki.page-write-request@1: bodies of wiki.page.create on OpenVibe.Wiki (editors of the space; a service acts for the person in X-OV-Subject). POST /api/v1/spaces/:space/pages: { title, body, summary?, infobox?, parent_id?, visibility?, citations?, message? } (title at most 200 characters, summary 300, body Markdown up to 200000). POST /api/v1/pages/:id/revisions: { expected_revision, body?, title?, summary?, infobox?, citations?, keep_citations?, message? } (expected_revision is the head you edited; a stale one is 412). PATCH /api/v1/pages/:id: { slug?, parent_id?, visibility?, noindex? } (visibility and noindex by an owner). POST /api/v1/pages/:id/media: { media_id, alt?, caption? } (a Media object the person can read, not private, ready). POST /api/v1/spaces/:space/import: { pages, publish?, on_existing?, source?, original_author?, ai_assisted? } (an owner; all or nothing; unknown keys refused). DELETE /api/v1/pages/:id and POST /api/v1/pages/:id/media/verify take no body.",
+  "description": "wiki.page-write-request@1: bodies of wiki.page.create on OpenVibe.Wiki (editors of the space; a service acts for the person in X-OV-Subject). POST /api/v1/spaces/:space/pages: { title, body?, blocks?, summary?, infobox?, parent_id?, visibility?, citations?, message? } (title at most 200 characters, summary 300, body Markdown up to 200000; blocks is a publishing.block@1 tree and the API writes it back as the Markdown the revision keeps, so body and blocks are alternatives). POST /api/v1/pages/:id/revisions: { expected_revision, body?, blocks?, title?, summary?, infobox?, citations?, keep_citations?, message? } (expected_revision is the head you edited; a stale one is 412). PATCH /api/v1/pages/:id: { slug?, parent_id?, visibility?, noindex? } (visibility and noindex by an owner). POST /api/v1/pages/:id/media: { media_id, alt?, caption? } (a Media object the person can read, not private, ready). POST /api/v1/spaces/:space/import: { pages, publish?, on_existing?, source?, original_author?, ai_assisted? } (an owner; all or nothing; unknown keys refused). DELETE /api/v1/pages/:id and POST /api/v1/pages/:id/media/verify take no body.",
   "anyOf": [
     {
       "type": "object",
@@ -116,6 +116,9 @@
             "string",
             "null"
           ]
+        },
+        "blocks": {
+          "$ref": "../publishing/block.v1.json"
         }
       }
     },
@@ -223,6 +226,9 @@
             "string",
             "null"
           ]
+        },
+        "blocks": {
+          "$ref": "../publishing/block.v1.json"
         }
       }
     },

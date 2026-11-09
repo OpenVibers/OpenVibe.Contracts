@@ -1083,6 +1083,42 @@
       "status": "active"
     },
     {
+      "id": "wiki.images-suggest-request",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "wiki/images-suggest-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.images-suggest-result",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "wiki/images-suggest-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.article-draft-request",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "wiki/article-draft-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "wiki.article-draft-result",
+      "version": "1.0.0",
+      "owner": "wiki",
+      "schema": "wiki/article-draft-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "wiki.page",
       "version": "1.0.0",
       "owner": "wiki",

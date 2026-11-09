@@ -1,0 +1,45 @@
+{
+  "article_id": "pg_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "task": "wiki.article.images",
+  "query": "OpenVibe Link machine",
+  "subject_is_person": false,
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "note": null,
+  "suggestions": [
+    {
+      "provider": "commons",
+      "role": "lead",
+      "media_id": null,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/OpenVibe_Link.jpg",
+      "page_url": "https://commons.wikimedia.org/wiki/File:OpenVibe_Link.jpg",
+      "title": "OpenVibe Link running on a laptop",
+      "author": "Ada Example",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "width": 1280,
+      "height": 800,
+      "alt": "The OpenVibe Link window on a laptop",
+      "caption": "OpenVibe Link running on a laptop",
+      "credit": "Picture: Ada Example, CC BY-SA 4.0",
+      "ai": false
+    },
+    {
+      "provider": "ai",
+      "role": "figure",
+      "media_id": null,
+      "url": null,
+      "title": "A diagram of the relay",
+      "author": null,
+      "license": null,
+      "license_url": null,
+      "width": 1024,
+      "height": 1024,
+      "alt": "An illustration of a relay between two machines",
+      "caption": "An illustration of the relay",
+      "credit": "Illustration made with anthropic/claude-opus-5-5",
+      "ai": true,
+      "model": "anthropic/claude-opus-5-5",
+      "data_url": "data:image/png;base64,iVBORw0KGgo="
+    }
+  ]
+}

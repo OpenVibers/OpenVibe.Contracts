@@ -157457,7 +157457,7 @@ export interface WikiCitation {
 
 /** wiki.page-read-result@1.0.0 (owner: wiki) */
 /**
- * wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] → { page, revision, citations, infobox, attachments, links, indexability, discussion_thread }; GET …/revisions?before=&limit= → { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET …/revisions/:n → { revision, citations, infobox }; GET …/diff?from=&to=&mode= → { diff }; GET …/revisions/:n/citations → { citations }; GET /api/v1/proposals/:id → { proposal }.
+ * wiki.page-read-result@1: answers of wiki.page.read on OpenVibe.Wiki (pages the caller may read; others are 404). GET /api/v1/pages/:id[?revision=] → { page, revision, citations, infobox, attachments, links, indexability, discussion_thread, blocks } (blocks is the revision's body as a publishing.block@1 tree, next to the Markdown in revision.body); GET …/revisions?before=&limit= → { revisions } (without bodies; each says whether it is published, its citation count and any AI proposal); GET …/revisions/:n → { revision, citations, infobox, blocks }; GET …/diff?from=&to=&mode= → { diff }; GET …/revisions/:n/citations → { citations }; GET /api/v1/proposals/:id → { proposal }.
  */
 export type WikiPageReadResult =
   | {
@@ -157476,6 +157476,7 @@ export type WikiPageReadResult =
         reasons?: string[];
       };
       discussion_thread?: unknown;
+      blocks?: PublishingBlock;
     }
   | {
       revisions: WikiRevision[];
@@ -157484,6 +157485,7 @@ export type WikiPageReadResult =
       revision: WikiRevision;
       citations: WikiCitation[];
       infobox?: unknown;
+      blocks?: PublishingBlock;
     }
   | {
       diff: {};
@@ -157506,7 +157508,7 @@ export type WikiPageReadResult =
 
 /** wiki.page-write-request@1.0.0 (owner: wiki) */
 /**
- * wiki.page-write-request@1: bodies of wiki.page.create on OpenVibe.Wiki (editors of the space; a service acts for the person in X-OV-Subject). POST /api/v1/spaces/:space/pages: { title, body, summary?, infobox?, parent_id?, visibility?, citations?, message? } (title at most 200 characters, summary 300, body Markdown up to 200000). POST /api/v1/pages/:id/revisions: { expected_revision, body?, title?, summary?, infobox?, citations?, keep_citations?, message? } (expected_revision is the head you edited; a stale one is 412). PATCH /api/v1/pages/:id: { slug?, parent_id?, visibility?, noindex? } (visibility and noindex by an owner). POST /api/v1/pages/:id/media: { media_id, alt?, caption? } (a Media object the person can read, not private, ready). POST /api/v1/spaces/:space/import: { pages, publish?, on_existing?, source?, original_author?, ai_assisted? } (an owner; all or nothing; unknown keys refused). DELETE /api/v1/pages/:id and POST /api/v1/pages/:id/media/verify take no body.
+ * wiki.page-write-request@1: bodies of wiki.page.create on OpenVibe.Wiki (editors of the space; a service acts for the person in X-OV-Subject). POST /api/v1/spaces/:space/pages: { title, body?, blocks?, summary?, infobox?, parent_id?, visibility?, citations?, message? } (title at most 200 characters, summary 300, body Markdown up to 200000; blocks is a publishing.block@1 tree and the API writes it back as the Markdown the revision keeps, so body and blocks are alternatives). POST /api/v1/pages/:id/revisions: { expected_revision, body?, blocks?, title?, summary?, infobox?, citations?, keep_citations?, message? } (expected_revision is the head you edited; a stale one is 412). PATCH /api/v1/pages/:id: { slug?, parent_id?, visibility?, noindex? } (visibility and noindex by an owner). POST /api/v1/pages/:id/media: { media_id, alt?, caption? } (a Media object the person can read, not private, ready). POST /api/v1/spaces/:space/import: { pages, publish?, on_existing?, source?, original_author?, ai_assisted? } (an owner; all or nothing; unknown keys refused). DELETE /api/v1/pages/:id and POST /api/v1/pages/:id/media/verify take no body.
  */
 export type WikiPageWriteRequest =
   | {
@@ -157542,6 +157544,7 @@ export type WikiPageWriteRequest =
         anchor?: string | null;
       }[];
       message?: string | null;
+      blocks?: PublishingBlock;
     }
   | {
       expected_revision: number;
@@ -157581,6 +157584,7 @@ export type WikiPageWriteRequest =
         [k: string]: unknown | undefined;
       };
       message?: string | null;
+      blocks?: PublishingBlock;
     }
   | {
       slug?: string;
@@ -157714,6 +157718,3011 @@ export type WikiPageWriteResult =
         revision: number;
       }[];
     };
+
+/** wiki.images-suggest-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.images-suggest-request@1: the body of wiki.images.suggest on OpenVibe.Wiki (an editor of the space). POST /api/v1/pages/:id/images/suggest asks the wiki.article.images task for the article's lead picture and figures: Wikimedia Commons and Openverse first, keeping the licence and the author; then OpenVibe.Pics and the page's own Media; an AI illustration only when nothing real exists, never of a real person. Every field is optional; the path names the article.
+ */
+export interface WikiImagesSuggestRequest {
+  /**
+   * What to look for; defaults to the article's title and summary.
+   */
+  query?: string | null;
+  /**
+   * A section heading the pictures should illustrate; omitted, the lead picture is suggested first.
+   */
+  section?: string | null;
+  /**
+   * At most this many suggestions (default 8).
+   */
+  count?: number;
+  /**
+   * Whether an illustration may be drawn when no real picture exists (default true; never for an article about a real person).
+   */
+  allow_ai?: boolean;
+  choice?: AiChoiceV1;
+}
+
+/** wiki.images-suggest-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.images-suggest-result@1: what wiki.images.suggest answers. Each suggestion says where a picture came from and keeps its licence and author (Commons and Openverse), the OpenVibe.Pics page and its uploader, the page's own Media object, or — only when nothing real exists and the subject is not a real person — an AI illustration labelled 'Illustration made with <model>'. A suggestion is a candidate, not an attachment: the editor chooses one, the file goes to Media, and only then does it become a page attachment.
+ */
+export interface WikiImagesSuggestResult {
+  article_id: string;
+  /**
+   * The AI task that found the pictures.
+   */
+  task: "wiki.article.images";
+  query?: string;
+  /**
+   * True when the article is about a real person: no AI illustration is suggested.
+   */
+  subject_is_person?: boolean;
+  run_id?: string | null;
+  /**
+   * Why nothing more was suggested (no licensed picture found, the AI is not configured, the subject is a person).
+   */
+  note?: string | null;
+  /**
+   * @maxItems 12
+   */
+  suggestions:
+    | []
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ]
+    | [
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        },
+        {
+          provider: "commons" | "openverse" | "pics" | "media" | "ai";
+          role: "lead" | "figure";
+          /**
+           * Set for provider media, or once a chosen suggestion is in Media.
+           */
+          media_id?: string | null;
+          /**
+           * The picture file to fetch (https) or to show when Media already serves it.
+           */
+          url?: string | null;
+          /**
+           * The picture's page at its source (Commons' file page, Openverse's result, the Pics picture, the Media object).
+           */
+          page_url?: string | null;
+          title?: string | null;
+          /**
+           * The author or uploader, kept for the credit line.
+           */
+          author?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          width?: number | null;
+          height?: number | null;
+          alt?: string | null;
+          caption?: string | null;
+          /**
+           * The line a figure shows: author, licence, or 'Illustration made with <model>' for an AI image.
+           */
+          credit?: string | null;
+          ai?: boolean;
+          model?: string | null;
+          /**
+           * An AI illustration's bytes as a data: URL when the provider returned no hosted URL.
+           */
+          data_url?: string | null;
+        }
+      ];
+}
+
+/** wiki.article-draft-request@1.0.0 (owner: wiki) */
+/**
+ * wiki.article-draft-request@1: the body of the wiki writer on OpenVibe.Wiki (an editor of the space). POST /api/v1/pages/:id/draft runs OpenVibe.AI's content.wiki workflow — research with web search plus the sources the article already cites, a citation on every sentence, and an infobox from structured facts — and files the result as a pending wiki proposal. It never publishes: a person approves it in the review queue.
+ */
+export interface WikiArticleDraftRequest {
+  /**
+   * What the editor wants written or improved.
+   */
+  instruction?: string | null;
+  choice?: AiChoiceV1;
+}
+
+/** wiki.article-draft-result@1.0.0 (owner: wiki) */
+/**
+ * wiki.article-draft-result@1: what the wiki writer answers. The draft revision is pending review — status is always 'pending' — with the workflow and run that wrote it, the model that answered, and the sources its sentences cited. Nothing here is published.
+ */
+export interface WikiArticleDraftResult {
+  proposal: {
+    id: string;
+    page_id: string;
+    space_id?: string;
+    revision?: number;
+    base_revision?: number;
+    workflow_id?: string;
+    run_id?: string;
+    status: "pending";
+    proposed_by?: string;
+  };
+  revision: WikiRevision;
+  run_id?: string | null;
+  model?: string | null;
+  provider?: string | null;
+  /**
+   * @maxItems 50
+   */
+  sources?: {
+    url: string;
+    title?: string | null;
+    author?: string | null;
+    retrieved_at?: string | null;
+    license?: string | null;
+  }[];
+}
 
 /** wiki.page@1.0.0 (owner: wiki) */
 /**

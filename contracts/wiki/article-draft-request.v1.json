@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/article-draft-request.v1.json",
+  "title": "WikiArticleDraftRequest",
+  "description": "wiki.article-draft-request@1: the body of the wiki writer on OpenVibe.Wiki (an editor of the space). POST /api/v1/pages/:id/draft runs OpenVibe.AI's content.wiki workflow — research with web search plus the sources the article already cites, a citation on every sentence, and an infobox from structured facts — and files the result as a pending wiki proposal. It never publishes: a person approves it in the review queue.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "instruction": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 4000,
+      "description": "What the editor wants written or improved."
+    },
+    "choice": {
+      "$ref": "../ai/choice.v1.json",
+      "description": "The model for the writer, from the same chip as every AI run."
+    }
+  }
+}

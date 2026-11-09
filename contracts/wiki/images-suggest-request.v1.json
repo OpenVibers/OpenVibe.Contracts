@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/wiki/images-suggest-request.v1.json",
+  "title": "WikiImagesSuggestRequest",
+  "description": "wiki.images-suggest-request@1: the body of wiki.images.suggest on OpenVibe.Wiki (an editor of the space). POST /api/v1/pages/:id/images/suggest asks the wiki.article.images task for the article's lead picture and figures: Wikimedia Commons and Openverse first, keeping the licence and the author; then OpenVibe.Pics and the page's own Media; an AI illustration only when nothing real exists, never of a real person. Every field is optional; the path names the article.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "query": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 300,
+      "description": "What to look for; defaults to the article's title and summary."
+    },
+    "section": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200,
+      "description": "A section heading the pictures should illustrate; omitted, the lead picture is suggested first."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12,
+      "description": "At most this many suggestions (default 8)."
+    },
+    "allow_ai": {
+      "type": "boolean",
+      "description": "Whether an illustration may be drawn when no real picture exists (default true; never for an article about a real person)."
+    },
+    "choice": {
+      "$ref": "../ai/choice.v1.json",
+      "description": "The search engine (search/commons, search/openverse, …) for the wiki.article.images task; the owner's or person's choice answers when omitted."
+    }
+  }
+}
