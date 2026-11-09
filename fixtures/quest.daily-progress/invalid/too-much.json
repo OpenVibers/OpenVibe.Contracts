@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-08",
+  "title": "Around the network",
+  "story": "Visit three places today.",
+  "steps": [
+    {
+      "id": "stream",
+      "event_type": "live.stream.started",
+      "site": "openvibe.live",
+      "sentence": "Do something on openvibe.live",
+      "href": "https://openvibe.live/",
+      "weight": 1,
+      "count": 1,
+      "verification": "event subject, count within the person's local day",
+      "status": "approved",
+      "source": "quest",
+      "progress": 1,
+      "done": true
+    },
+    {
+      "id": "chat",
+      "event_type": "chat.room.message.created",
+      "site": "openvibe.chat",
+      "sentence": "Do something on openvibe.chat",
+      "href": "https://openvibe.chat/",
+      "weight": 1,
+      "count": 1,
+      "verification": "event subject, count within the person's local day",
+      "status": "approved",
+      "source": "quest",
+      "progress": 1,
+      "done": true
+    },
+    {
+      "id": "wiki",
+      "event_type": "wiki.revision.created",
+      "site": "openvibe.wiki",
+      "sentence": "Do something on openvibe.wiki",
+      "href": "https://openvibe.wiki/",
+      "weight": 1,
+      "count": 1,
+      "verification": "event subject, count within the person's local day",
+      "status": "approved",
+      "source": "quest",
+      "progress": 1,
+      "done": true
+    }
+  ],
+  "source": "rotation",
+  "finished_today": 3,
+  "progress": 4,
+  "completed": true,
+  "completed_at": "2026-11-08T22:00:00Z",
+  "streak": 1,
+  "time_zone": "UTC"
+}

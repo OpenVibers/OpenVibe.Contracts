@@ -274496,6 +274496,121 @@ export interface AccessKeyList {
   keys: AccessKey[];
 }
 
+/** quest.daily@1.0.0 (owner: quest) */
+/**
+ * quest.daily@1: one quest shared by everyone on this UTC date. Progress is private and is not in this answer.
+ */
+export interface QuestDaily {
+  date: string;
+  title: string;
+  story: string;
+  /**
+   * @minItems 3
+   * @maxItems 3
+   */
+  steps: [QuestStepType, QuestStepType, QuestStepType];
+  source: "ai" | "rotation";
+  finished_today: number;
+}
+
+/** quest.daily-progress@1.0.0 (owner: quest) */
+/**
+ * quest.daily-progress@1: the caller's own progress, counted from Events in their IANA time zone.
+ */
+export interface QuestDailyProgress {
+  date: string;
+  title: string;
+  story: string;
+  /**
+   * @minItems 3
+   * @maxItems 3
+   */
+  steps: [
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    },
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    },
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    }
+  ];
+  source: "ai" | "rotation";
+  finished_today: number;
+  progress: number;
+  completed: boolean;
+  completed_at?: string | null;
+  streak: number;
+  time_zone: string;
+}
+
+/** quest.step-type@1.0.0 (owner: quest) */
+/**
+ * quest.step-type@1: a verified Events action that may be selected for a daily quest. A contributed type stays pending until staff review.
+ */
+export interface QuestStepType {
+  id: string;
+  event_type: string;
+  site: string;
+  sentence: string;
+  href: string;
+  weight: number;
+  count?: 1;
+  verification?: string;
+  status: "pending" | "approved" | "rejected";
+  source?: string;
+  project_id?: string;
+  created_at?: string;
+  reviewed_at?: string | null;
+}
+
+/** quest.step-type-request@1.0.0 (owner: quest) */
+/**
+ * A developer app's proposed daily step. Quest accepts only topics in its known Events catalog, verifies the site's host and queues the proposal for staff review.
+ */
+export interface QuestStepTypeRequest {
+  id: string;
+  event_type: string;
+  site: string;
+  sentence: string;
+  href: string;
+  weight?: number;
+}
+
 /** quest.app-quest-request@1.0.0 (owner: quest) */
 /**
  * quest.app-quest-request@1: PUT /api/v1/app-quests/:slug on OpenVibe.Quest with an app token (capability quest.app_quest.manage). A developer app defines a quest on its own project's events: each step counts events of type app.<project_key>.<name> whose envelope actor is a person (the app publishing on_behalf_of them). The badge is the only reward: app quests never pay OpenCoins. Only production apps' events are counted (Events never hands sandbox events to first-party consumers).
