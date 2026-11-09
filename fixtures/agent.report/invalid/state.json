@@ -1,0 +1,12 @@
+{
+  "ticket_id": "tkt_1",
+  "assignment_id": "asn_1",
+  "state": "done",
+  "summary": "Need a target",
+  "pr": null,
+  "tests_run": [],
+  "risks": [],
+  "human_action": {
+    "question": "Which target?"
+  }
+}

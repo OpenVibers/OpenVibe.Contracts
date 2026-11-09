@@ -16973,822 +16973,6 @@
         }
       }
     },
-    "ai.run-request": {
-      "version": "1.0.0",
-      "owner": "ai",
-      "status": "active",
-      "schema": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/ai/run-request.v1.json",
-        "title": "AiRunRequest",
-        "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).",
-        "type": "object",
-        "required": [],
-        "additionalProperties": false,
-        "properties": {
-          "task": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9_-]*\\.[a-z0-9_.-]{1,100}$",
-            "description": "A registered AI task (ai.task@1, GET /api/v1/tasks). Its workflow runs with the task's resolved choice; choice overrides it for this run."
-          },
-          "choice": {
-            "$ref": "choice.v1.json"
-          },
-          "workflow": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)+$",
-            "maxLength": 200,
-            "description": "Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…)."
-          },
-          "version": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "Pin a workflow version (active or deprecated). Omitted: the newest active version."
-          },
-          "input": {
-            "type": "object",
-            "description": "Workflow input; validated against the workflow version's input_schema. Default {}."
-          },
-          "target": {
-            "$ref": "../common/entity-ref.v1.json"
-          },
-          "attribution": {
-            "$ref": "../common/entity-ref.v1.json"
-          },
-          "on_behalf_of": {
-            "$ref": "../identity/subject-ref.v1.json"
-          },
-          "idempotency_key": {
-            "type": "string",
-            "pattern": "^[A-Za-z0-9._:-]{8,128}$",
-            "description": "Same (requester, key) returns the existing run; a different workflow or input under it is 409 idempotency.conflict. The Idempotency-Key header is used when this is absent."
-          },
-          "options": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "cache": {
-                "type": "boolean",
-                "default": true,
-                "description": "false skips the scoped cache lookup and store."
-              },
-              "debug": {
-                "type": "boolean",
-                "default": false,
-                "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on."
-              },
-              "latency": {
-                "enum": [
-                  "interactive",
-                  "background",
-                  "batch"
-                ],
-                "description": "The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped)."
-              },
-              "deadline_hours": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 72,
-                "description": "For a batch run: how long the answer may take, in hours (1 to 72). The run is queued and answered within the deadline; a deadline the provider cannot meet sends the run back to the ordinary path. Omitted: the service's own default."
-              }
-            }
-          },
-          "credential": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "subject"
-            ],
-            "properties": {
-              "subject": {
-                "type": "string",
-                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
-              }
-            },
-            "description": "Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision)."
-          }
-        },
-        "anyOf": [
-          {
-            "required": [
-              "workflow"
-            ]
-          },
-          {
-            "required": [
-              "task"
-            ]
-          }
-        ]
-      }
-    },
-    "ai.run": {
-      "version": "1.1.0",
-      "owner": "ai",
-      "status": "active",
-      "schema": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/ai/run.v1.json",
-        "title": "AiRun",
-        "description": "A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. latency_class is the class the run really ran in, service_tier the tier it was priced on, and latency_clamped set when the caller asked for a faster class than the workflow allows. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.",
-        "type": "object",
-        "required": [
-          "id",
-          "status",
-          "workflow",
-          "template",
-          "route",
-          "requester",
-          "on_behalf_of",
-          "attribution",
-          "source_service",
-          "target",
-          "input",
-          "output",
-          "error",
-          "synthetic",
-          "provenance",
-          "usage",
-          "citations_count",
-          "retry_of",
-          "idempotency_key",
-          "trace_id",
-          "created_at",
-          "started_at",
-          "finished_at"
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
-          },
-          "status": {
-            "enum": [
-              "queued",
-              "running",
-              "succeeded",
-              "failed",
-              "cancelled",
-              "cached"
-            ],
-            "description": "Terminal: succeeded, failed, cancelled, cached (a scoped cache hit, no provider call; provenance.cached_from names the run it reused)."
-          },
-          "workflow": {
-            "type": "object",
-            "required": [
-              "key",
-              "version"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "key": {
-                "type": "string"
-              },
-              "version": {
-                "type": "integer",
-                "minimum": 1
-              }
-            }
-          },
-          "template": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "required": [
-              "key",
-              "version"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "key": {
-                "type": "string"
-              },
-              "version": {
-                "type": [
-                  "integer",
-                  "null"
-                ]
-              }
-            },
-            "description": "The prompt template of the workflow's llm step; null for workflows without one."
-          },
-          "route": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "required": [
-              "key",
-              "version"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "key": {
-                "type": "string"
-              },
-              "version": {
-                "type": [
-                  "integer",
-                  "null"
-                ]
-              }
-            },
-            "description": "Provider route; version null while the route is unresolved or disabled."
-          },
-          "requester": {
-            "$ref": "../identity/subject-ref.v1.json"
-          },
-          "on_behalf_of": {
-            "anyOf": [
-              {
-                "$ref": "../identity/subject-ref.v1.json"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "attribution": {
-            "anyOf": [
-              {
-                "$ref": "../common/entity-ref.v1.json"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "source_service": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "The requester's service id when the requester is a service."
-          },
-          "target": {
-            "anyOf": [
-              {
-                "$ref": "../common/entity-ref.v1.json"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "The retained input (see the description)."
-          },
-          "output": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "Workflow output, or null."
-          },
-          "error": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "required": [
-              "code",
-              "detail"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "code": {
-                "type": "string",
-                "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
-                "description": "run.cancelled, run.interrupted, run.internal, output.invalid, output.empty, provider.unavailable, route.unavailable, source.unavailable, media.unresolvable…"
-              },
-              "detail": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              }
-            }
-          },
-          "synthetic": {
-            "type": "boolean",
-            "description": "Produced by the stub provider; never served to production callers and never cached."
-          },
-          "provenance": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "origin",
-              "workflow",
-              "workflow_version",
-              "template_version",
-              "route",
-              "route_version",
-              "provider",
-              "model",
-              "fallback_used",
-              "run_id",
-              "cached_from",
-              "synthetic"
-            ],
-            "properties": {
-              "origin": {
-                "const": "ai"
-              },
-              "workflow": {
-                "type": "string"
-              },
-              "workflow_version": {
-                "type": "integer",
-                "minimum": 1
-              },
-              "template_version": {
-                "type": [
-                  "integer",
-                  "null"
-                ]
-              },
-              "route": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "route_version": {
-                "type": [
-                  "integer",
-                  "null"
-                ]
-              },
-              "provider": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "model": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "fallback_used": {
-                "type": "boolean",
-                "description": "The primary provider was degraded and the run fell back (ADR-015: fallbacks are recorded)."
-              },
-              "run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
-              },
-              "cached_from": {
-                "type": [
-                  "string",
-                  "null"
-                ],
-                "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
-              },
-              "synthetic": {
-                "type": "boolean"
-              }
-            }
-          },
-          "usage": {
-            "type": "object",
-            "required": [
-              "tokens_in",
-              "tokens_out",
-              "cost_usd",
-              "attempts"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "tokens_in": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "tokens_out": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "cost_usd": {
-                "type": "number",
-                "minimum": 0
-              },
-              "attempts": {
-                "type": "integer",
-                "minimum": 0,
-                "description": "Provider calls made (skipped routes not counted)."
-              }
-            }
-          },
-          "citations_count": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later."
-          },
-          "latency_class": {
-            "enum": [
-              "interactive",
-              "background",
-              "batch"
-            ],
-            "description": "The class the run really ran in: how long the caller was willing to wait. It is the workflow's own class (the route's constraints.latency_class) or a slower one the caller asked for (options.latency); a caller can never make a run faster than its workflow allows."
-          },
-          "service_tier": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "enum": [
-              "standard",
-              "flex",
-              "batch",
-              "offpeak",
-              "local",
-              null
-            ],
-            "description": "The tier the run was priced on: the tier the provider really served (standard, flex, batch) or the one the router chose (offpeak inside a provider's off-peak hours, local on the host's own model). Null while the run has not answered. A provider that does not say which tier it served is priced at the list price: a saving nobody confirmed is not a saving."
-          },
-          "latency_clamped": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "required": [
-              "asked",
-              "used"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "asked": {
-                "enum": [
-                  "interactive",
-                  "background",
-                  "batch"
-                ],
-                "description": "The class the caller asked for."
-              },
-              "used": {
-                "enum": [
-                  "interactive",
-                  "background",
-                  "batch"
-                ],
-                "description": "The class the run really ran in."
-              }
-            },
-            "description": "Set when the caller asked for a faster class than the workflow allows: the class asked for and the class the run really ran in. The run is never refused for it."
-          },
-          "retry_of": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
-          },
-          "idempotency_key": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "trace_id": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "started_at": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time"
-          },
-          "finished_at": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time"
-          },
-          "explain": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "Why the run answered as it did: the task-aware router's explain (L33 P3, L36 Y7). task is the requirement set it read from the request, ranked the candidates it considered and why, attempts every provider it tried with why it was chosen and why it failed, and the placement view it ranked from (objective, reasons, selected, candidates). A run that never reached a provider has no explain.",
-            "required": [
-              "objective",
-              "reasons",
-              "selected",
-              "candidates"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "objective": {
-                "type": [
-                  "string",
-                  "null"
-                ],
-                "description": "The objective the pool planned with (cheapest, balanced, correctness, own-keys, own-machine), or null for a pinned route."
-              },
-              "reasons": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Why the router chose what it chose, in words."
-              },
-              "selected": {
-                "type": [
-                  "string",
-                  "object",
-                  "null"
-                ],
-                "description": "The provider that answered (provider, or provider/model, or the machine that answered), or null when nothing answered."
-              },
-              "candidates": {
-                "type": "array",
-                "description": "Every candidate the pool considered, with why it was excluded when it was.",
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "provider"
-                  ],
-                  "additionalProperties": true,
-                  "properties": {
-                    "provider": {
-                      "type": "string"
-                    },
-                    "model": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "eligible": {
-                      "type": "boolean"
-                    },
-                    "excluded_reason": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "cost": {
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    },
-                    "latency": {
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    }
-                  }
-                }
-              },
-              "paid_by": {
-                "type": [
-                  "string",
-                  "null"
-                ],
-                "description": "Who paid for the run: the network, the person's own key, their own machine, or a project's own provider."
-              },
-              "task": {
-                "type": "object",
-                "description": "The requirement set the router read off the request, with no model call.",
-                "required": [
-                  "vision",
-                  "tools",
-                  "json",
-                  "min_context",
-                  "reasoning",
-                  "output",
-                  "weight"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "vision": {
-                    "type": "boolean",
-                    "description": "The request carried a picture."
-                  },
-                  "tools": {
-                    "type": "boolean",
-                    "description": "The request carried tools."
-                  },
-                  "json": {
-                    "type": "boolean",
-                    "description": "The request asked for JSON out."
-                  },
-                  "min_context": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "description": "The context window the request needs, in tokens."
-                  },
-                  "reasoning": {
-                    "enum": [
-                      "none",
-                      "some",
-                      "deep"
-                    ],
-                    "description": "How much thinking the request asked for."
-                  },
-                  "output": {
-                    "enum": [
-                      "text",
-                      "image",
-                      "audio",
-                      "video"
-                    ],
-                    "description": "What the request wants out."
-                  },
-                  "weight": {
-                    "enum": [
-                      "light",
-                      "standard",
-                      "heavy"
-                    ],
-                    "description": "How heavy the work is."
-                  }
-                }
-              },
-              "ranked": {
-                "type": "array",
-                "maxItems": 5,
-                "description": "The candidates the router ranked for this task, best first, each with its reason.",
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "provider",
-                    "why"
-                  ],
-                  "additionalProperties": true,
-                  "properties": {
-                    "provider": {
-                      "type": "string"
-                    },
-                    "model": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "why": {
-                      "type": "string",
-                      "description": "Why this candidate is here (the cheapest with vision, the strong tier, warm cache)."
-                    },
-                    "cost": {
-                      "type": [
-                        "number",
-                        "null"
-                      ],
-                      "description": "The input price per million tokens, or null when the price is unknown."
-                    },
-                    "tier": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
-                      "description": "The catalogue's strength tier: fast, balanced, strong or frontier."
-                    }
-                  }
-                }
-              },
-              "attempts": {
-                "type": "array",
-                "description": "Every attempt, in order: why it was chosen, and what went wrong when it failed.",
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "provider",
-                    "status"
-                  ],
-                  "additionalProperties": true,
-                  "properties": {
-                    "key": {
-                      "type": "string",
-                      "description": "Which key or wallet paid for the attempt; never a key."
-                    },
-                    "provider": {
-                      "type": "string"
-                    },
-                    "model": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "why": {
-                      "type": "string",
-                      "description": "Why this provider was tried."
-                    },
-                    "status": {
-                      "enum": [
-                        "ok",
-                        "failed",
-                        "timeout",
-                        "skipped"
-                      ]
-                    },
-                    "error": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
-                }
-              },
-              "bench": {
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "description": "The Bench evidence the route used, when it opted in."
-              },
-              "usage_readings": {
-                "type": "array",
-                "items": {
-                  "type": "object"
-                },
-                "description": "The billing readings of the run, when it has any."
-              },
-              "task_choice": {
-                "type": "object",
-                "description": "A run started from an AI task (ai.task@1): the task it read, the choice it resolved, why that choice won and which fallback answered.",
-                "required": [
-                  "task",
-                  "requested",
-                  "answered",
-                  "why",
-                  "fallback_index"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "task": {
-                    "type": "string",
-                    "description": "The task's name."
-                  },
-                  "requested": {
-                    "$ref": "choice.v1.json"
-                  },
-                  "answered": {
-                    "$ref": "choice.v1.json"
-                  },
-                  "why": {
-                    "enum": [
-                      "run",
-                      "saved",
-                      "kind",
-                      "owner",
-                      "builtin"
-                    ],
-                    "description": "Which resolution step picked it: the run's own choice (run), the person's saved choice (saved), their kind default (kind), the owner's task default (owner) or the built-in."
-                  },
-                  "fallback_index": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "description": "0 when the chosen model answered; otherwise the position of the fallback that did."
-                  }
-                }
-              }
-            }
-          },
-          "choice": {
-            "anyOf": [
-              {
-                "$ref": "choice.v1.json"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The choice the run was started with, when it was started from a task or a choice; null otherwise."
-          },
-          "answered": {
-            "anyOf": [
-              {
-                "$ref": "choice.v1.json"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "What actually answered: the model and its source, and the machine when one did; null for a run outside a task."
-          }
-        }
-      }
-    },
     "ai.run-error": {
       "version": "1.0.0",
       "owner": "ai",
@@ -120544,81 +119728,6 @@
         ]
       }
     },
-    "ai.task-defaults": {
-      "version": "1.0.0",
-      "owner": "ai",
-      "status": "active",
-      "schema": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/ai/task-defaults.v1.json",
-        "title": "AiTaskDefaultsV1",
-        "description": "The owner's default for one task (GET|PUT /api/v1/admin/task-defaults, owner or admin role): the choice signed out and signed in, an ordered list of fallbacks, the image model for image tasks, the search engines in order for search tasks, and a per-run cost ceiling in USD. A change is audited and reaches services within a minute.",
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "signed_out": {
-            "$ref": "choice.v1.json"
-          },
-          "signed_in": {
-            "$ref": "choice.v1.json"
-          },
-          "fallbacks": {
-            "type": "array",
-            "maxItems": 10,
-            "items": {
-              "$ref": "choice.v1.json"
-            }
-          },
-          "image_model": {
-            "anyOf": [
-              {
-                "$ref": "choice.v1.json"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "search_engines": {
-            "type": "array",
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "engine",
-                "enabled"
-              ],
-              "properties": {
-                "engine": {
-                  "type": "string",
-                  "pattern": "^[a-z][a-z0-9_-]{0,39}$"
-                },
-                "enabled": {
-                  "type": "boolean"
-                }
-              }
-            }
-          },
-          "max_cost_usd": {
-            "type": [
-              "number",
-              "null"
-            ],
-            "minimum": 0,
-            "maximum": 1000
-          }
-        },
-        "required": [
-          "signed_out",
-          "signed_in",
-          "fallbacks",
-          "image_model",
-          "search_engines",
-          "max_cost_usd"
-        ]
-      }
-    },
     "git.change": {
       "version": "1.0.0",
       "owner": "git",
@@ -121448,6 +120557,1522 @@
           }
         },
         "additionalProperties": false
+      }
+    },
+    "ai.run-request": {
+      "version": "1.1.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run-request.v1.json",
+        "title": "AiRunRequest",
+        "description": "Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).",
+        "type": "object",
+        "required": [],
+        "additionalProperties": false,
+        "properties": {
+          "task": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*\\.[a-z0-9_.-]{1,100}$",
+            "description": "A registered AI task (ai.task@1, GET /api/v1/tasks). Its workflow runs with the task's resolved choice; choice overrides it for this run."
+          },
+          "choice": {
+            "$ref": "choice.v1.json"
+          },
+          "workflow": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z0-9_-]+)+$",
+            "maxLength": 200,
+            "description": "Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…)."
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Pin a workflow version (active or deprecated). Omitted: the newest active version."
+          },
+          "input": {
+            "type": "object",
+            "description": "Workflow input; validated against the workflow version's input_schema. Default {}."
+          },
+          "target": {
+            "$ref": "../common/entity-ref.v1.json"
+          },
+          "attribution": {
+            "$ref": "../common/entity-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{8,128}$",
+            "description": "Same (requester, key) returns the existing run; a different workflow or input under it is 409 idempotency.conflict. The Idempotency-Key header is used when this is absent."
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cache": {
+                "type": "boolean",
+                "default": true,
+                "description": "false skips the scoped cache lookup and store."
+              },
+              "debug": {
+                "type": "boolean",
+                "default": false,
+                "description": "Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on."
+              },
+              "latency": {
+                "enum": [
+                  "interactive",
+                  "background",
+                  "batch"
+                ],
+                "description": "The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped)."
+              },
+              "deadline_hours": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 72,
+                "description": "For a batch run: how long the answer may take, in hours (1 to 72). The run is queued and answered within the deadline; a deadline the provider cannot meet sends the run back to the ordinary path. Omitted: the service's own default."
+              }
+            }
+          },
+          "credential": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "subject"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "description": "Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision)."
+          },
+          "effort": {
+            "$ref": "effort.v1.json"
+          },
+          "ladder_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rung": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "agent_role": {
+            "enum": [
+              "router",
+              "gate",
+              "assessor",
+              "worker",
+              "subagent",
+              "reviewer"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]{0,99}$"
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "workflow"
+            ]
+          },
+          {
+            "required": [
+              "task"
+            ]
+          }
+        ]
+      }
+    },
+    "ai.run": {
+      "version": "1.2.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run.v1.json",
+        "title": "AiRun",
+        "description": "A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. latency_class is the class the run really ran in, service_tier the tier it was priced on, and latency_clamped set when the caller asked for a faster class than the workflow allows. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.",
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "workflow",
+          "template",
+          "route",
+          "requester",
+          "on_behalf_of",
+          "attribution",
+          "source_service",
+          "target",
+          "input",
+          "output",
+          "error",
+          "synthetic",
+          "provenance",
+          "usage",
+          "citations_count",
+          "retry_of",
+          "idempotency_key",
+          "trace_id",
+          "created_at",
+          "started_at",
+          "finished_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "cached"
+            ],
+            "description": "Terminal: succeeded, failed, cancelled, cached (a scoped cache hit, no provider call; provenance.cached_from names the run it reused)."
+          },
+          "workflow": {
+            "type": "object",
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "template": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "description": "The prompt template of the workflow's llm step; null for workflows without one."
+          },
+          "route": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "key",
+              "version"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "description": "Provider route; version null while the route is unresolved or disabled."
+          },
+          "requester": {
+            "$ref": "../identity/subject-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "anyOf": [
+              {
+                "$ref": "../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "$ref": "../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_service": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The requester's service id when the requester is a service."
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "../common/entity-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "The retained input (see the description)."
+          },
+          "output": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Workflow output, or null."
+          },
+          "error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "code",
+              "detail"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+                "description": "run.cancelled, run.interrupted, run.internal, output.invalid, output.empty, provider.unavailable, route.unavailable, source.unavailable, media.unresolvable…"
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "synthetic": {
+            "type": "boolean",
+            "description": "Produced by the stub provider; never served to production callers and never cached."
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "origin",
+              "workflow",
+              "workflow_version",
+              "template_version",
+              "route",
+              "route_version",
+              "provider",
+              "model",
+              "fallback_used",
+              "run_id",
+              "cached_from",
+              "synthetic"
+            ],
+            "properties": {
+              "origin": {
+                "const": "ai"
+              },
+              "workflow": {
+                "type": "string"
+              },
+              "workflow_version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "template_version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "route": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "route_version": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fallback_used": {
+                "type": "boolean",
+                "description": "The primary provider was degraded and the run fell back (ADR-015: fallbacks are recorded)."
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "cached_from": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "synthetic": {
+                "type": "boolean"
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "required": [
+              "tokens_in",
+              "tokens_out",
+              "cost_usd",
+              "attempts"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tokens_in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens_out": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "attempts": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Provider calls made (skipped routes not counted)."
+              }
+            }
+          },
+          "citations_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later."
+          },
+          "latency_class": {
+            "enum": [
+              "interactive",
+              "background",
+              "batch"
+            ],
+            "description": "The class the run really ran in: how long the caller was willing to wait. It is the workflow's own class (the route's constraints.latency_class) or a slower one the caller asked for (options.latency); a caller can never make a run faster than its workflow allows."
+          },
+          "service_tier": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "standard",
+              "flex",
+              "batch",
+              "offpeak",
+              "local",
+              null
+            ],
+            "description": "The tier the run was priced on: the tier the provider really served (standard, flex, batch) or the one the router chose (offpeak inside a provider's off-peak hours, local on the host's own model). Null while the run has not answered. A provider that does not say which tier it served is priced at the list price: a saving nobody confirmed is not a saving."
+          },
+          "latency_clamped": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "asked",
+              "used"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "asked": {
+                "enum": [
+                  "interactive",
+                  "background",
+                  "batch"
+                ],
+                "description": "The class the caller asked for."
+              },
+              "used": {
+                "enum": [
+                  "interactive",
+                  "background",
+                  "batch"
+                ],
+                "description": "The class the run really ran in."
+              }
+            },
+            "description": "Set when the caller asked for a faster class than the workflow allows: the class asked for and the class the run really ran in. The run is never refused for it."
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "trace_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "explain": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Why the run answered as it did: the task-aware router's explain (L33 P3, L36 Y7). task is the requirement set it read from the request, ranked the candidates it considered and why, attempts every provider it tried with why it was chosen and why it failed, and the placement view it ranked from (objective, reasons, selected, candidates). A run that never reached a provider has no explain.",
+            "required": [
+              "objective",
+              "reasons",
+              "selected",
+              "candidates"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "objective": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The objective the pool planned with (cheapest, balanced, correctness, own-keys, own-machine), or null for a pinned route."
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Why the router chose what it chose, in words."
+              },
+              "selected": {
+                "type": [
+                  "string",
+                  "object",
+                  "null"
+                ],
+                "description": "The provider that answered (provider, or provider/model, or the machine that answered), or null when nothing answered."
+              },
+              "candidates": {
+                "type": "array",
+                "description": "Every candidate the pool considered, with why it was excluded when it was.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "provider"
+                  ],
+                  "additionalProperties": true,
+                  "properties": {
+                    "provider": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "eligible": {
+                      "type": "boolean"
+                    },
+                    "excluded_reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "cost": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "latency": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "paid_by": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Who paid for the run: the network, the person's own key, their own machine, or a project's own provider."
+              },
+              "task": {
+                "type": "object",
+                "description": "The requirement set the router read off the request, with no model call.",
+                "required": [
+                  "vision",
+                  "tools",
+                  "json",
+                  "min_context",
+                  "reasoning",
+                  "output",
+                  "weight"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "vision": {
+                    "type": "boolean",
+                    "description": "The request carried a picture."
+                  },
+                  "tools": {
+                    "type": "boolean",
+                    "description": "The request carried tools."
+                  },
+                  "json": {
+                    "type": "boolean",
+                    "description": "The request asked for JSON out."
+                  },
+                  "min_context": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "The context window the request needs, in tokens."
+                  },
+                  "reasoning": {
+                    "enum": [
+                      "none",
+                      "some",
+                      "deep"
+                    ],
+                    "description": "How much thinking the request asked for."
+                  },
+                  "output": {
+                    "enum": [
+                      "text",
+                      "image",
+                      "audio",
+                      "video"
+                    ],
+                    "description": "What the request wants out."
+                  },
+                  "weight": {
+                    "enum": [
+                      "light",
+                      "standard",
+                      "heavy"
+                    ],
+                    "description": "How heavy the work is."
+                  }
+                }
+              },
+              "ranked": {
+                "type": "array",
+                "maxItems": 5,
+                "description": "The candidates the router ranked for this task, best first, each with its reason.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "provider",
+                    "why"
+                  ],
+                  "additionalProperties": true,
+                  "properties": {
+                    "provider": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "why": {
+                      "type": "string",
+                      "description": "Why this candidate is here (the cheapest with vision, the strong tier, warm cache)."
+                    },
+                    "cost": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "description": "The input price per million tokens, or null when the price is unknown."
+                    },
+                    "tier": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "The catalogue's strength tier: fast, balanced, strong or frontier."
+                    }
+                  }
+                }
+              },
+              "attempts": {
+                "type": "array",
+                "description": "Every attempt, in order: why it was chosen, and what went wrong when it failed.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "provider",
+                    "status"
+                  ],
+                  "additionalProperties": true,
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "description": "Which key or wallet paid for the attempt; never a key."
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "why": {
+                      "type": "string",
+                      "description": "Why this provider was tried."
+                    },
+                    "status": {
+                      "enum": [
+                        "ok",
+                        "failed",
+                        "timeout",
+                        "skipped"
+                      ]
+                    },
+                    "error": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "bench": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The Bench evidence the route used, when it opted in."
+              },
+              "usage_readings": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                },
+                "description": "The billing readings of the run, when it has any."
+              },
+              "task_choice": {
+                "type": "object",
+                "description": "A run started from an AI task (ai.task@1): the task it read, the choice it resolved, why that choice won and which fallback answered.",
+                "required": [
+                  "task",
+                  "requested",
+                  "answered",
+                  "why",
+                  "fallback_index"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "task": {
+                    "type": "string",
+                    "description": "The task's name."
+                  },
+                  "requested": {
+                    "$ref": "choice.v1.json"
+                  },
+                  "answered": {
+                    "$ref": "choice.v1.json"
+                  },
+                  "why": {
+                    "enum": [
+                      "run",
+                      "saved",
+                      "kind",
+                      "owner",
+                      "builtin"
+                    ],
+                    "description": "Which resolution step picked it: the run's own choice (run), the person's saved choice (saved), their kind default (kind), the owner's task default (owner) or the built-in."
+                  },
+                  "fallback_index": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "0 when the chosen model answered; otherwise the position of the fallback that did."
+                  }
+                }
+              }
+            }
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "$ref": "choice.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The choice the run was started with, when it was started from a task or a choice; null otherwise."
+          },
+          "answered": {
+            "anyOf": [
+              {
+                "$ref": "choice.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "What actually answered: the model and its source, and the machine when one did; null for a run outside a task."
+          },
+          "effort_requested": {
+            "$ref": "effort.v1.json"
+          },
+          "effort_applied": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "max"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "effort_rung": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ladder_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ladder": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "model",
+                "effort",
+                "cost_usd",
+                "outcome"
+              ],
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "effort": {
+                  "$ref": "effort.v1.json"
+                },
+                "cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "outcome": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ai.task-defaults": {
+      "version": "1.1.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/task-defaults.v1.json",
+        "title": "AiTaskDefaultsV1",
+        "description": "The owner's default for one task (GET|PUT /api/v1/admin/task-defaults, owner or admin role): the choice signed out and signed in, an ordered list of fallbacks, the image model for image tasks, the search engines in order for search tasks, and a per-run cost ceiling in USD. A change is audited and reaches services within a minute.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "signed_out": {
+            "$ref": "choice.v1.json"
+          },
+          "signed_in": {
+            "$ref": "choice.v1.json"
+          },
+          "fallbacks": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "$ref": "choice.v1.json"
+            }
+          },
+          "image_model": {
+            "anyOf": [
+              {
+                "$ref": "choice.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "search_engines": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "engine",
+                "enabled"
+              ],
+              "properties": {
+                "engine": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]{0,39}$"
+                },
+                "enabled": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "max_cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "effort": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "max"
+            ],
+            "description": "Concrete effort used when a request selects auto. Omitted uses the workflow default, then medium."
+          }
+        },
+        "required": [
+          "signed_out",
+          "signed_in",
+          "fallbacks",
+          "image_model",
+          "search_engines",
+          "max_cost_usd"
+        ]
+      }
+    },
+    "agent.trigger": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/trigger.v1.json",
+        "title": "AgentTrigger",
+        "description": "Immutable source event. Source-local actor identity grants no cross-source authority. Accepting an id twice creates one ticket.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "source",
+          "actor",
+          "source_scope",
+          "threads",
+          "occurred_at",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actor": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "id",
+              "kind"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "enum": [
+                  "person",
+                  "bot",
+                  "system"
+                ]
+              }
+            }
+          },
+          "source_scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "threads": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "read_pointer": {
+            "type": "string",
+            "format": "uri"
+          },
+          "addresses_agent": {
+            "enum": [
+              "mention",
+              "direct",
+              "none"
+            ]
+          }
+        }
+      }
+    },
+    "agent.decision": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/decision.v1.json",
+        "title": "AgentDecision",
+        "description": "Gate and assessment decision. Inferred work defaults to observe: record ignore with would_accept, never launch. Only an explicit human stop withdraws a mandate.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "trigger_ids",
+          "policy_version",
+          "decision",
+          "strength",
+          "direction",
+          "rule_assessments"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trigger_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "policy_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "enum": [
+              "accept",
+              "stop",
+              "ignore",
+              "unavailable"
+            ]
+          },
+          "strength": {
+            "enum": [
+              "explicit",
+              "inferred"
+            ]
+          },
+          "direction": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "implementation_requested",
+              "target_basis",
+              "requires_design_decision",
+              "evidence"
+            ],
+            "properties": {
+              "implementation_requested": {
+                "type": "boolean"
+              },
+              "target_basis": {
+                "enum": [
+                  "specified",
+                  "existing-standard",
+                  "undetermined"
+                ]
+              },
+              "requires_design_decision": {
+                "type": "boolean"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "trigger_id",
+                    "quote"
+                  ],
+                  "properties": {
+                    "trigger_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "rule_assessments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rule_id",
+                "matched",
+                "reason"
+              ],
+              "properties": {
+                "matched": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "rule_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "would_accept": {
+            "type": "boolean"
+          },
+          "ignored_from_card": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "agent.ticket": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/ticket.v1.json",
+        "title": "AgentTicket",
+        "description": "Authorized work with an immutable mandate. Policy changes notify, never cancel. Revalidate before resuming an ended ticket; bots and CI cannot resume it. Stage applies to open tickets.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "trigger_id",
+          "mandate",
+          "state",
+          "stage",
+          "threads"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trigger_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mandate": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "policy_version",
+              "scope",
+              "strength",
+              "matched_rules",
+              "actor",
+              "source_scope",
+              "budget"
+            ],
+            "properties": {
+              "policy_version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "strength": {
+                "enum": [
+                  "explicit",
+                  "inferred"
+                ]
+              },
+              "matched_rules": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "actor": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "id",
+                  "kind"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "kind": {
+                    "enum": [
+                      "person",
+                      "bot",
+                      "system"
+                    ]
+                  }
+                }
+              },
+              "source_scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "budget": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "usd",
+                  "tokens",
+                  "wall_minutes"
+                ],
+                "properties": {
+                  "usd": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "wall_minutes": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          },
+          "state": {
+            "enum": [
+              "open",
+              "ended"
+            ]
+          },
+          "stage": {
+            "$ref": "stage.v1.json"
+          },
+          "threads": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "agent.report": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/report.v1.json",
+        "title": "AgentReport",
+        "description": "Executor report. A PR alone is not ready; a draft is blocked. human_action carries exactly one question unchanged to the person.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ticket_id",
+          "assignment_id",
+          "state",
+          "summary",
+          "pr",
+          "tests_run",
+          "risks"
+        ],
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assignment_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "enum": [
+              "progress",
+              "waiting",
+              "ready",
+              "blocked",
+              "failed",
+              "dropped"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pr": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "tests_run": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "risks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "human_action": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "question"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "agent.attention": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/attention.v1.json",
+        "title": "AgentAttention",
+        "description": "One structured question awaiting a person. Authorized independent work may continue.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "ticket_id",
+          "question",
+          "state",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ticket_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "enum": [
+              "open",
+              "answered",
+              "dismissed"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "answer": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "agent.stage": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/stage.v1.json",
+        "title": "AgentStage",
+        "description": "Closed open-ticket stages. First matching row wins: delivery failure, attention, ready report, blocked/failed report without a later human input, absent/pending assignment, waiting report/ended assignment, working. Labels and conditions: docs/agent-work.md.",
+        "type": "string",
+        "enum": [
+          "person/delivery",
+          "person/answer",
+          "person/review",
+          "person/blocked",
+          "person/failed",
+          "working/queued",
+          "idle",
+          "working"
+        ]
+      }
+    },
+    "ai.effort": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/effort.v1.json",
+        "title": "AiEffort",
+        "description": "Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.",
+        "type": "string",
+        "enum": [
+          "auto",
+          "low",
+          "medium",
+          "high",
+          "max"
+        ]
       }
     }
   }

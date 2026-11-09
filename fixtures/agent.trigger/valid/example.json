@@ -1,0 +1,15 @@
+{
+  "id": "trg_1",
+  "source": "github",
+  "actor": {
+    "source": "github",
+    "id": "owner",
+    "kind": "person"
+  },
+  "source_scope": "issues",
+  "threads": [
+    "issue:1"
+  ],
+  "occurred_at": "2026-11-09T12:00:00Z",
+  "text": "Fix the bug"
+}
