@@ -1,0 +1,15 @@
+{
+  "id": "run.fill.approve",
+  "version": "1.0",
+  "owner": "run",
+  "status": "active",
+  "visibility": "public",
+  "description": "Read pending blind sign-in requests for the signed-in person and submit a single-use encrypted approval envelope. Responses contain request metadata and credential-free outcomes only.",
+  "inputSchema": "run.fill-grant@1",
+  "outputSchema": "run.fill-request@1",
+  "permissions": ["run:fill:approve"],
+  "resourceConstraints": ["owner"],
+  "quotaClass": "run-write",
+  "events": [],
+  "implementedBy": ["GET /api/v1/fill-requests", "POST /api/v1/fill-requests/:id/grant"]
+}
