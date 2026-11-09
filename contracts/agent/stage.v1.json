@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/stage.v1.json",
+  "title": "AgentStage",
+  "description": "Closed open-ticket stages. First matching row wins: delivery failure, attention, ready report, blocked/failed report without a later human input, absent/pending assignment, waiting report/ended assignment, working. Labels and conditions: docs/agent-work.md.",
+  "type": "string",
+  "enum": [
+    "person/delivery",
+    "person/answer",
+    "person/review",
+    "person/blocked",
+    "person/failed",
+    "working/queued",
+    "idle",
+    "working"
+  ]
+}

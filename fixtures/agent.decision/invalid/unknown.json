@@ -1,0 +1,22 @@
+{
+  "id": "dec_1",
+  "trigger_ids": [
+    "trg_1"
+  ],
+  "policy_version": "1",
+  "decision": "accept",
+  "strength": "explicit",
+  "direction": {
+    "implementation_requested": true,
+    "target_basis": "specified",
+    "requires_design_decision": false,
+    "evidence": [
+      {
+        "trigger_id": "trg_1",
+        "quote": "Fix the bug"
+      }
+    ]
+  },
+  "rule_assessments": [],
+  "unexpected": true
+}

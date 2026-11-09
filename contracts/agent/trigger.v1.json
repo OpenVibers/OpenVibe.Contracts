@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/trigger.v1.json",
+  "title": "AgentTrigger",
+  "description": "Immutable source event. Source-local actor identity grants no cross-source authority. Accepting an id twice creates one ticket.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "source",
+    "actor",
+    "source_scope",
+    "threads",
+    "occurred_at",
+    "text"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "person",
+            "bot",
+            "system"
+          ]
+        }
+      }
+    },
+    "source_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "threads": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "read_pointer": {
+      "type": "string",
+      "format": "uri"
+    },
+    "addresses_agent": {
+      "enum": [
+        "mention",
+        "direct",
+        "none"
+      ]
+    }
+  }
+}

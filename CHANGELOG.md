@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.384.0 — 2026-11-09
+
+- Agent work fabric: trigger, decision, immutable ticket mandate and budget, six report states, attention, and ordered stage vocabulary. Portable AI effort, concrete task-default effort, and optional effort/ladder receipt metadata.
+
 ## 0.383.0 — 2026-11-09
 
 - `ai.provider@1`: measured per provider+model circuit health (status, failure class, plain reason and since when, retry/backoff, notify time); `ai.run-read-result@1`: `requests[].error_class`.
