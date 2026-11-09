@@ -47,6 +47,9 @@
         },
         "image": {
           "$ref": "#/$defs/modelChoice"
+        },
+        "search": {
+          "$ref": "#/$defs/modelChoice"
         }
       }
     },

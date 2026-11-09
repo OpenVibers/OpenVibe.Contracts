@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/task-defaults.v1.json",
+  "title": "AiTaskDefaultsV1",
+  "description": "The owner's default for one task (GET|PUT /api/v1/admin/task-defaults, owner or admin role): the choice signed out and signed in, an ordered list of fallbacks, the image model for image tasks, the search engines in order for search tasks, and a per-run cost ceiling in USD. A change is audited and reaches services within a minute.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "signed_out": {
+      "$ref": "choice.v1.json"
+    },
+    "signed_in": {
+      "$ref": "choice.v1.json"
+    },
+    "fallbacks": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "$ref": "choice.v1.json"
+      }
+    },
+    "image_model": {
+      "anyOf": [
+        {
+          "$ref": "choice.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "search_engines": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "engine",
+          "enabled"
+        ],
+        "properties": {
+          "engine": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,39}$"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "max_cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1000
+    }
+  },
+  "required": [
+    "signed_out",
+    "signed_in",
+    "fallbacks",
+    "image_model",
+    "search_engines",
+    "max_cost_usd"
+  ]
+}
