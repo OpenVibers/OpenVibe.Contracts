@@ -62,7 +62,7 @@
       "name": "OpenVibe.Community",
       "origin": "https://openvibe.community",
       "operations": 40,
-      "capabilities": 13
+      "capabilities": 14
     },
     {
       "service": "connect",
@@ -105,6 +105,13 @@
       "origin": "https://openvibe.events",
       "operations": 16,
       "capabilities": 9
+    },
+    {
+      "service": "exchange",
+      "name": "OpenVibe.Exchange",
+      "origin": "https://openvibe.exchange",
+      "operations": 1,
+      "capabilities": 1
     },
     {
       "service": "food",

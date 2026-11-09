@@ -96,6 +96,10 @@ export type ServiceTokenClaims = {
    */
   on_behalf_of?: string;
   /**
+   * Signed display name of a developer app, for attribution such as via <app>.
+   */
+  app_name?: string;
+  /**
    * App tokens from the authorization-code flow (0.310.0): the purposes the person (on_behalf_of) granted this app at sign-in and that are still active when the token is issued, the claim network.consent-claim@1 defines. Present when the sign-in asked for consent:<purpose> scopes, [] when none is granted, absent otherwise.
    *
    * @maxItems 4
@@ -959,7 +963,25 @@ export interface ServiceManifest {
   repository: string;
   domains: string[];
   publicOrigin?: string;
+  /**
+   * Public service routes whose access comes from a person's session or token, rather than a service capability.
+   */
+  apiRoutes?: {
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    path: string;
+    responseSchema?: string;
+  }[];
   health?: string;
+  /**
+   * Public HTTP routes implemented by this service, with their response contract where one exists.
+   */
+  routes?: {
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    path: string;
+    contract?: string;
+    cacheSeconds?: number;
+    cors?: string;
+  }[];
   ready?: string;
   /**
    * Where the service answers on its host (loopback only): the address the registry polls health and readiness from. A host inventory or an OV_<ID>_INTERNAL_URL loopback override may replace it; a service with nothing to run has none.
@@ -206540,6 +206562,54 @@ export interface ChatTicketConversation {
   };
 }
 
+/** exchange.chat-export-request@1.0.0 (owner: exchange) */
+/**
+ * The x-ov-subject header on Chat's authenticated export request.
+ */
+export interface ExchangeChatExportRequest {
+  subject: string;
+}
+
+/** exchange.chat-export-result@1.0.0 (owner: exchange) */
+/**
+ * Unsealed chats and messages of exactly the named person, for their import into Chat.
+ */
+export interface ExchangeChatExportResult {
+  count: number;
+  chats: {
+    id: string;
+    title: string;
+    /**
+     * @maxItems 3
+     */
+    models: [] | [string] | [string, string] | [string, string, string];
+    created_at?: string;
+    updated_at?: string;
+    messages: {
+      role: string;
+      model?: string | null;
+      content?: string | null;
+      created_at?: string;
+      meta?: {};
+    }[];
+  }[];
+}
+
+/** chat.vibe-answer@2.0.0 (owner: chat) */
+/**
+ * chat.vibe-answer@2: one answer to a person's Vibe question, from an explicit model selection. A question may carry one to three of these independently.
+ */
+export interface ChatVibeAnswerV2 {
+  model: string;
+  status: "writing" | "finished" | "failed";
+  text: string;
+  provider?: string | null;
+  cost_usd?: number | null;
+  ms?: number | null;
+  run_id?: string | null;
+  error?: string;
+}
+
 /** chat.vibe-ask-request@1.0.0 (owner: chat) */
 /**
  * chat.vibe-ask-request@1: a first-party service asks Vibe, OpenVibe's assistant, on a person's behalf (Vibe by voice: OpenVibe.Bot passes what the person said after their machine's call word). Chat keeps it in the person's own Vibe chats, one chat per source ("Voice on <machine>"), and answers with Vibe's reply, which counts against the person's daily allowance like any of their Vibe answers. POST /internal/chat/vibe/ask, capability chat.vibe.ask, loopback only.
@@ -208022,6 +208092,11 @@ export interface CommunityPulseItem {
   url: string;
   origin: "user" | "ai" | "system";
   label: "AI" | "System" | null;
+  /**
+   * A third-party contribution is shown as via <app>.
+   */
+  via?: string;
+  picture_url?: string;
   actor: {
     subject?: string | null;
     username?: string | null;
@@ -317443,4 +317518,301 @@ export interface MailInboxAnswering {
 export interface ActorTaskViewTicket {
   url: string;
   expires_at: string;
+}
+
+/** report.ai-leaderboard@1.0.0 (owner: report) */
+/**
+ * report.ai-leaderboard@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiLeaderboard {
+  $schema: "report.ai-leaderboard@1";
+  generated_at: string;
+  count: number;
+  rows: {
+    id: string;
+    kind: string;
+    maker?: string | null;
+    weights?: string | null;
+    rating: {};
+    benchmark: {};
+    rank: {};
+    source: {};
+    [k: string]: unknown | undefined;
+  }[];
+  next_cursor: string | null;
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-model@1.0.0 (owner: report) */
+/**
+ * report.ai-model@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiModel {
+  $schema: "report.ai-model@1";
+  generated_at: string;
+  model: string;
+  source: {};
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-providers@1.0.0 (owner: report) */
+/**
+ * report.ai-providers@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiProviders {
+  $schema: "report.ai-providers@1";
+  generated_at: string;
+  providers: {}[];
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-compare@1.0.0 (owner: report) */
+/**
+ * report.ai-compare@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiCompare {
+  $schema: "report.ai-compare@1";
+  generated_at: string;
+  models: ({} | null)[];
+  [k: string]: unknown | undefined;
+}
+
+/** report.ai-picks@1.0.0 (owner: report) */
+/**
+ * report.ai-picks@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements.
+ */
+export interface ReportAiPicks {
+  $schema: "report.ai-picks@1";
+  generated_at: string;
+  picks: {
+    id: string;
+    model: {} | null;
+    why: string;
+  }[];
+  [k: string]: unknown | undefined;
+}
+
+/** network.home-screen@1.0.0 (owner: network) */
+/**
+ * network.home-screen@1: a person's ordered Home icons and folders. GET and PUT /api/v1/me/home-screen use a Bearer user session.
+ */
+export interface NetworkHomeScreen {
+  /**
+   * @maxItems 40
+   */
+  home: string[];
+  /**
+   * @maxItems 40
+   */
+  folders: {
+    id: string;
+    name: string;
+    /**
+     * @maxItems 40
+     */
+    apps: string[];
+  }[];
+  updated_at: string | null;
+}
+
+/** network.menu-feeds@2.0.0 (owner: network) */
+/**
+ * network.menu-feeds@2: every offered feed card is on unless its id is in off. order lists cards the person has positioned; other cards follow in their default order. GET and PUT /api/v1/me/menu-feeds.
+ */
+export interface NetworkMenuFeedsV2 {
+  /**
+   * @maxItems 100
+   */
+  order: string[];
+  /**
+   * @maxItems 100
+   */
+  off: string[];
+  updated_at: string | null;
+}
+
+/** network.frame-today@1.0.0 (owner: network) */
+/**
+ * network.frame-today@1: public UTC-day totals from Report's stats, with a fourteen-day series. People counts new accounts. A null count means Report does not publish a daily number for that metric.
+ */
+export interface NetworkFrameToday {
+  day: string;
+  /**
+   * New accounts today, from Report's accounts.daily series.
+   */
+  people_today: number | null;
+  streams_today: number | null;
+  posts_today: number | null;
+  new_videos_today: number | null;
+  /**
+   * @minItems 14
+   * @maxItems 14
+   */
+  series: [
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    },
+    {
+      day: string;
+      people: number | null;
+      streams: number | null;
+      posts: number | null;
+      new_videos: number | null;
+    }
+  ];
+  updated_at: string;
+}
+
+/** community.status@1.0.0 (owner: community) */
+/**
+ * community.status@1: a public status written by POST /api/v1/me/status. At most one https link may appear across text and link; Community checks this after validating the schema. The opening post id supports the existing post reaction and reply routes.
+ */
+export interface CommunityStatus {
+  text: string;
+  link?: string | null;
+  id?: number;
+  post_id?: number;
+  url?: string;
+  created_at?: string;
+}
+
+/** community.pulse-contribute-request@1.0.0 (owner: community) */
+/**
+ * An app with a person's community.pulse.contribute grant posts an item about that person. The app token supplies the person and app identity; the body cannot choose either.
+ */
+export interface CommunityPulseContributeRequest {
+  id: string;
+  text: string;
+  url: string;
+  picture_url?: string;
+}
+
+/** actor.ask@1.0.0 (owner: actor) */
+/**
+ * One question or action waiting for the owner of a personal Actor. An answer never grants permission for a different action.
+ */
+export interface ActorAsk {
+  id: string;
+  actor: string;
+  goal: string;
+  kind: "approve_action" | "answer_question" | "do_yourself" | "sign_in";
+  text: string;
+  /**
+   * @maxItems 12
+   */
+  options:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string];
+  created: string;
+  answered: null | {
+    at: string;
+    decision: "answer" | "decline";
+    text?: string;
+  };
+  /**
+   * The Actor page where its person can take over the screen; not a credential.
+   */
+  screen_url?: string | null;
+  evidence?: {
+    text?: string;
+  } | null;
 }

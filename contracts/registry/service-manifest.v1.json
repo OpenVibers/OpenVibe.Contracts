@@ -52,9 +52,39 @@
       "type": "string",
       "format": "uri"
     },
+    "apiRoutes": {
+      "type": "array",
+      "description": "Public service routes whose access comes from a person's session or token, rather than a service capability.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["method", "path"],
+        "properties": {
+          "method": { "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+          "path": { "type": "string", "pattern": "^/" },
+          "responseSchema": { "type": "string" }
+        }
+      }
+    },
     "health": {
       "type": "string",
       "pattern": "^/"
+    },
+    "routes": {
+      "type": "array",
+      "description": "Public HTTP routes implemented by this service, with their response contract where one exists.",
+      "items": {
+        "type": "object",
+        "required": ["method", "path"],
+        "additionalProperties": false,
+        "properties": {
+          "method": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+          "path": { "type": "string", "pattern": "^/" },
+          "contract": { "type": "string" },
+          "cacheSeconds": { "type": "integer", "minimum": 0 },
+          "cors": { "type": "string" }
+        }
+      }
     },
     "ready": {
       "type": "string",

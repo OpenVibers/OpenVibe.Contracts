@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/report/ai-compare.v1.json",
+  "title": "ReportAiCompare",
+  "type": "object",
+  "required": [
+    "$schema",
+    "generated_at",
+    "models"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "report.ai-compare@1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ]
+      }
+    }
+  },
+  "additionalProperties": true,
+  "description": "report.ai-compare@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
+}
