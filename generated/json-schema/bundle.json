@@ -1205,6 +1205,44 @@
             "type": "string",
             "pattern": "^/"
           },
+          "routes": {
+            "type": "array",
+            "description": "Public HTTP routes implemented by this service, with their response contract where one exists.",
+            "items": {
+              "type": "object",
+              "required": [
+                "method",
+                "path"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "GET",
+                    "POST",
+                    "PUT",
+                    "PATCH",
+                    "DELETE"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "pattern": "^/"
+                },
+                "contract": {
+                  "type": "string"
+                },
+                "cacheSeconds": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cors": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "ready": {
             "type": "string",
             "pattern": "^/"
@@ -113664,6 +113702,247 @@
             "format": "date-time"
           }
         }
+      }
+    },
+    "report.ai-leaderboard": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-leaderboard.v1.json",
+        "title": "ReportAiLeaderboard",
+        "type": "object",
+        "required": [
+          "$schema",
+          "generated_at",
+          "count",
+          "rows",
+          "next_cursor"
+        ],
+        "properties": {
+          "$schema": {
+            "const": "report.ai-leaderboard@1"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "kind",
+                "rating",
+                "benchmark",
+                "rank",
+                "source"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "maker": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "weights": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "rating": {
+                  "type": "object"
+                },
+                "benchmark": {
+                  "type": "object"
+                },
+                "rank": {
+                  "type": "object"
+                },
+                "source": {
+                  "type": "object"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "description": "report.ai-leaderboard@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
+      }
+    },
+    "report.ai-model": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-model.v1.json",
+        "title": "ReportAiModel",
+        "type": "object",
+        "required": [
+          "$schema",
+          "generated_at",
+          "model",
+          "source"
+        ],
+        "properties": {
+          "$schema": {
+            "const": "report.ai-model@1"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "model": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": true,
+        "description": "report.ai-model@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
+      }
+    },
+    "report.ai-providers": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-providers.v1.json",
+        "title": "ReportAiProviders",
+        "type": "object",
+        "required": [
+          "$schema",
+          "generated_at",
+          "providers"
+        ],
+        "properties": {
+          "$schema": {
+            "const": "report.ai-providers@1"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "providers": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "additionalProperties": true,
+        "description": "report.ai-providers@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
+      }
+    },
+    "report.ai-compare": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-compare.v1.json",
+        "title": "ReportAiCompare",
+        "type": "object",
+        "required": [
+          "$schema",
+          "generated_at",
+          "models"
+        ],
+        "properties": {
+          "$schema": {
+            "const": "report.ai-compare@1"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        },
+        "additionalProperties": true,
+        "description": "report.ai-compare@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
+      }
+    },
+    "report.ai-picks": {
+      "version": "1.0.0",
+      "owner": "report",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/report/ai-picks.v1.json",
+        "title": "ReportAiPicks",
+        "type": "object",
+        "required": [
+          "$schema",
+          "generated_at",
+          "picks"
+        ],
+        "properties": {
+          "$schema": {
+            "const": "report.ai-picks@1"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "picks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "model",
+                "why"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "why": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "additionalProperties": true,
+        "description": "report.ai-picks@1: public OpenVibe.Report AI comparison response, with source dates and sample sizes for reported measurements."
       }
     }
   }
