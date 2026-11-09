@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.381.0 — 2026-11-09
+## 0.379.0 — 2026-11-09
 
 - Add `exchange.market@1`: paginated own-page market offers, routing flags and per-field model metadata provenance.
+
+## 0.378.0 — 2026-11-09
+
+- Connect's manifest and a relay fixture say OpenVibe Link, not Node (the old-name sweep)
 
 ## 0.377.0 — 2026-11-09
 
