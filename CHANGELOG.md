@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.351.0 — 2026-11-09
+
+- Add the five public Report AI comparison response contracts and fixtures, and list their cached public routes in the Report service manifest.
+
 ## 0.350.0 — 2026-11-09
 
 - Define credential-free blind fill request, encrypted grant, and outcome contracts, plus the `run.fill.approve` capability.
