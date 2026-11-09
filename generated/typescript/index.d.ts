@@ -159793,6 +159793,18 @@ export interface AiRun {
   } | null;
 }
 
+/** ai.run-error@1.0.0 (owner: ai) */
+/**
+ * ai.run-error@1: safe, actionable words for an AI or Actor run. Raw provider responses are never display text. The code map is shared across products.
+ */
+export interface AiRunError {
+  code: string;
+  words: string;
+  next: string;
+  action: "pick_model" | "add_key" | "retry" | "retry_later" | "open";
+  retry_at?: string | null;
+}
+
 /** ai.call.recorded@1.0.0 (owner: ai) */
 /**
  * ai.call.recorded v1 (plan L40, one AI meter across the network). One AI call, wherever it happened: OpenVibe.AI's own runs, a harness turn in Codes, an Actor task, Vibe, a local model on a person's own machine. who and where: subject (the person, or null when the call is anonymous), attribution (the site or app the call came from, free text such as 'site:design'), surface (the product surface, free text such as 'design.generate' or 'codes.turn'). what ran: system (ai, harness:claude-code, harness:codex, actor, node), provider, model, effort. who paid: paid_by (own_key, openvibe_key, plan, own_machine, free_tier, network_allowance, org_key) and paid_by_detail (for example 'anthropic ...a1b2' for a person's own key, or 'claude-max' for a plan). tokens: input (the UNCACHED input tokens), output, reasoning, cache_read, cache_write (with cache_write_ttl 5m or 1h), images, audio_seconds, video_seconds. money, in USD: list_cost_usd (what the tokens cost at the human-typed list prices), charged_usd (what the payer was actually charged), fee_usd (the network's fee on top), cache_saved_usd (what the cache saved against the plain input price). price_source says where the prices came from ('models', 'pricing', 'flat', or 'no cache price' when no cache price is typed and the cache tokens are priced at the input price), price_date the day the price was checked. how it went: latency_ms, ttft_ms, attempts, outcome. ids: run_id or turn_id, and at. The record carries NO prompt and NO answer text, ever. A ledger (OpenVibe.AI) rolls the records up; a record consumed twice is stored once (idempotent by system and run_id or turn_id). Envelope: subject { type: run, id: <run_id> } or { type: user, id: <subject> }, visibility internal, priority low, actor service:ai.
@@ -206809,6 +206821,26 @@ export interface ChatVibeAskResult {
    * Why it was refused (chat.vibe.off, chat.vibe.allowance).
    */
   code?: string;
+}
+
+/** chat.vibe-conversations-result@1.0.0 (owner: chat) */
+/**
+ * chat.vibe-conversations-result@1: GET /api/vibe/conversations for a person, newest first. The last line and origin site are omitted when none is known.
+ */
+export interface ChatVibeConversationsResult {
+  count: number;
+  /**
+   * @maxItems 100
+   */
+  conversations: {
+    slug: string;
+    name: string;
+    last_message_at: string;
+    created_at: string;
+    last_line: string | null;
+    last_answer_at: string | null;
+    site: string | null;
+  }[];
 }
 
 /** chat.vibe-deliver-request@1.0.0 (owner: chat) */
@@ -275948,7 +275980,7 @@ export interface BotWatchLinkResult {
   share_id?: string;
 }
 
-/** common.action-item@1.0.0 (owner: contracts) */
+/** common.action-item@1.1.0 (owner: contracts) */
 /**
  * One piece of a person's agent work in the Action Center (plan 2026-10-28 §3.10): an agent task, a coding task, an AI run, or an approval waiting on them. Each authority answers its own items in this shape (common.action-list-result@1); OpenVibe.Network merges them into buckets (network.me-actions-result@1). Text is plain (no markup); a cost is what the person was charged in USD, null when unknown or free; href is a page on the authority's own public site.
  */
@@ -276027,9 +276059,32 @@ export interface ActionItem {
         "open" | "approve" | "decline" | "cancel" | "retry",
         "open" | "approve" | "decline" | "cancel" | "retry"
       ];
+  /**
+   * Catalogue skill key, when this run came from a skill.
+   */
+  skill?: string | null;
+  /**
+   * The content this run is about, with its canonical page when known.
+   */
+  subject?: {
+    kind: string;
+    title: string;
+    url: string | null;
+  } | null;
+  model?: string | null;
+  maker?: string | null;
+  duration_ms?: number | null;
+  /**
+   * Safe error words and the next useful action. Never a raw provider response.
+   */
+  run_error?: null | AiRunError;
+  /**
+   * The latest live step in plain words.
+   */
+  step?: string | null;
 }
 
-/** common.action-list-result@1.0.0 (owner: contracts) */
+/** common.action-list-result@1.1.0 (owner: contracts) */
 /**
  * One authority's Action Center items for a person (capabilities actor.actions.read, codes.actions.read, ai.actions.read, domains.actions.read): GET /api/v1/actions?subject=usr_… with the caller's service token. Everything running, waiting or scheduled, then done and failed items from the last 30 days, newest first, at most 50.
  */
@@ -276040,7 +276095,7 @@ export interface ActionListResult {
   items: ActionItem[];
 }
 
-/** network.me-actions-result@1.0.0 (owner: network) */
+/** network.me-actions-result@1.1.0 (owner: network) */
 /**
  * The Action Center for the signed-in person (capability network.actions.read, GET /api/v1/me/actions): every authority's items merged into five buckets, newest first in each. sources says how each authority answered; a slow or failing one is left out (partial true), never fails the answer.
  */
@@ -276066,7 +276121,7 @@ export interface MeActionsResult {
   generated_at: string;
 }
 
-/** network.dock-state@1.0.0 (owner: network) */
+/** network.dock-state@1.1.0 (owner: network) */
 /**
  * network.dock-state@1 (the Dock plan 2026-10-30, K-D1): the state of one person's Dock — the little floating surface every OpenVibe site draws. It lives in the Network, not in the browser, because localStorage is per site and the Dock follows the person across every domain. GET /api/v1/me/dock and PUT /api/v1/me/dock on OpenVibe.Network.
  */
@@ -276094,6 +276149,17 @@ export interface NetworkDockState {
    * The conversation the Chats tab has open, or null.
    */
   chat: string | null;
+  /**
+   * The Vibe conversation selected across sites, and when the person last opened it. An older selection opens the list instead.
+   */
+  vibe?: null | {
+    slug: string;
+    at: string;
+  };
+  /**
+   * The last Agents list filter chosen by this person.
+   */
+  agent_filter?: "all" | "running" | "waiting" | "scheduled" | "done" | "failed";
   /**
    * The person's timer (plan L48 R2): it counts down in the Dock's pill on every site and rings at its end. Absent or null: none. A focus timer of rounds alternates focus and break by itself.
    */
@@ -311136,6 +311202,33 @@ export interface ActorSkill {
   integrity: {
     alg: "sha256";
     hash: string;
+  };
+}
+
+/** actor.skill-run-request@1.0.0 (owner: actor) */
+/**
+ * actor.skill-run-request@1: POST /api/v1/runs starts a public prompt skill as this person, using normal task approvals and budget.
+ */
+export interface ActorSkillRunRequest {
+  skill: string;
+  input?: {
+    [k: string]: unknown | undefined;
+  };
+  choice?: {
+    mode?: "cheapest" | "balanced" | "best" | "fastest" | "private";
+  };
+}
+
+/** actor.skill-run-result@1.0.0 (owner: actor) */
+/**
+ * actor.skill-run-result@1: a catalogue run is an ordinary Actor task, with its skill and subject labelled.
+ */
+export interface ActorSkillRunResult {
+  run: {
+    id: string;
+    skill: string;
+    subject: string;
+    [k: string]: unknown | undefined;
   };
 }
 

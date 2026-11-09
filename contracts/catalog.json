@@ -1572,6 +1572,15 @@
       "adr": "ADR-015"
     },
     {
+      "id": "ai.run-error",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-error.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.call.recorded",
       "version": "1.0.0",
       "owner": "ai",
@@ -5703,6 +5712,15 @@
       "status": "active"
     },
     {
+      "id": "chat.vibe-conversations-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/vibe-conversations-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.vibe-deliver-request",
       "version": "1.0.0",
       "owner": "chat",
@@ -8701,7 +8719,7 @@
     },
     {
       "id": "common.action-item",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/action-item.v1.json",
       "visibility": "public",
@@ -8710,7 +8728,7 @@
     },
     {
       "id": "common.action-list-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/action-list-result.v1.json",
       "visibility": "public",
@@ -8719,7 +8737,7 @@
     },
     {
       "id": "network.me-actions-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "network/me-actions-result.v1.json",
       "visibility": "public",
@@ -8728,7 +8746,7 @@
     },
     {
       "id": "network.dock-state",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "network/dock-state.v1.json",
       "visibility": "public",
@@ -10278,6 +10296,24 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-058"
+    },
+    {
+      "id": "actor.skill-run-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill-run-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.skill-run-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill-run-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "actor.skill",

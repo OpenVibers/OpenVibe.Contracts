@@ -16942,6 +16942,55 @@
         }
       }
     },
+    "ai.run-error": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/run-error.v1.json",
+        "title": "AiRunError",
+        "description": "ai.run-error@1: safe, actionable words for an AI or Actor run. Raw provider responses are never display text. The code map is shared across products.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "words",
+          "next",
+          "action"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "words": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "next": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "action": {
+            "enum": [
+              "pick_model",
+              "add_key",
+              "retry",
+              "retry_later",
+              "open"
+            ]
+          },
+          "retry_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "ai.call.recorded": {
       "version": "1.0.0",
       "owner": "ai",
@@ -63486,6 +63535,83 @@
         }
       }
     },
+    "chat.vibe-conversations-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/vibe-conversations-result.v1.json",
+        "title": "ChatVibeConversationsResult",
+        "description": "chat.vibe-conversations-result@1: GET /api/vibe/conversations for a person, newest first. The last line and origin site are omitted when none is known.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conversations",
+          "count"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "conversations": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "slug",
+                "name",
+                "last_message_at",
+                "created_at",
+                "last_line",
+                "last_answer_at",
+                "site"
+              ],
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "last_message_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "last_line": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 160
+                },
+                "last_answer_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "site": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "chat.vibe-deliver-request": {
       "version": "1.0.0",
       "owner": "chat",
@@ -96354,7 +96480,7 @@
       }
     },
     "common.action-item": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "status": "active",
       "schema": {
@@ -96502,12 +96628,91 @@
                 "retry"
               ]
             }
+          },
+          "skill": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "description": "Catalogue skill key, when this run came from a skill."
+          },
+          "subject": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "title",
+              "url"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "maxLength": 60
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 160
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "pattern": "^https://"
+              }
+            },
+            "description": "The content this run is about, with its canonical page when known."
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "maker": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "duration_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "run_error": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "../ai/run-error.v1.json"
+              }
+            ],
+            "description": "Safe error words and the next useful action. Never a raw provider response."
+          },
+          "step": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 240,
+            "description": "The latest live step in plain words."
           }
         }
       }
     },
     "common.action-list-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "status": "active",
       "schema": {
@@ -96532,7 +96737,7 @@
       }
     },
     "network.me-actions-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -96658,7 +96863,7 @@
       }
     },
     "network.dock-state": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -96730,6 +96935,45 @@
             "minLength": 1,
             "maxLength": 80,
             "description": "The conversation the Chats tab has open, or null."
+          },
+          "vibe": {
+            "description": "The Vibe conversation selected across sites, and when the person last opened it. An older selection opens the list instead.",
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "slug",
+                  "at"
+                ],
+                "properties": {
+                  "slug": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80,
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  },
+                  "at": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            ]
+          },
+          "agent_filter": {
+            "enum": [
+              "all",
+              "running",
+              "waiting",
+              "scheduled",
+              "done",
+              "failed"
+            ],
+            "description": "The last Agents list filter chosen by this person."
           },
           "timer": {
             "description": "The person's timer (plan L48 R2): it counts down in the Dock's pill on every site and rings at its end. Absent or null: none. A focus timer of rounds alternates focus and break by itself.",
@@ -113472,6 +113716,88 @@
               "hash": {
                 "type": "string",
                 "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "actor.skill-run-request": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/skill-run-request.v1.json",
+        "title": "ActorSkillRunRequest",
+        "description": "actor.skill-run-request@1: POST /api/v1/runs starts a public prompt skill as this person, using normal task approvals and budget.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "skill"
+        ],
+        "properties": {
+          "skill": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": true,
+            "maxProperties": 30
+          },
+          "choice": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "mode": {
+                "enum": [
+                  "cheapest",
+                  "balanced",
+                  "best",
+                  "fastest",
+                  "private"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "actor.skill-run-result": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/skill-run-result.v1.json",
+        "title": "ActorSkillRunResult",
+        "description": "actor.skill-run-result@1: a catalogue run is an ordinary Actor task, with its skill and subject labelled.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "run"
+        ],
+        "properties": {
+          "run": {
+            "type": "object",
+            "required": [
+              "id",
+              "skill",
+              "subject"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^tsk_"
+              },
+              "skill": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
               }
             }
           }

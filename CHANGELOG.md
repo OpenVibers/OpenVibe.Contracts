@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.365.0 — 2026-11-09
+
+- Dock v2: action-item words, ai.run-error@1, skill runs and Vibe conversations
+
 ## 0.364.0 — 2026-11-09
 
 - The Feed of everything: community.feed-item@1

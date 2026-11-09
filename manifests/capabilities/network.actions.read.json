@@ -4,7 +4,7 @@
   "owner": "network",
   "status": "active",
   "visibility": "public",
-  "description": "The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and failed (network.me-actions-result@1); POST /api/v1/me/actions/:service/:id/:action approves, declines or cancels through the owning authority. Readable from every OpenVibe site with the person's Network token, like the bell.",
+  "description": "The Action Center for the signed-in person (plan 2026-10-28 §3.10): GET /api/v1/me/actions merges Actor, Codes and AI items and Network's own confirmations into running, waiting, scheduled, done and failed (network.me-actions-result@1); POST /api/v1/me/actions/:service/:id/:action approves, declines, cancels or retries through the owning authority. Readable from every OpenVibe site with the person's Network token, like the bell.",
   "permissions": [
     "network:read",
     "network:write"
