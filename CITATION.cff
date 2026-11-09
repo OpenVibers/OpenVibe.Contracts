@@ -9,8 +9,6 @@ authors:
 repository-code: https://github.com/OpenVibers/OpenVibe.Contracts
 url: https://openvibe.services
 license: AGPL-3.0-only
-version: 0.298.0
-date-released: 2026-11-09
 abstract: "Machine-readable contracts for the OpenVibe network: JSON Schema and OpenAPI for every service, manifest, id, error envelope and capability check."
 keywords:
   - openvibe

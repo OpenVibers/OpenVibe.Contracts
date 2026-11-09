@@ -1,6 +1,6 @@
 {
   "name": "openvibe-contracts",
-  "version": "0.355.0",
+  "version": "0.356.0",
   "description": "Open source, machine-readable contracts for the OpenVibe network: JSON Schema and OpenAPI for schemas, manifests, ids, the error envelope and capability checks.",
   "main": "index.js",
   "types": "generated/typescript/index.d.ts",
