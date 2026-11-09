@@ -14,7 +14,7 @@
       "description": "Stable within one response: p:<pulse item id> for a Pulse item, t:<site>:<url> for a trending card."
     },
     "kind": {
-      "enum": ["live", "clip", "video", "pic", "post", "meme", "game", "update", "wiki", "quest", "chat", "event", "member"]
+      "enum": ["live", "stream", "clip", "video", "pic", "post", "meme", "game", "update", "wiki", "quest", "chat", "event", "member"]
     },
     "url": {
       "type": "string",

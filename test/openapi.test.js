@@ -65,8 +65,9 @@ const ROOT = path.join(__dirname, '..');
                 assert.ok(op && op['x-openvibe-capabilities'].includes(cap.id), `${cap.id}: ${method.toUpperCase()} ${p} in ${cap.owner}'s document`);
                 const text = JSON.stringify(op);
                 const key = (ref) => `${ref.replace(/@(\d+)$/, '.v$1')}`;
-                if (cap.outputSchema && !['common.binary@1', 'common.no-body@1'].includes(cap.outputSchema)) assert.ok(text.includes(`#/components/schemas/${key(cap.outputSchema)}"`), `${cap.id} ${method} ${p}: output ${cap.outputSchema}`);
-                if (cap.inputSchema && !['common.binary@1', 'common.no-body@1'].includes(cap.inputSchema)) assert.ok(text.includes(`#/components/schemas/${key(cap.inputSchema)}"`), `${cap.id} ${method} ${p}: input ${cap.inputSchema}`);
+                const shape = { ...cap, ...(cap.routeSchemas && cap.routeSchemas[route]) };
+                if (shape.outputSchema && !['common.binary@1', 'common.no-body@1'].includes(shape.outputSchema)) assert.ok(text.includes(`#/components/schemas/${key(shape.outputSchema)}"`), `${cap.id} ${method} ${p}: output ${shape.outputSchema}`);
+                if (shape.inputSchema && !['common.binary@1', 'common.no-body@1'].includes(shape.inputSchema)) assert.ok(text.includes(`#/components/schemas/${key(shape.inputSchema)}"`), `${cap.id} ${method} ${p}: input ${shape.inputSchema}`);
             }
         }
     }

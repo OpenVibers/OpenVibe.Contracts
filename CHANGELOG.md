@@ -1,11 +1,23 @@
 # Changelog
 
-## 0.357.0 — 2026-11-09
+## 0.360.0 — 2026-11-09
 
 - Add `community.feed-item@1`, one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed): its kind
-  (live, clip, video, pic, post, meme, game, update, wiki, quest, chat, event, member), text, picture, actor and
-  Community's views/likes/comments, with fixtures. `community.pulse-item@1` gains the optional `text` and
+  (live, stream, clip, video, pic, post, meme, game, update, wiki, quest, chat, event, member), text, picture, actor
+  and Community's views/likes/comments, with fixtures. `community.pulse-item@1` gains the optional `text` and
   `picture_url` the Feed reads.
+
+## 0.359.0 — 2026-11-09
+
+- Media multipart uploads in contracts and OpenAPI
+
+## 0.358.0 — 2026-11-09
+
+- Chat view preference (bubbles or room)
+
+## 0.357.0 — 2026-11-09
+
+- Cam camera settings (cam.settings@1)
 
 ## 0.356.0 — 2026-11-09
 
