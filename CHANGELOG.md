@@ -1,16 +1,20 @@
 # Changelog
 
-## 0.380.0 — 2026-11-09
+## 0.381.0 — 2026-11-09
 
-- Agent work fabric: trigger, decision, immutable ticket mandate and budget, six report states, attention, and ordered stage vocabulary. Portable AI effort and optional effort/ladder receipt metadata.
+- Agent work fabric: trigger, decision, immutable ticket mandate and budget, six report states, attention, and ordered stage vocabulary. Portable AI effort, concrete task-default effort, and optional effort/ladder receipt metadata.
+
+## 0.380.0 — reserved, not released
+
+- Reserved by [PR #395](https://github.com/OpenVibers/OpenVibe.Contracts/pull/395) for tagged changelog entries. Reconcile this reservation with the release entry at merge.
 
 ## 0.379.0 — reserved, not released
 
-- Reserved by [PR #394](https://github.com/OpenVibers/OpenVibe.Contracts/pull/394) for Exchange routing, request presets and generation contracts. Replace this reservation with its release entry when reconciled at merge.
+- Reserved by [PR #394](https://github.com/OpenVibers/OpenVibe.Contracts/pull/394) for Exchange routing and by [PR #397](https://github.com/OpenVibers/OpenVibe.Contracts/pull/397) for exchange.market. Reconcile their versions and replace this reservation at merge.
 
-## 0.378.0 — reserved, not released
+## 0.378.0 — 2026-11-09
 
-- Reserved by [PR #393](https://github.com/OpenVibers/OpenVibe.Contracts/pull/393) for Wiki rich article contracts. Replace this reservation with its release entry when reconciled at merge.
+- Connect's manifest and a relay fixture say OpenVibe Link, not Node (the old-name sweep)
 
 ## 0.377.0 — 2026-11-09
 
