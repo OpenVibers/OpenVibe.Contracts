@@ -1,10 +1,32 @@
 # Changelog
 
+## 0.362.0 — 2026-11-09
+
+- Your stats: report.me-stats@1 and report.me-stats-publish@1
+
+## 0.361.0 — 2026-11-09
+
+- Reviewed glyph draft service
+
+## 0.360.0 — 2026-11-09
+
+- Meme entry and render contracts
+
+## 0.359.0 — 2026-11-09
+
+- Media multipart uploads in contracts and OpenAPI
+
+## 0.358.0 — 2026-11-09
+
+- Chat view preference (bubbles or room)
+
+## 0.357.0 — 2026-11-09
+
+- Cam camera settings (cam.settings@1)
+
 ## 0.356.0 — 2026-11-09
 
-- Add `report.me-stats@1`: one person's numbers across OpenVibe for OpenVibe.Report's `/me` and public `/u/<name>` pages. The document carries the person, the window, the five publish switches (sites, activity, made, ai, money) and only the sections a source answered for: the sites used from Network's cross-site history, the 12-week activity strip and streak, things made from Report's analytics and session reports, the AI meter's own totals, and Billing's settled Vibes. A section a source did not answer for is absent, never a zero, and the contract has no minutes field because Network's history counts visits, not durations.
-- Add `report.me-stats-publish@1`: the body of `PUT /api/v1/me/stats/published`, the person's per-section switch. Every switch is named so a request cannot leave one to chance.
-- Valid and invalid fixtures cover a public document, a private one, a missing switch, a zero visit and a publish body that leaves out a section.
+- Shoes product contract (shoes.product@1)
 
 ## 0.355.0 — 2026-11-09
 
