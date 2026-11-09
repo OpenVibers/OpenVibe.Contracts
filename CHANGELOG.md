@@ -1,11 +1,24 @@
 # Changelog
 
+## 0.364.0 — 2026-11-09
+
+- The Feed of everything: community.feed-item@1
+
+## 0.363.0 — 2026-11-09
+
+- npm metadata and CITATION
+
+## 0.362.0 — 2026-11-09
+
+- Your stats: report.me-stats@1 and report.me-stats-publish@1
+
+## 0.361.0 — 2026-11-09
+
+- Reviewed glyph draft service
+
 ## 0.360.0 — 2026-11-09
 
-- Add `community.feed-item@1`, one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed): its kind
-  (live, stream, clip, video, pic, post, meme, game, update, wiki, quest, chat, event, member), text, picture, actor
-  and Community's views/likes/comments, with fixtures. `community.pulse-item@1` gains the optional `text` and
-  `picture_url` the Feed reads.
+- Meme entry and render contracts
 
 ## 0.359.0 — 2026-11-09
 

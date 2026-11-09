@@ -10077,6 +10077,24 @@
       "status": "active"
     },
     {
+      "id": "report.me-stats",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.me-stats-publish",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats-publish.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.tts-speak-request",
       "version": "1.0.0",
       "owner": "chat",
@@ -10569,6 +10587,51 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-001"
+    },
+    {
+      "id": "meme.entry",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/entry.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.template",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/template.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.render",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/render.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-request",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-result",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
