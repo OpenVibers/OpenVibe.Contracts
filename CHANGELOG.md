@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.379.0 — 2026-11-09
+
+- `ai.provider@1`: measured per provider+model circuit health (status, failure class, plain reason and since when, retry/backoff, notify time); `ai.run-read-result@1`: `requests[].error_class`.
+
 ## 0.378.0 — 2026-11-09
 
 - Connect's manifest and a relay fixture say OpenVibe Link, not Node (the old-name sweep)
