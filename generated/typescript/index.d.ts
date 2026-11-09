@@ -275390,10 +275390,12 @@ export interface RunFillGrant {
 /**
  * Credential-free result of a blind sign-in fill.
  */
-export interface RunFillOutcome {
+export type RunFillOutcome = {
+  [k: string]: unknown | undefined;
+} & {
   request_id: string;
   outcome: "ok" | "failed";
-  reason?:
+  reason:
     | "origin_changed"
     | "expired"
     | "reused"
@@ -275405,7 +275407,7 @@ export interface RunFillOutcome {
     | "refused"
     | "timeout"
     | null;
-}
+};
 
 /** run.fill-request-create@1.0.0 (owner: run) */
 /**

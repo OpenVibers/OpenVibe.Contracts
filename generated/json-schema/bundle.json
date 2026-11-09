@@ -94745,7 +94745,8 @@
         "additionalProperties": false,
         "required": [
           "request_id",
-          "outcome"
+          "outcome",
+          "reason"
         ],
         "properties": {
           "request_id": {
@@ -94773,7 +94774,46 @@
               null
             ]
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "outcome": {
+                  "const": "ok"
+                }
+              },
+              "required": [
+                "outcome"
+              ]
+            },
+            "then": {
+              "properties": {
+                "reason": {
+                  "const": null
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "reason": {
+                  "enum": [
+                    "origin_changed",
+                    "expired",
+                    "reused",
+                    "not_owned",
+                    "no_fields",
+                    "iframe",
+                    "decrypt_failed",
+                    "navigation",
+                    "refused",
+                    "timeout"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "run.fill-request-create": {

@@ -5,10 +5,15 @@
   "description": "Credential-free result of a blind sign-in fill.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["request_id", "outcome"],
+  "required": ["request_id", "outcome", "reason"],
   "properties": {
     "request_id": {"type": "string", "pattern": "^fr_[A-Za-z0-9_-]{16,64}$"},
     "outcome": {"enum": ["ok", "failed"]},
     "reason": {"enum": ["origin_changed", "expired", "reused", "not_owned", "no_fields", "iframe", "decrypt_failed", "navigation", "refused", "timeout", null]}
-  }
+  },
+  "allOf": [{
+    "if": {"properties": {"outcome": {"const": "ok"}}, "required": ["outcome"]},
+    "then": {"properties": {"reason": {"const": null}}},
+    "else": {"properties": {"reason": {"enum": ["origin_changed", "expired", "reused", "not_owned", "no_fields", "iframe", "decrypt_failed", "navigation", "refused", "timeout"]}}}
+  }]
 }
