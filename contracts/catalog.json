@@ -10760,6 +10760,24 @@
       "status": "active"
     },
     {
+      "id": "git.access-request",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/access-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.access-result",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/access-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "design.component",
       "version": "1.0.0",
       "owner": "design",

@@ -118440,6 +118440,128 @@
         }
       }
     },
+    "git.access-request": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/access-request.v1.json",
+        "title": "GitAccessRequest",
+        "description": "git.access-request@1: the common request of git.read and git.write on OpenVibe.Git. owner and name name the repository at git.openvibe.codes; ref and path pick what is read; branch, message and files describe a contents write without a clone. A service names the person it acts for in X-OV-Subject, not in this body.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "owner",
+          "name"
+        ],
+        "properties": {
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,38}$",
+            "description": "The repository owner's lower-case OpenVibe username."
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$",
+            "description": "The repository name, lower-case and never ending in .git."
+          },
+          "ref": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "A branch or tag to read at; the default branch when absent."
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "A path inside the tree or a blob's path."
+          },
+          "branch": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "The branch a contents write goes on."
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "The commit message of a contents write."
+          },
+          "files": {
+            "type": "array",
+            "maxItems": 200,
+            "description": "The files a contents write changes, by path and full content.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "content"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "maxLength": 4096
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "git.access-result": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/access-result.v1.json",
+        "title": "GitAccessResult",
+        "description": "git.access-result@1: the common result of git.read and git.write on OpenVibe.Git. A repository names its full name, its page and clone addresses, its visibility and default branch; a contents write or a token also carries the branch or commit it made.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "full_name"
+        ],
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,38}/[a-z0-9][a-z0-9._-]{0,99}$"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "clone_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private"
+            ]
+          },
+          "default_branch": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "branch": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+          }
+        }
+      }
+    },
     "design.component": {
       "version": "1.0.0",
       "owner": "design",

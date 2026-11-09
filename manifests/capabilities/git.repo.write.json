@@ -1,0 +1,25 @@
+{
+  "id": "git.repo.write",
+  "version": "1.0",
+  "owner": "git",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Write on OpenVibe.Git (git.openvibe.codes): make a repository in a person's name, mint their short-lived Git token for clone and push, push a branch over HTTPS, write files on a branch without a clone, and set a release. The owner acts with their session; a first-party service token (Codes first) holds this capability for the audience openvibe.git and names the person in X-OV-Subject. A service may also write an official repository. Never another person's repository.",
+  "inputSchema": "git.access-request@1",
+  "outputSchema": "git.access-result@1",
+  "permissions": [
+    "git:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/repos",
+    "POST /api/v1/tokens",
+    "POST /api/v1/repos/:owner/:name/commits",
+    "POST /api/v1/repos/:owner/:name/releases",
+    "POST /api/v1/repos/:owner/:name/star"
+  ]
+}

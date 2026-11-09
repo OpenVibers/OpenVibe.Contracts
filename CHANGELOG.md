@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.371.0 — 2026-11-09
+
+- Add OpenVibe.Git's service manifest (`git`): the site at git.openvibe.codes, port 5270, bare repositories served by git's own http-backend behind OpenVibe sign-in, and the capabilities `git.repo.read` and `git.repo.write`. It replaces Forgejo, whose data was all mirrors of GitHub.
+- Add `git.repo.read` (repositories, trees, blobs, commits, branches, tags, releases, contributors and insights; public reads without a token, private ones only for their owner, their Git token or a first-party service acting for them) and `git.repo.write` (make a repository for a person, mint their short-lived Git token, push a branch, write files without a clone, publish a release). Both are first-party: Codes, Run and Link name the person in X-OV-Subject.
+- Add `git.access-request@1` (owner, name, and what is read or written) and `git.access-result@1` (the repository or the branch and sha written), shared by both capabilities, with valid and invalid fixtures.
+- `identity.service-token-claims@1` is unchanged: a service's token already carries `aud: openvibe.git` and `cap: git.repo.read`/`git.repo.write` through Network's grants.
+
 ## 0.370.0 — 2026-11-09
 
 - design.component@1: one platform-neutral definition per shared interface (the public registry on openvibe.design)
