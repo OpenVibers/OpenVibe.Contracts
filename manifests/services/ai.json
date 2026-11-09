@@ -111,8 +111,7 @@
       "method": "GET",
       "path": "/api/v1/exchange/market",
       "contract": "exchange.market@1",
-      "cacheSeconds": 60,
-      "cors": "*"
+      "cacheSeconds": 60
     }
   ]
 }
