@@ -20,6 +20,7 @@
   "implementedBy": [
     "POST /api/v1/tasks",
     "POST /api/v1/tasks/:id/cancel",
+    "POST /api/v1/tasks/:id/retry",
     "POST /api/v1/tasks/:id/takeover",
     "POST /api/v1/tasks/:id/giveback",
     "POST /api/v1/me/canvases/:id/events"

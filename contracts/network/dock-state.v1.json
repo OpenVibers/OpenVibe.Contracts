@@ -35,6 +35,17 @@
       "maxLength": 80,
       "description": "The conversation the Chats tab has open, or null."
     },
+    "vibe": {
+      "description": "The Vibe conversation selected across sites, and when the person last opened it. An older selection opens the list instead.",
+      "oneOf": [
+        { "type": "null" },
+        { "type": "object", "additionalProperties": false, "required": ["slug", "at"], "properties": {
+          "slug": { "type": "string", "minLength": 1, "maxLength": 80, "pattern": "^[A-Za-z0-9_-]+$" },
+          "at": { "type": "string", "format": "date-time" }
+        } }
+      ]
+    },
+    "agent_filter": { "enum": ["all", "running", "waiting", "scheduled", "done", "failed"], "description": "The last Agents list filter chosen by this person." },
     "timer": {
       "description": "The person's timer (plan L48 R2): it counts down in the Dock's pill on every site and rings at its end. Absent or null: none. A focus timer of rounds alternates focus and break by itself.",
       "oneOf": [

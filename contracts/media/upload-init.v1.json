@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/media/upload-init.v1.json",
+  "title": "MediaUploadInit",
+  "description": "The object and its presigned multipart session after POST /api/v2/:app/objects. Send parts to part_url_template in any order, then complete.",
+  "type": "object",
+  "required": ["id", "object", "upload"],
+  "additionalProperties": true,
+  "properties": {
+    "id": { "type": "string" },
+    "object": { "$ref": "object.v1.json" },
+    "upload": {
+      "type": "object",
+      "required": ["method", "multipart", "complete_url"],
+      "additionalProperties": true,
+      "properties": {
+        "method": { "const": "multipart" },
+        "multipart": { "$ref": "upload.v1.json" },
+        "complete_url": { "type": "string" },
+        "multipart_url": { "type": "string" }
+      }
+    }
+  }
+}

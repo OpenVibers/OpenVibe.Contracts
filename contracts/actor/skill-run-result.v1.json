@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/skill-run-result.v1.json",
+  "title": "ActorSkillRunResult",
+  "description": "actor.skill-run-result@1: a catalogue run is an ordinary Actor task, with its skill and subject labelled.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run"
+  ],
+  "properties": {
+    "run": {
+      "type": "object",
+      "required": [
+        "id",
+        "skill",
+        "subject"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^tsk_"
+        },
+        "skill": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

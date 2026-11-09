@@ -1,10 +1,56 @@
 # Changelog
 
+## 0.369.0 — 2026-11-09
+
+- OpenVibe Git: git.repo@1, git.commit@1, git.tree@1 and git.insights@1
+
+## 0.368.0 — 2026-11-09
+
+- The wallet and the reviewed store: billing.wallet@1, inventory.store@1, inventory.store-listing@1, inventory.purchase@1
+
+## 0.367.0 — 2026-11-09
+
+- publishing.block@1: the rich content block of a post or an article body
+
+## 0.366.0 — 2026-11-09
+
+- wiki.page.published@1 and wiki.page.updated@1 carry an optional `title` (the page as readers see it), so the network's Feed names a wiki page by its title, not its slug.
+
+## 0.365.0 — 2026-11-09
+
+- Dock v2: action-item words, ai.run-error@1, skill runs and Vibe conversations
+
+## 0.364.0 — 2026-11-09
+
+- The Feed of everything: community.feed-item@1
+
+## 0.363.0 — 2026-11-09
+
+- npm metadata and CITATION
+
+## 0.362.0 — 2026-11-09
+
+- Your stats: report.me-stats@1 and report.me-stats-publish@1
+
+## 0.361.0 — 2026-11-09
+
+- Reviewed glyph draft service
+
+## 0.360.0 — 2026-11-09
+
+- Meme entry and render contracts
+
+## 0.359.0 — 2026-11-09
+
+- Media multipart uploads in contracts and OpenAPI
+
+## 0.358.0 — 2026-11-09
+
+- Chat view preference (bubbles or room)
+
 ## 0.357.0 — 2026-11-09
 
-- Git contracts for OpenVibe.Git: `git.repo@1` (a repository, its mirror and GitHub card), `git.commit@1` (a
-  commit with its diff), `git.tree@1` (a directory with the last commit per entry) and `git.insights@1` (views,
-  unique visitors, clones, stars and commits per week).
+- Cam camera settings (cam.settings@1)
 
 ## 0.356.0 — 2026-11-09
 

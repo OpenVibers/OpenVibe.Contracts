@@ -17,6 +17,7 @@
   },
   "capabilities": [
     "actor.task.create",
+    "actor.skill.run",
     "actor.task.read",
     "actor.task.list",
     "actor.agent.read",
