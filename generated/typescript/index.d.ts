@@ -163973,7 +163973,7 @@ export type AiProviderManageResult =
 
 /** ai.provider@1.0.0 (owner: ai) */
 /**
- * ai.provider@1: one model provider as OpenVibe.AI's registry API shows it (server/registry.js publicProvider): never a secret value, only the secret reference name (env:NAME) and whether it resolves (credentials), plus the circuit-breaker health.
+ * ai.provider@1: one model provider as OpenVibe.AI's registry API shows it (server/registry.js publicProvider): never a secret value, only the secret reference name (env:NAME) and whether it resolves (credentials), plus the measured circuit-breaker health. health.state is the provider roll-up; health.circuits is one entry per provider+model offer, with the failure class and the plain reason.
  */
 export interface AiProvider {
   key: string;
@@ -164001,6 +164001,59 @@ export interface AiProvider {
     provider_key?: string;
     state?: "closed" | "open" | "half_open";
     consecutive_failures?: number;
+    /**
+     * The offer this circuit belongs to; absent on the provider roll-up.
+     */
+    model_key?: string | null;
+    /**
+     * Why the offer's circuit opened, or its last failure: balance, auth, rate_limit, transient or request.
+     */
+    failure_class?: "balance" | "auth" | "rate_limit" | "transient" | "request" | null;
+    /**
+     * The measured status: down while the circuit is open, degraded when over 5% of at least 10 requests in the last hour failed, up otherwise.
+     */
+    status?: "up" | "degraded" | "down" | null;
+    /**
+     * Plain words for a degraded or down offer: 'the provider says the account is out of credit', 'the key was refused' or 'too many errors in the last hour'.
+     */
+    status_reason?: string | null;
+    /**
+     * When the current status began (ISO 8601).
+     */
+    status_since?: string | null;
+    /**
+     * Epoch ms a half-open probe may run; after a failed probe the pause starts again.
+     */
+    retry_at?: number | null;
+    /**
+     * The current transient backoff: 30 s doubling to 10 min. 0 for balance/auth.
+     */
+    backoff_ms?: number | null;
+    opened_at?: number | null;
+    exhausted_at?: number | null;
+    last_success_at?: number | null;
+    last_failure_at?: number | null;
+    /**
+     * When the one owner alert for this open balance/auth circuit was sent; absent when none was sent.
+     */
+    notified_at?: number | null;
+    /**
+     * One entry per provider+model circuit (server/providers/index.js, migrations/0057). A model without a failure of its own stays served while another model's circuit is open.
+     */
+    circuits?: {
+      provider_key?: string;
+      model_key?: string;
+      state?: "closed" | "open" | "half_open";
+      failure_class?: string | null;
+      consecutive_failures?: number;
+      opened_at?: number | null;
+      retry_at?: number | null;
+      backoff_ms?: number | null;
+      status?: "up" | "degraded" | "down" | null;
+      status_reason?: string | null;
+      status_since?: string | null;
+      last_error?: string | null;
+    }[];
   } | null;
 }
 
@@ -164334,6 +164387,10 @@ export type AiRunReadResult =
         tokens_out?: number | null;
         cost_usd?: number | null;
         latency_ms?: number | null;
+        /**
+         * The class of a failed attempt (balance, auth, rate_limit, transient, request); the provider's message is in error, never the body.
+         */
+        error_class?: "balance" | "auth" | "rate_limit" | "transient" | "request" | null;
       }[];
     }
   | {

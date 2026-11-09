@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.383.0 — 2026-11-09
+
+- `ai.provider@1`: measured per provider+model circuit health (status, failure class, plain reason and since when, retry/backoff, notify time); `ai.run-read-result@1`: `requests[].error_class`.
+
 ## 0.382.0 — 2026-11-09
 
 - Add `exchange.market@1`: paginated own-page market offers, routing flags and per-field model metadata provenance.
