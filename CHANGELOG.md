@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.357.0 — 2026-11-09
+
+- Git contracts for OpenVibe.Git: `git.repo@1` (a repository, its mirror and GitHub card), `git.commit@1` (a
+  commit with its diff), `git.tree@1` (a directory with the last commit per entry) and `git.insights@1` (views,
+  unique visitors, clones, stars and commits per week).
+
 ## 0.356.0 — 2026-11-09
 
 - Shoes product contract (shoes.product@1)

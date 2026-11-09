@@ -1,0 +1,22 @@
+{
+  "id": "repo_01JQZ8M4T7Y2N5K3B6V9C1X0DA",
+  "owner": { "username": "openvibers", "subject": null, "display_name": null, "avatar_url": null },
+  "name": "private-notes",
+  "full_name": "openvibers/private-notes",
+  "description": "",
+  "visibility": "private",
+  "default_branch": "main",
+  "topics": [],
+  "stars": 0,
+  "watchers": 1,
+  "forks": 0,
+  "language": null,
+  "languages": {},
+  "html_url": "https://git.openvibe.codes/openvibers/private-notes",
+  "clone_url": "https://git.openvibe.codes/openvibers/private-notes.git",
+  "mirror": null,
+  "github": null,
+  "created_at": "2026-11-09T09:00:00Z",
+  "updated_at": "2026-11-09T09:00:00Z",
+  "pushed_at": null
+}

@@ -1,0 +1,8 @@
+{
+  "repo": "openvibers/openvibe.codes",
+  "ref": "main",
+  "path": "",
+  "entries": [
+    { "name": "server", "path": "server", "type": "directory", "mode": "040000", "sha": "c3d4e5f60718293a4b5c6d7e8f90123456789012", "size": -2, "last_commit": null }
+  ]
+}

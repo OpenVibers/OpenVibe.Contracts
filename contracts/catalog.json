@@ -10496,6 +10496,42 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "git.repo",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/repo.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.commit",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/commit.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.tree",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/tree.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.insights",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/insights.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
