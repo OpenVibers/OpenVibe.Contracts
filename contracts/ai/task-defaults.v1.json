@@ -57,6 +57,15 @@
       ],
       "minimum": 0,
       "maximum": 1000
+    },
+    "effort": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "max"
+      ],
+      "description": "Concrete effort used when a request selects auto. Omitted uses the workflow default, then medium."
     }
   },
   "required": [

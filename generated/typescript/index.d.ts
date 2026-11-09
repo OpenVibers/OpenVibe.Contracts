@@ -162656,568 +162656,6 @@ export interface AiAttributionQuota {
   updated_at: string;
 }
 
-/** ai.run-request@1.0.0 (owner: ai) */
-/**
- * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).
- */
-export type AiRunRequest = {
-  [k: string]: unknown | undefined;
-} & {
-  /**
-   * A registered AI task (ai.task@1, GET /api/v1/tasks). Its workflow runs with the task's resolved choice; choice overrides it for this run.
-   */
-  task?: string;
-  choice?: AiChoiceV1;
-  /**
-   * Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…).
-   */
-  workflow?: string;
-  /**
-   * Pin a workflow version (active or deprecated). Omitted: the newest active version.
-   */
-  version?: number;
-  /**
-   * Workflow input; validated against the workflow version's input_schema. Default {}.
-   */
-  input?: {};
-  target?: EntityRef;
-  attribution?: EntityRef;
-  on_behalf_of?: SubjectRef;
-  /**
-   * Same (requester, key) returns the existing run; a different workflow or input under it is 409 idempotency.conflict. The Idempotency-Key header is used when this is absent.
-   */
-  idempotency_key?: string;
-  options?: {
-    /**
-     * false skips the scoped cache lookup and store.
-     */
-    cache?: boolean;
-    /**
-     * Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on.
-     */
-    debug?: boolean;
-    /**
-     * The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped).
-     */
-    latency?: "interactive" | "background" | "batch";
-    /**
-     * For a batch run: how long the answer may take, in hours (1 to 72). The run is queued and answered within the deadline; a deadline the provider cannot meet sends the run back to the ordinary path. Omitted: the service's own default.
-     */
-    deadline_hours?: number;
-  };
-  /**
-   * Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision).
-   */
-  credential?: {
-    subject: string;
-  };
-};
-
-/** ai.run@1.1.0 (owner: ai) */
-/**
- * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. latency_class is the class the run really ran in, service_tier the tier it was priced on, and latency_clamped set when the caller asked for a faster class than the workflow allows. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.
- */
-export interface AiRun {
-  id: string;
-  /**
-   * Terminal: succeeded, failed, cancelled, cached (a scoped cache hit, no provider call; provenance.cached_from names the run it reused).
-   */
-  status: "queued" | "running" | "succeeded" | "failed" | "cancelled" | "cached";
-  workflow: {
-    key: string;
-    version: number;
-  };
-  /**
-   * The prompt template of the workflow's llm step; null for workflows without one.
-   */
-  template: {
-    key: string;
-    version: number | null;
-  } | null;
-  /**
-   * Provider route; version null while the route is unresolved or disabled.
-   */
-  route: {
-    key: string;
-    version: number | null;
-  } | null;
-  requester: SubjectRef;
-  on_behalf_of: SubjectRef | null;
-  attribution: EntityRef | null;
-  /**
-   * The requester's service id when the requester is a service.
-   */
-  source_service: string | null;
-  target: EntityRef | null;
-  /**
-   * The retained input (see the description).
-   */
-  input: {};
-  /**
-   * Workflow output, or null.
-   */
-  output: {} | null;
-  error: {
-    /**
-     * run.cancelled, run.interrupted, run.internal, output.invalid, output.empty, provider.unavailable, route.unavailable, source.unavailable, media.unresolvable…
-     */
-    code: string;
-    detail: string | null;
-  } | null;
-  /**
-   * Produced by the stub provider; never served to production callers and never cached.
-   */
-  synthetic: boolean;
-  provenance: {
-    origin: "ai";
-    workflow: string;
-    workflow_version: number;
-    template_version: number | null;
-    route: string | null;
-    route_version: number | null;
-    provider: string | null;
-    model: string | null;
-    /**
-     * The primary provider was degraded and the run fell back (ADR-015: fallbacks are recorded).
-     */
-    fallback_used: boolean;
-    run_id: string;
-    cached_from: string | null;
-    synthetic: boolean;
-  };
-  usage: {
-    tokens_in: number;
-    tokens_out: number;
-    cost_usd: number;
-    /**
-     * Provider calls made (skipped routes not counted).
-     */
-    attempts: number;
-  };
-  /**
-   * Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later.
-   */
-  citations_count: number;
-  /**
-   * The class the run really ran in: how long the caller was willing to wait. It is the workflow's own class (the route's constraints.latency_class) or a slower one the caller asked for (options.latency); a caller can never make a run faster than its workflow allows.
-   */
-  latency_class?: "interactive" | "background" | "batch";
-  /**
-   * The tier the run was priced on: the tier the provider really served (standard, flex, batch) or the one the router chose (offpeak inside a provider's off-peak hours, local on the host's own model). Null while the run has not answered. A provider that does not say which tier it served is priced at the list price: a saving nobody confirmed is not a saving.
-   */
-  service_tier?: "standard" | "flex" | "batch" | "offpeak" | "local" | null;
-  /**
-   * Set when the caller asked for a faster class than the workflow allows: the class asked for and the class the run really ran in. The run is never refused for it.
-   */
-  latency_clamped?: {
-    /**
-     * The class the caller asked for.
-     */
-    asked: "interactive" | "background" | "batch";
-    /**
-     * The class the run really ran in.
-     */
-    used: "interactive" | "background" | "batch";
-  } | null;
-  retry_of: string | null;
-  idempotency_key: string | null;
-  trace_id: string | null;
-  created_at: string;
-  started_at: string | null;
-  finished_at: string | null;
-  /**
-   * Why the run answered as it did: the task-aware router's explain (L33 P3, L36 Y7). task is the requirement set it read from the request, ranked the candidates it considered and why, attempts every provider it tried with why it was chosen and why it failed, and the placement view it ranked from (objective, reasons, selected, candidates). A run that never reached a provider has no explain.
-   */
-  explain?: {
-    /**
-     * The objective the pool planned with (cheapest, balanced, correctness, own-keys, own-machine), or null for a pinned route.
-     */
-    objective: string | null;
-    /**
-     * Why the router chose what it chose, in words.
-     */
-    reasons: string[];
-    /**
-     * The provider that answered (provider, or provider/model, or the machine that answered), or null when nothing answered.
-     */
-    selected: string | {} | null;
-    /**
-     * Every candidate the pool considered, with why it was excluded when it was.
-     */
-    candidates: {
-      provider: string;
-      model?: string | null;
-      eligible?: boolean;
-      excluded_reason?: string | null;
-      cost?: number | null;
-      latency?: number | null;
-      [k: string]: unknown | undefined;
-    }[];
-    /**
-     * Who paid for the run: the network, the person's own key, their own machine, or a project's own provider.
-     */
-    paid_by?: string | null;
-    /**
-     * The requirement set the router read off the request, with no model call.
-     */
-    task?: {
-      /**
-       * The request carried a picture.
-       */
-      vision: boolean;
-      /**
-       * The request carried tools.
-       */
-      tools: boolean;
-      /**
-       * The request asked for JSON out.
-       */
-      json: boolean;
-      /**
-       * The context window the request needs, in tokens.
-       */
-      min_context: number;
-      /**
-       * How much thinking the request asked for.
-       */
-      reasoning: "none" | "some" | "deep";
-      /**
-       * What the request wants out.
-       */
-      output: "text" | "image" | "audio" | "video";
-      /**
-       * How heavy the work is.
-       */
-      weight: "light" | "standard" | "heavy";
-    };
-    /**
-     * The candidates the router ranked for this task, best first, each with its reason.
-     *
-     * @maxItems 5
-     */
-    ranked?:
-      | []
-      | [
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          }
-        ]
-      | [
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          }
-        ]
-      | [
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          }
-        ]
-      | [
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          }
-        ]
-      | [
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          },
-          {
-            provider: string;
-            model?: string | null;
-            /**
-             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
-             */
-            why: string;
-            /**
-             * The input price per million tokens, or null when the price is unknown.
-             */
-            cost?: number | null;
-            /**
-             * The catalogue's strength tier: fast, balanced, strong or frontier.
-             */
-            tier?: string | null;
-            [k: string]: unknown | undefined;
-          }
-        ];
-    /**
-     * Every attempt, in order: why it was chosen, and what went wrong when it failed.
-     */
-    attempts?: {
-      /**
-       * Which key or wallet paid for the attempt; never a key.
-       */
-      key?: string;
-      provider: string;
-      model?: string | null;
-      /**
-       * Why this provider was tried.
-       */
-      why?: string;
-      status: "ok" | "failed" | "timeout" | "skipped";
-      error?: string | null;
-      [k: string]: unknown | undefined;
-    }[];
-    /**
-     * The Bench evidence the route used, when it opted in.
-     */
-    bench?: {} | null;
-    /**
-     * The billing readings of the run, when it has any.
-     */
-    usage_readings?: {}[];
-    /**
-     * A run started from an AI task (ai.task@1): the task it read, the choice it resolved, why that choice won and which fallback answered.
-     */
-    task_choice?: {
-      /**
-       * The task's name.
-       */
-      task: string;
-      requested: AiChoiceV1;
-      answered: AiChoiceV1;
-      /**
-       * Which resolution step picked it: the run's own choice (run), the person's saved choice (saved), their kind default (kind), the owner's task default (owner) or the built-in.
-       */
-      why: "run" | "saved" | "kind" | "owner" | "builtin";
-      /**
-       * 0 when the chosen model answered; otherwise the position of the fallback that did.
-       */
-      fallback_index: number;
-    };
-  } | null;
-  /**
-   * The choice the run was started with, when it was started from a task or a choice; null otherwise.
-   */
-  choice?: AiChoiceV1 | null;
-  /**
-   * What actually answered: the model and its source, and the machine when one did; null for a run outside a task.
-   */
-  answered?: AiChoiceV1 | null;
-}
-
 /** ai.run-error@1.0.0 (owner: ai) */
 /**
  * ai.run-error@1: safe, actionable words for an AI or Actor run. Raw provider responses are never display text. The code map is shared across products.
@@ -326969,288 +326407,6 @@ export interface AiTaskV1 {
   workflow?: string;
 }
 
-/** ai.task-defaults@1.0.0 (owner: ai) */
-/**
- * The owner's default for one task (GET|PUT /api/v1/admin/task-defaults, owner or admin role): the choice signed out and signed in, an ordered list of fallbacks, the image model for image tasks, the search engines in order for search tasks, and a per-run cost ceiling in USD. A change is audited and reaches services within a minute.
- */
-export interface AiTaskDefaultsV1 {
-  signed_out: AiChoiceV1;
-  signed_in: AiChoiceV1;
-  /**
-   * @maxItems 10
-   */
-  fallbacks:
-    | []
-    | [AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1, AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
-    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
-    | [
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1,
-        AiChoiceV1
-      ];
-  image_model: AiChoiceV1 | null;
-  /**
-   * @maxItems 10
-   */
-  search_engines:
-    | []
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ]
-    | [
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        },
-        {
-          engine: string;
-          enabled: boolean;
-        }
-      ];
-  max_cost_usd: number | null;
-}
-
 /** git.change@1.0.0 (owner: git) */
 /**
  * Git G2 change metadata. Community thread is hidden; Git authorizes repository access. PostgreSQL bigint numbers may be decimal strings.
@@ -327602,3 +326758,1003 @@ export interface ExchangeMarket {
     } | null;
   }[];
 }
+
+/** ai.run-request@1.1.0 (owner: ai) */
+/**
+ * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).
+ */
+export type AiRunRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * A registered AI task (ai.task@1, GET /api/v1/tasks). Its workflow runs with the task's resolved choice; choice overrides it for this run.
+   */
+  task?: string;
+  choice?: AiChoiceV1;
+  /**
+   * Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…).
+   */
+  workflow?: string;
+  /**
+   * Pin a workflow version (active or deprecated). Omitted: the newest active version.
+   */
+  version?: number;
+  /**
+   * Workflow input; validated against the workflow version's input_schema. Default {}.
+   */
+  input?: {};
+  target?: EntityRef;
+  attribution?: EntityRef;
+  on_behalf_of?: SubjectRef;
+  /**
+   * Same (requester, key) returns the existing run; a different workflow or input under it is 409 idempotency.conflict. The Idempotency-Key header is used when this is absent.
+   */
+  idempotency_key?: string;
+  options?: {
+    /**
+     * false skips the scoped cache lookup and store.
+     */
+    cache?: boolean;
+    /**
+     * Keep raw prompts and responses in the request log, only when AI runs with raw debug logging on.
+     */
+    debug?: boolean;
+    /**
+     * The class the caller asks for: how long the caller may wait, and what the router may do with the wait. interactive (the default) answers as soon as the provider can; background may take minutes, and the run is priced on the cheapest tier that can wait (a Flex tier, a provider's off-peak hours, the host's own idle model); batch may take hours, and the run is queued and answered through a provider's own batch API. The class is the workflow's own (the route's constraints.latency_class): a caller may ask for a SLOWER class and never for a faster one. A faster ask is not refused: the run happens in the workflow's own class and the answer says so (run.latency_clamped).
+     */
+    latency?: "interactive" | "background" | "batch";
+    /**
+     * For a batch run: how long the answer may take, in hours (1 to 72). The run is queued and answered within the deadline; a deadline the provider cannot meet sends the run back to the ordinary path. Omitted: the service's own default.
+     */
+    deadline_hours?: number;
+  };
+  /**
+   * Run with the person's own provider key (ai.credential@1) that this service stored, instead of a shared route: only that provider is called (no fallback), the result is never cached or taken from the cache, the shared paid budget is not spent, and the credential's own daily budget applies (429 quota.exceeded). Chat operations only (text, JSON, vision).
+   */
+  credential?: {
+    subject: string;
+  };
+  effort?: AiEffort;
+  ladder_id?: string;
+  rung?: number;
+  agent_role?: "router" | "gate" | "assessor" | "worker" | "subagent" | "reviewer";
+  kind?: string;
+};
+
+/** ai.run@1.2.0 (owner: ai) */
+/**
+ * A workflow run on OpenVibe.AI (ADR-015; server/runs.js decode): the `run` member of every run response (POST /api/v1/runs and the direct operations, GET /api/v1/runs/:id, cancel, retry) and each item of GET /api/v1/runs { runs }. Output is attributable to workflow + version + template version + route version + provider/model + run id, never to a person. A draft stays a draft: products store it with ai/ai_assisted authorship and publish nothing until a person reviews it. input keeps no inline media (replaced by data_url_sha256 and data_url_bytes) and no passthrough prompt ({ not_retained }); output is null until the run succeeded or was served from cache and then matches the workflow version's output_schema. requester is the token principal (service, app or mod). A run interrupted by a restart or shutdown ends failed with error.code run.interrupted. latency_class is the class the run really ran in, service_tier the tier it was priced on, and latency_clamped set when the caller asked for a faster class than the workflow allows. explain says why the run answered as it did: the task it read, the candidates it ranked and every attempt.
+ */
+export interface AiRun {
+  id: string;
+  /**
+   * Terminal: succeeded, failed, cancelled, cached (a scoped cache hit, no provider call; provenance.cached_from names the run it reused).
+   */
+  status: "queued" | "running" | "succeeded" | "failed" | "cancelled" | "cached";
+  workflow: {
+    key: string;
+    version: number;
+  };
+  /**
+   * The prompt template of the workflow's llm step; null for workflows without one.
+   */
+  template: {
+    key: string;
+    version: number | null;
+  } | null;
+  /**
+   * Provider route; version null while the route is unresolved or disabled.
+   */
+  route: {
+    key: string;
+    version: number | null;
+  } | null;
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  attribution: EntityRef | null;
+  /**
+   * The requester's service id when the requester is a service.
+   */
+  source_service: string | null;
+  target: EntityRef | null;
+  /**
+   * The retained input (see the description).
+   */
+  input: {};
+  /**
+   * Workflow output, or null.
+   */
+  output: {} | null;
+  error: {
+    /**
+     * run.cancelled, run.interrupted, run.internal, output.invalid, output.empty, provider.unavailable, route.unavailable, source.unavailable, media.unresolvable…
+     */
+    code: string;
+    detail: string | null;
+  } | null;
+  /**
+   * Produced by the stub provider; never served to production callers and never cached.
+   */
+  synthetic: boolean;
+  provenance: {
+    origin: "ai";
+    workflow: string;
+    workflow_version: number;
+    template_version: number | null;
+    route: string | null;
+    route_version: number | null;
+    provider: string | null;
+    model: string | null;
+    /**
+     * The primary provider was degraded and the run fell back (ADR-015: fallbacks are recorded).
+     */
+    fallback_used: boolean;
+    run_id: string;
+    cached_from: string | null;
+    synthetic: boolean;
+  };
+  usage: {
+    tokens_in: number;
+    tokens_out: number;
+    cost_usd: number;
+    /**
+     * Provider calls made (skipped routes not counted).
+     */
+    attempts: number;
+  };
+  /**
+   * Citations stored for the run (GET /api/v1/runs/:id/citations): the sources the workflow was given, and any the requester attached later.
+   */
+  citations_count: number;
+  /**
+   * The class the run really ran in: how long the caller was willing to wait. It is the workflow's own class (the route's constraints.latency_class) or a slower one the caller asked for (options.latency); a caller can never make a run faster than its workflow allows.
+   */
+  latency_class?: "interactive" | "background" | "batch";
+  /**
+   * The tier the run was priced on: the tier the provider really served (standard, flex, batch) or the one the router chose (offpeak inside a provider's off-peak hours, local on the host's own model). Null while the run has not answered. A provider that does not say which tier it served is priced at the list price: a saving nobody confirmed is not a saving.
+   */
+  service_tier?: "standard" | "flex" | "batch" | "offpeak" | "local" | null;
+  /**
+   * Set when the caller asked for a faster class than the workflow allows: the class asked for and the class the run really ran in. The run is never refused for it.
+   */
+  latency_clamped?: {
+    /**
+     * The class the caller asked for.
+     */
+    asked: "interactive" | "background" | "batch";
+    /**
+     * The class the run really ran in.
+     */
+    used: "interactive" | "background" | "batch";
+  } | null;
+  retry_of: string | null;
+  idempotency_key: string | null;
+  trace_id: string | null;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+  /**
+   * Why the run answered as it did: the task-aware router's explain (L33 P3, L36 Y7). task is the requirement set it read from the request, ranked the candidates it considered and why, attempts every provider it tried with why it was chosen and why it failed, and the placement view it ranked from (objective, reasons, selected, candidates). A run that never reached a provider has no explain.
+   */
+  explain?: {
+    /**
+     * The objective the pool planned with (cheapest, balanced, correctness, own-keys, own-machine), or null for a pinned route.
+     */
+    objective: string | null;
+    /**
+     * Why the router chose what it chose, in words.
+     */
+    reasons: string[];
+    /**
+     * The provider that answered (provider, or provider/model, or the machine that answered), or null when nothing answered.
+     */
+    selected: string | {} | null;
+    /**
+     * Every candidate the pool considered, with why it was excluded when it was.
+     */
+    candidates: {
+      provider: string;
+      model?: string | null;
+      eligible?: boolean;
+      excluded_reason?: string | null;
+      cost?: number | null;
+      latency?: number | null;
+      [k: string]: unknown | undefined;
+    }[];
+    /**
+     * Who paid for the run: the network, the person's own key, their own machine, or a project's own provider.
+     */
+    paid_by?: string | null;
+    /**
+     * The requirement set the router read off the request, with no model call.
+     */
+    task?: {
+      /**
+       * The request carried a picture.
+       */
+      vision: boolean;
+      /**
+       * The request carried tools.
+       */
+      tools: boolean;
+      /**
+       * The request asked for JSON out.
+       */
+      json: boolean;
+      /**
+       * The context window the request needs, in tokens.
+       */
+      min_context: number;
+      /**
+       * How much thinking the request asked for.
+       */
+      reasoning: "none" | "some" | "deep";
+      /**
+       * What the request wants out.
+       */
+      output: "text" | "image" | "audio" | "video";
+      /**
+       * How heavy the work is.
+       */
+      weight: "light" | "standard" | "heavy";
+    };
+    /**
+     * The candidates the router ranked for this task, best first, each with its reason.
+     *
+     * @maxItems 5
+     */
+    ranked?:
+      | []
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          },
+          {
+            provider: string;
+            model?: string | null;
+            /**
+             * Why this candidate is here (the cheapest with vision, the strong tier, warm cache).
+             */
+            why: string;
+            /**
+             * The input price per million tokens, or null when the price is unknown.
+             */
+            cost?: number | null;
+            /**
+             * The catalogue's strength tier: fast, balanced, strong or frontier.
+             */
+            tier?: string | null;
+            [k: string]: unknown | undefined;
+          }
+        ];
+    /**
+     * Every attempt, in order: why it was chosen, and what went wrong when it failed.
+     */
+    attempts?: {
+      /**
+       * Which key or wallet paid for the attempt; never a key.
+       */
+      key?: string;
+      provider: string;
+      model?: string | null;
+      /**
+       * Why this provider was tried.
+       */
+      why?: string;
+      status: "ok" | "failed" | "timeout" | "skipped";
+      error?: string | null;
+      [k: string]: unknown | undefined;
+    }[];
+    /**
+     * The Bench evidence the route used, when it opted in.
+     */
+    bench?: {} | null;
+    /**
+     * The billing readings of the run, when it has any.
+     */
+    usage_readings?: {}[];
+    /**
+     * A run started from an AI task (ai.task@1): the task it read, the choice it resolved, why that choice won and which fallback answered.
+     */
+    task_choice?: {
+      /**
+       * The task's name.
+       */
+      task: string;
+      requested: AiChoiceV1;
+      answered: AiChoiceV1;
+      /**
+       * Which resolution step picked it: the run's own choice (run), the person's saved choice (saved), their kind default (kind), the owner's task default (owner) or the built-in.
+       */
+      why: "run" | "saved" | "kind" | "owner" | "builtin";
+      /**
+       * 0 when the chosen model answered; otherwise the position of the fallback that did.
+       */
+      fallback_index: number;
+    };
+  } | null;
+  /**
+   * The choice the run was started with, when it was started from a task or a choice; null otherwise.
+   */
+  choice?: AiChoiceV1 | null;
+  /**
+   * What actually answered: the model and its source, and the machine when one did; null for a run outside a task.
+   */
+  answered?: AiChoiceV1 | null;
+  effort_requested?: AiEffort;
+  effort_applied?: ("low" | "medium" | "high" | "max") | null;
+  effort_rung?: number;
+  ladder_id?: string;
+  ladder?: {
+    model: string;
+    effort: AiEffort;
+    cost_usd: number;
+    outcome: string;
+  }[];
+}
+
+/** ai.task-defaults@1.1.0 (owner: ai) */
+/**
+ * The owner's default for one task (GET|PUT /api/v1/admin/task-defaults, owner or admin role): the choice signed out and signed in, an ordered list of fallbacks, the image model for image tasks, the search engines in order for search tasks, and a per-run cost ceiling in USD. A change is audited and reaches services within a minute.
+ */
+export interface AiTaskDefaultsV1 {
+  signed_out: AiChoiceV1;
+  signed_in: AiChoiceV1;
+  /**
+   * @maxItems 10
+   */
+  fallbacks:
+    | []
+    | [AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1
+      ];
+  image_model: AiChoiceV1 | null;
+  /**
+   * @maxItems 10
+   */
+  search_engines:
+    | []
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ];
+  max_cost_usd: number | null;
+  /**
+   * Concrete effort used when a request selects auto. Omitted uses the workflow default, then medium.
+   */
+  effort?: "low" | "medium" | "high" | "max";
+}
+
+/** agent.trigger@1.0.0 (owner: actor) */
+/**
+ * Immutable source event. Source-local actor identity grants no cross-source authority. Accepting an id twice creates one ticket.
+ */
+export interface AgentTrigger {
+  id: string;
+  source: string;
+  actor: {
+    source: string;
+    id: string;
+    kind: "person" | "bot" | "system";
+  };
+  source_scope: string;
+  /**
+   * @minItems 1
+   */
+  threads: [string, ...string[]];
+  occurred_at: string;
+  text: string;
+  read_pointer?: string;
+  addresses_agent?: "mention" | "direct" | "none";
+}
+
+/** agent.decision@1.0.0 (owner: actor) */
+/**
+ * Gate and assessment decision. Inferred work defaults to observe: record ignore with would_accept, never launch. Only an explicit human stop withdraws a mandate.
+ */
+export interface AgentDecision {
+  id: string;
+  /**
+   * @minItems 1
+   */
+  trigger_ids: [string, ...string[]];
+  policy_version: string;
+  decision: "accept" | "stop" | "ignore" | "unavailable";
+  strength: "explicit" | "inferred";
+  direction: {
+    implementation_requested: boolean;
+    target_basis: "specified" | "existing-standard" | "undetermined";
+    requires_design_decision: boolean;
+    evidence: {
+      trigger_id: string;
+      quote: string;
+    }[];
+  };
+  rule_assessments: {
+    matched: boolean;
+    reason: string;
+    rule_id: string;
+  }[];
+  reason?: string;
+  would_accept?: boolean;
+  ignored_from_card?: boolean;
+}
+
+/** agent.ticket@1.0.0 (owner: actor) */
+/**
+ * Authorized work with an immutable mandate. Policy changes notify, never cancel. Revalidate before resuming an ended ticket; bots and CI cannot resume it. Stage applies to open tickets.
+ */
+export interface AgentTicket {
+  id: string;
+  trigger_id: string;
+  mandate: {
+    policy_version: string;
+    scope: string;
+    strength: "explicit" | "inferred";
+    matched_rules: string[];
+    actor: {
+      source: string;
+      id: string;
+      kind: "person" | "bot" | "system";
+    };
+    source_scope: string;
+    budget: {
+      usd: number;
+      tokens: number;
+      wall_minutes: number;
+    };
+  };
+  state: "open" | "ended";
+  stage: AgentStage;
+  /**
+   * @minItems 1
+   */
+  threads: [string, ...string[]];
+}
+
+/** agent.report@1.0.0 (owner: actor) */
+/**
+ * Executor report. A PR alone is not ready; a draft is blocked. human_action carries exactly one question unchanged to the person.
+ */
+export interface AgentReport {
+  ticket_id: string;
+  assignment_id: string;
+  state: "progress" | "waiting" | "ready" | "blocked" | "failed" | "dropped";
+  summary: string;
+  pr: string | null;
+  tests_run: string[];
+  risks: string[];
+  human_action?: {
+    question: string;
+  };
+}
+
+/** agent.attention@1.0.0 (owner: actor) */
+/**
+ * One structured question awaiting a person. Authorized independent work may continue.
+ */
+export interface AgentAttention {
+  id: string;
+  ticket_id: string;
+  question: string;
+  state: "open" | "answered" | "dismissed";
+  created_at: string;
+  answer?: string;
+}
+
+/** agent.stage@1.0.0 (owner: actor) */
+/**
+ * Closed open-ticket stages. First matching row wins: delivery failure, attention, ready report, blocked/failed report without a later human input, absent/pending assignment, waiting report/ended assignment, working. Labels and conditions: docs/agent-work.md.
+ */
+export type AgentStage =
+  | "person/delivery"
+  | "person/answer"
+  | "person/review"
+  | "person/blocked"
+  | "person/failed"
+  | "working/queued"
+  | "idle"
+  | "working";
+
+/** ai.effort@1.0.0 (owner: ai) */
+/**
+ * Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.
+ */
+export type AiEffort = "auto" | "low" | "medium" | "high" | "max";

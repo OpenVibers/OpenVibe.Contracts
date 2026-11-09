@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/ticket.v1.json",
+  "title": "AgentTicket",
+  "description": "Authorized work with an immutable mandate. Policy changes notify, never cancel. Revalidate before resuming an ended ticket; bots and CI cannot resume it. Stage applies to open tickets.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "trigger_id",
+    "mandate",
+    "state",
+    "stage",
+    "threads"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mandate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_version",
+        "scope",
+        "strength",
+        "matched_rules",
+        "actor",
+        "source_scope",
+        "budget"
+      ],
+      "properties": {
+        "policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "strength": {
+          "enum": [
+            "explicit",
+            "inferred"
+          ]
+        },
+        "matched_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "actor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source",
+            "id",
+            "kind"
+          ],
+          "properties": {
+            "source": {
+              "type": "string",
+              "minLength": 1
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "enum": [
+                "person",
+                "bot",
+                "system"
+              ]
+            }
+          }
+        },
+        "source_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "usd",
+            "tokens",
+            "wall_minutes"
+          ],
+          "properties": {
+            "usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "wall_minutes": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "state": {
+      "enum": [
+        "open",
+        "ended"
+      ]
+    },
+    "stage": {
+      "$ref": "stage.v1.json"
+    },
+    "threads": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}

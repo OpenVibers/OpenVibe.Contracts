@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/effort.v1.json",
+  "title": "AiEffort",
+  "description": "Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.",
+  "type": "string",
+  "enum": [
+    "auto",
+    "low",
+    "medium",
+    "high",
+    "max"
+  ]
+}
