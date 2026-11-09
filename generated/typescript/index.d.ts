@@ -159391,11 +159391,18 @@ export interface AiAttributionQuota {
 /**
  * Body of POST /api/v1/runs on OpenVibe.AI (capability ai.run.create; ADR-015). Runs the newest active version of a workflow (or the given active or deprecated version) on input that must match that workflow version's own input schema; per-workflow input and output schemas live in AI's registry (GET /api/v1/workflows/:key), not here. The token's ns claim limits which workflow namespaces may run (403 capability.namespace_denied). ?wait=ms waits for the result: 201 finished or served from cache, 202 still queued/running (poll GET /api/v1/runs/:id), 200 an idempotent replay. Errors are problem+json: 404 workflow.not_found, 409 workflow.inactive, 409 idempotency.conflict, 413 input.too_large, 422 input.invalid, 429 quota.exceeded or queue.full with Retry-After. The direct operations POST /api/v1/{chat,generate,summarize,classify,extract,enrich,embed} take the same fields (except workflow and version) with the input fields at the top level and run workflow ai.<op>. target (EntityRef): what the output is about, part of the cache scope and a run filter. attribution (EntityRef): what the spend is attributed to for quotas and usage. on_behalf_of (SubjectRef): the person or actor the caller acts for, part of the cache scope and per-actor quotas. options.latency asks for a slower class than the workflow allows (options.deadline_hours says how long a batch run may take); the run answers with the class it ran in (run.latency_class), the tier it was priced on (run.service_tier) and, when the ask was clamped, the class it really ran in (run.latency_clamped).
  */
-export interface AiRunRequest {
+export type AiRunRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * A registered AI task (ai.task@1, GET /api/v1/tasks). Its workflow runs with the task's resolved choice; choice overrides it for this run.
+   */
+  task?: string;
+  choice?: AiChoiceV1;
   /**
    * Workflow key, <namespace>.<name> (live.chat_reply, news.summarize_story, network.site_copy…).
    */
-  workflow: string;
+  workflow?: string;
   /**
    * Pin a workflow version (active or deprecated). Omitted: the newest active version.
    */
@@ -159435,7 +159442,7 @@ export interface AiRunRequest {
   credential?: {
     subject: string;
   };
-}
+};
 
 /** ai.run@1.1.0 (owner: ai) */
 /**
@@ -159912,7 +159919,34 @@ export interface AiRun {
      * The billing readings of the run, when it has any.
      */
     usage_readings?: {}[];
+    /**
+     * A run started from an AI task (ai.task@1): the task it read, the choice it resolved, why that choice won and which fallback answered.
+     */
+    task_choice?: {
+      /**
+       * The task's name.
+       */
+      task: string;
+      requested: AiChoiceV1;
+      answered: AiChoiceV1;
+      /**
+       * Which resolution step picked it: the run's own choice (run), the person's saved choice (saved), their kind default (kind), the owner's task default (owner) or the built-in.
+       */
+      why: "run" | "saved" | "kind" | "owner" | "builtin";
+      /**
+       * 0 when the chosen model answered; otherwise the position of the fallback that did.
+       */
+      fallback_index: number;
+    };
   } | null;
+  /**
+   * The choice the run was started with, when it was started from a task or a choice; null otherwise.
+   */
+  choice?: AiChoiceV1 | null;
+  /**
+   * What actually answered: the model and its source, and the machine when one did; null for a run outside a task.
+   */
+  answered?: AiChoiceV1 | null;
 }
 
 /** ai.run-error@1.0.0 (owner: ai) */
@@ -160831,7 +160865,6 @@ export type AiRunCreateRequest =
       options?: {};
     }
   | NoBody;
-
 /** ai.run-create-result@1.0.0 (owner: ai) */
 /**
  * ai.run-create-result@1: answers of ai.run.create on OpenVibe.AI. POST /api/v1/runs and the direct operations → { run, replayed? } (201 when it finished or was served from cache within the wait, 202 with Location while queued or running, 200 with replayed true for an idempotent repeat); POST …/cancel → { run }; POST …/retry → { run } (a new run with retry_of); POST …/citations → 201 { citations }. A quota refusal or a full queue is 429 with Retry-After.
@@ -294753,6 +294786,10 @@ export interface AiMePreferencesV1 {
      * A model id, or `auto` to let placement choose.
      */
     image: string;
+    /**
+     * A model id, or `auto` to let placement choose.
+     */
+    search?: string;
   };
   updated_at?: string | null;
 }
@@ -323579,4 +323616,311 @@ export interface PicsGallery {
   pictures: PicsPicture[];
   next: string | null;
   sort: "popular" | "new" | "rising";
+}
+
+/** ai.choice@1.0.0 (owner: ai) */
+/**
+ * One model and where it comes from, for a task or a run: OpenVibe's supply (openvibe), the person's own provider key (keys), or one of their own computers through OpenVibe Link (machines). A machine choice names the machine; the other sources never do. Used by ai.run-request@1, ai.task@1 and ai.task-defaults@1.
+ */
+export type AiChoiceV1 = {
+  [k: string]: unknown | undefined;
+} & {
+  model: string;
+  source: "openvibe" | "keys" | "machines";
+  machine?: string;
+};
+
+/** ai.task@1.0.0 (owner: ai) */
+/**
+ * A named piece of AI work in OpenVibe.AI's catalogue: the service that registered it, its kind (text, code, vision, image or search), one sentence saying what it does, the built-in default choice and the workflow that runs it. Services register their own namespace with POST /api/v1/tasks; the catalogue lists every task at GET /api/v1/tasks.
+ */
+export interface AiTaskV1 {
+  name: string;
+  kind: "text" | "code" | "vision" | "image" | "search";
+  sentence: string;
+  default: AiChoiceV1;
+  service?: string;
+  workflow?: string;
+}
+
+/** ai.task-defaults@1.0.0 (owner: ai) */
+/**
+ * The owner's default for one task (GET|PUT /api/v1/admin/task-defaults, owner or admin role): the choice signed out and signed in, an ordered list of fallbacks, the image model for image tasks, the search engines in order for search tasks, and a per-run cost ceiling in USD. A change is audited and reaches services within a minute.
+ */
+export interface AiTaskDefaultsV1 {
+  signed_out: AiChoiceV1;
+  signed_in: AiChoiceV1;
+  /**
+   * @maxItems 10
+   */
+  fallbacks:
+    | []
+    | [AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1, AiChoiceV1]
+    | [
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1,
+        AiChoiceV1
+      ];
+  image_model: AiChoiceV1 | null;
+  /**
+   * @maxItems 10
+   */
+  search_engines:
+    | []
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ]
+    | [
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        },
+        {
+          engine: string;
+          enabled: boolean;
+        }
+      ];
+  max_cost_usd: number | null;
 }

@@ -4,6 +4,10 @@
 
 - Complete `community.feed-item@1` with the optional `live_now` flag emitted by the Feed; cover on-air and ended streams, invalid live status and negative counts with fixtures.
 
+## 0.375.0 — 2026-11-09
+
+- AI tasks and choices: `ai.task@1`, `ai.choice@1`, `ai.task-defaults@1`; a run accepts `task` or `choice` beside `workflow`, and `run.explain.task_choice` says what answered. `ai.me-preferences@1` gains `defaults.search`.
+
 ## 0.374.0 — 2026-11-09
 
 - Add the Pics public gallery and picture contracts (`pics.gallery@1`, `pics.picture@1`) with valid and invalid fixtures.

@@ -1,0 +1,9 @@
+{
+  "name": "design.icon",
+  "kind": "code",
+  "sentence": "Draw an SVG icon.",
+  "default": {
+    "model": "openvibe/cheapest",
+    "source": "openvibe"
+  }
+}

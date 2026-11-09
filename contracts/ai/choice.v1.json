@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/choice.v1.json",
+  "title": "AiChoiceV1",
+  "description": "One model and where it comes from, for a task or a run: OpenVibe's supply (openvibe), the person's own provider key (keys), or one of their own computers through OpenVibe Link (machines). A machine choice names the machine; the other sources never do. Used by ai.run-request@1, ai.task@1 and ai.task-defaults@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "model": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._:/@+\\-]{1,200}$"
+    },
+    "source": {
+      "enum": [
+        "openvibe",
+        "keys",
+        "machines"
+      ]
+    },
+    "machine": {
+      "type": "string",
+      "pattern": "^(any|dev_[0-9A-HJKMNP-TV-Z]{26})$"
+    }
+  },
+  "required": [
+    "model",
+    "source"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source": {
+            "const": "machines"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "machine"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "machine"
+          ]
+        }
+      }
+    }
+  ]
+}
