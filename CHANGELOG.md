@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.376.0 — 2026-11-09
+
+- Complete `community.feed-item@1` with the optional `live_now` flag emitted by the Feed; cover on-air and ended streams, invalid live status and negative counts with fixtures.
+
 ## 0.374.0 — 2026-11-09
 
 - Add the Pics public gallery and picture contracts (`pics.gallery@1`, `pics.picture@1`) with valid and invalid fixtures.

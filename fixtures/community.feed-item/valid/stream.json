@@ -1,0 +1,17 @@
+{
+  "id": "p:42",
+  "kind": "stream",
+  "url": "https://openvibe.live/@alex",
+  "title": "Alex went live",
+  "text": "",
+  "at": "2026-11-09T10:15:00.000Z",
+  "site": "live",
+  "site_name": "Live",
+  "actor": {
+    "name": "Alex",
+    "avatar": "https://openvibe.network/avatar/alex?s=96"
+  },
+  "media": null,
+  "counts": {},
+  "live_now": false
+}
