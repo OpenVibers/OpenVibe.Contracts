@@ -1,0 +1,9 @@
+{
+  "id": "example-product",
+  "kind": "raffle",
+  "title": "Example",
+  "brand": null,
+  "source": { "name": "Example", "url": "https://example.com" },
+  "checked_at": "2026-11-09T12:00:00Z",
+  "facts": []
+}

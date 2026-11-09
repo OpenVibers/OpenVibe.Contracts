@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.356.0 — 2026-11-09
+
+- Shoes product contract (shoes.product@1)
+
 ## 0.355.0 — 2026-11-09
 
 - Daily quest contracts and step contribution
