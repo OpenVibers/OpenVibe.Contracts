@@ -170,6 +170,15 @@
       "adr": "ADR-002"
     },
     {
+      "id": "publishing.block",
+      "version": "1.0.0",
+      "owner": "publishing",
+      "schema": "publishing/block.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "registry.service-manifest",
       "version": "1.2.0",
       "owner": "network",
@@ -10675,6 +10684,51 @@
       "owner": "design",
       "schema": "design/glyph-draft-result.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.wallet",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/wallet.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.store",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/store.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.purchase",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/purchase.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.store-listing-request",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/store-listing-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.store-listing",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/store-listing.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     }
