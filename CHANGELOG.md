@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.370.0 — 2026-11-09
+
+- design.component@1: one platform-neutral definition per shared interface (the public registry on openvibe.design)
+
 ## 0.369.0 — 2026-11-09
 
 - OpenVibe Git: git.repo@1, git.commit@1, git.tree@1 and git.insights@1
@@ -43,6 +47,7 @@
 ## 0.359.0 — 2026-11-09
 
 - Media multipart uploads in contracts and OpenAPI
+- Define `design.component@1` for web, Android and iOS component anatomy, props, states, tokens, behavior, accessibility and examples.
 
 ## 0.358.0 — 2026-11-09
 
