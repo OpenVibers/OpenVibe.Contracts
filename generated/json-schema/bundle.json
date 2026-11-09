@@ -120281,8 +120281,11 @@
                 "type": "boolean"
               },
               "target_basis": {
-                "type": "string",
-                "minLength": 1
+                "enum": [
+                  "specified",
+                  "existing-standard",
+                  "undetermined"
+                ]
               },
               "requires_design_decision": {
                 "type": "boolean"
@@ -120316,19 +120319,19 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "rule",
+                "rule_id",
                 "matched",
                 "reason"
               ],
               "properties": {
-                "rule": {
-                  "type": "string",
-                  "minLength": 1
-                },
                 "matched": {
                   "type": "boolean"
                 },
                 "reason": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "rule_id": {
                   "type": "string",
                   "minLength": 1
                 }

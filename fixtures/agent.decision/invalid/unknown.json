@@ -8,7 +8,7 @@
   "strength": "explicit",
   "direction": {
     "implementation_requested": true,
-    "target_basis": "issue:1",
+    "target_basis": "specified",
     "requires_design_decision": false,
     "evidence": [
       {

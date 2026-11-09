@@ -324153,7 +324153,7 @@ export interface AgentDecision {
   strength: "explicit" | "inferred";
   direction: {
     implementation_requested: boolean;
-    target_basis: string;
+    target_basis: "specified" | "existing-standard" | "undetermined";
     requires_design_decision: boolean;
     evidence: {
       trigger_id: string;
@@ -324161,9 +324161,9 @@ export interface AgentDecision {
     }[];
   };
   rule_assessments: {
-    rule: string;
     matched: boolean;
     reason: string;
+    rule_id: string;
   }[];
   reason?: string;
   would_accept?: boolean;
