@@ -89,8 +89,8 @@
       "service": "design",
       "name": "OpenVibe.Design",
       "origin": "https://openvibe.design",
-      "operations": 6,
-      "capabilities": 1
+      "operations": 7,
+      "capabilities": 2
     },
     {
       "service": "domains",

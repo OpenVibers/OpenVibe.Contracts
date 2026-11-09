@@ -1,0 +1,15 @@
+{
+  "id": "design.glyph.draft",
+  "version": "1.0",
+  "owner": "design",
+  "status": "active",
+  "visibility": "internal",
+  "description": "A first-party service may ask OpenVibe.Design to draft a missing glyph. Design deduplicates requests and leaves AI candidates in the staff review queue; the caller uses a bundled glyph until an approved drawing is available.",
+  "permissions": ["glyph:draft"],
+  "resourceConstraints": ["none"],
+  "quotaClass": "glyph-draft",
+  "events": [],
+  "implementedBy": ["POST /api/v1/glyphs/drafts"],
+  "inputSchema": "design.glyph-draft-request@1",
+  "outputSchema": "design.glyph-draft-result@1"
+}

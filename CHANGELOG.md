@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.353.0 — 2026-11-09
+
+- Add the first-party `design.glyph.draft` capability and request/result contracts for reviewable glyph drafts from other OpenVibe services.
+
 ## 0.352.0 — 2026-11-09
 
 - The menu's home screen and wall (M1): `network.home-screen@1`, `network.menu-feeds@2` (order and off; v1's on reads as
