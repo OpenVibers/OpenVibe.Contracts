@@ -1,0 +1,17 @@
+{
+  "sha": "4f0c2d9a1e8b7c6d5a4f3e2d1c0b9a8f7e6d5c4b",
+  "repo": "openvibers/openvibe.codes",
+  "message": "Open the desk from a phone\n\nA narrow layout and a bigger tap target.",
+  "subject": "Open the desk from a phone",
+  "author": { "name": "Sam", "email": "sam@example.com", "username": "sam", "date": "2026-11-09T08:40:00Z" },
+  "committer": { "name": "Sam", "email": "sam@example.com", "date": "2026-11-09T08:40:00Z" },
+  "parents": ["a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"],
+  "tree_sha": "b2c3d4e5f60718293a4b5c6d7e8f901234567890",
+  "date": "2026-11-09T08:40:00Z",
+  "stats": { "files": 2, "additions": 34, "deletions": 6 },
+  "files": [
+    { "path": "public/css/codes.css", "previous_path": null, "status": "modified", "additions": 30, "deletions": 6, "patch": "@@ -12,3 +12,27 @@\n .desk { display: grid; }\n" },
+    { "path": "test/phone.test.js", "previous_path": null, "status": "added", "additions": 4, "deletions": 0, "patch": null }
+  ],
+  "diff": "diff --git a/public/css/codes.css b/public/css/codes.css\n"
+}

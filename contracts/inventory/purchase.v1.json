@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/inventory/purchase.v1.json",
+  "title": "InventoryPurchase",
+  "description": "Universal wallet: inventory.purchase. Personal bearer reads and purchases; server-side reviewed prices.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^isp_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "item_id": {
+      "type": "string",
+      "pattern": "^itd_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "issuer": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "vibes",
+        "coins"
+      ]
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "fulfilled"
+      ]
+    },
+    "instance_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^inv_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "payment_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "subject",
+    "item_id",
+    "name",
+    "issuer",
+    "currency",
+    "amount",
+    "status",
+    "instance_id",
+    "payment_id"
+  ]
+}

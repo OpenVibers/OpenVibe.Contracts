@@ -1,0 +1,11 @@
+{
+  "type": "section",
+  "attrs": {
+    "id": "blueprint-rework",
+    "by": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "react": true
+  },
+  "children": [
+    { "type": "text", "value": "## Blueprint rework\n\nWorkbenches no longer need fragments." }
+  ]
+}

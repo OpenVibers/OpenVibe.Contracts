@@ -170,6 +170,15 @@
       "adr": "ADR-002"
     },
     {
+      "id": "publishing.block",
+      "version": "1.0.0",
+      "owner": "publishing",
+      "schema": "publishing/block.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "registry.service-manifest",
       "version": "1.2.0",
       "owner": "network",
@@ -1570,6 +1579,15 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-015"
+    },
+    {
+      "id": "ai.run-error",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/run-error.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "ai.call.recorded",
@@ -5703,6 +5721,15 @@
       "status": "active"
     },
     {
+      "id": "chat.vibe-conversations-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/vibe-conversations-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.vibe-deliver-request",
       "version": "1.0.0",
       "owner": "chat",
@@ -6034,6 +6061,15 @@
       "owner": "community",
       "schema": "community/pulse-item.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.feed-item",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-item.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },
@@ -8692,7 +8728,7 @@
     },
     {
       "id": "common.action-item",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/action-item.v1.json",
       "visibility": "public",
@@ -8701,7 +8737,7 @@
     },
     {
       "id": "common.action-list-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "contracts",
       "schema": "common/action-list-result.v1.json",
       "visibility": "public",
@@ -8710,7 +8746,7 @@
     },
     {
       "id": "network.me-actions-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "network/me-actions-result.v1.json",
       "visibility": "public",
@@ -8719,7 +8755,7 @@
     },
     {
       "id": "network.dock-state",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "network/dock-state.v1.json",
       "visibility": "public",
@@ -10068,6 +10104,24 @@
       "status": "active"
     },
     {
+      "id": "report.me-stats",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.me-stats-publish",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats-publish.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.tts-speak-request",
       "version": "1.0.0",
       "owner": "chat",
@@ -10251,6 +10305,24 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-058"
+    },
+    {
+      "id": "actor.skill-run-request",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill-run-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.skill-run-result",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/skill-run-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "actor.skill",
@@ -10562,6 +10634,132 @@
       "adr": "ADR-001"
     },
     {
+      "id": "meme.entry",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/entry.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.template",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/template.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.render",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "meme/render.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-request",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "design.glyph-draft-result",
+      "version": "1.0.0",
+      "owner": "design",
+      "schema": "design/glyph-draft-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "billing.wallet",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/wallet.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.store",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/store.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.purchase",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/purchase.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.store-listing-request",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/store-listing-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "inventory.store-listing",
+      "version": "1.0.0",
+      "owner": "inventory",
+      "schema": "inventory/store-listing.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.repo",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/repo.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.commit",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/commit.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.tree",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/tree.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.insights",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/insights.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "design.component",
       "version": "1.0.0",
       "owner": "design",
@@ -10570,6 +10768,5 @@
       "compatibility": "backward",
       "status": "active"
     }
-
   ]
 }

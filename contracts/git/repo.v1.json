@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/git/repo.v1.json",
+  "title": "GitRepository",
+  "description": "One repository on OpenVibe.Git (git.openvibe.codes): its owner, visibility, default branch, counts, and — when it has one — its GitHub mirror and the cached GitHub card. api/view/repo.",
+  "type": "object",
+  "required": [
+    "id",
+    "owner",
+    "name",
+    "full_name",
+    "description",
+    "visibility",
+    "default_branch",
+    "topics",
+    "stars",
+    "watchers",
+    "forks",
+    "language",
+    "html_url",
+    "clone_url",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^repo_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The repository's own id (repo_<ULID>), stable across a rename."
+    },
+    "owner": {
+      "type": "object",
+      "required": ["username"],
+      "additionalProperties": false,
+      "properties": {
+        "username": {
+          "type": "string",
+          "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}$",
+          "description": "The OpenVibe username that owns it, lower-case."
+        },
+        "subject": {
+          "type": ["string", "null"],
+          "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+          "description": "The owner's Network subject; absent when the owner is the organisation account."
+        },
+        "display_name": { "type": ["string", "null"] },
+        "avatar_url": { "type": ["string", "null"], "format": "uri" }
+      }
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^(?!.*\\.git$)[a-z0-9][a-z0-9._-]{0,99}$",
+      "description": "The repository name; lower-case, and never ending in .git."
+    },
+    "full_name": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}/(?!.*\\.git$)[a-z0-9][a-z0-9._-]{0,99}$",
+      "description": "<owner>/<name>, the name every API path and clone URL uses."
+    },
+    "description": { "type": "string", "maxLength": 500 },
+    "visibility": { "enum": ["public", "private"] },
+    "default_branch": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "topics": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,34}$" }
+    },
+    "stars": { "type": "integer", "minimum": 0 },
+    "watchers": { "type": "integer", "minimum": 0 },
+    "forks": { "type": "integer", "minimum": 0 },
+    "language": { "type": ["string", "null"] },
+    "languages": {
+      "type": "object",
+      "description": "Language name → share of bytes, 0–100, the largest first.",
+      "additionalProperties": { "type": "number", "minimum": 0, "maximum": 100 }
+    },
+    "html_url": { "type": "string", "format": "uri" },
+    "clone_url": { "type": "string", "format": "uri" },
+    "mirror": {
+      "type": ["object", "null"],
+      "description": "A git repository mirrored from somewhere (today: a public GitHub URL).",
+      "required": ["url", "state", "last_synced_at", "error"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "state": { "enum": ["ready", "syncing", "error"] },
+        "last_synced_at": { "type": ["string", "null"], "format": "date-time" },
+        "error": { "type": ["string", "null"], "maxLength": 500 }
+      }
+    },
+    "github": {
+      "type": ["object", "null"],
+      "description": "The GitHub card: cached GitHub API readings for the repository's twin.",
+      "required": ["full_name", "html_url", "stars", "open_issues", "open_pull_requests", "ci_state", "fetched_at"],
+      "additionalProperties": false,
+      "properties": {
+        "full_name": { "type": "string" },
+        "html_url": { "type": "string", "format": "uri" },
+        "stars": { "type": "integer", "minimum": 0 },
+        "open_issues": { "type": "integer", "minimum": 0 },
+        "open_pull_requests": { "type": "integer", "minimum": 0 },
+        "ci_state": { "enum": ["success", "failure", "pending", "unknown"] },
+        "fetched_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "pushed_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}
