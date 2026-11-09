@@ -5975,6 +5975,15 @@
       "status": "active"
     },
     {
+      "id": "community.feed-item",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-item.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "community.pulse-read-result",
       "version": "1.0.0",
       "owner": "community",

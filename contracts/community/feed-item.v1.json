@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/feed-item.v1.json",
+  "title": "CommunityFeedItem",
+  "description": "community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). One stream over Pulse: a paste or a status is a post, a Live clip a clip, a Wiki page a wiki page, a Quest badge a quest, a busy Chat hour a chat, a Today event an event, and a day's new Network accounts a member. Text only (the client draws every field), https links only, and counts carry Community's own views, likes and comments where it knows them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "url", "title", "text", "at", "site", "site_name", "actor", "media", "counts"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Stable within one response: p:<pulse item id> for a Pulse item, t:<site>:<url> for a trending card."
+    },
+    "kind": {
+      "enum": ["live", "clip", "video", "pic", "post", "meme", "game", "update", "wiki", "quest", "chat", "event", "member"]
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https?://",
+      "maxLength": 2000,
+      "description": "Where the card opens; https unless the source itself answered an http URL."
+    },
+    "title": { "type": "string", "maxLength": 300 },
+    "text": {
+      "type": "string",
+      "maxLength": 280,
+      "description": "The source's first 280 characters, on one line; empty when it has none."
+    },
+    "at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When it happened (Pulse provenance); null for a trending card."
+    },
+    "site": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "The source service (live, media-hub, pics, games, blog, wiki, quest, chat, today, network, community…)."
+    },
+    "site_name": { "type": "string", "maxLength": 40 },
+    "actor": {
+      "type": ["object", "null"],
+      "description": "Who did it; null for AI, system, aggregate and trending cards.",
+      "required": ["name", "avatar"],
+      "properties": {
+        "name": { "type": ["string", "null"], "maxLength": 80 },
+        "avatar": { "type": ["string", "null"], "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    },
+    "media": {
+      "type": ["object", "null"],
+      "description": "The card's first picture, as a Media thumbnail; null when it has none.",
+      "required": ["thumb", "ratio"],
+      "properties": {
+        "thumb": { "type": "string", "pattern": "^https://", "maxLength": 2000 },
+        "ratio": { "type": "number", "exclusiveMinimum": 0 },
+        "length": { "type": "number", "minimum": 0, "description": "Seconds, when the card is a video." }
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "description": "Community's own numbers, each present only when it knows it; {} for another service's item.",
+      "properties": {
+        "views": { "type": "integer", "minimum": 0 },
+        "likes": { "type": "integer", "minimum": 0 },
+        "comments": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "label": {
+      "enum": ["Trending", "AI", "System"],
+      "description": "Present only when the card needs one."
+    }
+  }
+}
