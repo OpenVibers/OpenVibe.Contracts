@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.362.0 — 2026-11-09
+
+- Your stats: report.me-stats@1 and report.me-stats-publish@1
+
 ## 0.361.0 — 2026-11-09
 
 - Reviewed glyph draft service

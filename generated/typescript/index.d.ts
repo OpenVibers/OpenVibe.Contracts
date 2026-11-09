@@ -299956,6 +299956,2920 @@ export interface ReportSessionWriteResult {
   created: boolean;
 }
 
+/** report.me-stats@1.0.0 (owner: report) */
+/**
+ * report.me-stats@1: one person's numbers across OpenVibe, on OpenVibe.Report (the owner, 2026-11-09: 'a section for most used, your most used platforms across all of them, with OpenVibe.Report analysis for you… show your stats… you can make them public if you want, but private by default'). GET /api/v1/me/stats answers the person their session names, with every section; GET /api/v1/u/:name/stats answers only the sections they published, and never a section they did not. A section a source did not answer for is absent, never an invented zero. The document is the same on both routes so the menu, the page and the public page read one shape.
+ */
+export interface ReportMeStats {
+  /**
+   * When the snapshot was counted. A public answer may be older than the request: it is the owner's last computed snapshot, so the page says when.
+   */
+  generated_at: string;
+  person: {
+    username: string;
+    display_name: string;
+    avatar_url?: string;
+  };
+  /**
+   * The window the counts were taken over. days is 7, 30 or 90; from and to are UTC calendar days.
+   */
+  window: {
+    days: 7 | 30 | 90;
+    from: string;
+    to: string;
+  };
+  /**
+   * Which sections the person made public. All false is the default: their /u/<name> page then shows none of their numbers.
+   */
+  published: {
+    sites: boolean;
+    activity: boolean;
+    made: boolean;
+    ai: boolean;
+    money: boolean;
+  };
+  /**
+   * The counts, one key per publishable section. On GET /api/v1/me/stats every section a source answered for is here; on GET /api/v1/u/:name/stats only the published ones are.
+   */
+  sections: {
+    sites?: {
+      /**
+       * This week's sites, most visited first.
+       *
+       * @maxItems 32
+       */
+      week: {
+        /**
+         * The site id from Network's history, e.g. live, community, chat.
+         */
+        service: string;
+        label: string;
+        /**
+         * A page on the site, so the menu can draw the site's app icon.
+         */
+        url: string;
+        /**
+         * The site's icon id when Network's history names one.
+         */
+        icon?: string;
+        visits: number;
+      }[];
+      /**
+       * This month's sites, most visited first.
+       *
+       * @maxItems 32
+       */
+      month: {
+        /**
+         * The site id from Network's history, e.g. live, community, chat.
+         */
+        service: string;
+        label: string;
+        /**
+         * A page on the site, so the menu can draw the site's app icon.
+         */
+        url: string;
+        /**
+         * The site's icon id when Network's history names one.
+         */
+        icon?: string;
+        visits: number;
+      }[];
+      /**
+       * The eight most visited this month: what the menu's Most used row draws.
+       *
+       * @maxItems 8
+       */
+      top:
+        | []
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ]
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ]
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ]
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ]
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ]
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ]
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ]
+        | [
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            },
+            {
+              /**
+               * The site id from Network's history, e.g. live, community, chat.
+               */
+              service: string;
+              label: string;
+              /**
+               * A page on the site, so the menu can draw the site's app icon.
+               */
+              url: string;
+              /**
+               * The site's icon id when Network's history names one.
+               */
+              icon?: string;
+              visits: number;
+            }
+          ];
+    };
+    /**
+     * What the person touched, as days. A day with no history row is 0 because Network answered with its history: an unavailable history is an absent section.
+     */
+    activity?: {
+      /**
+       * Twelve weeks, oldest first; each week starts on its Monday (UTC).
+       *
+       * @maxItems 12
+       */
+      weeks:
+        | []
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ]
+        | [
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            },
+            {
+              week_start: string;
+              /**
+               * @minItems 7
+               * @maxItems 7
+               */
+              days: [number, number, number, number, number, number, number];
+            }
+          ];
+      /**
+       * Days in the window with at least one visit.
+       */
+      active_days: number;
+      /**
+       * Consecutive days with a visit, ending today (UTC), counted from the history.
+       */
+      streak_days: number;
+    };
+    /**
+     * Things the person made, one row per thing a source answered for. A thing with no source is absent, never 0.
+     */
+    made?: {
+      /**
+       * @maxItems 20
+       */
+      items:
+        | []
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ]
+        | [
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            },
+            {
+              key: string;
+              label: string;
+              count: number;
+              unit: string;
+              href?: string;
+            }
+          ];
+    };
+    /**
+     * The person's own AI calls, from Report's AI meter (report.ai-usage-me-result@2's totals). Report quotes the meter; it never derives a price.
+     */
+    ai?: {
+      calls: number;
+      /**
+       * Input and output tokens added, as the meter counts them.
+       */
+      tokens: number;
+      cost_usd: number;
+      /**
+       * @maxItems 90
+       */
+      daily?: {
+        day: string;
+        calls: number;
+      }[];
+    };
+    /**
+     * Vibes that reached the person, as OpenVibe.Billing answered them. Report stores no money and derives no amount.
+     */
+    money?: {
+      currency: "vibes-bits";
+      settled_bits: number;
+      transactions: number;
+    };
+  };
+  /**
+   * One plain line about what is not in the counts, when a source could not answer. Never a count and never a claim that a number is zero.
+   */
+  note?: string;
+}
+
+/** report.me-stats-publish@1.0.0 (owner: report) */
+/**
+ * report.me-stats-publish@1: the body of PUT /api/v1/me/stats/published, the person's per-section switch (the owner, 2026-11-09: 'you can make them public if you want, but private by default'). Every switch is named, so a request can never leave one to chance; the route answers the same report.me-stats@1 document, recomputed at that moment.
+ */
+export interface ReportMeStatsPublish {
+  published: {
+    sites: boolean;
+    activity: boolean;
+    made: boolean;
+    ai: boolean;
+    money: boolean;
+  };
+}
+
 /** chat.tts-speak-request@1.0.0 (owner: chat) */
 /**
  * chat.tts-speak-request@1: the body of POST /api/agent-voice/speak (Agent Streams S4). The desk asks Chat for the sound of one line the agent said. TEXT is the line (at most 220 characters). VOICE is a Chat voice id, or absent for the site default. OWN asks for the person own voice, and only the person themself may ask for it.

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/report/me-stats-publish.v1.json",
+  "title": "ReportMeStatsPublish",
+  "description": "report.me-stats-publish@1: the body of PUT /api/v1/me/stats/published, the person's per-section switch (the owner, 2026-11-09: 'you can make them public if you want, but private by default'). Every switch is named, so a request can never leave one to chance; the route answers the same report.me-stats@1 document, recomputed at that moment.",
+  "type": "object",
+  "required": ["published"],
+  "additionalProperties": false,
+  "properties": {
+    "published": {
+      "type": "object",
+      "required": ["sites", "activity", "made", "ai", "money"],
+      "additionalProperties": false,
+      "properties": {
+        "sites": { "type": "boolean" },
+        "activity": { "type": "boolean" },
+        "made": { "type": "boolean" },
+        "ai": { "type": "boolean" },
+        "money": { "type": "boolean" }
+      }
+    }
+  }
+}
