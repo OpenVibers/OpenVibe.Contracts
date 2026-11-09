@@ -11153,6 +11153,12 @@
             "maxLength": 80,
             "description": "Page slug inside the space."
           },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The page's title as readers see it (optional, 0.366.0): the network's Feed names the page by it, not by its slug."
+          },
           "visibility": {
             "enum": [
               "public",
@@ -11229,6 +11235,12 @@
             "minLength": 1,
             "maxLength": 80,
             "description": "Page slug inside the space."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The page's title as readers see it (optional, 0.366.0): the network's Feed names the page by it, not by its slug."
           },
           "visibility": {
             "enum": [
