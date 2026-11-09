@@ -6056,6 +6056,15 @@
       "status": "active"
     },
     {
+      "id": "community.feed-item",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-item.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "community.pulse-read-result",
       "version": "1.0.0",
       "owner": "community",
@@ -10082,6 +10091,24 @@
       "owner": "report",
       "schema": "report/session-write-result.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.me-stats",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.me-stats-publish",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/me-stats-publish.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },

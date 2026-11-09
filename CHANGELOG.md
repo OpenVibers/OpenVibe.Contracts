@@ -1,15 +1,20 @@
 # Changelog
 
+## 0.365.0 — 2026-11-09
+
+- Dock v2: action-item words, ai.run-error@1, skill runs and Vibe conversations
+
+## 0.364.0 — 2026-11-09
+
+- The Feed of everything: community.feed-item@1
+
+## 0.363.0 — 2026-11-09
+
+- npm metadata and CITATION
+
 ## 0.362.0 — 2026-11-09
 
-- The Dock v2's run rows: `ai.run-error@1` (a code, words, the next step and the action, never a raw provider
-  response) with its shared code map, `common.action-item@1` and `network.me-actions-result@1` at 1.1.0 (the skill,
-  the subject, the model, the maker, the cost, the duration and the live step), `network.dock-state@1` at 1.1.0
-  (the Vibe conversation and the Agents filter a person chose, synced across sites), `chat.vibe-conversations-result@1`
-  and `actor.skill-run-request@1` with `actor.skill-run-result@1`.
-- The routes behind them: `GET /api/vibe/conversations` (Chat), `POST /api/v1/runs` and `POST /api/v1/tasks/:id/retry`
-  (Actor, under the new `actor.skill.run` capability) and `POST /api/v1/me/actions/skills/:id/run` (Network, under
-  `network.skill.run`).
+- Your stats: report.me-stats@1 and report.me-stats-publish@1
 
 ## 0.361.0 — 2026-11-09
 
