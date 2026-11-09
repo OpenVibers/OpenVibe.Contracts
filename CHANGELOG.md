@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.356.0 — 2026-11-09
+
+- Define `design.component@1` for web, Android and iOS component anatomy, props, states, tokens, behavior, accessibility and examples.
+
 ## 0.355.0 — 2026-11-09
 
 - Daily quest contracts and step contribution

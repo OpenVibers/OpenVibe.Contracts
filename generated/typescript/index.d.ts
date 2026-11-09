@@ -317816,3 +317816,953 @@ export interface ActorAsk {
     text?: string;
   } | null;
 }
+
+/** design.component@1.0.0 (owner: design) */
+/**
+ * design.component@1: a platform-neutral OpenVibe interface definition served by openvibe.design/api/v1/components.
+ */
+export interface DesignComponent {
+  schema: "design.component@1";
+  name: string;
+  title: string;
+  summary: string;
+  /**
+   * @minItems 1
+   * @maxItems 32
+   */
+  anatomy: [
+    {
+      part: string;
+      role: string;
+    },
+    ...{
+      part: string;
+      role: string;
+    }[]
+  ];
+  props: {
+    [k: string]: string | undefined;
+  };
+  /**
+   * @minItems 1
+   * @maxItems 30
+   */
+  states: [string, ...string[]];
+  /**
+   * @minItems 1
+   * @maxItems 50
+   */
+  tokens: [string, ...string[]];
+  behaviors: {
+    keyboardAware: boolean;
+    outsideTapCloses: boolean;
+    scrollLock: boolean;
+    reducedMotion: string;
+  };
+  accessibility: {
+    name: string;
+    target: string;
+    focus: string;
+  };
+  platforms: {
+    web: {
+      module: string;
+      markup: string;
+      demo: string;
+    };
+    android: {
+      toolkit: "Jetpack Compose";
+      material3: string;
+      specification: string;
+    };
+    ios: {
+      toolkit: "SwiftUI";
+      specification: string;
+    };
+  };
+  /**
+   * @minItems 1
+   * @maxItems 20
+   */
+  examples:
+    | [
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ]
+    | [
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        },
+        {
+          title: string;
+          props: {};
+        }
+      ];
+}

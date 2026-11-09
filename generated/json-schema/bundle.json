@@ -114920,6 +114920,258 @@
           }
         }
       }
+    },
+    "design.component": {
+      "version": "1.0.0",
+      "owner": "design",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/design/component.v1.json",
+        "title": "DesignComponent",
+        "description": "design.component@1: a platform-neutral OpenVibe interface definition served by openvibe.design/api/v1/components.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "name",
+          "title",
+          "summary",
+          "anatomy",
+          "props",
+          "states",
+          "tokens",
+          "behaviors",
+          "accessibility",
+          "platforms",
+          "examples"
+        ],
+        "properties": {
+          "schema": {
+            "const": "design.component@1"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "anatomy": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "part",
+                "role"
+              ],
+              "properties": {
+                "part": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            }
+          },
+          "props": {
+            "type": "object",
+            "maxProperties": 60,
+            "propertyNames": {
+              "pattern": "^[a-z][a-zA-Z0-9]*$"
+            },
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "states": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 30,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            }
+          },
+          "tokens": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "behaviors": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "keyboardAware",
+              "outsideTapCloses",
+              "scrollLock",
+              "reducedMotion"
+            ],
+            "properties": {
+              "keyboardAware": {
+                "type": "boolean"
+              },
+              "outsideTapCloses": {
+                "type": "boolean"
+              },
+              "scrollLock": {
+                "type": "boolean"
+              },
+              "reducedMotion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          },
+          "accessibility": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "target",
+              "focus"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "focus": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          },
+          "platforms": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "web",
+              "android",
+              "ios"
+            ],
+            "properties": {
+              "web": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "module",
+                  "markup",
+                  "demo"
+                ],
+                "properties": {
+                  "module": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "markup": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "demo": {
+                    "type": "string",
+                    "pattern": "^/components/[a-z0-9-]+$"
+                  }
+                }
+              },
+              "android": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "toolkit",
+                  "material3",
+                  "specification"
+                ],
+                "properties": {
+                  "toolkit": {
+                    "const": "Jetpack Compose"
+                  },
+                  "material3": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "specification": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "ios": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "toolkit",
+                  "specification"
+                ],
+                "properties": {
+                  "toolkit": {
+                    "const": "SwiftUI"
+                  },
+                  "specification": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          },
+          "examples": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "props"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "props": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
