@@ -327110,3 +327110,117 @@ export interface GitIssue {
         string
       ];
 }
+
+/** exchange.compat-routing@1.0.0 (owner: exchange) */
+/**
+ * OpenRouter-compatible model fallback and provider policy controls. Prices are USD per million tokens.
+ */
+export interface ExchangeCompatRouting {
+  model?: string;
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  models?:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  provider?: {
+    /**
+     * @maxItems 64
+     */
+    order?: string[];
+    /**
+     * @maxItems 64
+     */
+    only?: string[];
+    /**
+     * @maxItems 64
+     */
+    ignore?: string[];
+    allow_fallbacks?: boolean;
+    sort?: "price" | "throughput" | "latency" | "quality" | "value";
+    max_price?: {
+      prompt?: number;
+      completion?: number;
+    };
+    data_collection?: "allow" | "deny";
+    zdr?: boolean;
+  };
+  usage?: {
+    include?: boolean;
+  };
+}
+
+/** exchange.request-preset@1.0.0 (owner: exchange) */
+/**
+ * A person-owned request preset with model fallbacks, system prompt, routing and sampling defaults.
+ */
+export type ExchangeRequestPreset = {
+  [k: string]: unknown | undefined;
+} & {
+  model?: string;
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  models?:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  provider?: {
+    /**
+     * @maxItems 64
+     */
+    order?: string[];
+    /**
+     * @maxItems 64
+     */
+    only?: string[];
+    /**
+     * @maxItems 64
+     */
+    ignore?: string[];
+    allow_fallbacks?: boolean;
+    sort?: "price" | "throughput" | "latency" | "quality" | "value";
+    max_price?: {
+      prompt?: number;
+      completion?: number;
+    };
+    data_collection?: "allow" | "deny";
+    zdr?: boolean;
+  };
+  name: string;
+  system?: string;
+  temperature?: number;
+  top_p?: number;
+  max_tokens?: number;
+  seed?: number;
+  response_format?: {};
+};
+
+/** exchange.generation@1.0.0 (owner: exchange) */
+/**
+ * Owner-scoped request accounting. Cost is USD and latency is milliseconds; prompts and outputs are excluded.
+ */
+export interface ExchangeGeneration {
+  id: string;
+  model: string | null;
+  provider: string | null;
+  cost: number;
+  total_cost: number;
+  latency: number;
+  tokens_prompt: number;
+  tokens_completion: number;
+  created_at: string;
+}

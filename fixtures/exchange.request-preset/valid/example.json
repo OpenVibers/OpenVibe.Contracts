@@ -1,0 +1,8 @@
+{
+  "name": "writer",
+  "model": "maker/model",
+  "system": "Write clearly",
+  "provider": {
+    "sort": "price"
+  }
+}

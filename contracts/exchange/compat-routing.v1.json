@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/exchange/compat-routing.v1.json",
+  "title": "ExchangeCompatRouting",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+          }
+        },
+        "only": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+          }
+        },
+        "ignore": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+          }
+        },
+        "allow_fallbacks": {
+          "type": "boolean"
+        },
+        "sort": {
+          "enum": [
+            "price",
+            "throughput",
+            "latency",
+            "quality",
+            "value"
+          ]
+        },
+        "max_price": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "prompt": {
+              "type": "number",
+              "minimum": 0
+            },
+            "completion": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "data_collection": {
+          "enum": [
+            "allow",
+            "deny"
+          ]
+        },
+        "zdr": {
+          "type": "boolean"
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "description": "OpenRouter-compatible model fallback and provider policy controls. Prices are USD per million tokens."
+}

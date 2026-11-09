@@ -120454,6 +120454,322 @@
           }
         }
       }
+    },
+    "exchange.compat-routing": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/compat-routing.v1.json",
+        "title": "ExchangeCompatRouting",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "models": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "provider": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "order": {
+                "type": "array",
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+                }
+              },
+              "only": {
+                "type": "array",
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+                }
+              },
+              "ignore": {
+                "type": "array",
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+                }
+              },
+              "allow_fallbacks": {
+                "type": "boolean"
+              },
+              "sort": {
+                "enum": [
+                  "price",
+                  "throughput",
+                  "latency",
+                  "quality",
+                  "value"
+                ]
+              },
+              "max_price": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "prompt": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "completion": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              },
+              "data_collection": {
+                "enum": [
+                  "allow",
+                  "deny"
+                ]
+              },
+              "zdr": {
+                "type": "boolean"
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "include": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "description": "OpenRouter-compatible model fallback and provider policy controls. Prices are USD per million tokens."
+      }
+    },
+    "exchange.request-preset": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/request-preset.v1.json",
+        "title": "ExchangeRequestPreset",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "model"
+            ]
+          },
+          {
+            "required": [
+              "models"
+            ]
+          }
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "models": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "provider": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "order": {
+                "type": "array",
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+                }
+              },
+              "only": {
+                "type": "array",
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+                }
+              },
+              "ignore": {
+                "type": "array",
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9._-]{1,100}$"
+                }
+              },
+              "allow_fallbacks": {
+                "type": "boolean"
+              },
+              "sort": {
+                "enum": [
+                  "price",
+                  "throughput",
+                  "latency",
+                  "quality",
+                  "value"
+                ]
+              },
+              "max_price": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "prompt": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "completion": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              },
+              "data_collection": {
+                "enum": [
+                  "allow",
+                  "deny"
+                ]
+              },
+              "zdr": {
+                "type": "boolean"
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          },
+          "system": {
+            "type": "string",
+            "maxLength": 32000
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64000
+          },
+          "seed": {
+            "type": "integer"
+          },
+          "response_format": {
+            "type": "object"
+          }
+        },
+        "description": "A person-owned request preset with model fallbacks, system prompt, routing and sampling defaults."
+      }
+    },
+    "exchange.generation": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/generation.v1.json",
+        "title": "ExchangeGeneration",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "model",
+          "provider",
+          "cost",
+          "total_cost",
+          "latency",
+          "tokens_prompt",
+          "tokens_completion",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "total_cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "latency": {
+            "type": "number",
+            "minimum": 0
+          },
+          "tokens_prompt": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tokens_completion": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Owner-scoped request accounting. Cost is USD and latency is milliseconds; prompts and outputs are excluded."
+      }
     }
   }
 }

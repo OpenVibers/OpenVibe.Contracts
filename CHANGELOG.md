@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.380.0 — 2026-11-09
+
+- Exchange routing controls, owner request presets and generation accounting schemas, with valid and invalid fixtures.
+
 ## 0.379.0 — 2026-11-09
 
 - Wiki's rich articles: the page write request and the page read result carry `blocks` (`publishing.block@1`) next to the Markdown, and `wiki.images-suggest-request@1`/`-result@1` and `wiki.article-draft-request@1`/`-result@1` describe the image suggestions (`wiki.article.images`) and the `content.wiki` draft revision that waits for a person.
