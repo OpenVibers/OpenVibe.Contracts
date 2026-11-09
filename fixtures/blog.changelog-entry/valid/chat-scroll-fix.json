@@ -1,0 +1,18 @@
+{
+  "service": "chat",
+  "repo": "OpenVibers/OpenVibe.Chat",
+  "sha": "3d2c1b0a9f8e7d6c5b4a39281706f5e4d3c2b1a0",
+  "short": "3d2c1b0",
+  "subject": "Fix scroll jump when a message arrives while reading history (#361)",
+  "plain": "Fix the chat jumping to the bottom when a message arrives while you read history",
+  "kind": "fixed",
+  "areas": ["chat", "accessibility"],
+  "author": "OpenVibers",
+  "committed_at": "2026-11-08T09:15:00.000Z",
+  "deployed_at": "2026-11-08T11:00:00.000Z",
+  "major": false,
+  "url": "https://github.com/OpenVibers/OpenVibe.Chat/commit/3d2c1b0a9f8e7d6c5b4a39281706f5e4d3c2b1a0",
+  "post_id": null,
+  "pr": 361,
+  "pr_url": "https://github.com/OpenVibers/OpenVibe.Chat/pull/361"
+}

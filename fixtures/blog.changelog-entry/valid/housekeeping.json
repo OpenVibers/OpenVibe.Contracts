@@ -1,0 +1,18 @@
+{
+  "service": "network",
+  "repo": "OpenVibers/OpenVibe.Network",
+  "sha": "9c4f2a10b3d5e7f90123456789abcdef01234567",
+  "short": "9c4f2a1",
+  "subject": "openvibe-shared v4.175.0 (was v4.173.0) (#401)",
+  "plain": "Pin openvibe-shared 4.175.0 (was 4.173.0)",
+  "kind": "internal",
+  "areas": [],
+  "author": null,
+  "committed_at": null,
+  "deployed_at": "2026-11-09T19:07:00.000Z",
+  "major": false,
+  "url": "https://github.com/OpenVibers/OpenVibe.Network/commit/9c4f2a10b3d5e7f90123456789abcdef01234567",
+  "post_id": null,
+  "pr": null,
+  "pr_url": null
+}

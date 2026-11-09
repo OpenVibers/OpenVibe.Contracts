@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.380.0 — 2026-11-09
+
+- blog.changelog-entry@2: a shipped change with its plain words, kind (new, better, fixed or internal) and one to three areas from Blog's fixed list, with the commit and pull request for the row's fold
+
 ## 0.377.0 — 2026-11-09
 
 - community.feed-item@1: live_now on a live stream's row

@@ -158832,6 +158832,266 @@ export interface BlogBlog {
   };
 }
 
+/** blog.changelog-entry@2.0.0 (owner: blog) */
+/**
+ * blog.changelog-entry@2: one shipped commit as OpenVibe.Blog's network changelog shows it (GET /api/v1/changelog, server/changelog.js). Every entry names what changed in plain words (plain, without its PR number or stage tag) and is tagged with a kind and up to three areas from Blog's fixed list; housekeeping (library pins, merges, test-only and docs-only changes) is kind internal and needs no model. The commit id, its GitHub URL and the pull request that shipped it stay available for the fold under the row.
+ */
+export type BlogChangelogEntry = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The site's registry id (live, chat, blog, …).
+   */
+  service: string;
+  /**
+   * The GitHub repository the commit shipped from, owner/name.
+   */
+  repo: string;
+  sha: string;
+  /**
+   * The first seven characters of sha.
+   */
+  short: string;
+  /**
+   * The commit message's first line, as written.
+   */
+  subject: string;
+  /**
+   * The subject in plain words: the PR number and stage tag removed, no other claim added.
+   */
+  plain: string;
+  /**
+   * new: something a person can now do; better: an existing thing improved; fixed: a defect repaired; internal: housekeeping with nothing for a person to notice.
+   */
+  kind: "new" | "better" | "fixed" | "internal";
+  /**
+   * One to three of Blog's fixed areas; empty only for kind internal.
+   *
+   * @maxItems 3
+   */
+  areas:
+    | []
+    | [
+        | "phone"
+        | "chat"
+        | "go-live"
+        | "video"
+        | "menu"
+        | "accessibility"
+        | "speed"
+        | "sign-in"
+        | "wallet"
+        | "ai"
+        | "search"
+        | "files"
+        | "pictures"
+        | "games"
+        | "design"
+        | "developer"
+        | "machines"
+        | "money"
+        | "privacy"
+        | "moderation"
+        | "notifications"
+        | "feed"
+        | "wiki"
+        | "blog"
+        | "community"
+        | "meme"
+        | "shop"
+        | "tools"
+        | "exchange"
+        | "git"
+      ]
+    | [
+        (
+          | "phone"
+          | "chat"
+          | "go-live"
+          | "video"
+          | "menu"
+          | "accessibility"
+          | "speed"
+          | "sign-in"
+          | "wallet"
+          | "ai"
+          | "search"
+          | "files"
+          | "pictures"
+          | "games"
+          | "design"
+          | "developer"
+          | "machines"
+          | "money"
+          | "privacy"
+          | "moderation"
+          | "notifications"
+          | "feed"
+          | "wiki"
+          | "blog"
+          | "community"
+          | "meme"
+          | "shop"
+          | "tools"
+          | "exchange"
+          | "git"
+        ),
+        (
+          | "phone"
+          | "chat"
+          | "go-live"
+          | "video"
+          | "menu"
+          | "accessibility"
+          | "speed"
+          | "sign-in"
+          | "wallet"
+          | "ai"
+          | "search"
+          | "files"
+          | "pictures"
+          | "games"
+          | "design"
+          | "developer"
+          | "machines"
+          | "money"
+          | "privacy"
+          | "moderation"
+          | "notifications"
+          | "feed"
+          | "wiki"
+          | "blog"
+          | "community"
+          | "meme"
+          | "shop"
+          | "tools"
+          | "exchange"
+          | "git"
+        )
+      ]
+    | [
+        (
+          | "phone"
+          | "chat"
+          | "go-live"
+          | "video"
+          | "menu"
+          | "accessibility"
+          | "speed"
+          | "sign-in"
+          | "wallet"
+          | "ai"
+          | "search"
+          | "files"
+          | "pictures"
+          | "games"
+          | "design"
+          | "developer"
+          | "machines"
+          | "money"
+          | "privacy"
+          | "moderation"
+          | "notifications"
+          | "feed"
+          | "wiki"
+          | "blog"
+          | "community"
+          | "meme"
+          | "shop"
+          | "tools"
+          | "exchange"
+          | "git"
+        ),
+        (
+          | "phone"
+          | "chat"
+          | "go-live"
+          | "video"
+          | "menu"
+          | "accessibility"
+          | "speed"
+          | "sign-in"
+          | "wallet"
+          | "ai"
+          | "search"
+          | "files"
+          | "pictures"
+          | "games"
+          | "design"
+          | "developer"
+          | "machines"
+          | "money"
+          | "privacy"
+          | "moderation"
+          | "notifications"
+          | "feed"
+          | "wiki"
+          | "blog"
+          | "community"
+          | "meme"
+          | "shop"
+          | "tools"
+          | "exchange"
+          | "git"
+        ),
+        (
+          | "phone"
+          | "chat"
+          | "go-live"
+          | "video"
+          | "menu"
+          | "accessibility"
+          | "speed"
+          | "sign-in"
+          | "wallet"
+          | "ai"
+          | "search"
+          | "files"
+          | "pictures"
+          | "games"
+          | "design"
+          | "developer"
+          | "machines"
+          | "money"
+          | "privacy"
+          | "moderation"
+          | "notifications"
+          | "feed"
+          | "wiki"
+          | "blog"
+          | "community"
+          | "meme"
+          | "shop"
+          | "tools"
+          | "exchange"
+          | "git"
+        )
+      ];
+  author?: string | null;
+  committed_at?: string | null;
+  /**
+   * When the release carrying the commit was seen deployed.
+   */
+  deployed_at: string;
+  /**
+   * True when the release was large or named as major; the hints a patch notes post highlights.
+   */
+  major?: boolean;
+  /**
+   * The commit on GitHub.
+   */
+  url: string;
+  /**
+   * The patch notes post that carried it; null while pending and for imported history.
+   */
+  post_id?: string | null;
+  /**
+   * The pull request the subject names, when it names one.
+   */
+  pr?: number | null;
+  pr_url?: string | null;
+};
+
 /** blog.delete-result@1.0.0 (owner: blog) */
 /**
  * blog.delete-result@1: the answer of DELETE /api/v1/posts/:id on OpenVibe.Blog (blog.post.delete): { deleted: true, id }.
