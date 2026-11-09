@@ -158,7 +158,7 @@
             "node",
             "submitted"
           ],
-          "description": "codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it."
+          "description": "codes: an openvibe.codes task. run: a Run worker. link: the person's own machine. submitted: nobody ran it."
         },
         "id": {
           "type": "string",

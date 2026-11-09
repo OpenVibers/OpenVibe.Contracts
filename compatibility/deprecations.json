@@ -231,6 +231,41 @@
       "since": "0.263.0",
       "removeAfter": "1.0.0",
       "reason": "Report's personal AI usage answers rows, totals, by_paid_by, insights and source (plan L41 R1); v1's usage array and its field names never matched the route, so the shape moved to a new major (2026-10-31)"
+    },
+    {
+      "id": "network.node",
+      "replacement": "network.link@1",
+      "since": "0.366.0",
+      "removeAfter": "1.0.0",
+      "reason": "The machine product Node became OpenVibe Link: network.node@1 became network.link@1 in the rename (2026-11-09)"
+    },
+    {
+      "id": "network.node-report-request",
+      "replacement": "network.link-report-request@1",
+      "since": "0.366.0",
+      "removeAfter": "1.0.0",
+      "reason": "The machine product Node became OpenVibe Link: network.node-report-request@1 became network.link-report-request@1 in the rename (2026-11-09)"
+    },
+    {
+      "id": "network.node-list-result",
+      "replacement": "network.link-list-result@1",
+      "since": "0.366.0",
+      "removeAfter": "1.0.0",
+      "reason": "The machine product Node became OpenVibe Link: network.node-list-result@1 became network.link-list-result@1 in the rename (2026-11-09)"
+    },
+    {
+      "id": "platform.node-capabilities",
+      "replacement": "platform.link-capabilities@1",
+      "since": "0.366.0",
+      "removeAfter": "1.0.0",
+      "reason": "The machine product Node became OpenVibe Link: platform.node-capabilities@1 became platform.link-capabilities@1, and link.compute@1 carries the Link's offer in the platform fabric (2026-11-09)"
+    },
+    {
+      "id": "network.node.revoked",
+      "replacement": "network.link.revoked@1",
+      "since": "0.366.0",
+      "removeAfter": "1.0.0",
+      "reason": "The machine product Node became OpenVibe Link: the network.node.revoked event became network.link.revoked and its principal ids move to lnk_ (2026-11-09)"
     }
   ]
 }

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.366.0 — 2026-11-09
+
+- The machine product Node became OpenVibe Link. The network registry contracts are `network.link@1`,
+  `network.link-report-request@1` and `network.link-list-result@1`, the event is `network.link.revoked`, and the platform
+  carries `platform.link-capabilities@1` and `link.compute@1`. The capabilities `network.node.manage`,
+  `network.node.report` and `network.node.self.manage` are `network.link.manage`, `network.link.report` and
+  `network.link.self.manage`; their internal routes and the manifests follow.
+- A paired machine is a `link` principal: identity.service-token-claims actor_type `node` is `link` with sub `link:lnk_…`,
+  and `ids.principalSub` mints `link:lnk_…` (the old prefix and ids are gone, no alias). The AI provider `node` is `link`
+  in ai.credential-put@1/@2 and ai.credential@1/@2. The old contract ids are deprecated with their Link replacements; the
+  schema corrections are recorded against v0.352.0 and v0.365.0.
+
 ## 0.365.0 — 2026-11-09
 
 - Dock v2: action-item words, ai.run-error@1, skill runs and Vibe conversations
