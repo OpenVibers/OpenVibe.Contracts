@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/design/glyph-draft-request.v1.json",
+  "title": "DesignGlyphDraftRequest",
+  "description": "A first-party service asks Design to draw an icon candidate. Design verifies the caller's service token, deduplicates by caller and name, and keeps every candidate in staff review before any site shows it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "sentence"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$" },
+    "sentence": { "type": "string", "minLength": 3, "maxLength": 200 }
+  }
+}

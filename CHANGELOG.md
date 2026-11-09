@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.363.0 — 2026-11-09
+
+- npm metadata and CITATION
+
+## 0.362.0 — 2026-11-09
+
+- Your stats: report.me-stats@1 and report.me-stats-publish@1
+
+## 0.361.0 — 2026-11-09
+
+- Reviewed glyph draft service
+
+## 0.360.0 — 2026-11-09
+
+- Meme entry and render contracts
+
+## 0.359.0 — 2026-11-09
+
+- Media multipart uploads in contracts and OpenAPI
+
+## 0.358.0 — 2026-11-09
+
+- Chat view preference (bubbles or room)
+
+## 0.357.0 — 2026-11-09
+
+- Cam camera settings (cam.settings@1)
+
 ## 0.356.0 — 2026-11-09
 
 - Shoes product contract (shoes.product@1)
