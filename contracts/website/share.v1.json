@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/website/share.v1.json",
   "title": "WebsiteShare",
-  "description": "website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Node tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.",
+  "description": "website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Link tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -44,7 +44,7 @@
         "string",
         "null"
       ],
-      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
       "description": "The Network node principal expected to serve the tunnel; null until one is bound."
     },
     "name": {
@@ -122,7 +122,7 @@
         "null"
       ],
       "format": "date-time",
-      "description": "The last successful Node liveness check; null until the first tunnel."
+      "description": "The last successful Link liveness check; null until the first tunnel."
     },
     "created_at": {
       "type": "string",

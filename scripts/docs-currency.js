@@ -23,7 +23,7 @@
  *   touched package.json's pins (so a bump without a STATUS refresh is caught): checked by the date only.
  *
  * Every other checkout under the root named OpenVibe.* (a client or repository with no service manifest, such as
- * OpenVibe.Node or OpenVibe.Extensions) needs a STATUS.json with repository, stage, deployed, features and updated, so
+ * OpenVibe.Link or OpenVibe.Extensions) needs a STATUS.json with repository, stage, deployed, features and updated, so
  * the estate does not show it blank; its README is not held to the service headings. One whose STATUS `stage` is
  * closed, retired or archived (OpenVibe.Realtime, closed by ADR-005) is skipped.
  *
@@ -438,7 +438,7 @@ function checkRepo(root, manifest, ctx) {
 }
 
 /**
- * A checkout with no service manifest (OpenVibe.Node, OpenVibe.Extensions): it needs a STATUS.json the estate can
+ * A checkout with no service manifest (OpenVibe.Link, OpenVibe.Extensions): it needs a STATUS.json the estate can
  * read, and its facts are checked; the service README headings are not asked of it.
  */
 function checkCheckout(root, name, ctx) {

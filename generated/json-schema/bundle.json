@@ -264,14 +264,14 @@
           },
           "sub": {
             "type": "string",
-            "pattern": "^(svc:[a-z][a-z0-9-]{1,39}|app:app_[0-9A-HJKMNP-TV-Z]{26}|mod:mod_[0-9A-HJKMNP-TV-Z]{26}|node:nod_[0-9A-HJKMNP-TV-Z]{26}|agent:agt_[0-9A-HJKMNP-TV-Z]{26})$"
+            "pattern": "^(svc:[a-z][a-z0-9-]{1,39}|app:app_[0-9A-HJKMNP-TV-Z]{26}|mod:mod_[0-9A-HJKMNP-TV-Z]{26}|link:lnk_[0-9A-HJKMNP-TV-Z]{26}|agent:agt_[0-9A-HJKMNP-TV-Z]{26})$"
           },
           "actor_type": {
             "enum": [
               "service",
               "app",
               "mod",
-              "node",
+              "link",
               "agent"
             ]
           },
@@ -15739,14 +15739,14 @@
             "enum": [
               "openai",
               "anthropic",
-              "node"
+              "link"
             ],
             "description": "openai = any OpenAI-compatible endpoint. node = the person's own machine: a model on their own model server, through their OpenVibe Link and OpenVibe.Bot (no key, no base_url, no cost)."
           },
           "machine": {
             "type": "string",
             "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
-            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine."
+            "description": "provider link: the person's own machine (openvibe.link/machines) whose OpenVibe Link runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine."
           },
           "base_url": {
             "type": "string",
@@ -15804,7 +15804,7 @@
             "if": {
               "properties": {
                 "provider": {
-                  "const": "node"
+                  "const": "link"
                 }
               },
               "required": [
@@ -15857,7 +15857,7 @@
               "minimax",
               "openrouter",
               "custom",
-              "node"
+              "link"
             ],
             "description": "anthropic = Anthropic's Messages API; openai = any OpenAI-compatible endpoint; deepseek, minimax and openrouter = those providers; custom = the endpoint in base_url (a URL that speaks the OpenAI or the Anthropic format, by the route it is used on); node = the person's own machine (no key, no base_url, no cost)."
           },
@@ -15882,7 +15882,7 @@
           "machine": {
             "type": "string",
             "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
-            "description": "provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model, or `any` of their own."
+            "description": "provider link: the person's own machine (openvibe.link/machines) whose OpenVibe Link runs the model, or `any` of their own."
           },
           "models": {
             "type": "object",
@@ -15929,7 +15929,7 @@
             "if": {
               "properties": {
                 "provider": {
-                  "const": "node"
+                  "const": "link"
                 }
               },
               "required": [
@@ -16013,7 +16013,7 @@
             "enum": [
               "openai",
               "anthropic",
-              "node"
+              "link"
             ]
           },
           "machine": {
@@ -16022,7 +16022,7 @@
               "null"
             ],
             "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
-            "description": "provider node: the machine it runs on, or `any` of the person's own (contracts 0.221.0)"
+            "description": "provider link: the machine it runs on, or `any` of the person's own (contracts 0.221.0)"
           },
           "base_url": {
             "type": [
@@ -16155,7 +16155,7 @@
               "minimax",
               "openrouter",
               "custom",
-              "node"
+              "link"
             ]
           },
           "machine": {
@@ -16164,7 +16164,7 @@
               "null"
             ],
             "pattern": "^(dev_[0-9A-HJKMNP-TV-Z]{26}|any)$",
-            "description": "provider node: the machine it runs on, or `any` of the person's own"
+            "description": "provider link: the machine it runs on, or `any` of the person's own"
           },
           "base_url": {
             "type": [
@@ -16243,7 +16243,7 @@
               "properties": {
                 "provider": {
                   "not": {
-                    "const": "node"
+                    "const": "link"
                   }
                 }
               },
@@ -18852,7 +18852,7 @@
           },
           "operator": {
             "type": "string",
-            "description": "Operator slug or `owner:<subject_id>` for a private node."
+            "description": "Operator slug or `owner:<subject_id>` for a private machine."
           },
           "host": {
             "type": [
@@ -54094,7 +54094,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/watch/watch.v1.json",
         "title": "Watch",
-        "description": "watch.watch@1: a user-defined persistent observation (plan T18). It names a source (a push event, a webhook, a conditional HTTP URL, a feed or API, a local Node probe, or an expensive Run check), how a value is extracted, how it is compared with the last observation, the condition that fires, the actions it wakes, its budget and its retention. Carrier preference is binding: an event or webhook source is used when one exists, then ETag/Last-Modified, then a feed, then an API, and browser polling through Run only when none works. A price or stock is 'as of' the observation, null when it stated none.",
+        "description": "watch.watch@1: a user-defined persistent observation (plan T18). It names a source (a push event, a webhook, a conditional HTTP URL, a feed or API, a local Link probe, or an expensive Run check), how a value is extracted, how it is compared with the last observation, the condition that fires, the actions it wakes, its budget and its retention. Carrier preference is binding: an event or webhook source is used when one exists, then ETag/Last-Modified, then a feed, then an API, and browser polling through Run only when none works. A price or stock is 'as of' the observation, null when it stated none.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -73036,15 +73036,15 @@
         }
       }
     },
-    "network.node": {
+    "network.link": {
       "version": "1.0.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/network/node.v1.json",
-        "title": "NetworkNode",
-        "description": "network.node@1: one machine of the OpenVibe platform as the node registry lists it (ADR-034 section 12; roadmap WS-X1). Roles are what it serves; location is region-level; the beacon is an HTTPS URL a client times to measure its own round trip. No addresses, capacity or secrets are public: a node is found by role and location, and reached through the service that uses it.",
+        "$id": "https://openvibe.network/contracts/network/link.v1.json",
+        "title": "NetworkLink",
+        "description": "network.link@1: one machine of the OpenVibe platform as the node registry lists it (ADR-034 section 12; roadmap WS-X1). Roles are what it serves; location is region-level; the beacon is an HTTPS URL a client times to measure its own round trip. No addresses, capacity or secrets are public: a node is found by role and location, and reached through the service that uses it.",
         "type": "object",
         "required": [
           "id",
@@ -73160,15 +73160,15 @@
         }
       }
     },
-    "network.node-report-request": {
+    "network.link-report-request": {
       "version": "1.0.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/network/node-report-request.v1.json",
-        "title": "NetworkNodeReportRequest",
-        "description": "network.node-report-request@1: POST /internal/nodes/report on OpenVibe.Network (capability network.node.report, held by the Host principal). The complete set of nodes one Host inventory knows, with their health now: a node absent from a later report of the same source is marked down, never deleted silently.",
+        "$id": "https://openvibe.network/contracts/network/link-report-request.v1.json",
+        "title": "NetworkLinkReportRequest",
+        "description": "network.link-report-request@1: POST /internal/links/report on OpenVibe.Network (capability network.link.report, held by the Host principal). The complete set of nodes one Host inventory knows, with their health now: a node absent from a later report of the same source is marked down, never deleted silently.",
         "type": "object",
         "required": [
           "source",
@@ -73185,21 +73185,21 @@
             "type": "array",
             "maxItems": 500,
             "items": {
-              "$ref": "node.v1.json"
+              "$ref": "link.v1.json"
             }
           }
         }
       }
     },
-    "network.node-list-result": {
+    "network.link-list-result": {
       "version": "1.0.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/network/node-list-result.v1.json",
-        "title": "NetworkNodeListResult",
-        "description": "network.node-list-result@1: GET /api/v1/nodes on OpenVibe.Network (public, cacheable): every node of the platform, filterable by ?role= and ?region=. The input of openvibe-sdk/geo's nearest().",
+        "$id": "https://openvibe.network/contracts/network/link-list-result.v1.json",
+        "title": "NetworkLinkListResult",
+        "description": "network.link-list-result@1: GET /api/v1/links on OpenVibe.Network (public, cacheable): every node of the platform, filterable by ?role= and ?region=. The input of openvibe-sdk/geo's nearest().",
         "type": "object",
         "required": [
           "nodes",
@@ -73210,7 +73210,7 @@
           "nodes": {
             "type": "array",
             "items": {
-              "$ref": "node.v1.json"
+              "$ref": "link.v1.json"
             }
           },
           "generated_at": {
@@ -73246,8 +73246,8 @@
           },
           "principal_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "The machine's node principal on Network (nod_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for."
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The machine's node principal on Network (lnk_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for."
           },
           "name": {
             "type": "string",
@@ -73536,7 +73536,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/network/machine-pairing.v1.json",
         "title": "NetworkMachinePairing",
-        "description": "network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.bot/install). The code is never stored in the clear and never returned again.",
+        "description": "network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.link/install). The code is never stored in the clear and never returned again.",
         "type": "object",
         "required": [
           "code",
@@ -73563,7 +73563,7 @@
           "installer": {
             "type": "string",
             "maxLength": 500,
-            "description": "The command the owner runs on the machine (openvibe.bot/install, with the network, the pairing id and the code)."
+            "description": "The command the owner runs on the machine (openvibe.link/install, with the network, the pairing id and the code)."
           }
         }
       }
@@ -73591,7 +73591,7 @@
           },
           "principal_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The machine's node principal on Network, when it has one."
           },
           "owner": {
@@ -73629,7 +73629,7 @@
           },
           "principal_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The machine's node principal on Network, when it has one."
           },
           "owner": {
@@ -73652,7 +73652,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/network.machine.paired.v1.json",
         "title": "NetworkMachinePairedPayload",
-        "description": "network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <nod_…> }, visibility internal, actor service:network.",
+        "description": "network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <lnk_…> }, visibility internal, actor service:network.",
         "type": "object",
         "required": [
           "principal_id",
@@ -73673,7 +73673,7 @@
           },
           "principal_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The node principal the pairing created. Also the envelope subject id."
           },
           "owner": {
@@ -73759,7 +73759,7 @@
           },
           "principal_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The machine's node principal on Network, when it had one."
           },
           "owner": {
@@ -73958,7 +73958,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/platform/resource-offer.v1.json",
         "title": "ResourceOffer",
-        "description": "What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.node@1) deliberately leaves out.",
+        "description": "What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.link@1) deliberately leaves out.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -73989,7 +73989,7 @@
           },
           "node_id": {
             "type": "string",
-            "description": "network.node@1 id, for kind node"
+            "description": "network.link@1 id, for kind node"
           },
           "provider": {
             "type": "string",
@@ -74027,7 +74027,7 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9-]*:[a-z0-9.-]+$"
             },
-            "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe Link's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers."
+            "description": "e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe Link's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A Link advertises the name of each class it runs (Link's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers."
           },
           "capacity": {
             "type": "object",
@@ -75300,7 +75300,7 @@
             "quantity": 1,
             "unit": "s",
             "at": "2026-10-02T10:00:00.250Z",
-            "source": "openvibe-node.worker"
+            "source": "openvibe-link.worker"
           }
         ]
       }
@@ -75436,15 +75436,222 @@
         ]
       }
     },
-    "platform.node-capabilities": {
+    "link.compute": {
       "version": "1.0.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/platform/node-capabilities.v1.json",
-        "title": "NodeCapabilities",
-        "description": "Node hardware, placement regions, tags, and operating costs (T1 Universal Fabric; ADR-034 proposed).",
+        "$id": "https://openvibe.network/contracts/link/compute.v1.json",
+        "title": "LinkCompute",
+        "description": "Where a person's work can run. Only ready candidates may be picked; a missing rental quote is never a price.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sources",
+          "candidates"
+        ],
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/source"
+            }
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/candidate"
+            }
+          }
+        },
+        "$defs": {
+          "kind": {
+            "enum": [
+              "personal",
+              "cloud",
+              "exchange",
+              "community"
+            ]
+          },
+          "status": {
+            "enum": [
+              "ready",
+              "unavailable",
+              "coming_soon"
+            ]
+          },
+          "price": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "amount_usd",
+              "unit"
+            ],
+            "properties": {
+              "amount_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "unit": {
+                "enum": [
+                  "hour"
+                ]
+              }
+            }
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "name",
+              "status",
+              "reason"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "principal_id": {
+                "type": "string",
+                "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "kind": {
+                "$ref": "#/$defs/kind"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "$ref": "#/$defs/status"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "price": {
+                "$ref": "#/$defs/price"
+              },
+              "quoted_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "exchange"
+                },
+                "status": {
+                  "const": "ready"
+                }
+              },
+              "required": [
+                "kind",
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "price",
+                "quoted_at",
+                "expires_at"
+              ],
+              "properties": {
+                "price": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "candidate": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/source"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "price"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "examples": [
+          {
+            "sources": [
+              {
+                "kind": "personal",
+                "name": "Your Link machines",
+                "status": "ready",
+                "reason": null
+              },
+              {
+                "kind": "cloud",
+                "name": "OpenVibe cloud machines",
+                "status": "coming_soon",
+                "reason": "No cloud pool is accepting jobs yet."
+              },
+              {
+                "kind": "exchange",
+                "name": "Exchange GPU rentals",
+                "status": "coming_soon",
+                "reason": "A live quote is required.",
+                "price": null
+              },
+              {
+                "kind": "community",
+                "name": "Community machines",
+                "status": "coming_soon",
+                "reason": "Shared placement is being connected."
+              }
+            ],
+            "candidates": [
+              {
+                "id": "dev_01J0000000000000000000000",
+                "kind": "personal",
+                "name": "Studio",
+                "status": "ready",
+                "reason": null,
+                "price": {
+                  "amount_usd": 0,
+                  "unit": "hour"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "platform.link-capabilities": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/platform/link-capabilities.v1.json",
+        "title": "LinkCapabilities",
+        "description": "Link machine hardware, placement regions, tags, and operating costs (T1 Universal Fabric; ADR-034 proposed).",
         "$comment": "Additive optional fields may extend this v1 contract.",
         "type": "object",
         "additionalProperties": false,
@@ -77002,7 +77209,7 @@
           {
             "type": "object",
             "additionalProperties": false,
-            "description": "Device to server: wall-clock second `second` of the job has fully elapsed. Metering (platform.usage-sample@1, written through billing.usage.record by whoever terminates the link: OpenVibe.Bot now, Fabric later): second n is [started_ms + n*1000, started_ms + (n+1)*1000) on the worker's monotonic clock. A worker sends `job_usage` for n only once that second has fully elapsed, so every `job_usage` stands for quantity 1; the partial last second is never sent here, only in `job_exit`. Each second is exactly one reading: `id` and `idempotency_key` `run:<job id>:<n>`, `service` `run`, `operation` `function.invoke`, `unit` `s`, `quantity` 1 (the partial last second: (wall_ms mod 1000)/1000, never 0), `at` new Date(started_ms + n*1000).toISOString(), `resource` the job id, `node` the worker's device id, `source` `openvibe-node.worker`, and `project`, `subject` and `provider` from the dispatcher's own record of the job. No field depends on when or how often a frame was sent, and no rating fields (`cost_estimate`, `free_allowance_used`, `vibes_charged`) are set, because Billing keeps the first reading under a key, replays an identical one and refuses a different one (409): a resend after a reconnect, a `job_usage` and the `job_exit` backfill of the same second, and two writers of one job all land on one record.",
+            "description": "Device to server: wall-clock second `second` of the job has fully elapsed. Metering (platform.usage-sample@1, written through billing.usage.record by whoever terminates the link: OpenVibe.Bot now, Fabric later): second n is [started_ms + n*1000, started_ms + (n+1)*1000) on the worker's monotonic clock. A worker sends `job_usage` for n only once that second has fully elapsed, so every `job_usage` stands for quantity 1; the partial last second is never sent here, only in `job_exit`. Each second is exactly one reading: `id` and `idempotency_key` `run:<job id>:<n>`, `service` `run`, `operation` `function.invoke`, `unit` `s`, `quantity` 1 (the partial last second: (wall_ms mod 1000)/1000, never 0), `at` new Date(started_ms + n*1000).toISOString(), `resource` the job id, `node` the worker's device id, `source` `openvibe-link.worker`, and `project`, `subject` and `provider` from the dispatcher's own record of the job. No field depends on when or how often a frame was sent, and no rating fields (`cost_estimate`, `free_allowance_used`, `vibes_charged`) are set, because Billing keeps the first reading under a key, replays an identical one and refuses a different one (409): a resend after a reconnect, a `job_usage` and the `job_exit` backfill of the same second, and two writers of one job all land on one record.",
             "required": [
               "v",
               "seq",
@@ -82324,7 +82531,7 @@
                   "null"
                 ],
                 "maxLength": 128,
-                "description": "The offer's provider, as Run sent it; null for a first-party node."
+                "description": "The offer's provider, as Run sent it; null for a first-party machine."
               },
               "cancel_requested": {
                 "type": "boolean",
@@ -83868,7 +84075,7 @@
                   "null"
                 ],
                 "maxLength": 128,
-                "description": "The offer's provider (the usage reading's `provider`); null for a first-party node."
+                "description": "The offer's provider (the usage reading's `provider`); null for a first-party machine."
               },
               "region": {
                 "type": [
@@ -85407,15 +85614,15 @@
         }
       }
     },
-    "network.node.revoked": {
+    "network.link.revoked": {
       "version": "1.0.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://openvibe.network/contracts/events/payloads/network.node.revoked.v1.json",
-        "title": "NetworkNodeRevokedPayload",
-        "description": "network.node.revoked v1 (OpenVibe.Network; plan T2, docs/t2-cells-and-node-principal.md section 10, migrations/0014_node_pairing.sql). A node principal (nod_…), a person's paired machine, was revoked: through POST /internal/node-principals/:id/revoke (network.node.manage, the service that paired it), through POST /api/v1/me/nodes/:id/revoke (the owner's session), or with the owner's account. Network revokes the row and clears the credential and its grace window; a machine holding a live node token is refused at its next use (≤ 300 s), and until this event only learned of the revoke at its next reauth (≤ 330 s). A consumer stops the machine at once; a second revoke changes nothing and emits nothing. The credential and its hash are never carried. Envelope: subject { type: node_principal, id: <nod_…> }, visibility internal, actor the service (svc:<service>) or the owner ({ type: user }) that revoked.",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.link.revoked.v1.json",
+        "title": "NetworkLinkRevokedPayload",
+        "description": "network.link.revoked v1 (OpenVibe.Network; plan T2, docs/t2-cells-and-node-principal.md section 10, migrations/0014_node_pairing.sql). A node principal (lnk_…), a person's paired machine, was revoked: through POST /internal/link-principals/:id/revoke (network.link.manage, the service that paired it), through POST /api/v1/me/nodes/:id/revoke (the owner's session), or with the owner's account. Network revokes the row and clears the credential and its grace window; a machine holding a live node token is refused at its next use (≤ 300 s), and until this event only learned of the revoke at its next reauth (≤ 330 s). A consumer stops the machine at once; a second revoke changes nothing and emits nothing. The credential and its hash are never carried. Envelope: subject { type: node_principal, id: <lnk_…> }, visibility internal, actor the service (svc:<service>) or the owner ({ type: user }) that revoked.",
         "type": "object",
         "required": [
           "node_id",
@@ -85432,7 +85639,7 @@
           },
           "principal_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The revoked node principal. Also the envelope subject id."
           },
           "owner": {
@@ -103941,7 +104148,7 @@
                   "node",
                   "submitted"
                 ],
-                "description": "codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it."
+                "description": "codes: an openvibe.codes task. run: a Run worker. link: the person's own machine. submitted: nobody ran it."
               },
               "id": {
                 "type": "string",
@@ -104190,7 +104397,7 @@
                   "node",
                   "submitted"
                 ],
-                "description": "codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it."
+                "description": "codes: an openvibe.codes task. run: a Run worker. link: the person's own machine. submitted: nobody ran it."
               },
               "id": {
                 "type": "string",
@@ -105334,7 +105541,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/website/share.v1.json",
         "title": "WebsiteShare",
-        "description": "website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Node tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.",
+        "description": "website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Link tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -105376,7 +105583,7 @@
               "string",
               "null"
             ],
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The Network node principal expected to serve the tunnel; null until one is bound."
           },
           "name": {
@@ -105454,7 +105661,7 @@
               "null"
             ],
             "format": "date-time",
-            "description": "The last successful Node liveness check; null until the first tunnel."
+            "description": "The last successful Link liveness check; null until the first tunnel."
           },
           "created_at": {
             "type": "string",
@@ -105537,8 +105744,8 @@
           },
           "node_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
-            "description": "Optional: bind the share to this Node principal now. Omit to bind it when the first tunnel connects."
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Optional: bind the share to this Link principal now. Omit to bind it when the first tunnel connects."
           },
           "region": {
             "type": "string",
@@ -105571,7 +105778,7 @@
           },
           "node_id": {
             "type": "string",
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "Must equal the node principal in the Network token; a mismatch is refused and audited."
           },
           "tunnel_token": {
@@ -106077,7 +106284,7 @@
               "string",
               "null"
             ],
-            "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
+            "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "The Network node principal the device presents; null for an agent or server that joins through a pre-auth key."
           },
           "name": {
@@ -111984,7 +112191,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/machine-pool.v1.json",
         "title": "BotMachinePool",
-        "description": "bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Link generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.",
+        "description": "bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own Link token (GET /api/v1/link/self/pools/:id, network.link.self.manage) and approves it locally (POST /api/v1/link/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Link generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Link check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -119133,6 +119340,325 @@
           "secret": {
             "type": "string",
             "pattern": "^ovx_[A-Za-z0-9_-]{43}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "git.access-request": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/access-request.v1.json",
+        "title": "GitAccessRequest",
+        "description": "git.access-request@1: the common request of git.read and git.write on OpenVibe.Git. owner and name name the repository at git.openvibe.codes; ref and path pick what is read; branch, message and files describe a contents write without a clone. A service names the person it acts for in X-OV-Subject, not in this body.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "owner",
+          "name"
+        ],
+        "properties": {
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,38}$",
+            "description": "The repository owner's lower-case OpenVibe username."
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$",
+            "description": "The repository name, lower-case and never ending in .git."
+          },
+          "ref": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "A branch or tag to read at; the default branch when absent."
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "A path inside the tree or a blob's path."
+          },
+          "branch": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "The branch a contents write goes on."
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "The commit message of a contents write."
+          },
+          "files": {
+            "type": "array",
+            "maxItems": 200,
+            "description": "The files a contents write changes, by path and full content.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "content"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "maxLength": 4096
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "git.access-result": {
+      "version": "1.0.0",
+      "owner": "git",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/git/access-result.v1.json",
+        "title": "GitAccessResult",
+        "description": "git.access-result@1: the common result of git.read and git.write on OpenVibe.Git. A repository names its full name, its page and clone addresses, its visibility and default branch; a contents write or a token also carries the branch or commit it made.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "full_name"
+        ],
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,38}/[a-z0-9][a-z0-9._-]{0,99}$"
+          },
+          "html_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "clone_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private"
+            ]
+          },
+          "default_branch": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "branch": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+          }
+        }
+      }
+    },
+    "pics.picture": {
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/pics/picture.v1.json",
+        "title": "PicsPicture",
+        "description": "A Pics picture. Public counts and attribution are returned for opted-in public gallery entries only. Uploads are private by default.",
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "width",
+          "height",
+          "listed",
+          "tags",
+          "links"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pic_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "slug": {
+            "type": "string",
+            "pattern": "^[2-9a-km-zA-HJ-NP-Z]{8}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "ext": {
+            "enum": [
+              "jpg",
+              "png",
+              "webp",
+              "gif",
+              "avif"
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "animated": {
+            "type": "boolean"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ai": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "content_labels": {
+            "type": "object"
+          },
+          "state": {
+            "enum": [
+              "active",
+              "hidden",
+              "removed"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "listed": {
+            "type": "boolean"
+          },
+          "tags": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            }
+          },
+          "author": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "views": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "report_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "page",
+              "direct",
+              "thumb",
+              "markdown",
+              "html",
+              "bbcode"
+            ],
+            "properties": {
+              "page": {
+                "type": "string"
+              },
+              "direct": {
+                "type": "string"
+              },
+              "thumb": {
+                "type": "string"
+              },
+              "markdown": {
+                "type": "string"
+              },
+              "html": {
+                "type": "string"
+              },
+              "bbcode": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "pics.gallery": {
+      "version": "1.0.0",
+      "owner": "media-hub",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/pics/gallery.v1.json",
+        "title": "PicsGallery",
+        "description": "Public, active, explicitly listed pictures; first 30 per page. Opaque next cursor is null at the end. Popular orders likes then views; Rising orders likes in the last day; New orders publication time.",
+        "type": "object",
+        "required": [
+          "pictures",
+          "next",
+          "sort"
+        ],
+        "properties": {
+          "pictures": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "$ref": "picture.v1.json"
+            }
+          },
+          "next": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sort": {
+            "enum": [
+              "popular",
+              "new",
+              "rising"
+            ]
           }
         },
         "additionalProperties": false

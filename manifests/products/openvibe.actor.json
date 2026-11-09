@@ -47,7 +47,7 @@
     },
     {
       "question": "Can an agent take full control of my computer?",
-      "answer": "Only if you set that Node to Full control on the device itself. It is time-boxed and recorded, you can see when an agent is in control, and a button, a hotkey or one command ends it. Most people use Trusted: routine actions run and risky ones ask first."
+      "answer": "Only if you set that Link to Full control on the device itself. It is time-boxed and recorded, you can see when an agent is in control, and a button, a hotkey or one command ends it. Most people use Trusted: routine actions run and risky ones ask first."
     },
     {
       "question": "Can I run Actor myself?",
@@ -234,7 +234,7 @@
           [
             "fa-robot",
             "Robots too",
-            "The same Node drives robots on OpenVibe.Bot, so one install covers your computers and your robots.",
+            "The same Link drives robots on OpenVibe.Bot, so one install covers your computers and your robots.",
             "https://openvibe.bot"
           ]
         ]
@@ -257,7 +257,7 @@
           [
             "fa-server",
             "Devices",
-            "Every Node with its status, a terminal, its files and its screen."
+            "Every Link with its status, a terminal, its files and its screen."
           ],
           [
             "fa-robot",

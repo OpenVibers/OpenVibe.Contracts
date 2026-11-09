@@ -6,7 +6,7 @@ the first new adapters (OpenCode, Antigravity CLI), capability-aware routing, vi
 (headless browser + virtual desktop, screenshots)" ahead of "ADR-044 (task contract, adapter interface, modes,
 signals, verification, trust)", and the engine's harness work is paused where it stands. Contract: `platform.task@1`.
 Builds on ADR-034 §2 (projects and resource names), §5 (control and data plane) and §9 (metering), on ADR-046 (the
-placer, its objectives and the five trust classes), on ADR-012 (one Billing authority) and on ADR-043 (Node control
+placer, its objectives and the five trust classes), on ADR-012 (one Billing authority) and on ADR-043 (Link control
 levels and the local kill switch). For the owner's review.
 
 ## Context and current evidence
@@ -112,7 +112,7 @@ ADR-046 §4's five classes apply unchanged: `first-party`, `user-owned`, `partne
 data on OpenVibe — `first-party`, and a `user-owned` node only when the deployment allows it — which the plan
 describes as "only agents that keep your data on OpenVibe: its own runtime and open models on its hardware". Local
 execution on a person's own machine goes through OpenVibe Link under ADR-043's control levels (Observe / Ask /
-Trusted / Full control), a local indicator and a kill switch the owner holds; Node's local policy always overrides a
+Trusted / Full control), a local indicator and a kill switch the owner holds; Link's local policy always overrides a
 cloud command (plan T14).
 
 ### 7. Progress, cancel and webhooks
@@ -146,7 +146,7 @@ Actor plans and routes; it does not become an authority. The plan's own list of 
 | Coding work | Codes (the one coding-harness router) |
 | Persistent conditions | Watch |
 | Cloud execution | Run (`platform.job@1` / `platform.job-frame@1`) |
-| Local execution and computer control | Node (ADR-043 control levels, kill switch) |
+| Local execution and computer control | Link (ADR-043 control levels, kill switch) |
 | Resource control | Services (`common.resource-control-request@1`, ADR-048) |
 | Artifacts | Media |
 | Robots | Bot |

@@ -1,26 +1,26 @@
 # ADR-045: The Link is OpenVibe's universal runtime
 
-**Status:** Proposed 2026-10-05 (plan §8: *"ADR-045 (Node; **revise: Node is the universal runtime, not a
+**Status:** Proposed 2026-10-05 (plan §8: *"ADR-045 (Link; **revise: Link is the universal runtime, not a
 Bot/Actor helper**)"*; plan T14, lines 575–579). For the owner's review. Builds on ADR-043 (Bot — devices, pairing,
 control and safety), ADR-046 §5 (the `worker:<class>` capability names) and ADR-048 (OVRN and authority boundaries).
-ADR-043 stays the robot/device half of the same Node; this record is the runtime half, and amends ADR-043's credential
+ADR-043 stays the robot/device half of the same Link; this record is the runtime half, and amends ADR-043's credential
 paragraph: Network owns the node/device principal and the pairing credential, Bot keeps the robot binding and control
 link.
 
 ## Context and current evidence
 
-- **The plan revises ADR-045.** Plan §8 (line 986) calls ADR-045 written but to be revised: *"Node is the universal
+- **The plan revises ADR-045.** Plan §8 (line 986) calls ADR-045 written but to be revised: *"Link is the universal
   runtime, not a Bot/Actor helper"*. `origin/main` has no ADR-045 file in any repository, so the revision is unstated
   in the contract repository.
-- **What the plan says the Link is.** Plan T14, lines 575–579: *"**Node runtime** (ADR-045 revised: Node is the
+- **What the plan says the Link is.** Plan T14, lines 575–579: *"**Link runtime** (ADR-045 revised: Link is the
   universal runtime, not a Bot/Actor helper). **Core built on `origin/main`:** one signed binary, pairing, control
   link, WHIP publisher, plugin runtime, the Adeept and Cozmo plugins, installer and CI. Still to add for its other
   roles: computer control (terminal, files, screen, input, browser) under control levels, local kill switch and
   recording (Actor's need, T17); execution-worker capability (Run's need); cache/storage/delivery capability (Media's
   need, T4). **Local policy always overrides cloud commands.**"*
-- **Products bind capabilities, not device code.** Plan lines 321–324: *"Node identity is a Network principal.
-  Network owns the node/device principal and pairing credentials. Services manages the resource; Node presents
-  capabilities (T14); Bot binds robot resources to Node capabilities (T15); Actor binds computer control (T17); Run
+- **Products bind capabilities, not device code.** Plan lines 321–324: *"Link identity is a Network principal.
+  Network owns the node/device principal and pairing credentials. Services manages the resource; Link presents
+  capabilities (T14); Bot binds robot resources to Link capabilities (T15); Actor binds computer control (T17); Run
   binds execution workers (T14); Media binds cache/storage (T4). Bot keeps robots, robot profiles, operators, command
   leases and physical safety — not universal device identity."*
 - **What the code already does** (OpenVibe Link, `origin/main`): one Go static binary per platform — pairing
@@ -35,20 +35,20 @@ link.
 - **The capability names are already agreed.** ADR-046 §5 reserves `worker:function`, `worker:code`,
   `worker:browser`, `worker:linux`, `worker:desktop` and `worker:gpu` for the Link job worker, one per
   `platform.runtime-class@1` class, in `platform.resource-offer@1.$defs.reservedWorkerCapabilities`.
-- **The control levels are plan wording.** Plan lines 745–747: *"each Node has a control level set on the device
+- **The control levels are plan wording.** Plan lines 745–747: *"each Link has a control level set on the device
   (Observe / Ask / Trusted / Full control), a local indicator, a local kill switch, optional container/VM
   confinement, replayable transcripts and file changes, and local secrets used through handles."* Of that, the local
   kill switch (the persisted stop latch) exists; the four named levels and recording do not.
-- **Media's need is stated too.** Plan lines 366–368: *"Node is a storage/delivery candidate too
+- **Media's need is stated too.** Plan lines 366–368: *"Link is a storage/delivery candidate too
   (`media.cache`, `storage.hot`, prepaid disk and bandwidth), so the placement engine can use unused capacity on
-  already-paid OpenVibe nodes before buying CDN traffic."*
+  already-paid OpenVibe Links before buying CDN traffic."*
 
 ## Decision
 
-### 1. One Node, the universal runtime
+### 1. One Link, the universal runtime
 
 The Link is OpenVibe's universal runtime — one agent for a person's computers, servers, Raspberry Pis, phones and
-robots. It is **not** a Bot helper or an Actor helper: Bot, Actor, Run and Media are all clients of the same Node,
+robots. It is **not** a Bot helper or an Actor helper: Bot, Actor, Run and Media are all clients of the same Link,
 and each binds the capabilities it needs. ADR-043 remains the robot/device half (robots, robot profiles, operators,
 command leases and physical safety); this ADR is the runtime half. The one split this record draws inside ADR-043 is
 the credential: **Network owns the node/device principal and issues the pairing credential; Bot keeps the robot
@@ -61,7 +61,7 @@ stands.
   A role is **a capability the Link advertises plus local configuration**, never a second agent or a second install.
 - The Link is a Network principal (its node/device principal and pairing credential are Network's), and its resource
   is named by OVRN (ADR-048). Network owns identity and pairing; Bot keeps the robot binding and the control link
-  (amending ADR-043's credential paragraph); Node presents capabilities.
+  (amending ADR-043's credential paragraph); Link presents capabilities.
 
 ### 3. Execution worker (Run's need)
 
@@ -102,7 +102,7 @@ stands.
 
 ## Alternatives considered
 
-- **Node as a Bot-only helper (the plan's earlier framing):** rejected by the revision. Bot, Actor, Run and Media
+- **Link as a Bot-only helper (the plan's earlier framing):** rejected by the revision. Bot, Actor, Run and Media
   would each grow a device agent, and an owner would install and pair several.
 - **A separate agent per product (an Actor agent, a Run worker, a Media cache daemon):** rejected. One binary, one
   control link and one local policy are what make a single device safe to reason about; capabilities distinguish the
@@ -128,7 +128,7 @@ stands.
 2. **One principal or many.** Whether a Link serving several products/projects is one Network principal with scoped
    grants or one principal per project is Network's decision and is open (ADR-048 OVRN).
 3. **Cache/storage contracts.** Which offer contracts carry the Link's cache/storage role — the existing
-   `platform.storage-offer@1` / `platform.delivery-offer@1` or a Node-specific one — and whether placement policy
+   `platform.storage-offer@1` / `platform.delivery-offer@1` or a Link-specific one — and whether placement policy
    stays Media's, is open.
 4. **Other users' workloads.** Whether a Link may run other users' jobs or serve other users' computer control, or
    only its owner's, mirrors ADR-046's `user-owned` question and is open.
@@ -140,7 +140,7 @@ stands.
 - The release binary is not code-signed and has no self-update: releases publish `SHA256SUMS` only.
 - The four control-level names and the local indicator are plan wording; the code today has a local stop latch, not
   the four levels.
-- No Actor, Run or Media consumer binds these Node capabilities on `origin/main`; Run is a placeholder service
+- No Actor, Run or Media consumer binds these Link capabilities on `origin/main`; Run is a placeholder service
   (ADR-036).
 - The Link worker is reached over the Bot control link today; it is not yet an offer producer, because the Run that
   would convert its descriptor is not built.

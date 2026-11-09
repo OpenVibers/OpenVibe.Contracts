@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/pics/gallery.v1.json",
+  "title": "PicsGallery",
+  "description": "Public, active, explicitly listed pictures; first 30 per page. Opaque next cursor is null at the end. Popular orders likes then views; Rising orders likes in the last day; New orders publication time.",
+  "type": "object",
+  "required": [
+    "pictures",
+    "next",
+    "sort"
+  ],
+  "properties": {
+    "pictures": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "$ref": "picture.v1.json"
+      }
+    },
+    "next": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sort": {
+      "enum": [
+        "popular",
+        "new",
+        "rising"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

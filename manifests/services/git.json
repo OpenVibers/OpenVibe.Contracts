@@ -1,0 +1,76 @@
+{
+  "version": "0.1.0",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.370.0 <1.0.0"
+  },
+  "id": "git",
+  "name": "OpenVibe.Git",
+  "status": "alpha",
+  "repository": "OpenVibers/OpenVibe-Git",
+  "domains": [
+    "git.openvibe.codes"
+  ],
+  "publicOrigin": "https://git.openvibe.codes",
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [
+    "git.repo.read",
+    "git.repo.write"
+  ],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [],
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed",
+        "git http-backend requests finish"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "the database (repositories, stars, tokens and insights) is in PostgreSQL; the bare repositories are on disk under GIT_DATA_DIR and are the state themselves"
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback git --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "migrations are expand-only and run forward; the previous sha reads the same rows, so rolling the code back is safe"
+      }
+    },
+    "contracts": {
+      "range": ">=0.370.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site; repository writes take their own file and database locks"
+    }
+  },
+  "notes": "Port 5270, unit openvibe-git.service. OpenVibe's own code home at git.openvibe.codes (plan OpenVibe_Git_Plan_2026-11-09): bare repositories on disk served by git's own http-backend behind OpenVibe sign-in, our pages and API for browsing, GitHub mirrors, stars, insights and contents writes without a clone. Codes, Run and Link act for a person with a typed service token and X-OV-Subject. It replaces Forgejo (deploy/forgejo in OpenVibe.Codes), whose data was all mirrors.",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "internalOrigin": "http://127.0.0.1:5270",
+  "site": {
+    "name": "Git",
+    "icon": "git",
+    "tagline": "Code with your OpenVibe account",
+    "what": "Host code, browse it, mirror GitHub and clone it to your computer with Link, in OpenVibe's own theme.",
+    "legalProfile": "public",
+    "position": 33,
+    "neighbourhood": "make"
+  }
+}

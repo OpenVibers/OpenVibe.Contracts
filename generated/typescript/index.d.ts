@@ -76,7 +76,7 @@ export type ServiceTokenClaims = {
    */
   iss: string;
   sub: string;
-  actor_type: "service" | "app" | "mod" | "node" | "agent";
+  actor_type: "service" | "app" | "mod" | "link" | "agent";
   /**
    * @minItems 1
    */
@@ -159209,9 +159209,9 @@ export type AiCredentialPut = {
   /**
    * openai = any OpenAI-compatible endpoint. node = the person's own machine: a model on their own model server, through their OpenVibe Link and OpenVibe.Bot (no key, no base_url, no cost).
    */
-  provider: "openai" | "anthropic" | "node";
+  provider: "openai" | "anthropic" | "link";
   /**
-   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine.
+   * provider link: the person's own machine (openvibe.link/machines) whose OpenVibe Link runs the model (the ai plugin, contracts 0.219.0), or `any` (contracts 0.221.0): whichever of their machines is on, lets their AI use its models and offers the model, the fastest first, the next one when it is busy or away. Never anyone else's machine.
    */
   machine?: string;
   base_url?: string;
@@ -159245,7 +159245,7 @@ export type AiCredentialPutV2 = {
   /**
    * anthropic = Anthropic's Messages API; openai = any OpenAI-compatible endpoint; deepseek, minimax and openrouter = those providers; custom = the endpoint in base_url (a URL that speaks the OpenAI or the Anthropic format, by the route it is used on); node = the person's own machine (no key, no base_url, no cost).
    */
-  provider: "anthropic" | "openai" | "deepseek" | "minimax" | "openrouter" | "custom" | "node";
+  provider: "anthropic" | "openai" | "deepseek" | "minimax" | "openrouter" | "custom" | "link";
   /**
    * The provider key (ai.credential-put@2's name for v1's api_key). Required the first time, and whenever provider or base_url changes (a key is never sent to a new endpoint without being entered again); otherwise the stored key is kept, and it is never returned.
    */
@@ -159259,7 +159259,7 @@ export type AiCredentialPutV2 = {
    */
   base_url?: string;
   /**
-   * provider node: the person's own machine (openvibe.bot/machines) whose OpenVibe Link runs the model, or `any` of their own.
+   * provider link: the person's own machine (openvibe.link/machines) whose OpenVibe Link runs the model, or `any` of their own.
    */
   machine?: string;
   /**
@@ -159290,9 +159290,9 @@ export type AiCredential = {
    * The service that stored it; only it may use or change it.
    */
   owner: string;
-  provider: "openai" | "anthropic" | "node";
+  provider: "openai" | "anthropic" | "link";
   /**
-   * provider node: the machine it runs on, or `any` of the person's own (contracts 0.221.0)
+   * provider link: the machine it runs on, or `any` of the person's own (contracts 0.221.0)
    */
   machine?: string | null;
   base_url?: string | null;
@@ -159326,9 +159326,9 @@ export type AiCredentialV2 = {
    * The service that stored it; only it may use or change it.
    */
   owner: string;
-  provider: "anthropic" | "openai" | "deepseek" | "minimax" | "openrouter" | "custom" | "node";
+  provider: "anthropic" | "openai" | "deepseek" | "minimax" | "openrouter" | "custom" | "link";
   /**
-   * provider node: the machine it runs on, or `any` of the person's own
+   * provider link: the machine it runs on, or `any` of the person's own
    */
   machine?: string | null;
   base_url?: string | null;
@@ -160478,7 +160478,7 @@ export interface AiInferenceDeployment {
    */
   trust_tier?: "first_party" | "owner_node" | "approved_wholesale" | "unverified";
   /**
-   * Operator slug or `owner:<subject_id>` for a private node.
+   * Operator slug or `owner:<subject_id>` for a private machine.
    */
   operator?: string;
   /**
@@ -197336,7 +197336,7 @@ export interface TradeWatchlist {
 
 /** watch.watch@1.0.0 (owner: watch) */
 /**
- * watch.watch@1: a user-defined persistent observation (plan T18). It names a source (a push event, a webhook, a conditional HTTP URL, a feed or API, a local Node probe, or an expensive Run check), how a value is extracted, how it is compared with the last observation, the condition that fires, the actions it wakes, its budget and its retention. Carrier preference is binding: an event or webhook source is used when one exists, then ETag/Last-Modified, then a feed, then an API, and browser polling through Run only when none works. A price or stock is 'as of' the observation, null when it stated none.
+ * watch.watch@1: a user-defined persistent observation (plan T18). It names a source (a push event, a webhook, a conditional HTTP URL, a feed or API, a local Link probe, or an expensive Run check), how a value is extracted, how it is compared with the last observation, the condition that fires, the actions it wakes, its budget and its retention. Carrier preference is binding: an event or webhook source is used when one exists, then ETag/Last-Modified, then a feed, then an API, and browser polling through Run only when none works. A price or stock is 'as of' the observation, null when it stated none.
  */
 export interface Watch {
   id: string;
@@ -210320,11 +210320,11 @@ export interface HostSite {
   updated_at: string;
 }
 
-/** network.node@1.0.0 (owner: network) */
+/** network.link@1.0.0 (owner: network) */
 /**
- * network.node@1: one machine of the OpenVibe platform as the node registry lists it (ADR-034 section 12; roadmap WS-X1). Roles are what it serves; location is region-level; the beacon is an HTTPS URL a client times to measure its own round trip. No addresses, capacity or secrets are public: a node is found by role and location, and reached through the service that uses it.
+ * network.link@1: one machine of the OpenVibe platform as the node registry lists it (ADR-034 section 12; roadmap WS-X1). Roles are what it serves; location is region-level; the beacon is an HTTPS URL a client times to measure its own round trip. No addresses, capacity or secrets are public: a node is found by role and location, and reached through the service that uses it.
  */
-export interface NetworkNode {
+export interface NetworkLink {
   id: string;
   name?: string;
   /**
@@ -210384,11 +210384,11 @@ export interface NetworkNode {
   cell?: string;
 }
 
-/** network.node-report-request@1.0.0 (owner: network) */
+/** network.link-report-request@1.0.0 (owner: network) */
 /**
- * network.node-report-request@1: POST /internal/nodes/report on OpenVibe.Network (capability network.node.report, held by the Host principal). The complete set of nodes one Host inventory knows, with their health now: a node absent from a later report of the same source is marked down, never deleted silently.
+ * network.link-report-request@1: POST /internal/links/report on OpenVibe.Network (capability network.link.report, held by the Host principal). The complete set of nodes one Host inventory knows, with their health now: a node absent from a later report of the same source is marked down, never deleted silently.
  */
-export interface NetworkNodeReportRequest {
+export interface NetworkLinkReportRequest {
   /**
    * The reporting inventory (e.g. the host id).
    */
@@ -210396,15 +210396,15 @@ export interface NetworkNodeReportRequest {
   /**
    * @maxItems 500
    */
-  nodes: NetworkNode[];
+  nodes: NetworkLink[];
 }
 
-/** network.node-list-result@1.0.0 (owner: network) */
+/** network.link-list-result@1.0.0 (owner: network) */
 /**
- * network.node-list-result@1: GET /api/v1/nodes on OpenVibe.Network (public, cacheable): every node of the platform, filterable by ?role= and ?region=. The input of openvibe-sdk/geo's nearest().
+ * network.link-list-result@1: GET /api/v1/links on OpenVibe.Network (public, cacheable): every node of the platform, filterable by ?role= and ?region=. The input of openvibe-sdk/geo's nearest().
  */
-export interface NetworkNodeListResult {
-  nodes: NetworkNode[];
+export interface NetworkLinkListResult {
+  nodes: NetworkLink[];
   generated_at: string;
 }
 
@@ -210418,7 +210418,7 @@ export interface NetworkMachine {
    */
   id: string;
   /**
-   * The machine's node principal on Network (nod_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for.
+   * The machine's node principal on Network (lnk_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for.
    */
   principal_id?: string;
   /**
@@ -210572,7 +210572,7 @@ export interface NetworkMachineRolesPut {
 
 /** network.machine-pairing@1.0.0 (owner: network) */
 /**
- * network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.bot/install). The code is never stored in the clear and never returned again.
+ * network.machine-pairing@1: a one-time code that pairs a machine with the person's account (POST /api/v1/machines/pairings, capability machines.manage). The code is shown once, expires, and works once: the machine redeems it and becomes the person's. The command is what the owner runs on the machine (openvibe.link/install). The code is never stored in the clear and never returned again.
  */
 export interface NetworkMachinePairing {
   /**
@@ -210588,7 +210588,7 @@ export interface NetworkMachinePairing {
    */
   expires_at: string;
   /**
-   * The command the owner runs on the machine (openvibe.bot/install, with the network, the pairing id and the code).
+   * The command the owner runs on the machine (openvibe.link/install, with the network, the pairing id and the code).
    */
   installer: string;
 }
@@ -210629,7 +210629,7 @@ export interface NetworkMachineOfflinePayload {
 
 /** network.machine.paired@1.0.0 (owner: network) */
 /**
- * network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <nod_…> }, visibility internal, actor service:network.
+ * network.machine.paired v1 (OpenVibe.Network, plan L34: the machines hub). A machine was paired with a person's account: it redeemed the one-time code and became theirs. It holds a credential from then on; the code is spent. The machine's device id in Bot is absent until the machine checks in for the first time. Envelope: subject { type: machine, id: <lnk_…> }, visibility internal, actor service:network.
  */
 export interface NetworkMachinePairedPayload {
   /**
@@ -210761,7 +210761,7 @@ export interface NetworkCoinsReadResult {
 
 /** platform.resource-offer@1.1.0 (owner: network) */
 /**
- * What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.node@1) deliberately leaves out.
+ * What one node or external provider can run right now (roadmap WS-Z9, decision 43): capabilities, multidimensional capacity, measured latencies, health and pricing. First-party only: it carries capacity the public node registry (network.link@1) deliberately leaves out.
  */
 export type ResourceOffer = {
   [k: string]: unknown | undefined;
@@ -210769,7 +210769,7 @@ export type ResourceOffer = {
   offer_id: string;
   kind: "node" | "provider" | "storage" | "delivery" | "runtime" | "agent" | "harness";
   /**
-   * network.node@1 id, for kind node
+   * network.link@1 id, for kind node
    */
   node_id?: string;
   /**
@@ -210791,7 +210791,7 @@ export type ResourceOffer = {
    */
   owner?: string;
   /**
-   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe Link's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A node advertises the name of each class it runs (Node's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers.
+   * e.g. node:http, worker:browser, worker:ffmpeg, worker:ai-gpu, events:gateway, events:durable, object:r2. Kind harness: task:edit, task:review, task:browse, task:run, task:test and task:plan for the task kinds it takes (its detail's task_capabilities), and harness:mcp, harness:resume, harness:host-access and harness:long-autonomy for its detail's capabilities that are true. The `worker:<class>` names that map to platform.runtime-class@1 values are reserved for OpenVibe Link's job worker, one per class: worker:function, worker:code, worker:browser, worker:linux, worker:desktop and worker:gpu ($defs.reservedWorkerCapabilities). A Link advertises the name of each class it runs (Link's status.capabilities.worker); every other `worker:` name (worker:ffmpeg, worker:ai-gpu) is an ordinary capability name. Beside them, a kind harness names `runtime:<class>` for each platform.runtime-class@1 class it can run (runtime:function, runtime:code, runtime:browser, runtime:linux, runtime:desktop, runtime:gpu); these are ordinary capability names, not reserved, and OpenVibe.Codes already advertises the classes it offers.
    */
   capabilities: string[];
   capacity?: {
@@ -211242,11 +211242,48 @@ export interface TelemetrySample {
   };
 }
 
-/** platform.node-capabilities@1.0.0 (owner: network) */
+/** link.compute@1.0.0 (owner: network) */
 /**
- * Node hardware, placement regions, tags, and operating costs (T1 Universal Fabric; ADR-034 proposed).
+ * Where a person's work can run. Only ready candidates may be picked; a missing rental quote is never a price.
  */
-export interface NodeCapabilities {
+export interface LinkCompute {
+  sources: {
+    id?: string;
+    principal_id?: string;
+    kind: "personal" | "cloud" | "exchange" | "community";
+    name: string;
+    status: "ready" | "unavailable" | "coming_soon";
+    reason: string | null;
+    price?: {
+      amount_usd: number;
+      unit: "hour";
+    } | null;
+    quoted_at?: string;
+    expires_at?: string;
+  }[];
+  candidates: ({
+    id?: string;
+    principal_id?: string;
+    kind: "personal" | "cloud" | "exchange" | "community";
+    name: string;
+    status: "ready" | "unavailable" | "coming_soon";
+    reason: string | null;
+    price?: {
+      amount_usd: number;
+      unit: "hour";
+    } | null;
+    quoted_at?: string;
+    expires_at?: string;
+  } & {
+    id: string;
+  })[];
+}
+
+/** platform.link-capabilities@1.0.0 (owner: network) */
+/**
+ * Link machine hardware, placement regions, tags, and operating costs (T1 Universal Fabric; ADR-034 proposed).
+ */
+export interface LinkCapabilities {
   node_id: string;
   cpu: {
     cores: number;
@@ -262676,7 +262713,7 @@ export type BotJobDispatchResult =
          */
         subject: string | null;
         /**
-         * The offer's provider, as Run sent it; null for a first-party node.
+         * The offer's provider, as Run sent it; null for a first-party machine.
          */
         provider: string | null;
         /**
@@ -262766,7 +262803,7 @@ export type BotJobDispatchResult =
          */
         subject: string | null;
         /**
-         * The offer's provider, as Run sent it; null for a first-party node.
+         * The offer's provider, as Run sent it; null for a first-party machine.
          */
         provider: string | null;
         /**
@@ -263370,7 +263407,7 @@ export type RunJobReadResult = {
      */
     node: string;
     /**
-     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     * The offer's provider (the usage reading's `provider`); null for a first-party machine.
      */
     provider: string | null;
     region: string | null;
@@ -263590,7 +263627,7 @@ export interface RunJobStartedPayload {
      */
     node: string;
     /**
-     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     * The offer's provider (the usage reading's `provider`); null for a first-party machine.
      */
     provider: string | null;
     region: string | null;
@@ -263650,7 +263687,7 @@ export interface RunJobSucceededPayload {
      */
     node: string;
     /**
-     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     * The offer's provider (the usage reading's `provider`); null for a first-party machine.
      */
     provider: string | null;
     region: string | null;
@@ -263722,7 +263759,7 @@ export interface RunJobFailedPayload {
      */
     node: string;
     /**
-     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     * The offer's provider (the usage reading's `provider`); null for a first-party machine.
      */
     provider: string | null;
     region: string | null;
@@ -263797,7 +263834,7 @@ export interface RunJobCancelledPayload {
      */
     node: string;
     /**
-     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     * The offer's provider (the usage reading's `provider`); null for a first-party machine.
      */
     provider: string | null;
     region: string | null;
@@ -263866,7 +263903,7 @@ export interface RunJobExpiredPayload {
      */
     node: string;
     /**
-     * The offer's provider (the usage reading's `provider`); null for a first-party node.
+     * The offer's provider (the usage reading's `provider`); null for a first-party machine.
      */
     provider: string | null;
     region: string | null;
@@ -264021,11 +264058,11 @@ export interface ResourceControlResult {
   at: string;
 }
 
-/** network.node.revoked@1.0.0 (owner: network) */
+/** network.link.revoked@1.0.0 (owner: network) */
 /**
- * network.node.revoked v1 (OpenVibe.Network; plan T2, docs/t2-cells-and-node-principal.md section 10, migrations/0014_node_pairing.sql). A node principal (nod_…), a person's paired machine, was revoked: through POST /internal/node-principals/:id/revoke (network.node.manage, the service that paired it), through POST /api/v1/me/nodes/:id/revoke (the owner's session), or with the owner's account. Network revokes the row and clears the credential and its grace window; a machine holding a live node token is refused at its next use (≤ 300 s), and until this event only learned of the revoke at its next reauth (≤ 330 s). A consumer stops the machine at once; a second revoke changes nothing and emits nothing. The credential and its hash are never carried. Envelope: subject { type: node_principal, id: <nod_…> }, visibility internal, actor the service (svc:<service>) or the owner ({ type: user }) that revoked.
+ * network.link.revoked v1 (OpenVibe.Network; plan T2, docs/t2-cells-and-node-principal.md section 10, migrations/0014_node_pairing.sql). A node principal (lnk_…), a person's paired machine, was revoked: through POST /internal/link-principals/:id/revoke (network.link.manage, the service that paired it), through POST /api/v1/me/nodes/:id/revoke (the owner's session), or with the owner's account. Network revokes the row and clears the credential and its grace window; a machine holding a live node token is refused at its next use (≤ 300 s), and until this event only learned of the revoke at its next reauth (≤ 330 s). A consumer stops the machine at once; a second revoke changes nothing and emits nothing. The credential and its hash are never carried. Envelope: subject { type: node_principal, id: <lnk_…> }, visibility internal, actor the service (svc:<service>) or the owner ({ type: user }) that revoked.
  */
-export interface NetworkNodeRevokedPayload {
+export interface NetworkLinkRevokedPayload {
   /**
    * The machine's node id (platform_node_principals.node_id), minted with the principal and unique among principals.
    */
@@ -294308,7 +294345,7 @@ export interface BenchRun {
   };
   executor: {
     /**
-     * codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it.
+     * codes: an openvibe.codes task. run: a Run worker. link: the person's own machine. submitted: nobody ran it.
      */
     kind: "codes" | "run" | "node" | "submitted";
     id: string;
@@ -294379,7 +294416,7 @@ export interface BenchRunV2 {
   };
   executor: {
     /**
-     * codes: an openvibe.codes task. run: a Run worker. node: the person's own machine. submitted: nobody ran it.
+     * codes: an openvibe.codes task. run: a Run worker. link: the person's own machine. submitted: nobody ran it.
      */
     kind: "codes" | "run" | "node" | "submitted";
     id: string;
@@ -294844,7 +294881,7 @@ export interface TodayReminderResult {
 
 /** website.share@1.0.0 (owner: connect) */
 /**
- * website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Node tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.
+ * website.share@1: one Share on OpenVibe.Website Connect, a local port published at a stable hostname through the edge relay. The record says who owns it, which project scopes it, which Link tunnel serves it, which local target it may reach, which policy version the edge enforces and where it is in its life (draft, review, active, paused, revoked). The tunnel token, the request bodies the inspector captures and the policy's password hash are never part of this document.
  */
 export interface WebsiteShare {
   id: string;
@@ -294898,7 +294935,7 @@ export interface WebsiteShare {
    */
   expires_at?: string | null;
   /**
-   * The last successful Node liveness check; null until the first tunnel.
+   * The last successful Link liveness check; null until the first tunnel.
    */
   last_seen_at?: string | null;
   created_at: string;
@@ -294933,7 +294970,7 @@ export interface WebsiteShareCreateRequest {
     password_set?: never;
   };
   /**
-   * Optional: bind the share to this Node principal now. Omit to bind it when the first tunnel connects.
+   * Optional: bind the share to this Link principal now. Omit to bind it when the first tunnel connects.
    */
   node_id?: string;
   /**
@@ -303516,7 +303553,7 @@ export interface ChatParty {
 
 /** bot.machine-pool@1.0.0 (owner: bot) */
 /**
- * bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own node token (GET /api/v1/node/self/pools/:id, network.node.self.manage) and approves it locally (POST /api/v1/node/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Link generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Node check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.
+ * bot.machine-pool@1 (the pooled machines design, 2026-11-06): several of one owner's machines on the same local network that serve one model together through llama.cpp RPC, `rpc-server` on the members and `llama-server --rpc` on the head. OpenVibe.Network holds the record: the owner proposes it on /machines (POST /api/v1/machine-pools, two to eight of their own machines and an optional head; the default head has the most free VRAM), and each machine reads it with its own Link token (GET /api/v1/link/self/pools/:id, network.link.self.manage) and approves it locally (POST /api/v1/link/self/pools/:id/approve with { certificate }). A machine's `certificate` is null until it approves on that machine: the Link generates an Ed25519 key there, keeps the private key, and uploads only its self-signed public certificate, which the other members pin for the pool's private link. A pool with any null certificate never serves. The record never carries a private key or a prompt. What a schema cannot say, Network and Link check at run time: the members are distinct and the head is one of them; every member has the pool's owner, today, through Bot; every member was seen from the same public address with a private address in the same subnet; the head's direct link probe to each member passes; each machine's certificate is its own; and any change of membership, owner, head or key revokes the pool, so all machines approve a new one. A machine that leaves (removed, signed out, a different owner) drops its link and its key at once.
  */
 export interface BotMachinePool {
   /**
@@ -323455,6 +323492,126 @@ export interface ExchangeImageResult {
 export interface ExchangeKeyCreated {
   key: ExchangeKey;
   secret: string;
+}
+
+/** git.access-request@1.0.0 (owner: git) */
+/**
+ * git.access-request@1: the common request of git.read and git.write on OpenVibe.Git. owner and name name the repository at git.openvibe.codes; ref and path pick what is read; branch, message and files describe a contents write without a clone. A service names the person it acts for in X-OV-Subject, not in this body.
+ */
+export interface GitAccessRequest {
+  /**
+   * The repository owner's lower-case OpenVibe username.
+   */
+  owner: string;
+  /**
+   * The repository name, lower-case and never ending in .git.
+   */
+  name: string;
+  /**
+   * A branch or tag to read at; the default branch when absent.
+   */
+  ref?: string;
+  /**
+   * A path inside the tree or a blob's path.
+   */
+  path?: string;
+  /**
+   * The branch a contents write goes on.
+   */
+  branch?: string;
+  /**
+   * The commit message of a contents write.
+   */
+  message?: string;
+  /**
+   * The files a contents write changes, by path and full content.
+   *
+   * @maxItems 200
+   */
+  files?: {
+    path: string;
+    content: string;
+  }[];
+}
+
+/** git.access-result@1.0.0 (owner: git) */
+/**
+ * git.access-result@1: the common result of git.read and git.write on OpenVibe.Git. A repository names its full name, its page and clone addresses, its visibility and default branch; a contents write or a token also carries the branch or commit it made.
+ */
+export interface GitAccessResult {
+  full_name: string;
+  html_url?: string;
+  clone_url?: string;
+  visibility?: "public" | "private";
+  default_branch?: string;
+  branch?: string;
+  sha?: string;
+}
+
+/** pics.picture@1.0.0 (owner: media-hub) */
+/**
+ * A Pics picture. Public counts and attribution are returned for opted-in public gallery entries only. Uploads are private by default.
+ */
+export interface PicsPicture {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  mime_type?: string;
+  ext?: "jpg" | "png" | "webp" | "gif" | "avif";
+  width: number;
+  height: number;
+  bytes?: number;
+  animated?: boolean;
+  alt?: string;
+  alt_source?: string | null;
+  ai?: {} | null;
+  content_labels?: {};
+  state?: "active" | "hidden" | "removed";
+  created_at?: string;
+  listed: boolean;
+  /**
+   * @maxItems 10
+   */
+  tags:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string];
+  author?: string;
+  likes?: number;
+  views?: number;
+  published_at?: string | null;
+  report_count?: number;
+  links: {
+    page: string;
+    direct: string;
+    thumb: string;
+    markdown: string;
+    html: string;
+    bbcode: string;
+  };
+  [k: string]: unknown | undefined;
+}
+
+/** pics.gallery@1.0.0 (owner: media-hub) */
+/**
+ * Public, active, explicitly listed pictures; first 30 per page. Opaque next cursor is null at the end. Popular orders likes then views; Rising orders likes in the last day; New orders publication time.
+ */
+export interface PicsGallery {
+  /**
+   * @maxItems 30
+   */
+  pictures: PicsPicture[];
+  next: string | null;
+  sort: "popular" | "new" | "rising";
 }
 
 /** ai.choice@1.0.0 (owner: ai) */

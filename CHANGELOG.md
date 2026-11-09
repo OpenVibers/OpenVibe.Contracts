@@ -1,8 +1,28 @@
 # Changelog
 
-## 0.372.0 — 2026-11-09
+## 0.375.0 — 2026-11-09
 
 - AI tasks and choices: `ai.task@1`, `ai.choice@1`, `ai.task-defaults@1`; a run accepts `task` or `choice` beside `workflow`, and `run.explain.task_choice` says what answered. `ai.me-preferences@1` gains `defaults.search`.
+
+## 0.374.0 — 2026-11-09
+
+- Add the Pics public gallery and picture contracts (`pics.gallery@1`, `pics.picture@1`) with valid and invalid fixtures.
+
+## 0.373.0 — 2026-11-09
+
+- The git service: its manifest, git.repo.read and git.repo.write, git.access-request@1 and git.access-result@1 (OpenVibe.Git)
+
+## 0.372.0 — 2026-11-09
+
+- The machine product Node became OpenVibe Link. The network registry contracts are `network.link@1`,
+  `network.link-report-request@1` and `network.link-list-result@1`, the event is `network.link.revoked`, and the platform
+  carries `platform.link-capabilities@1` and `link.compute@1`. The capabilities `network.node.manage`,
+  `network.node.report` and `network.node.self.manage` are `network.link.manage`, `network.link.report` and
+  `network.link.self.manage`; their internal routes and the manifests follow.
+- A paired machine is a `link` principal: identity.service-token-claims actor_type `node` is `link` with sub `link:lnk_…`,
+  and `ids.principalSub` mints `link:lnk_…` (the old prefix and ids are gone, no alias). The AI provider `node` is `link`
+  in ai.credential-put@1/@2 and ai.credential@1/@2. The old contract ids are deprecated with their Link replacements; the
+  schema corrections are recorded against the current release and the ones before it.
 
 ## 0.371.0 — 2026-11-09
 
@@ -855,7 +875,7 @@
 ## 0.261.0 — 2026-10-31
 
 - **The machines hub** (plan L34, steps M2 and M4). A person's computers are the network's: Bot stays the device
-  registry underneath, and Network fronts it on openvibe.network/machines for the person and for apps the person
+  registry underneath, and Network fronts it on openvibe.link/machines for the person and for apps the person
   consented to.
   - **`network.machine@1`:** one machine as the hub shows it — its id (Bot's `dev_…`), name, kind, os, whether it is
     online, when it was last seen, its `roles` and what it does right now (`running`: its Codes jobs, its desks, its
@@ -3123,7 +3143,7 @@ contract changes.
 
 **The node-revoked event contract** (plan T2 follow-up; the deferred item in OpenVibe.Network's
 `docs/t2-cells-and-node-principal.md` section 10, "Revocation latency outside Bot"). Adds
-`network.node.revoked@1` (owner `network`, first-party, active): a node principal (`nod_…`), a person's paired
+`network.link.revoked@1` (owner `network`, first-party, active): a node principal (`lnk_…`), a person's paired
 machine, was revoked through `POST /internal/node-principals/:id/revoke` (`network.node.manage`, the service that
 paired it) or `POST /api/v1/me/nodes/:id/revoke` (the owner's session), or with the owner's account. The payload is
 `{ node_id, principal_id, owner, reason?, at }` (`extra` fields refused): `owner` is the person, project or platform
@@ -3527,9 +3547,9 @@ Network grants for the usage producers follow this release. Additive.
 
 **Node principals, node capabilities and per-kind resource offers** (plan T1 lane A, the contracts brief of
 OpenVibe.Network `docs/t2-cells-and-node-principal.md` §9.1):
-- `lib/ids.js`: `PREFIX.node = 'nod'`; `principalSub({ type: 'node', id })` gives `node:nod_<ULID>`. A node is a
+- `lib/ids.js`: `PREFIX.node = 'nod'`; `principalSub({ type: 'link', id })` gives `link:lnk_<ULID>`. A node is a
   principal only: `node` is not a `SUBJECT_TYPES` entry nor an `identity.subject-ref@1` type.
-- `identity.service-token-claims`: `sub` also accepts `node:nod_<ULID>` and `actor_type` gains `node`, so
+- `identity.service-token-claims`: `sub` also accepts `link:lnk_<ULID>` and `actor_type` gains `link`, so
   `verifyServiceToken` accepts a node token and still rejects a malformed node id. Fixtures `node-token` (valid) and
   `node-bad-id` (invalid).
 - New capabilities `network.node.manage` (a service mints pairing codes and reads or revokes the node principals it

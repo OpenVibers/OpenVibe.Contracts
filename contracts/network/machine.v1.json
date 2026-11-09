@@ -14,8 +14,8 @@
     },
     "principal_id": {
       "type": "string",
-      "pattern": "^nod_[0-9A-HJKMNP-TV-Z]{26}$",
-      "description": "The machine's node principal on Network (nod_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for."
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The machine's node principal on Network (lnk_…): the credential it holds. Absent for a machine Bot knows but Network has no principal for."
     },
     "name": { "type": "string", "maxLength": 80, "description": "The name the owner gave it. Absent when they gave none." },
     "kind": {
