@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use the OpenVibe contracts in research or a product, cite them as below."
+title: openvibe-contracts
+type: software
+authors:
+  - name: OpenVibe
+    alias: OpenVibers
+    website: https://openvibe.network
+repository-code: https://github.com/OpenVibers/OpenVibe.Contracts
+url: https://openvibe.services
+license: AGPL-3.0-only
+abstract: "Machine-readable contracts for the OpenVibe network: JSON Schema and OpenAPI for every service, manifest, id, error envelope and capability check."
+keywords:
+  - openvibe
+  - contracts
+  - json-schema
+  - openapi
+  - api

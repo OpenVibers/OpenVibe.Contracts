@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.363.0 — 2026-11-09
+
+- npm metadata and CITATION
+
 ## 0.362.0 — 2026-11-09
 
 - Your stats: report.me-stats@1 and report.me-stats-publish@1
