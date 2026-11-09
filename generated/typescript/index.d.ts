@@ -208248,6 +208248,9 @@ export interface CommunityPulseItem {
    * A third-party contribution is shown as via <app>.
    */
   via?: string;
+  /**
+   * Optional: the first picture of a Community post or paste, or a Media object URL on an app contribution.
+   */
   picture_url?: string;
   actor: {
     subject?: string | null;
@@ -208259,6 +208262,84 @@ export interface CommunityPulseItem {
     is_system?: true;
   } | null;
   occurred_at: string | null;
+  /**
+   * Optional: the source's first 280 characters, used by the Feed when Pulse came from a post or a paste.
+   */
+  text?: string;
+}
+
+/** community.feed-item@1.0.0 (owner: community) */
+/**
+ * community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). One stream over Pulse: a paste or a status is a post, a Live clip a clip, a Wiki page a wiki page, a Quest badge a quest, a busy Chat hour a chat, a Today event an event, and a day's new Network accounts a member. Text only (the client draws every field), https links only, and counts carry Community's own views, likes and comments where it knows them.
+ */
+export interface CommunityFeedItem {
+  /**
+   * Stable within one response: p:<pulse item id> for a Pulse item, t:<site>:<url> for a trending card.
+   */
+  id: string;
+  kind:
+    | "live"
+    | "stream"
+    | "clip"
+    | "video"
+    | "pic"
+    | "post"
+    | "meme"
+    | "game"
+    | "update"
+    | "wiki"
+    | "quest"
+    | "chat"
+    | "event"
+    | "member";
+  /**
+   * Where the card opens; https unless the source itself answered an http URL.
+   */
+  url: string;
+  title: string;
+  /**
+   * The source's first 280 characters, on one line; empty when it has none.
+   */
+  text: string;
+  /**
+   * When it happened (Pulse provenance); null for a trending card.
+   */
+  at: string | null;
+  /**
+   * The source service (live, media-hub, pics, games, blog, wiki, quest, chat, today, network, community…).
+   */
+  site: string;
+  site_name: string;
+  /**
+   * Who did it; null for AI, system, aggregate and trending cards.
+   */
+  actor: {
+    name: string | null;
+    avatar: string | null;
+  } | null;
+  /**
+   * The card's first picture, as a Media thumbnail; null when it has none.
+   */
+  media: {
+    thumb: string;
+    ratio: number;
+    /**
+     * Seconds, when the card is a video.
+     */
+    length?: number;
+  } | null;
+  /**
+   * Community's own numbers, each present only when it knows it; {} for another service's item.
+   */
+  counts: {
+    views?: number;
+    likes?: number;
+    comments?: number;
+  };
+  /**
+   * Present only when the card needs one.
+   */
+  label?: "Trending" | "AI" | "System";
 }
 
 /** community.pulse-read-result@1.0.0 (owner: community) */

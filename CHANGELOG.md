@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.364.0 — 2026-11-09
+
+- The Feed of everything: community.feed-item@1
+
 ## 0.363.0 — 2026-11-09
 
 - npm metadata and CITATION
