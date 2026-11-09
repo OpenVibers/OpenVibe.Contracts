@@ -1,0 +1,7 @@
+{
+  "id": "quest.step_types.read", "version": "1.0", "owner": "quest", "status": "active", "visibility": "public",
+  "description": "List approved daily step types, each bound to an event topic and its verification rule.",
+  "inputSchema": "common.no-body@1", "outputSchema": "quest.step-type@1", "permissions": ["none"],
+  "resourceConstraints": [], "quotaClass": "quest-read", "events": [],
+  "implementedBy": ["GET /api/v1/step-types"]
+}

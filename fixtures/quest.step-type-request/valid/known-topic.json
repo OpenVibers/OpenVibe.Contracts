@@ -1,0 +1,8 @@
+{
+  "id": "stream",
+  "event_type": "live.stream.started",
+  "site": "openvibe.live",
+  "sentence": "Go live",
+  "href": "https://openvibe.live/",
+  "weight": 1
+}
