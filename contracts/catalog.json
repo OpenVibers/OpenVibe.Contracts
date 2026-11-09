@@ -366,6 +366,51 @@
       "status": "active"
     },
     {
+      "id": "media.upload",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-create",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-create.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-init",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-init.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-part",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-part.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.upload-complete",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/upload-complete.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "search.index-document",
       "version": "1.0.0",
       "owner": "search",
