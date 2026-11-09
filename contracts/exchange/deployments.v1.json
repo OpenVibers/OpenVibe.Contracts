@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/exchange/deployments.v1.json",
+  "title": "ExchangeDeployments",
+  "type": "object",
+  "required": [
+    "endpoints",
+    "status"
+  ],
+  "properties": {
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "status": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Exchange API platform ExchangeDeployments response. Private account data is available only to its owner."
+}

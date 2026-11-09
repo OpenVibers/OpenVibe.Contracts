@@ -118691,6 +118691,370 @@
           }
         }
       }
+    },
+    "exchange.key": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/key.v1.json",
+        "title": "ExchangeKey",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "monthly_cap_usd",
+          "allowed_models",
+          "created_at",
+          "revoked_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "monthly_cap_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "allowed_models": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeKey response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.usage": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/usage.v1.json",
+        "title": "ExchangeUsage",
+        "type": "object",
+        "required": [
+          "rows"
+        ],
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "day",
+                "key_id",
+                "model",
+                "requests",
+                "tokens_in",
+                "tokens_out",
+                "cost_usd",
+                "status"
+              ],
+              "properties": {
+                "day": {
+                  "type": "string"
+                },
+                "key_id": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "tokens_in": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "tokens_out": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeUsage response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.deployments": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/deployments.v1.json",
+        "title": "ExchangeDeployments",
+        "type": "object",
+        "required": [
+          "endpoints",
+          "status"
+        ],
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "status": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeDeployments response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.search-result": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/search-result.v1.json",
+        "title": "ExchangeSearchResult",
+        "type": "object",
+        "required": [
+          "results",
+          "receipt"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "url",
+                "snippet",
+                "engine",
+                "published"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "snippet": {
+                  "type": "string"
+                },
+                "engine": {
+                  "type": "string"
+                },
+                "published": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "required": [
+              "engine",
+              "cost_usd",
+              "time_ms"
+            ],
+            "properties": {
+              "engine": {
+                "type": "string"
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "time_ms": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeSearchResult response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.image-result": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/image-result.v1.json",
+        "title": "ExchangeImageResult",
+        "type": "object",
+        "required": [
+          "results",
+          "receipt"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "url",
+                "snippet",
+                "engine",
+                "published",
+                "license",
+                "author",
+                "source_page",
+                "attribution"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "snippet": {
+                  "type": "string"
+                },
+                "engine": {
+                  "type": "string"
+                },
+                "published": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "license": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "author": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_page": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "attribution": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "thumbnail": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "required": [
+              "engine",
+              "cost_usd",
+              "time_ms"
+            ],
+            "properties": {
+              "engine": {
+                "type": "string"
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "time_ms": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "Exchange API platform ExchangeImageResult response. Private account data is available only to its owner."
+      }
+    },
+    "exchange.key-created": {
+      "version": "1.0.0",
+      "owner": "exchange",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/exchange/key-created.v1.json",
+        "title": "ExchangeKeyCreated",
+        "description": "An Exchange key and its one-time secret. Never cache or log this response.",
+        "type": "object",
+        "required": [
+          "key",
+          "secret"
+        ],
+        "properties": {
+          "key": {
+            "$ref": "key.v1.json"
+          },
+          "secret": {
+            "type": "string",
+            "pattern": "^ovx_[A-Za-z0-9_-]{43}$"
+          }
+        },
+        "additionalProperties": false
+      }
     }
   }
 }

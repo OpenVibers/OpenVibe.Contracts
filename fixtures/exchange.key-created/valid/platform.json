@@ -1,0 +1,14 @@
+{
+  "key": {
+    "id": "xkey_example",
+    "name": "App",
+    "prefix": "ovx_exampl",
+    "monthly_cap_usd": 10,
+    "allowed_models": [
+      "m"
+    ],
+    "created_at": "2026-11-09T00:00:00Z",
+    "revoked_at": null
+  },
+  "secret": "ovx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}

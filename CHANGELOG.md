@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.371.0 — 2026-11-09
+
+- Exchange API platform and search: exchange.key@1, exchange.key-created@1, exchange.usage@1, exchange.deployments@1, exchange.search-result@1, exchange.image-result@1, and the Exchange manifest's routes
+
 ## 0.370.0 — 2026-11-09
 
 - design.component@1: one platform-neutral definition per shared interface (the public registry on openvibe.design)

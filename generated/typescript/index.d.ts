@@ -323325,3 +323325,97 @@ export interface DesignComponent {
         }
       ];
 }
+
+/** exchange.key@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeKey response. Private account data is available only to its owner.
+ */
+export interface ExchangeKey {
+  id: string;
+  name: string;
+  prefix: string;
+  monthly_cap_usd: number;
+  allowed_models: string[];
+  created_at: string;
+  revoked_at: string | null;
+}
+
+/** exchange.usage@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeUsage response. Private account data is available only to its owner.
+ */
+export interface ExchangeUsage {
+  rows: {
+    day: string;
+    key_id: string;
+    model: string;
+    status: string;
+    requests: number | string;
+    tokens_in: number | string;
+    tokens_out: number | string;
+    cost_usd: number;
+  }[];
+}
+
+/** exchange.deployments@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeDeployments response. Private account data is available only to its owner.
+ */
+export interface ExchangeDeployments {
+  endpoints: {}[];
+  status: {};
+}
+
+/** exchange.search-result@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeSearchResult response. Private account data is available only to its owner.
+ */
+export interface ExchangeSearchResult {
+  results: {
+    title: string;
+    url: string;
+    snippet: string;
+    engine: string;
+    published: string | null;
+    [k: string]: unknown | undefined;
+  }[];
+  receipt: {
+    engine: string;
+    cost_usd: number;
+    time_ms: number;
+  };
+}
+
+/** exchange.image-result@1.0.0 (owner: exchange) */
+/**
+ * Exchange API platform ExchangeImageResult response. Private account data is available only to its owner.
+ */
+export interface ExchangeImageResult {
+  results: {
+    title: string;
+    url: string;
+    snippet: string;
+    engine: string;
+    published: string | null;
+    license: string | null;
+    author: string | null;
+    source_page: string | null;
+    attribution: string | null;
+    thumbnail?: string | null;
+    [k: string]: unknown | undefined;
+  }[];
+  receipt: {
+    engine: string;
+    cost_usd: number;
+    time_ms: number;
+  };
+}
+
+/** exchange.key-created@1.0.0 (owner: exchange) */
+/**
+ * An Exchange key and its one-time secret. Never cache or log this response.
+ */
+export interface ExchangeKeyCreated {
+  key: ExchangeKey;
+  secret: string;
+}
