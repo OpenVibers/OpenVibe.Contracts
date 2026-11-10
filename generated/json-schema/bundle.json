@@ -95290,6 +95290,18 @@
         }
       }
     },
+    "quest.today": {
+      "version": "1.0.0",
+      "owner": "quest",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/quest/today.v1.json",
+        "title": "QuestToday",
+        "description": "quest.today@1: today's private quest and progress for the signed-in person. GET /api/v1/quests/today requires a person token.",
+        "$ref": "daily-progress.v1.json"
+      }
+    },
     "quest.step-type": {
       "version": "1.0.0",
       "owner": "quest",

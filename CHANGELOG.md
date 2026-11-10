@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.390.0 — 2026-11-09
+
+- Add `quest.today@1` for the signed-in person's private daily quest and progress response.
+
 ## 0.389.0 — 2026-11-10
 
 - Add `ai.advisor@1`: how a run may ask a stronger model for advice during the run. Off when the request omits it; at most 3 uses and at most 100 words of advice; the advisor may be named, the effort is concrete, and each use is on the run's receipt with its cost. Add `ai.advice@1`: one use on that receipt, naming the advice run, the model, the tokens and the cost. `ai.run-request@1` takes the optional `advisor` field and `ai.run@1`'s explain carries the uses.
