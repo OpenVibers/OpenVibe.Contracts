@@ -1,0 +1,6 @@
+{
+  "goal": "The file src/main.js exists and passes node --check.",
+  "check": { "kind": "command", "value": "node --check src/main.js" },
+  "budget": { "tokens": 12000, "turns": 12, "active_minutes": 30 },
+  "no_progress_limit": 3
+}

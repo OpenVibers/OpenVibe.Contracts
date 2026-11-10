@@ -175,6 +175,9 @@
         }
       }
     },
+    "goal": {
+      "$ref": "../agent/goal.v1.json"
+    },
     "actor_ref": {
       "type": [
         "object",

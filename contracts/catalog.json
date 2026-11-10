@@ -11143,6 +11143,15 @@
       "status": "active"
     },
     {
+      "id": "agent.goal",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "agent/goal.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "agent.stage",
       "version": "1.0.0",
       "owner": "actor",

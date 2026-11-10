@@ -1,0 +1,4 @@
+{
+  "goal": "The file exists.",
+  "check": { "value": "test -f src/main.js" }
+}

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.397.0 — 2026-11-10
+
+- Add `agent.goal@1`: a task's outcome in words, a typed check (`command`, `url` or `rubric`), optional resource budgets (tokens, turns, active minutes) and a no-progress limit, plus the worker's bounded completion proposal and evidence and the independent verifier's verdict (accepted or rejected, with a reason and the check's own output).
+- `codes.task-start-request@1` takes the optional `goal`; `codes.task@2` carries it back with the worker's proposal, evidence and the verifier's verdict.
+
 ## 0.396.0 — 2026-11-10
 
 - Add optional ordered attempts to web and image search receipts, with provider/engine, status, safe reason codes, latency and cost. Existing receipts remain valid.

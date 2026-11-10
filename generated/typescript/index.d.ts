@@ -278793,6 +278793,7 @@ export interface CodesTaskStartRequest {
   prompt: string;
   agent?: string;
   permission?: "review" | "edit" | "full";
+  goal?: AgentGoal;
   push?: boolean;
   pull_request?: boolean;
   idempotency_key?: string;
@@ -329765,6 +329766,31 @@ export interface AgentAttention {
   state: "open" | "answered" | "dismissed";
   created_at: string;
   answer?: string;
+}
+
+/** agent.goal@1.0.0 (owner: codes) */
+/**
+ * A task outcome, its verifiable check, and bounded resources. A worker proposes completion; an independent verifier records the verdict.
+ */
+export interface AgentGoal {
+  goal: string;
+  check: {
+    kind: "command" | "url" | "rubric";
+    value: string;
+  };
+  budget?: {
+    tokens?: number;
+    turns?: number;
+    active_minutes?: number;
+  };
+  no_progress_limit?: number;
+  proposal?: string;
+  evidence?: string;
+  verdict?: {
+    status: "accepted" | "rejected" | "failed";
+    reason: string;
+    check_output?: string;
+  };
 }
 
 /** agent.stage@1.0.0 (owner: actor) */

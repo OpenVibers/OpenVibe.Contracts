@@ -38,6 +38,9 @@
         "full"
       ]
     },
+    "goal": {
+      "$ref": "../agent/goal.v1.json"
+    },
     "push": {
       "type": "boolean"
     },

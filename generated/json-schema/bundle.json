@@ -94092,6 +94092,9 @@
               "full"
             ]
           },
+          "goal": {
+            "$ref": "../agent/goal.v1.json"
+          },
           "push": {
             "type": "boolean"
           },
@@ -94528,6 +94531,9 @@
                 "maxLength": 1000
               }
             }
+          },
+          "goal": {
+            "$ref": "../agent/goal.v1.json"
           },
           "actor_ref": {
             "type": [
@@ -123171,6 +123177,110 @@
           "answer": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      }
+    },
+    "agent.goal": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/goal.v1.json",
+        "title": "AgentGoal",
+        "description": "A task outcome, its verifiable check, and bounded resources. A worker proposes completion; an independent verifier records the verdict.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "goal",
+          "check"
+        ],
+        "properties": {
+          "goal": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "check": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "command",
+                  "url",
+                  "rubric"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            }
+          },
+          "budget": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tokens": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "turns": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "active_minutes": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "minProperties": 1
+          },
+          "no_progress_limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "proposal": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 262144
+          },
+          "verdict": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "reason"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "accepted",
+                  "rejected",
+                  "failed"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "check_output": {
+                "type": "string",
+                "maxLength": 262144
+              }
+            }
           }
         }
       }
