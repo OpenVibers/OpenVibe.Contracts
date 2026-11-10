@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.393.0 — 2026-11-10
+
+- `network.operator-alerts-request@1` learns what a browser-check alert knows. Optional `details` says what failed (the route, the check, the axe rule and its impact, up to five target selectors, the rule's help text and help page, the page's own URL, a console error's text, a viewport width, a status, the overflow offenders); optional `release`, `release_url`, `checked_at` and `failing_since` say which deployed commit the check saw, where its commit page is, when the check ran and since when the alert has been failing. An alert without them is unchanged, so old documents stay valid.
+- The strings are text for a person (a notification escapes them, never renders them as markup); the URLs are https and point only at the network's own sites, git.openvibe.codes, github.com or dequeuniversity.com. Network turns the details into the notification's sentence, facts, actions and next steps.
+- Valid and invalid fixtures cover the browser-check alert and a detail without a check.
+
 ## 0.392.0 — 2026-11-10
 
 - Add `billing.money-reason@1` and `lib/money-reasons.js`: one list of the plain words for a movement of OpenCoins, Vibes or Balance. Each kind declares the key it matches (`quest:publish-a-video`, `Media request: <title>`, Billing's type:metadata), its site, what its subject is (a quest, a stream, a tip, a creator, an app, a project, a purchase), the phrase that names it ("for the quest {name}"), and how the subject's own name and address are found. `describe()` answers `{ key, text, subject: { name, url } | null }`, so a page writes "+15 OpenCoins" before the text and links it; an undeclared key reads "for something on <site>" with `known: false` and never shows the key. Fixtures cover a quest, a tip, a reason with no page and an undeclared key.

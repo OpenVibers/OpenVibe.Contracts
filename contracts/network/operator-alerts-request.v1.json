@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/network/operator-alerts-request.v1.json",
   "title": "NetworkOperatorAlertsRequest",
-  "description": "network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations.",
+  "description": "network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations. A browser-check alert may carry what its result file knows (details, the release and its commit link, when the check ran, since when it has been failing) so the notification can explain the problem in words and link to the page, the commit and the rule's help page. Every string is text, never markup; every URL is https.",
   "type": "object",
   "required": ["source", "alerts"],
   "additionalProperties": false,
@@ -23,7 +23,35 @@
           "summary": { "type": "string", "minLength": 1, "maxLength": 300 },
           "description": { "type": "string", "maxLength": 1000 },
           "service": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
-          "started_at": { "type": "string", "format": "date-time" }
+          "started_at": { "type": "string", "format": "date-time" },
+          "details": {
+            "type": "array",
+            "maxItems": 5,
+            "description": "What failed, for a browser-check alert (from the check's result file), most useful first. Plain text: a notification shows it escaped, never as markup.",
+            "items": {
+              "type": "object",
+              "required": ["check"],
+              "additionalProperties": false,
+              "properties": {
+                "route": { "type": "string", "maxLength": 200, "description": "The page's path on the site, e.g. /pricing." },
+                "check": { "type": "string", "maxLength": 40, "description": "status, errors, overflow, scripts, jsonld or axe." },
+                "rule": { "type": "string", "maxLength": 100, "description": "The axe rule id when check is axe." },
+                "impact": { "enum": ["minor", "moderate", "serious", "critical"] },
+                "targets": { "type": "array", "maxItems": 5, "items": { "type": "string", "maxLength": 160 }, "description": "The elements the rule names, as axe's target selectors." },
+                "help": { "type": "string", "maxLength": 300, "description": "The rule's own help text (axe's help), for a rule the notification does not know." },
+                "help_url": { "type": "string", "format": "uri", "maxLength": 500, "description": "The rule's help page (axe's helpUrl), when the check kept it." },
+                "page_url": { "type": "string", "format": "uri", "maxLength": 500, "description": "The page that failed, on the site's own https origin." },
+                "message": { "type": "string", "maxLength": 300, "description": "A console error's text, or a JSON-LD entity's type." },
+                "width": { "type": "integer", "minimum": 0, "maximum": 10000, "description": "The viewport width the failure was seen at, when it is width-specific." },
+                "status": { "type": "integer", "minimum": 100, "maximum": 599 },
+                "offenders": { "type": "array", "maxItems": 5, "items": { "type": "string", "maxLength": 160 }, "description": "The elements that overflow the viewport." }
+              }
+            }
+          },
+          "release": { "type": "string", "pattern": "^[0-9a-f]{7,40}$", "description": "The deployed commit the browser check saw (the full sha when the host can resolve it)." },
+          "release_url": { "type": "string", "format": "uri", "maxLength": 500, "description": "The release commit's page: git.openvibe.codes when the repository is mirrored there, else github.com." },
+          "checked_at": { "type": "string", "format": "date-time", "description": "When the browser check that found this ran." },
+          "failing_since": { "type": "string", "format": "date-time", "description": "When this alert started firing; the same instant as started_at, named for the notification's Failing since fact." }
         }
       }
     }

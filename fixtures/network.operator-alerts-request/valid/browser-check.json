@@ -1,0 +1,45 @@
+{
+  "source": "prometheus",
+  "sent_at": "2026-11-10T09:20:00Z",
+  "alerts": [
+    {
+      "fingerprint": "4c1f8a2d9e7b6c50",
+      "name": "OpenVibeBrowserCheckFailed",
+      "severity": "critical",
+      "summary": "domains: the browser check of release 74bdff4 failed (1 failing check(s)); run: sudo ovhost browser-watch --sites domains --force",
+      "description": "The automatic check of openvibe.domains found a problem after release 74bdff4.",
+      "service": "domains",
+      "started_at": "2026-11-10T09:12:30Z",
+      "failing_since": "2026-11-10T09:12:30Z",
+      "release": "74bdff4c0a1e9d2b7f3c5a8e6b4d2f1a0c9e8d7b",
+      "release_url": "https://git.openvibe.codes/OpenVibers/OpenVibe.Domains/commit/74bdff4c0a1e9d2b7f3c5a8e6b4d2f1a0c9e8d7b",
+      "checked_at": "2026-11-10T09:12:00Z",
+      "details": [
+        {
+          "route": "/",
+          "check": "axe",
+          "rule": "summary-name",
+          "impact": "serious",
+          "targets": ["#dev-fold > summary", "#faq-fold > summary"],
+          "help": "Ensures the summary element has a non-empty accessible name",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.13/summary-name?application=axeAPI",
+          "page_url": "https://openvibe.domains/"
+        }
+      ]
+    },
+    {
+      "fingerprint": "9a8b7c6d5e4f3a2b1c0d",
+      "name": "OpenVibeBrowserCheckFailed",
+      "severity": "warning",
+      "summary": "live: the browser check of release 8caa540 failed (2 failing check(s))",
+      "service": "live",
+      "started_at": "2026-09-26T14:05:00Z",
+      "release": "8caa540",
+      "checked_at": "2026-09-26T14:04:00Z",
+      "details": [
+        { "route": "/", "check": "errors", "message": "WebSocket closed", "width": 390, "page_url": "https://openvibe.live/" },
+        { "route": "/", "check": "overflow", "width": 390, "offenders": [".wide"], "page_url": "https://openvibe.live/" }
+      ]
+    }
+  ]
+}
