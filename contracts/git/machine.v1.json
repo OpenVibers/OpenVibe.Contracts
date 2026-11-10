@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/git/machine.v1.json",
+  "title": "GitMachine",
+  "description": "A computer published to OpenVibe.Git through Link, read-only. Link connects out to Git, sends its name and the repositories under the root the person chose in Link, and keeps watching: the page lists the machine and browses its tree, files and log through Link while it is online. The request never reaches the machine; Git only asks on a poll the machine opened. Nothing here is a write path.",
+  "type": "object",
+  "required": ["id", "name", "online", "last_seen_at", "repos"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^mch_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The machine's own id (mch_<ULID>), minted by Git when the person connects it."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "The computer's name, as Link knows it."
+    },
+    "os": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "linux, darwin or windows, for the page's small label."
+    },
+    "online": {
+      "type": "boolean",
+      "description": "True when Link has checked in within the last thirty seconds."
+    },
+    "last_seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "offline_since": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the machine was last seen before going offline; null while it is online."
+    },
+    "repos": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": ["name", "branch", "head"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]*$",
+            "maxLength": 100,
+            "description": "The folder's name, lower-case, the same rule as a Git repository name."
+          },
+          "branch": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "The branch checked out in that folder."
+          },
+          "head": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}(?:[0-9a-f]{24})?$",
+            "description": "The commit's full SHA (SHA-1, or SHA-256 when the repository uses it)."
+          },
+          "head_subject": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The commit's own date."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.388.0 — 2026-11-10
+
+- Add `git.clone-request@1`: one "Clone to my computer" request from a repository page. Git mints it for the signed-in person, the person's Link reads it over an outbound HTTPS relay, asks for approval on the machine, clones into a folder inside the root the person chose in Link, and reports progress back; the page polls the same document. The request lasts two minutes, only a repository the person may read can be requested, and `clone_url` (with a short-lived read token) is present only in the Link's answer, never in the page's copy.
+- Add `git.machine@1`: a computer published to OpenVibe.Git through Link, read-only. It lists the repositories under the root the person chose in Link, each with its branch, head commit and date, and whether the machine is online ("offline since …" when it is not). Browsing is asked of the machine over the poll it opened; nothing in this contract is a write path.
+- Valid and invalid fixtures cover a pending, cloning and done request, a bad id, a bad state and a traversing repository name, and an online and offline machine, a machine without repositories and a repository name that escapes its root.
+
 ## 0.387.0 — 2026-11-09
 
 - Add `ai.creation@1` and `ai.creation-list@1`: the catalogue of everything AI can make on OpenVibe, one entry per creation. An entry names the product it lands in, a plain one-line name, what the person gives it and what comes back, the workflow or registered task behind it, who may use it (guest, signed-in, the 18+ floor), whether it can cost coins, and the URL where a person starts it. `GET /api/v1/creations` on OpenVibe.AI answers the list, built from the registered workflows and tasks so only what is live is listed; the contract is public and its fixtures show a workflow creation and a task creation.
