@@ -361,7 +361,7 @@
         "null"
       ],
       "additionalProperties": false,
-      "description": "What the task's attempts added up to: done, unfinished (with what is left), or stopped. Null while the task still runs.",
+      "description": "What the task's attempts added up to: done, unfinished (with what is left), or stopped; a goal task ends ready, waiting, blocked, failed, dropped or stopped_by_budget. Null while the task still runs.",
       "required": [
         "state"
       ],
@@ -375,8 +375,15 @@
             "done",
             "unfinished",
             "stopped",
+            "ready",
+            "waiting",
+            "blocked",
+            "failed",
+            "dropped",
+            "stopped_by_budget",
             null
-          ]
+          ],
+          "description": "What the task ended as. A task without a goal keeps done, unfinished or stopped; a goal task reports its honest end state: ready only with an accepted independent verdict, waiting on a person, blocked at its no-progress limit, failed, dropped by the person, or stopped by budget."
         },
         "note": {
           "type": [
