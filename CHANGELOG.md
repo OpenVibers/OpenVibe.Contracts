@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.394.0 — 2026-11-10
+
+- Add `chat.room-insight-result@1` (`contracts/chat/room-insight-result.v1.json`): the public answer of `GET /api/v1/rooms/:id/insight` on OpenVibe.Chat. One shape for every room: `overview` (the text written for someone arriving now, its topics with message counts, how many people and messages the window held, its from/to times and when it was written), `timeline` (the room's notable moments, newest first, each with `at`, `kind`, `title`, `text` and the `message_id` it came from), and `state` (`ready` / `quiet` / `off`). Quiet is explicit: an old or empty summary carries no text rather than invented news. The overview reads only people who allowed AI use of their messages (`network.consent@1`, purpose `ai.train` on kind `chat`).
+
 ## 0.393.0 — 2026-11-10
 
 - `billing.money-reason@1`: declare `donation:received`, the row a creator sees for a tip that arrived ("for a tip from @alice"). The kind list is one list; the sender's `donation` still reads "for a tip to @bob".

@@ -1,0 +1,31 @@
+{
+  "overview": {
+    "text": "People are planning the Friday stream and comparing two capture cards. Someone asked for the clip of the ending, and the room voted for a Saturday replay.",
+    "topics": [
+      { "label": "capture card", "count": 7 },
+      { "label": "friday stream", "count": 4 }
+    ],
+    "people": 9,
+    "messages": 42,
+    "from": "2026-11-10 08:10:00",
+    "to": "2026-11-10 09:45:00",
+    "updated_at": "2026-11-10 09:45:03"
+  },
+  "timeline": [
+    {
+      "at": "2026-11-10 09:40:12",
+      "kind": "moment",
+      "title": "The Saturday replay",
+      "text": "The room agreed on a replay at the weekend.",
+      "message_id": 90214
+    },
+    {
+      "at": "2026-11-10 09:12:44",
+      "kind": "event",
+      "title": "A donation came in",
+      "text": "goosely gave 500 OpenCoins for the capture card fund.",
+      "message_id": null
+    }
+  ],
+  "state": "ready"
+}
