@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.396.0 — 2026-11-10
+
+- Add optional ordered attempts to web and image search receipts, with provider/engine, status, safe reason codes, latency and cost. Existing receipts remain valid.
+
 ## 0.395.0 — 2026-11-10
 
 - Add two planned products to the catalog: `manifests/products/openvibe.compare.json` (OpenVibe.Compare: compare anything side by side with its sources and dates, AI models first) and `manifests/products/openvibe.directory.json` (OpenVibe.Directory). Both are `noRepo` with launch notes; the addresses are parked. Compare's "meanwhile" link is OpenVibe.Exchange, where the models and their prices live today.

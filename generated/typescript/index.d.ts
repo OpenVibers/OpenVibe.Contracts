@@ -328088,6 +328088,29 @@ export interface ExchangeSearchResult {
     engine: string;
     cost_usd: number;
     time_ms: number;
+    /**
+     * Ordered routing attempts with safe reason codes; no provider error bodies or credentials.
+     *
+     * @maxItems 64
+     */
+    attempts?: {
+      provider: string;
+      engine: string;
+      model?: string | null;
+      status: "ok" | "error" | "skipped";
+      reason?:
+        | "disabled"
+        | "unsupported"
+        | "no_credentials"
+        | "circuit_open"
+        | "daily_cap"
+        | "budget"
+        | "timeout"
+        | "upstream_error"
+        | "invalid_response";
+      time_ms: number;
+      cost_usd: number;
+    }[];
   };
 }
 
@@ -328113,6 +328136,29 @@ export interface ExchangeImageResult {
     engine: string;
     cost_usd: number;
     time_ms: number;
+    /**
+     * Ordered routing attempts with safe reason codes; no provider error bodies or credentials.
+     *
+     * @maxItems 64
+     */
+    attempts?: {
+      provider: string;
+      engine: string;
+      model?: string | null;
+      status: "ok" | "error" | "skipped";
+      reason?:
+        | "disabled"
+        | "unsupported"
+        | "no_credentials"
+        | "circuit_open"
+        | "daily_cap"
+        | "budget"
+        | "timeout"
+        | "upstream_error"
+        | "invalid_response";
+      time_ms: number;
+      cost_usd: number;
+    }[];
   };
 }
 
