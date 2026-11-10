@@ -326499,6 +326499,108 @@ export interface AiTaskV1 {
   workflow?: string;
 }
 
+/** ai.creation@1.0.0 (owner: ai) */
+/**
+ * ai.creation@1: one thing AI can make on OpenVibe, as the catalogue lists it. GET /api/v1/creations (public, cached, CORS open) answers every creation that is live now, built from OpenVibe.AI's registered workflows and tasks: a creation appears only while the workflow or task behind it is active, so a paused or retired workflow leaves the list. `gives` and `returns` are the person-facing sentences, not the workflow's JSON schema. `workflow` names the AI workflow that does the work; `task` names a registered AI task when the creation is a task rather than a workflow (the task's own workflow still does the work). At least one of them is set. `access` says who may start it: a guest, a signed-in person, and whether the 18+ floor applies. `costs_coins` says a run may charge the person's OpenVibe balance after their free allowance. `start_url` is where a person starts it.
+ */
+export type AiCreation = (
+  | {
+      workflow: string;
+    }
+  | {
+      task: string;
+    }
+) & {
+  /**
+   * Stable id, never reused: the catalogue's key for this creation.
+   */
+  id: string;
+  /**
+   * The OpenVibe product the result lands in.
+   */
+  product:
+    | "ai"
+    | "blog"
+    | "codes"
+    | "community"
+    | "design"
+    | "food"
+    | "games"
+    | "live"
+    | "media"
+    | "meme"
+    | "news"
+    | "pics"
+    | "quest"
+    | "rent"
+    | "reviews"
+    | "space"
+    | "tools"
+    | "trade"
+    | "wiki";
+  /**
+   * One plain line a person reads, in the imperative: "Write a blog post".
+   */
+  name: string;
+  /**
+   * What the person gives it, in plain words (a topic, a picture, a listing, source links).
+   */
+  gives: string;
+  /**
+   * What comes back, in plain words (a draft, an article, a set of files, a check).
+   */
+  returns: string;
+  /**
+   * The OpenVibe.AI workflow key that does the work (for example blog.draft_post), or null when the creation is only a registered task.
+   */
+  workflow: string | null;
+  /**
+   * A registered AI task key (for example design.icon), or null when the creation is the workflow itself.
+   */
+  task: string | null;
+  access: {
+    /**
+     * A person who is not signed in may start it.
+     */
+    guest: boolean;
+    /**
+     * A signed-in person may start it.
+     */
+    signed_in: boolean;
+    /**
+     * The 18+ confirmation is required first.
+     */
+    floor_18: boolean;
+  };
+  /**
+   * A run may charge the person's OpenVibe balance after their free allowance; false only when it is free to them.
+   */
+  costs_coins: boolean;
+  /**
+   * Where a person starts it.
+   */
+  start_url: string;
+};
+
+/** ai.creation-list@1.0.0 (owner: ai) */
+/**
+ * ai.creation-list@1: the answer of GET /api/v1/creations on OpenVibe.AI — every thing AI can make that is live now, built from the registered workflows and tasks rather than a hand-kept list. The endpoint is public, cached for five minutes and answers any origin (Access-Control-Allow-Origin: *). The same catalogue is rendered as Markdown at GET /api/v1/creations.md and listed in GET /llms.txt.
+ */
+export interface AiCreationList {
+  /**
+   * Live creations, ordered by product and then by name.
+   */
+  creations: AiCreation[];
+  /**
+   * Number of creations in this response.
+   */
+  count: number;
+  /**
+   * When this answer was built from the registry.
+   */
+  generated_at: string;
+}
+
 /** git.change@1.0.0 (owner: git) */
 /**
  * Git G2 change metadata. Community thread is hidden; Git authorizes repository access. PostgreSQL bigint numbers may be decimal strings.

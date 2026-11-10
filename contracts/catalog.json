@@ -10955,6 +10955,26 @@
       "adr": "ADR-001"
     },
     {
+      "id": "ai.creation",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/creation.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
+      "id": "ai.creation-list",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/creation-list.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-001"
+    },
+    {
       "id": "git.change",
       "version": "1.0.0",
       "owner": "git",

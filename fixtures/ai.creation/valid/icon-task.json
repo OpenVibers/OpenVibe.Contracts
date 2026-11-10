@@ -1,0 +1,12 @@
+{
+  "id": "icon",
+  "product": "design",
+  "name": "Draw an icon",
+  "gives": "A name for the icon and what it stands for.",
+  "returns": "Up to four line drawings in OpenVibe's hand, each with its solid twin, checked before you see them.",
+  "workflow": "ai.chat",
+  "task": "design.icon",
+  "access": { "guest": true, "signed_in": true, "floor_18": false },
+  "costs_coins": true,
+  "start_url": "https://openvibe.design/icons"
+}
