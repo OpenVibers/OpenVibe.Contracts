@@ -23,7 +23,7 @@
       "description": "Stable id, never reused: the catalogue's key for this creation."
     },
     "product": {
-      "enum": ["ai", "blog", "codes", "community", "design", "food", "games", "live", "media", "news", "pics", "quest", "rent", "reviews", "space", "tools", "trade", "wiki"],
+      "enum": ["ai", "blog", "codes", "community", "design", "food", "games", "live", "media", "meme", "news", "pics", "quest", "rent", "reviews", "space", "tools", "trade", "wiki"],
       "description": "The OpenVibe product the result lands in."
     },
     "name": {
