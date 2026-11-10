@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/creation-list.v1.json",
+  "title": "AiCreationList",
+  "description": "ai.creation-list@1: the answer of GET /api/v1/creations on OpenVibe.AI — every thing AI can make that is live now, built from the registered workflows and tasks rather than a hand-kept list. The endpoint is public, cached for five minutes and answers any origin (Access-Control-Allow-Origin: *). The same catalogue is rendered as Markdown at GET /api/v1/creations.md and listed in GET /llms.txt.",
+  "type": "object",
+  "required": ["creations", "count", "generated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "creations": {
+      "type": "array",
+      "items": { "$ref": "creation.v1.json" },
+      "description": "Live creations, ordered by product and then by name."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of creations in this response."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this answer was built from the registry."
+    }
+  }
+}

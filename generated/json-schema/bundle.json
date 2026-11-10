@@ -119728,6 +119728,187 @@
         ]
       }
     },
+    "ai.creation": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/creation.v1.json",
+        "title": "AiCreation",
+        "description": "ai.creation@1: one thing AI can make on OpenVibe, as the catalogue lists it. GET /api/v1/creations (public, cached, CORS open) answers every creation that is live now, built from OpenVibe.AI's registered workflows and tasks: a creation appears only while the workflow or task behind it is active, so a paused or retired workflow leaves the list. `gives` and `returns` are the person-facing sentences, not the workflow's JSON schema. `workflow` names the AI workflow that does the work; `task` names a registered AI task when the creation is a task rather than a workflow (the task's own workflow still does the work). At least one of them is set. `access` says who may start it: a guest, a signed-in person, and whether the 18+ floor applies. `costs_coins` says a run may charge the person's OpenVibe balance after their free allowance. `start_url` is where a person starts it.",
+        "type": "object",
+        "required": [
+          "id",
+          "product",
+          "name",
+          "gives",
+          "returns",
+          "workflow",
+          "task",
+          "access",
+          "costs_coins",
+          "start_url"
+        ],
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "workflow"
+            ],
+            "properties": {
+              "workflow": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "required": [
+              "task"
+            ],
+            "properties": {
+              "task": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$",
+            "description": "Stable id, never reused: the catalogue's key for this creation."
+          },
+          "product": {
+            "enum": [
+              "ai",
+              "blog",
+              "codes",
+              "community",
+              "design",
+              "food",
+              "games",
+              "live",
+              "media",
+              "news",
+              "pics",
+              "quest",
+              "rent",
+              "reviews",
+              "space",
+              "tools",
+              "trade",
+              "wiki"
+            ],
+            "description": "The OpenVibe product the result lands in."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 80,
+            "description": "One plain line a person reads, in the imperative: \"Write a blog post\"."
+          },
+          "gives": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 300,
+            "description": "What the person gives it, in plain words (a topic, a picture, a listing, source links)."
+          },
+          "returns": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 300,
+            "description": "What comes back, in plain words (a draft, an article, a set of files, a check)."
+          },
+          "workflow": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-z][a-z0-9_-]*\\.[a-z0-9_.-]{1,100}$",
+            "description": "The OpenVibe.AI workflow key that does the work (for example blog.draft_post), or null when the creation is only a registered task."
+          },
+          "task": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-z][a-z0-9_-]*\\.[a-z0-9_.-]{1,100}$",
+            "description": "A registered AI task key (for example design.icon), or null when the creation is the workflow itself."
+          },
+          "access": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "guest",
+              "signed_in",
+              "floor_18"
+            ],
+            "properties": {
+              "guest": {
+                "type": "boolean",
+                "description": "A person who is not signed in may start it."
+              },
+              "signed_in": {
+                "type": "boolean",
+                "description": "A signed-in person may start it."
+              },
+              "floor_18": {
+                "type": "boolean",
+                "description": "The 18+ confirmation is required first."
+              }
+            }
+          },
+          "costs_coins": {
+            "type": "boolean",
+            "description": "A run may charge the person's OpenVibe balance after their free allowance; false only when it is free to them."
+          },
+          "start_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "description": "Where a person starts it."
+          }
+        }
+      }
+    },
+    "ai.creation-list": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/creation-list.v1.json",
+        "title": "AiCreationList",
+        "description": "ai.creation-list@1: the answer of GET /api/v1/creations on OpenVibe.AI — every thing AI can make that is live now, built from the registered workflows and tasks rather than a hand-kept list. The endpoint is public, cached for five minutes and answers any origin (Access-Control-Allow-Origin: *). The same catalogue is rendered as Markdown at GET /api/v1/creations.md and listed in GET /llms.txt.",
+        "type": "object",
+        "required": [
+          "creations",
+          "count",
+          "generated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "creations": {
+            "type": "array",
+            "items": {
+              "$ref": "creation.v1.json"
+            },
+            "description": "Live creations, ordered by product and then by name."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of creations in this response."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this answer was built from the registry."
+          }
+        }
+      }
+    },
     "git.change": {
       "version": "1.0.0",
       "owner": "git",

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.385.0 — 2026-11-09
+
+- Add `ai.creation@1` and `ai.creation-list@1`: the catalogue of everything AI can make on OpenVibe, one entry per creation. An entry names the product it lands in, a plain one-line name, what the person gives it and what comes back, the workflow or registered task behind it, who may use it (guest, signed-in, the 18+ floor), whether it can cost coins, and the URL where a person starts it. `GET /api/v1/creations` on OpenVibe.AI answers the list, built from the registered workflows and tasks so only what is live is listed; the contract is public and its fixtures show a workflow creation and a task creation.
+
 ## 0.384.0 — 2026-11-09
 
 - Agent work fabric: trigger, decision, immutable ticket mandate and budget, six report states, attention, and ordered stage vocabulary. Portable AI effort, concrete task-default effort, and optional effort/ladder receipt metadata.

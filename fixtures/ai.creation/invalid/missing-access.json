@@ -1,0 +1,11 @@
+{
+  "id": "blog-post",
+  "product": "blog",
+  "name": "Write a blog post",
+  "gives": "A topic.",
+  "returns": "A draft.",
+  "workflow": "blog.draft_post",
+  "task": null,
+  "costs_coins": true,
+  "start_url": "https://openvibe.blog/write"
+}

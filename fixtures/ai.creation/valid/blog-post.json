@@ -1,0 +1,12 @@
+{
+  "id": "blog-post",
+  "product": "blog",
+  "name": "Write a blog post",
+  "gives": "A topic, and optionally a brief, a tone and who it is for.",
+  "returns": "A Markdown draft with a title, a standfirst and cited sources, saved as a draft you can edit.",
+  "workflow": "blog.draft_post",
+  "task": null,
+  "access": { "guest": false, "signed_in": true, "floor_18": false },
+  "costs_coins": true,
+  "start_url": "https://openvibe.blog/write"
+}
