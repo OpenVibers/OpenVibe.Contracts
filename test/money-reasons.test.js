@@ -20,6 +20,9 @@ ok(moneyReasons.describe('Refund: A film').text === 'for a refund of A film', 'a
 ok(moneyReasons.describe('account_merge').text === 'for merging your accounts', 'a reason with no page has its own words');
 ok(moneyReasons.describe('account_merge').subject === null, 'and no subject');
 
+const received = moneyReasons.describe('donation:received', { subject: { name: '@bob' } });
+ok(received.text === 'for a tip from @bob', 'a received tip names the sender');
+
 const tip = moneyReasons.describe('donation', { subject: { name: '@alice', url: 'https://openvibe.live/@alice' } });
 ok(tip.text === 'for a tip to @alice' && tip.subject.url === 'https://openvibe.live/@alice', 'a provided subject names a tip');
 
