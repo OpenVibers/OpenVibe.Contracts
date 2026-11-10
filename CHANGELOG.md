@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.393.0 — 2026-11-10
+
+- Add `chat.room-insight-result@1` (`contracts/chat/room-insight-result.v1.json`): the public answer of `GET /api/v1/rooms/:id/insight` on OpenVibe.Chat. One shape for every room: `overview` (the text written for someone arriving now, its topics with message counts, how many people and messages the window held, its from/to times and when it was written), `timeline` (the room's notable moments, newest first, each with `at`, `kind`, `title`, `text` and the `message_id` it came from), and `state` (`ready` / `quiet` / `off`). Quiet is explicit: an old or empty summary carries no text rather than invented news. The overview reads only people who allowed AI use of their messages (`network.consent@1`, purpose `ai.train` on kind `chat`).
+
 ## 0.392.0 — 2026-11-10
 
 - Add `billing.money-reason@1` and `lib/money-reasons.js`: one list of the plain words for a movement of OpenCoins, Vibes or Balance. Each kind declares the key it matches (`quest:publish-a-video`, `Media request: <title>`, Billing's type:metadata), its site, what its subject is (a quest, a stream, a tip, a creator, an app, a project, a purchase), the phrase that names it ("for the quest {name}"), and how the subject's own name and address are found. `describe()` answers `{ key, text, subject: { name, url } | null }`, so a page writes "+15 OpenCoins" before the text and links it; an undeclared key reads "for something on <site>" with `known: false` and never shows the key. Fixtures cover a quest, a tip, a reason with no page and an undeclared key.

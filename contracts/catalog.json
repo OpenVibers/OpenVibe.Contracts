@@ -5692,6 +5692,15 @@
       "status": "active"
     },
     {
+      "id": "chat.room-insight-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/room-insight-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.first-chat-result",
       "version": "1.0.0",
       "owner": "chat",

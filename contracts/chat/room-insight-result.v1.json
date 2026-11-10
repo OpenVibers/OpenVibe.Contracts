@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/room-insight-result.v1.json",
+  "title": "ChatRoomInsightResult",
+  "description": "chat.room-insight-result@1: the answer of GET /api/v1/rooms/:id/insight on OpenVibe.Chat, public (no account, as the room itself is readable). One shape for every room: Global (id `global`) first, then a server's channels and the rooms people make. The overview is the summary OpenVibe.Chat's chat-AI job keeps (the same schedule, window and budget rules as Live's, only when there were new messages); it reads only the messages of people who allowed AI use of them (network.consent@1, purpose ai.train on kind chat), so an overview never quotes someone who did not. state is `ready` when the overview is fresh, `quiet` when there is nothing new to say (text and topics empty, the timeline keeps history), and `off` when the room's owner has not turned the insight on (private rooms; never a DM). A room the rollout does not cover answers 404. Timestamps are Chat's UTC `YYYY-MM-DD HH:MM:SS` (ov_now()), or null.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["overview", "timeline", "state"],
+  "properties": {
+    "overview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "topics", "people", "messages", "from", "to", "updated_at"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The overview written for someone arriving now, in plain prose; empty when state is quiet or off."
+        },
+        "topics": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "count"],
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "How many messages of the window mentioned the topic."
+              }
+            }
+          },
+          "description": "The words the window kept coming back to, most mentioned first. Empty when state is quiet or off."
+        },
+        "people": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many different people wrote in the window the overview reads."
+        },
+        "messages": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many messages the window held (the ones the summariser was allowed to read)."
+        },
+        "from": {
+          "type": ["string", "null"],
+          "description": "The window's first message time."
+        },
+        "to": {
+          "type": ["string", "null"],
+          "description": "The window's last time, which is when the job last looked."
+        },
+        "updated_at": {
+          "type": ["string", "null"],
+          "description": "When the overview row was last written."
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["at", "kind", "title", "text", "message_id"],
+        "properties": {
+          "at": {
+            "type": "string",
+            "description": "When it happened, Chat's UTC `YYYY-MM-DD HH:MM:SS`."
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "What kind of moment: `moment` for a notable thing the summariser recorded, `event` for a non-chat activity (a donation, a clip), `message` for a line it picked out."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "message_id": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "description": "The message it came from, when it is one message; null for a summary of several."
+          }
+        }
+      },
+      "description": "The room's notable moments, newest first. History survives a quiet window."
+    },
+    "state": {
+      "enum": ["ready", "quiet", "off"],
+      "description": "ready: the overview above is fresh. quiet: nothing new to say; said as quiet, never invented. off: the room's owner has not turned insight on."
+    }
+  }
+}

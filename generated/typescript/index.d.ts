@@ -209582,6 +209582,1581 @@ export type ChatTimelineResult =
       error: string;
     };
 
+/** chat.room-insight-result@1.0.0 (owner: chat) */
+/**
+ * chat.room-insight-result@1: the answer of GET /api/v1/rooms/:id/insight on OpenVibe.Chat, public (no account, as the room itself is readable). One shape for every room: Global (id `global`) first, then a server's channels and the rooms people make. The overview is the summary OpenVibe.Chat's chat-AI job keeps (the same schedule, window and budget rules as Live's, only when there were new messages); it reads only the messages of people who allowed AI use of them (network.consent@1, purpose ai.train on kind chat), so an overview never quotes someone who did not. state is `ready` when the overview is fresh, `quiet` when there is nothing new to say (text and topics empty, the timeline keeps history), and `off` when the room's owner has not turned the insight on (private rooms; never a DM). A room the rollout does not cover answers 404. Timestamps are Chat's UTC `YYYY-MM-DD HH:MM:SS` (ov_now()), or null.
+ */
+export interface ChatRoomInsightResult {
+  overview: {
+    /**
+     * The overview written for someone arriving now, in plain prose; empty when state is quiet or off.
+     */
+    text: string;
+    /**
+     * The words the window kept coming back to, most mentioned first. Empty when state is quiet or off.
+     *
+     * @maxItems 20
+     */
+    topics:
+      | []
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ];
+    /**
+     * How many different people wrote in the window the overview reads.
+     */
+    people: number;
+    /**
+     * How many messages the window held (the ones the summariser was allowed to read).
+     */
+    messages: number;
+    /**
+     * The window's first message time.
+     */
+    from: string | null;
+    /**
+     * The window's last time, which is when the job last looked.
+     */
+    to: string | null;
+    /**
+     * When the overview row was last written.
+     */
+    updated_at: string | null;
+  };
+  /**
+   * The room's notable moments, newest first. History survives a quiet window.
+   *
+   * @maxItems 60
+   */
+  timeline: {
+    /**
+     * When it happened, Chat's UTC `YYYY-MM-DD HH:MM:SS`.
+     */
+    at: string;
+    /**
+     * What kind of moment: `moment` for a notable thing the summariser recorded, `event` for a non-chat activity (a donation, a clip), `message` for a line it picked out.
+     */
+    kind: string;
+    title: string;
+    text: string;
+    /**
+     * The message it came from, when it is one message; null for a summary of several.
+     */
+    message_id: number | null;
+  }[];
+  /**
+   * ready: the overview above is fresh. quiet: nothing new to say; said as quiet, never invented. off: the room's owner has not turned insight on.
+   */
+  state: "ready" | "quiet" | "off";
+}
+
 /** chat.first-chat-result@1.0.0 (owner: chat) */
 /**
  * chat.first-chat-result@1: the answer of GET /internal/chat/first-chat?channel_id&identity on OpenVibe.Chat (capability chat.analysis.read), OpenVibe.Live's welcome check (isFirstChatInChannel): first is true when identity (user:<user_id>, anon:<anonId> or ext:<prefixed username>) has never chatted in the channel, from stream_first_chats, and false when it has. channel_id is the channel owner's Live user id (stream_first_chats.channel_user_id), not Chat's ctx_channels.id. A failure is chat.ingress-ack@1's error.
