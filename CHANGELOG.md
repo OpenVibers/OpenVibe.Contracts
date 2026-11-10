@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.397.0 — 2026-11-10
+
+- Add `agent.finding@1` (`contracts/agent/finding.v1.json`): one review, hunt or security finding. `confirmed` carries a split severity (likelihood and impact, with overall_severity never above impact) and a confidence with its reason; `needs_validation` is a lead with a claimed cause, exact blockers and a local/deployment validation plan, and carries no severity; `rejected` carries its reason. `fingerprint` is the stable identity from the file and the normalised text, so a re-wrapped finding keeps its id.
+
 ## 0.396.0 — 2026-11-10
 
 - Add optional ordered attempts to web and image search receipts, with provider/engine, status, safe reason codes, latency and cost. Existing receipts remain valid.

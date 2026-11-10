@@ -1,0 +1,25 @@
+{
+  "verdict": "needs_validation",
+  "fingerprint": "server/billing.js:the retry may debit twice",
+  "title": "A retried debit may charge twice",
+  "description": "The retry path calls the debit again without reading the receipt; on a real card this could charge twice.",
+  "trace": [
+    { "file": "server/billing.js", "line": 118, "symbol": "debitRetry" }
+  ],
+  "evidence": [
+    {
+      "kind": "source",
+      "summary": "The retry calls debit() before the receipt is read.",
+      "location": { "file": "server/billing.js", "line": 118 }
+    }
+  ],
+  "claimed_root_cause": "The retry does not look up the first attempt's idempotency key.",
+  "blockers": [
+    "A test charge needs the live payment provider's sandbox credential, which is not on this machine."
+  ],
+  "validation_plan": {
+    "local": "Point the provider client at the sandbox and post one retried payment; the provider's ledger shows one or two charges.",
+    "deployment": "Replay a failed billing retry with a test account and read the provider's ledger."
+  },
+  "remediation": { "strategy": "Reuse the first attempt's idempotency key on the retry." }
+}

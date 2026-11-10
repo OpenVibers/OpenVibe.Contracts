@@ -1,0 +1,8 @@
+{
+  "verdict": "rejected",
+  "fingerprint": "server/x.js:a rejected claim without a reason",
+  "title": "A rejected claim without a reason",
+  "description": "A rejected finding must say why it does not stand.",
+  "trace": [ { "file": "server/x.js", "line": 1 } ],
+  "evidence": [ { "kind": "source", "summary": "The source." } ]
+}

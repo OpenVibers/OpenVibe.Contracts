@@ -1,0 +1,17 @@
+{
+  "verdict": "rejected",
+  "fingerprint": "server/cache.js:the cache never expires",
+  "title": "The cache never expires",
+  "description": "The review said the cache has no expiry; the entry it named has a TTL two lines down.",
+  "trace": [
+    { "file": "server/cache.js", "line": 31, "symbol": "put" }
+  ],
+  "evidence": [
+    {
+      "kind": "source",
+      "summary": "The named call passes ttlMs.",
+      "location": { "file": "server/cache.js", "line": 31 }
+    }
+  ],
+  "reason": "The TTL is set by the options object on line 34, which the review did not read."
+}

@@ -1,0 +1,10 @@
+{
+  "verdict": "needs_validation",
+  "fingerprint": "server/x.js:a lead without its blocker",
+  "title": "A lead without a blocker",
+  "description": "An unprovable claim must say exactly what blocked it.",
+  "trace": [ { "file": "server/x.js", "line": 1 } ],
+  "evidence": [ { "kind": "source", "summary": "The source." } ],
+  "claimed_root_cause": "A guess.",
+  "validation_plan": { "local": "Try it." }
+}

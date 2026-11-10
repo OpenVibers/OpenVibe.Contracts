@@ -1,0 +1,9 @@
+{
+  "verdict": "confirmed",
+  "fingerprint": "server/x.js:a confirmed finding without severity",
+  "title": "A confirmed finding without a severity",
+  "description": "A confirmed finding must say how likely and how bad it is.",
+  "trace": [ { "file": "server/x.js", "line": 1 } ],
+  "evidence": [ { "kind": "test", "summary": "The failing test." } ],
+  "confidence": { "level": "high", "reason": "The test fails." }
+}
