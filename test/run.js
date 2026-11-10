@@ -1,3 +1,4 @@
+require('./search-attempts.test');
 require('./levels.test');
 'use strict';
 const assert = require('assert');

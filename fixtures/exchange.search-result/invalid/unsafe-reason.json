@@ -1,0 +1,25 @@
+{
+  "results": [],
+  "receipt": {
+    "engine": "openvibe",
+    "cost_usd": 0,
+    "time_ms": 5,
+    "attempts": [
+      {
+        "provider": "brave",
+        "engine": "brave",
+        "status": "error",
+        "reason": "raw upstream error",
+        "time_ms": 15000,
+        "cost_usd": 0.005
+      },
+      {
+        "provider": "openverse",
+        "engine": "openverse",
+        "status": "ok",
+        "time_ms": 20,
+        "cost_usd": 0
+      }
+    ]
+  }
+}
