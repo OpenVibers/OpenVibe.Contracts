@@ -208572,6 +208572,31 @@ export interface ChatModerationActionPayload {
   details?: {};
 }
 
+/** chat.command@1.0.0 (owner: chat) */
+/**
+ * chat.command@1: one command the OpenVibe.Chat composer offers. A registered command's name (one to 32 lowercase letters, digits, underscores or dashes, starting with a letter), a plain-sentence description of at most 100 characters, and its typed options in order; source says who registered it (builtin, app or actor) and application_id names the app or actor for a registration. Chat serves the built-in list at GET /api/chat/commands (query q filters by name) and an option's choices at GET /api/chat/commands/autocomplete, both behind the default-off CHAT_SLASH_COMMANDS_ENABLED switch. An execution still runs through the socket's authenticated command pipeline with the sender's own rights, so moderating commands keep the moderation checks; an unknown command is answered with a plain sentence.
+ */
+export interface ChatSlashCommand {
+  name: string;
+  description: string;
+  /**
+   * @maxItems 25
+   */
+  options: {
+    name: string;
+    description: string;
+    type: "string" | "integer" | "boolean" | "user" | "channel";
+    required: boolean;
+    /**
+     * @maxItems 25
+     */
+    choices?: string[];
+    autocomplete?: boolean;
+  }[];
+  source?: "builtin" | "app" | "actor";
+  application_id?: string | null;
+}
+
 /** chat.send-request@1.1.0 (owner: chat) */
 /**
  * chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused. From a first-party service, POST /internal/chat/messages: one line (or one DM) that Chat stores, broadcasts to the room (with mirror, also to global chat and the streamer rooms), reads aloud (tts) and answers with the real id; applied once per (caller, key), the same key with another body gets 409.

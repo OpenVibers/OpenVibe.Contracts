@@ -1,0 +1,6 @@
+{
+  "name": "ban",
+  "description": "Ban a member",
+  "options": [],
+  "permission": "moderate"
+}

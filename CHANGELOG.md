@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.386.0 — 2026-11-09
+
+- Add `chat.command@1` for registered slash commands and typed options.
+
 ## 0.385.0 — 2026-11-09
 
 - Add `ai.file@1` plus typed conversational turn request and result shapes for Media-backed attachments and artifacts.

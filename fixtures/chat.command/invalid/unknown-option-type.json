@@ -1,0 +1,7 @@
+{
+  "name": "slow",
+  "description": "Set slow mode",
+  "options": [
+    { "name": "seconds", "description": "Seconds between messages", "type": "float", "required": true }
+  ]
+}
