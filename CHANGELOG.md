@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.399.0 — 2026-11-10
+
+- `actor.task-create-request@1`: the one-engine slice — a product has Actor answer one turn of its own conversation. Three new optional fields: `conversation` ({ product, id }: which product conversation the task answers), `tools` (the registry tool names the run may call; an empty array answers with no tool calls), and `model` (one exact model id, resolved like one the person picked themselves). Existing bodies remain valid.
+
 ## 0.398.0 — 2026-11-10
 
 - `codes.task@2`'s outcome state names a goal task's honest end state: `ready` only with an accepted independent verdict, `waiting`, `blocked` at its no-progress limit, `failed`, `dropped` by the person, or `stopped_by_budget`. A task without a goal keeps `done`, `unfinished` and `stopped`.
@@ -8,6 +12,7 @@
 
 - Add `agent.goal@1`: a task's outcome in words, a typed check (`command`, `url` or `rubric`), optional resource budgets (tokens, turns, active minutes) and a no-progress limit, plus the worker's bounded completion proposal and evidence and the independent verifier's verdict (accepted or rejected, with a reason and the check's own output).
 - `codes.task-start-request@1` takes the optional `goal`; `codes.task@2` carries it back with the worker's proposal, evidence and the verifier's verdict.
+
 
 ## 0.396.0 — 2026-11-10
 
