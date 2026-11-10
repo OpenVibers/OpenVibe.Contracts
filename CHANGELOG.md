@@ -1,8 +1,12 @@
+# Changelog
+
+## 0.392.0 — 2026-11-10
+
+- Add `billing.money-reason@1` and `lib/money-reasons.js`: one list of the plain words for a movement of OpenCoins, Vibes or Balance. Each kind declares the key it matches (`quest:publish-a-video`, `Media request: <title>`, Billing's type:metadata), its site, what its subject is (a quest, a stream, a tip, a creator, an app, a project, a purchase), the phrase that names it ("for the quest {name}"), and how the subject's own name and address are found. `describe()` answers `{ key, text, subject: { name, url } | null }`, so a page writes "+15 OpenCoins" before the text and links it; an undeclared key reads "for something on <site>" with `known: false` and never shows the key. Fixtures cover a quest, a tip, a reason with no page and an undeclared key.
+
 ## 0.391.0 — 2026-11-09
 
 - One Network experience curve, named reasons, level reads and capped service awards.
-
-# Changelog
 
 ## 0.390.0 — 2026-11-10
 

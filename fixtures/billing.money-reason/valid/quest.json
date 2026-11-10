@@ -1,0 +1,7 @@
+{
+  "key": "quest:publish-a-video",
+  "text": "for the quest Publish a video",
+  "subject": { "name": "Publish a video", "url": "https://openvibe.quest/quests/publish-a-video" },
+  "site": "OpenVibe.Quest",
+  "known": true
+}

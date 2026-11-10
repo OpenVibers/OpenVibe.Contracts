@@ -2575,6 +2575,15 @@
       "status": "active"
     },
     {
+      "id": "billing.money-reason",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/money-reason.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "billing.vibes-charge",
       "version": "1.0.0",
       "owner": "billing",
