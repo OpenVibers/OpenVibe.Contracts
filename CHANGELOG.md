@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.397.0 — 2026-11-10
+
+- `actor.task-create-request@1`: the one-engine slice — a product has Actor answer one turn of its own conversation. Three new optional fields: `conversation` ({ product, id }: which product conversation the task answers), `tools` (the registry tool names the run may call; an empty array answers with no tool calls), and `model` (one exact model id, resolved like one the person picked themselves). Existing bodies remain valid.
+
 ## 0.396.0 — 2026-11-10
 
 - Add optional ordered attempts to web and image search receipts, with provider/engine, status, safe reason codes, latency and cost. Existing receipts remain valid.

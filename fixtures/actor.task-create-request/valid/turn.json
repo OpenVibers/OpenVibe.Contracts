@@ -1,0 +1,14 @@
+{
+  "task": "You are Sable.\n\nThe conversation so far:\nThe person: Do you like quiet weekends?\nThe companion: The quiet ones are the best ones.\n\nThe person now says:\nHelp me plan a quiet weekend.",
+  "mode": "cheapest",
+  "model": "deepseek/deepseek-chat@v1",
+  "budget": {
+    "per_task_usd": 0.05
+  },
+  "idempotency_key": "exchange-companion-cmp_01-turn-ext_01-v0",
+  "conversation": {
+    "product": "exchange",
+    "id": "companion-chat:cmp_01/turn:ext_01/v0"
+  },
+  "tools": []
+}
