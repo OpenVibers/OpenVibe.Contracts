@@ -4,6 +4,10 @@
 
 # Changelog
 
+## 0.390.0 — 2026-11-10
+
+- A service manifest's `site` block takes an optional `strip`: up to three items a site adds to the network's footer strip, read with the rest of it at OpenVibe.Network `GET /api/frame/online?site=<id>`. An item is a plain label, an icon from openvibe-shared's glyph set, an https link on an `openvibe.*` domain, and either a `count` the site reports or a fixed `line` — never both. Live, Community and Games declare one each as the worked examples.
+
 ## 0.389.0 — 2026-11-10
 
 - Add `ai.advisor@1`: how a run may ask a stronger model for advice during the run. Off when the request omits it; at most 3 uses and at most 100 words of advice; the advisor may be named, the effort is concrete, and each use is on the run's receipt with its cost. Add `ai.advice@1`: one use on that receipt, naming the advice run, the model, the tokens and the cost. `ai.run-request@1` takes the optional `advisor` field and `ai.run@1`'s explain carries the uses.
