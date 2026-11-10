@@ -121332,6 +121332,17 @@
           "effort": {
             "$ref": "effort.v1.json"
           },
+          "advisor": {
+            "description": "Ask a stronger model for advice during this run (ai.advisor@1). Off when omitted. true takes the defaults: at most 3 uses, at most 100 words, the owner's reviewer role default and high effort. An object may name the model, the effort and smaller caps.",
+            "oneOf": [
+              {
+                "const": true
+              },
+              {
+                "$ref": "advisor.v1.json"
+              }
+            ]
+          },
           "ladder_id": {
             "type": "string",
             "minLength": 1
@@ -122128,6 +122139,53 @@
                 }
               }
             }
+          },
+          "advisor": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "max_uses",
+                  "max_words",
+                  "count",
+                  "cost_usd",
+                  "uses"
+                ],
+                "properties": {
+                  "max_uses": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3
+                  },
+                  "max_words": {
+                    "type": "integer",
+                    "minimum": 10,
+                    "maximum": 100
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                  },
+                  "cost_usd": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "uses": {
+                    "type": "array",
+                    "maxItems": 3,
+                    "items": {
+                      "$ref": "advice.v1.json"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The advisor calls this run made (ai.advisor@1), each with the advice run, the model, the tokens and the cost. Absent or null when the run did not ask for advice."
           }
         }
       }
@@ -122749,6 +122807,121 @@
           "high",
           "max"
         ]
+      }
+    },
+    "ai.advisor": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/advisor.v1.json",
+        "title": "AiAdvisor",
+        "description": "How a run may ask a stronger model for advice. Off unless the caller asks; at most 3 uses and at most 100 words of advice come back, and each use is on the run's receipt with its cost. The executor stays in charge: advice is guidance in the run's transcript, never an answer or a tool the advisor runs.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "max_uses",
+          "max_words"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*/[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,199}$",
+            "description": "The stronger model to consult, as provider/model from GET /api/v1/routes. Omitted: the owner's reviewer role default, then the strongest offer the run's route can serve."
+          },
+          "effort": {
+            "$ref": "effort.v1.json",
+            "description": "The advice call's effort. auto is refused: it resolves to a concrete level before the call (high when omitted)."
+          },
+          "max_uses": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "default": 3,
+            "description": "How many times this run may ask for advice. 1 to 3; the default is 3."
+          },
+          "max_words": {
+            "type": "integer",
+            "minimum": 10,
+            "maximum": 100,
+            "default": 100,
+            "description": "The longest advice the advisor may return. 10 to 100 words; the default is 100 and longer advice is cut to it."
+          }
+        }
+      }
+    },
+    "ai.advice": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/advice.v1.json",
+        "title": "AiAdvice",
+        "description": "One advisor use on a run (ai.advisor@1): the advice run it made, the model consulted, its effort, the tokens and the cost. The advice text itself is answered to the caller and not kept on the receipt.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "run_id",
+          "use",
+          "advice_run_id",
+          "model",
+          "effort",
+          "tokens_in",
+          "tokens_out",
+          "cost_usd",
+          "created_at"
+        ],
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The executor run the advice was asked for."
+          },
+          "use": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "This use's number on the run, from 1."
+          },
+          "advice_run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The run of workflow ai.chat that made the advice call; its own receipt carries the price."
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The advisor model that answered, provider/model."
+          },
+          "effort": {
+            "$ref": "effort.v1.json"
+          },
+          "tokens_in": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tokens_out": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What this advice call cost, on the same price basis as the run's own cost."
+          },
+          "words": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "How many words of advice came back."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       }
     }
   }
