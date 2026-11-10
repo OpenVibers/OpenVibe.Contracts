@@ -788,6 +788,103 @@
  },
  "components": {
   "schemas": {
+   "agent.goal.v1": {
+    "title": "AgentGoal",
+    "description": "A task outcome, its verifiable check, and bounded resources. A worker proposes completion; an independent verifier records the verdict.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "goal",
+     "check"
+    ],
+    "properties": {
+     "goal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+     },
+     "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "kind",
+       "value"
+      ],
+      "properties": {
+       "kind": {
+        "enum": [
+         "command",
+         "url",
+         "rubric"
+        ]
+       },
+       "value": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000
+       }
+      }
+     },
+     "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "tokens": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "turns": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "active_minutes": {
+        "type": "integer",
+        "minimum": 1
+       }
+      },
+      "minProperties": 1
+     },
+     "no_progress_limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20
+     },
+     "proposal": {
+      "type": "string",
+      "maxLength": 4000
+     },
+     "evidence": {
+      "type": "string",
+      "maxLength": 262144
+     },
+     "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "status",
+       "reason"
+      ],
+      "properties": {
+       "status": {
+        "enum": [
+         "accepted",
+         "rejected",
+         "failed"
+        ]
+       },
+       "reason": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000
+       },
+       "check_output": {
+        "type": "string",
+        "maxLength": 262144
+       }
+      }
+     }
+    }
+   },
    "ai.run-error.v1": {
     "title": "AiRunError",
     "description": "ai.run-error@1: safe, actionable words for an AI or Actor run. Raw provider responses are never display text. The code map is shared across products.",
@@ -867,6 +964,9 @@
        "edit",
        "full"
       ]
+     },
+     "goal": {
+      "$ref": "#/components/schemas/agent.goal.v1"
      },
      "push": {
       "type": "boolean"
@@ -1283,6 +1383,9 @@
         "maxLength": 1000
        }
       }
+     },
+     "goal": {
+      "$ref": "#/components/schemas/agent.goal.v1"
      },
      "actor_ref": {
       "type": [

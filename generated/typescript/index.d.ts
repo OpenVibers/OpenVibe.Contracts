@@ -278793,6 +278793,7 @@ export interface CodesTaskStartRequest {
   prompt: string;
   agent?: string;
   permission?: "review" | "edit" | "full";
+  goal?: AgentGoal;
   push?: boolean;
   pull_request?: boolean;
   idempotency_key?: string;
