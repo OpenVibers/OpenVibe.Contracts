@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.400.0 — 2026-11-10
+
+- `actor.task-create-request@1` takes the optional `tier`: the content tier the task answers under, `standard` or `uncensored`. The uncensored tier needs the task to name the person it is for, and OpenVibe.AI checks that person's 18+ confirmation on the account before it answers on that tier. A task with no person, or one whose person has not confirmed, is answered on the standard tier. The hard floor holds on every tier. Existing bodies remain valid.
+
 ## 0.399.0 — 2026-11-10
 
 - `actor.task-create-request@1`: the one-engine slice — a product has Actor answer one turn of its own conversation. Three new optional fields: `conversation` ({ product, id }: which product conversation the task answers), `tools` (the registry tool names the run may call; an empty array answers with no tool calls), and `model` (one exact model id, resolved like one the person picked themselves). Existing bodies remain valid.
