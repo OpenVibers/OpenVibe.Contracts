@@ -1,0 +1,12 @@
+{
+  "kind": "live",
+  "url": "https://openvibe.live/@streamer",
+  "site_name": "OpenVibe.Live",
+  "title": "The Streamer",
+  "description": "Live every Friday",
+  "image": "https://openvibe.media/avatars/s.jpg",
+  "width": 0,
+  "height": 0,
+  "by": "streamer",
+  "live": true
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.400.0 — 2026-11-10
+
+- Add `chat.embed@1` (`contracts/chat/embed.v1.json`): one address preview under a chat message, the shape every client draws (Chat, Live's chat, the Dock). `kind` says what was found (`link`, `video`, `image`, `live`, `picture`, `design`, `post`, `profile`, `game`); `url`, `site_name`, `title`, `description`, `image`, `width` and `height` are always present, and `image` is an OpenVibe.Media address or null (another site's picture is never hot-linked). OpenVibe's own kinds carry `by` (the person or channel it belongs to) and, for Live, `live` (broadcasting now), since they are resolved through that service's public API and never by reading its page. Every field is plain data a client escapes. Valid and invalid fixtures cover a link, a live channel, a picture without an image, a missing title, an unknown kind, an http address and a non-boolean `live`.
+
 ## 0.399.0 — 2026-11-10
 
 - #408: add `quest.today@1`, the private Quest today response.

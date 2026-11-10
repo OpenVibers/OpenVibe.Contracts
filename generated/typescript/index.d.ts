@@ -212090,6 +212090,53 @@ export interface ChatRoomInsightResult {
   state: "ready" | "quiet" | "off";
 }
 
+/** chat.embed@1.0.0 (owner: chat) */
+/**
+ * chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link.
+ */
+export interface ChatEmbed {
+  /**
+   * What the address turned out to be; a client may draw the same card for every value.
+   */
+  kind: "link" | "video" | "image" | "live" | "picture" | "design" | "post" | "profile" | "game";
+  /**
+   * The https address the message carried, after the writer's trailing punctuation was dropped.
+   */
+  url: string;
+  /**
+   * The site as it names itself (og:site_name, the provider's name, or the host).
+   */
+  site_name: string;
+  /**
+   * The page's or service's title, folded to plain text.
+   */
+  title: string;
+  /**
+   * A short plain-text description, or an empty string when the source states none.
+   */
+  description: string;
+  /**
+   * The preview picture, only when it already lives on OpenVibe.Media; null when the source's picture would have to be hot-linked.
+   */
+  image: string | null;
+  /**
+   * The picture's stated width in pixels, or 0.
+   */
+  width: number;
+  /**
+   * The picture's stated height in pixels, or 0.
+   */
+  height: number;
+  /**
+   * On OpenVibe's own kinds, the person or channel the thing belongs to (a Live channel's handle, a Video channel, a post's author, a profile's handle, a Games world's owner). Absent on an ordinary link.
+   */
+  by?: string;
+  /**
+   * On a Live channel kind, whether it is broadcasting now. Absent on the other kinds.
+   */
+  live?: boolean;
+}
+
 /** chat.first-chat-result@1.0.0 (owner: chat) */
 /**
  * chat.first-chat-result@1: the answer of GET /internal/chat/first-chat?channel_id&identity on OpenVibe.Chat (capability chat.analysis.read), OpenVibe.Live's welcome check (isFirstChatInChannel): first is true when identity (user:<user_id>, anon:<anonId> or ext:<prefixed username>) has never chatted in the channel, from stream_first_chats, and false when it has. channel_id is the channel owner's Live user id (stream_first_chats.channel_user_id), not Chat's ctx_channels.id. A failure is chat.ingress-ack@1's error.

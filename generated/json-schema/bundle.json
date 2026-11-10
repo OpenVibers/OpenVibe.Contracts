@@ -63572,6 +63572,99 @@
         }
       }
     },
+    "chat.embed": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/embed.v1.json",
+        "title": "ChatEmbed",
+        "description": "chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "url",
+          "site_name",
+          "title",
+          "description",
+          "image",
+          "width",
+          "height"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "link",
+              "video",
+              "image",
+              "live",
+              "picture",
+              "design",
+              "post",
+              "profile",
+              "game"
+            ],
+            "description": "What the address turned out to be; a client may draw the same card for every value."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "The https address the message carried, after the writer's trailing punctuation was dropped."
+          },
+          "site_name": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "The site as it names itself (og:site_name, the provider's name, or the host)."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "The page's or service's title, folded to plain text."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "A short plain-text description, or an empty string when the source states none."
+          },
+          "image": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "maxLength": 2048,
+            "description": "The preview picture, only when it already lives on OpenVibe.Media; null when the source's picture would have to be hot-linked."
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000,
+            "description": "The picture's stated width in pixels, or 0."
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000,
+            "description": "The picture's stated height in pixels, or 0."
+          },
+          "by": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "On OpenVibe's own kinds, the person or channel the thing belongs to (a Live channel's handle, a Video channel, a post's author, a profile's handle, a Games world's owner). Absent on an ordinary link."
+          },
+          "live": {
+            "type": "boolean",
+            "description": "On a Live channel kind, whether it is broadcasting now. Absent on the other kinds."
+          }
+        }
+      }
+    },
     "chat.first-chat-result": {
       "version": "1.0.0",
       "owner": "chat",
