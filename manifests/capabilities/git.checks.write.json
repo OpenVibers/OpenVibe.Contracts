@@ -1,0 +1,21 @@
+{
+  "id": "git.checks.write",
+  "version": "1.0",
+  "owner": "git",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Report commit statuses (checks) on OpenVibe.Git (git.openvibe.codes): POST /api/v1/repos/:owner/:name/commits/:sha/statuses with {context, state: pending|success|failure|error, description?, target_url?}. A first-party CI service (Run first) holds this capability for the audience openvibe.git and reports any repository it builds; the owner may report their own. Reads (GET, the latest per context) need no capability on a public repository and git.repo.read on a private one. A change is mergeable only when its required contexts are green.",
+  "inputSchema": "git.access-request@1",
+  "outputSchema": "git.access-result@1",
+  "permissions": [
+    "git:checks-write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/repos/:owner/:name/commits/:sha/statuses"
+  ]
+}

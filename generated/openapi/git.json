@@ -2050,6 +2050,88 @@
     }
    }
   },
+  "/api/v1/repos/{owner}/{name}/commits/{sha}/statuses": {
+   "post": {
+    "operationId": "post_api_v1_repos_owner_name_commits_sha_statuses",
+    "summary": "Report commit statuses (checks) on OpenVibe.Git (git.openvibe.codes): POST /api/v1/repos/:owner/:name/commits/:sha/statuses with {context, state: pending|success|failure|error, description?, target_ur",
+    "description": "**git.checks.write** (first-party): Report commit statuses (checks) on OpenVibe.Git (git.openvibe.codes): POST /api/v1/repos/:owner/:name/commits/:sha/statuses with {context, state: pending|success|failure|error, description?, target_url?}. A first-party CI service (Run first) holds this capability for the audience openvibe.git and reports any repository it builds; the owner may report their own. Reads (GET, the latest per context) need no capability on a public repository and git.repo.read on a private one. A change is mergeable only when its required contexts are green.",
+    "tags": [
+     "git.checks"
+    ],
+    "x-openvibe-capabilities": [
+     "git.checks.write"
+    ],
+    "x-openvibe-visibility": [
+     "first-party"
+    ],
+    "x-openvibe-quota-class": "standard",
+    "security": [
+     {
+      "openvibeToken": [
+       "git.checks.write"
+      ]
+     }
+    ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/git.access-request.v1"
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "owner",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "sha",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "2XX": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/git.access-result.v1"
+        }
+       }
+      }
+     },
+     "default": {
+      "description": "An error (RFC 9457 problem details)",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/errors.problem.v1"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/v1/repos/{owner}/{name}/compare/{base}...{head}": {
    "get": {
     "operationId": "get_api_v1_repos_owner_name_compare_base_head",
