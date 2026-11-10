@@ -1,0 +1,28 @@
+{
+  "verdict": "confirmed",
+  "fingerprint": "server/session.js:the cookie is set without httponly",
+  "title": "Session cookie has no HttpOnly flag",
+  "description": "The sign-in response sets ov_session without HttpOnly, so a script on the page can read it.",
+  "trace": [
+    { "file": "server/session.js", "line": 42, "symbol": "setSessionCookie" }
+  ],
+  "evidence": [
+    {
+      "kind": "source",
+      "summary": "The cookie options omit httpOnly.",
+      "location": { "file": "server/session.js", "line": 42 }
+    },
+    {
+      "kind": "command",
+      "summary": "The sign-in response shows the cookie without HttpOnly.",
+      "command": "curl -si -X POST localhost:4900/signin -d '{}' | grep set-cookie",
+      "output": "set-cookie: ov_session=…; Path=/; SameSite=Lax"
+    }
+  ],
+  "severity": { "likelihood": "medium", "impact": "high", "overall_severity": "high" },
+  "confidence": { "level": "high", "reason": "Reproduced against the local server and the source shows the same." },
+  "remediation": {
+    "strategy": "Add HttpOnly to the cookie options.",
+    "code_changes": [ { "file": "server/session.js", "change": "Add httpOnly: true to the cookie options." } ]
+  }
+}

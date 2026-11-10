@@ -330805,6 +330805,1173 @@ export type AgentStage =
   | "idle"
   | "working";
 
+/** agent.finding@1.0.0 (owner: actor) */
+/**
+ * One finding of a review, a hunt or a security pass. The verdict is the evidence bar, not the severity: `confirmed` means the finding was reproduced or re-read and carries `severity` and `confidence`; `needs_validation` is an unprovable claim turned into a lead with an exact `blockers` entry and a `validation_plan`, and it has no severity by design (never noise, never a silent pass); `rejected` says why it does not stand. `fingerprint` is the stable identity — repository-relative file plus whitespace-normalised, lowercased text — so a re-wrapped finding keeps its id while a real rewording becomes a new one. `trace` and `evidence` carry repository-relative locations and the commands or answers that show the fact. A validator must also refuse `severity.overall_severity` above the demonstrated `severity.impact`; the schema cannot rank two enums, so `description` states the rule.
+ */
+export type AgentFinding = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * confirmed: reproduced or re-read by a second agent. needs_validation: a lead that could not be proven locally; it carries blockers and a plan, never a severity. rejected: the claim was refuted; it carries a reason.
+   */
+  verdict: "confirmed" | "needs_validation" | "rejected";
+  /**
+   * The stable id: repository-relative file + whitespace-normalised, lowercased finding text (for example `server/x.js:the cache never expires`).
+   */
+  fingerprint: string;
+  title: string;
+  /**
+   * What is wrong, in plain words; no severity claim beyond the evidence.
+   */
+  description: string;
+  /**
+   * Where the issue lives, repository-relative, most specific first.
+   *
+   * @minItems 1
+   * @maxItems 50
+   */
+  trace: [
+    {
+      /**
+       * Repository-relative path; no leading slash and no `..`.
+       */
+      file: string;
+      /**
+       * The line the finding is about, when it is one line.
+       */
+      line?: number;
+      /**
+       * The function, route or job the line belongs to.
+       */
+      symbol?: string;
+    },
+    ...{
+      /**
+       * Repository-relative path; no leading slash and no `..`.
+       */
+      file: string;
+      /**
+       * The line the finding is about, when it is one line.
+       */
+      line?: number;
+      /**
+       * The function, route or job the line belongs to.
+       */
+      symbol?: string;
+    }[]
+  ];
+  /**
+   * What shows the fact: the source read, the command and its output, the response, the screenshot or the test.
+   *
+   * @minItems 1
+   * @maxItems 50
+   */
+  evidence: [
+    {
+      /**
+       * What kind of evidence this is.
+       */
+      kind: "source" | "command" | "response" | "screenshot" | "log" | "test";
+      /**
+       * What this shows, in one sentence.
+       */
+      summary: string;
+      location?: {
+        /**
+         * Repository-relative path; no leading slash and no `..`.
+         */
+        file: string;
+        /**
+         * The line the finding is about, when it is one line.
+         */
+        line?: number;
+        /**
+         * The function, route or job the line belongs to.
+         */
+        symbol?: string;
+      };
+      command?: string;
+      output?: string;
+    },
+    ...{
+      /**
+       * What kind of evidence this is.
+       */
+      kind: "source" | "command" | "response" | "screenshot" | "log" | "test";
+      /**
+       * What this shows, in one sentence.
+       */
+      summary: string;
+      location?: {
+        /**
+         * Repository-relative path; no leading slash and no `..`.
+         */
+        file: string;
+        /**
+         * The line the finding is about, when it is one line.
+         */
+        line?: number;
+        /**
+         * The function, route or job the line belongs to.
+         */
+        symbol?: string;
+      };
+      command?: string;
+      output?: string;
+    }[]
+  ];
+  /**
+   * The two axes stay separate: likelihood is how easily it is reached, impact is what it does, overall_severity may not exceed impact.
+   */
+  severity?: {
+    likelihood: "informational" | "low" | "medium" | "high" | "critical";
+    impact: "informational" | "low" | "medium" | "high" | "critical";
+    overall_severity: "informational" | "low" | "medium" | "high" | "critical";
+  };
+  confidence?: {
+    level: "low" | "medium" | "high";
+    reason: string;
+  };
+  remediation?: {
+    strategy: string;
+    /**
+     * @maxItems 20
+     */
+    code_changes?:
+      | []
+      | [
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ];
+  };
+  /**
+   * The suspected cause of a needs_validation lead, stated as a claim to test.
+   */
+  claimed_root_cause?: string;
+  /**
+   * The exact reason the claim could not be proven here (a credential, an environment, data, a downstream service).
+   *
+   * @minItems 1
+   * @maxItems 20
+   */
+  blockers?:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  validation_plan?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Why a rejected claim does not stand.
+   */
+  reason?: string;
+};
+
 /** ai.effort@1.0.0 (owner: ai) */
 /**
  * Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.

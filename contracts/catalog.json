@@ -11170,6 +11170,15 @@
       "status": "active"
     },
     {
+      "id": "agent.finding",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/finding.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.effort",
       "version": "1.0.0",
       "owner": "ai",

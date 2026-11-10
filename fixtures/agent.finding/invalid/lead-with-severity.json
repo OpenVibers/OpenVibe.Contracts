@@ -1,0 +1,12 @@
+{
+  "verdict": "needs_validation",
+  "fingerprint": "server/x.js:a lead with a severity",
+  "title": "A lead that still carries a severity",
+  "description": "A claim that could not be proven must stay a lead and carry no severity.",
+  "trace": [ { "file": "server/x.js", "line": 1 } ],
+  "evidence": [ { "kind": "source", "summary": "The source." } ],
+  "claimed_root_cause": "A guess.",
+  "blockers": [ "No credential." ],
+  "validation_plan": { "local": "Try it." },
+  "severity": { "likelihood": "low", "impact": "low", "overall_severity": "low" }
+}
