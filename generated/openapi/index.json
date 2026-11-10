@@ -131,8 +131,8 @@
       "service": "git",
       "name": "OpenVibe.Git",
       "origin": "https://git.openvibe.codes",
-      "operations": 35,
-      "capabilities": 2
+      "operations": 36,
+      "capabilities": 3
     },
     {
       "service": "host",

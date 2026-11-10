@@ -17,7 +17,8 @@
   },
   "capabilities": [
     "git.repo.read",
-    "git.repo.write"
+    "git.repo.write",
+    "git.checks.write"
   ],
   "eventsProduced": [],
   "eventsConsumed": [],
