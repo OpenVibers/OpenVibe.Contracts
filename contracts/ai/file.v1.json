@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/file.v1.json",
+  "title": "AiFile",
+  "description": "ai.file@1: a person attachment or model-produced artifact stored by Media. The reference is metadata only; file bytes are never embedded in an AI turn.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "media_type", "size", "storage", "access", "read"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 200},
+    "name": {"type": "string", "minLength": 1, "maxLength": 255},
+    "media_type": {"type": "string", "minLength": 1, "maxLength": 255},
+    "size": {"type": "integer", "minimum": 0},
+    "storage": {"type": "object", "additionalProperties": false, "required": ["provider", "key"], "properties": {"provider": {"const": "media"}, "key": {"type": "string", "minLength": 1, "maxLength": 500}}},
+    "access": {"type": "object", "additionalProperties": false, "required": ["readers"], "properties": {"readers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 200}}}},
+    "read": {"oneOf": [
+      {"type": "object", "additionalProperties": false, "required": ["method"], "properties": {"method": {"enum": ["text", "pages", "image", "audio_transcript"]}, "content": {"type": "string"}, "pages": {"type": "array", "items": {"type": "string"}}}},
+      {"type": "object", "additionalProperties": false, "required": ["method", "reason"], "properties": {"method": {"const": "not_readable"}, "reason": {"type": "string", "minLength": 1, "maxLength": 500}}}
+    ]},
+    "role": {"enum": ["input", "artifact"]}
+  }
+}

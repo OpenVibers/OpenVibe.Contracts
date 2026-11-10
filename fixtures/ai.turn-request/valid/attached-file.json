@@ -1,0 +1,4 @@
+{
+  "messages": [{"role": "user", "content": "Summarize this", "files": [{"id": "med_file_01", "name": "notes.txt", "media_type": "text/plain", "size": 12, "storage": {"provider": "media", "key": "files/usr_01/med_file_01"}, "access": {"readers": ["usr_01"]}, "read": {"method": "text", "content": "hello world"}, "role": "input"}]}],
+  "files": []
+}
