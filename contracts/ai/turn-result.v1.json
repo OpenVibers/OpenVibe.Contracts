@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/turn-result.v1.json",
+  "title": "AiTurnResult",
+  "description": "ai.turn-result@1: conversational response and any model-produced files, stored by Media.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["content", "artifacts"],
+  "properties": {
+    "content": {"type": "string"},
+    "artifacts": {"type": "array", "items": {"$ref": "file.v1.json"}}
+  }
+}

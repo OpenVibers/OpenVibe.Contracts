@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.385.0 — 2026-11-09
+
+- Add `ai.file@1` plus typed conversational turn request and result shapes for Media-backed attachments and artifacts.
+
 ## 0.384.0 — 2026-11-09
 
 - Agent work fabric: trigger, decision, immutable ticket mandate and budget, six report states, attention, and ordered stage vocabulary. Portable AI effort, concrete task-default effort, and optional effort/ladder receipt metadata.

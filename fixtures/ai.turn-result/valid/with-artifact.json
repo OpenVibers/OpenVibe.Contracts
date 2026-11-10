@@ -1,0 +1,1 @@
+{"content": "Here is the file.", "artifacts": [{"id": "med_file_02", "name": "answer.csv", "media_type": "text/csv", "size": 8, "storage": {"provider": "media", "key": "files/usr_01/med_file_02"}, "access": {"readers": ["usr_01"]}, "read": {"method": "text", "content": "a,b\n1,2\n"}, "role": "artifact"}]}
