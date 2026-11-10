@@ -2966,6 +2966,79 @@ export interface ServiceManifest {
      * The room's launcher group in OpenVibe.Shared rooms.js and OpenVibe.Network frame/sites.js; optional so older manifests retain their meaning.
      */
     neighbourhood?: "streams" | "games" | "answers" | "make" | "shop" | "people" | "build";
+    /**
+     * This site's own items on the network's footer strip, read with the rest of it at openvibe.network GET /api/frame/online?site=<id>: a label, an icon from the shared glyph set, an https link on an OpenVibe domain (any openvibe.* host), and either a count the site reports or a fixed line. Network checks every field again before it reaches a page.
+     *
+     * @maxItems 3
+     */
+    strip?:
+      | []
+      | [
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          },
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          },
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          },
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          }
+        ];
   };
   capabilities: string[];
   eventsProduced: string[];
@@ -328146,4 +328219,1151 @@ export interface AiAdvice {
    */
   words?: number;
   created_at: string;
+}
+
+/** network.level@1.0.0 (owner: network) */
+/**
+ * NetworkLevel: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevel {
+  level: number;
+  xp: number;
+  into: number;
+  span: number;
+  next_at: number;
+  rank: number | null;
+  /**
+   * @maxItems 5
+   */
+  recent:
+    | []
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ];
+}
+
+/** network.level-award@1.0.0 (owner: network) */
+/**
+ * NetworkLevelAward: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevelAward {
+  subject: string;
+  reason: "quest.completed" | "coins.earned" | "video.published" | "stream.watched";
+  amount: number;
+  idempotency_key: string;
+}
+
+/** network.level-batch@1.0.0 (owner: network) */
+/**
+ * NetworkLevelBatch: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevelBatch {
+  levels: {
+    [k: string]: number | undefined;
+  };
+}
+
+/** network.level-board@1.0.0 (owner: network) */
+/**
+ * NetworkLevelBoard: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevelBoard {
+  all_time: {
+    /**
+     * @maxItems 50
+     */
+    top: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    }[];
+    me: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    } | null;
+    /**
+     * @maxItems 11
+     */
+    around:
+      | []
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ];
+  };
+  week: {
+    /**
+     * @maxItems 50
+     */
+    top: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    }[];
+    me: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    } | null;
+    /**
+     * @maxItems 11
+     */
+    around:
+      | []
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ];
+  };
 }

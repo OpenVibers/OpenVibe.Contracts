@@ -1,3 +1,4 @@
+require('./levels.test');
 'use strict';
 const assert = require('assert');
 const fs = require('fs');

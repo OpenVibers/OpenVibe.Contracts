@@ -11168,6 +11168,42 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.level",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.level-award",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level-award.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.level-batch",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level-batch.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.level-board",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level-board.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

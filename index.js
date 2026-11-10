@@ -13,6 +13,7 @@
 const registry = require('./lib/registry');
 
 module.exports = {
+    levels: require('./lib/levels'),
     catalog: registry.catalog,
     resolve: registry.resolve,
     validate: registry.validate,
