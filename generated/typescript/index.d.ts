@@ -325310,6 +325310,99 @@ export interface GitInsights {
   }[];
 }
 
+/** git.clone-request@1.0.0 (owner: git) */
+/**
+ * One 'Clone to my computer' request from a repository page on OpenVibe.Git. Git mints it for the signed-in person and keeps it for two minutes. The person's Link reads it over an outbound HTTPS relay with the one-time token in the link, asks the person there, clones owner/name into a folder inside the root the person chose in Link, and reports progress back. The page polls the same document. clone_url is present only in the answer to the Link (it carries a short-lived read token) and never in the page's copy.
+ */
+export interface GitCloneRequest {
+  /**
+   * The request's own id (clr_<ULID>), also the Link's idempotency key.
+   */
+  id: string;
+  /**
+   * owner/name, lower-case, exactly as the repository page names it.
+   */
+  repo: string;
+  /**
+   * pending until the person answers in Link; approved when they say yes; cloning while git runs; done, refused, failed or expired after that. A request past expires_at is expired, whatever the stored state.
+   */
+  state: "pending" | "approved" | "cloning" | "done" | "refused" | "failed" | "expired";
+  /**
+   * The HTTPS clone URL with a read-only, short-lived Git token, sent to the Link only. Never returned to the page.
+   */
+  clone_url?: string;
+  created_at: string;
+  /**
+   * created_at + two minutes. Link refuses to start a clone after this.
+   */
+  expires_at: string;
+  progress?: {
+    percent: number;
+    /**
+     * One line of git's own progress, with any token removed.
+     */
+    line: string;
+  };
+  /**
+   * Where Link put the clone, only when state is done.
+   */
+  path?: string;
+  /**
+   * Why it was refused or failed, in words the page can show.
+   */
+  reason?: string;
+}
+
+/** git.machine@1.0.0 (owner: git) */
+/**
+ * A computer published to OpenVibe.Git through Link, read-only. Link connects out to Git, sends its name and the repositories under the root the person chose in Link, and keeps watching: the page lists the machine and browses its tree, files and log through Link while it is online. The request never reaches the machine; Git only asks on a poll the machine opened. Nothing here is a write path.
+ */
+export interface GitMachine {
+  /**
+   * The machine's own id (mch_<ULID>), minted by Git when the person connects it.
+   */
+  id: string;
+  /**
+   * The computer's name, as Link knows it.
+   */
+  name: string;
+  /**
+   * linux, darwin or windows, for the page's small label.
+   */
+  os?: string;
+  /**
+   * True when Link has checked in within the last thirty seconds.
+   */
+  online: boolean;
+  last_seen_at: string;
+  /**
+   * When the machine was last seen before going offline; null while it is online.
+   */
+  offline_since?: string | null;
+  /**
+   * @maxItems 500
+   */
+  repos: {
+    /**
+     * The folder's name, lower-case, the same rule as a Git repository name.
+     */
+    name: string;
+    /**
+     * The branch checked out in that folder.
+     */
+    branch: string;
+    /**
+     * The commit's full SHA (SHA-1, or SHA-256 when the repository uses it).
+     */
+    head: string;
+    head_subject?: string;
+    /**
+     * The commit's own date.
+     */
+    updated_at?: string;
+  }[];
+}
+
 /** design.component@1.0.0 (owner: design) */
 /**
  * design.component@1: a platform-neutral OpenVibe interface definition served by openvibe.design/api/v1/components.

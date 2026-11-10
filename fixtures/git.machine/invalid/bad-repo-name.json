@@ -1,0 +1,7 @@
+{
+  "id": "mch_01JQZ8M4T7Y2N5K3B6V9C1X0DA",
+  "name": "ada-laptop",
+  "online": true,
+  "last_seen_at": "2026-11-10T09:00:00Z",
+  "repos": [{ "name": "../escape", "branch": "main", "head": "0123456789abcdef0123456789abcdef01234567" }]
+}

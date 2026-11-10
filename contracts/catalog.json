@@ -10830,6 +10830,24 @@
       "status": "active"
     },
     {
+      "id": "git.clone-request",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/clone-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "git.machine",
+      "version": "1.0.0",
+      "owner": "git",
+      "schema": "git/machine.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "design.component",
       "version": "1.0.0",
       "owner": "design",
