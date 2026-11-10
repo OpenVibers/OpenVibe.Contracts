@@ -46,7 +46,7 @@
         "answer": "Yes. Link platforms like Twitch, YouTube or Kick to your OpenVibe account, and unlink them whenever you like."
       }
     ],
-    "neighbourhood": "people"
+    "neighbourhood": "talk"
   },
   "capabilities": [
     "identity.emails.read",

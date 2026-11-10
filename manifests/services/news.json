@@ -75,7 +75,7 @@
         }
       ]
     },
-    "neighbourhood": "answers"
+    "neighbourhood": "read"
   },
   "capabilities": [
     "news.story.create",
