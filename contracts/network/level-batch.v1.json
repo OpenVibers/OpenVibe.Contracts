@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/level-batch.v1.json",
+  "title": "NetworkLevelBatch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "levels"
+  ],
+  "properties": {
+    "levels": {
+      "type": "object",
+      "maxProperties": 100,
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 1
+      }
+    }
+  },
+  "description": "NetworkLevelBatch: one earned platform level owned by Network; experience is never bought or spent."
+}

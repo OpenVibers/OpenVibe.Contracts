@@ -89,7 +89,8 @@
     "network.consent.manage",
     "network.machines.read",
     "network.machines.manage",
-    "network.presence.read"
+    "network.presence.read",
+    "network.levels.award"
   ],
   "eventsProduced": [
     "network.account.deleted",
