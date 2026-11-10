@@ -328026,6 +328026,31 @@ export interface AgentAttention {
   answer?: string;
 }
 
+/** agent.goal@1.0.0 (owner: codes) */
+/**
+ * A task outcome, its verifiable check, and bounded resources. A worker proposes completion; an independent verifier records the verdict.
+ */
+export interface AgentGoal {
+  goal: string;
+  check: {
+    kind: "command" | "url" | "rubric";
+    value: string;
+  };
+  budget?: {
+    tokens?: number;
+    turns?: number;
+    active_minutes?: number;
+  };
+  no_progress_limit?: number;
+  proposal?: string;
+  evidence?: string;
+  verdict?: {
+    status: "accepted" | "rejected" | "failed";
+    reason: string;
+    check_output?: string;
+  };
+}
+
 /** agent.stage@1.0.0 (owner: actor) */
 /**
  * Closed open-ticket stages. First matching row wins: delivery failure, attention, ready report, blocked/failed report without a later human input, absent/pending assignment, waiting report/ended assignment, working. Labels and conditions: docs/agent-work.md.
