@@ -1,0 +1,8 @@
+{
+  "name": "shrug",
+  "description": "Send a shrug",
+  "options": [
+    { "name": "text", "description": "Optional message", "type": "string", "required": false }
+  ],
+  "source": "builtin"
+}

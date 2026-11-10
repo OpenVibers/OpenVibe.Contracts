@@ -1,0 +1,16 @@
+{
+  "name": "mute",
+  "description": "Mute a member for a while",
+  "options": [
+    { "name": "user", "description": "Member", "type": "user", "required": true },
+    {
+      "name": "seconds",
+      "description": "Duration in seconds",
+      "type": "integer",
+      "required": false,
+      "choices": ["60", "300", "900"]
+    }
+  ],
+  "source": "app",
+  "application_id": "app_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3"
+}
