@@ -279574,6 +279574,71 @@ export interface QuestDailyProgress {
   time_zone: string;
 }
 
+/** quest.today@1.0.0 (owner: quest) */
+/**
+ * quest.today@1: today's private quest and progress for the signed-in person. GET /api/v1/quests/today requires a person token.
+ */
+export interface QuestToday {
+  date: string;
+  title: string;
+  story: string;
+  /**
+   * @minItems 3
+   * @maxItems 3
+   */
+  steps: [
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    },
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    },
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    }
+  ];
+  source: "ai" | "rotation";
+  finished_today: number;
+  progress: number;
+  completed: boolean;
+  completed_at?: string | null;
+  streak: number;
+  time_zone: string;
+}
+
 /** quest.step-type@1.0.0 (owner: quest) */
 /**
  * quest.step-type@1: a verified Events action that may be selected for a daily quest. A contributed type stays pending until staff review.
