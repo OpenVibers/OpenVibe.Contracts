@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/billing/money-reason.v1.json",
+  "title": "BillingMoneyReason",
+  "description": "billing.money-reason@1: why a movement of OpenCoins, Vibes or Balance happened, in the words a person reads. `key` is the raw ledger reason (OpenCoins reason, or Billing's type:metadata); `text` is the phrase without the amount (\"for the quest Publish a video\"), so a page writes \"+15 OpenCoins\" before it; `subject` is the thing it was for and where to read it, when there is one. A key nobody declared reads \"for something on <site>\", has known: false, and is never shown as its key. Same reason kinds, one list: openvibe-contracts/lib/money-reasons.js.",
+  "type": "object",
+  "required": [
+    "key",
+    "text"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "key": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "The ledger's own reason, kept for support and logs. A page never prints it."
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "description": "The plain phrase, without the amount: \"for the quest Publish a video\"."
+    },
+    "subject": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "What the movement was for (a quest, a stream, a tip, a creator, an app, a project, a purchase), with its own name and address. Null when the reason has no page of its own.",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri",
+          "maxLength": 500
+        }
+      }
+    },
+    "site": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "The site the movement belongs to, in the words a person reads (OpenVibe.Quest, OpenVibe.Live, OpenVibe)."
+    },
+    "known": {
+      "type": "boolean",
+      "description": "False for a key no kind declares; its text says \"for something on <site>\"."
+    }
+  }
+}

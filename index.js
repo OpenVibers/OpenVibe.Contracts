@@ -31,5 +31,6 @@ module.exports = {
     resources: require('./lib/resources'),
     staff: require('./lib/staff'),
     labels: require('./lib/labels'),
+    moneyReasons: require('./lib/money-reasons'),
     openapi: require('./lib/openapi'),
 };

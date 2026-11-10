@@ -1,0 +1,7 @@
+{
+  "key": "donation",
+  "text": "for a tip to @alice",
+  "subject": { "name": "@alice", "url": "https://openvibe.live/@alice" },
+  "site": "OpenVibe",
+  "known": true
+}

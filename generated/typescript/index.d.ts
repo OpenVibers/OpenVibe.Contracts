@@ -174462,6 +174462,36 @@ export type BillingBalance = {
     }
 );
 
+/** billing.money-reason@1.0.0 (owner: billing) */
+/**
+ * billing.money-reason@1: why a movement of OpenCoins, Vibes or Balance happened, in the words a person reads. `key` is the raw ledger reason (OpenCoins reason, or Billing's type:metadata); `text` is the phrase without the amount ("for the quest Publish a video"), so a page writes "+15 OpenCoins" before it; `subject` is the thing it was for and where to read it, when there is one. A key nobody declared reads "for something on <site>", has known: false, and is never shown as its key. Same reason kinds, one list: openvibe-contracts/lib/money-reasons.js.
+ */
+export interface BillingMoneyReason {
+  /**
+   * The ledger's own reason, kept for support and logs. A page never prints it.
+   */
+  key: string;
+  /**
+   * The plain phrase, without the amount: "for the quest Publish a video".
+   */
+  text: string;
+  /**
+   * What the movement was for (a quest, a stream, a tip, a creator, an app, a project, a purchase), with its own name and address. Null when the reason has no page of its own.
+   */
+  subject?: {
+    name: string;
+    url?: string | null;
+  } | null;
+  /**
+   * The site the movement belongs to, in the words a person reads (OpenVibe.Quest, OpenVibe.Live, OpenVibe).
+   */
+  site?: string;
+  /**
+   * False for a key no kind declares; its text says "for something on <site>".
+   */
+  known?: boolean;
+}
+
 /** billing.vibes-charge@1.0.0 (owner: billing) */
 /**
  * billing.vibes-charge@1: one Vibes Pay charge (D12). An app creates it for a person to pay with Vibes; GET /api/v1/vibes/charges/:id answers it, and a replay of the same app reference returns the same charge. amount is a whole number of Vibes (never a fraction, never nano-USD). status moves pending -> paid -> refunded, or pending -> expired|cancelled. sandbox charges use test Vibes only, worth nothing. The paid and refunded webhook/event payloads carry the same fields plus an opaque payer_ref and no person id or email.

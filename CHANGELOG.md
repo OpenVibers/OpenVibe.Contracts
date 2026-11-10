@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.390.0 — 2026-11-10
+
+- Add `billing.money-reason@1` and `lib/money-reasons.js`: one list of the plain words for a movement of OpenCoins, Vibes or Balance. Each kind declares the key it matches (`quest:publish-a-video`, `Media request: <title>`, Billing's type:metadata), its site, what its subject is (a quest, a stream, a tip, a creator, an app, a project, a purchase), the phrase that names it ("for the quest {name}"), and how the subject's own name and address are found. `describe()` answers `{ key, text, subject: { name, url } | null }`, so a page writes "+15 OpenCoins" before the text and links it; an undeclared key reads "for something on <site>" with `known: false` and never shows the key. Fixtures cover a quest, a tip, a reason with no page and an undeclared key.
+
 ## 0.389.0 — 2026-11-10
 
 - Add `ai.advisor@1`: how a run may ask a stronger model for advice during the run. Off when the request omits it; at most 3 uses and at most 100 words of advice; the advisor may be named, the effort is concrete, and each use is on the run's receipt with its cost. Add `ai.advice@1`: one use on that receipt, naming the advice run, the model, the tokens and the cost. `ai.run-request@1` takes the optional `advisor` field and `ai.run@1`'s explain carries the uses.
