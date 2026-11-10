@@ -5,7 +5,7 @@
   "icon": "fa-scale-balanced",
   "accent": "#0ea5e9",
   "tagline": "Compare anything, with its sources and dates: AI models first",
-  "description": "OpenVibe.Compare will compare anything side by side with its sources and dates attached, AI models first. The product is not chartered yet; this address is parked and sends visitors to OpenVibe AI, where the models live today.",
+  "description": "OpenVibe.Compare will compare anything side by side with its sources and dates attached, AI models first. The product is not chartered yet; this address is parked and sends visitors to OpenVibe.Exchange, where the models and their prices live today.",
   "legalProfile": "info",
   "launch": "A charter: what Compare covers first, who keeps each comparison current, and where its source data comes from.",
   "keywords": "compare ai models, model comparison, side by side comparison, openvibe compare",
@@ -13,9 +13,9 @@
     "noRepo": true,
     "meanwhile": [
       {
-        "label": "OpenVibe AI",
-        "url": "https://openvibe.ai/",
-        "note": "The models API and what the models cost today."
+        "label": "OpenVibe.Exchange",
+        "url": "https://openvibe.exchange/",
+        "note": "The models, what each costs today, and one API for all of them."
       }
     ]
   }
