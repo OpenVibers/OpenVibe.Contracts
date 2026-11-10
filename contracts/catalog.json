@@ -2575,6 +2575,15 @@
       "status": "active"
     },
     {
+      "id": "billing.money-reason",
+      "version": "1.0.0",
+      "owner": "billing",
+      "schema": "billing/money-reason.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "billing.vibes-charge",
       "version": "1.0.0",
       "owner": "billing",
@@ -5679,6 +5688,15 @@
       "owner": "chat",
       "schema": "chat/timeline-result.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.room-insight-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/room-insight-result.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },
@@ -11147,6 +11165,60 @@
       "version": "1.0.0",
       "owner": "ai",
       "schema": "ai/effort.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.advisor",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/advisor.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.advice",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/advice.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.level",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.level-award",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level-award.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.level-batch",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level-batch.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.level-board",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/level-board.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"

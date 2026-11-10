@@ -1,0 +1,6 @@
+{
+  "model": "deepseek/deepseek-v4-pro",
+  "effort": "high",
+  "max_uses": 4,
+  "max_words": 100
+}

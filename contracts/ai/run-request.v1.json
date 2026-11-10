@@ -91,6 +91,17 @@
     "effort": {
       "$ref": "effort.v1.json"
     },
+    "advisor": {
+      "description": "Ask a stronger model for advice during this run (ai.advisor@1). Off when omitted. true takes the defaults: at most 3 uses, at most 100 words, the owner's reviewer role default and high effort. An object may name the model, the effort and smaller caps.",
+      "oneOf": [
+        {
+          "const": true
+        },
+        {
+          "$ref": "advisor.v1.json"
+        }
+      ]
+    },
     "ladder_id": {
       "type": "string",
       "minLength": 1

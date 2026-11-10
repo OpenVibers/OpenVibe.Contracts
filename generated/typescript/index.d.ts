@@ -2966,6 +2966,79 @@ export interface ServiceManifest {
      * The room's launcher group in OpenVibe.Shared rooms.js and OpenVibe.Network frame/sites.js; optional so older manifests retain their meaning.
      */
     neighbourhood?: "streams" | "games" | "answers" | "make" | "shop" | "people" | "build";
+    /**
+     * This site's own items on the network's footer strip, read with the rest of it at openvibe.network GET /api/frame/online?site=<id>: a label, an icon from the shared glyph set, an https link on an OpenVibe domain (any openvibe.* host), and either a count the site reports or a fixed line. Network checks every field again before it reaches a page.
+     *
+     * @maxItems 3
+     */
+    strip?:
+      | []
+      | [
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          },
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          }
+        ]
+      | [
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          },
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          },
+          (
+            | {
+                [k: string]: unknown | undefined;
+              }
+            | {
+                [k: string]: unknown | undefined;
+              }
+          ) & {
+            [k: string]: unknown | undefined;
+          }
+        ];
   };
   capabilities: string[];
   eventsProduced: string[];
@@ -174462,6 +174535,36 @@ export type BillingBalance = {
     }
 );
 
+/** billing.money-reason@1.0.0 (owner: billing) */
+/**
+ * billing.money-reason@1: why a movement of OpenCoins, Vibes or Balance happened, in the words a person reads. `key` is the raw ledger reason (OpenCoins reason, or Billing's type:metadata); `text` is the phrase without the amount ("for the quest Publish a video"), so a page writes "+15 OpenCoins" before it; `subject` is the thing it was for and where to read it, when there is one. A key nobody declared reads "for something on <site>", has known: false, and is never shown as its key. Same reason kinds, one list: openvibe-contracts/lib/money-reasons.js.
+ */
+export interface BillingMoneyReason {
+  /**
+   * The ledger's own reason, kept for support and logs. A page never prints it.
+   */
+  key: string;
+  /**
+   * The plain phrase, without the amount: "for the quest Publish a video".
+   */
+  text: string;
+  /**
+   * What the movement was for (a quest, a stream, a tip, a creator, an app, a project, a purchase), with its own name and address. Null when the reason has no page of its own.
+   */
+  subject?: {
+    name: string;
+    url?: string | null;
+  } | null;
+  /**
+   * The site the movement belongs to, in the words a person reads (OpenVibe.Quest, OpenVibe.Live, OpenVibe).
+   */
+  site?: string;
+  /**
+   * False for a key no kind declares; its text says "for something on <site>".
+   */
+  known?: boolean;
+}
+
 /** billing.vibes-charge@1.0.0 (owner: billing) */
 /**
  * billing.vibes-charge@1: one Vibes Pay charge (D12). An app creates it for a person to pay with Vibes; GET /api/v1/vibes/charges/:id answers it, and a replay of the same app reference returns the same charge. amount is a whole number of Vibes (never a fraction, never nano-USD). status moves pending -> paid -> refunded, or pending -> expired|cancelled. sandbox charges use test Vibes only, worth nothing. The paid and refunded webhook/event payloads carry the same fields plus an opaque payer_ref and no person id or email.
@@ -209478,6 +209581,1581 @@ export type ChatTimelineResult =
        */
       error: string;
     };
+
+/** chat.room-insight-result@1.0.0 (owner: chat) */
+/**
+ * chat.room-insight-result@1: the answer of GET /api/v1/rooms/:id/insight on OpenVibe.Chat, public (no account, as the room itself is readable). One shape for every room: Global (id `global`) first, then a server's channels and the rooms people make. The overview is the summary OpenVibe.Chat's chat-AI job keeps (the same schedule, window and budget rules as Live's, only when there were new messages); it reads only the messages of people who allowed AI use of them (network.consent@1, purpose ai.train on kind chat), so an overview never quotes someone who did not. state is `ready` when the overview is fresh, `quiet` when there is nothing new to say (text and topics empty, the timeline keeps history), and `off` when the room's owner has not turned the insight on (private rooms; never a DM). A room the rollout does not cover answers 404. Timestamps are Chat's UTC `YYYY-MM-DD HH:MM:SS` (ov_now()), or null.
+ */
+export interface ChatRoomInsightResult {
+  overview: {
+    /**
+     * The overview written for someone arriving now, in plain prose; empty when state is quiet or off.
+     */
+    text: string;
+    /**
+     * The words the window kept coming back to, most mentioned first. Empty when state is quiet or off.
+     *
+     * @maxItems 20
+     */
+    topics:
+      | []
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ]
+      | [
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          },
+          {
+            label: string;
+            /**
+             * How many messages of the window mentioned the topic.
+             */
+            count: number;
+          }
+        ];
+    /**
+     * How many different people wrote in the window the overview reads.
+     */
+    people: number;
+    /**
+     * How many messages the window held (the ones the summariser was allowed to read).
+     */
+    messages: number;
+    /**
+     * The window's first message time.
+     */
+    from: string | null;
+    /**
+     * The window's last time, which is when the job last looked.
+     */
+    to: string | null;
+    /**
+     * When the overview row was last written.
+     */
+    updated_at: string | null;
+  };
+  /**
+   * The room's notable moments, newest first. History survives a quiet window.
+   *
+   * @maxItems 60
+   */
+  timeline: {
+    /**
+     * When it happened, Chat's UTC `YYYY-MM-DD HH:MM:SS`.
+     */
+    at: string;
+    /**
+     * What kind of moment: `moment` for a notable thing the summariser recorded, `event` for a non-chat activity (a donation, a clip), `message` for a line it picked out.
+     */
+    kind: string;
+    title: string;
+    text: string;
+    /**
+     * The message it came from, when it is one message; null for a summary of several.
+     */
+    message_id: number | null;
+  }[];
+  /**
+   * ready: the overview above is fresh. quiet: nothing new to say; said as quiet, never invented. off: the room's owner has not turned insight on.
+   */
+  state: "ready" | "quiet" | "off";
+}
 
 /** chat.first-chat-result@1.0.0 (owner: chat) */
 /**
@@ -326410,6 +328088,29 @@ export interface ExchangeSearchResult {
     engine: string;
     cost_usd: number;
     time_ms: number;
+    /**
+     * Ordered routing attempts with safe reason codes; no provider error bodies or credentials.
+     *
+     * @maxItems 64
+     */
+    attempts?: {
+      provider: string;
+      engine: string;
+      model?: string | null;
+      status: "ok" | "error" | "skipped";
+      reason?:
+        | "disabled"
+        | "unsupported"
+        | "no_credentials"
+        | "circuit_open"
+        | "daily_cap"
+        | "budget"
+        | "timeout"
+        | "upstream_error"
+        | "invalid_response";
+      time_ms: number;
+      cost_usd: number;
+    }[];
   };
 }
 
@@ -326435,6 +328136,29 @@ export interface ExchangeImageResult {
     engine: string;
     cost_usd: number;
     time_ms: number;
+    /**
+     * Ordered routing attempts with safe reason codes; no provider error bodies or credentials.
+     *
+     * @maxItems 64
+     */
+    attempts?: {
+      provider: string;
+      engine: string;
+      model?: string | null;
+      status: "ok" | "error" | "skipped";
+      reason?:
+        | "disabled"
+        | "unsupported"
+        | "no_credentials"
+        | "circuit_open"
+        | "daily_cap"
+        | "budget"
+        | "timeout"
+        | "upstream_error"
+        | "invalid_response";
+      time_ms: number;
+      cost_usd: number;
+    }[];
   };
 }
 
@@ -327102,6 +328826,10 @@ export type AiRunRequest = {
     subject: string;
   };
   effort?: AiEffort;
+  /**
+   * Ask a stronger model for advice during this run (ai.advisor@1). Off when omitted. true takes the defaults: at most 3 uses, at most 100 words, the owner's reviewer role default and high effort. An object may name the model, the effort and smaller caps.
+   */
+  advisor?: true | AiAdvisor;
   ladder_id?: string;
   rung?: number;
   agent_role?: "router" | "gate" | "assessor" | "worker" | "subagent" | "reviewer";
@@ -327621,6 +329349,19 @@ export interface AiRun {
     cost_usd: number;
     outcome: string;
   }[];
+  /**
+   * The advisor calls this run made (ai.advisor@1), each with the advice run, the model, the tokens and the cost. Absent or null when the run did not ask for advice.
+   */
+  advisor?: {
+    max_uses: number;
+    max_words: number;
+    count: number;
+    cost_usd: number;
+    /**
+     * @maxItems 3
+     */
+    uses: [] | [AiAdvice] | [AiAdvice, AiAdvice] | [AiAdvice, AiAdvice, AiAdvice];
+  } | null;
 }
 
 /** ai.task-defaults@1.1.0 (owner: ai) */
@@ -328070,3 +329811,1205 @@ export type AgentStage =
  * Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.
  */
 export type AiEffort = "auto" | "low" | "medium" | "high" | "max";
+
+/** ai.advisor@1.0.0 (owner: ai) */
+/**
+ * How a run may ask a stronger model for advice. Off unless the caller asks; at most 3 uses and at most 100 words of advice come back, and each use is on the run's receipt with its cost. The executor stays in charge: advice is guidance in the run's transcript, never an answer or a tool the advisor runs.
+ */
+export interface AiAdvisor {
+  /**
+   * The stronger model to consult, as provider/model from GET /api/v1/routes. Omitted: the owner's reviewer role default, then the strongest offer the run's route can serve.
+   */
+  model?: string;
+  effort?: AiEffort;
+  /**
+   * How many times this run may ask for advice. 1 to 3; the default is 3.
+   */
+  max_uses: number;
+  /**
+   * The longest advice the advisor may return. 10 to 100 words; the default is 100 and longer advice is cut to it.
+   */
+  max_words: number;
+}
+
+/** ai.advice@1.0.0 (owner: ai) */
+/**
+ * One advisor use on a run (ai.advisor@1): the advice run it made, the model consulted, its effort, the tokens and the cost. The advice text itself is answered to the caller and not kept on the receipt.
+ */
+export interface AiAdvice {
+  /**
+   * The executor run the advice was asked for.
+   */
+  run_id: string;
+  /**
+   * This use's number on the run, from 1.
+   */
+  use: number;
+  /**
+   * The run of workflow ai.chat that made the advice call; its own receipt carries the price.
+   */
+  advice_run_id: string;
+  /**
+   * The advisor model that answered, provider/model.
+   */
+  model: string;
+  effort: AiEffort;
+  tokens_in: number;
+  tokens_out: number;
+  /**
+   * What this advice call cost, on the same price basis as the run's own cost.
+   */
+  cost_usd: number;
+  /**
+   * How many words of advice came back.
+   */
+  words?: number;
+  created_at: string;
+}
+
+/** network.level@1.0.0 (owner: network) */
+/**
+ * NetworkLevel: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevel {
+  level: number;
+  xp: number;
+  into: number;
+  span: number;
+  next_at: number;
+  rank: number | null;
+  /**
+   * @maxItems 5
+   */
+  recent:
+    | []
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ]
+    | [
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        },
+        {
+          name: string;
+          at: string;
+          amount: number;
+        }
+      ];
+}
+
+/** network.level-award@1.0.0 (owner: network) */
+/**
+ * NetworkLevelAward: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevelAward {
+  subject: string;
+  reason: "quest.completed" | "coins.earned" | "video.published" | "stream.watched";
+  amount: number;
+  idempotency_key: string;
+}
+
+/** network.level-batch@1.0.0 (owner: network) */
+/**
+ * NetworkLevelBatch: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevelBatch {
+  levels: {
+    [k: string]: number | undefined;
+  };
+}
+
+/** network.level-board@1.0.0 (owner: network) */
+/**
+ * NetworkLevelBoard: one earned platform level owned by Network; experience is never bought or spent.
+ */
+export interface NetworkLevelBoard {
+  all_time: {
+    /**
+     * @maxItems 50
+     */
+    top: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    }[];
+    me: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    } | null;
+    /**
+     * @maxItems 11
+     */
+    around:
+      | []
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ];
+  };
+  week: {
+    /**
+     * @maxItems 50
+     */
+    top: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    }[];
+    me: {
+      subject: string;
+      username: string;
+      level: number;
+      xp: number;
+      rank: number;
+    } | null;
+    /**
+     * @maxItems 11
+     */
+    around:
+      | []
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ]
+      | [
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          },
+          {
+            subject: string;
+            username: string;
+            level: number;
+            xp: number;
+            rank: number;
+          }
+        ];
+  };
+}

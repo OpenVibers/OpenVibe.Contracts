@@ -1869,6 +1869,75 @@
                   "build"
                 ],
                 "description": "The room's launcher group in OpenVibe.Shared rooms.js and OpenVibe.Network frame/sites.js; optional so older manifests retain their meaning."
+              },
+              "strip": {
+                "type": "array",
+                "maxItems": 3,
+                "description": "This site's own items on the network's footer strip, read with the rest of it at openvibe.network GET /api/frame/online?site=<id>: a label, an icon from the shared glyph set, an https link on an OpenVibe domain (any openvibe.* host), and either a count the site reports or a fixed line. Network checks every field again before it reaches a page.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "label",
+                    "icon",
+                    "link"
+                  ],
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 24,
+                      "description": "Plain text, one line."
+                    },
+                    "icon": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9-]{0,39}$",
+                      "description": "A name from openvibe-shared's glyph set (glyphs.js NAMES), e.g. members, video, clipboard."
+                    },
+                    "link": {
+                      "type": "string",
+                      "minLength": 8,
+                      "maxLength": 400,
+                      "pattern": "^https://",
+                      "description": "Where the item opens: https on an openvibe.* domain. Network refuses any other host."
+                    },
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "The number the site reports, shown beside the label."
+                    },
+                    "line": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40,
+                      "description": "A fixed line instead of a number, plain text."
+                    }
+                  },
+                  "allOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "count"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "line"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "not": {
+                        "required": [
+                          "count",
+                          "line"
+                        ]
+                      }
+                    }
+                  ]
+                }
               }
             }
           },
@@ -28613,6 +28682,70 @@
             }
           }
         ]
+      }
+    },
+    "billing.money-reason": {
+      "version": "1.0.0",
+      "owner": "billing",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/billing/money-reason.v1.json",
+        "title": "BillingMoneyReason",
+        "description": "billing.money-reason@1: why a movement of OpenCoins, Vibes or Balance happened, in the words a person reads. `key` is the raw ledger reason (OpenCoins reason, or Billing's type:metadata); `text` is the phrase without the amount (\"for the quest Publish a video\"), so a page writes \"+15 OpenCoins\" before it; `subject` is the thing it was for and where to read it, when there is one. A key nobody declared reads \"for something on <site>\", has known: false, and is never shown as its key. Same reason kinds, one list: openvibe-contracts/lib/money-reasons.js.",
+        "type": "object",
+        "required": [
+          "key",
+          "text"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "The ledger's own reason, kept for support and logs. A page never prints it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "The plain phrase, without the amount: \"for the quest Publish a video\"."
+          },
+          "subject": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "What the movement was for (a quest, a stream, a tip, a creator, an app, a project, a purchase), with its own name and address. Null when the reason has no page of its own.",
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 160
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "maxLength": 500
+              }
+            }
+          },
+          "site": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "The site the movement belongs to, in the words a person reads (OpenVibe.Quest, OpenVibe.Live, OpenVibe)."
+          },
+          "known": {
+            "type": "boolean",
+            "description": "False for a key no kind declares; its text says \"for something on <site>\"."
+          }
+        }
       }
     },
     "billing.vibes-charge": {
@@ -63180,6 +63313,154 @@
             "$ref": "ingress-ack.v1.json#/$defs/error"
           }
         ]
+      }
+    },
+    "chat.room-insight-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/room-insight-result.v1.json",
+        "title": "ChatRoomInsightResult",
+        "description": "chat.room-insight-result@1: the answer of GET /api/v1/rooms/:id/insight on OpenVibe.Chat, public (no account, as the room itself is readable). One shape for every room: Global (id `global`) first, then a server's channels and the rooms people make. The overview is the summary OpenVibe.Chat's chat-AI job keeps (the same schedule, window and budget rules as Live's, only when there were new messages); it reads only the messages of people who allowed AI use of them (network.consent@1, purpose ai.train on kind chat), so an overview never quotes someone who did not. state is `ready` when the overview is fresh, `quiet` when there is nothing new to say (text and topics empty, the timeline keeps history), and `off` when the room's owner has not turned the insight on (private rooms; never a DM). A room the rollout does not cover answers 404. Timestamps are Chat's UTC `YYYY-MM-DD HH:MM:SS` (ov_now()), or null.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "overview",
+          "timeline",
+          "state"
+        ],
+        "properties": {
+          "overview": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "text",
+              "topics",
+              "people",
+              "messages",
+              "from",
+              "to",
+              "updated_at"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "The overview written for someone arriving now, in plain prose; empty when state is quiet or off."
+              },
+              "topics": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "label",
+                    "count"
+                  ],
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "count": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "How many messages of the window mentioned the topic."
+                    }
+                  }
+                },
+                "description": "The words the window kept coming back to, most mentioned first. Empty when state is quiet or off."
+              },
+              "people": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many different people wrote in the window the overview reads."
+              },
+              "messages": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many messages the window held (the ones the summariser was allowed to read)."
+              },
+              "from": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The window's first message time."
+              },
+              "to": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The window's last time, which is when the job last looked."
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "When the overview row was last written."
+              }
+            }
+          },
+          "timeline": {
+            "type": "array",
+            "maxItems": 60,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "at",
+                "kind",
+                "title",
+                "text",
+                "message_id"
+              ],
+              "properties": {
+                "at": {
+                  "type": "string",
+                  "description": "When it happened, Chat's UTC `YYYY-MM-DD HH:MM:SS`."
+                },
+                "kind": {
+                  "type": "string",
+                  "maxLength": 20,
+                  "description": "What kind of moment: `moment` for a notable thing the summariser recorded, `event` for a non-chat activity (a donation, a clip), `message` for a line it picked out."
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 140
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "message_id": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1,
+                  "description": "The message it came from, when it is one message; null for a summary of several."
+                }
+              }
+            },
+            "description": "The room's notable moments, newest first. History survives a quiet window."
+          },
+          "state": {
+            "enum": [
+              "ready",
+              "quiet",
+              "off"
+            ],
+            "description": "ready: the overview above is fresh. quiet: nothing new to say; said as quiet, never invented. off: the room's owner has not turned insight on."
+          }
+        }
       }
     },
     "chat.first-chat-result": {
@@ -119653,6 +119934,69 @@
               "time_ms": {
                 "type": "number",
                 "minimum": 0
+              },
+              "attempts": {
+                "description": "Ordered routing attempts with safe reason codes; no provider error bodies or credentials.",
+                "type": "array",
+                "maxItems": 64,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "provider",
+                    "engine",
+                    "status",
+                    "time_ms",
+                    "cost_usd"
+                  ],
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "engine": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 200
+                    },
+                    "status": {
+                      "enum": [
+                        "ok",
+                        "error",
+                        "skipped"
+                      ]
+                    },
+                    "reason": {
+                      "enum": [
+                        "disabled",
+                        "unsupported",
+                        "no_credentials",
+                        "circuit_open",
+                        "daily_cap",
+                        "budget",
+                        "timeout",
+                        "upstream_error",
+                        "invalid_response"
+                      ]
+                    },
+                    "time_ms": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "cost_usd": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                }
               }
             },
             "additionalProperties": false
@@ -119763,6 +120107,69 @@
               "time_ms": {
                 "type": "number",
                 "minimum": 0
+              },
+              "attempts": {
+                "description": "Ordered routing attempts with safe reason codes; no provider error bodies or credentials.",
+                "type": "array",
+                "maxItems": 64,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "provider",
+                    "engine",
+                    "status",
+                    "time_ms",
+                    "cost_usd"
+                  ],
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "engine": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 200
+                    },
+                    "status": {
+                      "enum": [
+                        "ok",
+                        "error",
+                        "skipped"
+                      ]
+                    },
+                    "reason": {
+                      "enum": [
+                        "disabled",
+                        "unsupported",
+                        "no_credentials",
+                        "circuit_open",
+                        "daily_cap",
+                        "budget",
+                        "timeout",
+                        "upstream_error",
+                        "invalid_response"
+                      ]
+                    },
+                    "time_ms": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "cost_usd": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                }
               }
             },
             "additionalProperties": false
@@ -121332,6 +121739,17 @@
           "effort": {
             "$ref": "effort.v1.json"
           },
+          "advisor": {
+            "description": "Ask a stronger model for advice during this run (ai.advisor@1). Off when omitted. true takes the defaults: at most 3 uses, at most 100 words, the owner's reviewer role default and high effort. An object may name the model, the effort and smaller caps.",
+            "oneOf": [
+              {
+                "const": true
+              },
+              {
+                "$ref": "advisor.v1.json"
+              }
+            ]
+          },
           "ladder_id": {
             "type": "string",
             "minLength": 1
@@ -122128,6 +122546,53 @@
                 }
               }
             }
+          },
+          "advisor": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "max_uses",
+                  "max_words",
+                  "count",
+                  "cost_usd",
+                  "uses"
+                ],
+                "properties": {
+                  "max_uses": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3
+                  },
+                  "max_words": {
+                    "type": "integer",
+                    "minimum": 10,
+                    "maximum": 100
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                  },
+                  "cost_usd": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "uses": {
+                    "type": "array",
+                    "maxItems": 3,
+                    "items": {
+                      "$ref": "advice.v1.json"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The advisor calls this run made (ai.advisor@1), each with the advice run, the model, the tokens and the cost. Absent or null when the run did not ask for advice."
           }
         }
       }
@@ -122853,6 +123318,554 @@
           "high",
           "max"
         ]
+      }
+    },
+    "ai.advisor": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/advisor.v1.json",
+        "title": "AiAdvisor",
+        "description": "How a run may ask a stronger model for advice. Off unless the caller asks; at most 3 uses and at most 100 words of advice come back, and each use is on the run's receipt with its cost. The executor stays in charge: advice is guidance in the run's transcript, never an answer or a tool the advisor runs.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "max_uses",
+          "max_words"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*/[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,199}$",
+            "description": "The stronger model to consult, as provider/model from GET /api/v1/routes. Omitted: the owner's reviewer role default, then the strongest offer the run's route can serve."
+          },
+          "effort": {
+            "$ref": "effort.v1.json",
+            "description": "The advice call's effort. auto is refused: it resolves to a concrete level before the call (high when omitted)."
+          },
+          "max_uses": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "default": 3,
+            "description": "How many times this run may ask for advice. 1 to 3; the default is 3."
+          },
+          "max_words": {
+            "type": "integer",
+            "minimum": 10,
+            "maximum": 100,
+            "default": 100,
+            "description": "The longest advice the advisor may return. 10 to 100 words; the default is 100 and longer advice is cut to it."
+          }
+        }
+      }
+    },
+    "ai.advice": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/advice.v1.json",
+        "title": "AiAdvice",
+        "description": "One advisor use on a run (ai.advisor@1): the advice run it made, the model consulted, its effort, the tokens and the cost. The advice text itself is answered to the caller and not kept on the receipt.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "run_id",
+          "use",
+          "advice_run_id",
+          "model",
+          "effort",
+          "tokens_in",
+          "tokens_out",
+          "cost_usd",
+          "created_at"
+        ],
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The executor run the advice was asked for."
+          },
+          "use": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "This use's number on the run, from 1."
+          },
+          "advice_run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The run of workflow ai.chat that made the advice call; its own receipt carries the price."
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The advisor model that answered, provider/model."
+          },
+          "effort": {
+            "$ref": "effort.v1.json"
+          },
+          "tokens_in": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tokens_out": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What this advice call cost, on the same price basis as the run's own cost."
+          },
+          "words": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "How many words of advice came back."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.level": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/level.v1.json",
+        "title": "NetworkLevel",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "level",
+          "xp",
+          "into",
+          "span",
+          "next_at",
+          "rank",
+          "recent"
+        ],
+        "properties": {
+          "level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000000
+          },
+          "xp": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000000
+          },
+          "into": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000000
+          },
+          "span": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000000
+          },
+          "next_at": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000000
+          },
+          "rank": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "recent": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "at",
+                "amount"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "amount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "description": "NetworkLevel: one earned platform level owned by Network; experience is never bought or spent."
+      }
+    },
+    "network.level-award": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/level-award.v1.json",
+        "title": "NetworkLevelAward",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "reason",
+          "amount",
+          "idempotency_key"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "reason": {
+            "enum": [
+              "quest.completed",
+              "coins.earned",
+              "video.published",
+              "stream.watched"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "description": "NetworkLevelAward: one earned platform level owned by Network; experience is never bought or spent."
+      }
+    },
+    "network.level-batch": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/level-batch.v1.json",
+        "title": "NetworkLevelBatch",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "levels"
+        ],
+        "properties": {
+          "levels": {
+            "type": "object",
+            "maxProperties": 100,
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "description": "NetworkLevelBatch: one earned platform level owned by Network; experience is never bought or spent."
+      }
+    },
+    "network.level-board": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/level-board.v1.json",
+        "title": "NetworkLevelBoard",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "all_time",
+          "week"
+        ],
+        "properties": {
+          "all_time": {
+            "type": "object",
+            "required": [
+              "top",
+              "me",
+              "around"
+            ],
+            "properties": {
+              "top": {
+                "type": "array",
+                "maxItems": 50,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "username",
+                    "level",
+                    "xp",
+                    "rank"
+                  ],
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "xp": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "rank": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "me": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "subject",
+                      "username",
+                      "level",
+                      "xp",
+                      "rank"
+                    ],
+                    "properties": {
+                      "subject": {
+                        "type": "string",
+                        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "level": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000000000
+                      },
+                      "xp": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000000000
+                      },
+                      "rank": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000000000
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "around": {
+                "type": "array",
+                "maxItems": 11,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "username",
+                    "level",
+                    "xp",
+                    "rank"
+                  ],
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "xp": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "rank": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "week": {
+            "type": "object",
+            "required": [
+              "top",
+              "me",
+              "around"
+            ],
+            "properties": {
+              "top": {
+                "type": "array",
+                "maxItems": 50,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "username",
+                    "level",
+                    "xp",
+                    "rank"
+                  ],
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "xp": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "rank": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "me": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "subject",
+                      "username",
+                      "level",
+                      "xp",
+                      "rank"
+                    ],
+                    "properties": {
+                      "subject": {
+                        "type": "string",
+                        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "level": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000000000
+                      },
+                      "xp": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000000000
+                      },
+                      "rank": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1000000000000
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "around": {
+                "type": "array",
+                "maxItems": 11,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "subject",
+                    "username",
+                    "level",
+                    "xp",
+                    "rank"
+                  ],
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "xp": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    },
+                    "rank": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "description": "NetworkLevelBoard: one earned platform level owned by Network; experience is never bought or spent."
       }
     }
   }

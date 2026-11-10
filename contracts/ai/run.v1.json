@@ -753,6 +753,53 @@
           }
         }
       }
+    },
+    "advisor": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_uses",
+            "max_words",
+            "count",
+            "cost_usd",
+            "uses"
+          ],
+          "properties": {
+            "max_uses": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3
+            },
+            "max_words": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 100
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            },
+            "cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "uses": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "$ref": "advice.v1.json"
+              }
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "The advisor calls this run made (ai.advisor@1), each with the advice run, the model, the tokens and the cost. Absent or null when the run did not ask for advice."
     }
   }
 }

@@ -1,3 +1,5 @@
+require('./search-attempts.test');
+require('./levels.test');
 'use strict';
 const assert = require('assert');
 const fs = require('fs');
@@ -38,6 +40,7 @@ function sub(file, ...args) {
 
 sub(path.join(ROOT, 'test/link-brand.test.js'));
 sub(path.join(ROOT, 'test/link-compute.test.js'));
+sub(path.join(ROOT, 'test/money-reasons.test.js'));
 
 // ── Catalog integrity ────────────────────────────────────────────────────
 const files = [];

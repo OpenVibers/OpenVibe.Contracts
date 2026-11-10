@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/level-board.v1.json",
+  "title": "NetworkLevelBoard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "all_time",
+    "week"
+  ],
+  "properties": {
+    "all_time": {
+      "type": "object",
+      "required": [
+        "top",
+        "me",
+        "around"
+      ],
+      "properties": {
+        "top": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "username",
+              "level",
+              "xp",
+              "rank"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "username": {
+                "type": "string"
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "xp": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "rank": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "me": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "subject",
+                "username",
+                "level",
+                "xp",
+                "rank"
+              ],
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "level": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                },
+                "xp": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                },
+                "rank": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "around": {
+          "type": "array",
+          "maxItems": 11,
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "username",
+              "level",
+              "xp",
+              "rank"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "username": {
+                "type": "string"
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "xp": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "rank": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "week": {
+      "type": "object",
+      "required": [
+        "top",
+        "me",
+        "around"
+      ],
+      "properties": {
+        "top": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "username",
+              "level",
+              "xp",
+              "rank"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "username": {
+                "type": "string"
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "xp": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "rank": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "me": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "subject",
+                "username",
+                "level",
+                "xp",
+                "rank"
+              ],
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "level": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                },
+                "xp": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                },
+                "rank": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "around": {
+          "type": "array",
+          "maxItems": 11,
+          "items": {
+            "type": "object",
+            "required": [
+              "subject",
+              "username",
+              "level",
+              "xp",
+              "rank"
+            ],
+            "properties": {
+              "subject": {
+                "type": "string",
+                "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "username": {
+                "type": "string"
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "xp": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              },
+              "rank": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000000000
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "description": "NetworkLevelBoard: one earned platform level owned by Network; experience is never bought or spent."
+}

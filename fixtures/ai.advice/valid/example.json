@@ -1,0 +1,12 @@
+{
+  "run_id": "run_01JQ8Z3K4M5N6P7Q8R9S0T1V2W",
+  "use": 1,
+  "advice_run_id": "run_01JQ8Z3K4M5N6P7Q8R9S0T1V2X",
+  "model": "deepseek/deepseek-v4-pro",
+  "effort": "high",
+  "tokens_in": 1200,
+  "tokens_out": 80,
+  "cost_usd": 0.00216,
+  "words": 61,
+  "created_at": "2026-11-10T09:30:00Z"
+}

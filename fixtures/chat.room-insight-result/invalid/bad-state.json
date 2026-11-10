@@ -1,0 +1,13 @@
+{
+  "overview": {
+    "text": "A room whose state is not one of the three.",
+    "topics": [],
+    "people": 1,
+    "messages": 1,
+    "from": null,
+    "to": null,
+    "updated_at": null
+  },
+  "timeline": [],
+  "state": "busy"
+}

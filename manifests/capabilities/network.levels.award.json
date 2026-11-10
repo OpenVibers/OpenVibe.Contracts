@@ -1,0 +1,19 @@
+{
+  "id": "network.levels.award",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "internal",
+  "description": "Award earned, non-spendable experience. Service identity comes from the credential; duplicates are refused with 409. Daily service and person caps apply.",
+  "permissions": [
+    "levels:write"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "ledger-write",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/levels/award"
+  ],
+  "inputSchema": "network.level-award@1",
+  "outputSchema": "network.level@1"
+}

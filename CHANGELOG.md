@@ -1,8 +1,40 @@
 # Changelog
 
+## 0.397.0 — 2026-11-10
+
+- Add `agent.goal@1`: a task's outcome in words, a typed check (`command`, `url` or `rubric`), optional resource budgets (tokens, turns, active minutes) and a no-progress limit, plus the worker's bounded completion proposal and evidence and the independent verifier's verdict (accepted or rejected, with a reason and the check's own output).
+
+## 0.396.0 — 2026-11-10
+
+- Add optional ordered attempts to web and image search receipts, with provider/engine, status, safe reason codes, latency and cost. Existing receipts remain valid.
+
+## 0.395.0 — 2026-11-10
+
+- Add two planned products to the catalog: `manifests/products/openvibe.compare.json` (OpenVibe.Compare: compare anything side by side with its sources and dates, AI models first) and `manifests/products/openvibe.directory.json` (OpenVibe.Directory). Both are `noRepo` with launch notes; the addresses are parked. Compare's "meanwhile" link is OpenVibe.Exchange, where the models and their prices live today.
+
+## 0.394.0 — 2026-11-10
+
+- Add `chat.room-insight-result@1` (`contracts/chat/room-insight-result.v1.json`): the public answer of `GET /api/v1/rooms/:id/insight` on OpenVibe.Chat. One shape for every room: `overview` (the text written for someone arriving now, its topics with message counts, how many people and messages the window held, its from/to times and when it was written), `timeline` (the room's notable moments, newest first, each with `at`, `kind`, `title`, `text` and the `message_id` it came from), and `state` (`ready` / `quiet` / `off`). Quiet is explicit: an old or empty summary carries no text rather than invented news. The overview reads only people who allowed AI use of their messages (`network.consent@1`, purpose `ai.train` on kind `chat`).
+
+## 0.393.0 — 2026-11-10
+
+- `billing.money-reason@1`: declare `donation:received`, the row a creator sees for a tip that arrived ("for a tip from @alice"). The kind list is one list; the sender's `donation` still reads "for a tip to @bob".
+
+## 0.392.0 — 2026-11-10
+
+- Add `billing.money-reason@1` and `lib/money-reasons.js`: one list of the plain words for a movement of OpenCoins, Vibes or Balance. Each kind declares the key it matches (`quest:publish-a-video`, `Media request: <title>`, Billing's type:metadata), its site, what its subject is (a quest, a stream, a tip, a creator, an app, a project, a purchase), the phrase that names it ("for the quest {name}"), and how the subject's own name and address are found. `describe()` answers `{ key, text, subject: { name, url } | null }`, so a page writes "+15 OpenCoins" before the text and links it; an undeclared key reads "for something on <site>" with `known: false` and never shows the key. Fixtures cover a quest, a tip, a reason with no page and an undeclared key.
+
+## 0.391.0 — 2026-11-09
+
+- One Network experience curve, named reasons, level reads and capped service awards.
+
+## 0.390.0 — 2026-11-10
+
+- A service manifest's `site` block takes an optional `strip`: up to three items a site adds to the network's footer strip, read with the rest of it at OpenVibe.Network `GET /api/frame/online?site=<id>`. An item is a plain label, an icon from openvibe-shared's glyph set, an https link on an `openvibe.*` domain, and either a `count` the site reports or a fixed `line` — never both. Live, Community and Games declare one each as the worked examples.
+
 ## 0.389.0 — 2026-11-10
 
-- Add `agent.goal@1`, a goal and typed check with optional resource budgets and no-progress limit, plus bounded completion proposal, evidence and verifier verdict fields.
+- Add `ai.advisor@1`: how a run may ask a stronger model for advice during the run. Off when the request omits it; at most 3 uses and at most 100 words of advice; the advisor may be named, the effort is concrete, and each use is on the run's receipt with its cost. Add `ai.advice@1`: one use on that receipt, naming the advice run, the model, the tokens and the cost. `ai.run-request@1` takes the optional `advisor` field and `ai.run@1`'s explain carries the uses.
 
 ## 0.388.0 — 2026-11-10
 

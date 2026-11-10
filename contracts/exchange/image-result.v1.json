@@ -95,6 +95,69 @@
         "time_ms": {
           "type": "number",
           "minimum": 0
+        },
+        "attempts": {
+          "description": "Ordered routing attempts with safe reason codes; no provider error bodies or credentials.",
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": [
+              "provider",
+              "engine",
+              "status",
+              "time_ms",
+              "cost_usd"
+            ],
+            "properties": {
+              "provider": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "engine": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 200
+              },
+              "status": {
+                "enum": [
+                  "ok",
+                  "error",
+                  "skipped"
+                ]
+              },
+              "reason": {
+                "enum": [
+                  "disabled",
+                  "unsupported",
+                  "no_credentials",
+                  "circuit_open",
+                  "daily_cap",
+                  "budget",
+                  "timeout",
+                  "upstream_error",
+                  "invalid_response"
+                ]
+              },
+              "time_ms": {
+                "type": "number",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
         }
       },
       "additionalProperties": false

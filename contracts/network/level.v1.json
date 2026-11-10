@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/level.v1.json",
+  "title": "NetworkLevel",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "level",
+    "xp",
+    "into",
+    "span",
+    "next_at",
+    "rank",
+    "recent"
+  ],
+  "properties": {
+    "level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "xp": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "into": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "span": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "next_at": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "rank": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "recent": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "at",
+          "amount"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000000
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "description": "NetworkLevel: one earned platform level owned by Network; experience is never bought or spent."
+}
