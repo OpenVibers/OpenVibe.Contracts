@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/command.v1.json",
+  "title": "Chat slash command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "description", "options"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}$" },
+    "description": { "type": "string", "maxLength": 100 },
+    "options": { "type": "array", "maxItems": 25, "items": { "$ref": "#/$defs/option" } },
+    "source": { "enum": ["builtin", "app", "actor"] },
+    "application_id": { "type": ["string", "null"], "maxLength": 128 }
+  },
+  "$defs": {
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "type", "required"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}$" },
+        "description": { "type": "string", "maxLength": 100 },
+        "type": { "enum": ["string", "integer", "boolean", "user", "channel"] },
+        "required": { "type": "boolean" },
+        "choices": { "type": "array", "maxItems": 25, "items": { "type": "string", "maxLength": 100 } },
+        "autocomplete": { "type": "boolean" }
+      }
+    }
+  }
+}
