@@ -46,7 +46,12 @@
     ],
     "neighbourhood": "streams",
     "strip": [
-      { "label": "The Rundown", "icon": "news", "link": "https://openvibe.live/rundown", "line": "What streamers talked about" }
+      {
+        "label": "The Rundown",
+        "icon": "news",
+        "link": "https://openvibe.live/rundown",
+        "line": "What streamers talked about"
+      }
     ]
   },
   "capabilities": [
@@ -82,7 +87,6 @@
     "media.vod.*",
     "network.account.deleted",
     "network.account.export_requested",
-    "network.subject.merged",
     "network.user.token_valid_after",
     "network.user.updated",
     "openre.session.*"

@@ -13,15 +13,44 @@
   ],
   "publicOrigin": "https://openvibe.chat",
   "apiRoutes": [
-    { "method": "GET", "path": "/api/vibe/models" },
-    { "method": "GET", "path": "/api/vibe/chat", "responseSchema": "chat.vibe-answer@2" },
-    { "method": "GET", "path": "/api/vibe/conversations", "responseSchema": "chat.vibe-conversations-result@1" },
-    { "method": "POST", "path": "/api/vibe/ask" },
-    { "method": "POST", "path": "/api/vibe/pick" },
-    { "method": "POST", "path": "/api/vibe/prefer" },
-    { "method": "GET", "path": "/api/vibe/import" },
-    { "method": "POST", "path": "/api/vibe/import" },
-    { "method": "POST", "path": "/api/vibe/import/dismiss" }
+    {
+      "method": "GET",
+      "path": "/api/vibe/models"
+    },
+    {
+      "method": "GET",
+      "path": "/api/vibe/chat",
+      "responseSchema": "chat.vibe-answer@2"
+    },
+    {
+      "method": "GET",
+      "path": "/api/vibe/conversations",
+      "responseSchema": "chat.vibe-conversations-result@1"
+    },
+    {
+      "method": "POST",
+      "path": "/api/vibe/ask"
+    },
+    {
+      "method": "POST",
+      "path": "/api/vibe/pick"
+    },
+    {
+      "method": "POST",
+      "path": "/api/vibe/prefer"
+    },
+    {
+      "method": "GET",
+      "path": "/api/vibe/import"
+    },
+    {
+      "method": "POST",
+      "path": "/api/vibe/import"
+    },
+    {
+      "method": "POST",
+      "path": "/api/vibe/import/dismiss"
+    }
   ],
   "capabilities": [
     "chat.agent_digest.read",
@@ -65,7 +94,6 @@
     "network.account.deleted",
     "network.account.export_requested",
     "network.block.changed",
-    "network.subject.merged",
     "network.user.token_valid_after"
   ],
   "namespacesOwned": [
@@ -107,7 +135,7 @@
         },
         {
           "kind": "consumer",
-          "what": "OpenVibe.Events redelivers the events of Chat's subscriptions (network.block.changed, network.user.token_valid_after, live.release.deployed, …) that were pending during the stop (at least once, deduped by event_id)"
+          "what": "OpenVibe.Events redelivers the events of Chat's subscriptions (network.block.changed, network.user.token_valid_after, live.release.deployed, \u2026) that were pending during the stop (at least once, deduped by event_id)"
         }
       ]
     },
@@ -118,7 +146,7 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+        "none": "the schema code only adds (CREATE \u2026 IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
       }
     },
     "contracts": {

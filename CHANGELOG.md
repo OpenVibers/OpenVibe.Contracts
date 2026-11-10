@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.399.0 — 2026-11-10
+
+- Retire account-merge contracts without deleting their published schemas; replacement events document that account deletion is the remaining account-closing flow.
+
+
 ## 0.398.0 — 2026-11-10
 
 - `codes.task@2`'s outcome state names a goal task's honest end state: `ready` only with an accepted independent verdict, `waiting`, `blocked` at its no-progress limit, `failed`, `dropped` by the person, or `stopped_by_budget`. A task without a goal keeps `done`, `unfinished` and `stopped`.

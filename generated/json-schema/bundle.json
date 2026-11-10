@@ -34620,7 +34620,7 @@
     "network.subject.merged": {
       "version": "1.0.0",
       "owner": "network",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/events/payloads/network.subject.merged.v1.json",
@@ -36003,7 +36003,7 @@
     "network.account-merge-result": {
       "version": "1.0.0",
       "owner": "network",
-      "status": "active",
+      "status": "retired",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/network/account-merge-result.v1.json",

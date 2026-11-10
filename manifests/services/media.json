@@ -90,7 +90,6 @@
   "eventsConsumed": [
     "network.account.deleted",
     "network.account.export_requested",
-    "network.subject.merged",
     "network.user.token_valid_after"
   ],
   "namespacesOwned": [

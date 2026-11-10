@@ -47,7 +47,6 @@
     "bot.robot.online",
     "network.account.export_requested",
     "network.account.deleted",
-    "network.subject.merged",
     "mediahub.picture.uploaded",
     "mediahub.video.published"
   ],

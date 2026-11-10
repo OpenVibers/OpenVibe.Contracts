@@ -3257,7 +3257,7 @@
       "schema": "events/payloads/network.subject.merged.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active",
+      "status": "retired",
       "adr": "ADR-029"
     },
     {
@@ -3406,7 +3406,7 @@
       "schema": "network/account-merge-result.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active",
+      "status": "retired",
       "adr": "ADR-029"
     },
     {

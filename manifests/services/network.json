@@ -109,7 +109,6 @@
     "network.link.revoked",
     "network.notification.created",
     "network.principal_grant.changed",
-    "network.subject.merged",
     "network.user.token_valid_after",
     "network.user.updated",
     "network.consent.changed",
