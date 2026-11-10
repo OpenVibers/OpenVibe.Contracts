@@ -327102,6 +327102,10 @@ export type AiRunRequest = {
     subject: string;
   };
   effort?: AiEffort;
+  /**
+   * Ask a stronger model for advice during this run (ai.advisor@1). Off when omitted. true takes the defaults: at most 3 uses, at most 100 words, the owner's reviewer role default and high effort. An object may name the model, the effort and smaller caps.
+   */
+  advisor?: true | AiAdvisor;
   ladder_id?: string;
   rung?: number;
   agent_role?: "router" | "gate" | "assessor" | "worker" | "subagent" | "reviewer";
@@ -327621,6 +327625,19 @@ export interface AiRun {
     cost_usd: number;
     outcome: string;
   }[];
+  /**
+   * The advisor calls this run made (ai.advisor@1), each with the advice run, the model, the tokens and the cost. Absent or null when the run did not ask for advice.
+   */
+  advisor?: {
+    max_uses: number;
+    max_words: number;
+    count: number;
+    cost_usd: number;
+    /**
+     * @maxItems 3
+     */
+    uses: [] | [AiAdvice] | [AiAdvice, AiAdvice] | [AiAdvice, AiAdvice, AiAdvice];
+  } | null;
 }
 
 /** ai.task-defaults@1.1.0 (owner: ai) */
@@ -328045,3 +328062,58 @@ export type AgentStage =
  * Portable reasoning effort. auto resolves to the task default; unsupported model controls are ignored and receipt effort_applied is null.
  */
 export type AiEffort = "auto" | "low" | "medium" | "high" | "max";
+
+/** ai.advisor@1.0.0 (owner: ai) */
+/**
+ * How a run may ask a stronger model for advice. Off unless the caller asks; at most 3 uses and at most 100 words of advice come back, and each use is on the run's receipt with its cost. The executor stays in charge: advice is guidance in the run's transcript, never an answer or a tool the advisor runs.
+ */
+export interface AiAdvisor {
+  /**
+   * The stronger model to consult, as provider/model from GET /api/v1/routes. Omitted: the owner's reviewer role default, then the strongest offer the run's route can serve.
+   */
+  model?: string;
+  effort?: AiEffort;
+  /**
+   * How many times this run may ask for advice. 1 to 3; the default is 3.
+   */
+  max_uses: number;
+  /**
+   * The longest advice the advisor may return. 10 to 100 words; the default is 100 and longer advice is cut to it.
+   */
+  max_words: number;
+}
+
+/** ai.advice@1.0.0 (owner: ai) */
+/**
+ * One advisor use on a run (ai.advisor@1): the advice run it made, the model consulted, its effort, the tokens and the cost. The advice text itself is answered to the caller and not kept on the receipt.
+ */
+export interface AiAdvice {
+  /**
+   * The executor run the advice was asked for.
+   */
+  run_id: string;
+  /**
+   * This use's number on the run, from 1.
+   */
+  use: number;
+  /**
+   * The run of workflow ai.chat that made the advice call; its own receipt carries the price.
+   */
+  advice_run_id: string;
+  /**
+   * The advisor model that answered, provider/model.
+   */
+  model: string;
+  effort: AiEffort;
+  tokens_in: number;
+  tokens_out: number;
+  /**
+   * What this advice call cost, on the same price basis as the run's own cost.
+   */
+  cost_usd: number;
+  /**
+   * How many words of advice came back.
+   */
+  words?: number;
+  created_at: string;
+}

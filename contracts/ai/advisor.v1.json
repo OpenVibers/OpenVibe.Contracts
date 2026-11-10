@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/advisor.v1.json",
+  "title": "AiAdvisor",
+  "description": "How a run may ask a stronger model for advice. Off unless the caller asks; at most 3 uses and at most 100 words of advice come back, and each use is on the run's receipt with its cost. The executor stays in charge: advice is guidance in the run's transcript, never an answer or a tool the advisor runs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "max_uses",
+    "max_words"
+  ],
+  "properties": {
+    "model": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*/[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,199}$",
+      "description": "The stronger model to consult, as provider/model from GET /api/v1/routes. Omitted: the owner's reviewer role default, then the strongest offer the run's route can serve."
+    },
+    "effort": {
+      "$ref": "effort.v1.json",
+      "description": "The advice call's effort. auto is refused: it resolves to a concrete level before the call (high when omitted)."
+    },
+    "max_uses": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3,
+      "default": 3,
+      "description": "How many times this run may ask for advice. 1 to 3; the default is 3."
+    },
+    "max_words": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 100,
+      "default": 100,
+      "description": "The longest advice the advisor may return. 10 to 100 words; the default is 100 and longer advice is cut to it."
+    }
+  }
+}

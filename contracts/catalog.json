@@ -11141,6 +11141,24 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "ai.advisor",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/advisor.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.advice",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/advice.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

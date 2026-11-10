@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.389.0 — 2026-11-10
+
+- Add `ai.advisor@1`: how a run may ask a stronger model for advice during the run. Off when the request omits it; at most 3 uses and at most 100 words of advice; the advisor may be named, the effort is concrete, and each use is on the run's receipt with its cost. Add `ai.advice@1`: one use on that receipt, naming the advice run, the model, the tokens and the cost. `ai.run-request@1` takes the optional `advisor` field and `ai.run@1`'s explain carries the uses.
+
 ## 0.388.0 — 2026-11-10
 
 - Add `git.clone-request@1`: one "Clone to my computer" request from a repository page. Git mints it for the signed-in person, the person's Link reads it over an outbound HTTPS relay, asks for approval on the machine, clones into a folder inside the root the person chose in Link, and reports progress back; the page polls the same document. The request lasts two minutes, only a repository the person may read can be requested, and `clone_url` (with a short-lived read token) is present only in the Link's answer, never in the page's copy.

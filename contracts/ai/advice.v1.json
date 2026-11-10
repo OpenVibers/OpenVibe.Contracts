@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/advice.v1.json",
+  "title": "AiAdvice",
+  "description": "One advisor use on a run (ai.advisor@1): the advice run it made, the model consulted, its effort, the tokens and the cost. The advice text itself is answered to the caller and not kept on the receipt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "use",
+    "advice_run_id",
+    "model",
+    "effort",
+    "tokens_in",
+    "tokens_out",
+    "cost_usd",
+    "created_at"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The executor run the advice was asked for."
+    },
+    "use": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3,
+      "description": "This use's number on the run, from 1."
+    },
+    "advice_run_id": {
+      "type": "string",
+      "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The run of workflow ai.chat that made the advice call; its own receipt carries the price."
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The advisor model that answered, provider/model."
+    },
+    "effort": {
+      "$ref": "effort.v1.json"
+    },
+    "tokens_in": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tokens_out": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cost_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "What this advice call cost, on the same price basis as the run's own cost."
+    },
+    "words": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "How many words of advice came back."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
