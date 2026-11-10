@@ -180590,7 +180590,7 @@ export interface NetworkFollowStatusResult {
 
 /** network.operator-alerts-request@1.0.0 (owner: network) */
 /**
- * network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations.
+ * network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations. A browser-check alert may carry what its result file knows (details, the release and its commit link, when the check ran, since when it has been failing) so the notification can explain the problem in words and link to the page, the commit and the rule's help page. Every string is text, never markup; every URL is https.
  */
 export interface NetworkOperatorAlertsRequest {
   /**
@@ -180609,6 +180609,939 @@ export interface NetworkOperatorAlertsRequest {
     description?: string;
     service?: string;
     started_at: string;
+    /**
+     * What failed, for a browser-check alert (from the check's result file), most useful first. Plain text: a notification shows it escaped, never as markup.
+     *
+     * @maxItems 5
+     */
+    details?:
+      | []
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ];
+    /**
+     * The deployed commit the browser check saw (the full sha when the host can resolve it).
+     */
+    release?: string;
+    /**
+     * The release commit's page: git.openvibe.codes when the repository is mirrored there, else github.com.
+     */
+    release_url?: string;
+    /**
+     * When the browser check that found this ran.
+     */
+    checked_at?: string;
+    /**
+     * When this alert started firing; the same instant as started_at, named for the notification's Failing since fact.
+     */
+    failing_since?: string;
   }[];
 }
 
