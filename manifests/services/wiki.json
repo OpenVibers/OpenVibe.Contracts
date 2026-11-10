@@ -39,7 +39,7 @@
         "answer": "The page was written with AI assistance. It stays readable with that label, and out of search engines and network search until a person reviews it."
       }
     ],
-    "neighbourhood": "answers"
+    "neighbourhood": "read"
   },
   "capabilities": [
     "wiki.space.create",

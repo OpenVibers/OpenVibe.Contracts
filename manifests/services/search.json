@@ -102,6 +102,6 @@
         "answer": "Search lists only what its site marks public and indexable. Private, draft and noindex pages never appear, and a page removed from its site leaves Search too."
       }
     ],
-    "neighbourhood": "answers"
+    "neighbourhood": "read"
   }
 }

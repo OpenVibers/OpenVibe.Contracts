@@ -115,7 +115,7 @@
         }
       ]
     },
-    "neighbourhood": "streams"
+    "neighbourhood": "watch"
   },
   "capabilities": [
     "openre.stream.read",

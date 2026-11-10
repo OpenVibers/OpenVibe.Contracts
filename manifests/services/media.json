@@ -36,7 +36,7 @@
         "answer": "You choose for each one: public, unlisted (only people with the link) or private."
       }
     ],
-    "neighbourhood": "build"
+    "neighbourhood": "watch"
   },
   "capabilities": [
     "media.access_key.manage",

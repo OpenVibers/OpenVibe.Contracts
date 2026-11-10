@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.400.0 — 2026-11-10
+
+- Regroup the sites into the owner's eight groups (plan ask 274, 2026-11-10): `site.neighbourhood` is now `watch`, `talk`, `play`, `read`, `shop`, `tools`, `make` or `build`, the same ids and order as OpenVibe.Network `frame/sites.js` GROUPS and OpenVibe.Shared `rooms.js` HOODS. Every site manifest carries its new group; merged sections point at the site that shows them (Media → Video/watch, Bench → Report/read, Play → Games/play).
+
 ## 0.399.0 — 2026-11-10
 
 - #408: add `quest.today@1`, the private Quest today response.

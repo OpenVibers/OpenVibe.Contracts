@@ -75,7 +75,7 @@
         }
       ]
     },
-    "neighbourhood": "answers"
+    "neighbourhood": "shop"
   },
   "capabilities": [
     "reviews.entity.resolve",

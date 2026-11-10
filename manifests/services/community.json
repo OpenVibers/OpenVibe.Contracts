@@ -77,7 +77,7 @@
         "answer": "Yes. Comments on Live recordings and clips, blog posts and hosting plans are OpenVibe.Community threads, so one account and one moderation team cover them all."
       }
     ],
-    "neighbourhood": "people",
+    "neighbourhood": "talk",
     "strip": [
       { "label": "Share a paste", "icon": "clipboard", "link": "https://openvibe.community/pastes", "line": "No account needed" }
     ]

@@ -44,7 +44,7 @@
         "answer": "A write-up of what streamers talked about, from their own speech: the topics, each streamer's take in their own words with a link to the moment, every stream as an episode with a recap and chapters, and crossovers when streamers name each other. It replaced the Arena on 19 October 2026: no beefs, ratings or rankings."
       }
     ],
-    "neighbourhood": "streams",
+    "neighbourhood": "watch",
     "strip": [
       { "label": "The Rundown", "icon": "news", "link": "https://openvibe.live/rundown", "line": "What streamers talked about" }
     ]

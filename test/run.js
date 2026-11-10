@@ -1053,6 +1053,7 @@ sub(path.join(__dirname, 'docs-currency.test.js'));
 // ── Generated output and compatibility gate ──────────────────────────────
 sub(path.join(__dirname, 'platform-fabric.test.js'));
 sub(path.join(__dirname, 'platform-run.test.js'));
+sub(path.join(__dirname, 'site-neighbourhoods.test.js'));
 sub(path.join(ROOT, 'scripts/generate.js'), '--check');
 sub(path.join(ROOT, 'scripts/compat.js'));
 sub(path.join(__dirname, 'changelog-history.test.js'));

@@ -39,7 +39,7 @@
         "answer": "Yes. Every blog has RSS, Atom and JSON feeds."
       }
     ],
-    "neighbourhood": "answers"
+    "neighbourhood": "read"
   },
   "capabilities": [
     "blog.blog.create",

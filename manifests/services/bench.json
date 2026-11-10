@@ -105,6 +105,6 @@
     "what": "The shared AI benchmark and comparison engine: kinds, pinned rounds, blind judgements, elo/pareto/cost boards, an open dataset per kind and private evals.",
     "legalProfile": "service",
     "position": 48,
-    "neighbourhood": "build"
+    "neighbourhood": "read"
   }
 }

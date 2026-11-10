@@ -80,7 +80,7 @@
         "answer": "Tips arrive as Vibes you can cash out, under the network’s cash-out rules (from 500 Vibes, after a 14-day hold)."
       }
     ],
-    "neighbourhood": "people"
+    "neighbourhood": "talk"
   },
   "capabilities": [
     "tips.profile.get",
