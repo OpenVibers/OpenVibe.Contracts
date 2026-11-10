@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.395.0 — 2026-11-10
+
+- Add two planned products to the catalog: `manifests/products/openvibe.compare.json` (OpenVibe.Compare: compare anything side by side with its sources and dates, AI models first) and `manifests/products/openvibe.directory.json` (OpenVibe.Directory). Both are `noRepo` with launch notes; the addresses are parked. Compare's "meanwhile" link is OpenVibe.Exchange, where the models and their prices live today.
+
 ## 0.394.0 — 2026-11-10
 
 - Add `chat.room-insight-result@1` (`contracts/chat/room-insight-result.v1.json`): the public answer of `GET /api/v1/rooms/:id/insight` on OpenVibe.Chat. One shape for every room: `overview` (the text written for someone arriving now, its topics with message counts, how many people and messages the window held, its from/to times and when it was written), `timeline` (the room's notable moments, newest first, each with `at`, `kind`, `title`, `text` and the `message_id` it came from), and `state` (`ready` / `quiet` / `off`). Quiet is explicit: an old or empty summary carries no text rather than invented news. The overview reads only people who allowed AI use of their messages (`network.consent@1`, purpose `ai.train` on kind `chat`).

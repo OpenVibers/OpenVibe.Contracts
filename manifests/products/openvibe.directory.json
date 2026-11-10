@@ -1,0 +1,15 @@
+{
+  "domain": "openvibe.directory",
+  "tld": "directory",
+  "name": "OpenVibe.Directory",
+  "icon": "fa-address-book",
+  "accent": "#84cc16",
+  "tagline": "Directories that keep themselves current",
+  "description": "OpenVibe.Directory will be directories that keep themselves current: listings that update themselves instead of going stale. The product is not chartered yet; this address is parked and sends visitors to the network's front door.",
+  "legalProfile": "info",
+  "launch": "A charter: which directory goes first, what keeps it current, and who answers for stale listings.",
+  "keywords": "openvibe directory, business directory, self-updating listings, local directory",
+  "relationships": {
+    "noRepo": true
+  }
+}
