@@ -180590,7 +180590,7 @@ export interface NetworkFollowStatusResult {
 
 /** network.operator-alerts-request@1.0.0 (owner: network) */
 /**
- * network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations.
+ * network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations. A browser-check alert may carry what its result file knows (details, the release and its commit link, when the check ran, since when it has been failing) so the notification can explain the problem in words and link to the page, the commit and the rule's help page. Every string is text, never markup; every URL is https.
  */
 export interface NetworkOperatorAlertsRequest {
   /**
@@ -180609,6 +180609,939 @@ export interface NetworkOperatorAlertsRequest {
     description?: string;
     service?: string;
     started_at: string;
+    /**
+     * What failed, for a browser-check alert (from the check's result file), most useful first. Plain text: a notification shows it escaped, never as markup.
+     *
+     * @maxItems 5
+     */
+    details?:
+      | []
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ]
+      | [
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          },
+          {
+            /**
+             * The page's path on the site, e.g. /pricing.
+             */
+            route?: string;
+            /**
+             * status, errors, overflow, scripts, jsonld or axe.
+             */
+            check: string;
+            /**
+             * The axe rule id when check is axe.
+             */
+            rule?: string;
+            impact?: "minor" | "moderate" | "serious" | "critical";
+            /**
+             * The elements the rule names, as axe's target selectors.
+             *
+             * @maxItems 5
+             */
+            targets?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+            /**
+             * The rule's own help text (axe's help), for a rule the notification does not know.
+             */
+            help?: string;
+            /**
+             * The rule's help page (axe's helpUrl), when the check kept it.
+             */
+            help_url?: string;
+            /**
+             * The page that failed, on the site's own https origin.
+             */
+            page_url?: string;
+            /**
+             * A console error's text, or a JSON-LD entity's type.
+             */
+            message?: string;
+            /**
+             * The viewport width the failure was seen at, when it is width-specific.
+             */
+            width?: number;
+            status?: number;
+            /**
+             * The elements that overflow the viewport.
+             *
+             * @maxItems 5
+             */
+            offenders?:
+              | []
+              | [string]
+              | [string, string]
+              | [string, string, string]
+              | [string, string, string, string]
+              | [string, string, string, string, string];
+          }
+        ];
+    /**
+     * The deployed commit the browser check saw (the full sha when the host can resolve it).
+     */
+    release?: string;
+    /**
+     * The release commit's page: git.openvibe.codes when the repository is mirrored there, else github.com.
+     */
+    release_url?: string;
+    /**
+     * When the browser check that found this ran.
+     */
+    checked_at?: string;
+    /**
+     * When this alert started firing; the same instant as started_at, named for the notification's Failing since fact.
+     */
+    failing_since?: string;
   }[];
 }
 
@@ -279574,6 +280507,71 @@ export interface QuestDailyProgress {
   time_zone: string;
 }
 
+/** quest.today@1.0.0 (owner: quest) */
+/**
+ * quest.today@1: today's private quest and progress for the signed-in person. GET /api/v1/quests/today requires a person token.
+ */
+export interface QuestToday {
+  date: string;
+  title: string;
+  story: string;
+  /**
+   * @minItems 3
+   * @maxItems 3
+   */
+  steps: [
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    },
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    },
+    {
+      id: string;
+      event_type: string;
+      site: string;
+      sentence: string;
+      href: string;
+      weight: number;
+      count: 1;
+      verification: string;
+      status: "approved";
+      source: string;
+      progress: number;
+      done: boolean;
+    }
+  ];
+  source: "ai" | "rotation";
+  finished_today: number;
+  progress: number;
+  completed: boolean;
+  completed_at?: string | null;
+  streak: number;
+  time_zone: string;
+}
+
 /** quest.step-type@1.0.0 (owner: quest) */
 /**
  * quest.step-type@1: a verified Events action that may be selected for a daily quest. A contributed type stays pending until staff review.
@@ -329806,6 +330804,1173 @@ export type AgentStage =
   | "working/queued"
   | "idle"
   | "working";
+
+/** agent.finding@1.0.0 (owner: actor) */
+/**
+ * One finding of a review, a hunt or a security pass. The verdict is the evidence bar, not the severity: `confirmed` means the finding was reproduced or re-read and carries `severity` and `confidence`; `needs_validation` is an unprovable claim turned into a lead with an exact `blockers` entry and a `validation_plan`, and it has no severity by design (never noise, never a silent pass); `rejected` says why it does not stand. `fingerprint` is the stable identity — repository-relative file plus whitespace-normalised, lowercased text — so a re-wrapped finding keeps its id while a real rewording becomes a new one. `trace` and `evidence` carry repository-relative locations and the commands or answers that show the fact. A validator must also refuse `severity.overall_severity` above the demonstrated `severity.impact`; the schema cannot rank two enums, so `description` states the rule.
+ */
+export type AgentFinding = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * confirmed: reproduced or re-read by a second agent. needs_validation: a lead that could not be proven locally; it carries blockers and a plan, never a severity. rejected: the claim was refuted; it carries a reason.
+   */
+  verdict: "confirmed" | "needs_validation" | "rejected";
+  /**
+   * The stable id: repository-relative file + whitespace-normalised, lowercased finding text (for example `server/x.js:the cache never expires`).
+   */
+  fingerprint: string;
+  title: string;
+  /**
+   * What is wrong, in plain words; no severity claim beyond the evidence.
+   */
+  description: string;
+  /**
+   * Where the issue lives, repository-relative, most specific first.
+   *
+   * @minItems 1
+   * @maxItems 50
+   */
+  trace: [
+    {
+      /**
+       * Repository-relative path; no leading slash and no `..`.
+       */
+      file: string;
+      /**
+       * The line the finding is about, when it is one line.
+       */
+      line?: number;
+      /**
+       * The function, route or job the line belongs to.
+       */
+      symbol?: string;
+    },
+    ...{
+      /**
+       * Repository-relative path; no leading slash and no `..`.
+       */
+      file: string;
+      /**
+       * The line the finding is about, when it is one line.
+       */
+      line?: number;
+      /**
+       * The function, route or job the line belongs to.
+       */
+      symbol?: string;
+    }[]
+  ];
+  /**
+   * What shows the fact: the source read, the command and its output, the response, the screenshot or the test.
+   *
+   * @minItems 1
+   * @maxItems 50
+   */
+  evidence: [
+    {
+      /**
+       * What kind of evidence this is.
+       */
+      kind: "source" | "command" | "response" | "screenshot" | "log" | "test";
+      /**
+       * What this shows, in one sentence.
+       */
+      summary: string;
+      location?: {
+        /**
+         * Repository-relative path; no leading slash and no `..`.
+         */
+        file: string;
+        /**
+         * The line the finding is about, when it is one line.
+         */
+        line?: number;
+        /**
+         * The function, route or job the line belongs to.
+         */
+        symbol?: string;
+      };
+      command?: string;
+      output?: string;
+    },
+    ...{
+      /**
+       * What kind of evidence this is.
+       */
+      kind: "source" | "command" | "response" | "screenshot" | "log" | "test";
+      /**
+       * What this shows, in one sentence.
+       */
+      summary: string;
+      location?: {
+        /**
+         * Repository-relative path; no leading slash and no `..`.
+         */
+        file: string;
+        /**
+         * The line the finding is about, when it is one line.
+         */
+        line?: number;
+        /**
+         * The function, route or job the line belongs to.
+         */
+        symbol?: string;
+      };
+      command?: string;
+      output?: string;
+    }[]
+  ];
+  /**
+   * The two axes stay separate: likelihood is how easily it is reached, impact is what it does, overall_severity may not exceed impact.
+   */
+  severity?: {
+    likelihood: "informational" | "low" | "medium" | "high" | "critical";
+    impact: "informational" | "low" | "medium" | "high" | "critical";
+    overall_severity: "informational" | "low" | "medium" | "high" | "critical";
+  };
+  confidence?: {
+    level: "low" | "medium" | "high";
+    reason: string;
+  };
+  remediation?: {
+    strategy: string;
+    /**
+     * @maxItems 20
+     */
+    code_changes?:
+      | []
+      | [
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ]
+      | [
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          },
+          {
+            file: string;
+            change: string;
+          }
+        ];
+  };
+  /**
+   * The suspected cause of a needs_validation lead, stated as a claim to test.
+   */
+  claimed_root_cause?: string;
+  /**
+   * The exact reason the claim could not be proven here (a credential, an environment, data, a downstream service).
+   *
+   * @minItems 1
+   * @maxItems 20
+   */
+  blockers?:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  validation_plan?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Why a rejected claim does not stand.
+   */
+  reason?: string;
+};
 
 /** ai.effort@1.0.0 (owner: ai) */
 /**

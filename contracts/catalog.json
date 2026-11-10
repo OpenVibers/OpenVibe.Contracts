@@ -8588,6 +8588,15 @@
       "status": "active"
     },
     {
+      "id": "quest.today",
+      "version": "1.0.0",
+      "owner": "quest",
+      "schema": "quest/today.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "quest.step-type",
       "version": "1.0.0",
       "owner": "quest",
@@ -11156,6 +11165,15 @@
       "version": "1.0.0",
       "owner": "actor",
       "schema": "agent/stage.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.finding",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/finding.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"

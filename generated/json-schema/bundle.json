@@ -36239,7 +36239,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/network/operator-alerts-request.v1.json",
         "title": "NetworkOperatorAlertsRequest",
-        "description": "network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations.",
+        "description": "network.operator-alerts-request@1: POST /internal/operator/alerts on OpenVibe.Network (capability network.operator.alert, held by the Host principal). The complete set of alerts firing now at one source: an alert Network has not seen firing opens and pages the operator; one still firing is reminded once a day; one that was firing and is absent from the set is resolved and says so. An empty list resolves everything from that source. Fingerprints are stable per alert (name and labels), never secrets; summaries and descriptions are the alert rule's annotations. A browser-check alert may carry what its result file knows (details, the release and its commit link, when the check ran, since when it has been failing) so the notification can explain the problem in words and link to the page, the commit and the rule's help page. Every string is text, never markup; every URL is https.",
         "type": "object",
         "required": [
           "source",
@@ -36302,6 +36302,115 @@
                 "started_at": {
                   "type": "string",
                   "format": "date-time"
+                },
+                "details": {
+                  "type": "array",
+                  "maxItems": 5,
+                  "description": "What failed, for a browser-check alert (from the check's result file), most useful first. Plain text: a notification shows it escaped, never as markup.",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "check"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "route": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "description": "The page's path on the site, e.g. /pricing."
+                      },
+                      "check": {
+                        "type": "string",
+                        "maxLength": 40,
+                        "description": "status, errors, overflow, scripts, jsonld or axe."
+                      },
+                      "rule": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "description": "The axe rule id when check is axe."
+                      },
+                      "impact": {
+                        "enum": [
+                          "minor",
+                          "moderate",
+                          "serious",
+                          "critical"
+                        ]
+                      },
+                      "targets": {
+                        "type": "array",
+                        "maxItems": 5,
+                        "items": {
+                          "type": "string",
+                          "maxLength": 160
+                        },
+                        "description": "The elements the rule names, as axe's target selectors."
+                      },
+                      "help": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "description": "The rule's own help text (axe's help), for a rule the notification does not know."
+                      },
+                      "help_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "maxLength": 500,
+                        "description": "The rule's help page (axe's helpUrl), when the check kept it."
+                      },
+                      "page_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "maxLength": 500,
+                        "description": "The page that failed, on the site's own https origin."
+                      },
+                      "message": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "description": "A console error's text, or a JSON-LD entity's type."
+                      },
+                      "width": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 10000,
+                        "description": "The viewport width the failure was seen at, when it is width-specific."
+                      },
+                      "status": {
+                        "type": "integer",
+                        "minimum": 100,
+                        "maximum": 599
+                      },
+                      "offenders": {
+                        "type": "array",
+                        "maxItems": 5,
+                        "items": {
+                          "type": "string",
+                          "maxLength": 160
+                        },
+                        "description": "The elements that overflow the viewport."
+                      }
+                    }
+                  }
+                },
+                "release": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{7,40}$",
+                  "description": "The deployed commit the browser check saw (the full sha when the host can resolve it)."
+                },
+                "release_url": {
+                  "type": "string",
+                  "format": "uri",
+                  "maxLength": 500,
+                  "description": "The release commit's page: git.openvibe.codes when the repository is mirrored there, else github.com."
+                },
+                "checked_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "When the browser check that found this ran."
+                },
+                "failing_since": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "When this alert started firing; the same instant as started_at, named for the notification's Failing since fact."
                 }
               }
             }
@@ -95584,6 +95693,18 @@
         }
       }
     },
+    "quest.today": {
+      "version": "1.0.0",
+      "owner": "quest",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/quest/today.v1.json",
+        "title": "QuestToday",
+        "description": "quest.today@1: today's private quest and progress for the signed-in person. GET /api/v1/quests/today requires a person token.",
+        "$ref": "daily-progress.v1.json"
+      }
+    },
     "quest.step-type": {
       "version": "1.0.0",
       "owner": "quest",
@@ -123312,6 +123433,365 @@
           "idle",
           "working"
         ]
+      }
+    },
+    "agent.finding": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agent/finding.v1.json",
+        "title": "AgentFinding",
+        "description": "One finding of a review, a hunt or a security pass. The verdict is the evidence bar, not the severity: `confirmed` means the finding was reproduced or re-read and carries `severity` and `confidence`; `needs_validation` is an unprovable claim turned into a lead with an exact `blockers` entry and a `validation_plan`, and it has no severity by design (never noise, never a silent pass); `rejected` says why it does not stand. `fingerprint` is the stable identity — repository-relative file plus whitespace-normalised, lowercased text — so a re-wrapped finding keeps its id while a real rewording becomes a new one. `trace` and `evidence` carry repository-relative locations and the commands or answers that show the fact. A validator must also refuse `severity.overall_severity` above the demonstrated `severity.impact`; the schema cannot rank two enums, so `description` states the rule.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "verdict",
+          "fingerprint",
+          "title",
+          "description",
+          "trace",
+          "evidence"
+        ],
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "needs_validation",
+              "rejected"
+            ],
+            "description": "confirmed: reproduced or re-read by a second agent. needs_validation: a lead that could not be proven locally; it carries blockers and a plan, never a severity. rejected: the claim was refuted; it carries a reason."
+          },
+          "fingerprint": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The stable id: repository-relative file + whitespace-normalised, lowercased finding text (for example `server/x.js:the cache never expires`)."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "description": "What is wrong, in plain words; no severity claim beyond the evidence."
+          },
+          "trace": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "$ref": "#/$defs/location"
+            },
+            "description": "Where the issue lives, repository-relative, most specific first."
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "$ref": "#/$defs/evidence"
+            },
+            "description": "What shows the fact: the source read, the command and its output, the response, the screenshot or the test."
+          },
+          "severity": {
+            "$ref": "#/$defs/severity"
+          },
+          "confidence": {
+            "$ref": "#/$defs/confidence"
+          },
+          "remediation": {
+            "$ref": "#/$defs/remediation"
+          },
+          "claimed_root_cause": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "The suspected cause of a needs_validation lead, stated as a claim to test."
+          },
+          "blockers": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "description": "The exact reason the claim could not be proven here (a credential, an environment, data, a downstream service)."
+          },
+          "validation_plan": {
+            "$ref": "#/$defs/validation_plan"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Why a rejected claim does not stand."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "verdict": {
+                  "const": "confirmed"
+                }
+              },
+              "required": [
+                "verdict"
+              ]
+            },
+            "then": {
+              "required": [
+                "severity",
+                "confidence"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "verdict": {
+                  "const": "needs_validation"
+                }
+              },
+              "required": [
+                "verdict"
+              ]
+            },
+            "then": {
+              "required": [
+                "claimed_root_cause",
+                "blockers",
+                "validation_plan"
+              ],
+              "not": {
+                "required": [
+                  "severity"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "verdict": {
+                  "const": "rejected"
+                }
+              },
+              "required": [
+                "verdict"
+              ]
+            },
+            "then": {
+              "required": [
+                "reason"
+              ],
+              "not": {
+                "required": [
+                  "severity"
+                ]
+              }
+            }
+          }
+        ],
+        "$defs": {
+          "location": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "description": "Repository-relative path; no leading slash and no `..`."
+              },
+              "line": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The line the finding is about, when it is one line."
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "The function, route or job the line belongs to."
+              }
+            }
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "summary"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "source",
+                  "command",
+                  "response",
+                  "screenshot",
+                  "log",
+                  "test"
+                ],
+                "description": "What kind of evidence this is."
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000,
+                "description": "What this shows, in one sentence."
+              },
+              "location": {
+                "$ref": "#/$defs/location"
+              },
+              "command": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "output": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            }
+          },
+          "severity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "likelihood",
+              "impact",
+              "overall_severity"
+            ],
+            "description": "The two axes stay separate: likelihood is how easily it is reached, impact is what it does, overall_severity may not exceed impact.",
+            "properties": {
+              "likelihood": {
+                "$ref": "#/$defs/level"
+              },
+              "impact": {
+                "$ref": "#/$defs/level"
+              },
+              "overall_severity": {
+                "$ref": "#/$defs/level"
+              }
+            }
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "informational",
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "confidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "level",
+              "reason"
+            ],
+            "properties": {
+              "level": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              }
+            }
+          },
+          "remediation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "strategy"
+            ],
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "code_changes": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "file",
+                    "change"
+                  ],
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 500
+                    },
+                    "change": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "validation_plan": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "local": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000,
+                "description": "How to prove or refute the lead on a machine with the repository."
+              },
+              "deployment": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000,
+                "description": "How to prove or refute it where only a deployed service, its data or its credentials can."
+              }
+            },
+            "anyOf": [
+              {
+                "required": [
+                  "local"
+                ]
+              },
+              {
+                "required": [
+                  "deployment"
+                ]
+              }
+            ]
+          }
+        }
       }
     },
     "ai.effort": {
