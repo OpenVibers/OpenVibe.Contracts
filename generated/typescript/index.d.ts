@@ -209271,6 +209271,14 @@ export interface MediaVod {
   playback_url: string;
   thumbnail_url?: string | null;
   /**
+   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /p/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
+   */
+  preview_url?: string | null;
+  /**
+   * The same moment as preview_url, encoded as WebM (VP9, VP8 where the encoder has no VP9). Null while preview_url is.
+   */
+  preview_webm_url?: string | null;
+  /**
    * local, b2 or r2.
    */
   storage_provider?: string;
@@ -209363,6 +209371,14 @@ export interface MediaClip {
    */
   playback_url: string;
   thumbnail_url?: string | null;
+  /**
+   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /p/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
+   */
+  preview_url?: string | null;
+  /**
+   * The same moment as preview_url, encoded as WebM (VP9, VP8 where the encoder has no VP9). Null while preview_url is.
+   */
+  preview_webm_url?: string | null;
   storage_provider?: string;
   /**
    * public: anyone. unlisted: reached only by its exact id, never listed, noindex. private: missing to everyone but its owner and staff.
@@ -212633,6 +212649,10 @@ export type LiveChannelReadResult =
         viewer_count?: number | null;
         peak_viewers?: number | null;
         thumbnail_url?: string | null;
+        /**
+         * A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail.
+         */
+        preview_url?: string | null;
         started_at?: string | null;
         ended_at?: string | null;
         /**
@@ -212934,6 +212954,10 @@ export type LiveStreamReadResult =
         viewer_count?: number | null;
         peak_viewers?: number | null;
         thumbnail_url?: string | null;
+        /**
+         * A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail.
+         */
+        preview_url?: string | null;
         started_at?: string | null;
         ended_at?: string | null;
         /**
@@ -212964,6 +212988,10 @@ export type LiveStreamReadResult =
         viewer_count?: number | null;
         peak_viewers?: number | null;
         thumbnail_url?: string | null;
+        /**
+         * A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail.
+         */
+        preview_url?: string | null;
         started_at?: string | null;
         ended_at?: string | null;
         /**

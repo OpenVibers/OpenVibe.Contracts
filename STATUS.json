@@ -49,7 +49,8 @@
     "bench.benchmark@1 and bench.run@1 with the capabilities bench.benchmark.write, bench.run.publish and bench.run.read: the benchmark registry and the results API (spec 2026-10-30, stage B1)",
     "mail.agent_inbox.received@1, mail.agent-inbox-message@1, mail.agent-reply-request@1, mail.agent-reply-result@1 and mail.inbox-answering@1, with the capabilities mail.agent.read, mail.agent.reply and mail.agent.answering (track HO6): an agent answers the mail sent to its own OpenVibe.Mail address, reads it in full text on the owner's behalf, replies from its own address in the thread, and answers only when the person's switch for that address is on",
     "actor.task-create-request@1 supports Actor conversation turns with optional tools, model and content tier; uncensored content is limited to tasks naming their intended person",
-    "chat.embed@1 provides one address preview shape for every chat client; account-merge contracts are deprecated"
+    "chat.embed@1 provides one address preview shape for every chat client; account-merge contracts are deprecated",
+    "media.vod@1, media.clip@1 and the live stream shapes carry preview_url (and the media shapes preview_webm_url): the 6 s muted hover preview beside a thumbnail (plan 355)"
   ],
   "updated": "2026-11-11"
 }
