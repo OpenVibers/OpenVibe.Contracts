@@ -163451,6 +163451,56 @@ export interface AiModelList {
   cursor?: string | null;
 }
 
+/** ai.model-directory-entry@1.0.0 (owner: ai) */
+/**
+ * ai.model-directory-entry@1: one public model, including provider-listed models with routing off and sourced pre-list sightings. Spotted never means available.
+ */
+export type AiModelDirectoryEntry = {
+  [k: string]: unknown | undefined;
+} & {
+  id: string;
+  provider: string;
+  provider_name?: string | null;
+  model: string;
+  name: string;
+  family?: string | null;
+  version?: string | null;
+  status: "available" | "preview" | "spotted" | "retired";
+  routing_enabled: boolean;
+  context_window?: number | null;
+  max_output?: number | null;
+  type?: string;
+  modalities?: string[];
+  price?: {
+    input_per_million?: number | null;
+    output_per_million?: number | null;
+    cached_per_million?: number | null;
+    source?: string | null;
+    checked_at?: string | null;
+  };
+  source?: string | null;
+  sources?: {
+    url: string;
+    observed_at: string;
+    published_at?: string;
+  }[];
+  first_seen_at?: string | null;
+  updated_at?: string | null;
+  retired_at?: string | null;
+  [k: string]: unknown | undefined;
+};
+
+/** ai.model-directory-list@1.0.0 (owner: ai) */
+/**
+ * ai.model-directory-list@1: public model directory response; the list may include spotted, disabled and retired models.
+ */
+export interface AiModelDirectoryList {
+  generated_at?: string;
+  count: number;
+  models: AiModelDirectoryEntry[];
+  [k: string]: unknown | undefined;
+}
+
 /** ai.model-read-result@1.0.0 (owner: ai) */
 /**
  * ai.model-read-result@1: response from GET /v1/models (a list) or GET /v1/models/:id (a single model).

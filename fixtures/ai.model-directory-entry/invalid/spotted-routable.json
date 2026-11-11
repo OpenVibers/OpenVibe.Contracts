@@ -1,0 +1,8 @@
+{
+  "id": "arena/anonymous-silver",
+  "provider": "arena",
+  "model": "anonymous-silver",
+  "name": "anonymous-silver",
+  "status": "spotted",
+  "routing_enabled": true
+}
