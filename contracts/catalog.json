@@ -11240,6 +11240,33 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "composer.attachment",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "composer/attachment.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "composer.prefs",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "composer/prefs.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "composer.mention",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "composer/mention.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

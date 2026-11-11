@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add `composer.attachment@1`: one file a person attached to a message in the shared composer, as Media stores it — id (`att_<ULID>`), the kind it sniffed from the bytes (`image`, `video`, `audio`, `file`, `code`), name, size, mime, absolute url, thumb, w/h when measurable, and `expires_at` (24 hours unless a message keeps it).
+- Add `composer.prefs@1`: a person's composer settings on every site, stored by Network — `rev` (the revision a PUT must carry, so two tabs cannot overwrite each other), `send_key` (`enter` or `mod-enter`), the ordered `tools` and which are hidden, `density` (`comfy` or `compact`), `voice`, and up to 50 slash-word `snippets` (label, text up to 4000 characters).
+- Add `composer.mention@1`: one entry of the composer's @ menu — kind (`person`, `repo`, `site`, `file`), id, label, handle when there is one, avatar and url. Network answers it from `GET /api/v1/mentions`.
+- Valid and invalid fixtures cover each: an image, a video and a plain file; the default and a compact document; a trigger that is not a slash word and a 51st snippet; a person and a repo, a kind outside the list and a missing label.
+
 ## 0.400.0 — 2026-11-10
 
 - Regroup the sites into the owner's eight groups (plan ask 274, 2026-11-10): `site.neighbourhood` is now `watch`, `talk`, `play`, `read`, `shop`, `tools`, `make` or `build`, the same ids and order as OpenVibe.Network `frame/sites.js` GROUPS and OpenVibe.Shared `rooms.js` HOODS. Every site manifest carries its new group; merged sections point at the site that shows them (Media → Video/watch, Bench → Report/read, Play → Games/play).

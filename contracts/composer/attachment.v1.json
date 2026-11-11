@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/composer/attachment.v1.json",
+  "title": "ComposerAttachment",
+  "description": "composer.attachment@1: one file a person attached to a message in the shared composer. Media stores it and answers this shape from POST /api/v1/attachments (multipart field `file`); a client keeps it until the message is sent, then names it in POST /api/v1/attachments/:id/keep. `kind` is sniffed from the bytes, never taken from the browser: image, video, audio, file or code. `thumb` is a small preview for images and video (absent for the rest), `w`/`h` the pixel size when the file is one Media can measure. An attachment nobody keeps expires after 24 hours; `expires_at` says when, and a keep extends it to the message's life.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "name", "size", "mime", "url", "expires_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^att_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The attachment id (att_ + ULID): what DELETE /api/v1/attachments/:id and POST /api/v1/attachments/:id/keep name."
+    },
+    "kind": {
+      "enum": ["image", "video", "audio", "file", "code"],
+      "description": "Decided by Media from the bytes, not the client's claim: image/video/audio when the signature matches, code for recognised source text, otherwise file. Executables are refused at upload."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "The file's original name, sanitised for display; never a path."
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Bytes stored."
+    },
+    "mime": {
+      "type": "string",
+      "description": "The content type Media serves the bytes as, from the sniffed kind and format."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Absolute https URL the bytes are served at. It stays valid while the attachment exists; a kept attachment is the message's to serve."
+    },
+    "thumb": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Absolute URL of a preview image: an image's own small copy or a video's first frame. Null when Media could not make one (or the kind has none)."
+    },
+    "w": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "description": "Pixel width of an image, video or video preview; null when unknown."
+    },
+    "h": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "description": "Pixel height of an image, video or video preview; null when unknown."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When an unkept attachment is deleted. The upload answers now + 24 hours; a keep moves it to the kept window."
+    }
+  }
+}

@@ -333191,3 +333191,132 @@ export interface NetworkLevelBoard {
         ];
   };
 }
+
+/** composer.attachment@1.0.0 (owner: media) */
+/**
+ * composer.attachment@1: one file a person attached to a message in the shared composer. Media stores it and answers this shape from POST /api/v1/attachments (multipart field `file`); a client keeps it until the message is sent, then names it in POST /api/v1/attachments/:id/keep. `kind` is sniffed from the bytes, never taken from the browser: image, video, audio, file or code. `thumb` is a small preview for images and video (absent for the rest), `w`/`h` the pixel size when the file is one Media can measure. An attachment nobody keeps expires after 24 hours; `expires_at` says when, and a keep extends it to the message's life.
+ */
+export interface ComposerAttachment {
+  /**
+   * The attachment id (att_ + ULID): what DELETE /api/v1/attachments/:id and POST /api/v1/attachments/:id/keep name.
+   */
+  id: string;
+  /**
+   * Decided by Media from the bytes, not the client's claim: image/video/audio when the signature matches, code for recognised source text, otherwise file. Executables are refused at upload.
+   */
+  kind: "image" | "video" | "audio" | "file" | "code";
+  /**
+   * The file's original name, sanitised for display; never a path.
+   */
+  name: string;
+  /**
+   * Bytes stored.
+   */
+  size: number;
+  /**
+   * The content type Media serves the bytes as, from the sniffed kind and format.
+   */
+  mime: string;
+  /**
+   * Absolute https URL the bytes are served at. It stays valid while the attachment exists; a kept attachment is the message's to serve.
+   */
+  url: string;
+  /**
+   * Absolute URL of a preview image: an image's own small copy or a video's first frame. Null when Media could not make one (or the kind has none).
+   */
+  thumb?: string | null;
+  /**
+   * Pixel width of an image, video or video preview; null when unknown.
+   */
+  w?: number | null;
+  /**
+   * Pixel height of an image, video or video preview; null when unknown.
+   */
+  h?: number | null;
+  /**
+   * When an unkept attachment is deleted. The upload answers now + 24 hours; a keep moves it to the kept window.
+   */
+  expires_at: string;
+}
+
+/** composer.prefs@1.0.0 (owner: network) */
+/**
+ * composer.prefs@1: a person's composer settings, the same on every OpenVibe site because Network stores them (GET/PUT /api/v1/me/composer). `rev` is the stored revision: send the one you read back with your change, and a tab that read an older copy gets 409 with the current document instead of overwriting the other tab. `send_key` says whether Enter or Ctrl/Cmd+Enter sends. `tools` is the one order of the composer's tools and which are hidden; a tool id the client does not know is kept, so a site can add one without another site dropping the person's order. `snippets` are the person's saved inserts, triggered by typing a slash word.
+ */
+export interface ComposerPrefs {
+  /**
+   * Revision of the stored document. A missing document is rev 0 with the defaults; every successful PUT answers rev + 1.
+   */
+  rev: number;
+  /**
+   * enter: Enter sends and Shift+Enter breaks the line. mod-enter: Ctrl/Cmd+Enter sends and Enter breaks the line (the default on a phone keyboard is enter).
+   */
+  send_key: "enter" | "mod-enter";
+  /**
+   * Every tool in the order the person wants them, each marked hidden or not.
+   *
+   * @maxItems 100
+   */
+  tools: {
+    id: string;
+    hidden: boolean;
+  }[];
+  /**
+   * How much room the composer takes: comfy is the default on a computer, compact on a phone.
+   */
+  density: "comfy" | "compact";
+  /**
+   * Whether the composer offers dictation (where the device has it).
+   */
+  voice: boolean;
+  /**
+   * Saved inserts. Typing the trigger (a slash word such as /sig) in the composer offers the snippet.
+   *
+   * @maxItems 50
+   */
+  snippets: {
+    /**
+     * The slash word that offers the snippet, e.g. /sig. Lower-case letters, digits, _ and - only.
+     */
+    trigger: string;
+    /**
+     * What the menu shows.
+     */
+    label: string;
+    /**
+     * What is inserted.
+     */
+    text: string;
+  }[];
+}
+
+/** composer.mention@1.0.0 (owner: network) */
+/**
+ * composer.mention@1: one thing the composer's @ menu can insert, from GET /api/v1/mentions on OpenVibe.Network. kind person (a person the caller follows first, then a public person), repo (a repository on OpenVibe Git the caller can see), site (a first-party OpenVibe site) or file (a file of the message's own context). `id` is the stable id inside its kind, `label` what the menu shows, `handle` the @name when the kind has one, `avatar` the picture, and `url` where choosing it links.
+ */
+export interface ComposerMention {
+  /**
+   * What is mentioned. The same person is a person; a repository on OpenVibe Git is a repo; a first-party OpenVibe site is a site; a file of the message's context (an attachment or a repository file) is a file.
+   */
+  kind: "person" | "repo" | "site" | "file";
+  /**
+   * The stable id inside the kind: a usr_… subject for a person, owner/name for a repo, a site id for a site, a path or attachment id for a file.
+   */
+  id: string;
+  /**
+   * What the menu shows (a display name, owner/name, the site's name, a file name).
+   */
+  label: string;
+  /**
+   * The @name when the kind has one: a person's username, a site's short name. Absent for a repo or a file.
+   */
+  handle?: string;
+  /**
+   * Absolute URL of the picture to show beside the label. Null when the kind has none (a file, a site without a mark).
+   */
+  avatar?: string | null;
+  /**
+   * Absolute https URL where choosing the mention leads: the person's profile, the repository, the site's home or the file.
+   */
+  url: string;
+}
