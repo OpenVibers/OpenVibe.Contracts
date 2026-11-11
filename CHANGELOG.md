@@ -1,9 +1,13 @@
 # Changelog
 
-## 0.404.0 — 2026-11-11
+## 0.405.0 — 2026-11-11
 
 - Add `preview_url` and `preview_webm_url` to `media.vod@1` and `media.clip@1`: the 6 s muted hover preview (MP4 H.264 and WebM, 320 px) Media makes beside the thumbnail, served at /t/<name>.
 - Add `preview_url` to the stream shape of `live.stream-read-result@1` and `live.channel-read-result@1`: Live's cheap live preview (Media's DVR HLS playlist at the live edge while the stream is recorded).
+
+## 0.404.0 — 2026-11-11
+
+- Add owner-only Run compute configuration capability for Network admin proxy.
 
 ## 0.403.0 — 2026-11-11
 
