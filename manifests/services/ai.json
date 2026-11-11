@@ -36,6 +36,7 @@
     "ai.memory.write",
     "ai.me.read",
     "ai.me.manage",
+    "ai.layout.suggest",
     "ai.config.manage",
     "exchange.search.icons"
   ],
@@ -45,7 +46,8 @@
     "ai.run.succeeded",
     "ai.run.failed",
     "ai.run.cached",
-    "ai.credential.failed"
+    "ai.credential.failed",
+    "ai.deep_dive.updated"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

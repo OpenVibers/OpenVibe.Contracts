@@ -1,0 +1,16 @@
+{
+  "ok": false,
+  "layout": {
+    "surface": "bot.controls",
+    "surface_version": 1,
+    "device": "phone",
+    "name": "Still here",
+    "author": { "name": "Ana" },
+    "sharing": "private",
+    "parts": [
+      { "id": "stop", "visible": true, "place": { "x": 0, "y": 0, "w": 2, "h": 2 }, "style": { "tint": "danger", "shape": "round", "opacity": 1, "label": true }, "bindings": { "keys": [], "gamepad": [] } }
+    ]
+  },
+  "summary": "Couldn't do that.",
+  "reasons": ["Stop has to stay visible."]
+}

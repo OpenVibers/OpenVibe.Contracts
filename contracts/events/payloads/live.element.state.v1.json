@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/live.element.state.v1.json",
+  "title": "LiveElementStatePayload",
+  "description": "live.element.state v1 (OpenVibe.Live server/elements): an element's own store changed, broadcast to everyone watching through Live's existing events path. Carries the channel's public facts and the same store as ui.element-state@1: the element instance, a revision that grows by one per accepted change, the values themselves and when. It is public state (a counter, a score, a wheel's entries), never the presser's data: a value may not be an object, a markup string or a URL, and the payload carries no account.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "channel",
+    "element_id",
+    "revision",
+    "values",
+    "updated_at"
+  ],
+  "properties": {
+    "channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "username",
+        "display_name"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      }
+    },
+    "element_id": {
+      "type": "string",
+      "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "values": {
+      "$ref": "../../ui/element-state.v1.json#/$defs/values"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

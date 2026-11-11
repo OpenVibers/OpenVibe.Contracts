@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ui/element.v1.json",
+  "title": "UiElement",
+  "description": "ui.element@1: an Element people make and place on a surface: a look, a behaviour and, only when a recipe is not enough, a mod. LOOK draws from OpenVibe.Design's components and the theme's tokens, so it follows the person's theme, the seasons and dark/light; it carries no markup and no URL. RECIPE is data only: one or more triggers from ui.trigger@1, the conditions that decide who may fire it and what it costs, and one or more actions from ui.action@1, checked against CAPABILITIES. A capability is an action kind the element declares; the host refuses an action the element did not declare, and the product named by the action still checks the presser's role, the cooldown, the cost and its own limits. MOD is an optional reference to a code module (id, version and digest) for the stage where a recipe is not enough; the module never adds a power. Conditions use channel points only in stage 1: no Vibes, no money, and Billing still confirms any charge itself. The id and revision are assigned by the store; a draft has neither.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "author", "sharing", "look", "recipe", "capabilities"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Assigned by the store when the element is saved; absent in a draft."
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Assigned by the store; every saved change moves it by one."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "subject": { "$ref": "../identity/subject-ref.v1.json" }
+      },
+      "description": "The author's display name and, for a private or link element, the subject. A gallery or copy answer carries the display name only, never the account."
+    },
+    "sharing": { "enum": ["private", "link", "gallery"] },
+    "look": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component", "label"],
+      "properties": {
+        "component": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,63}$",
+          "description": "An OpenVibe.Design component name (design.component@1), e.g. button or meter. A name the page does not have is refused, never fetched."
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "The words on the element, e.g. Make it dance."
+        },
+        "icon": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,31}$",
+          "description": "A glyph name from the design icon set."
+        },
+        "props": {
+          "type": "object",
+          "maxProperties": 20,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9]{0,31}$" },
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "boolean" },
+              { "type": "number" },
+              { "type": "string", "maxLength": 200 }
+            ]
+          },
+          "description": "The design component's own props (the sliders the editor shows). Numbers, strings and booleans only; no nesting."
+        },
+        "style": { "$ref": "#/$defs/style" }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["triggers", "actions"],
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "$ref": "trigger.v1.json" }
+        },
+        "conditions": { "$ref": "#/$defs/conditions" },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": { "$ref": "action.v1.json" }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": { "$ref": "action.v1.json#/$defs/capability" },
+      "description": "The action kinds this element may request. Every action in the recipe must be declared here; the host refuses the rest."
+    },
+    "initial_state": {
+      "$ref": "element-state.v1.json#/$defs/values",
+      "description": "The element's state before anything runs; the counter starts at 0, never at a value the element did not declare."
+    },
+    "mod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$"
+        },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "capabilities": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "$ref": "action.v1.json#/$defs/capability" },
+          "description": "The subset of the element's capabilities the module itself may request; omitted means the element's declared capabilities, and a product may grant fewer."
+        }
+      },
+      "description": "A code module for an element whose recipe is not enough (stage 3). It runs sandboxed; the reference is data, and the host checks every request the module makes against the element's capabilities."
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tint": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,39}$",
+          "description": "A theme token, never a colour: the theme decides what it is, so contrast follows the theme."
+        },
+        "shape": { "enum": ["round", "pill", "square"] },
+        "opacity": { "type": "number", "minimum": 0.4, "maximum": 1 },
+        "show_label": { "type": "boolean" }
+      }
+    },
+    "conditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "enum": ["everyone", "follower", "subscriber", "vip", "operator", "owner"],
+          "description": "Who may fire it. A higher role admits the lower ones where the product says so (an operator is admitted to subscriber-only); owner is the channel's owner alone. Default everyone."
+        },
+        "cost": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["points"],
+          "properties": {
+            "points": { "type": "integer", "minimum": 1, "maximum": 1000000 }
+          },
+          "description": "Channel points the presser spends, from Live's points. Stage 1 has no other currency, and an element never charges money."
+        },
+        "cooldown": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "per_person_seconds": { "type": "integer", "minimum": 0, "maximum": 86400 },
+            "overall_seconds": { "type": "integer", "minimum": 0, "maximum": 86400 }
+          },
+          "description": "How long the same person must wait, and how long everybody must wait, before it can fire again."
+        },
+        "daily_cap": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "per_person": { "type": "integer", "minimum": 1, "maximum": 10000 },
+            "overall": { "type": "integer", "minimum": 1, "maximum": 1000000 }
+          },
+          "description": "The most times it may fire in a UTC day, per person and for everyone."
+        },
+        "live_only": {
+          "type": "boolean",
+          "description": "When true the element fires only while the channel is live."
+        },
+        "robot_turn_only": {
+          "type": "boolean",
+          "description": "When true a robot action is requested only while the presser has the robot's turn; Bot still decides."
+        },
+        "chance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["one_in"],
+          "properties": {
+            "one_in": { "type": "integer", "minimum": 1, "maximum": 1000000 }
+          },
+          "description": "Fire only one time in N. The host draws the lot, so a refused draw costs nothing."
+        }
+      }
+    }
+  }
+}

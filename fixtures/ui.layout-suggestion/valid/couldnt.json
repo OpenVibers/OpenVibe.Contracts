@@ -1,0 +1,7 @@
+{
+  "ok": false,
+  "layout": null,
+  "summary": "Couldn't do that: Stop has to stay visible.",
+  "reasons": ["Stop has to stay visible.", "Every pressed part has to be at least 44 px."],
+  "receipt": { "model": "deepseek-flash", "provider": "deepseek", "route": "ui.layout.suggest", "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPR" }
+}

@@ -93,7 +93,8 @@
     "network.levels.award",
     "network.link.access.request",
     "network.agents.register",
-    "network.agents.relay"
+    "network.agents.relay",
+    "network.layout.read"
   ],
   "eventsProduced": [
     "network.account.deleted",
@@ -120,6 +121,7 @@
     "network.machine.paired",
     "network.machine.roles_changed",
     "network.machine.revoked",
+    "network.layout.changed",
     "share.granted",
     "share.revoked",
     "share.transfer.requested",

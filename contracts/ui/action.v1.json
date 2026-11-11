@@ -1,0 +1,702 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ui/action.v1.json",
+  "title": "UiAction",
+  "description": "ui.action@1: one action an Element's recipe may request, from the fixed catalog, with the product that authorises it. An element never has a power of its own: the host asks the product named here, and that product checks the presser's role, the element's declared capability, its cooldown and cost, and its own owner limits before it does anything. kind is also the capability id an element declares in ui.element@1, and product is fixed by kind: bot for robot.drive_pulse, robot.head_preset, robot.headlight, robot.say and robot.macro; chat for chat.message, chat.pin and chat.poll; live for the screen, stream and webhook actions; ai for ai.ask; actor for actor.task; billing for money.tip_goal. A robot action is a request through Bot's existing command path: turns, Stop, the e-stop and owner takeover are never bypassed. Money never moves from an action without Billing's own confirmation.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "direction",
+        "ms"
+      ],
+      "description": "Drive the robot for a moment, then stop. The duration is bounded by Bot's own max_command_ms and the owner's limits for the presser's role.",
+      "properties": {
+        "kind": {
+          "const": "robot.drive_pulse"
+        },
+        "product": {
+          "const": "bot"
+        },
+        "direction": {
+          "enum": [
+            "forward",
+            "back",
+            "left",
+            "right",
+            "spin_left",
+            "spin_right"
+          ]
+        },
+        "ms": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 3000
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1,
+          "description": "Fraction of the robot's allowed speed; omitted means the owner's default for the role."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "preset"
+      ],
+      "description": "Take the robot's head to a preset. Bot maps up, center and down to the head actuator its robot profile declares; a robot without one refuses it.",
+      "properties": {
+        "kind": {
+          "const": "robot.head_preset"
+        },
+        "product": {
+          "const": "bot"
+        },
+        "preset": {
+          "enum": [
+            "up",
+            "center",
+            "down"
+          ],
+          "description": "A head tilt preset. Bot still checks the robot profile and the owner's limits."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "on"
+      ],
+      "description": "Turn the robot's headlight on or off. Bot's own headlight kind is the authority: only the owner and People Operators may send it, and a robot whose profile has no headlight refuses it.",
+      "properties": {
+        "kind": {
+          "const": "robot.headlight"
+        },
+        "product": {
+          "const": "bot"
+        },
+        "on": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "text"
+      ],
+      "description": "Speak a line through the robot. Text goes through the existing content checks and Bot's own speak limits.",
+      "properties": {
+        "kind": {
+          "const": "robot.say"
+        },
+        "product": {
+          "const": "bot"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "macro"
+      ],
+      "description": "Replay a recorded robot macro through the safe command path, with its own deadline. Macros are stage 4 of Elements; a stage-1 product refuses this kind as not yet supported.",
+      "properties": {
+        "kind": {
+          "const": "robot.macro"
+        },
+        "product": {
+          "const": "bot"
+        },
+        "macro": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "text"
+      ],
+      "description": "Send a chat message as the channel's bot. Text goes through Chat's content checks and rate limits.",
+      "properties": {
+        "kind": {
+          "const": "chat.message"
+        },
+        "product": {
+          "const": "chat"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "source"
+      ],
+      "properties": {
+        "kind": {
+          "const": "chat.pin"
+        },
+        "product": {
+          "const": "chat"
+        },
+        "source": {
+          "enum": [
+            "trigger",
+            "latest"
+          ],
+          "description": "trigger pins the message that caused this action; latest pins the newest chat message."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "question",
+        "options"
+      ],
+      "properties": {
+        "kind": {
+          "const": "chat.poll"
+        },
+        "product": {
+          "const": "chat"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "title"
+      ],
+      "properties": {
+        "kind": {
+          "const": "screen.alert"
+        },
+        "product": {
+          "const": "live"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "const": "screen.animation"
+        },
+        "product": {
+          "const": "live"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "An animation the page or overlay has; an unknown name is refused, never fetched."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product"
+      ],
+      "properties": {
+        "kind": {
+          "const": "screen.confetti"
+        },
+        "product": {
+          "const": "live"
+        },
+        "intensity": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "sound"
+      ],
+      "properties": {
+        "kind": {
+          "const": "screen.sound"
+        },
+        "product": {
+          "const": "live"
+        },
+        "sound": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "A sound from the streamer's own sound list; Live never fetches a URL for it."
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "text",
+        "voice"
+      ],
+      "properties": {
+        "kind": {
+          "const": "screen.tts"
+        },
+        "product": {
+          "const": "live"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "voice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "A voice from the streamer's own voice list."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "key",
+        "by"
+      ],
+      "description": "Move one of the element's counters. The host applies it to the element's own state and Live broadcasts the new state.",
+      "properties": {
+        "kind": {
+          "const": "screen.counter"
+        },
+        "product": {
+          "const": "live"
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{0,31}$"
+        },
+        "by": {
+          "type": "integer",
+          "minimum": -1000,
+          "maximum": 1000
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "key",
+        "value"
+      ],
+      "description": "Set one of the element's state values: a boolean, a number, a short string or a list of those (a wheel's entries, a scoreboard). Objects are not state values.",
+      "properties": {
+        "kind": {
+          "const": "screen.state"
+        },
+        "product": {
+          "const": "live"
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{0,31}$"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "maxLength": 200
+            },
+            {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "element",
+        "visible"
+      ],
+      "properties": {
+        "kind": {
+          "const": "screen.visibility"
+        },
+        "product": {
+          "const": "live"
+        },
+        "element": {
+          "type": "string",
+          "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "visible": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "scene"
+      ],
+      "properties": {
+        "kind": {
+          "const": "screen.scene"
+        },
+        "product": {
+          "const": "live"
+        },
+        "scene": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "A scene the layout has; an unknown scene is refused."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product"
+      ],
+      "properties": {
+        "kind": {
+          "const": "stream.clip"
+        },
+        "product": {
+          "const": "live"
+        },
+        "seconds": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 30,
+          "description": "How far back the clip starts, at most 30 seconds."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product"
+      ],
+      "properties": {
+        "kind": {
+          "const": "stream.moment"
+        },
+        "product": {
+          "const": "live"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "title"
+      ],
+      "properties": {
+        "kind": {
+          "const": "stream.title"
+        },
+        "product": {
+          "const": "live"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        }
+      },
+      "description": "Change the stream title. Live allows it only for the channel's owner, whatever the element's trigger says."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "category"
+      ],
+      "properties": {
+        "kind": {
+          "const": "stream.category"
+        },
+        "product": {
+          "const": "live"
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      },
+      "description": "Change the stream category. Live allows it only for the channel's owner."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "prompt"
+      ],
+      "description": "Ask an AI model through Exchange's catalogue, with the element's budget and a receipt. Stage 2 of Elements; a stage-1 product refuses it as not yet supported.",
+      "properties": {
+        "kind": {
+          "const": "ai.ask"
+        },
+        "product": {
+          "const": "ai"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "max_cost_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "task"
+      ],
+      "description": "Hand a task to an Actor agent. Stage 2 of Elements; a stage-1 product refuses it as not yet supported.",
+      "properties": {
+        "kind": {
+          "const": "actor.task"
+        },
+        "product": {
+          "const": "actor"
+        },
+        "task": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "endpoint"
+      ],
+      "description": "Call one of the streamer's own webhook endpoints. The element names the endpoint the streamer listed; it never carries a URL, and the payload never carries a viewer's data. Stage 2 of Elements; a stage-1 product refuses it as not yet supported.",
+      "properties": {
+        "kind": {
+          "const": "webhook.call"
+        },
+        "product": {
+          "const": "live"
+        },
+        "endpoint": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "product",
+        "goal"
+      ],
+      "description": "Update a tip goal's display. Money never moves here; Billing's own sheet confirms any charge. Stage 4 of Elements.",
+      "properties": {
+        "kind": {
+          "const": "money.tip_goal"
+        },
+        "product": {
+          "const": "billing"
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "capability": {
+      "description": "The action kinds an Element may declare in ui.element@1 capabilities. One id, one product: the host routes an action only to the product that owns it.",
+      "enum": [
+        "robot.drive_pulse",
+        "robot.head_preset",
+        "robot.headlight",
+        "robot.say",
+        "robot.macro",
+        "chat.message",
+        "chat.pin",
+        "chat.poll",
+        "screen.alert",
+        "screen.animation",
+        "screen.confetti",
+        "screen.sound",
+        "screen.tts",
+        "screen.counter",
+        "screen.state",
+        "screen.visibility",
+        "screen.scene",
+        "stream.clip",
+        "stream.moment",
+        "stream.title",
+        "stream.category",
+        "ai.ask",
+        "actor.task",
+        "webhook.call",
+        "money.tip_goal"
+      ]
+    }
+  }
+}

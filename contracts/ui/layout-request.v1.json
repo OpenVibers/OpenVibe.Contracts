@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ui/layout-request.v1.json",
+  "title": "UiLayoutRequest",
+  "description": "ui.layout-request@1: what an editor sends OpenVibe.AI's ui.layout.suggest task, and what Network forwards for a signed-in person. It is the surface's catalog, the layout shown now (or null for the default one) and the words the person typed (max 500 characters), for one device class. The catalog is the only power the answer can use; the current layout is the starting arrangement; the words never contain markup that becomes part of it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["catalog", "layout", "words", "device"],
+  "properties": {
+    "catalog": { "$ref": "surface.v1.json" },
+    "layout": {
+      "oneOf": [
+        { "$ref": "layout.v1.json" },
+        { "type": "null" }
+      ],
+      "description": "The arrangement shown now, or null when the person is looking at the default."
+    },
+    "words": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "The person's own description, e.g. \"put Stop on the left and make it huge\"."
+    },
+    "device": { "enum": ["phone", "tablet", "computer"] }
+  }
+}

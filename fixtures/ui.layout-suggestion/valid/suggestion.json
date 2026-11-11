@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "layout": {
+    "surface": "bot.controls",
+    "surface_version": 1,
+    "device": "phone",
+    "name": "One-thumb controls",
+    "author": { "name": "Ana" },
+    "sharing": "private",
+    "parts": [
+      { "id": "stop", "visible": true, "place": { "x": 0, "y": 0, "w": 4, "h": 2 }, "style": { "tint": "danger", "shape": "round", "opacity": 1, "label": true }, "bindings": { "keys": ["Space"], "gamepad": ["south"] } },
+      { "id": "stick", "visible": true, "place": { "x": 0, "y": 2, "w": 4, "h": 3 }, "style": { "tint": "surface", "shape": "round", "opacity": 1, "label": false }, "bindings": { "keys": ["W", "A", "S", "D"], "gamepad": ["left-stick"] } }
+    ]
+  },
+  "summary": "Put Stop across the top and the drive stick below it where a thumb reaches.",
+  "reasons": ["Stop had to stay visible, so it became the top row.", "The stick moved under the thumb."],
+  "receipt": { "model": "deepseek-flash", "provider": "deepseek", "route": "ui.layout.suggest", "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ", "cost_usd": 0.0004 }
+}

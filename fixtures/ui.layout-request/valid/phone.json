@@ -1,0 +1,40 @@
+{
+  "catalog": {
+    "id": "bot.controls",
+    "version": 1,
+    "name": "Robot controls",
+    "devices": ["phone"],
+    "grid": { "columns": { "phone": 4, "tablet": 8, "computer": 12 }, "cell_px": { "phone": 44, "tablet": 44, "computer": 44 } },
+    "theme_tokens": ["danger", "surface"],
+    "parts": [
+      {
+        "id": "stop", "name": "Stop", "kind": "button",
+        "required": true, "pressed": true,
+        "min": { "w": 2, "h": 2, "px": 64 },
+        "styles": { "tints": ["danger"], "shapes": ["round"] },
+        "bindings": { "keys": ["Space"], "gamepad": ["south"] }
+      },
+      {
+        "id": "stick", "name": "Drive stick", "kind": "stick",
+        "required": false, "pressed": true,
+        "min": { "w": 3, "h": 3 },
+        "styles": { "tints": ["surface"], "shapes": ["round"] },
+        "bindings": { "keys": ["W", "A", "S", "D"], "gamepad": ["left-stick"] }
+      }
+    ]
+  },
+  "layout": {
+    "surface": "bot.controls",
+    "surface_version": 1,
+    "device": "phone",
+    "name": "Default",
+    "author": { "name": "OpenVibe" },
+    "sharing": "private",
+    "parts": [
+      { "id": "stop", "visible": true, "place": { "x": 0, "y": 0, "w": 2, "h": 2 }, "style": { "tint": "danger", "shape": "round", "opacity": 1, "label": true }, "bindings": { "keys": ["Space"], "gamepad": ["south"] } },
+      { "id": "stick", "visible": true, "place": { "x": 0, "y": 2, "w": 4, "h": 3 }, "style": { "tint": "surface", "shape": "round", "opacity": 1, "label": false }, "bindings": { "keys": ["W", "A", "S", "D"], "gamepad": ["left-stick"] } }
+    ]
+  },
+  "words": "put Stop on the left and make it huge, and give me a vertical head slider on the right edge",
+  "device": "phone"
+}

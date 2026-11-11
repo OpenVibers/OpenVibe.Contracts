@@ -338191,3 +338191,3156 @@ export interface NetworkAgentTaskUpdatedPayload {
   status: "pending" | "running" | "completed" | "failed" | "cancelled";
   at: string;
 }
+
+/** ui.surface@1.0.0 (owner: contracts) */
+/**
+ * ui.surface@1: the catalog a product publishes for one surface people may arrange (bot.controls, bot.overlay, live.channel, dock, chat.composer, navbar.shortcuts). It names the surface, its device classes and grid, the theme tokens its styles draw from, and every part a layout may place. A part says what it is (stick, button, slider, readout, video, list), whether it is required or pressed, its minimum cells and the minimum pixels the product guarantees (44 px for anything pressed, larger for Stop), the sizes and styles it allows, the bindings it accepts, and the parts it must never cover. A layout is validated against this catalog (openvibe-sdk/ui-layout); a layout can arrange only what the catalog has and can never add a power. The catalog is data: a layout or an AI answer never carries code or a URL.
+ */
+export interface UiSurface {
+  /**
+   * The surface id: <product>.<surface>, e.g. bot.controls.
+   */
+  id: string;
+  /**
+   * The catalog version. A layout names the version it was made against.
+   */
+  version: number;
+  /**
+   * What the surface is called where a person sees it.
+   */
+  name: string;
+  description?: string;
+  /**
+   * The device classes this surface offers.
+   *
+   * @minItems 1
+   * @maxItems 3
+   */
+  devices:
+    | ["phone" | "tablet" | "computer"]
+    | ["phone" | "tablet" | "computer", "phone" | "tablet" | "computer"]
+    | ["phone" | "tablet" | "computer", "phone" | "tablet" | "computer", "phone" | "tablet" | "computer"];
+  grid: {
+    /**
+     * The grid's columns per device class: 4 on a phone and 12 on a computer in the design; a product may choose otherwise within these bounds.
+     */
+    columns: {
+      phone: number;
+      tablet: number;
+      computer: number;
+    };
+    /**
+     * The smallest a cell is rendered at that device class, in CSS pixels, at the narrowest supported width. The validator multiplies a part's cells by this to check the 44 px rule.
+     */
+    cell_px: {
+      phone: number;
+      tablet: number;
+      computer: number;
+    };
+  };
+  /**
+   * The theme tokens a tint may name (accent, surface, danger, ...). Never a colour value: the theme decides what the token is.
+   *
+   * @minItems 1
+   * @maxItems 64
+   */
+  theme_tokens: [string, ...string[]];
+  /**
+   * @minItems 1
+   * @maxItems 64
+   */
+  parts: [
+    {
+      /**
+       * Stable part id inside this catalog, e.g. stop, stick, battery.
+       */
+      id: string;
+      name: string;
+      kind: "stick" | "button" | "slider" | "readout" | "video" | "list";
+      /**
+       * A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused.
+       */
+      required: boolean;
+      /**
+       * The part sends a command when pressed or moved; it must render at least 44 px on every side.
+       */
+      pressed: boolean;
+      /**
+       * The smallest size a layout may give the part: w and h in grid cells, and px when the product guarantees more than 44 px (Stop).
+       */
+      min: {
+        w: number;
+        h: number;
+        px?: number;
+      };
+      /**
+       * Sizes the editor may offer as presets. A layout is not limited to these: it is limited to min and to the grid.
+       *
+       * @maxItems 12
+       */
+      sizes?:
+        | []
+        | [
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ];
+      styles: {
+        /**
+         * The theme tokens this part may be tinted with; every one is also in the surface's theme_tokens.
+         *
+         * @minItems 1
+         * @maxItems 16
+         */
+        tints:
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+        /**
+         * @minItems 1
+         * @maxItems 3
+         */
+        shapes:
+          | ["round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square", "round" | "pill" | "square"];
+        /**
+         * The opacity range this part allows; the design's range is 0.4 to 1.
+         */
+        opacity?: {
+          min: number;
+          max: number;
+        };
+        /**
+         * Whether the editor may show the part's label on it.
+         */
+        label?: boolean;
+      };
+      /**
+       * The bindings the product accepts for this part. A layout may pick a subset, never add one.
+       */
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+      /**
+       * The parts this part must never cover, in addition to the surface-wide rule that nothing covers a required part.
+       *
+       * @maxItems 32
+       */
+      never_covers?: string[];
+    },
+    ...{
+      /**
+       * Stable part id inside this catalog, e.g. stop, stick, battery.
+       */
+      id: string;
+      name: string;
+      kind: "stick" | "button" | "slider" | "readout" | "video" | "list";
+      /**
+       * A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused.
+       */
+      required: boolean;
+      /**
+       * The part sends a command when pressed or moved; it must render at least 44 px on every side.
+       */
+      pressed: boolean;
+      /**
+       * The smallest size a layout may give the part: w and h in grid cells, and px when the product guarantees more than 44 px (Stop).
+       */
+      min: {
+        w: number;
+        h: number;
+        px?: number;
+      };
+      /**
+       * Sizes the editor may offer as presets. A layout is not limited to these: it is limited to min and to the grid.
+       *
+       * @maxItems 12
+       */
+      sizes?:
+        | []
+        | [
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ];
+      styles: {
+        /**
+         * The theme tokens this part may be tinted with; every one is also in the surface's theme_tokens.
+         *
+         * @minItems 1
+         * @maxItems 16
+         */
+        tints:
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+        /**
+         * @minItems 1
+         * @maxItems 3
+         */
+        shapes:
+          | ["round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square", "round" | "pill" | "square"];
+        /**
+         * The opacity range this part allows; the design's range is 0.4 to 1.
+         */
+        opacity?: {
+          min: number;
+          max: number;
+        };
+        /**
+         * Whether the editor may show the part's label on it.
+         */
+        label?: boolean;
+      };
+      /**
+       * The bindings the product accepts for this part. A layout may pick a subset, never add one.
+       */
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+      /**
+       * The parts this part must never cover, in addition to the surface-wide rule that nothing covers a required part.
+       *
+       * @maxItems 32
+       */
+      never_covers?: string[];
+    }[]
+  ];
+}
+
+/** ui.layout@1.0.0 (owner: contracts) */
+/**
+ * ui.layout@1: one person's arrangement of one surface on one device class. A layout names the surface and its catalog version, the device, its own name, its author and its sharing (private, link or gallery), and one entry per part it places. A part is visible or not, sits on the surface's grid (x, y, w, h in cells) or docks to an edge for an overlay, and carries a style (a theme token tint, a shape, opacity 0.4-1 and the label) and bindings. It is data only: no URL, no markup and no code may appear anywhere in it, and every part id, tint, shape, opacity, size and binding must be one the catalog allows. openvibe-sdk/ui-layout validates it before any server, editor or AI answer stores or shows it.
+ */
+export interface UiLayout {
+  /**
+   * Assigned by OpenVibe.Network when the layout is stored; absent in a draft, a share answer or an AI suggestion.
+   */
+  id?: string;
+  /**
+   * Assigned by the store; every change to a stored layout moves it by one.
+   */
+  revision?: number;
+  /**
+   * Set by OpenVibe.Network: the one layout a product draws for this surface on this device class. A draft, a share answer and an AI suggestion carry no active field.
+   */
+  active?: boolean;
+  surface: string;
+  surface_version: number;
+  device: "phone" | "tablet" | "computer";
+  /**
+   * The person's name for this layout; "My phone controls" is fine.
+   */
+  name: string;
+  /**
+   * The author's display name and, for a private or link layout, the subject. A share or gallery answer carries the display name only, never the account.
+   */
+  author: {
+    name: string;
+    subject?: SubjectRef;
+  };
+  sharing: "private" | "link" | "gallery";
+  /**
+   * @minItems 1
+   * @maxItems 64
+   */
+  parts: [
+    {
+      id: string;
+      visible: boolean;
+      place:
+        | {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        | {
+            dock: "left" | "right" | "top" | "bottom";
+            order: number;
+            w: number;
+            h: number;
+          };
+      style: {
+        /**
+         * A theme token, never a colour: the theme decides what it is, so contrast follows the theme.
+         */
+        tint: string;
+        shape: "round" | "pill" | "square";
+        opacity: number;
+        label: boolean;
+      };
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+    },
+    ...{
+      id: string;
+      visible: boolean;
+      place:
+        | {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        | {
+            dock: "left" | "right" | "top" | "bottom";
+            order: number;
+            w: number;
+            h: number;
+          };
+      style: {
+        /**
+         * A theme token, never a colour: the theme decides what it is, so contrast follows the theme.
+         */
+        tint: string;
+        shape: "round" | "pill" | "square";
+        opacity: number;
+        label: boolean;
+      };
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+    }[]
+  ];
+  updated_at?: string;
+}
+
+/** ui.layout-request@1.0.0 (owner: contracts) */
+/**
+ * ui.layout-request@1: what an editor sends OpenVibe.AI's ui.layout.suggest task, and what Network forwards for a signed-in person. It is the surface's catalog, the layout shown now (or null for the default one) and the words the person typed (max 500 characters), for one device class. The catalog is the only power the answer can use; the current layout is the starting arrangement; the words never contain markup that becomes part of it.
+ */
+export interface UiLayoutRequest {
+  catalog: UiSurface;
+  /**
+   * The arrangement shown now, or null when the person is looking at the default.
+   */
+  layout: UiLayout | null;
+  /**
+   * The person's own description, e.g. "put Stop on the left and make it huge".
+   */
+  words: string;
+  device: "phone" | "tablet" | "computer";
+}
+
+/** ui.layout-suggestion@1.0.0 (owner: contracts) */
+/**
+ * ui.layout-suggestion@1: OpenVibe.AI's answer to ui.layout.suggest. ok true carries the layout, already checked by openvibe-sdk/ui-layout against the catalog sent with the request, and a one-sentence summary of what changed plus the model's reasons. ok false is an honest refusal: no layout, one sentence saying what it could not do, and the validator's reasons in plain words (for example "Stop has to stay visible."). A receipt names the model that answered, with the run and the route. The suggestion is previewed, never applied silently; Network or the product stores it only after the person accepts it.
+ */
+export type UiLayoutSuggestion = {
+  [k: string]: unknown | undefined;
+} & {
+  ok: boolean;
+  /**
+   * The validated layout when ok is true; null when it is false.
+   */
+  layout: UiLayout | null;
+  /**
+   * One sentence saying what changed, or what could not be done.
+   */
+  summary: string;
+  /**
+   * Why this arrangement, or the validator's reasons for refusing one.
+   *
+   * @maxItems 20
+   */
+  reasons:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * Which model answered: the same receipt every AI run carries, at the task's own shape.
+   */
+  receipt?: {
+    model: string;
+    provider?: string;
+    route?: string;
+    run_id?: string;
+    cost_usd?: number;
+  };
+};
+
+/** network.layout.changed@1.0.0 (owner: network) */
+/**
+ * network.layout.changed v1 (OpenVibe.Network server/layouts, written into network_event_outbox in the transaction that changes a stored layout). One event per change to one person's ui.layout@1: set active, saved, renamed, deleted, shared, unshared, published to the gallery, unpublished, copied from the gallery, or reset to the default. Envelope: subject { type: user, id } and the layout's revision, actor the person, visibility internal. The payload carries no account data and no layout contents, so an open page can announce a change and refetch with the person's own token.
+ */
+export interface NetworkLayoutChangedPayload {
+  surface: string;
+  device: "phone" | "tablet" | "computer";
+  layout_id: string;
+  change:
+    | "active"
+    | "saved"
+    | "renamed"
+    | "deleted"
+    | "shared"
+    | "unshared"
+    | "published"
+    | "unpublished"
+    | "copied"
+    | "reset";
+  revision: number;
+  sharing?: "private" | "link" | "gallery";
+}
+
+/** ui.action@1.0.0 (owner: contracts) */
+/**
+ * ui.action@1: one action an Element's recipe may request, from the fixed catalog, with the product that authorises it. An element never has a power of its own: the host asks the product named here, and that product checks the presser's role, the element's declared capability, its cooldown and cost, and its own owner limits before it does anything. kind is also the capability id an element declares in ui.element@1, and product is fixed by kind: bot for robot.drive_pulse, robot.head_preset, robot.headlight, robot.say and robot.macro; chat for chat.message, chat.pin and chat.poll; live for the screen, stream and webhook actions; ai for ai.ask; actor for actor.task; billing for money.tip_goal. A robot action is a request through Bot's existing command path: turns, Stop, the e-stop and owner takeover are never bypassed. Money never moves from an action without Billing's own confirmation.
+ */
+export type UiAction =
+  | {
+      kind: "robot.drive_pulse";
+      product: "bot";
+      direction: "forward" | "back" | "left" | "right" | "spin_left" | "spin_right";
+      ms: number;
+      /**
+       * Fraction of the robot's allowed speed; omitted means the owner's default for the role.
+       */
+      speed?: number;
+    }
+  | {
+      kind: "robot.head_preset";
+      product: "bot";
+      /**
+       * A head tilt preset. Bot still checks the robot profile and the owner's limits.
+       */
+      preset: "up" | "center" | "down";
+    }
+  | {
+      kind: "robot.headlight";
+      product: "bot";
+      on: boolean;
+    }
+  | {
+      kind: "robot.say";
+      product: "bot";
+      text: string;
+    }
+  | {
+      kind: "robot.macro";
+      product: "bot";
+      macro: string;
+    }
+  | {
+      kind: "chat.message";
+      product: "chat";
+      text: string;
+    }
+  | {
+      kind: "chat.pin";
+      product: "chat";
+      /**
+       * trigger pins the message that caused this action; latest pins the newest chat message.
+       */
+      source: "trigger" | "latest";
+    }
+  | {
+      kind: "chat.poll";
+      product: "chat";
+      question: string;
+      /**
+       * @minItems 2
+       * @maxItems 10
+       */
+      options:
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string];
+    }
+  | {
+      kind: "screen.alert";
+      product: "live";
+      title: string;
+      text?: string;
+    }
+  | {
+      kind: "screen.animation";
+      product: "live";
+      /**
+       * An animation the page or overlay has; an unknown name is refused, never fetched.
+       */
+      name: string;
+    }
+  | {
+      kind: "screen.confetti";
+      product: "live";
+      intensity?: "low" | "medium" | "high";
+    }
+  | {
+      kind: "screen.sound";
+      product: "live";
+      /**
+       * A sound from the streamer's own sound list; Live never fetches a URL for it.
+       */
+      sound: string;
+      volume?: number;
+    }
+  | {
+      kind: "screen.tts";
+      product: "live";
+      text: string;
+      /**
+       * A voice from the streamer's own voice list.
+       */
+      voice: string;
+    }
+  | {
+      kind: "screen.counter";
+      product: "live";
+      key: string;
+      by: number;
+    }
+  | {
+      kind: "screen.state";
+      product: "live";
+      key: string;
+      value: boolean | number | string | (number | string)[];
+    }
+  | {
+      kind: "screen.visibility";
+      product: "live";
+      element: string;
+      visible: boolean;
+    }
+  | {
+      kind: "screen.scene";
+      product: "live";
+      /**
+       * A scene the layout has; an unknown scene is refused.
+       */
+      scene: string;
+    }
+  | {
+      kind: "stream.clip";
+      product: "live";
+      /**
+       * How far back the clip starts, at most 30 seconds.
+       */
+      seconds?: number;
+    }
+  | {
+      kind: "stream.moment";
+      product: "live";
+      label?: string;
+    }
+  | {
+      kind: "stream.title";
+      product: "live";
+      title: string;
+    }
+  | {
+      kind: "stream.category";
+      product: "live";
+      category: string;
+    }
+  | {
+      kind: "ai.ask";
+      product: "ai";
+      prompt: string;
+      model?: string;
+      max_cost_usd?: number;
+    }
+  | {
+      kind: "actor.task";
+      product: "actor";
+      task: string;
+    }
+  | {
+      kind: "webhook.call";
+      product: "live";
+      endpoint: string;
+    }
+  | {
+      kind: "money.tip_goal";
+      product: "billing";
+      goal: string;
+    };
+
+/** ui.element@1.0.0 (owner: contracts) */
+/**
+ * ui.element@1: an Element people make and place on a surface: a look, a behaviour and, only when a recipe is not enough, a mod. LOOK draws from OpenVibe.Design's components and the theme's tokens, so it follows the person's theme, the seasons and dark/light; it carries no markup and no URL. RECIPE is data only: one or more triggers from ui.trigger@1, the conditions that decide who may fire it and what it costs, and one or more actions from ui.action@1, checked against CAPABILITIES. A capability is an action kind the element declares; the host refuses an action the element did not declare, and the product named by the action still checks the presser's role, the cooldown, the cost and its own limits. MOD is an optional reference to a code module (id, version and digest) for the stage where a recipe is not enough; the module never adds a power. Conditions use channel points only in stage 1: no Vibes, no money, and Billing still confirms any charge itself. The id and revision are assigned by the store; a draft has neither.
+ */
+export interface UiElement {
+  /**
+   * Assigned by the store when the element is saved; absent in a draft.
+   */
+  id?: string;
+  /**
+   * Assigned by the store; every saved change moves it by one.
+   */
+  revision?: number;
+  name: string;
+  description?: string;
+  /**
+   * The author's display name and, for a private or link element, the subject. A gallery or copy answer carries the display name only, never the account.
+   */
+  author: {
+    name: string;
+    subject?: SubjectRef;
+  };
+  sharing: "private" | "link" | "gallery";
+  look: {
+    /**
+     * An OpenVibe.Design component name (design.component@1), e.g. button or meter. A name the page does not have is refused, never fetched.
+     */
+    component: string;
+    /**
+     * The words on the element, e.g. Make it dance.
+     */
+    label: string;
+    /**
+     * A glyph name from the design icon set.
+     */
+    icon?: string;
+    /**
+     * The design component's own props (the sliders the editor shows). Numbers, strings and booleans only; no nesting.
+     */
+    props?: {
+      [k: string]: (boolean | number | string) | undefined;
+    };
+    style?: {
+      /**
+       * A theme token, never a colour: the theme decides what it is, so contrast follows the theme.
+       */
+      tint?: string;
+      shape?: "round" | "pill" | "square";
+      opacity?: number;
+      show_label?: boolean;
+    };
+  };
+  recipe: {
+    /**
+     * @minItems 1
+     * @maxItems 8
+     */
+    triggers:
+      | [UiTrigger]
+      | [UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger];
+    conditions?: {
+      /**
+       * Who may fire it. A higher role admits the lower ones where the product says so (an operator is admitted to subscriber-only); owner is the channel's owner alone. Default everyone.
+       */
+      role?: "everyone" | "follower" | "subscriber" | "vip" | "operator" | "owner";
+      /**
+       * Channel points the presser spends, from Live's points. Stage 1 has no other currency, and an element never charges money.
+       */
+      cost?: {
+        points: number;
+      };
+      /**
+       * How long the same person must wait, and how long everybody must wait, before it can fire again.
+       */
+      cooldown?: {
+        per_person_seconds?: number;
+        overall_seconds?: number;
+      };
+      /**
+       * The most times it may fire in a UTC day, per person and for everyone.
+       */
+      daily_cap?: {
+        per_person?: number;
+        overall?: number;
+      };
+      /**
+       * When true the element fires only while the channel is live.
+       */
+      live_only?: boolean;
+      /**
+       * When true a robot action is requested only while the presser has the robot's turn; Bot still decides.
+       */
+      robot_turn_only?: boolean;
+      /**
+       * Fire only one time in N. The host draws the lot, so a refused draw costs nothing.
+       */
+      chance?: {
+        one_in: number;
+      };
+    };
+    /**
+     * @minItems 1
+     * @maxItems 16
+     */
+    actions:
+      | [UiAction]
+      | [UiAction, UiAction]
+      | [UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ];
+  };
+  /**
+   * The action kinds this element may request. Every action in the recipe must be declared here; the host refuses the rest.
+   *
+   * @minItems 1
+   * @maxItems 32
+   */
+  capabilities: [
+    (
+      | "robot.drive_pulse"
+      | "robot.head_preset"
+      | "robot.headlight"
+      | "robot.say"
+      | "robot.macro"
+      | "chat.message"
+      | "chat.pin"
+      | "chat.poll"
+      | "screen.alert"
+      | "screen.animation"
+      | "screen.confetti"
+      | "screen.sound"
+      | "screen.tts"
+      | "screen.counter"
+      | "screen.state"
+      | "screen.visibility"
+      | "screen.scene"
+      | "stream.clip"
+      | "stream.moment"
+      | "stream.title"
+      | "stream.category"
+      | "ai.ask"
+      | "actor.task"
+      | "webhook.call"
+      | "money.tip_goal"
+    ),
+    ...(
+      | "robot.drive_pulse"
+      | "robot.head_preset"
+      | "robot.headlight"
+      | "robot.say"
+      | "robot.macro"
+      | "chat.message"
+      | "chat.pin"
+      | "chat.poll"
+      | "screen.alert"
+      | "screen.animation"
+      | "screen.confetti"
+      | "screen.sound"
+      | "screen.tts"
+      | "screen.counter"
+      | "screen.state"
+      | "screen.visibility"
+      | "screen.scene"
+      | "stream.clip"
+      | "stream.moment"
+      | "stream.title"
+      | "stream.category"
+      | "ai.ask"
+      | "actor.task"
+      | "webhook.call"
+      | "money.tip_goal"
+    )[]
+  ];
+  /**
+   * The element's state before anything runs; the counter starts at 0, never at a value the element did not declare.
+   */
+  initial_state?: {
+    [k: string]: (boolean | number | string | (number | string)[]) | undefined;
+  };
+  /**
+   * A code module for an element whose recipe is not enough (stage 3). It runs sandboxed; the reference is data, and the host checks every request the module makes against the element's capabilities.
+   */
+  mod?: {
+    id: string;
+    version: string;
+    sha256: string;
+    /**
+     * The subset of the element's capabilities the module itself may request; omitted means the element's declared capabilities, and a product may grant fewer.
+     *
+     * @maxItems 32
+     */
+    capabilities?: (
+      | "robot.drive_pulse"
+      | "robot.head_preset"
+      | "robot.headlight"
+      | "robot.say"
+      | "robot.macro"
+      | "chat.message"
+      | "chat.pin"
+      | "chat.poll"
+      | "screen.alert"
+      | "screen.animation"
+      | "screen.confetti"
+      | "screen.sound"
+      | "screen.tts"
+      | "screen.counter"
+      | "screen.state"
+      | "screen.visibility"
+      | "screen.scene"
+      | "stream.clip"
+      | "stream.moment"
+      | "stream.title"
+      | "stream.category"
+      | "ai.ask"
+      | "actor.task"
+      | "webhook.call"
+      | "money.tip_goal"
+    )[];
+  };
+  created_at?: string;
+  updated_at?: string;
+}
+
+/** ui.element-state@1.0.0 (owner: contracts) */
+/**
+ * ui.element-state@1: the small store an Element keeps for itself (counters, scores, lists, a wheel's entries), as Live broadcasts it to everyone watching and as a read returns it. CHANNEL and ELEMENT_ID name the element instance, REVISION grows by one with each accepted change so a late frame never overwrites a newer one, and VALUES is the store itself: at most 32 keys, each a boolean, a number, a short string or a list of those. It is state, not code: no objects, no markup, no URL and no account data, which keeps a shared element's state safe to render for every viewer.
+ */
+export interface UiElementState {
+  /**
+   * The Live channel's username (its slug).
+   */
+  channel: string;
+  element_id: string;
+  revision: number;
+  /**
+   * The element's own store. A key is lower-case and 32 characters at most; a value is a boolean, a number, a string of 200 characters at most or a list of those.
+   */
+  values: {
+    [k: string]: (boolean | number | string | (number | string)[]) | undefined;
+  };
+  updated_at: string;
+}
+
+/** ui.trigger@1.0.0 (owner: contracts) */
+/**
+ * ui.trigger@1: one trigger an Element's recipe listens for, from the fixed catalog. kind says what happened: a viewer pressing, holding or double-pressing the element, a key or gamepad binding, a chat command or text, a follow, a tip, an AI Moment, a Rundown topic, a timer or schedule, robot telemetry or an event, the stream starting or ending, a viewer-count crossing or another element's event. The fields a kind needs are the only fields it accepts. A trigger is data: it never names code or a URL, and a product may refuse a kind it does not offer yet. Stage 1 of Elements uses press and chat_command; the rest are declared here so a stage-2 element and the editor speak one language.
+ */
+export type UiTrigger =
+  | {
+      kind: "press";
+    }
+  | {
+      kind: "hold";
+      ms: number;
+    }
+  | {
+      kind: "double_press";
+      /**
+       * The longest gap between the two presses; 400 by default.
+       */
+      within_ms?: number;
+    }
+  | {
+      kind: "key";
+      key: string;
+      /**
+       * @maxItems 4
+       */
+      modifiers?:
+        | []
+        | ["ctrl" | "alt" | "shift" | "meta"]
+        | ["ctrl" | "alt" | "shift" | "meta", "ctrl" | "alt" | "shift" | "meta"]
+        | ["ctrl" | "alt" | "shift" | "meta", "ctrl" | "alt" | "shift" | "meta", "ctrl" | "alt" | "shift" | "meta"]
+        | [
+            "ctrl" | "alt" | "shift" | "meta",
+            "ctrl" | "alt" | "shift" | "meta",
+            "ctrl" | "alt" | "shift" | "meta",
+            "ctrl" | "alt" | "shift" | "meta"
+          ];
+    }
+  | {
+      kind: "gamepad";
+      button: string;
+      /**
+       * Which connected pad; omitted means any.
+       */
+      index?: number;
+    }
+  | {
+      kind: "chat_command";
+      /**
+       * The command without arguments, lower case, e.g. !dance.
+       */
+      command: string;
+    }
+  | {
+      kind: "chat_text";
+      /**
+       * @minItems 1
+       * @maxItems 16
+       */
+      words:
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ];
+      /**
+       * any (default) matches one of the words; all matches every one.
+       */
+      mode?: "any" | "all";
+    }
+  | {
+      kind: "follow";
+    }
+  | {
+      kind: "tip";
+      /**
+       * The smallest tip, in Vibes, that fires the trigger; omitted means any tip.
+       */
+      min?: number;
+    }
+  | {
+      kind: "ai_moment";
+    }
+  | {
+      kind: "rundown_topic";
+      /**
+       * Optional words the topic has to mention; omitted means any topic.
+       *
+       * @maxItems 8
+       */
+      words?:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string];
+    }
+  | {
+      kind: "timer";
+      every_seconds: number;
+      /**
+       * live (default) counts only while the channel is live; always counts from the element being active.
+       */
+      start?: "live" | "always";
+    }
+  | {
+      kind: "schedule";
+      /**
+       * A five-field cron in the person's timezone.
+       */
+      cron: string;
+      timezone: string;
+    }
+  | {
+      kind: "robot_telemetry";
+      metric: "battery_percent" | "latency_ms" | "stuck" | "temperature_c";
+      op: "lt" | "gt";
+      value: number;
+      /**
+       * How long the condition must hold; 0 (default) means at once.
+       */
+      for_seconds?: number;
+    }
+  | {
+      kind: "robot_event";
+      event: "estop" | "stopped" | "disconnected" | "command_refused" | "button";
+    }
+  | {
+      kind: "stream_start";
+    }
+  | {
+      kind: "stream_end";
+    }
+  | {
+      kind: "viewer_count";
+      op: "above" | "below";
+      count: number;
+    }
+  | {
+      kind: "element_event";
+      element_id: string;
+      /**
+       * pressed (default) fires after that element ran; state and shown fire when Live broadcasts them.
+       */
+      event?: "pressed" | "state" | "shown";
+    };
+
+/** live.element.pressed@1.0.0 (owner: live) */
+/**
+ * live.element.pressed v1 (OpenVibe.Live server/elements): a viewer's element press was accepted and ran. It carries the public facts the stream should see: the channel, the element's id and name, the presser's public name and subject, the trigger that fired, the channel points it cost and the element-state revision it left behind. It never carries the presser's email, address, account balance or anything private; a refused press does not produce it. Envelope: subject { type: element, id: el_… }, actor the presser's subject, visibility public, priority low. Also written to the channel's AI timeline as a moment, so the stream's own timeline can cite 'chat made the robot dance'.
+ */
+export interface LiveElementPressedPayload {
+  /**
+   * The public channel facts (the channel page is public already).
+   */
+  channel: {
+    username: string;
+    display_name: string;
+  };
+  element_id: string;
+  element_name: string;
+  presser: SubjectRef;
+  /**
+   * The display name the stream shows, never an email or an account id.
+   */
+  presser_name: string;
+  trigger: UiTrigger;
+  /**
+   * Channel points the press cost; 0 when it was free.
+   */
+  points_spent?: number;
+  /**
+   * The element-state revision after the actions ran; 0 when the element has no state yet.
+   */
+  state_revision?: number;
+  at: string;
+}
+
+/** live.element.state@1.0.0 (owner: live) */
+/**
+ * live.element.state v1 (OpenVibe.Live server/elements): an element's own store changed, broadcast to everyone watching through Live's existing events path. Carries the channel's public facts and the same store as ui.element-state@1: the element instance, a revision that grows by one per accepted change, the values themselves and when. It is public state (a counter, a score, a wheel's entries), never the presser's data: a value may not be an object, a markup string or a URL, and the payload carries no account.
+ */
+export interface LiveElementStatePayload {
+  channel: {
+    username: string;
+    display_name: string;
+  };
+  element_id: string;
+  revision: number;
+  /**
+   * The element's own store. A key is lower-case and 32 characters at most; a value is a boolean, a number, a string of 200 characters at most or a list of those.
+   */
+  values: {
+    [k: string]: (boolean | number | string | (number | string)[]) | undefined;
+  };
+  updated_at: string;
+}
+
+/** ai.deep-dive@1.0.0 (owner: ai) */
+/**
+ * A deep dive: expert design research run by OpenVibe.AI (workflow design.deep_dive) for OpenVibe.Exchange's /deep-dive page and, through the API, OpenVibe.Design. One document holds the question and depth (the input), the seven steps, every source read, every capture (a private Media object per viewport and theme, with its DOM facts and Expert extras), the per-site analysis, the synthesis across sites, the recommendations checked against OpenVibe's own rules, and the receipt of every model call and capture. Every claim carries its evidence: the site, the capture or crop, the URL and the date it was read. Nothing is copied: captures are private to the run's owner and the report shows them as attributed commentary.
+ */
+export interface AiDeepDive {
+  /**
+   * The run id; a deep dive is a run (GET /api/v1/deep-dives/{id}).
+   */
+  id: string;
+  schema: "ai.deep-dive@1";
+  run_id: string;
+  status: "queued" | "running" | "choosing" | "succeeded" | "failed" | "cancelled";
+  input: {
+    question: string;
+    depth: "quick" | "thorough" | "expert";
+    max_sites: number;
+    /**
+     * Sites the person named when starting the run.
+     *
+     * @maxItems 30
+     */
+    sites?: string[];
+  };
+  steps: {
+    key: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report";
+    status: "pending" | "running" | "done" | "skipped" | "failed";
+    detail?: string | null;
+    started_at?: string | null;
+    finished_at?: string | null;
+  }[];
+  sources: {
+    id: string;
+    kind: "web" | "picture" | "icon" | "project" | "rules" | "component" | "named";
+    title: string;
+    url: string;
+    publisher?: string | null;
+    engine?: string | null;
+    snippet?: string | null;
+    license?: string | null;
+    read_at: string;
+  }[];
+  captures: {
+    id: string;
+    source_id: string;
+    url: string;
+    final_url?: string | null;
+    title?: string | null;
+    captured_at: string;
+    viewport: 390 | 1280;
+    theme: "light" | "dark";
+    full_page: boolean;
+    media_id?: string | null;
+    width?: number | null;
+    height?: number | null;
+    crops: {
+      id: string;
+      media_id: string;
+      y: number;
+      height: number;
+    }[];
+    dom?: {} | null;
+    extras?: {} | null;
+    /**
+     * Why the capture did not happen: robots_disallowed, not_public, no_chrome, timeout, …
+     */
+    skip?: string | null;
+    cached?: boolean;
+  }[];
+  analysis: {
+    source_id: string;
+    url: string;
+    summary: string;
+    first_impression?: string;
+    hierarchy?: string;
+    density?: string;
+    type?: string;
+    colour?: string;
+    motion?: string;
+    words?: string;
+    /**
+     * @maxItems 12
+     */
+    strengths:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string];
+    /**
+     * @maxItems 12
+     */
+    weaknesses:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string];
+    accessibility?: string | null;
+    speed?: string | null;
+    evidence: {
+      claim: string;
+      source_id?: string | null;
+      capture_id?: string | null;
+      crop_id?: string | null;
+      url: string;
+      read_at: string;
+    }[];
+  }[];
+  synthesis: {
+    patterns: {
+      name: string;
+      what: string;
+      /**
+       * @maxItems 30
+       */
+      sites: string[];
+      usage_count?: number;
+      evidence: {
+        claim: string;
+        source_id?: string | null;
+        capture_id?: string | null;
+        crop_id?: string | null;
+        url: string;
+        read_at: string;
+      }[];
+    }[];
+    comparison: {
+      /**
+       * @maxItems 12
+       */
+      columns:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string];
+      rows:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string][];
+    };
+    best: {
+      source_id: string;
+      what: string;
+      evidence: {
+        claim: string;
+        source_id?: string | null;
+        capture_id?: string | null;
+        crop_id?: string | null;
+        url: string;
+        read_at: string;
+      }[];
+    };
+    mistakes: {
+      what: string;
+      evidence: {
+        claim: string;
+        source_id?: string | null;
+        capture_id?: string | null;
+        crop_id?: string | null;
+        url: string;
+        read_at: string;
+      }[];
+    }[];
+    gap: string;
+    reference_tokens: {
+      palettes: {
+        source_id: string;
+        /**
+         * @maxItems 16
+         */
+        colours:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+      }[];
+      type_scales: {
+        source_id: string;
+        /**
+         * @maxItems 8
+         */
+        families:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string];
+        /**
+         * @maxItems 16
+         */
+        sizes:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+      }[];
+      spacing: {
+        source_id: string;
+        /**
+         * @maxItems 16
+         */
+        steps:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+      }[];
+    };
+    /**
+     * @maxItems 20
+     */
+    do:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * @maxItems 20
+     */
+    dont:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * @maxItems 20
+     */
+    accessibility:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * @maxItems 20
+     */
+    speed:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  recommendations: {
+    id: string;
+    what: string;
+    why: string;
+    rule: {
+      id?: string | null;
+      status: "follows" | "would_change" | "none";
+      text: string;
+    };
+    evidence: {
+      claim: string;
+      source_id?: string | null;
+      capture_id?: string | null;
+      crop_id?: string | null;
+      url: string;
+      read_at: string;
+    }[];
+  }[];
+  receipt: {
+    price_usd: number;
+    held_usd: number;
+    cost_usd: number;
+    captures_count: number;
+    synthetic: boolean;
+    models: {
+      step: "plan" | "choose" | "analyse" | "synthesise";
+      provider: string | null;
+      model: string | null;
+      tokens_in: number;
+      tokens_out: number;
+      cost_usd: number;
+      ms: number;
+    }[];
+  };
+  /**
+   * @maxItems 40
+   */
+  gaps: string[];
+  created_at: string;
+  updated_at: string;
+  finished_at?: string | null;
+}
+
+/** ai.deep_dive.updated@1.0.0 (owner: ai) */
+/**
+ * ai.deep_dive.updated v1 (OpenVibe.AI server/deep-dive): a deep dive's step changed or it ended. One event per step transition and one at the end, so a page (OpenVibe.Exchange's /deep-dive) can follow a run without polling, and OpenVibe.Design can attach a finished report. The payload carries the run and deep-dive ids, the step, the progress and the status; never the question's answer, a capture or a prompt. Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low (important on failed), actor service:ai.
+ */
+export interface AiDeepDiveUpdatedPayload {
+  deep_dive_id: string;
+  run_id: string;
+  status: "queued" | "running" | "choosing" | "succeeded" | "failed" | "cancelled";
+  step: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report" | "done" | null;
+  progress: number;
+  steps: {
+    key: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report";
+    status: "pending" | "running" | "done" | "skipped" | "failed";
+  }[];
+  depth: "quick" | "thorough" | "expert";
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  url: string;
+  error: {
+    code: string;
+    detail: string;
+  } | null;
+  occurred_at: string;
+}

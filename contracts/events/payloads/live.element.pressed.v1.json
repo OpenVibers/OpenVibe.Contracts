@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/live.element.pressed.v1.json",
+  "title": "LiveElementPressedPayload",
+  "description": "live.element.pressed v1 (OpenVibe.Live server/elements): a viewer's element press was accepted and ran. It carries the public facts the stream should see: the channel, the element's id and name, the presser's public name and subject, the trigger that fired, the channel points it cost and the element-state revision it left behind. It never carries the presser's email, address, account balance or anything private; a refused press does not produce it. Envelope: subject { type: element, id: el_… }, actor the presser's subject, visibility public, priority low. Also written to the channel's AI timeline as a moment, so the stream's own timeline can cite 'chat made the robot dance'.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["channel", "element_id", "element_name", "presser", "presser_name", "trigger", "at"],
+  "properties": {
+    "channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["username", "display_name"],
+      "properties": {
+        "username": { "type": "string", "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$" },
+        "display_name": { "type": "string", "minLength": 1, "maxLength": 80 }
+      },
+      "description": "The public channel facts (the channel page is public already)."
+    },
+    "element_id": { "type": "string", "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "element_name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "presser": { "$ref": "../../identity/subject-ref.v1.json" },
+    "presser_name": { "type": "string", "minLength": 1, "maxLength": 120, "description": "The display name the stream shows, never an email or an account id." },
+    "trigger": { "$ref": "../../ui/trigger.v1.json" },
+    "points_spent": { "type": "integer", "minimum": 0, "description": "Channel points the press cost; 0 when it was free." },
+    "state_revision": { "type": "integer", "minimum": 0, "description": "The element-state revision after the actions ran; 0 when the element has no state yet." },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

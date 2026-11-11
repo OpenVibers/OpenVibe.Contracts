@@ -1,0 +1,75 @@
+{
+  "id": "el_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "revision": 3,
+  "name": "Make it dance",
+  "description": "The robot spins for a moment and confetti follows.",
+  "author": {
+    "name": "Maticus",
+    "subject": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    }
+  },
+  "sharing": "gallery",
+  "look": {
+    "component": "button",
+    "label": "Make it dance",
+    "icon": "robot",
+    "props": {
+      "size": "large"
+    },
+    "style": {
+      "tint": "accent",
+      "shape": "pill",
+      "opacity": 1,
+      "show_label": true
+    }
+  },
+  "recipe": {
+    "triggers": [
+      {
+        "kind": "press"
+      }
+    ],
+    "conditions": {
+      "role": "follower",
+      "cost": {
+        "points": 50
+      },
+      "cooldown": {
+        "per_person_seconds": 60,
+        "overall_seconds": 10
+      },
+      "live_only": true,
+      "daily_cap": {
+        "per_person": 5
+      },
+      "chance": {
+        "one_in": 1
+      }
+    },
+    "actions": [
+      {
+        "kind": "robot.drive_pulse",
+        "product": "bot",
+        "direction": "spin_left",
+        "ms": 800,
+        "speed": 0.5
+      },
+      {
+        "kind": "screen.confetti",
+        "product": "live",
+        "intensity": "medium"
+      }
+    ]
+  },
+  "capabilities": [
+    "robot.drive_pulse",
+    "screen.confetti"
+  ],
+  "initial_state": {
+    "dances": 0
+  },
+  "created_at": "2026-11-11T20:00:00.000Z",
+  "updated_at": "2026-11-11T20:30:00.000Z"
+}

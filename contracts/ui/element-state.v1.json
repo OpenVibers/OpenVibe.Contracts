@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ui/element-state.v1.json",
+  "title": "UiElementState",
+  "description": "ui.element-state@1: the small store an Element keeps for itself (counters, scores, lists, a wheel's entries), as Live broadcasts it to everyone watching and as a read returns it. CHANNEL and ELEMENT_ID name the element instance, REVISION grows by one with each accepted change so a late frame never overwrites a newer one, and VALUES is the store itself: at most 32 keys, each a boolean, a number, a short string or a list of those. It is state, not code: no objects, no markup, no URL and no account data, which keeps a shared element's state safe to render for every viewer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["channel", "element_id", "revision", "values", "updated_at"],
+  "properties": {
+    "channel": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$",
+      "description": "The Live channel's username (its slug)."
+    },
+    "element_id": {
+      "type": "string",
+      "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "values": { "$ref": "#/$defs/values" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "values": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]{0,31}$" },
+      "additionalProperties": { "$ref": "#/$defs/value" },
+      "description": "The element's own store. A key is lower-case and 32 characters at most; a value is a boolean, a number, a string of 200 characters at most or a list of those."
+    },
+    "value": {
+      "oneOf": [
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string", "maxLength": 200 },
+        {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "oneOf": [
+              { "type": "number" },
+              { "type": "string", "maxLength": 200 }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ai.layout.suggest",
+  "version": "1.0",
+  "owner": "ai",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Turn a person's words into a ui.layout@1 for one surface, using only the parts its ui.surface@1 catalog has. The answer is checked by openvibe-sdk/ui-layout against the same catalog; an invalid answer gets one retry with the validator's reasons, then the task says plainly that it could not do it. The suggestion is previewed, never applied. Runs on the cheap structured-output route with the per-person limits every AI run uses, and its receipt names the model. POST /api/v1/ui/layout/suggest with a service token; OpenVibe.Network calls it for the signed-in person and names them in X-OV-Subject.",
+  "permissions": [
+    "ai:layout"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "ai-run",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/ui/layout/suggest"
+  ],
+  "inputSchema": "ui.layout-request@1",
+  "outputSchema": "ui.layout-suggestion@1"
+}

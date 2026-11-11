@@ -1,0 +1,40 @@
+{
+  "name": "Wheel of chatters",
+  "author": {
+    "name": "Ada"
+  },
+  "sharing": "link",
+  "look": {
+    "component": "wheel",
+    "label": "Spin the wheel"
+  },
+  "recipe": {
+    "triggers": [
+      {
+        "kind": "press"
+      },
+      {
+        "kind": "chat_command",
+        "command": "!wheel"
+      }
+    ],
+    "actions": [
+      {
+        "kind": "robot.say",
+        "product": "bot",
+        "text": "The wheel says hello."
+      }
+    ]
+  },
+  "capabilities": [
+    "robot.say"
+  ],
+  "mod": {
+    "id": "mod_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+    "version": "1.2.0",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "capabilities": [
+      "robot.say"
+    ]
+  }
+}

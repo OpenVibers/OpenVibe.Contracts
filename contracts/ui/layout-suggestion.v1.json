@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ui/layout-suggestion.v1.json",
+  "title": "UiLayoutSuggestion",
+  "description": "ui.layout-suggestion@1: OpenVibe.AI's answer to ui.layout.suggest. ok true carries the layout, already checked by openvibe-sdk/ui-layout against the catalog sent with the request, and a one-sentence summary of what changed plus the model's reasons. ok false is an honest refusal: no layout, one sentence saying what it could not do, and the validator's reasons in plain words (for example \"Stop has to stay visible.\"). A receipt names the model that answered, with the run and the route. The suggestion is previewed, never applied silently; Network or the product stores it only after the person accepts it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ok", "layout", "summary", "reasons"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "layout": {
+      "oneOf": [
+        { "$ref": "layout.v1.json" },
+        { "type": "null" }
+      ],
+      "description": "The validated layout when ok is true; null when it is false."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "description": "One sentence saying what changed, or what could not be done."
+    },
+    "reasons": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "minLength": 1, "maxLength": 300 },
+      "description": "Why this arrangement, or the validator's reasons for refusing one."
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model"],
+      "properties": {
+        "model": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "provider": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "route": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "run_id": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "cost_usd": { "type": "number", "minimum": 0 }
+      },
+      "description": "Which model answered: the same receipt every AI run carries, at the task's own shape."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "ok": { "const": true } }, "required": ["ok"] },
+      "then": { "properties": { "layout": { "type": "object" } } }
+    },
+    {
+      "if": { "properties": { "ok": { "const": false } }, "required": ["ok"] },
+      "then": { "properties": { "layout": { "type": "null" } } }
+    }
+  ]
+}
