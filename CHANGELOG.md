@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.402.0 — 2026-11-11
+
+- Activate `download.file.read` for grant-bound, per-file reads by agents on openvibe.download; the capability alone does not provide drive listing or access without an owner's active grant.
+
 ## 0.401.0 — 2026-11-11
 
 - Add the `live.channel_points.read` capability (with `live.channel-points-page@1`): OpenVibe.Network reads one channel's points moves for the person behind a Network account through Live's internal channel-points changes read, for the gain/loss API (ask 273).

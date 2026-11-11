@@ -2,9 +2,9 @@
   "id": "download.file.read",
   "version": "1.0",
   "owner": "media-hub",
-  "status": "planned",
+  "status": "active",
   "visibility": "public",
-  "description": "PLANNED: list and read files and folders in the caller's drive on openvibe.download, and resolve a share link (plan T10 item 12). Bytes are Media files/objects.",
+  "description": "Read a specific file on openvibe.download only when its owner has made an active, revocable grant to this agent. A capability alone never lists or reads the owner's drive. Bytes remain in OpenVibe.Media; each content read checks the grant and supports byte ranges.",
   "permissions": [
     "download:read"
   ],
@@ -13,5 +13,9 @@
   ],
   "quotaClass": "download-read",
   "events": [],
-  "implementedBy": []
+  "implementedBy": [
+    "GET /api/v1/agent/files/:id/content"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "media.file-read-result@1"
 }
