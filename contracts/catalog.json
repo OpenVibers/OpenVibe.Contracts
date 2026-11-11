@@ -11249,6 +11249,15 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "compare.comparison",
+      "version": "1.0.0",
+      "owner": "compare",
+      "schema": "compare/comparison.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

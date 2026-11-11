@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.402.0 — 2026-11-11
+
+- Add `compare.comparison@1` and the public Compare service/site manifest in Read & ask. Every result requires a date and HTTPS source. Release is held for the orchestrator.
+
 ## 0.401.0 — 2026-11-11
 
 - Add the `live.channel_points.read` capability (with `live.channel-points-page@1`): OpenVibe.Network reads one channel's points moves for the person behind a Network account through Live's internal channel-points changes read, for the gain/loss API (ask 273).
