@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.407.0 — 2026-11-11
+
+- `identity.subject-projection@1` gains `is_test`: true for an account the probe and test tooling signs in as (OpenVibe.Network's `users.is_test`). Every public surface filters on it, while the account's own signed-in view keeps working. It is optional and additive, so an older projection without it still validates.
+- `identity.resolve-result@1` gains the `{ subjects: [...] }` answer of the new `GET /internal/identity/test-subjects`, which lists the test accounts' projections to first-party services. `identity.subject.resolve@1.1` names the route.
+- The fixtures cover a test account's projection and the list answer.
+
 ## 0.406.0 — 2026-11-11
 
 The second train of the day, for the five pull requests opened after 0.405.0 (one line each):

@@ -317,9 +317,9 @@ export type IdentityResolveRequest =
     }
   | NoBody;
 
-/** identity.resolve-result@1.0.0 (owner: network) */
+/** identity.resolve-result@1.1.0 (owner: network) */
 /**
- * identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing.
+ * identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing; GET /internal/identity/test-subjects → { subjects } with every account marked is_test.
  */
 export type IdentityResolveResult =
   | IdentitySubjectProjection
@@ -327,6 +327,9 @@ export type IdentityResolveResult =
       results: {
         [k: string]: (IdentitySubjectProjection | null) | undefined;
       };
+    }
+  | {
+      subjects: IdentitySubjectProjection[];
     };
 
 /** identity.trust@1.0.0 (owner: network) */
@@ -973,9 +976,9 @@ export interface VerifiedEmailCheckResult {
   verified: boolean;
 }
 
-/** identity.subject-projection@1.0.0 (owner: network) */
+/** identity.subject-projection@1.1.0 (owner: network) */
 /**
- * identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.
+ * identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned and whether it is a test account, and every legacy id mapped to it.
  */
 export interface IdentitySubjectProjection {
   subject: SubjectRef;
@@ -990,6 +993,10 @@ export interface IdentitySubjectProjection {
     source_type: string;
     source_id: string;
   }[];
+  /**
+   * True for an account the probe and test tooling signs in as (users.is_test on Network). A public member list, feed, leaderboard or account count leaves these accounts out; their own signed-in views still work.
+   */
+  is_test?: boolean;
 }
 
 /** common.entity-ref@1.0.0 (owner: contracts) */

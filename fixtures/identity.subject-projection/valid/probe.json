@@ -1,0 +1,19 @@
+{
+  "subject": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+  },
+  "network_user_id": 410,
+  "username": "ovprobe_merge_keep",
+  "display_name": "ovprobe_merge_keep",
+  "avatar_url": null,
+  "banned": false,
+  "is_test": true,
+  "legacy_ids": [
+    {
+      "source_system": "live",
+      "source_type": "user",
+      "source_id": "17"
+    }
+  ]
+}
