@@ -338211,25 +338211,19 @@ export type UiAction =
       kind: "robot.head_preset";
       product: "bot";
       /**
-       * A preset name from the robot's profile; Bot refuses one the robot does not have.
+       * A head tilt preset. Bot still checks the robot profile and the owner's limits.
        */
-      preset: string;
+      preset: "up" | "center" | "down";
     }
   | {
       kind: "robot.headlight";
       product: "bot";
       on: boolean;
-      brightness?: number;
-      colour?: string;
     }
   | {
       kind: "robot.say";
       product: "bot";
       text: string;
-      /**
-       * A voice from the robot's own voice list; omitted means the profile default.
-       */
-      voice?: string;
     }
   | {
       kind: "robot.macro";
@@ -338315,7 +338309,7 @@ export type UiAction =
       kind: "screen.state";
       product: "live";
       key: string;
-      value: boolean | number | string;
+      value: boolean | number | string | (number | string)[];
     }
   | {
       kind: "screen.visibility";

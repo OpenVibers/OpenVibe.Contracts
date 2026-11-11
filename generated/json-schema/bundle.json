@@ -130864,7 +130864,7 @@
               "product",
               "preset"
             ],
-            "description": "Take the robot's head to a preset the robot profile defines.",
+            "description": "Take the robot's head to a preset. Bot maps up, center and down to the head actuator its robot profile declares; a robot without one refuses it.",
             "properties": {
               "kind": {
                 "const": "robot.head_preset"
@@ -130873,10 +130873,12 @@
                 "const": "bot"
               },
               "preset": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 40,
-                "description": "A preset name from the robot's profile; Bot refuses one the robot does not have."
+                "enum": [
+                  "up",
+                  "center",
+                  "down"
+                ],
+                "description": "A head tilt preset. Bot still checks the robot profile and the owner's limits."
               }
             }
           },
@@ -130888,7 +130890,7 @@
               "product",
               "on"
             ],
-            "description": "Turn the robot's headlight on or off. Bot refuses it unless the robot's profile has the headlight capability.",
+            "description": "Turn the robot's headlight on or off. Bot's own headlight kind is the authority: only the owner and People Operators may send it, and a robot whose profile has no headlight refuses it.",
             "properties": {
               "kind": {
                 "const": "robot.headlight"
@@ -130898,15 +130900,6 @@
               },
               "on": {
                 "type": "boolean"
-              },
-              "brightness": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1
-              },
-              "colour": {
-                "type": "string",
-                "pattern": "^#[0-9a-fA-F]{6}$"
               }
             }
           },
@@ -130930,12 +130923,6 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 300
-              },
-              "voice": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 40,
-                "description": "A voice from the robot's own voice list; omitted means the profile default."
               }
             }
           },
@@ -131210,7 +131197,7 @@
               "key",
               "value"
             ],
-            "description": "Set one of the element's state values. Lists and objects are not state values: a value is a number, a string or a boolean.",
+            "description": "Set one of the element's state values: a boolean, a number, a short string or a list of those (a wheel's entries, a scoreboard). Objects are not state values.",
             "properties": {
               "kind": {
                 "const": "screen.state"
@@ -131233,6 +131220,21 @@
                   {
                     "type": "string",
                     "maxLength": 200
+                  },
+                  {
+                    "type": "array",
+                    "maxItems": 64,
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      ]
+                    }
                   }
                 ]
               }

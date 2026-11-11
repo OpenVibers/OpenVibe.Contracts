@@ -22,8 +22,7 @@
       {
         "kind": "robot.say",
         "product": "bot",
-        "text": "The wheel says hello.",
-        "voice": "default"
+        "text": "The wheel says hello."
       }
     ]
   },
