@@ -12,8 +12,6 @@ service id); **Runtime** is `STATUS.json.runtime`; **Database** is inferred from
 | Repository | Product | Authority it owns | Runtime | Database | Domain | SDK/Contracts pin | Deployment | Public/private | Current track |
 |---|---|---|---|---|---|---|---|---|---|
 | AFResume | — | — | — | — | — | — | — | — | — |
-| BreakRoomSimulator | — | — | — | — | — | — | — | — | — |
-| OpenRe.Stream | — | — | node 22 | PostgreSQL | openre.stream | contracts v0.112.0, sdk v0.35.0, shared v2.13.0 | deployed | — | W7 |
 | OpenRestream | OpenRestream | openre.* | node 22 | PostgreSQL | openre.stream, ingest.openre.stream | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | live | W7 |
 | OpenVibe.AI | AI | ai.usage_summary | node 22 | PostgreSQL | ai.openvibe.services, ai.openvibe.network, openvibe.ai | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | live | W13 |
 | OpenVibe.Actor | Actor | actor.* | node 22 | PostgreSQL | openvibe.actor | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | live | W20 |
@@ -64,11 +62,3 @@ service id); **Runtime** is `STATUS.json.runtime`; **Database** is inferred from
 | OpenVibe.Work | Work | work.* | node 22 | PostgreSQL | openvibe.work | contracts v0.222.0, sdk v0.67.0, shared v4.17.0, publishing v1.4.0 | deployed | live | W20 |
 | OpenVibe.Zone | Zone | zone.* | node 22 | PostgreSQL | openvibe.zone, api.openvibe.zone | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | live | T8 |
 | openvibe-agents | — | — | — | — | — | — | — | — | — |
-| wt-bot-claim | — | — | node 22 | PostgreSQL | openvibe.bot | contracts v0.200.0, sdk v0.50.1, shared v4.4.0 | deployed | — | — |
-| wt-chat-baseline | — | — | node 22 | PostgreSQL | openvibe.chat, openvibe.live | contracts v0.222.0, sdk v0.70.0, shared v4.33.0 | deployed | — | W6 |
-| wt-live-agent-layer | — | — | node 22 | PostgreSQL | openvibe.live | contracts v0.222.0, sdk v0.71.0, shared v4.34.0 | deployed | — | — |
-| wt-live-bind | — | — | node 22 | PostgreSQL | openvibe.live | contracts v0.203.0, sdk v0.50.1, shared v4.4.0 | deployed | — | — |
-| wt-live-hero-tts | — | — | node 22 | PostgreSQL | openvibe.live | contracts v0.203.0, sdk v0.50.1, shared v4.4.0 | deployed | — | — |
-| wt-live-node-viewers | — | — | node 22 | PostgreSQL | openvibe.live | contracts v0.222.0, sdk v0.67.0, shared v4.17.0 | deployed | — | — |
-| wt-mediahub-agent-layer | — | — | node 22 | PostgreSQL | openvibe.download, openvibe.video, openvibe.pics, openvibe.network | contracts v0.222.0, sdk v0.67.0, shared v4.34.0 | deployed | — | W20 |
-| wt-node-claim | — | — | — | — | — | — | — | — | — |
