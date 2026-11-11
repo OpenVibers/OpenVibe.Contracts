@@ -2,7 +2,7 @@
 
 ## 0.404.0 — 2026-11-11
 
-- Add `agent.ui-event@1` and `agent.run@1` for AG-UI events and run snapshots; add the `agent-run` chat embed kind.
+- Add `agent.ui-event@1` with all 31 AG-UI 1.0 event types and family fields, OpenVibe `metadata.ov`, and `agent.run@1` snapshots; add `agent-run` embeds with run and event URLs.
 
 ## 0.403.0 — 2026-11-11
 
