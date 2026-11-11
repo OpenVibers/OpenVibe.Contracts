@@ -333491,6 +333491,10 @@ export type ToolCallResultEvent = BaseEvent &
     role?: "tool";
   };
 /**
+ * One part of a message body: what a person sends in a user message, or what a tool returns in a tool message. Discriminated by type. Named by what the part is rather than by direction, because the same part travels into the model inside a user message and back out of the stream inside a tool result.
+ */
+export type ContentPart = TextPart | ImagePart | AudioPart | VideoPart | DocumentPart;
+/**
  * Replaces the agent state wholesale. Sent when a delta cannot express the change, or to resynchronise a consumer.
  */
 export type StateSnapshotEvent = BaseEvent &
@@ -333512,6 +333516,15 @@ export type StateDeltaEvent = BaseEvent &
     delta: JsonPatch;
   };
 /**
+ * A single RFC 6902 operation. Exactly one of the operation shapes must match, discriminated by op. Unlike the protocol's own objects, the operations are open: RFC 6902 section 4 requires members an operation does not define to be ignored rather than rejected, so a remove carrying a leftover value is a valid patch. Two of the RFC's rules are relations between values rather than shapes, so no static schema can express them and neither is checked here: a move whose from is a proper prefix of its path (section 4.4), and any operation whose pointer does not resolve in the target document. Both are the applier's to reject.
+ */
+export type JsonPatchOperation =
+  AddOperation | RemoveOperation | ReplaceOperation | MoveOperation | CopyOperation | TestOperation;
+/**
+ * The change, as an RFC 6902 patch against the current state. Structural validity here does not mean the patch applies: a well-formed operation may point at a path that does not exist, which RFC 6902 leaves to the applier.
+ */
+export type JsonPatch = JsonPatchOperation[];
+/**
  * The complete set of messages the producer owns, in order. Conversation-wide rather than a plain overwrite: a consumer may keep messages of its own that no producer tracks, so exactly how a snapshot reconciles with those is behavioural and belongs in the prose. Being conversation-wide it cannot belong to a single subagent, so it carries no attribution; it does establish which subagent owns each message it contains, through the messages themselves.
  */
 export type MessagesSnapshotEvent = BaseEvent & {
@@ -333520,6 +333533,153 @@ export type MessagesSnapshotEvent = BaseEvent & {
    * The messages the producer is declaring, in order.
    */
   messages: Message[];
+};
+/**
+ * Any message in a conversation. Discriminated by role.
+ */
+export type Message =
+  DeveloperMessage | SystemMessage | AssistantMessage | UserMessage | ToolMessage | ActivityMessage | ReasoningMessage;
+/**
+ * Instructions from the application developer.
+ */
+export type DeveloperMessage = BaseMessage & {
+  role: "developer";
+  /**
+   * The instructions. Required: a developer message with nothing in it says nothing.
+   */
+  content: string;
+};
+/**
+ * The fields shared by the developer, system, assistant and user messages. Deliberately excludes content, because a user message's content may be an array while the others are strings, and composition here intersects rather than overrides: a base that constrained content to a string would make an array content invalid. The tool, activity and reasoning messages do not compose this, because they carry no name.
+ */
+export type BaseMessage = Attributable & {
+  /**
+   * Identifies the message within the conversation.
+   */
+  id: string;
+  /**
+   * Who the message is from. Each message definition narrows this to a single value.
+   */
+  role: string;
+  /**
+   * An optional display name for the author.
+   */
+  name?: string;
+  /**
+   * A provider's opaque artefact belonging to this message, stored by a consumer and returned on a later turn.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata1;
+};
+/**
+ * Instructions from the system.
+ */
+export type SystemMessage = BaseMessage & {
+  role: "system";
+  /**
+   * The instructions. Required.
+   */
+  content: string;
+};
+/**
+ * A message from the agent. Content is optional because a turn may consist only of tool calls.
+ */
+export type AssistantMessage = BaseMessage & {
+  role: "assistant";
+  /**
+   * What the agent said, if it said anything.
+   */
+  content?: string;
+  /**
+   * The tool calls this turn made.
+   */
+  toolCalls?: ToolCall[];
+};
+/**
+ * A message from the person using the application.
+ */
+export type UserMessage = BaseMessage & {
+  role: "user";
+  /**
+   * What the person sent: either plain text, or an ordered list of parts for a multimodal message.
+   */
+  content: string | ContentPart[];
+};
+/**
+ * What a tool returned, as a message in the conversation. Stands alone rather than composing BaseMessage, because it carries no name.
+ */
+export type ToolMessage = Attributable & {
+  /**
+   * Identifies the message.
+   */
+  id: string;
+  /**
+   * Fixed. Declared here rather than inherited, because this message does not compose BaseMessage.
+   */
+  role: "tool";
+  /**
+   * What the tool returned: either plain text, or an ordered list of parts. A tool returning structured data serialises it into text; media travel as parts of their own.
+   */
+  content: string | ContentPart[];
+  /**
+   * The call this answers.
+   */
+  toolCallId: string;
+  /**
+   * Why the tool failed, when it did. Present alongside content rather than instead of it, so a partial result survives a failure.
+   */
+  error?: string;
+  /**
+   * A provider's opaque artefact belonging to this message.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata3;
+};
+/**
+ * Structured progress that is not conversation content, materialised as a message so it keeps its place in the sequence. Stands alone rather than composing BaseMessage, because its content is an object rather than a string.
+ */
+export type ActivityMessage = Attributable & {
+  /**
+   * Identifies the message.
+   */
+  id: string;
+  /**
+   * Fixed. Declared here rather than inherited, because this message does not compose BaseMessage.
+   */
+  role: "activity";
+  /**
+   * What kind of activity this is. An open string: the set is the producer's.
+   */
+  activityType: string;
+  /**
+   * The activity's payload, open by key.
+   */
+  content: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata4;
+};
+/**
+ * A span of the agent's reasoning, materialised as a message. Stands alone rather than composing BaseMessage, because it carries no name.
+ */
+export type ReasoningMessage = Attributable & {
+  /**
+   * Identifies the message.
+   */
+  id: string;
+  /**
+   * Fixed. Declared here rather than inherited, because this message does not compose BaseMessage.
+   */
+  role: "reasoning";
+  /**
+   * The reasoning text.
+   */
+  content: string;
+  /**
+   * A provider's opaque reasoning artefact belonging to this message.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata5;
 };
 /**
  * Reports structured progress that is not conversation content, such as a step a UI renders as its own widget.
@@ -333562,6 +333722,10 @@ export type ActivityDeltaEvent = BaseEvent &
     activityType: string;
     patch: JsonPatch1;
   };
+/**
+ * The change, as an RFC 6902 patch against the activity's content.
+ */
+export type JsonPatch1 = JsonPatchOperation[];
 /**
  * Passes a provider-native event through untranslated, for consumers that need detail the protocol does not model.
  */
@@ -333646,6 +333810,66 @@ export type RunFinishedEvent = BaseEvent & {
    * Token usage for the run, one entry per provider and model, so a run that invoked several models keeps them separate. A consumer that only wants totals sums across the entries. The run is the accounting boundary: usage covers every model call made within the run, calls made by its subagents included; an agent invoked as a separate run under parentRunId reports its own usage on its own terminal event; and a run that resumes an interrupted one reports only the calls it made itself, not the interrupted run's.
    */
   usage?: TokenUsage[];
+};
+/**
+ * Something a run needs from outside before it can continue, such as an approval or a missing value.
+ */
+export type Interrupt = Attributable & {
+  /**
+   * Identifies the interrupt. A resume entry answers it by this id.
+   */
+  id: string;
+  /**
+   * Why the run stopped. An open string rather than an enumeration: the protocol does not attempt to classify every reason an agent might need input.
+   */
+  reason: string;
+  /**
+   * A human-readable prompt for whoever answers.
+   */
+  message?: string;
+  /**
+   * The tool call this interrupt concerns, when it is a tool approval.
+   */
+  toolCallId?: string;
+  /**
+   * A JSON Schema describing the answer this interrupt expects, so a consumer can build a form for it. Carried opaquely: the protocol does not constrain or validate it. Restricted to an object because TypeScript and Python both declare it that way; .NET holds it as any JSON, and the ticket that commissioned this schema lists it among the arbitrary-JSON fields. Following the two that constrain it keeps the schema from accepting documents the reference client rejects, at the cost of rejecting the boolean schemas JSON Schema also permits — a bare true for "any answer". Recorded as a known divergence rather than settled.
+   */
+  responseSchema?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * When the interrupt stops being answerable. Deliberately unconstrained rather than a date-time format, because producers already disagree about the representation and tightening it here would reject streams that work today. The documented convention is ISO 8601, and a consumer comparing this value will parse it as a date, so a value that is not one leaves the interrupt looking permanently unexpired.
+   */
+  expiresAt?: string;
+  metadata?: Metadata8;
+} & {
+  /**
+   * Identifies the interrupt. A resume entry answers it by this id.
+   */
+  id: string;
+  /**
+   * Why the run stopped. An open string rather than an enumeration: the protocol does not attempt to classify every reason an agent might need input.
+   */
+  reason: string;
+  /**
+   * A human-readable prompt for whoever answers.
+   */
+  message?: string;
+  /**
+   * The tool call this interrupt concerns, when it is a tool approval.
+   */
+  toolCallId?: string;
+  /**
+   * A JSON Schema describing the answer this interrupt expects, so a consumer can build a form for it. Carried opaquely: the protocol does not constrain or validate it. Restricted to an object because TypeScript and Python both declare it that way; .NET holds it as any JSON, and the ticket that commissioned this schema lists it among the arbitrary-JSON fields. Following the two that constrain it keeps the schema from accepting documents the reference client rejects, at the cost of rejecting the boolean schemas JSON Schema also permits — a bare true for "any answer". Recorded as a known divergence rather than settled.
+   */
+  responseSchema?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * When the interrupt stops being answerable. Deliberately unconstrained rather than a date-time format, because producers already disagree about the representation and tightening it here would reject streams that work today. The documented convention is ISO 8601, and a consumer comparing this value will parse it as a date, so a value that is not one leaves the interrupt looking permanently unexpired.
+   */
+  expiresAt?: string;
+  metadata?: Metadata8;
 };
 /**
  * Ends a run that failed. Run-scoped, so it carries no subagent attribution; a subagent that fails without ending the run reports SUBAGENT_ERROR instead.
@@ -333852,6 +334076,756 @@ export type SubagentErrorEvent = BaseEvent & {
    */
   code?: string;
 };
+
+/**
+ * The fields every event carries, whatever its type. Composed into each event definition rather than repeated, so a change here reaches every event at once.
+ */
+export interface BaseEvent {
+  /**
+   * Which event this is. Each event definition narrows this to a single value.
+   */
+  type:
+    | "TEXT_MESSAGE_START"
+    | "TEXT_MESSAGE_CONTENT"
+    | "TEXT_MESSAGE_END"
+    | "TEXT_MESSAGE_CHUNK"
+    | "TOOL_CALL_START"
+    | "TOOL_CALL_ARGS"
+    | "TOOL_CALL_END"
+    | "TOOL_CALL_CHUNK"
+    | "TOOL_CALL_RESULT"
+    | "STATE_SNAPSHOT"
+    | "STATE_DELTA"
+    | "MESSAGES_SNAPSHOT"
+    | "ACTIVITY_SNAPSHOT"
+    | "ACTIVITY_DELTA"
+    | "RAW"
+    | "CUSTOM"
+    | "RUN_STARTED"
+    | "RUN_FINISHED"
+    | "RUN_ERROR"
+    | "STEP_STARTED"
+    | "STEP_FINISHED"
+    | "REASONING_START"
+    | "REASONING_MESSAGE_START"
+    | "REASONING_MESSAGE_CONTENT"
+    | "REASONING_MESSAGE_END"
+    | "REASONING_MESSAGE_CHUNK"
+    | "REASONING_END"
+    | "REASONING_ENCRYPTED_VALUE"
+    | "SUBAGENT_STARTED"
+    | "SUBAGENT_FINISHED"
+    | "SUBAGENT_ERROR";
+  /**
+   * When the event was created. Bounded to the range JSON numbers survive a round trip in, so the value a consumer reads is the value the producer wrote. Deliberately not a float. The unit is not constrained here, because it never has been stated normatively; every SDK that sets it in practice uses milliseconds since the Unix epoch, and a producer choosing another unit will be misread by consumers even though it validates. Nothing in the protocol computes with this value.
+   */
+  timestamp?: number;
+  /**
+   * The provider-native event this one was translated from, carried verbatim for debugging and for consumers that need detail the protocol does not model. Any JSON value.
+   */
+  rawEvent?: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata;
+}
+/**
+ * Extra information attached to this event.
+ */
+export interface Metadata {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+export interface OvSource {
+  url: string;
+  title: string;
+  site: string;
+}
+/**
+ * Composed into everything that can belong to a subagent's work: the events that describe content or progress, the message types, and each interrupt. Run-scoped events omit it — RUN_STARTED, RUN_FINISHED and RUN_ERROR describe the run itself and MESSAGES_SNAPSHOT is conversation-wide, so none of them can belong to one subagent. A tool call omits it too and inherits its containing message's attribution.
+ */
+export interface Attributable {
+  /**
+   * The subagent invocation this belongs to. Absent means the parent agent produced it directly.
+   */
+  subagentRunId?: string;
+}
+/**
+ * A text part.
+ */
+export interface TextPart {
+  /**
+   * Discriminator.
+   */
+  type: "text";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved so that a streamed part can be matched to its entry in history once assistant messages carry parts too.
+   */
+  id?: string;
+  /**
+   * The text.
+   */
+  text: string;
+  /**
+   * Extra information about this part. Unconstrained, as on the media parts. This is where a text search hit carries its source and title, rather than the protocol modelling a search-result part of its own.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * An image part.
+ */
+export interface ImagePart {
+  /**
+   * Discriminator.
+   */
+  type: "image";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the image comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained rather than an object: inherited from the SDKs, which declare it unknown rather than a record; listed under known divergences in the README rather than resolved here.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Bytes carried inline.
+ */
+export interface DataSource {
+  /**
+   * Discriminator.
+   */
+  type: "data";
+  /**
+   * The bytes, base64-encoded. contentEncoding is an annotation rather than a constraint in 2020-12, so a malformed string still validates here; rejecting one is the decoder's job.
+   */
+  value: string;
+  /**
+   * What the bytes are. Required here, unlike on a URL source, because nothing else can tell a consumer how to read them.
+   */
+  mimeType: string;
+}
+/**
+ * Bytes referenced by URL, fetched by whoever needs them.
+ */
+export interface UrlSource {
+  /**
+   * Discriminator.
+   */
+  type: "url";
+  /**
+   * The URL. Deliberately not constrained to a URI format, so a scheme a producer already uses is not rejected here.
+   */
+  value: string;
+  /**
+   * What the resource is, when the producer knows. Optional, because the response can say.
+   */
+  mimeType?: string;
+}
+/**
+ * Bytes already at the provider, named by a handle the provider issued: an OpenAI or Anthropic file id, a Gemini file URI, a storage URL only that provider can read. No bytes travel and nothing is fetched. Only the provider that minted the handle can resolve it; a peer that cannot drops the part as it drops any part it cannot use.
+ */
+export interface FileSource {
+  /**
+   * Discriminator.
+   */
+  type: "file";
+  /**
+   * The handle, exactly as the provider issued it. Opaque: a consumer MUST NOT fetch it, parse it or read a scheme out of it.
+   */
+  value: string;
+  /**
+   * Who issued the handle, when the producer knows. Optional: an agent already knows which provider it talks to. When present, SHOULD be the lowercase vendor id (openai, anthropic, google) that TokenUsage.provider uses, so a peer can tell before sending whether a handle is one it can use.
+   */
+  provider?: string;
+  /**
+   * What the file is, when the producer knows. Optional, because the provider that holds the bytes knows.
+   */
+  mimeType?: string;
+}
+/**
+ * An audio part.
+ */
+export interface AudioPart {
+  /**
+   * Discriminator.
+   */
+  type: "audio";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the audio comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained, as on the other media parts.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * A video part.
+ */
+export interface VideoPart {
+  /**
+   * Discriminator.
+   */
+  type: "video";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the video comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained, as on the other media parts.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * A document part.
+ */
+export interface DocumentPart {
+  /**
+   * Discriminator.
+   */
+  type: "document";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the document comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained, as on the other media parts.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Inserts value at path. RFC 6902 section 4.1.
+ */
+export interface AddOperation {
+  /**
+   * Discriminator for the add operation.
+   */
+  op: "add";
+  /**
+   * Where to insert the value.
+   */
+  path: string;
+  /**
+   * The value to insert. Any JSON value, including null, which is a legitimate thing to add.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Removes the value at path. RFC 6902 section 4.2.
+ */
+export interface RemoveOperation {
+  /**
+   * Discriminator for the remove operation.
+   */
+  op: "remove";
+  /**
+   * What to remove.
+   */
+  path: string;
+}
+/**
+ * Replaces the value at path. RFC 6902 section 4.3.
+ */
+export interface ReplaceOperation {
+  /**
+   * Discriminator for the replace operation.
+   */
+  op: "replace";
+  /**
+   * What to replace.
+   */
+  path: string;
+  /**
+   * The replacement. Any JSON value, including null.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Moves the value at from to path. RFC 6902 section 4.4.
+ */
+export interface MoveOperation {
+  /**
+   * Discriminator for the move operation.
+   */
+  op: "move";
+  /**
+   * Where the value is moved from.
+   */
+  from: string;
+  /**
+   * Where the value is moved to.
+   */
+  path: string;
+}
+/**
+ * Copies the value at from to path. RFC 6902 section 4.5.
+ */
+export interface CopyOperation {
+  /**
+   * Discriminator for the copy operation.
+   */
+  op: "copy";
+  /**
+   * Where the value is copied from.
+   */
+  from: string;
+  /**
+   * Where the value is copied to.
+   */
+  path: string;
+}
+/**
+ * Asserts that the value at path equals value. RFC 6902 section 4.6.
+ */
+export interface TestOperation {
+  /**
+   * Discriminator for the test operation.
+   */
+  op: "test";
+  /**
+   * What to compare.
+   */
+  path: string;
+  /**
+   * The value the target must equal. Any JSON value, including null.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata1 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * A call an assistant message made. Carries no subagent attribution of its own and inherits its containing message's, since several calls can share one parent.
+ */
+export interface ToolCall {
+  /**
+   * Identifies the call. The answering tool message carries this as its toolCallId.
+   */
+  id: string;
+  /**
+   * The only kind of call the protocol models.
+   */
+  type: "function";
+  function: FunctionCall;
+  /**
+   * A provider's opaque artefact belonging to this call.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata2;
+}
+/**
+ * What is being called, and with what.
+ */
+export interface FunctionCall {
+  /**
+   * Which tool is being called.
+   */
+  name: string;
+  /**
+   * The arguments as a JSON string, not as parsed JSON. Kept as written because a model can emit arguments that are not valid JSON, and losing them at the protocol boundary would hide the fault from the consumer that has to handle it.
+   */
+  arguments: string;
+}
+/**
+ * Extra information attached to this call. Carried here rather than folded into the containing message, because several calls can share one parent and merging them would make the result depend on their order.
+ */
+export interface Metadata2 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata3 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata4 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata5 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * The request this run was started from, echoed back so a consumer that did not make the request can still see what the agent was asked.
+ */
+export interface RunAgentInput {
+  /**
+   * The conversation this run belongs to.
+   */
+  threadId: string;
+  /**
+   * Identifies this run.
+   */
+  runId: string;
+  /**
+   * The protocol version this consumer speaks, such as "1.0". Absent means the input was produced before the protocol carried a version — the versioning rules in the prose govern what each side does with that. Sent in-band rather than by the transport, so a recorded exchange stays self-describing.
+   */
+  protocolVersion?: string;
+  /**
+   * The run that spawned this one.
+   */
+  parentRunId?: string;
+  /**
+   * The state the run starts from.
+   */
+  state?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * The conversation so far, in order.
+   */
+  messages: Message[];
+  /**
+   * The tools the agent may call. Absent means none.
+   */
+  tools?: Tool[];
+  /**
+   * Ambient information for the run. Absent means none.
+   */
+  context?: Context[];
+  /**
+   * Application-specific values passed through to the agent untouched. Any JSON value.
+   */
+  forwardedProps?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Answers to the interrupts that ended a previous run, when this run continues from one.
+   */
+  resume?: ResumeEntry[];
+}
+/**
+ * A tool the agent may call.
+ */
+export interface Tool {
+  /**
+   * The tool's name, as the agent will call it.
+   */
+  name: string;
+  /**
+   * What the tool does, for the agent to decide when to use it.
+   */
+  description: string;
+  /**
+   * A JSON Schema describing the tool's arguments. Carried opaquely: the protocol does not constrain or validate it. Optional, because all three SDKs already treat it that way and a tool that takes no arguments has nothing to declare; an absent schema and an empty one mean the same thing to an agent.
+   */
+  parameters?: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata6;
+}
+/**
+ * Extra information about the tool, for consumers that attach their own rendering or routing information to it.
+ */
+export interface Metadata6 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * A named piece of ambient information given to the agent for the run, distinct from the conversation.
+ */
+export interface Context {
+  /**
+   * What this context is, for the agent to interpret.
+   */
+  description: string;
+  /**
+   * The context itself.
+   */
+  value: string;
+}
+/**
+ * An answer to one interrupt, sent on the run that continues from it.
+ */
+export interface ResumeEntry {
+  /**
+   * The interrupt being answered.
+   */
+  interruptId: string;
+  /**
+   * Whether the interrupt was answered or abandoned.
+   */
+  status: "resolved" | "cancelled";
+  /**
+   * The answer the agent asked for and will act on. Any JSON value.
+   */
+  payload?: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata7;
+}
+/**
+ * Envelope information about the response, such as signatures or routing keys, as opposed to payload, which is the answer itself.
+ */
+export interface Metadata7 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * The run completed. Equivalent to an absent outcome. Closed like every other object, which is also what keeps it from carrying the suspended sibling's interrupts — a success with an interrupt still pending would be a contradiction, not an extension. A completed run may still have left frontend tool calls for the application to answer; pendingToolCallIds names them.
+ */
+export interface RunFinishedSuccessOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "success";
+  /**
+   * The tool calls this run started and left unanswered — no TOOL_CALL_RESULT in the run — for the application to answer in the next input's messages, in the order they were made. Absent or empty means the producer named none, and a consumer derives the list from the stream; otherwise it is the list, and it agrees with the stream. On the success outcome rather than the event because a run that stopped on a frontend tool call is a completed run: whether the application continues the thread is its own decision, so the producer reports what it knows and no more.
+   */
+  pendingToolCallIds?: string[];
+}
+/**
+ * The run is paused, waiting for something outside it. Resuming means starting a new run whose resume entries answer these interrupts.
+ */
+export interface RunFinishedInterruptOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "interrupt";
+  /**
+   * What the run is waiting for. At least one: an interrupt outcome with nothing to answer would leave a consumer with nothing to do.
+   *
+   * @minItems 1
+   */
+  interrupts: [Interrupt, ...Interrupt[]];
+}
+/**
+ * Extra information attached to this interrupt.
+ */
+export interface Metadata8 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      [k: string]: unknown | undefined;
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * The run was stopped before it completed, by whoever was running it, and did not fail. Neither success nor interrupt: nothing was produced as a result, and nothing is waited for, so the next run on the thread is an ordinary new run rather than a resume. Closed like its siblings: a cancelled run has no interrupts to carry. Named in the schema before 1.0 because an outcome a consumer does not recognise is stripped and read as success — a cancellation added later would reach every 1.0 consumer as a completed run.
+ */
+export interface RunFinishedCancelledOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "cancelled";
+}
+/**
+ * Token counts for one provider and model, in the protocol's own accounting: every count is either a total or a named part of one, so entries from different providers add up without double-counting. inputTokens and outputTokens are the totals; reasoningTokens, cachedInputTokens and cacheWriteInputTokens are parts of them, never additions to them; totalTokens is the two totals summed. Every field is a label or a number — nothing content-bearing or identifying, no prompts, completions, messages, or thread, run and user identifiers.
+ */
+export interface TokenUsage {
+  /**
+   * Which provider served the request.
+   */
+  provider?: string;
+  /**
+   * Which model served the request.
+   */
+  model?: string;
+  /**
+   * Every prompt token the call was charged for: tokens read from a provider cache, tokens written to one, and audio or other non-text input all count here. cachedInputTokens and cacheWriteInputTokens break this number down and are never added to it — a provider that reports its cache counts beside a smaller input count has them added in by the producer before the entry leaves. Bounded like timestamp and for the same reason: a count above the JSON safe-integer range does not survive a round trip, so a consumer would silently read a different number than the producer wrote.
+   */
+  inputTokens?: number;
+  /**
+   * Every generated token, reasoning included where the provider distinguishes it. reasoningTokens breaks this number down and is never added to it — a provider that reports reasoning tokens beside a smaller completion count has them added in by the producer.
+   */
+  outputTokens?: number;
+  /**
+   * inputTokens plus outputTokens, under the accounting above. A producer MAY compute it rather than copy a provider's total, and copies a provider's total only when that total counts the same way, so a consumer can read this field as the sum of the other two.
+   */
+  totalTokens?: number;
+  /**
+   * Output tokens spent on reasoning, where the provider distinguishes them. Part of outputTokens, not in addition to it.
+   */
+  reasoningTokens?: number;
+  /**
+   * Input tokens read from a provider cache. Part of inputTokens, not in addition to it, and disjoint from cacheWriteInputTokens.
+   */
+  cachedInputTokens?: number;
+  /**
+   * Input tokens written to a provider cache on this call, where the provider distinguishes them. Part of inputTokens, not in addition to it, and disjoint from cachedInputTokens. Its own field because providers price a cache write differently from a cache read, so a consumer computing cost cannot do without it.
+   */
+  cacheWriteInputTokens?: number;
+}
+/**
+ * The subagent completed its work. Equivalent to an absent outcome.
+ */
+export interface SubagentFinishedSuccessOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "success";
+}
+/**
+ * The subagent is paused awaiting outside input. Terminal for this stream, not for the subagent: a later run may continue the same invocation once the interrupts are answered.
+ */
+export interface SubagentFinishedSuspendedOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "suspended";
+  /**
+   * The run-level interrupts this subagent raised itself. May be empty or absent: a subagent suspended because a descendant interrupted owns no interrupt of its own.
+   */
+  interruptIds?: string[];
+}
 
 /** agent.run@1.0.0 (owner: actor) */
 /**
