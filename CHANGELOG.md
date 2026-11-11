@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.408.0 — 2026-11-11
+## 0.409.0 — 2026-11-11
 
 - Define machine access requests, grants and signed token claims; the agent directory, A2A tasks and results; five Network events and four registration and relay capabilities.
+
+## 0.408.0 — 2026-11-11
+
+The remaining contracts from the 0.407.0 release train are released by #453.
 
 ## 0.407.0 — 2026-11-11
 
