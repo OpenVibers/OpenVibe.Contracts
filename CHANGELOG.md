@@ -4,6 +4,10 @@
 
 - Add owner-scoped Actor and Codes agent sheet response contracts for ask 306.
 
+## 0.405.0 — 2026-11-11
+
+- Extend the Feed activity card contract in the pending 0.405.0 release.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.
