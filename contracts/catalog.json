@@ -8579,6 +8579,15 @@
       "status": "active"
     },
     {
+      "id": "codes.task-summary",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/task-summary.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "play.title-definition",
       "version": "1.0.0",
       "owner": "play",
@@ -9125,6 +9134,15 @@
       "version": "1.0.0",
       "owner": "codes",
       "schema": "events/payloads/codes.task.cancelled.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.task.updated",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "events/payloads/codes.task.updated.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
