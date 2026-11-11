@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.407.0 — 2026-11-11
+
+- Add `exchange.search.icons`: a first-party service searches icon references through the Exchange platform API (`POST /v1/search/icons` at `api.openvibe.exchange`, served by OpenVibe.AI) with its own free-search quota and no Exchange key. It reaches the icons route only, never web, image or fetch search, and the receipt names the engine, cost and skipped attempts. OpenVibe.Design holds it for the references shown beside a glyph draft.
+
 ## 0.406.0 — 2026-11-11
 
 The second train of the day, for the five pull requests opened after 0.405.0 (one line each):
