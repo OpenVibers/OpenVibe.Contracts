@@ -212106,7 +212106,9 @@ export interface ChatRoomInsightResult {
 /**
  * chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link. An agent-run embed carries the live run and event addresses, title and status.
  */
-export interface ChatEmbed {
+export type ChatEmbed = {
+  [k: string]: unknown | undefined;
+} & {
   /**
    * What the address turned out to be; a client may draw the same card for every value.
    */
@@ -212147,7 +212149,7 @@ export interface ChatEmbed {
   run_url?: string;
   events_url?: string;
   status?: "queued" | "running" | "waiting" | "needs_you" | "succeeded" | "failed" | "stopped" | "cancelled";
-}
+};
 
 /** chat.first-chat-result@1.0.0 (owner: chat) */
 /**

@@ -63691,7 +63691,28 @@
               "cancelled"
             ]
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "agent-run"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "run_url",
+                "events_url",
+                "status"
+              ]
+            }
+          }
+        ]
       }
     },
     "chat.first-chat-result": {
