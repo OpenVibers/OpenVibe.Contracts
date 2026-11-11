@@ -152,8 +152,8 @@
       "service": "live",
       "name": "OpenVibe.Live",
       "origin": "https://openvibe.live",
-      "operations": 47,
-      "capabilities": 12
+      "operations": 48,
+      "capabilities": 13
     },
     {
       "service": "mail",

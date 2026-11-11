@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "user_id": 7,
+  "streamer_id": 3,
+  "balance": 70,
+  "moves": [
+    { "id": 11, "streamer_id": 3, "at": "2026-11-11T10:00:00Z", "delta": "100", "reason": "watch" }
+  ],
+  "cursor": 11,
+  "next_since": null
+}

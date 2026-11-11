@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.401.0 — 2026-11-11
+
+- Add the `live.channel_points.read` capability (with `live.channel-points-page@1`): OpenVibe.Network reads one channel's points moves for the person behind a Network account through Live's internal channel-points changes read, for the gain/loss API (ask 273).
+
 ## 0.400.0 — 2026-11-10
 
 - Regroup the sites into the owner's eight groups (plan ask 274, 2026-11-10): `site.neighbourhood` is now `watch`, `talk`, `play`, `read`, `shop`, `tools`, `make` or `build`, the same ids and order as OpenVibe.Network `frame/sites.js` GROUPS and OpenVibe.Shared `rooms.js` HOODS. Every site manifest carries its new group; merged sections point at the site that shows them (Media → Video/watch, Bench → Report/read, Play → Games/play).
