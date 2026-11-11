@@ -832,6 +832,16 @@ await assert.rejects(failing.getToken(), /401: invalid_client/);
     ok(JSON.stringify(modules.publicView('live.profile', { followers: 3, stream_minutes_30d: 99 })) === '{"followers":3}', 'public view keeps only public fields');
     ok(modules.canWrite('chat.preferences', { type: 'user' }) && !modules.canWrite('live.profile', { type: 'user' }), 'user write follows writers');
     ok(modules.canWrite('live.profile', { type: 'service', id: 'live' }) && !modules.canWrite('live.profile', { type: 'service', id: 'tools' }), 'only the owning service writes');
+
+    // live.layout: where a person put each picture-in-picture, kept in their account (Live's /api/me/layout).
+    const place = { x: 0.72, y: 0.7, w: 0.25, mode: 'dock', tuck: null, muted: true, at: 1760000000000 };
+    const layout = (pip) => ({ pip });
+    ok(modules.validateData('live.layout', layout({ '12:34': place })).valid, 'live.layout takes a place per slot and source');
+    ok(modules.validateData('live.layout', layout({ '12:34': { ...place, mode: 'float', tuck: 'left' } })).valid, 'a floating, tucked place is valid');
+    ok(!modules.validateData('live.layout', layout({ 'slot:source': place })).valid, 'a place key that is not <slot>:<source> is refused');
+    ok(!modules.validateData('live.layout', layout({ '12:34': { ...place, x: 1.2 } })).valid, 'a place outside the frame is refused');
+    ok(!modules.validateData('live.layout', layout({ '12:34': { ...place, extra: 1 } })).valid, 'an unknown field is refused');
+    ok(!modules.validateData('live.layout', layout(Object.fromEntries(Array.from({ length: 61 }, (_, i) => [`1:${i}`, place])))).valid, 'more than 60 places is refused');
 }
 
 // ── openvibe-contracts-check (the CLI services run in CI) ─────────────────

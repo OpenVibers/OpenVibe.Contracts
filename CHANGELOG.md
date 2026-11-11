@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.405.0 — 2026-11-11
+
+- Add the `live.layout` user-module namespace (owner `live`, writers `owner` and `user`, private, 8 KiB): where a person put each picture-in-picture on OpenVibe.Live, per stream slot and source — `x`, `y`, `w` as fractions of the frame, `mode` dock or float, `tuck` left, right or none, muted, and when it last moved. At most 60 places, keyed `<slot>:<source>`. The person's own account keeps it, so the place follows them to another device.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.
