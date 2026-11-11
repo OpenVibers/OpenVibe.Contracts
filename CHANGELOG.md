@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.404.0 — 2026-11-11
+
+- Add owner-only Run compute configuration capability for Network admin proxy.
+
+
 ## 0.403.0 — 2026-11-11
 
 - Extend `actor.task-create-request@1` with conversation, tools, model and optional content tier fields for Actor turns; uncensored content is available only when a task names the person it is for.
