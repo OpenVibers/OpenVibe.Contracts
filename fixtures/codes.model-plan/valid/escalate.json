@@ -1,0 +1,1 @@
+{"mode":"escalate","roles":[{"role":"builder","model":"auto","effort":"low"},{"role":"verifier","model":"auto","effort":"medium"}],"ladder":["openvibe/economy","openvibe/auto"],"checks":{"tests":true}}

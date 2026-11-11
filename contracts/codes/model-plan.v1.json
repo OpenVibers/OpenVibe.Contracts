@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/codes/model-plan.v1.json",
+  "title": "CodesModelPlan",
+  "description": "codes.model-plan@1: a versioned execution plan for a Codes task. Roles are attempted in list order. The ladder names AI registry ids in fallback order; auto asks AI to route. A pair requires reviewer approval, a council has two or three planner samples and a judge, and escalation advances on a failed check, refusal, or low confidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "roles", "checks"],
+  "properties": {
+    "mode": { "enum": ["single", "pair", "council", "escalate"] },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "model", "effort"],
+        "properties": {
+          "role": { "enum": ["planner", "builder", "reviewer", "verifier"] },
+          "model": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "^(auto|[A-Za-z0-9][A-Za-z0-9._:/@+-]*)$" },
+          "effort": { "enum": ["none", "low", "medium", "high", "xhigh", "max"] },
+          "samples": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "budget": {
+            "type": "object", "additionalProperties": false, "minProperties": 1,
+            "properties": {
+              "tokens": { "type": "integer", "minimum": 1, "maximum": 100000000 },
+              "minutes": { "type": "number", "exclusiveMinimum": 0, "maximum": 1440 },
+              "dollars": { "type": "number", "exclusiveMinimum": 0, "maximum": 10000 }
+            }
+          }
+        }
+      }
+    },
+    "ladder": {
+      "type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "^(auto|[A-Za-z0-9][A-Za-z0-9._:/@+-]*)$" }
+    },
+    "checks": {
+      "type": "object", "additionalProperties": false, "minProperties": 1,
+      "properties": {
+        "tests": { "type": "boolean" },
+        "lint": { "type": "boolean" },
+        "reviewer": { "type": "boolean" }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "mode": { "const": "pair" } } }, "then": { "properties": { "roles": { "type": "array", "contains": { "type": "object", "properties": { "role": { "const": "reviewer" } }, "required": ["role"] } }, "checks": { "type": "object", "properties": { "reviewer": { "const": true } }, "required": ["reviewer"] } } } },
+    { "if": { "properties": { "mode": { "const": "council" } } }, "then": { "properties": { "roles": { "type": "array", "contains": { "type": "object", "properties": { "role": { "const": "planner" }, "samples": { "type": "integer", "minimum": 2, "maximum": 3 } }, "required": ["role", "samples"] } } } } },
+    { "if": { "properties": { "mode": { "const": "escalate" } } }, "then": { "required": ["ladder"], "properties": { "ladder": { "type": "array", "minItems": 2 } } } },
+    { "properties": { "roles": { "type": "array", "contains": { "type": "object", "properties": { "role": { "const": "builder" } }, "required": ["role"] } } } }
+  ]
+}

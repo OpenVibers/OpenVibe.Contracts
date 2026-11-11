@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.405.0 — 2026-11-11
+
+- Add `codes.model-plan@1`: execution modes, role models and effort, bounded samples and budgets, an escalation ladder, and required checks. Task requests accept a plan or preset; task reads can include the resolved plan and per-role usage and outcome.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.

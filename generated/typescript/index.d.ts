@@ -279825,7 +279825,454 @@ export type VideoPlaylistManageResult =
       }[];
     };
 
-/** codes.task-start-request@1.1.0 (owner: codes) */
+/** codes.model-plan@1.0.0 (owner: codes) */
+/**
+ * codes.model-plan@1: a versioned execution plan for a Codes task. Roles are attempted in list order. The ladder names AI registry ids in fallback order; auto asks AI to route. A pair requires reviewer approval, a council has two or three planner samples and a judge, and escalation advances on a failed check, refusal, or low confidence.
+ */
+export type CodesModelPlan = {
+  [k: string]: unknown | undefined;
+} & {
+  roles?: unknown[];
+} & {
+  mode: "single" | "pair" | "council" | "escalate";
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  roles:
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ];
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  ladder?:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  checks: {
+    tests?: boolean;
+    lint?: boolean;
+    reviewer?: boolean;
+  };
+};
+
+/** codes.task-start-request@1.2.0 (owner: codes) */
 /**
  * codes.task-start-request@1: the body of POST /api/v1/tasks on OpenVibe.Codes (capability codes.task.start). A first-party service (OpenVibe.Actor) starts a coding task for a person, named with X-OV-Subject: Codes runs it on that person's own machine through OpenVibe.Run (openvibe.codes/run, plan T16), in the project of their latest task there, so the person has used openvibe.codes/run once before a service can start one for them (else 409 codes.no_project). REPO is an https git URL with no credentials; REF a branch or tag to start from (default: the repository's default branch). PROMPT is the task. AGENT names one of Codes' agents (GET /harnesses), absent for Codes' router to pick. PERMISSION: review (read-only: research, audits, reviews; nothing is changed), edit (default; the agents edit files) or full (they may also run commands: tests, installs). PUSH asks for the change on a new branch (GitHub, with the machine's GITHUB_TOKEN; never the branch it started from), PULL_REQUEST also opens a pull request. IDEMPOTENCY_KEY: a repeat for the same person with the same key answers the first task (200, created false).
  */
@@ -279836,6 +280283,8 @@ export interface CodesTaskStartRequest {
   agent?: string;
   permission?: "review" | "edit" | "full";
   goal?: AgentGoal;
+  plan?: CodesModelPlan;
+  preset?: "Fast" | "Balanced" | "Deep" | "Council";
   push?: boolean;
   pull_request?: boolean;
   idempotency_key?: string;
@@ -280045,7 +280494,7 @@ export interface CodesTask {
   } | null;
 }
 
-/** codes.task@2.0.0 (owner: codes) */
+/** codes.task@2.1.0 (owner: codes) */
 
 /** play.title-definition@1.0.0 (owner: play) */
 /**
