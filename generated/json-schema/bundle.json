@@ -131175,6 +131175,10 @@
             "minimum": 1,
             "description": "Assigned by the store; every change to a stored layout moves it by one."
           },
+          "active": {
+            "type": "boolean",
+            "description": "Set by OpenVibe.Network: the one layout a product draws for this surface on this device class. A draft, a share answer and an AI suggestion carry no active field."
+          },
           "surface": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",

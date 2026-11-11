@@ -339222,6 +339222,10 @@ export interface UiLayout {
    * Assigned by the store; every change to a stored layout moves it by one.
    */
   revision?: number;
+  /**
+   * Set by OpenVibe.Network: the one layout a product draws for this surface on this device class. A draft, a share answer and an AI suggestion carry no active field.
+   */
+  active?: boolean;
   surface: string;
   surface_version: number;
   device: "phone" | "tablet" | "computer";
