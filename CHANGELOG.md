@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.407.0 — 2026-11-11
+## 0.408.0 — 2026-11-11
 
-The third train of the day: #451 (merged ahead of its tag) and three pull requests that had waited for a release.
+The rest of the 0.407.0 train. v0.407.0 was tagged at #451's merge, before the train merged, so the tag holds #451
+alone; a tag is never moved, so the three pull requests the train carried are released here.
 
-- Add `exchange.search.icons`: a first-party service searches icon references through the Exchange platform API (`POST /v1/search/icons` at `api.openvibe.exchange`, served by OpenVibe.AI) with its own free-search quota and no Exchange key. It reaches the icons route only, never web, image or fetch search, and the receipt names the engine, cost and skipped attempts. OpenVibe.Design holds it for the references shown beside a glyph draft. (#451)
 - Add `codes.task-summary@1` (a task as the Dock's Code tab lists it: id, title, status, mode, repo, times, attempts,
   url, preview and PR links) and `codes.task.updated@1`, the one event Codes writes on every task status change beside
   the per-state `codes.task.*` events (#425).
@@ -14,6 +14,10 @@ The third train of the day: #451 (merged ahead of its tag) and three pull reques
 - Add the optional `is_test` to `identity.subject-projection@1` so public surfaces can leave probe and test accounts out
   while their own signed-in views keep working, and the `{ subjects }` answer of Network's
   `GET /internal/identity/test-subjects` in `identity.resolve-result@1` (#450).
+
+## 0.407.0 — 2026-11-11
+
+- Add `exchange.search.icons`: a first-party service searches icon references through the Exchange platform API (`POST /v1/search/icons` at `api.openvibe.exchange`, served by OpenVibe.AI) with its own free-search quota and no Exchange key. It reaches the icons route only, never web, image or fetch search, and the receipt names the engine, cost and skipped attempts. OpenVibe.Design holds it for the references shown beside a glyph draft. (#451)
 
 ## 0.406.0 — 2026-11-11
 
