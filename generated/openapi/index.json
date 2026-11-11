@@ -180,7 +180,7 @@
       "service": "network",
       "name": "OpenVibe.Network",
       "origin": "https://openvibe.network",
-      "operations": 69,
+      "operations": 70,
       "capabilities": 40
     },
     {

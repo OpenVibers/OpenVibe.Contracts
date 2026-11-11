@@ -854,14 +854,14 @@
       }
     },
     "identity.resolve-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/identity/resolve-result.v1.json",
         "title": "IdentityResolveResult",
-        "description": "identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing.",
+        "description": "identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing; GET /internal/identity/test-subjects → { subjects } with every account marked is_test.",
         "anyOf": [
           {
             "$ref": "subject-projection.v1.json"
@@ -883,6 +883,20 @@
                       "type": "null"
                     }
                   ]
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "subjects"
+            ],
+            "properties": {
+              "subjects": {
+                "type": "array",
+                "items": {
+                  "$ref": "subject-projection.v1.json"
                 }
               }
             }
@@ -1240,14 +1254,14 @@
       }
     },
     "identity.subject-projection": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/identity/subject-projection.v1.json",
         "title": "IdentitySubjectProjection",
-        "description": "identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.",
+        "description": "identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned and whether it is a test account, and every legacy id mapped to it.",
         "type": "object",
         "required": [
           "subject",
@@ -1302,6 +1316,10 @@
                 }
               }
             }
+          },
+          "is_test": {
+            "type": "boolean",
+            "description": "True for an account the probe and test tooling signs in as (users.is_test on Network). A public member list, feed, leaderboard or account count leaves these accounts out; their own signed-in views still work."
           }
         }
       }

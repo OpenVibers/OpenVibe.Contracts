@@ -1,10 +1,10 @@
 {
   "id": "identity.subject.resolve",
-  "version": "1.0",
+  "version": "1.1",
   "owner": "network",
   "status": "active",
   "visibility": "first-party",
-  "description": "Resolve a subject (or a legacy service-local id) to its canonical SubjectRef and display projection.",
+  "description": "Resolve a subject (or a legacy service-local id) to its canonical SubjectRef and display projection, and list the accounts marked as test accounts.",
   "inputSchema": "identity.resolve-request@1",
   "outputSchema": "identity.resolve-result@1",
   "permissions": [
@@ -17,6 +17,7 @@
   "events": [],
   "implementedBy": [
     "GET /internal/identity/resolve",
-    "POST /internal/identity/resolve-batch"
+    "POST /internal/identity/resolve-batch",
+    "GET /internal/identity/test-subjects"
   ]
 }

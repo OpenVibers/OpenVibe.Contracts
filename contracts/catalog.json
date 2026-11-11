@@ -98,7 +98,7 @@
     },
     {
       "id": "identity.resolve-result",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "identity/resolve-result.v1.json",
       "visibility": "first-party",
@@ -170,7 +170,7 @@
     },
     {
       "id": "identity.subject-projection",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "identity/subject-projection.v1.json",
       "visibility": "first-party",
