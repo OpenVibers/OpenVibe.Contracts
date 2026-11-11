@@ -268215,7 +268215,7 @@ export type BotCommand = {
 
 /** bot.command-result@1.0.0 (owner: bot) */
 /**
- * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data.
+ * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.
  */
 export interface BotCommandResult {
   v: 1;
@@ -268232,6 +268232,17 @@ export interface BotCommandResult {
    * A computer command's answer as the machine gave it (exec: exit_code, stdout, stderr, truncated, timed_out, duration_ms; fs: entries, the stat, content_b64, written, created; screen: format, width, height, content_b64). Present only on an ack of exec, fs or screen.
    */
   data?: {};
+  /**
+   * Whether the command reached the machine. Both senders and the device report it; absent means unknown.
+   */
+  delivery?: "delivered" | "not_delivered" | "uncertain";
+  /**
+   * Whether repeating the command is safe. safe is true only when delivery is not_delivered.
+   */
+  retry?: {
+    safe: boolean;
+    reason?: string;
+  };
 }
 
 /** bot.job-dispatch-result@1.0.0 (owner: bot) */

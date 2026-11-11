@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.405.0 — 2026-11-11
+
+- **Delivery and retry on computer/browser results (Release 2 item 10).** `bot.command-result@1` gains `delivery` (`delivered`, `not_delivered`, `uncertain`) and `retry` (`safe`, `reason`): only `not_delivered` is safe to repeat. Additive. Fixtures: valid `not-delivered-retry`, `delivered-no-retry`; invalid `bad-delivery`.
+
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.

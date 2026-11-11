@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "seq": 15,
+  "ts": 1759600000015,
+  "type": "command_result",
+  "id": "op-9",
+  "result": "expired",
+  "reason": "no answer before the deadline; the machine never confirmed receipt",
+  "delivery": "not_delivered",
+  "retry": {
+    "safe": true,
+    "reason": "the command never reached the machine"
+  }
+}
