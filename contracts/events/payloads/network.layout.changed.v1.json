@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.layout.changed.v1.json",
+  "title": "NetworkLayoutChangedPayload",
+  "description": "network.layout.changed v1 (OpenVibe.Network server/layouts, written into network_event_outbox in the transaction that changes a stored layout). One event per change to one person's ui.layout@1: set active, saved, renamed, deleted, shared, unshared, published to the gallery, unpublished, copied from the gallery, or reset to the default. Envelope: subject { type: user, id } and the layout's revision, actor the person, visibility internal. The payload carries no account data and no layout contents, so an open page can announce a change and refetch with the person's own token.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["surface", "device", "layout_id", "change", "revision"],
+  "properties": {
+    "surface": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+      "maxLength": 80
+    },
+    "device": { "enum": ["phone", "tablet", "computer"] },
+    "layout_id": { "type": "string", "pattern": "^lay_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "change": {
+      "enum": ["active", "saved", "renamed", "deleted", "shared", "unshared", "published", "unpublished", "copied", "reset"]
+    },
+    "revision": { "type": "integer", "minimum": 1 },
+    "sharing": { "enum": ["private", "link", "gallery"] }
+  }
+}

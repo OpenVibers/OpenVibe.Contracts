@@ -36,6 +36,7 @@
     "ai.memory.write",
     "ai.me.read",
     "ai.me.manage",
+    "ai.layout.suggest",
     "ai.config.manage",
     "exchange.search.icons"
   ],

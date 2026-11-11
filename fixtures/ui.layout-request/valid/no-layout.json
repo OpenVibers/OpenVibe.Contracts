@@ -1,0 +1,22 @@
+{
+  "catalog": {
+    "id": "bot.controls",
+    "version": 1,
+    "name": "Robot controls",
+    "devices": ["phone"],
+    "grid": { "columns": { "phone": 4, "tablet": 8, "computer": 12 }, "cell_px": { "phone": 44, "tablet": 44, "computer": 44 } },
+    "theme_tokens": ["danger"],
+    "parts": [
+      {
+        "id": "stop", "name": "Stop", "kind": "button",
+        "required": true, "pressed": true,
+        "min": { "w": 2, "h": 2 },
+        "styles": { "tints": ["danger"], "shapes": ["round"] },
+        "bindings": { "keys": ["Space"], "gamepad": ["south"] }
+      }
+    ]
+  },
+  "layout": null,
+  "words": "make it work with one thumb",
+  "device": "phone"
+}

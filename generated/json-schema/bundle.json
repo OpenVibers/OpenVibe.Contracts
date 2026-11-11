@@ -130805,6 +130805,825 @@
           }
         }
       }
+    },
+    "ui.surface": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/surface.v1.json",
+        "title": "UiSurface",
+        "description": "ui.surface@1: the catalog a product publishes for one surface people may arrange (bot.controls, bot.overlay, live.channel, dock, chat.composer, navbar.shortcuts). It names the surface, its device classes and grid, the theme tokens its styles draw from, and every part a layout may place. A part says what it is (stick, button, slider, readout, video, list), whether it is required or pressed, its minimum cells and the minimum pixels the product guarantees (44 px for anything pressed, larger for Stop), the sizes and styles it allows, the bindings it accepts, and the parts it must never cover. A layout is validated against this catalog (openvibe-sdk/ui-layout); a layout can arrange only what the catalog has and can never add a power. The catalog is data: a layout or an AI answer never carries code or a URL.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "name",
+          "devices",
+          "grid",
+          "theme_tokens",
+          "parts"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+            "maxLength": 80,
+            "description": "The surface id: <product>.<surface>, e.g. bot.controls."
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The catalog version. A layout names the version it was made against."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "What the surface is called where a person sees it."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "devices": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "phone",
+                "tablet",
+                "computer"
+              ]
+            },
+            "description": "The device classes this surface offers."
+          },
+          "grid": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "columns",
+              "cell_px"
+            ],
+            "properties": {
+              "columns": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "phone",
+                  "tablet",
+                  "computer"
+                ],
+                "description": "The grid's columns per device class: 4 on a phone and 12 on a computer in the design; a product may choose otherwise within these bounds.",
+                "properties": {
+                  "phone": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 8
+                  },
+                  "tablet": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 16
+                  },
+                  "computer": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 24
+                  }
+                }
+              },
+              "cell_px": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "phone",
+                  "tablet",
+                  "computer"
+                ],
+                "description": "The smallest a cell is rendered at that device class, in CSS pixels, at the narrowest supported width. The validator multiplies a part's cells by this to check the 44 px rule.",
+                "properties": {
+                  "phone": {
+                    "type": "integer",
+                    "minimum": 24,
+                    "maximum": 200
+                  },
+                  "tablet": {
+                    "type": "integer",
+                    "minimum": 24,
+                    "maximum": 200
+                  },
+                  "computer": {
+                    "type": "integer",
+                    "minimum": 24,
+                    "maximum": 200
+                  }
+                }
+              }
+            }
+          },
+          "theme_tokens": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,39}$"
+            },
+            "description": "The theme tokens a tint may name (accent, surface, danger, ...). Never a colour value: the theme decides what the token is."
+          },
+          "parts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+              "$ref": "#/$defs/part"
+            }
+          }
+        },
+        "$defs": {
+          "part": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "name",
+              "kind",
+              "required",
+              "pressed",
+              "min",
+              "styles",
+              "bindings"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_.-]{0,39}$",
+                "description": "Stable part id inside this catalog, e.g. stop, stick, battery."
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "kind": {
+                "enum": [
+                  "stick",
+                  "button",
+                  "slider",
+                  "readout",
+                  "video",
+                  "list"
+                ]
+              },
+              "required": {
+                "type": "boolean",
+                "description": "A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused."
+              },
+              "pressed": {
+                "type": "boolean",
+                "description": "The part sends a command when pressed or moved; it must render at least 44 px on every side."
+              },
+              "min": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "w",
+                  "h"
+                ],
+                "description": "The smallest size a layout may give the part: w and h in grid cells, and px when the product guarantees more than 44 px (Stop).",
+                "properties": {
+                  "w": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 24
+                  },
+                  "h": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 24
+                  },
+                  "px": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 400
+                  }
+                }
+              },
+              "sizes": {
+                "type": "array",
+                "maxItems": 12,
+                "uniqueItems": true,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "w",
+                    "h"
+                  ],
+                  "properties": {
+                    "w": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    },
+                    "h": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 24
+                    }
+                  }
+                },
+                "description": "Sizes the editor may offer as presets. A layout is not limited to these: it is limited to min and to the grid."
+              },
+              "styles": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tints",
+                  "shapes"
+                ],
+                "properties": {
+                  "tints": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 16,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]{0,39}$"
+                    },
+                    "description": "The theme tokens this part may be tinted with; every one is also in the surface's theme_tokens."
+                  },
+                  "shapes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "round",
+                        "pill",
+                        "square"
+                      ]
+                    }
+                  },
+                  "opacity": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "type": "number",
+                        "minimum": 0.4,
+                        "maximum": 1
+                      },
+                      "max": {
+                        "type": "number",
+                        "minimum": 0.4,
+                        "maximum": 1
+                      }
+                    },
+                    "description": "The opacity range this part allows; the design's range is 0.4 to 1."
+                  },
+                  "label": {
+                    "type": "boolean",
+                    "description": "Whether the editor may show the part's label on it."
+                  }
+                }
+              },
+              "bindings": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "keys",
+                  "gamepad"
+                ],
+                "properties": {
+                  "keys": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9+_.-]{1,40}$"
+                    }
+                  },
+                  "gamepad": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_.-]{0,39}$"
+                    }
+                  }
+                },
+                "description": "The bindings the product accepts for this part. A layout may pick a subset, never add one."
+              },
+              "never_covers": {
+                "type": "array",
+                "maxItems": 32,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_.-]{0,39}$"
+                },
+                "description": "The parts this part must never cover, in addition to the surface-wide rule that nothing covers a required part."
+              }
+            }
+          }
+        }
+      }
+    },
+    "ui.layout": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/layout.v1.json",
+        "title": "UiLayout",
+        "description": "ui.layout@1: one person's arrangement of one surface on one device class. A layout names the surface and its catalog version, the device, its own name, its author and its sharing (private, link or gallery), and one entry per part it places. A part is visible or not, sits on the surface's grid (x, y, w, h in cells) or docks to an edge for an overlay, and carries a style (a theme token tint, a shape, opacity 0.4-1 and the label) and bindings. It is data only: no URL, no markup and no code may appear anywhere in it, and every part id, tint, shape, opacity, size and binding must be one the catalog allows. openvibe-sdk/ui-layout validates it before any server, editor or AI answer stores or shows it.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "surface",
+          "surface_version",
+          "device",
+          "name",
+          "author",
+          "sharing",
+          "parts"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^lay_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Assigned by OpenVibe.Network when the layout is stored; absent in a draft, a share answer or an AI suggestion."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Assigned by the store; every change to a stored layout moves it by one."
+          },
+          "surface": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+            "maxLength": 80
+          },
+          "surface_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "device": {
+            "enum": [
+              "phone",
+              "tablet",
+              "computer"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "The person's name for this layout; \"My phone controls\" is fine."
+          },
+          "author": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "subject": {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            },
+            "description": "The author's display name and, for a private or link layout, the subject. A share or gallery answer carries the display name only, never the account."
+          },
+          "sharing": {
+            "enum": [
+              "private",
+              "link",
+              "gallery"
+            ]
+          },
+          "parts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+              "$ref": "#/$defs/part"
+            }
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "place": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "x",
+                  "y",
+                  "w",
+                  "h"
+                ],
+                "properties": {
+                  "x": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 23
+                  },
+                  "y": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "w": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 24
+                  },
+                  "h": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 24
+                  }
+                },
+                "description": "The part's cell on the surface grid."
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dock",
+                  "order"
+                ],
+                "properties": {
+                  "dock": {
+                    "enum": [
+                      "left",
+                      "right",
+                      "top",
+                      "bottom"
+                    ]
+                  },
+                  "order": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 63
+                  }
+                },
+                "description": "For an overlay: the edge the part docks to, and its order along that edge."
+              }
+            ]
+          },
+          "style": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "tint",
+              "shape",
+              "opacity",
+              "label"
+            ],
+            "properties": {
+              "tint": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,39}$",
+                "description": "A theme token, never a colour: the theme decides what it is, so contrast follows the theme."
+              },
+              "shape": {
+                "enum": [
+                  "round",
+                  "pill",
+                  "square"
+                ]
+              },
+              "opacity": {
+                "type": "number",
+                "minimum": 0.4,
+                "maximum": 1
+              },
+              "label": {
+                "type": "boolean"
+              }
+            }
+          },
+          "bindings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "keys",
+              "gamepad"
+            ],
+            "properties": {
+              "keys": {
+                "type": "array",
+                "maxItems": 32,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9+_.-]{1,40}$"
+                }
+              },
+              "gamepad": {
+                "type": "array",
+                "maxItems": 32,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_.-]{0,39}$"
+                }
+              }
+            }
+          },
+          "part": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "visible",
+              "place",
+              "style",
+              "bindings"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_.-]{0,39}$"
+              },
+              "visible": {
+                "type": "boolean"
+              },
+              "place": {
+                "$ref": "#/$defs/place"
+              },
+              "style": {
+                "$ref": "#/$defs/style"
+              },
+              "bindings": {
+                "$ref": "#/$defs/bindings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ui.layout-request": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/layout-request.v1.json",
+        "title": "UiLayoutRequest",
+        "description": "ui.layout-request@1: what an editor sends OpenVibe.AI's ui.layout.suggest task, and what Network forwards for a signed-in person. It is the surface's catalog, the layout shown now (or null for the default one) and the words the person typed (max 500 characters), for one device class. The catalog is the only power the answer can use; the current layout is the starting arrangement; the words never contain markup that becomes part of it.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "catalog",
+          "layout",
+          "words",
+          "device"
+        ],
+        "properties": {
+          "catalog": {
+            "$ref": "surface.v1.json"
+          },
+          "layout": {
+            "oneOf": [
+              {
+                "$ref": "layout.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The arrangement shown now, or null when the person is looking at the default."
+          },
+          "words": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "The person's own description, e.g. \"put Stop on the left and make it huge\"."
+          },
+          "device": {
+            "enum": [
+              "phone",
+              "tablet",
+              "computer"
+            ]
+          }
+        }
+      }
+    },
+    "ui.layout-suggestion": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/layout-suggestion.v1.json",
+        "title": "UiLayoutSuggestion",
+        "description": "ui.layout-suggestion@1: OpenVibe.AI's answer to ui.layout.suggest. ok true carries the layout, already checked by openvibe-sdk/ui-layout against the catalog sent with the request, and a one-sentence summary of what changed plus the model's reasons. ok false is an honest refusal: no layout, one sentence saying what it could not do, and the validator's reasons in plain words (for example \"Stop has to stay visible.\"). A receipt names the model that answered, with the run and the route. The suggestion is previewed, never applied silently; Network or the product stores it only after the person accepts it.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ok",
+          "layout",
+          "summary",
+          "reasons"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "layout": {
+            "oneOf": [
+              {
+                "$ref": "layout.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The validated layout when ok is true; null when it is false."
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "One sentence saying what changed, or what could not be done."
+          },
+          "reasons": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "description": "Why this arrangement, or the validator's reasons for refusing one."
+          },
+          "receipt": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "model"
+            ],
+            "properties": {
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "route": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "run_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "description": "Which model answered: the same receipt every AI run carries, at the task's own shape."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "ok": {
+                  "const": true
+                }
+              },
+              "required": [
+                "ok"
+              ]
+            },
+            "then": {
+              "properties": {
+                "layout": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "ok": {
+                  "const": false
+                }
+              },
+              "required": [
+                "ok"
+              ]
+            },
+            "then": {
+              "properties": {
+                "layout": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "network.layout.changed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.layout.changed.v1.json",
+        "title": "NetworkLayoutChangedPayload",
+        "description": "network.layout.changed v1 (OpenVibe.Network server/layouts, written into network_event_outbox in the transaction that changes a stored layout). One event per change to one person's ui.layout@1: set active, saved, renamed, deleted, shared, unshared, published to the gallery, unpublished, copied from the gallery, or reset to the default. Envelope: subject { type: user, id } and the layout's revision, actor the person, visibility internal. The payload carries no account data and no layout contents, so an open page can announce a change and refetch with the person's own token.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "surface",
+          "device",
+          "layout_id",
+          "change",
+          "revision"
+        ],
+        "properties": {
+          "surface": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$",
+            "maxLength": 80
+          },
+          "device": {
+            "enum": [
+              "phone",
+              "tablet",
+              "computer"
+            ]
+          },
+          "layout_id": {
+            "type": "string",
+            "pattern": "^lay_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "change": {
+            "enum": [
+              "active",
+              "saved",
+              "renamed",
+              "deleted",
+              "shared",
+              "unshared",
+              "published",
+              "unpublished",
+              "copied",
+              "reset"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sharing": {
+            "enum": [
+              "private",
+              "link",
+              "gallery"
+            ]
+          }
+        }
+      }
     }
   }
 }

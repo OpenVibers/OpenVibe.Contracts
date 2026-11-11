@@ -1,0 +1,21 @@
+{
+  "id": "network.layout.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read the active ui.layout@1 one person made for a product's own surface, with that surface's device class. A first-party service presents a service token for openvibe.network and names the person with X-OV-Subject (which must be the person in the path); it reads one layout and nothing else of their account, and never their saved or gallery layouts. The person's own token uses GET /api/v1/me/layouts/:surface instead, which reads and writes only their own rows.",
+  "permissions": [
+    "network:layout"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "standard",
+  "events": [],
+  "implementedBy": [
+    "GET /api/v1/people/:subject/layouts/:surface"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "ui.layout@1"
+}

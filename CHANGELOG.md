@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.410.0 — 2026-11-11
+
+- Add `ui.surface@1` (the catalog of a surface's parts, their minimum sizes, styles, bindings and
+  `never_covers` rules), `ui.layout@1` (a person's arrangement on one device class, with its name, author and
+  sharing), `ui.layout-request@1` (catalog, current layout, words and device for the AI task) and
+  `ui.layout-suggestion@1` (a validated layout with a one-sentence summary, reasons and the model's receipt, or
+  an honest refusal with the validator's reasons).
+- Add `network.layout.changed@1`: the event Network writes in the transaction that sets, saves, renames, deletes,
+  shares, publishes, copies or resets one person's layout. It carries the surface, device, layout id, change and
+  revision, never account data or layout contents.
+- Add `ai.layout.suggest` (first-party, `POST /api/v1/ui/layout/suggest`) and `network.layout.read` (first-party,
+  `GET /api/v1/people/:subject/layouts/:surface`), and list them in the AI and Network manifests.
+- The fixtures cover a bot-controls catalog, a phone layout, a docked overlay, a suggestion and a refusal, a
+  request and the event; the suite checks part ids, theme tokens, never_covers targets and the 44 px minimum.
+
 ## 0.409.0 — 2026-11-11
 
 - Define machine access requests, grants and signed token claims; the agent directory, A2A tasks and results; five Network events and four registration and relay capabilities.

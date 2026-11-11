@@ -338191,3 +338191,1331 @@ export interface NetworkAgentTaskUpdatedPayload {
   status: "pending" | "running" | "completed" | "failed" | "cancelled";
   at: string;
 }
+
+/** ui.surface@1.0.0 (owner: contracts) */
+/**
+ * ui.surface@1: the catalog a product publishes for one surface people may arrange (bot.controls, bot.overlay, live.channel, dock, chat.composer, navbar.shortcuts). It names the surface, its device classes and grid, the theme tokens its styles draw from, and every part a layout may place. A part says what it is (stick, button, slider, readout, video, list), whether it is required or pressed, its minimum cells and the minimum pixels the product guarantees (44 px for anything pressed, larger for Stop), the sizes and styles it allows, the bindings it accepts, and the parts it must never cover. A layout is validated against this catalog (openvibe-sdk/ui-layout); a layout can arrange only what the catalog has and can never add a power. The catalog is data: a layout or an AI answer never carries code or a URL.
+ */
+export interface UiSurface {
+  /**
+   * The surface id: <product>.<surface>, e.g. bot.controls.
+   */
+  id: string;
+  /**
+   * The catalog version. A layout names the version it was made against.
+   */
+  version: number;
+  /**
+   * What the surface is called where a person sees it.
+   */
+  name: string;
+  description?: string;
+  /**
+   * The device classes this surface offers.
+   *
+   * @minItems 1
+   * @maxItems 3
+   */
+  devices:
+    | ["phone" | "tablet" | "computer"]
+    | ["phone" | "tablet" | "computer", "phone" | "tablet" | "computer"]
+    | ["phone" | "tablet" | "computer", "phone" | "tablet" | "computer", "phone" | "tablet" | "computer"];
+  grid: {
+    /**
+     * The grid's columns per device class: 4 on a phone and 12 on a computer in the design; a product may choose otherwise within these bounds.
+     */
+    columns: {
+      phone: number;
+      tablet: number;
+      computer: number;
+    };
+    /**
+     * The smallest a cell is rendered at that device class, in CSS pixels, at the narrowest supported width. The validator multiplies a part's cells by this to check the 44 px rule.
+     */
+    cell_px: {
+      phone: number;
+      tablet: number;
+      computer: number;
+    };
+  };
+  /**
+   * The theme tokens a tint may name (accent, surface, danger, ...). Never a colour value: the theme decides what the token is.
+   *
+   * @minItems 1
+   * @maxItems 64
+   */
+  theme_tokens: [string, ...string[]];
+  /**
+   * @minItems 1
+   * @maxItems 64
+   */
+  parts: [
+    {
+      /**
+       * Stable part id inside this catalog, e.g. stop, stick, battery.
+       */
+      id: string;
+      name: string;
+      kind: "stick" | "button" | "slider" | "readout" | "video" | "list";
+      /**
+       * A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused.
+       */
+      required: boolean;
+      /**
+       * The part sends a command when pressed or moved; it must render at least 44 px on every side.
+       */
+      pressed: boolean;
+      /**
+       * The smallest size a layout may give the part: w and h in grid cells, and px when the product guarantees more than 44 px (Stop).
+       */
+      min: {
+        w: number;
+        h: number;
+        px?: number;
+      };
+      /**
+       * Sizes the editor may offer as presets. A layout is not limited to these: it is limited to min and to the grid.
+       *
+       * @maxItems 12
+       */
+      sizes?:
+        | []
+        | [
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ];
+      styles: {
+        /**
+         * The theme tokens this part may be tinted with; every one is also in the surface's theme_tokens.
+         *
+         * @minItems 1
+         * @maxItems 16
+         */
+        tints:
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+        /**
+         * @minItems 1
+         * @maxItems 3
+         */
+        shapes:
+          | ["round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square", "round" | "pill" | "square"];
+        /**
+         * The opacity range this part allows; the design's range is 0.4 to 1.
+         */
+        opacity?: {
+          min: number;
+          max: number;
+        };
+        /**
+         * Whether the editor may show the part's label on it.
+         */
+        label?: boolean;
+      };
+      /**
+       * The bindings the product accepts for this part. A layout may pick a subset, never add one.
+       */
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+      /**
+       * The parts this part must never cover, in addition to the surface-wide rule that nothing covers a required part.
+       *
+       * @maxItems 32
+       */
+      never_covers?: string[];
+    },
+    ...{
+      /**
+       * Stable part id inside this catalog, e.g. stop, stick, battery.
+       */
+      id: string;
+      name: string;
+      kind: "stick" | "button" | "slider" | "readout" | "video" | "list";
+      /**
+       * A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused.
+       */
+      required: boolean;
+      /**
+       * The part sends a command when pressed or moved; it must render at least 44 px on every side.
+       */
+      pressed: boolean;
+      /**
+       * The smallest size a layout may give the part: w and h in grid cells, and px when the product guarantees more than 44 px (Stop).
+       */
+      min: {
+        w: number;
+        h: number;
+        px?: number;
+      };
+      /**
+       * Sizes the editor may offer as presets. A layout is not limited to these: it is limited to min and to the grid.
+       *
+       * @maxItems 12
+       */
+      sizes?:
+        | []
+        | [
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ]
+        | [
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            },
+            {
+              w: number;
+              h: number;
+            }
+          ];
+      styles: {
+        /**
+         * The theme tokens this part may be tinted with; every one is also in the surface's theme_tokens.
+         *
+         * @minItems 1
+         * @maxItems 16
+         */
+        tints:
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+        /**
+         * @minItems 1
+         * @maxItems 3
+         */
+        shapes:
+          | ["round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square"]
+          | ["round" | "pill" | "square", "round" | "pill" | "square", "round" | "pill" | "square"];
+        /**
+         * The opacity range this part allows; the design's range is 0.4 to 1.
+         */
+        opacity?: {
+          min: number;
+          max: number;
+        };
+        /**
+         * Whether the editor may show the part's label on it.
+         */
+        label?: boolean;
+      };
+      /**
+       * The bindings the product accepts for this part. A layout may pick a subset, never add one.
+       */
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+      /**
+       * The parts this part must never cover, in addition to the surface-wide rule that nothing covers a required part.
+       *
+       * @maxItems 32
+       */
+      never_covers?: string[];
+    }[]
+  ];
+}
+
+/** ui.layout@1.0.0 (owner: contracts) */
+/**
+ * ui.layout@1: one person's arrangement of one surface on one device class. A layout names the surface and its catalog version, the device, its own name, its author and its sharing (private, link or gallery), and one entry per part it places. A part is visible or not, sits on the surface's grid (x, y, w, h in cells) or docks to an edge for an overlay, and carries a style (a theme token tint, a shape, opacity 0.4-1 and the label) and bindings. It is data only: no URL, no markup and no code may appear anywhere in it, and every part id, tint, shape, opacity, size and binding must be one the catalog allows. openvibe-sdk/ui-layout validates it before any server, editor or AI answer stores or shows it.
+ */
+export interface UiLayout {
+  /**
+   * Assigned by OpenVibe.Network when the layout is stored; absent in a draft, a share answer or an AI suggestion.
+   */
+  id?: string;
+  /**
+   * Assigned by the store; every change to a stored layout moves it by one.
+   */
+  revision?: number;
+  surface: string;
+  surface_version: number;
+  device: "phone" | "tablet" | "computer";
+  /**
+   * The person's name for this layout; "My phone controls" is fine.
+   */
+  name: string;
+  /**
+   * The author's display name and, for a private or link layout, the subject. A share or gallery answer carries the display name only, never the account.
+   */
+  author: {
+    name: string;
+    subject?: SubjectRef;
+  };
+  sharing: "private" | "link" | "gallery";
+  /**
+   * @minItems 1
+   * @maxItems 64
+   */
+  parts: [
+    {
+      id: string;
+      visible: boolean;
+      place:
+        | {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        | {
+            dock: "left" | "right" | "top" | "bottom";
+            order: number;
+          };
+      style: {
+        /**
+         * A theme token, never a colour: the theme decides what it is, so contrast follows the theme.
+         */
+        tint: string;
+        shape: "round" | "pill" | "square";
+        opacity: number;
+        label: boolean;
+      };
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+    },
+    ...{
+      id: string;
+      visible: boolean;
+      place:
+        | {
+            x: number;
+            y: number;
+            w: number;
+            h: number;
+          }
+        | {
+            dock: "left" | "right" | "top" | "bottom";
+            order: number;
+          };
+      style: {
+        /**
+         * A theme token, never a colour: the theme decides what it is, so contrast follows the theme.
+         */
+        tint: string;
+        shape: "round" | "pill" | "square";
+        opacity: number;
+        label: boolean;
+      };
+      bindings: {
+        /**
+         * @maxItems 32
+         */
+        keys: string[];
+        /**
+         * @maxItems 32
+         */
+        gamepad: string[];
+      };
+    }[]
+  ];
+  updated_at?: string;
+}
+
+/** ui.layout-request@1.0.0 (owner: contracts) */
+/**
+ * ui.layout-request@1: what an editor sends OpenVibe.AI's ui.layout.suggest task, and what Network forwards for a signed-in person. It is the surface's catalog, the layout shown now (or null for the default one) and the words the person typed (max 500 characters), for one device class. The catalog is the only power the answer can use; the current layout is the starting arrangement; the words never contain markup that becomes part of it.
+ */
+export interface UiLayoutRequest {
+  catalog: UiSurface;
+  /**
+   * The arrangement shown now, or null when the person is looking at the default.
+   */
+  layout: UiLayout | null;
+  /**
+   * The person's own description, e.g. "put Stop on the left and make it huge".
+   */
+  words: string;
+  device: "phone" | "tablet" | "computer";
+}
+
+/** ui.layout-suggestion@1.0.0 (owner: contracts) */
+/**
+ * ui.layout-suggestion@1: OpenVibe.AI's answer to ui.layout.suggest. ok true carries the layout, already checked by openvibe-sdk/ui-layout against the catalog sent with the request, and a one-sentence summary of what changed plus the model's reasons. ok false is an honest refusal: no layout, one sentence saying what it could not do, and the validator's reasons in plain words (for example "Stop has to stay visible."). A receipt names the model that answered, with the run and the route. The suggestion is previewed, never applied silently; Network or the product stores it only after the person accepts it.
+ */
+export type UiLayoutSuggestion = {
+  [k: string]: unknown | undefined;
+} & {
+  ok: boolean;
+  /**
+   * The validated layout when ok is true; null when it is false.
+   */
+  layout: UiLayout | null;
+  /**
+   * One sentence saying what changed, or what could not be done.
+   */
+  summary: string;
+  /**
+   * Why this arrangement, or the validator's reasons for refusing one.
+   *
+   * @maxItems 20
+   */
+  reasons:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * Which model answered: the same receipt every AI run carries, at the task's own shape.
+   */
+  receipt?: {
+    model: string;
+    provider?: string;
+    route?: string;
+    run_id?: string;
+    cost_usd?: number;
+  };
+};
+
+/** network.layout.changed@1.0.0 (owner: network) */
+/**
+ * network.layout.changed v1 (OpenVibe.Network server/layouts, written into network_event_outbox in the transaction that changes a stored layout). One event per change to one person's ui.layout@1: set active, saved, renamed, deleted, shared, unshared, published to the gallery, unpublished, copied from the gallery, or reset to the default. Envelope: subject { type: user, id } and the layout's revision, actor the person, visibility internal. The payload carries no account data and no layout contents, so an open page can announce a change and refetch with the person's own token.
+ */
+export interface NetworkLayoutChangedPayload {
+  surface: string;
+  device: "phone" | "tablet" | "computer";
+  layout_id: string;
+  change:
+    | "active"
+    | "saved"
+    | "renamed"
+    | "deleted"
+    | "shared"
+    | "unshared"
+    | "published"
+    | "unpublished"
+    | "copied"
+    | "reset";
+  revision: number;
+  sharing?: "private" | "link" | "gallery";
+}

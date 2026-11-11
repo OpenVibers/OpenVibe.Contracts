@@ -141,6 +141,33 @@ ok(contracts.resolve('ai.credential-put@1').schema === 'ai/credential-put.v1.jso
     && contracts.resolve('ai.credential-put').version === '2.0.0', 'a contract with two majors resolves by id (newest) or by major');
 assert.throws(() => contracts.assertValid('identity.subject-ref', { type: 'user', id: '1' }), e => e.code === 'contract.invalid');
 
+// ── UI surfaces and layouts (make your own controls, 2026-11-11) ─────────
+// ui.surface@1 is the catalog a product publishes; ui.layout@1 arranges only what it has. The
+// catalog's own consistency is not something JSON Schema can state: a part's tint has to be one of
+// the surface's theme tokens, part ids are unique, and a never_covers target is a real part.
+{
+    const surface = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/ui.surface/valid/bot-controls.json'), 'utf8'));
+    const partIds = new Set(surface.parts.map((p) => p.id));
+    ok(partIds.size === surface.parts.length, 'ui.surface part ids are unique');
+    for (const p of surface.parts) {
+        for (const tint of p.styles.tints) ok(surface.theme_tokens.includes(tint), `${surface.id}/${p.id} tint ${tint} is a theme token`);
+        for (const target of p.never_covers || []) ok(partIds.has(target), `${surface.id}/${p.id} never_covers names ${target}`);
+        const cols = surface.grid.columns.phone;
+        ok(p.min.w <= cols, `${surface.id}/${p.id} minimum fits the phone grid`);
+        if (p.pressed) ok(p.min.w * surface.grid.cell_px.phone >= 44 && p.min.h * surface.grid.cell_px.phone >= 44, `${surface.id}/${p.id} pressed minimum is at least 44 px`);
+    }
+    // The layout is data only: no URL or markup may appear in a value a layout stores.
+    const layoutText = fs.readFileSync(path.join(ROOT, 'fixtures/ui.layout/valid/phone-controls.json'), 'utf8');
+    ok(!/https?:\/\/|<[a-z]/i.test(layoutText), 'ui.layout carries no URL or markup');
+    // A suggestion says what it could not do rather than carrying an unchecked layout.
+    const suggestion = contracts.validate('ui.layout-suggestion@1', JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/ui.layout-suggestion/valid/suggestion.json'), 'utf8')));
+    ok(suggestion.valid, 'ui.layout-suggestion accepts a validated arrangement with its reasons and receipt');
+    ok(!contracts.validate('ui.layout-suggestion@1', { ok: true, layout: null, summary: 'x', reasons: [] }).valid, 'a successful suggestion must carry a layout');
+    // The event names the change and the layout revision; no account data is in the payload.
+    const changed = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures/network.layout.changed/valid/activated.json'), 'utf8'));
+    ok(!('subject' in changed) && !('author' in changed) && !('parts' in changed), 'network.layout.changed carries no account data or layout contents');
+}
+
 // ── Manifests ────────────────────────────────────────────────────────────
 const serviceIds = new Set(services.manifests.map(m => m.id));
 for (const m of services.manifests) {

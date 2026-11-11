@@ -1,0 +1,12 @@
+{
+  "surface": "bot.overlay",
+  "surface_version": 1,
+  "device": "computer",
+  "name": "One-thumb overlay",
+  "author": { "name": "Ana" },
+  "sharing": "link",
+  "parts": [
+    { "id": "stop", "visible": true, "place": { "dock": "right", "order": 0 }, "style": { "tint": "danger", "shape": "round", "opacity": 1, "label": true }, "bindings": { "keys": ["Space"], "gamepad": ["south"] } },
+    { "id": "battery", "visible": true, "place": { "dock": "right", "order": 1 }, "style": { "tint": "surface", "shape": "pill", "opacity": 0.8, "label": false }, "bindings": { "keys": [], "gamepad": [] } }
+  ]
+}

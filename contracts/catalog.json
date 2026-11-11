@@ -11573,6 +11573,51 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "ui.surface",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/surface.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ui.layout",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/layout.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ui.layout-request",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/layout-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ui.layout-suggestion",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/layout-suggestion.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.layout.changed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.layout.changed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
