@@ -1,0 +1,28 @@
+{
+  "id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "schema": "ai.deep-dive@1",
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "status": "finished",
+  "input": { "question": "a phone-first robot control panel", "depth": "quick", "max_sites": 6 },
+  "steps": [],
+  "sources": [],
+  "captures": [],
+  "analysis": [],
+  "synthesis": {
+    "patterns": [],
+    "comparison": { "columns": [], "rows": [] },
+    "best": { "source_id": "src_1", "what": "x", "evidence": [] },
+    "mistakes": [],
+    "gap": "",
+    "reference_tokens": { "palettes": [], "type_scales": [], "spacing": [] },
+    "do": [],
+    "dont": [],
+    "accessibility": [],
+    "speed": []
+  },
+  "recommendations": [],
+  "receipt": { "price_usd": 0.2, "held_usd": 0.2, "cost_usd": 0, "models": [], "captures_count": 0, "synthetic": false },
+  "gaps": [],
+  "created_at": "2026-11-11T10:00:00.000Z",
+  "updated_at": "2026-11-11T10:03:21.000Z"
+}

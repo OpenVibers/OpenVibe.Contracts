@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.412.0 — 2026-11-11
+
+- Add `ai.deep-dive@1`: a deep dive run's report as OpenVibe.AI's `design.deep_dive` workflow produces it for
+  OpenVibe.Exchange and OpenVibe.Design — the question and depth, the seven steps, every source, every capture (a
+  private Media object per viewport and theme, with its DOM facts and Expert extras), the per-site analysis, the
+  synthesis, the recommendations checked against OpenVibe's rules, and the receipt. Every claim carries its evidence.
+- Add `ai.deep_dive.updated@1`, the event AI writes on each step transition and at the end, so a page can follow a
+  run without polling and Design can attach a finished report.
+
+## 0.411.0 — 2026-11-11
+
+- Elements stage 1: `ui.element`, `ui.trigger`, `ui.action`, `ui.element-state` and two Live events (open release PR
+  #456; the full entry lands with it).
+
+## 0.410.0 — 2026-11-11
+
+- Layouts stage 1: `ui.surface@1`, `ui.layout@1`, `ui.layout-suggestion@1` and `network.layout.changed@1` (open release
+  PR #455; the full entry lands with it).
+
 ## 0.409.0 — 2026-11-11
 
 - Define machine access requests, grants and signed token claims; the agent directory, A2A tasks and results; five Network events and four registration and relay capabilities.

@@ -130805,6 +130805,1088 @@
           }
         }
       }
+    },
+    "ai.deep-dive": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/deep-dive.v1.json",
+        "title": "AiDeepDive",
+        "description": "A deep dive: expert design research run by OpenVibe.AI (workflow design.deep_dive) for OpenVibe.Exchange's /deep-dive page and, through the API, OpenVibe.Design. One document holds the question and depth (the input), the seven steps, every source read, every capture (a private Media object per viewport and theme, with its DOM facts and Expert extras), the per-site analysis, the synthesis across sites, the recommendations checked against OpenVibe's own rules, and the receipt of every model call and capture. Every claim carries its evidence: the site, the capture or crop, the URL and the date it was read. Nothing is copied: captures are private to the run's owner and the report shows them as attributed commentary.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "schema",
+          "run_id",
+          "status",
+          "input",
+          "steps",
+          "sources",
+          "captures",
+          "analysis",
+          "synthesis",
+          "recommendations",
+          "receipt",
+          "gaps",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The run id; a deep dive is a run (GET /api/v1/deep-dives/{id})."
+          },
+          "schema": {
+            "const": "ai.deep-dive@1"
+          },
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "choosing",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "question",
+              "depth",
+              "max_sites"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "depth": {
+                "enum": [
+                  "quick",
+                  "thorough",
+                  "expert"
+                ]
+              },
+              "max_sites": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 30
+              },
+              "sites": {
+                "type": "array",
+                "maxItems": 30,
+                "items": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https?://"
+                },
+                "description": "Sites the person named when starting the run."
+              }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "status"
+              ],
+              "properties": {
+                "key": {
+                  "enum": [
+                    "plan",
+                    "search",
+                    "choose",
+                    "capture",
+                    "analyse",
+                    "synthesise",
+                    "report"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "running",
+                    "done",
+                    "skipped",
+                    "failed"
+                  ]
+                },
+                "detail": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 300
+                },
+                "started_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "finished_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "kind",
+                "title",
+                "url",
+                "read_at"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                },
+                "kind": {
+                  "enum": [
+                    "web",
+                    "picture",
+                    "icon",
+                    "project",
+                    "rules",
+                    "component",
+                    "named"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https?://"
+                },
+                "publisher": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "engine": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 80
+                },
+                "snippet": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2000
+                },
+                "license": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "read_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "captures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "source_id",
+                "url",
+                "captured_at",
+                "viewport",
+                "theme",
+                "full_page",
+                "crops"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^cap_[A-Za-z0-9_-]{1,40}$"
+                },
+                "source_id": {
+                  "type": "string",
+                  "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https?://"
+                },
+                "final_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri",
+                  "pattern": "^https?://"
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400
+                },
+                "captured_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "viewport": {
+                  "enum": [
+                    390,
+                    1280
+                  ]
+                },
+                "theme": {
+                  "enum": [
+                    "light",
+                    "dark"
+                  ]
+                },
+                "full_page": {
+                  "type": "boolean"
+                },
+                "media_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "width": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "height": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "crops": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "media_id",
+                      "y",
+                      "height"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^crop_[A-Za-z0-9_-]{1,40}$"
+                      },
+                      "media_id": {
+                        "type": "string",
+                        "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+                      },
+                      "y": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "height": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  }
+                },
+                "dom": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "extras": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "skip": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200,
+                  "description": "Why the capture did not happen: robots_disallowed, not_public, no_chrome, timeout, …"
+                },
+                "cached": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "analysis": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source_id",
+                "url",
+                "summary",
+                "strengths",
+                "weaknesses",
+                "evidence"
+              ],
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https?://"
+                },
+                "summary": {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                "first_impression": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "hierarchy": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "density": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "type": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "colour": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "motion": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "words": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "strengths": {
+                  "type": "array",
+                  "maxItems": 12,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 600
+                  }
+                },
+                "weaknesses": {
+                  "type": "array",
+                  "maxItems": 12,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 600
+                  }
+                },
+                "accessibility": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2000
+                },
+                "speed": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2000
+                },
+                "evidence": {
+                  "$ref": "#/$defs/evidence"
+                }
+              }
+            }
+          },
+          "synthesis": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "patterns",
+              "comparison",
+              "best",
+              "mistakes",
+              "gap",
+              "reference_tokens",
+              "do",
+              "dont",
+              "accessibility",
+              "speed"
+            ],
+            "properties": {
+              "patterns": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "what",
+                    "sites",
+                    "evidence"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 160
+                    },
+                    "what": {
+                      "type": "string",
+                      "maxLength": 1200
+                    },
+                    "sites": {
+                      "type": "array",
+                      "maxItems": 30,
+                      "items": {
+                        "type": "string",
+                        "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                      }
+                    },
+                    "usage_count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 30
+                    },
+                    "evidence": {
+                      "$ref": "#/$defs/evidence"
+                    }
+                  }
+                }
+              },
+              "comparison": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "columns",
+                  "rows"
+                ],
+                "properties": {
+                  "columns": {
+                    "type": "array",
+                    "maxItems": 12,
+                    "items": {
+                      "type": "string",
+                      "maxLength": 120
+                    }
+                  },
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "maxItems": 12,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 1000
+                      }
+                    }
+                  }
+                }
+              },
+              "best": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_id",
+                  "what",
+                  "evidence"
+                ],
+                "properties": {
+                  "source_id": {
+                    "type": "string",
+                    "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                  },
+                  "what": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "evidence": {
+                    "$ref": "#/$defs/evidence"
+                  }
+                }
+              },
+              "mistakes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "what",
+                    "evidence"
+                  ],
+                  "properties": {
+                    "what": {
+                      "type": "string",
+                      "maxLength": 1200
+                    },
+                    "evidence": {
+                      "$ref": "#/$defs/evidence"
+                    }
+                  }
+                }
+              },
+              "gap": {
+                "type": "string",
+                "maxLength": 2000
+              },
+              "reference_tokens": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "palettes",
+                  "type_scales",
+                  "spacing"
+                ],
+                "properties": {
+                  "palettes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "source_id",
+                        "colours"
+                      ],
+                      "properties": {
+                        "source_id": {
+                          "type": "string",
+                          "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                        },
+                        "colours": {
+                          "type": "array",
+                          "maxItems": 16,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 40
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type_scales": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "source_id",
+                        "families",
+                        "sizes"
+                      ],
+                      "properties": {
+                        "source_id": {
+                          "type": "string",
+                          "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                        },
+                        "families": {
+                          "type": "array",
+                          "maxItems": 8,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 120
+                          }
+                        },
+                        "sizes": {
+                          "type": "array",
+                          "maxItems": 16,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 40
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "spacing": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "source_id",
+                        "steps"
+                      ],
+                      "properties": {
+                        "source_id": {
+                          "type": "string",
+                          "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                        },
+                        "steps": {
+                          "type": "array",
+                          "maxItems": 16,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 40
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "do": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "maxLength": 600
+                }
+              },
+              "dont": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "maxLength": 600
+                }
+              },
+              "accessibility": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "maxLength": 600
+                }
+              },
+              "speed": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "maxLength": 600
+                }
+              }
+            }
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "what",
+                "why",
+                "rule",
+                "evidence"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^rec_[A-Za-z0-9_-]{1,40}$"
+                },
+                "what": {
+                  "type": "string",
+                  "maxLength": 1200
+                },
+                "why": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "rule": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "status",
+                    "text"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 120
+                    },
+                    "status": {
+                      "enum": [
+                        "follows",
+                        "would_change",
+                        "none"
+                      ]
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 600
+                    }
+                  }
+                },
+                "evidence": {
+                  "$ref": "#/$defs/evidence"
+                }
+              }
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "price_usd",
+              "held_usd",
+              "cost_usd",
+              "models",
+              "captures_count",
+              "synthetic"
+            ],
+            "properties": {
+              "price_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "held_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "captures_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "synthetic": {
+                "type": "boolean"
+              },
+              "models": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "step",
+                    "provider",
+                    "model",
+                    "tokens_in",
+                    "tokens_out",
+                    "cost_usd",
+                    "ms"
+                  ],
+                  "properties": {
+                    "step": {
+                      "enum": [
+                        "plan",
+                        "choose",
+                        "analyse",
+                        "synthesise"
+                      ]
+                    },
+                    "provider": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 80
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 200
+                    },
+                    "tokens_in": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "tokens_out": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "cost_usd": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "ms": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "gaps": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "string",
+              "maxLength": 400
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "claim",
+                "url",
+                "read_at"
+              ],
+              "properties": {
+                "claim": {
+                  "type": "string",
+                  "maxLength": 600
+                },
+                "source_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^src_[A-Za-z0-9_-]{1,40}$"
+                },
+                "capture_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^cap_[A-Za-z0-9_-]{1,40}$"
+                },
+                "crop_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^crop_[A-Za-z0-9_-]{1,40}$"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https?://"
+                },
+                "read_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ai.deep_dive.updated": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/ai.deep_dive.updated.v1.json",
+        "title": "AiDeepDiveUpdatedPayload",
+        "description": "ai.deep_dive.updated v1 (OpenVibe.AI server/deep-dive): a deep dive's step changed or it ended. One event per step transition and one at the end, so a page (OpenVibe.Exchange's /deep-dive) can follow a run without polling, and OpenVibe.Design can attach a finished report. The payload carries the run and deep-dive ids, the step, the progress and the status; never the question's answer, a capture or a prompt. Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low (important on failed), actor service:ai.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "deep_dive_id",
+          "run_id",
+          "status",
+          "step",
+          "progress",
+          "steps",
+          "depth",
+          "requester",
+          "on_behalf_of",
+          "url",
+          "error",
+          "occurred_at"
+        ],
+        "properties": {
+          "deep_dive_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "run_id": {
+            "type": "string",
+            "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "choosing",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "step": {
+            "enum": [
+              "plan",
+              "search",
+              "choose",
+              "capture",
+              "analyse",
+              "synthesise",
+              "report",
+              "done",
+              null
+            ]
+          },
+          "progress": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "status"
+              ],
+              "properties": {
+                "key": {
+                  "enum": [
+                    "plan",
+                    "search",
+                    "choose",
+                    "capture",
+                    "analyse",
+                    "synthesise",
+                    "report"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "running",
+                    "done",
+                    "skipped",
+                    "failed"
+                  ]
+                }
+              }
+            }
+          },
+          "depth": {
+            "enum": [
+              "quick",
+              "thorough",
+              "expert"
+            ]
+          },
+          "requester": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "on_behalf_of": {
+            "anyOf": [
+              {
+                "$ref": "../../identity/subject-ref.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code",
+                  "detail"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "detail": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
     }
   }
 }

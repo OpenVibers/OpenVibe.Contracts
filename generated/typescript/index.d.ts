@@ -338191,3 +338191,1046 @@ export interface NetworkAgentTaskUpdatedPayload {
   status: "pending" | "running" | "completed" | "failed" | "cancelled";
   at: string;
 }
+
+/** ai.deep-dive@1.0.0 (owner: ai) */
+/**
+ * A deep dive: expert design research run by OpenVibe.AI (workflow design.deep_dive) for OpenVibe.Exchange's /deep-dive page and, through the API, OpenVibe.Design. One document holds the question and depth (the input), the seven steps, every source read, every capture (a private Media object per viewport and theme, with its DOM facts and Expert extras), the per-site analysis, the synthesis across sites, the recommendations checked against OpenVibe's own rules, and the receipt of every model call and capture. Every claim carries its evidence: the site, the capture or crop, the URL and the date it was read. Nothing is copied: captures are private to the run's owner and the report shows them as attributed commentary.
+ */
+export interface AiDeepDive {
+  /**
+   * The run id; a deep dive is a run (GET /api/v1/deep-dives/{id}).
+   */
+  id: string;
+  schema: "ai.deep-dive@1";
+  run_id: string;
+  status: "queued" | "running" | "choosing" | "succeeded" | "failed" | "cancelled";
+  input: {
+    question: string;
+    depth: "quick" | "thorough" | "expert";
+    max_sites: number;
+    /**
+     * Sites the person named when starting the run.
+     *
+     * @maxItems 30
+     */
+    sites?: string[];
+  };
+  steps: {
+    key: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report";
+    status: "pending" | "running" | "done" | "skipped" | "failed";
+    detail?: string | null;
+    started_at?: string | null;
+    finished_at?: string | null;
+  }[];
+  sources: {
+    id: string;
+    kind: "web" | "picture" | "icon" | "project" | "rules" | "component" | "named";
+    title: string;
+    url: string;
+    publisher?: string | null;
+    engine?: string | null;
+    snippet?: string | null;
+    license?: string | null;
+    read_at: string;
+  }[];
+  captures: {
+    id: string;
+    source_id: string;
+    url: string;
+    final_url?: string | null;
+    title?: string | null;
+    captured_at: string;
+    viewport: 390 | 1280;
+    theme: "light" | "dark";
+    full_page: boolean;
+    media_id?: string | null;
+    width?: number | null;
+    height?: number | null;
+    crops: {
+      id: string;
+      media_id: string;
+      y: number;
+      height: number;
+    }[];
+    dom?: {} | null;
+    extras?: {} | null;
+    /**
+     * Why the capture did not happen: robots_disallowed, not_public, no_chrome, timeout, …
+     */
+    skip?: string | null;
+    cached?: boolean;
+  }[];
+  analysis: {
+    source_id: string;
+    url: string;
+    summary: string;
+    first_impression?: string;
+    hierarchy?: string;
+    density?: string;
+    type?: string;
+    colour?: string;
+    motion?: string;
+    words?: string;
+    /**
+     * @maxItems 12
+     */
+    strengths:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string];
+    /**
+     * @maxItems 12
+     */
+    weaknesses:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string];
+    accessibility?: string | null;
+    speed?: string | null;
+    evidence: {
+      claim: string;
+      source_id?: string | null;
+      capture_id?: string | null;
+      crop_id?: string | null;
+      url: string;
+      read_at: string;
+    }[];
+  }[];
+  synthesis: {
+    patterns: {
+      name: string;
+      what: string;
+      /**
+       * @maxItems 30
+       */
+      sites: string[];
+      usage_count?: number;
+      evidence: {
+        claim: string;
+        source_id?: string | null;
+        capture_id?: string | null;
+        crop_id?: string | null;
+        url: string;
+        read_at: string;
+      }[];
+    }[];
+    comparison: {
+      /**
+       * @maxItems 12
+       */
+      columns:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string];
+      rows:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string][];
+    };
+    best: {
+      source_id: string;
+      what: string;
+      evidence: {
+        claim: string;
+        source_id?: string | null;
+        capture_id?: string | null;
+        crop_id?: string | null;
+        url: string;
+        read_at: string;
+      }[];
+    };
+    mistakes: {
+      what: string;
+      evidence: {
+        claim: string;
+        source_id?: string | null;
+        capture_id?: string | null;
+        crop_id?: string | null;
+        url: string;
+        read_at: string;
+      }[];
+    }[];
+    gap: string;
+    reference_tokens: {
+      palettes: {
+        source_id: string;
+        /**
+         * @maxItems 16
+         */
+        colours:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+      }[];
+      type_scales: {
+        source_id: string;
+        /**
+         * @maxItems 8
+         */
+        families:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string];
+        /**
+         * @maxItems 16
+         */
+        sizes:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+      }[];
+      spacing: {
+        source_id: string;
+        /**
+         * @maxItems 16
+         */
+        steps:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ]
+          | [
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string,
+              string
+            ];
+      }[];
+    };
+    /**
+     * @maxItems 20
+     */
+    do:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * @maxItems 20
+     */
+    dont:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * @maxItems 20
+     */
+    accessibility:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * @maxItems 20
+     */
+    speed:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  recommendations: {
+    id: string;
+    what: string;
+    why: string;
+    rule: {
+      id?: string | null;
+      status: "follows" | "would_change" | "none";
+      text: string;
+    };
+    evidence: {
+      claim: string;
+      source_id?: string | null;
+      capture_id?: string | null;
+      crop_id?: string | null;
+      url: string;
+      read_at: string;
+    }[];
+  }[];
+  receipt: {
+    price_usd: number;
+    held_usd: number;
+    cost_usd: number;
+    captures_count: number;
+    synthetic: boolean;
+    models: {
+      step: "plan" | "choose" | "analyse" | "synthesise";
+      provider: string | null;
+      model: string | null;
+      tokens_in: number;
+      tokens_out: number;
+      cost_usd: number;
+      ms: number;
+    }[];
+  };
+  /**
+   * @maxItems 40
+   */
+  gaps: string[];
+  created_at: string;
+  updated_at: string;
+  finished_at?: string | null;
+}
+
+/** ai.deep_dive.updated@1.0.0 (owner: ai) */
+/**
+ * ai.deep_dive.updated v1 (OpenVibe.AI server/deep-dive): a deep dive's step changed or it ended. One event per step transition and one at the end, so a page (OpenVibe.Exchange's /deep-dive) can follow a run without polling, and OpenVibe.Design can attach a finished report. The payload carries the run and deep-dive ids, the step, the progress and the status; never the question's answer, a capture or a prompt. Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low (important on failed), actor service:ai.
+ */
+export interface AiDeepDiveUpdatedPayload {
+  deep_dive_id: string;
+  run_id: string;
+  status: "queued" | "running" | "choosing" | "succeeded" | "failed" | "cancelled";
+  step: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report" | "done" | null;
+  progress: number;
+  steps: {
+    key: "plan" | "search" | "choose" | "capture" | "analyse" | "synthesise" | "report";
+    status: "pending" | "running" | "done" | "skipped" | "failed";
+  }[];
+  depth: "quick" | "thorough" | "expert";
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  url: string;
+  error: {
+    code: string;
+    detail: string;
+  } | null;
+  occurred_at: string;
+}

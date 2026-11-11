@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/ai.deep_dive.updated.v1.json",
+  "title": "AiDeepDiveUpdatedPayload",
+  "description": "ai.deep_dive.updated v1 (OpenVibe.AI server/deep-dive): a deep dive's step changed or it ended. One event per step transition and one at the end, so a page (OpenVibe.Exchange's /deep-dive) can follow a run without polling, and OpenVibe.Design can attach a finished report. The payload carries the run and deep-dive ids, the step, the progress and the status; never the question's answer, a capture or a prompt. Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low (important on failed), actor service:ai.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "deep_dive_id",
+    "run_id",
+    "status",
+    "step",
+    "progress",
+    "steps",
+    "depth",
+    "requester",
+    "on_behalf_of",
+    "url",
+    "error",
+    "occurred_at"
+  ],
+  "properties": {
+    "deep_dive_id": {
+      "type": "string",
+      "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "choosing",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "step": {
+      "enum": [
+        "plan",
+        "search",
+        "choose",
+        "capture",
+        "analyse",
+        "synthesise",
+        "report",
+        "done",
+        null
+      ]
+    },
+    "progress": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "status"
+        ],
+        "properties": {
+          "key": {
+            "enum": [
+              "plan",
+              "search",
+              "choose",
+              "capture",
+              "analyse",
+              "synthesise",
+              "report"
+            ]
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "running",
+              "done",
+              "skipped",
+              "failed"
+            ]
+          }
+        }
+      }
+    },
+    "depth": {
+      "enum": [
+        "quick",
+        "thorough",
+        "expert"
+      ]
+    },
+    "requester": {
+      "$ref": "../../identity/subject-ref.v1.json"
+    },
+    "on_behalf_of": {
+      "anyOf": [
+        {
+          "$ref": "../../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "detail"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "detail": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
