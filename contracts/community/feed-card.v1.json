@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/feed-card.v1.json",
+  "title": "CommunityFeedCard",
+  "description": "community.feed-card@1: one public card returned by GET /api/v1/feed on OpenVibe.Community.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "url", "title", "text", "at", "site", "site_name", "actor", "media", "counts"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "kind": { "enum": ["live", "stream", "clip", "video", "pic", "post", "meme", "game", "update", "wiki", "quest", "chat", "event", "member"] },
+    "url": { "type": "string", "pattern": "^https?://", "maxLength": 2000 },
+    "title": { "type": "string", "maxLength": 300 },
+    "text": { "type": "string", "maxLength": 280 },
+    "at": { "type": ["string", "null"], "format": "date-time" },
+    "site": { "type": "string", "maxLength": 40 },
+    "site_name": { "type": "string", "maxLength": 40 },
+    "actor": { "type": ["object", "null"], "required": ["name", "avatar"], "properties": { "name": { "type": ["string", "null"], "maxLength": 80 }, "avatar": { "type": ["string", "null"], "maxLength": 2000 } }, "additionalProperties": false },
+    "media": { "type": ["object", "null"], "required": ["thumb", "ratio"], "properties": { "thumb": { "type": "string", "pattern": "^https://", "maxLength": 2000 }, "preview": { "type": ["string", "null"], "pattern": "^https://", "maxLength": 2000 }, "ratio": { "type": "number", "exclusiveMinimum": 0 }, "length": { "type": "number", "minimum": 0 } }, "additionalProperties": false },
+    "counts": { "type": "object", "properties": { "views": { "type": "integer", "minimum": 0 }, "likes": { "type": "integer", "minimum": 0 }, "comments": { "type": "integer", "minimum": 0 } }, "additionalProperties": false },
+    "live_now": { "type": "boolean" },
+    "label": { "enum": ["Trending", "AI", "System"] }
+  }
+}

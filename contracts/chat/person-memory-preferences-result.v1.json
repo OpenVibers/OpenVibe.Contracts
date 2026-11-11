@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/person-memory-preferences-result.v1.json",
+  "title": "ChatPersonMemoryPreferencesResult",
+  "description": "chat.person-memory-preferences-result@1: the person's delete or opt-out result.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["opted_out"],
+  "properties": {
+    "opted_out": { "type": "boolean" },
+    "deleted": { "type": "boolean" }
+  }
+}

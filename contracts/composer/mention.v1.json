@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/composer/mention.v1.json",
+  "title": "ComposerMention",
+  "description": "composer.mention@1: one thing the composer's @ menu can insert, from GET /api/v1/mentions on OpenVibe.Network. kind person (a person the caller follows first, then a public person), repo (a repository on OpenVibe Git the caller can see), site (a first-party OpenVibe site) or file (a file of the message's own context). `id` is the stable id inside its kind, `label` what the menu shows, `handle` the @name when the kind has one, `avatar` the picture, and `url` where choosing it links.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "id", "label", "url"],
+  "properties": {
+    "kind": {
+      "enum": ["person", "repo", "site", "file"],
+      "description": "What is mentioned. The same person is a person; a repository on OpenVibe Git is a repo; a first-party OpenVibe site is a site; a file of the message's context (an attachment or a repository file) is a file."
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The stable id inside the kind: a usr_… subject for a person, owner/name for a repo, a site id for a site, a path or attachment id for a file."
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "What the menu shows (a display name, owner/name, the site's name, a file name)."
+    },
+    "handle": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9_.-]+$",
+      "description": "The @name when the kind has one: a person's username, a site's short name. Absent for a repo or a file."
+    },
+    "avatar": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Absolute URL of the picture to show beside the label. Null when the kind has none (a file, a site without a mark)."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Absolute https URL where choosing the mention leads: the person's profile, the repository, the site's home or the file."
+    }
+  }
+}

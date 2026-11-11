@@ -29,6 +29,7 @@
     "chat.analysis.read",
     "chat.cache.invalidate",
     "chat.config.manage",
+    "chat.commands.register",
     "chat.event.publish",
     "chat.inbox.manage",
     "chat.inbox.read",

@@ -1,0 +1,5 @@
+{
+  "server": "command-tests",
+  "command": { "name": "hello", "description": "Say hello", "options": [{ "name": "text", "description": "Who to greet", "type": "string", "required": false }] },
+  "response_template": "Hello, {args}!"
+}

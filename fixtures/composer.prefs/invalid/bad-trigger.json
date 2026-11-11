@@ -1,0 +1,10 @@
+{
+  "rev": 0,
+  "send_key": "enter",
+  "tools": [],
+  "density": "comfy",
+  "voice": false,
+  "snippets": [
+    { "trigger": "sig", "label": "Signature", "text": "— Sam" }
+  ]
+}

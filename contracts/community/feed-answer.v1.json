@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/community/feed-answer.v1.json",
+  "title": "CommunityFeedAnswer",
+  "description": "community.feed-answer@1: the response from GET /api/v1/feed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items", "next_cursor"],
+  "properties": {
+    "items": { "type": "array", "items": { "$ref": "feed-card.v1.json" } },
+    "next_cursor": { "type": ["string", "null"] }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "chat.commands.register",
+  "version": "1.0",
+  "owner": "chat",
+  "status": "active",
+  "visibility": "public",
+  "sensitive": true,
+  "description": "Register a slash command in a Chat server where the person authorizing the app is an owner or admin. The Network service token names the approved app or agent in sub, names the person in on_behalf_of, and carries this granted capability. Chat stores the command under that app, refuses built-in names, and executes its plain response template by posting as the person who invoked it with that person's current room rights. This grant never lets an app post as someone else or perform moderation.",
+  "permissions": ["chat:write"],
+  "resourceConstraints": ["owner"],
+  "quotaClass": "chat-write",
+  "events": [],
+  "implementedBy": ["POST /api/chat/commands/registered", "DELETE /api/chat/commands/registered/:name"],
+  "inputSchema": "chat.command-registration-request@1",
+  "outputSchema": "chat.command-registration-result@1"
+}
