@@ -336196,3 +336196,51 @@ export interface CodesAgentSheet {
     capabilities: {};
   };
 }
+
+/** compare.comparison@1.0.0 (owner: compare) */
+/**
+ * A comparison of things by weighted criteria, with finite dated results and their public sources. Missing evidence is absent, never zero.
+ */
+export interface CompareComparison {
+  slug: string;
+  title: string;
+  kind: string;
+  summary: string;
+  things: {
+    id: string;
+    name: string;
+    maker: string;
+    icon: string;
+    url: string;
+  }[];
+  criteria: {
+    id: string;
+    label: string;
+    unit: string;
+    group: string;
+    better: "higher" | "lower";
+    weight: number;
+  }[];
+  results: {
+    thing: string;
+    criterion: string;
+    value: number;
+    as_of: string;
+    source: {
+      label: string;
+      url: string;
+    };
+  }[];
+  method: string;
+  sources: {
+    label: string;
+    url: string;
+  }[];
+  updated_at: string;
+  versions: {
+    id: string;
+    url: string;
+    as_of: string;
+  }[];
+  availability?: string[];
+}
