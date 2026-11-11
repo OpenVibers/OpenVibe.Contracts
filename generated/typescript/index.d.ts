@@ -281458,6 +281458,17 @@ export interface RunSessionControlResult {
    * The desk's answer on an ack (bot.command-result@1 data).
    */
   data?: {};
+  /**
+   * Whether the command reached the machine. Absent on older servers means unknown.
+   */
+  delivery?: "delivered" | "not_delivered" | "uncertain";
+  /**
+   * safe is true only when delivery is not_delivered.
+   */
+  retry?: {
+    safe: boolean;
+    reason?: string;
+  };
   state: "placing" | "starting" | "running" | "ended";
 }
 
