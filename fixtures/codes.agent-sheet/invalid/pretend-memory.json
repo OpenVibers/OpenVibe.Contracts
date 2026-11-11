@@ -1,0 +1,12 @@
+{
+  "agent": {"id": "codex", "name": "Codex", "face": null, "state": "ready", "kind": "coding harness", "availability": null},
+  "now": null,
+  "work": [],
+  "activity": [],
+  "asks": [],
+  "asks_empty": "Requests to approve coding work will appear here when this agent needs you.",
+  "computer": null,
+  "schedules": [],
+  "memory": [{"text": "not a Codes record"}],
+  "identity": {"provider": null, "capabilities": {}}
+}
