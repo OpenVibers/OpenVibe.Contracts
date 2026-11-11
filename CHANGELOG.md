@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.405.0 — 2026-11-11
+
+- Add the Directory service manifest and mark the product as a public site with sourced listings. Private-person lookup remains excluded.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.

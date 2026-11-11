@@ -1,0 +1,74 @@
+{
+  "version": "0.1.0",
+  "status": "alpha",
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "Public sources are re-read at startup and every six hours; the in-memory last good snapshot is retained on transient source failure."
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "No database, writes or migrations."
+      }
+    },
+    "contracts": {
+      "range": ">=0.405.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "id": "directory",
+  "name": "OpenVibe.Directory",
+  "repository": "OpenVibers/OpenVibe.Directory",
+  "domains": [
+    "openvibe.directory"
+  ],
+  "publicOrigin": "https://openvibe.directory",
+  "internalOrigin": "http://127.0.0.1:5281",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.405.0 <1.0.0"
+  },
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "directory.*"
+  ],
+  "notes": "Public read service. Sources: Network frame, Tools catalog, Compare AI models, GitHub public repositories, and a bounded OpenStreetMap local-business pilot. People listings remain empty until an authenticated opt-in claim flow is available.",
+  "site": {
+    "name": "Directory",
+    "icon": "directory",
+    "tagline": "Directories that keep themselves current",
+    "what": "Source-linked listings with a last checked date.",
+    "legalProfile": "info",
+    "position": 81,
+    "neighbourhood": "make"
+  }
+}
