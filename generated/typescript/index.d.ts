@@ -213812,7 +213812,7 @@ export type CommunityPostWriteResult =
 
 /** community.pulse-write-request@1.0.0 (owner: community) */
 /**
- * community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities (ref.service must be that service: 403 pulse.foreign_ref otherwise), with a title (whitespace collapsed, 1 to 300 characters) and an absolute http(s) url (at most 2000 characters). origin defaults to X-OV-Origin (user, ai or system; X-OV-Origin: ai always wins); an origin user item names the person in X-OV-Subject. occurred_at is an ISO time, not in the future (default now). Only public activity enters Pulse: a visibility other than public is 400 pulse.not_public. The same ref again updates the item. Unknown fields are ignored. DELETE /api/v1/pulse/items/:service/:type/:id takes no body.
+ * community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities (ref.service must be that service: 403 pulse.foreign_ref otherwise), with a title (whitespace collapsed, 1 to 300 characters) and an absolute http(s) url (at most 2000 characters). Optional media carries an HTTPS thumbnail, preview video, aspect ratio and duration for Feed cards. origin defaults to X-OV-Origin (user, ai or system; X-OV-Origin: ai always wins); an origin user item names the person in X-OV-Subject. occurred_at is an ISO time, not in the future (default now). Only public activity enters Pulse: a visibility other than public is 400 pulse.not_public. The same ref again updates the item. Unknown fields are ignored. DELETE /api/v1/pulse/items/:service/:type/:id takes no body.
  */
 export type CommunityPulseWriteRequest =
   | {
@@ -213825,6 +213825,12 @@ export type CommunityPulseWriteRequest =
       origin?: "user" | "ai" | "system" | null;
       occurred_at?: string | number | null;
       visibility?: "public" | null;
+      media?: {
+        thumb?: string;
+        preview?: string | null;
+        ratio?: number;
+        length?: number;
+      };
     }
   | NoBody;
 
