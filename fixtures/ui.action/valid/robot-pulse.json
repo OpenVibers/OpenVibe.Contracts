@@ -1,0 +1,6 @@
+{
+  "kind": "robot.drive_pulse",
+  "product": "bot",
+  "direction": "forward",
+  "ms": 600
+}

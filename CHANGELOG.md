@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.411.0 — 2026-11-11
+
+- Add `ui.element@1`: a look from OpenVibe.Design's components and the theme's tokens, a recipe (triggers, conditions,
+  actions), the capabilities the element declares, an optional mod reference (id, version, digest) and its sharing.
+  The store assigns the id and revision; a draft has neither.
+- Add `ui.trigger@1` (press, hold, double-press, key, gamepad, chat command and text, follow, tip, AI Moment, Rundown
+  topic, timer, schedule, robot telemetry and event, stream start and end, viewer count, another element's event) and
+  `ui.action@1` (robot, chat, screen, stream, AI, Actor, webhook and tip-goal actions), each action carrying the product
+  that authorises it. `ui.action@1`'s `$defs.capability` is the one list an element's `capabilities` draws from.
+- Add `ui.element-state@1`: the element's own store (counters, scores, lists), with a revision that grows per accepted
+  change and values that are booleans, numbers, short strings or lists of them, never objects.
+- Add `live.element.pressed@1` and `live.element.state@1`: a press with the presser's public name and the trigger, and
+  the store with its revision, written by Live.
+- Fixtures cover a gallery dance button, a chat counter, a mod element, trigger and action variants, the state, and
+  both events; `test/elements.test.js` holds the capability list to the action catalog, each kind to its product, and
+  the recipe to the element's declared capabilities.
+
+## 0.410.0 — 2026-11-11 (reserved, not released)
+
+- Reserved for the stage-0 layouts pull request (`ui.surface@1`, `ui.layout@1`, `ui.layout-request@1`,
+  `ui.layout-suggestion@1` and `network.layout.changed@1`, OpenVibers/OpenVibe.Contracts#455). Those contracts are not
+  released by this entry; it keeps the changelog's minor sequence while that pull request is open, and its own entry
+  replaces this one at merge.
+
 ## 0.409.0 — 2026-11-11
 
 - Define machine access requests, grants and signed token claims; the agent directory, A2A tasks and results; five Network events and four registration and relay capabilities.

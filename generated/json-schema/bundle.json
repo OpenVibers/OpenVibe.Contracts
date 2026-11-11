@@ -130805,6 +130805,1660 @@
           }
         }
       }
+    },
+    "ui.action": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/action.v1.json",
+        "title": "UiAction",
+        "description": "ui.action@1: one action an Element's recipe may request, from the fixed catalog, with the product that authorises it. An element never has a power of its own: the host asks the product named here, and that product checks the presser's role, the element's declared capability, its cooldown and cost, and its own owner limits before it does anything. kind is also the capability id an element declares in ui.element@1, and product is fixed by kind: bot for robot.drive_pulse, robot.head_preset, robot.headlight, robot.say and robot.macro; chat for chat.message, chat.pin and chat.poll; live for the screen, stream and webhook actions; ai for ai.ask; actor for actor.task; billing for money.tip_goal. A robot action is a request through Bot's existing command path: turns, Stop, the e-stop and owner takeover are never bypassed. Money never moves from an action without Billing's own confirmation.",
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "direction",
+              "ms"
+            ],
+            "description": "Drive the robot for a moment, then stop. The duration is bounded by Bot's own max_command_ms and the owner's limits for the presser's role.",
+            "properties": {
+              "kind": {
+                "const": "robot.drive_pulse"
+              },
+              "product": {
+                "const": "bot"
+              },
+              "direction": {
+                "enum": [
+                  "forward",
+                  "back",
+                  "left",
+                  "right",
+                  "spin_left",
+                  "spin_right"
+                ]
+              },
+              "ms": {
+                "type": "integer",
+                "minimum": 50,
+                "maximum": 3000
+              },
+              "speed": {
+                "type": "number",
+                "minimum": 0.1,
+                "maximum": 1,
+                "description": "Fraction of the robot's allowed speed; omitted means the owner's default for the role."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "preset"
+            ],
+            "description": "Take the robot's head to a preset the robot profile defines.",
+            "properties": {
+              "kind": {
+                "const": "robot.head_preset"
+              },
+              "product": {
+                "const": "bot"
+              },
+              "preset": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "A preset name from the robot's profile; Bot refuses one the robot does not have."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "on"
+            ],
+            "description": "Turn the robot's headlight on or off. Bot refuses it unless the robot's profile has the headlight capability.",
+            "properties": {
+              "kind": {
+                "const": "robot.headlight"
+              },
+              "product": {
+                "const": "bot"
+              },
+              "on": {
+                "type": "boolean"
+              },
+              "brightness": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "colour": {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "text"
+            ],
+            "description": "Speak a line through the robot. Text goes through the existing content checks and Bot's own speak limits.",
+            "properties": {
+              "kind": {
+                "const": "robot.say"
+              },
+              "product": {
+                "const": "bot"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "voice": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "A voice from the robot's own voice list; omitted means the profile default."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "macro"
+            ],
+            "description": "Replay a recorded robot macro through the safe command path, with its own deadline. Macros are stage 4 of Elements; a stage-1 product refuses this kind as not yet supported.",
+            "properties": {
+              "kind": {
+                "const": "robot.macro"
+              },
+              "product": {
+                "const": "bot"
+              },
+              "macro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "text"
+            ],
+            "description": "Send a chat message as the channel's bot. Text goes through Chat's content checks and rate limits.",
+            "properties": {
+              "kind": {
+                "const": "chat.message"
+              },
+              "product": {
+                "const": "chat"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "source"
+            ],
+            "properties": {
+              "kind": {
+                "const": "chat.pin"
+              },
+              "product": {
+                "const": "chat"
+              },
+              "source": {
+                "enum": [
+                  "trigger",
+                  "latest"
+                ],
+                "description": "trigger pins the message that caused this action; latest pins the newest chat message."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "question",
+              "options"
+            ],
+            "properties": {
+              "kind": {
+                "const": "chat.poll"
+              },
+              "product": {
+                "const": "chat"
+              },
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 10,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "title"
+            ],
+            "properties": {
+              "kind": {
+                "const": "screen.alert"
+              },
+              "product": {
+                "const": "live"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "name"
+            ],
+            "properties": {
+              "kind": {
+                "const": "screen.animation"
+              },
+              "product": {
+                "const": "live"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "An animation the page or overlay has; an unknown name is refused, never fetched."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product"
+            ],
+            "properties": {
+              "kind": {
+                "const": "screen.confetti"
+              },
+              "product": {
+                "const": "live"
+              },
+              "intensity": {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "sound"
+            ],
+            "properties": {
+              "kind": {
+                "const": "screen.sound"
+              },
+              "product": {
+                "const": "live"
+              },
+              "sound": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80,
+                "description": "A sound from the streamer's own sound list; Live never fetches a URL for it."
+              },
+              "volume": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "text",
+              "voice"
+            ],
+            "properties": {
+              "kind": {
+                "const": "screen.tts"
+              },
+              "product": {
+                "const": "live"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "voice": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "A voice from the streamer's own voice list."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "key",
+              "by"
+            ],
+            "description": "Move one of the element's counters. The host applies it to the element's own state and Live broadcasts the new state.",
+            "properties": {
+              "kind": {
+                "const": "screen.counter"
+              },
+              "product": {
+                "const": "live"
+              },
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,31}$"
+              },
+              "by": {
+                "type": "integer",
+                "minimum": -1000,
+                "maximum": 1000
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "key",
+              "value"
+            ],
+            "description": "Set one of the element's state values. Lists and objects are not state values: a value is a number, a string or a boolean.",
+            "properties": {
+              "kind": {
+                "const": "screen.state"
+              },
+              "product": {
+                "const": "live"
+              },
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,31}$"
+              },
+              "value": {
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "element",
+              "visible"
+            ],
+            "properties": {
+              "kind": {
+                "const": "screen.visibility"
+              },
+              "product": {
+                "const": "live"
+              },
+              "element": {
+                "type": "string",
+                "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "visible": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "scene"
+            ],
+            "properties": {
+              "kind": {
+                "const": "screen.scene"
+              },
+              "product": {
+                "const": "live"
+              },
+              "scene": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "A scene the layout has; an unknown scene is refused."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product"
+            ],
+            "properties": {
+              "kind": {
+                "const": "stream.clip"
+              },
+              "product": {
+                "const": "live"
+              },
+              "seconds": {
+                "type": "integer",
+                "minimum": 5,
+                "maximum": 30,
+                "description": "How far back the clip starts, at most 30 seconds."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product"
+            ],
+            "properties": {
+              "kind": {
+                "const": "stream.moment"
+              },
+              "product": {
+                "const": "live"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "title"
+            ],
+            "properties": {
+              "kind": {
+                "const": "stream.title"
+              },
+              "product": {
+                "const": "live"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 140
+              }
+            },
+            "description": "Change the stream title. Live allows it only for the channel's owner, whatever the element's trigger says."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "category"
+            ],
+            "properties": {
+              "kind": {
+                "const": "stream.category"
+              },
+              "product": {
+                "const": "live"
+              },
+              "category": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            },
+            "description": "Change the stream category. Live allows it only for the channel's owner."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "prompt"
+            ],
+            "description": "Ask an AI model through Exchange's catalogue, with the element's budget and a receipt. Stage 2 of Elements; a stage-1 product refuses it as not yet supported.",
+            "properties": {
+              "kind": {
+                "const": "ai.ask"
+              },
+              "product": {
+                "const": "ai"
+              },
+              "prompt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "max_cost_usd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "task"
+            ],
+            "description": "Hand a task to an Actor agent. Stage 2 of Elements; a stage-1 product refuses it as not yet supported.",
+            "properties": {
+              "kind": {
+                "const": "actor.task"
+              },
+              "product": {
+                "const": "actor"
+              },
+              "task": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8000
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "endpoint"
+            ],
+            "description": "Call one of the streamer's own webhook endpoints. The element names the endpoint the streamer listed; it never carries a URL, and the payload never carries a viewer's data. Stage 2 of Elements; a stage-1 product refuses it as not yet supported.",
+            "properties": {
+              "kind": {
+                "const": "webhook.call"
+              },
+              "product": {
+                "const": "live"
+              },
+              "endpoint": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "product",
+              "goal"
+            ],
+            "description": "Update a tip goal's display. Money never moves here; Billing's own sheet confirms any charge. Stage 4 of Elements.",
+            "properties": {
+              "kind": {
+                "const": "money.tip_goal"
+              },
+              "product": {
+                "const": "billing"
+              },
+              "goal": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          }
+        ],
+        "$defs": {
+          "capability": {
+            "description": "The action kinds an Element may declare in ui.element@1 capabilities. One id, one product: the host routes an action only to the product that owns it.",
+            "enum": [
+              "robot.drive_pulse",
+              "robot.head_preset",
+              "robot.headlight",
+              "robot.say",
+              "robot.macro",
+              "chat.message",
+              "chat.pin",
+              "chat.poll",
+              "screen.alert",
+              "screen.animation",
+              "screen.confetti",
+              "screen.sound",
+              "screen.tts",
+              "screen.counter",
+              "screen.state",
+              "screen.visibility",
+              "screen.scene",
+              "stream.clip",
+              "stream.moment",
+              "stream.title",
+              "stream.category",
+              "ai.ask",
+              "actor.task",
+              "webhook.call",
+              "money.tip_goal"
+            ]
+          }
+        }
+      }
+    },
+    "ui.element": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/element.v1.json",
+        "title": "UiElement",
+        "description": "ui.element@1: an Element people make and place on a surface: a look, a behaviour and, only when a recipe is not enough, a mod. LOOK draws from OpenVibe.Design's components and the theme's tokens, so it follows the person's theme, the seasons and dark/light; it carries no markup and no URL. RECIPE is data only: one or more triggers from ui.trigger@1, the conditions that decide who may fire it and what it costs, and one or more actions from ui.action@1, checked against CAPABILITIES. A capability is an action kind the element declares; the host refuses an action the element did not declare, and the product named by the action still checks the presser's role, the cooldown, the cost and its own limits. MOD is an optional reference to a code module (id, version and digest) for the stage where a recipe is not enough; the module never adds a power. Conditions use channel points only in stage 1: no Vibes, no money, and Billing still confirms any charge itself. The id and revision are assigned by the store; a draft has neither.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "author",
+          "sharing",
+          "look",
+          "recipe",
+          "capabilities"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Assigned by the store when the element is saved; absent in a draft."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Assigned by the store; every saved change moves it by one."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "author": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "subject": {
+                "$ref": "../identity/subject-ref.v1.json"
+              }
+            },
+            "description": "The author's display name and, for a private or link element, the subject. A gallery or copy answer carries the display name only, never the account."
+          },
+          "sharing": {
+            "enum": [
+              "private",
+              "link",
+              "gallery"
+            ]
+          },
+          "look": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "component",
+              "label"
+            ],
+            "properties": {
+              "component": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,63}$",
+                "description": "An OpenVibe.Design component name (design.component@1), e.g. button or meter. A name the page does not have is refused, never fetched."
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "The words on the element, e.g. Make it dance."
+              },
+              "icon": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{1,31}$",
+                "description": "A glyph name from the design icon set."
+              },
+              "props": {
+                "type": "object",
+                "maxProperties": 20,
+                "propertyNames": {
+                  "pattern": "^[a-z][a-zA-Z0-9]{0,31}$"
+                },
+                "additionalProperties": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    }
+                  ]
+                },
+                "description": "The design component's own props (the sliders the editor shows). Numbers, strings and booleans only; no nesting."
+              },
+              "style": {
+                "$ref": "#/$defs/style"
+              }
+            }
+          },
+          "recipe": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "triggers",
+              "actions"
+            ],
+            "properties": {
+              "triggers": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": {
+                  "$ref": "trigger.v1.json"
+                }
+              },
+              "conditions": {
+                "$ref": "#/$defs/conditions"
+              },
+              "actions": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 16,
+                "items": {
+                  "$ref": "action.v1.json"
+                }
+              }
+            }
+          },
+          "capabilities": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "action.v1.json#/$defs/capability"
+            },
+            "description": "The action kinds this element may request. Every action in the recipe must be declared here; the host refuses the rest."
+          },
+          "initial_state": {
+            "$ref": "element-state.v1.json#/$defs/values",
+            "description": "The element's state before anything runs; the counter starts at 0, never at a value the element did not declare."
+          },
+          "mod": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "version",
+              "sha256"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^mod_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "capabilities": {
+                "type": "array",
+                "maxItems": 32,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "action.v1.json#/$defs/capability"
+                },
+                "description": "The subset of the element's capabilities the module itself may request; omitted means the element's declared capabilities, and a product may grant fewer."
+              }
+            },
+            "description": "A code module for an element whose recipe is not enough (stage 3). It runs sandboxed; the reference is data, and the host checks every request the module makes against the element's capabilities."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "style": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tint": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,39}$",
+                "description": "A theme token, never a colour: the theme decides what it is, so contrast follows the theme."
+              },
+              "shape": {
+                "enum": [
+                  "round",
+                  "pill",
+                  "square"
+                ]
+              },
+              "opacity": {
+                "type": "number",
+                "minimum": 0.4,
+                "maximum": 1
+              },
+              "show_label": {
+                "type": "boolean"
+              }
+            }
+          },
+          "conditions": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "role": {
+                "enum": [
+                  "everyone",
+                  "follower",
+                  "subscriber",
+                  "vip",
+                  "operator",
+                  "owner"
+                ],
+                "description": "Who may fire it. A higher role admits the lower ones where the product says so (an operator is admitted to subscriber-only); owner is the channel's owner alone. Default everyone."
+              },
+              "cost": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "points"
+                ],
+                "properties": {
+                  "points": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000
+                  }
+                },
+                "description": "Channel points the presser spends, from Live's points. Stage 1 has no other currency, and an element never charges money."
+              },
+              "cooldown": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "per_person_seconds": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "overall_seconds": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 86400
+                  }
+                },
+                "description": "How long the same person must wait, and how long everybody must wait, before it can fire again."
+              },
+              "daily_cap": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "per_person": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  },
+                  "overall": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000
+                  }
+                },
+                "description": "The most times it may fire in a UTC day, per person and for everyone."
+              },
+              "live_only": {
+                "type": "boolean",
+                "description": "When true the element fires only while the channel is live."
+              },
+              "robot_turn_only": {
+                "type": "boolean",
+                "description": "When true a robot action is requested only while the presser has the robot's turn; Bot still decides."
+              },
+              "chance": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "one_in"
+                ],
+                "properties": {
+                  "one_in": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000
+                  }
+                },
+                "description": "Fire only one time in N. The host draws the lot, so a refused draw costs nothing."
+              }
+            }
+          }
+        }
+      }
+    },
+    "ui.element-state": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/element-state.v1.json",
+        "title": "UiElementState",
+        "description": "ui.element-state@1: the small store an Element keeps for itself (counters, scores, lists, a wheel's entries), as Live broadcasts it to everyone watching and as a read returns it. CHANNEL and ELEMENT_ID name the element instance, REVISION grows by one with each accepted change so a late frame never overwrites a newer one, and VALUES is the store itself: at most 32 keys, each a boolean, a number, a short string or a list of those. It is state, not code: no objects, no markup, no URL and no account data, which keeps a shared element's state safe to render for every viewer.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "channel",
+          "element_id",
+          "revision",
+          "values",
+          "updated_at"
+        ],
+        "properties": {
+          "channel": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$",
+            "description": "The Live channel's username (its slug)."
+          },
+          "element_id": {
+            "type": "string",
+            "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "values": {
+            "$ref": "#/$defs/values"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "values": {
+            "type": "object",
+            "maxProperties": 32,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]{0,31}$"
+            },
+            "additionalProperties": {
+              "$ref": "#/$defs/value"
+            },
+            "description": "The element's own store. A key is lower-case and 32 characters at most; a value is a boolean, a number, a string of 200 characters at most or a list of those."
+          },
+          "value": {
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "array",
+                "maxItems": 64,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ui.trigger": {
+      "version": "1.0.0",
+      "owner": "contracts",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ui/trigger.v1.json",
+        "title": "UiTrigger",
+        "description": "ui.trigger@1: one trigger an Element's recipe listens for, from the fixed catalog. kind says what happened: a viewer pressing, holding or double-pressing the element, a key or gamepad binding, a chat command or text, a follow, a tip, an AI Moment, a Rundown topic, a timer or schedule, robot telemetry or an event, the stream starting or ending, a viewer-count crossing or another element's event. The fields a kind needs are the only fields it accepts. A trigger is data: it never names code or a URL, and a product may refuse a kind it does not offer yet. Stage 1 of Elements uses press and chat_command; the rest are declared here so a stage-2 element and the editor speak one language.",
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "press"
+              }
+            },
+            "description": "The element itself was pressed. This is the Viewer Deck's button."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "ms"
+            ],
+            "properties": {
+              "kind": {
+                "const": "hold"
+              },
+              "ms": {
+                "type": "integer",
+                "minimum": 300,
+                "maximum": 10000
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "double_press"
+              },
+              "within_ms": {
+                "type": "integer",
+                "minimum": 100,
+                "maximum": 2000,
+                "description": "The longest gap between the two presses; 400 by default."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "key"
+            ],
+            "properties": {
+              "kind": {
+                "const": "key"
+              },
+              "key": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9+_.-]{1,40}$"
+              },
+              "modifiers": {
+                "type": "array",
+                "maxItems": 4,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "ctrl",
+                    "alt",
+                    "shift",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "button"
+            ],
+            "properties": {
+              "kind": {
+                "const": "gamepad"
+              },
+              "button": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_.-]{0,39}$"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7,
+                "description": "Which connected pad; omitted means any."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "command"
+            ],
+            "properties": {
+              "kind": {
+                "const": "chat_command"
+              },
+              "command": {
+                "type": "string",
+                "pattern": "^![a-z0-9_-]{1,32}$",
+                "description": "The command without arguments, lower case, e.g. !dance."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "words"
+            ],
+            "properties": {
+              "kind": {
+                "const": "chat_text"
+              },
+              "words": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 16,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                }
+              },
+              "mode": {
+                "enum": [
+                  "any",
+                  "all"
+                ],
+                "description": "any (default) matches one of the words; all matches every one."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "follow"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "tip"
+              },
+              "min": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "The smallest tip, in Vibes, that fires the trigger; omitted means any tip."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "ai_moment"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "rundown_topic"
+              },
+              "words": {
+                "type": "array",
+                "maxItems": 8,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "description": "Optional words the topic has to mention; omitted means any topic."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "every_seconds"
+            ],
+            "properties": {
+              "kind": {
+                "const": "timer"
+              },
+              "every_seconds": {
+                "type": "integer",
+                "minimum": 5,
+                "maximum": 86400
+              },
+              "start": {
+                "enum": [
+                  "live",
+                  "always"
+                ],
+                "description": "live (default) counts only while the channel is live; always counts from the element being active."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "cron",
+              "timezone"
+            ],
+            "properties": {
+              "kind": {
+                "const": "schedule"
+              },
+              "cron": {
+                "type": "string",
+                "pattern": "^[0-9*/, -]{9,80}$",
+                "description": "A five-field cron in the person's timezone."
+              },
+              "timezone": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "metric",
+              "op",
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "const": "robot_telemetry"
+              },
+              "metric": {
+                "enum": [
+                  "battery_percent",
+                  "latency_ms",
+                  "stuck",
+                  "temperature_c"
+                ]
+              },
+              "op": {
+                "enum": [
+                  "lt",
+                  "gt"
+                ]
+              },
+              "value": {
+                "type": "number"
+              },
+              "for_seconds": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3600,
+                "description": "How long the condition must hold; 0 (default) means at once."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "event"
+            ],
+            "properties": {
+              "kind": {
+                "const": "robot_event"
+              },
+              "event": {
+                "enum": [
+                  "estop",
+                  "stopped",
+                  "disconnected",
+                  "command_refused",
+                  "button"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "stream_start"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "stream_end"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "op",
+              "count"
+            ],
+            "properties": {
+              "kind": {
+                "const": "viewer_count"
+              },
+              "op": {
+                "enum": [
+                  "above",
+                  "below"
+                ]
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "element_id"
+            ],
+            "properties": {
+              "kind": {
+                "const": "element_event"
+              },
+              "element_id": {
+                "type": "string",
+                "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "event": {
+                "enum": [
+                  "pressed",
+                  "state",
+                  "shown"
+                ],
+                "description": "pressed (default) fires after that element ran; state and shown fire when Live broadcasts them."
+              }
+            }
+          }
+        ]
+      }
+    },
+    "live.element.pressed": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.element.pressed.v1.json",
+        "title": "LiveElementPressedPayload",
+        "description": "live.element.pressed v1 (OpenVibe.Live server/elements): a viewer's element press was accepted and ran. It carries the public facts the stream should see: the channel, the element's id and name, the presser's public name and subject, the trigger that fired, the channel points it cost and the element-state revision it left behind. It never carries the presser's email, address, account balance or anything private; a refused press does not produce it. Envelope: subject { type: element, id: el_… }, actor the presser's subject, visibility public, priority low. Also written to the channel's AI timeline as a moment, so the stream's own timeline can cite 'chat made the robot dance'.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "channel",
+          "element_id",
+          "element_name",
+          "presser",
+          "presser_name",
+          "trigger",
+          "at"
+        ],
+        "properties": {
+          "channel": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "username",
+              "display_name"
+            ],
+            "properties": {
+              "username": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+              },
+              "display_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            },
+            "description": "The public channel facts (the channel page is public already)."
+          },
+          "element_id": {
+            "type": "string",
+            "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "element_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "presser": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "presser_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "The display name the stream shows, never an email or an account id."
+          },
+          "trigger": {
+            "$ref": "../../ui/trigger.v1.json"
+          },
+          "points_spent": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Channel points the press cost; 0 when it was free."
+          },
+          "state_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The element-state revision after the actions ran; 0 when the element has no state yet."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "live.element.state": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/live.element.state.v1.json",
+        "title": "LiveElementStatePayload",
+        "description": "live.element.state v1 (OpenVibe.Live server/elements): an element's own store changed, broadcast to everyone watching through Live's existing events path. Same fields as ui.element-state@1: the channel, the element instance, a revision that grows by one per accepted change, the values themselves and when. It is public state (a counter, a score, a wheel's entries), never the presser's data: a value may not be an object, a markup string or a URL, and the payload carries no account.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "channel",
+          "element_id",
+          "revision",
+          "values",
+          "updated_at"
+        ],
+        "properties": {
+          "channel": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "username",
+              "display_name"
+            ],
+            "properties": {
+              "username": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$"
+              },
+              "display_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            }
+          },
+          "element_id": {
+            "type": "string",
+            "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "values": {
+            "$ref": "../../ui/element-state.v1.json#/$defs/values"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
     }
   }
 }

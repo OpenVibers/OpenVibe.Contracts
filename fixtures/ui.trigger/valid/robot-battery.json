@@ -1,0 +1,7 @@
+{
+  "kind": "robot_telemetry",
+  "metric": "battery_percent",
+  "op": "lt",
+  "value": 20,
+  "for_seconds": 30
+}

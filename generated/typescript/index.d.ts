@@ -338191,3 +338191,783 @@ export interface NetworkAgentTaskUpdatedPayload {
   status: "pending" | "running" | "completed" | "failed" | "cancelled";
   at: string;
 }
+
+/** ui.action@1.0.0 (owner: contracts) */
+/**
+ * ui.action@1: one action an Element's recipe may request, from the fixed catalog, with the product that authorises it. An element never has a power of its own: the host asks the product named here, and that product checks the presser's role, the element's declared capability, its cooldown and cost, and its own owner limits before it does anything. kind is also the capability id an element declares in ui.element@1, and product is fixed by kind: bot for robot.drive_pulse, robot.head_preset, robot.headlight, robot.say and robot.macro; chat for chat.message, chat.pin and chat.poll; live for the screen, stream and webhook actions; ai for ai.ask; actor for actor.task; billing for money.tip_goal. A robot action is a request through Bot's existing command path: turns, Stop, the e-stop and owner takeover are never bypassed. Money never moves from an action without Billing's own confirmation.
+ */
+export type UiAction =
+  | {
+      kind: "robot.drive_pulse";
+      product: "bot";
+      direction: "forward" | "back" | "left" | "right" | "spin_left" | "spin_right";
+      ms: number;
+      /**
+       * Fraction of the robot's allowed speed; omitted means the owner's default for the role.
+       */
+      speed?: number;
+    }
+  | {
+      kind: "robot.head_preset";
+      product: "bot";
+      /**
+       * A preset name from the robot's profile; Bot refuses one the robot does not have.
+       */
+      preset: string;
+    }
+  | {
+      kind: "robot.headlight";
+      product: "bot";
+      on: boolean;
+      brightness?: number;
+      colour?: string;
+    }
+  | {
+      kind: "robot.say";
+      product: "bot";
+      text: string;
+      /**
+       * A voice from the robot's own voice list; omitted means the profile default.
+       */
+      voice?: string;
+    }
+  | {
+      kind: "robot.macro";
+      product: "bot";
+      macro: string;
+    }
+  | {
+      kind: "chat.message";
+      product: "chat";
+      text: string;
+    }
+  | {
+      kind: "chat.pin";
+      product: "chat";
+      /**
+       * trigger pins the message that caused this action; latest pins the newest chat message.
+       */
+      source: "trigger" | "latest";
+    }
+  | {
+      kind: "chat.poll";
+      product: "chat";
+      question: string;
+      /**
+       * @minItems 2
+       * @maxItems 10
+       */
+      options:
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string];
+    }
+  | {
+      kind: "screen.alert";
+      product: "live";
+      title: string;
+      text?: string;
+    }
+  | {
+      kind: "screen.animation";
+      product: "live";
+      /**
+       * An animation the page or overlay has; an unknown name is refused, never fetched.
+       */
+      name: string;
+    }
+  | {
+      kind: "screen.confetti";
+      product: "live";
+      intensity?: "low" | "medium" | "high";
+    }
+  | {
+      kind: "screen.sound";
+      product: "live";
+      /**
+       * A sound from the streamer's own sound list; Live never fetches a URL for it.
+       */
+      sound: string;
+      volume?: number;
+    }
+  | {
+      kind: "screen.tts";
+      product: "live";
+      text: string;
+      /**
+       * A voice from the streamer's own voice list.
+       */
+      voice: string;
+    }
+  | {
+      kind: "screen.counter";
+      product: "live";
+      key: string;
+      by: number;
+    }
+  | {
+      kind: "screen.state";
+      product: "live";
+      key: string;
+      value: boolean | number | string;
+    }
+  | {
+      kind: "screen.visibility";
+      product: "live";
+      element: string;
+      visible: boolean;
+    }
+  | {
+      kind: "screen.scene";
+      product: "live";
+      /**
+       * A scene the layout has; an unknown scene is refused.
+       */
+      scene: string;
+    }
+  | {
+      kind: "stream.clip";
+      product: "live";
+      /**
+       * How far back the clip starts, at most 30 seconds.
+       */
+      seconds?: number;
+    }
+  | {
+      kind: "stream.moment";
+      product: "live";
+      label?: string;
+    }
+  | {
+      kind: "stream.title";
+      product: "live";
+      title: string;
+    }
+  | {
+      kind: "stream.category";
+      product: "live";
+      category: string;
+    }
+  | {
+      kind: "ai.ask";
+      product: "ai";
+      prompt: string;
+      model?: string;
+      max_cost_usd?: number;
+    }
+  | {
+      kind: "actor.task";
+      product: "actor";
+      task: string;
+    }
+  | {
+      kind: "webhook.call";
+      product: "live";
+      endpoint: string;
+    }
+  | {
+      kind: "money.tip_goal";
+      product: "billing";
+      goal: string;
+    };
+
+/** ui.element@1.0.0 (owner: contracts) */
+/**
+ * ui.element@1: an Element people make and place on a surface: a look, a behaviour and, only when a recipe is not enough, a mod. LOOK draws from OpenVibe.Design's components and the theme's tokens, so it follows the person's theme, the seasons and dark/light; it carries no markup and no URL. RECIPE is data only: one or more triggers from ui.trigger@1, the conditions that decide who may fire it and what it costs, and one or more actions from ui.action@1, checked against CAPABILITIES. A capability is an action kind the element declares; the host refuses an action the element did not declare, and the product named by the action still checks the presser's role, the cooldown, the cost and its own limits. MOD is an optional reference to a code module (id, version and digest) for the stage where a recipe is not enough; the module never adds a power. Conditions use channel points only in stage 1: no Vibes, no money, and Billing still confirms any charge itself. The id and revision are assigned by the store; a draft has neither.
+ */
+export interface UiElement {
+  /**
+   * Assigned by the store when the element is saved; absent in a draft.
+   */
+  id?: string;
+  /**
+   * Assigned by the store; every saved change moves it by one.
+   */
+  revision?: number;
+  name: string;
+  description?: string;
+  /**
+   * The author's display name and, for a private or link element, the subject. A gallery or copy answer carries the display name only, never the account.
+   */
+  author: {
+    name: string;
+    subject?: SubjectRef;
+  };
+  sharing: "private" | "link" | "gallery";
+  look: {
+    /**
+     * An OpenVibe.Design component name (design.component@1), e.g. button or meter. A name the page does not have is refused, never fetched.
+     */
+    component: string;
+    /**
+     * The words on the element, e.g. Make it dance.
+     */
+    label: string;
+    /**
+     * A glyph name from the design icon set.
+     */
+    icon?: string;
+    /**
+     * The design component's own props (the sliders the editor shows). Numbers, strings and booleans only; no nesting.
+     */
+    props?: {
+      [k: string]: (boolean | number | string) | undefined;
+    };
+    style?: {
+      /**
+       * A theme token, never a colour: the theme decides what it is, so contrast follows the theme.
+       */
+      tint?: string;
+      shape?: "round" | "pill" | "square";
+      opacity?: number;
+      show_label?: boolean;
+    };
+  };
+  recipe: {
+    /**
+     * @minItems 1
+     * @maxItems 8
+     */
+    triggers:
+      | [UiTrigger]
+      | [UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger]
+      | [UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger, UiTrigger];
+    conditions?: {
+      /**
+       * Who may fire it. A higher role admits the lower ones where the product says so (an operator is admitted to subscriber-only); owner is the channel's owner alone. Default everyone.
+       */
+      role?: "everyone" | "follower" | "subscriber" | "vip" | "operator" | "owner";
+      /**
+       * Channel points the presser spends, from Live's points. Stage 1 has no other currency, and an element never charges money.
+       */
+      cost?: {
+        points: number;
+      };
+      /**
+       * How long the same person must wait, and how long everybody must wait, before it can fire again.
+       */
+      cooldown?: {
+        per_person_seconds?: number;
+        overall_seconds?: number;
+      };
+      /**
+       * The most times it may fire in a UTC day, per person and for everyone.
+       */
+      daily_cap?: {
+        per_person?: number;
+        overall?: number;
+      };
+      /**
+       * When true the element fires only while the channel is live.
+       */
+      live_only?: boolean;
+      /**
+       * When true a robot action is requested only while the presser has the robot's turn; Bot still decides.
+       */
+      robot_turn_only?: boolean;
+      /**
+       * Fire only one time in N. The host draws the lot, so a refused draw costs nothing.
+       */
+      chance?: {
+        one_in: number;
+      };
+    };
+    /**
+     * @minItems 1
+     * @maxItems 16
+     */
+    actions:
+      | [UiAction]
+      | [UiAction, UiAction]
+      | [UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction, UiAction]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ]
+      | [
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction,
+          UiAction
+        ];
+  };
+  /**
+   * The action kinds this element may request. Every action in the recipe must be declared here; the host refuses the rest.
+   *
+   * @minItems 1
+   * @maxItems 32
+   */
+  capabilities: [
+    (
+      | "robot.drive_pulse"
+      | "robot.head_preset"
+      | "robot.headlight"
+      | "robot.say"
+      | "robot.macro"
+      | "chat.message"
+      | "chat.pin"
+      | "chat.poll"
+      | "screen.alert"
+      | "screen.animation"
+      | "screen.confetti"
+      | "screen.sound"
+      | "screen.tts"
+      | "screen.counter"
+      | "screen.state"
+      | "screen.visibility"
+      | "screen.scene"
+      | "stream.clip"
+      | "stream.moment"
+      | "stream.title"
+      | "stream.category"
+      | "ai.ask"
+      | "actor.task"
+      | "webhook.call"
+      | "money.tip_goal"
+    ),
+    ...(
+      | "robot.drive_pulse"
+      | "robot.head_preset"
+      | "robot.headlight"
+      | "robot.say"
+      | "robot.macro"
+      | "chat.message"
+      | "chat.pin"
+      | "chat.poll"
+      | "screen.alert"
+      | "screen.animation"
+      | "screen.confetti"
+      | "screen.sound"
+      | "screen.tts"
+      | "screen.counter"
+      | "screen.state"
+      | "screen.visibility"
+      | "screen.scene"
+      | "stream.clip"
+      | "stream.moment"
+      | "stream.title"
+      | "stream.category"
+      | "ai.ask"
+      | "actor.task"
+      | "webhook.call"
+      | "money.tip_goal"
+    )[]
+  ];
+  /**
+   * The element's state before anything runs; the counter starts at 0, never at a value the element did not declare.
+   */
+  initial_state?: {
+    [k: string]: (boolean | number | string | (number | string)[]) | undefined;
+  };
+  /**
+   * A code module for an element whose recipe is not enough (stage 3). It runs sandboxed; the reference is data, and the host checks every request the module makes against the element's capabilities.
+   */
+  mod?: {
+    id: string;
+    version: string;
+    sha256: string;
+    /**
+     * The subset of the element's capabilities the module itself may request; omitted means the element's declared capabilities, and a product may grant fewer.
+     *
+     * @maxItems 32
+     */
+    capabilities?: (
+      | "robot.drive_pulse"
+      | "robot.head_preset"
+      | "robot.headlight"
+      | "robot.say"
+      | "robot.macro"
+      | "chat.message"
+      | "chat.pin"
+      | "chat.poll"
+      | "screen.alert"
+      | "screen.animation"
+      | "screen.confetti"
+      | "screen.sound"
+      | "screen.tts"
+      | "screen.counter"
+      | "screen.state"
+      | "screen.visibility"
+      | "screen.scene"
+      | "stream.clip"
+      | "stream.moment"
+      | "stream.title"
+      | "stream.category"
+      | "ai.ask"
+      | "actor.task"
+      | "webhook.call"
+      | "money.tip_goal"
+    )[];
+  };
+  created_at?: string;
+  updated_at?: string;
+}
+
+/** ui.element-state@1.0.0 (owner: contracts) */
+/**
+ * ui.element-state@1: the small store an Element keeps for itself (counters, scores, lists, a wheel's entries), as Live broadcasts it to everyone watching and as a read returns it. CHANNEL and ELEMENT_ID name the element instance, REVISION grows by one with each accepted change so a late frame never overwrites a newer one, and VALUES is the store itself: at most 32 keys, each a boolean, a number, a short string or a list of those. It is state, not code: no objects, no markup, no URL and no account data, which keeps a shared element's state safe to render for every viewer.
+ */
+export interface UiElementState {
+  /**
+   * The Live channel's username (its slug).
+   */
+  channel: string;
+  element_id: string;
+  revision: number;
+  /**
+   * The element's own store. A key is lower-case and 32 characters at most; a value is a boolean, a number, a string of 200 characters at most or a list of those.
+   */
+  values: {
+    [k: string]: (boolean | number | string | (number | string)[]) | undefined;
+  };
+  updated_at: string;
+}
+
+/** ui.trigger@1.0.0 (owner: contracts) */
+/**
+ * ui.trigger@1: one trigger an Element's recipe listens for, from the fixed catalog. kind says what happened: a viewer pressing, holding or double-pressing the element, a key or gamepad binding, a chat command or text, a follow, a tip, an AI Moment, a Rundown topic, a timer or schedule, robot telemetry or an event, the stream starting or ending, a viewer-count crossing or another element's event. The fields a kind needs are the only fields it accepts. A trigger is data: it never names code or a URL, and a product may refuse a kind it does not offer yet. Stage 1 of Elements uses press and chat_command; the rest are declared here so a stage-2 element and the editor speak one language.
+ */
+export type UiTrigger =
+  | {
+      kind: "press";
+    }
+  | {
+      kind: "hold";
+      ms: number;
+    }
+  | {
+      kind: "double_press";
+      /**
+       * The longest gap between the two presses; 400 by default.
+       */
+      within_ms?: number;
+    }
+  | {
+      kind: "key";
+      key: string;
+      /**
+       * @maxItems 4
+       */
+      modifiers?:
+        | []
+        | ["ctrl" | "alt" | "shift" | "meta"]
+        | ["ctrl" | "alt" | "shift" | "meta", "ctrl" | "alt" | "shift" | "meta"]
+        | ["ctrl" | "alt" | "shift" | "meta", "ctrl" | "alt" | "shift" | "meta", "ctrl" | "alt" | "shift" | "meta"]
+        | [
+            "ctrl" | "alt" | "shift" | "meta",
+            "ctrl" | "alt" | "shift" | "meta",
+            "ctrl" | "alt" | "shift" | "meta",
+            "ctrl" | "alt" | "shift" | "meta"
+          ];
+    }
+  | {
+      kind: "gamepad";
+      button: string;
+      /**
+       * Which connected pad; omitted means any.
+       */
+      index?: number;
+    }
+  | {
+      kind: "chat_command";
+      /**
+       * The command without arguments, lower case, e.g. !dance.
+       */
+      command: string;
+    }
+  | {
+      kind: "chat_text";
+      /**
+       * @minItems 1
+       * @maxItems 16
+       */
+      words:
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ]
+        | [
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string
+          ];
+      /**
+       * any (default) matches one of the words; all matches every one.
+       */
+      mode?: "any" | "all";
+    }
+  | {
+      kind: "follow";
+    }
+  | {
+      kind: "tip";
+      /**
+       * The smallest tip, in Vibes, that fires the trigger; omitted means any tip.
+       */
+      min?: number;
+    }
+  | {
+      kind: "ai_moment";
+    }
+  | {
+      kind: "rundown_topic";
+      /**
+       * Optional words the topic has to mention; omitted means any topic.
+       *
+       * @maxItems 8
+       */
+      words?:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string]
+        | [string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string]
+        | [string, string, string, string, string, string, string, string];
+    }
+  | {
+      kind: "timer";
+      every_seconds: number;
+      /**
+       * live (default) counts only while the channel is live; always counts from the element being active.
+       */
+      start?: "live" | "always";
+    }
+  | {
+      kind: "schedule";
+      /**
+       * A five-field cron in the person's timezone.
+       */
+      cron: string;
+      timezone: string;
+    }
+  | {
+      kind: "robot_telemetry";
+      metric: "battery_percent" | "latency_ms" | "stuck" | "temperature_c";
+      op: "lt" | "gt";
+      value: number;
+      /**
+       * How long the condition must hold; 0 (default) means at once.
+       */
+      for_seconds?: number;
+    }
+  | {
+      kind: "robot_event";
+      event: "estop" | "stopped" | "disconnected" | "command_refused" | "button";
+    }
+  | {
+      kind: "stream_start";
+    }
+  | {
+      kind: "stream_end";
+    }
+  | {
+      kind: "viewer_count";
+      op: "above" | "below";
+      count: number;
+    }
+  | {
+      kind: "element_event";
+      element_id: string;
+      /**
+       * pressed (default) fires after that element ran; state and shown fire when Live broadcasts them.
+       */
+      event?: "pressed" | "state" | "shown";
+    };
+
+/** live.element.pressed@1.0.0 (owner: live) */
+/**
+ * live.element.pressed v1 (OpenVibe.Live server/elements): a viewer's element press was accepted and ran. It carries the public facts the stream should see: the channel, the element's id and name, the presser's public name and subject, the trigger that fired, the channel points it cost and the element-state revision it left behind. It never carries the presser's email, address, account balance or anything private; a refused press does not produce it. Envelope: subject { type: element, id: el_… }, actor the presser's subject, visibility public, priority low. Also written to the channel's AI timeline as a moment, so the stream's own timeline can cite 'chat made the robot dance'.
+ */
+export interface LiveElementPressedPayload {
+  /**
+   * The public channel facts (the channel page is public already).
+   */
+  channel: {
+    username: string;
+    display_name: string;
+  };
+  element_id: string;
+  element_name: string;
+  presser: SubjectRef;
+  /**
+   * The display name the stream shows, never an email or an account id.
+   */
+  presser_name: string;
+  trigger: UiTrigger;
+  /**
+   * Channel points the press cost; 0 when it was free.
+   */
+  points_spent?: number;
+  /**
+   * The element-state revision after the actions ran; 0 when the element has no state yet.
+   */
+  state_revision?: number;
+  at: string;
+}
+
+/** live.element.state@1.0.0 (owner: live) */
+/**
+ * live.element.state v1 (OpenVibe.Live server/elements): an element's own store changed, broadcast to everyone watching through Live's existing events path. Same fields as ui.element-state@1: the channel, the element instance, a revision that grows by one per accepted change, the values themselves and when. It is public state (a counter, a score, a wheel's entries), never the presser's data: a value may not be an object, a markup string or a URL, and the payload carries no account.
+ */
+export interface LiveElementStatePayload {
+  channel: {
+    username: string;
+    display_name: string;
+  };
+  element_id: string;
+  revision: number;
+  /**
+   * The element's own store. A key is lower-case and 32 characters at most; a value is a boolean, a number, a string of 200 characters at most or a list of those.
+   */
+  values: {
+    [k: string]: (boolean | number | string | (number | string)[]) | undefined;
+  };
+  updated_at: string;
+}

@@ -11573,6 +11573,60 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "ui.action",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/action.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ui.element",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/element.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ui.element-state",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/element-state.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ui.trigger",
+      "version": "1.0.0",
+      "owner": "contracts",
+      "schema": "ui/trigger.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.element.pressed",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.element.pressed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "live.element.state",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "events/payloads/live.element.state.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -1,0 +1,52 @@
+{
+  "name": "Headlight tally",
+  "author": {
+    "name": "Ada"
+  },
+  "sharing": "private",
+  "look": {
+    "component": "counter",
+    "label": "Headlights",
+    "style": {
+      "tint": "surface",
+      "shape": "square",
+      "opacity": 0.8,
+      "show_label": true
+    }
+  },
+  "recipe": {
+    "triggers": [
+      {
+        "kind": "chat_command",
+        "command": "!headlights"
+      }
+    ],
+    "conditions": {
+      "role": "everyone",
+      "cooldown": {
+        "per_person_seconds": 30,
+        "overall_seconds": 5
+      }
+    },
+    "actions": [
+      {
+        "kind": "screen.counter",
+        "product": "live",
+        "key": "headlights",
+        "by": 1
+      },
+      {
+        "kind": "chat.message",
+        "product": "chat",
+        "text": "Headlights on!"
+      }
+    ]
+  },
+  "capabilities": [
+    "screen.counter",
+    "chat.message"
+  ],
+  "initial_state": {
+    "headlights": 0
+  }
+}
