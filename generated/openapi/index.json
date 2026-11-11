@@ -229,8 +229,8 @@
       "service": "run",
       "name": "OpenVibe.Run",
       "origin": "https://openvibe.run",
-      "operations": 16,
-      "capabilities": 10
+      "operations": 22,
+      "capabilities": 11
     },
     {
       "service": "search",
