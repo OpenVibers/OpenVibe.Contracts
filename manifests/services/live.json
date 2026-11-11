@@ -46,7 +46,12 @@
     ],
     "neighbourhood": "watch",
     "strip": [
-      { "label": "The Rundown", "icon": "news", "link": "https://openvibe.live/rundown", "line": "What streamers talked about" }
+      {
+        "label": "The Rundown",
+        "icon": "news",
+        "link": "https://openvibe.live/rundown",
+        "line": "What streamers talked about"
+      }
     ]
   },
   "capabilities": [
@@ -69,6 +74,8 @@
   ],
   "eventsProduced": [
     "live.agent_stream.changed",
+    "live.element.pressed",
+    "live.element.state",
     "live.index_document.deleted",
     "live.index_document.upserted",
     "live.moderation.action",

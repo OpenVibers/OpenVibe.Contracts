@@ -42,6 +42,7 @@ sub(path.join(ROOT, 'test/compare-comparison.test.js'));
 sub(path.join(ROOT, 'test/link-brand.test.js'));
 sub(path.join(ROOT, 'test/link-compute.test.js'));
 sub(path.join(ROOT, 'test/money-reasons.test.js'));
+sub(path.join(ROOT, 'test/elements.test.js'));
 
 // ── Catalog integrity ────────────────────────────────────────────────────
 const files = [];

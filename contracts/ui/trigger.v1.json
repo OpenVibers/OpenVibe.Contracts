@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ui/trigger.v1.json",
+  "title": "UiTrigger",
+  "description": "ui.trigger@1: one trigger an Element's recipe listens for, from the fixed catalog. kind says what happened: a viewer pressing, holding or double-pressing the element, a key or gamepad binding, a chat command or text, a follow, a tip, an AI Moment, a Rundown topic, a timer or schedule, robot telemetry or an event, the stream starting or ending, a viewer-count crossing or another element's event. The fields a kind needs are the only fields it accepts. A trigger is data: it never names code or a URL, and a product may refuse a kind it does not offer yet. Stage 1 of Elements uses press and chat_command; the rest are declared here so a stage-2 element and the editor speak one language.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "press" }
+      },
+      "description": "The element itself was pressed. This is the Viewer Deck's button."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ms"],
+      "properties": {
+        "kind": { "const": "hold" },
+        "ms": { "type": "integer", "minimum": 300, "maximum": 10000 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "double_press" },
+        "within_ms": { "type": "integer", "minimum": 100, "maximum": 2000, "description": "The longest gap between the two presses; 400 by default." }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "key"],
+      "properties": {
+        "kind": { "const": "key" },
+        "key": { "type": "string", "pattern": "^[A-Za-z0-9+_.-]{1,40}$" },
+        "modifiers": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "enum": ["ctrl", "alt", "shift", "meta"] }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "button"],
+      "properties": {
+        "kind": { "const": "gamepad" },
+        "button": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]{0,39}$" },
+        "index": { "type": "integer", "minimum": 0, "maximum": 7, "description": "Which connected pad; omitted means any." }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "command"],
+      "properties": {
+        "kind": { "const": "chat_command" },
+        "command": { "type": "string", "pattern": "^![a-z0-9_-]{1,32}$", "description": "The command without arguments, lower case, e.g. !dance." }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "words"],
+      "properties": {
+        "kind": { "const": "chat_text" },
+        "words": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 40 }
+        },
+        "mode": { "enum": ["any", "all"], "description": "any (default) matches one of the words; all matches every one." }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "follow" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "tip" },
+        "min": { "type": "integer", "minimum": 0, "description": "The smallest tip, in Vibes, that fires the trigger; omitted means any tip." }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "ai_moment" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "rundown_topic" },
+        "words": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 40 },
+          "description": "Optional words the topic has to mention; omitted means any topic."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "every_seconds"],
+      "properties": {
+        "kind": { "const": "timer" },
+        "every_seconds": { "type": "integer", "minimum": 5, "maximum": 86400 },
+        "start": { "enum": ["live", "always"], "description": "live (default) counts only while the channel is live; always counts from the element being active." }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "cron", "timezone"],
+      "properties": {
+        "kind": { "const": "schedule" },
+        "cron": { "type": "string", "pattern": "^[0-9*/, -]{9,80}$", "description": "A five-field cron in the person's timezone." },
+        "timezone": { "type": "string", "minLength": 1, "maxLength": 64 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "metric", "op", "value"],
+      "properties": {
+        "kind": { "const": "robot_telemetry" },
+        "metric": { "enum": ["battery_percent", "latency_ms", "stuck", "temperature_c"] },
+        "op": { "enum": ["lt", "gt"] },
+        "value": { "type": "number" },
+        "for_seconds": { "type": "integer", "minimum": 0, "maximum": 3600, "description": "How long the condition must hold; 0 (default) means at once." }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "event"],
+      "properties": {
+        "kind": { "const": "robot_event" },
+        "event": { "enum": ["estop", "stopped", "disconnected", "command_refused", "button"] }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "stream_start" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "stream_end" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "op", "count"],
+      "properties": {
+        "kind": { "const": "viewer_count" },
+        "op": { "enum": ["above", "below"] },
+        "count": { "type": "integer", "minimum": 0, "maximum": 100000000 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "element_id"],
+      "properties": {
+        "kind": { "const": "element_event" },
+        "element_id": { "type": "string", "pattern": "^el_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "event": { "enum": ["pressed", "state", "shown"], "description": "pressed (default) fires after that element ran; state and shown fire when Live broadcasts them." }
+      }
+    }
+  ]
+}

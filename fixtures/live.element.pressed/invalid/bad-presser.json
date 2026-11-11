@@ -1,0 +1,17 @@
+{
+  "channel": {
+    "username": "ada",
+    "display_name": "Ada"
+  },
+  "element_id": "el_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "element_name": "Make it dance",
+  "presser": {
+    "type": "user",
+    "id": "alice"
+  },
+  "presser_name": "Alice",
+  "trigger": {
+    "kind": "press"
+  },
+  "at": "2026-11-11T20:31:00.000Z"
+}

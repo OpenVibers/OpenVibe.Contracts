@@ -1,0 +1,20 @@
+{
+  "channel": {
+    "username": "ada",
+    "display_name": "Ada"
+  },
+  "element_id": "el_01JAB2C3D4E5F6G7H8J9K0MNPS",
+  "element_name": "Headlight tally",
+  "presser": {
+    "type": "user",
+    "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPR"
+  },
+  "presser_name": "Maticus",
+  "trigger": {
+    "kind": "chat_command",
+    "command": "!headlights"
+  },
+  "points_spent": 0,
+  "state_revision": 2,
+  "at": "2026-11-11T20:31:00.000Z"
+}

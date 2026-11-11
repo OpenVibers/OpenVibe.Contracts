@@ -1,0 +1,21 @@
+{
+  "name": "Bad",
+  "author": {
+    "name": "Ada"
+  },
+  "sharing": "private",
+  "look": {
+    "component": "button",
+    "label": "Bad"
+  },
+  "recipe": {
+    "triggers": [
+      {
+        "kind": "press"
+      }
+    ]
+  },
+  "capabilities": [
+    "robot.say"
+  ]
+}
