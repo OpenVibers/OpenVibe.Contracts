@@ -1,0 +1,22 @@
+{
+  "id": "bot.machine.relay",
+  "version": "1.0",
+  "owner": "bot",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Network relays grant-checked tasks and frames to a paired machine.",
+  "permissions": [
+    "agents:relay"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/machines/:id/relay"
+  ],
+  "inputSchema": "agent.task@1",
+  "outputSchema": "agent.task-result@1"
+}

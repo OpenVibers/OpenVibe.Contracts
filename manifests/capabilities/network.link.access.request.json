@@ -1,0 +1,22 @@
+{
+  "id": "network.link.access.request",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "A paired node requests access to another machine.",
+  "permissions": [
+    "nodes:self"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/link/self/access-requests"
+  ],
+  "inputSchema": "link.access-request@1",
+  "outputSchema": "link.access-request@1"
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/link/access-request.v1.json",
+  "title": "LinkAccessRequest",
+  "description": "A machine asks another for bounded access.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "from_principal",
+    "to_principal",
+    "from_owner",
+    "to_owner",
+    "scopes",
+    "status",
+    "requested_at",
+    "expires_at",
+    "duration_seconds"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]{3}_[A-Za-z0-9_-]{8,80}$"
+    },
+    "from_principal": {
+      "type": "string",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "to_principal": {
+      "type": "string",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "from_owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "to_owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "from_agent": {
+      "type": "string",
+      "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "scopes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "agent",
+          "send",
+          "screen",
+          "desk",
+          "computer",
+          "worker"
+        ]
+      }
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "approved",
+        "denied",
+        "expired"
+      ]
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_seconds": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 2592000
+    }
+  }
+}

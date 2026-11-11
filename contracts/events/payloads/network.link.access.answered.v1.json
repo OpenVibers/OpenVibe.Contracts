@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.link.access.answered.v1.json",
+  "title": "NetworkLinkAccessAnsweredPayload",
+  "description": "Machine access request was answered or expired.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "status",
+    "at"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-z]{3}_[A-Za-z0-9_-]{8,80}$"
+    },
+    "status": {
+      "enum": [
+        "approved",
+        "denied",
+        "expired"
+      ]
+    },
+    "grant_id": {
+      "type": "string",
+      "pattern": "^[a-z]{3}_[A-Za-z0-9_-]{8,80}$"
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

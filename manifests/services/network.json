@@ -90,7 +90,10 @@
     "network.machines.read",
     "network.machines.manage",
     "network.presence.read",
-    "network.levels.award"
+    "network.levels.award",
+    "network.link.access.request",
+    "network.agents.register",
+    "network.agents.relay"
   ],
   "eventsProduced": [
     "network.account.deleted",
@@ -122,7 +125,12 @@
     "share.transfer.requested",
     "share.transfer.accepted",
     "share.transfer.declined",
-    "network.presence.changed"
+    "network.presence.changed",
+    "network.link.access.requested",
+    "network.link.access.answered",
+    "network.link.access.revoked",
+    "network.agent.task.created",
+    "network.agent.task.updated"
   ],
   "eventsConsumed": [
     "billing.staff.action",

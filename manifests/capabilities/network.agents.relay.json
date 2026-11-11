@@ -1,0 +1,22 @@
+{
+  "id": "network.agents.relay",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "Bot reports machine agent task results to Network.",
+  "permissions": [
+    "agents:relay"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/agents/tasks/:id/result"
+  ],
+  "inputSchema": "agent.task-result@1",
+  "outputSchema": "agent.task-result@1"
+}

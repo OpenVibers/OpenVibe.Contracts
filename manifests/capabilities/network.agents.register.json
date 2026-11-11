@@ -1,0 +1,22 @@
+{
+  "id": "network.agents.register",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "sensitive": true,
+  "description": "A service or paired node registers only its own agents.",
+  "permissions": [
+    "agents:register"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "admin",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/agents/register"
+  ],
+  "inputSchema": "agent.directory-entry@1",
+  "outputSchema": "agent.directory-entry@1"
+}

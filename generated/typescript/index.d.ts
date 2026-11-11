@@ -336244,3 +336244,1950 @@ export interface CompareComparison {
   }[];
   availability?: string[];
 }
+
+/** link.access-request@1.0.0 (owner: network) */
+/**
+ * A machine asks another for bounded access.
+ */
+export interface LinkAccessRequest {
+  id: string;
+  from_principal: string;
+  to_principal: string;
+  from_owner: string;
+  to_owner: string;
+  from_agent?: string;
+  /**
+   * @minItems 1
+   */
+  scopes: [
+    "agent" | "send" | "screen" | "desk" | "computer" | "worker",
+    ...("agent" | "send" | "screen" | "desk" | "computer" | "worker")[]
+  ];
+  reason?: string;
+  status: "pending" | "approved" | "denied" | "expired";
+  requested_at: string;
+  expires_at: string;
+  duration_seconds: number;
+}
+
+/** link.access-grant@1.0.0 (owner: network) */
+/**
+ * Approved machine access; null expiration is for same-owner agent or send only.
+ */
+export interface LinkAccessGrant {
+  id: string;
+  request_id?: string;
+  from_principal: string;
+  to_principal: string;
+  /**
+   * @minItems 1
+   */
+  scopes: [
+    "agent" | "send" | "screen" | "desk" | "computer" | "worker",
+    ...("agent" | "send" | "screen" | "desk" | "computer" | "worker")[]
+  ];
+  approved_by: string;
+  created_at: string;
+  expires_at: string | null;
+  revoked_at: string | null;
+}
+
+/** link.access-grant-token@1.0.0 (owner: network) */
+/**
+ * Claims of the signed grant JWT; target is audience, requester is subject.
+ */
+export interface LinkAccessGrantToken {
+  iss: string;
+  aud: string;
+  sub: string;
+  jti: string;
+  grant_id: string;
+  /**
+   * @minItems 1
+   */
+  scopes: [
+    "agent" | "send" | "screen" | "desk" | "computer" | "worker",
+    ...("agent" | "send" | "screen" | "desk" | "computer" | "worker")[]
+  ];
+  iat: number;
+  exp: number;
+}
+
+/** agent.directory-entry@1.0.0 (owner: network) */
+/**
+ * One discoverable A2A agent belonging to a person.
+ */
+export interface AgentDirectoryEntry {
+  id: string;
+  owner: string;
+  kind: "actor" | "codes" | "link-local" | "chat-bot" | "service";
+  name: string;
+  machine_id?: string;
+  service?: string;
+  endpoint?: string;
+  /**
+   * @maxItems 100
+   */
+  skills: string[];
+  status: "online" | "busy" | "offline";
+  allow_others: boolean;
+  updated_at: string;
+}
+
+/** agent.task@1.0.0 (owner: network) */
+/**
+ * A2A task with agent, person, thread and text parts limited to 8000 characters.
+ */
+export interface AgentTask {
+  id?: string;
+  to: string;
+  from: string;
+  on_behalf_of: string;
+  thread: string;
+  message: {
+    role?: "user" | "agent";
+    /**
+     * @minItems 1
+     * @maxItems 20
+     */
+    parts:
+      | [
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ];
+  };
+  skillId?: string;
+  created_at?: string;
+}
+
+/** agent.task-result@1.0.0 (owner: network) */
+/**
+ * Asynchronous A2A task status and optional result.
+ */
+export interface AgentTaskResult {
+  id: string;
+  thread: string;
+  status: "pending" | "running" | "completed" | "failed" | "cancelled";
+  result?: {
+    role?: "user" | "agent";
+    /**
+     * @minItems 1
+     * @maxItems 20
+     */
+    parts:
+      | [
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ]
+      | [
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          },
+          {
+            type: "text";
+            text: string;
+          }
+        ];
+  };
+  updated_at: string;
+  error?: string;
+}
+
+/** network.link.access.requested@1.0.0 (owner: network) */
+/**
+ * Machine access request was created.
+ */
+export interface NetworkLinkAccessRequestedPayload {
+  request_id: string;
+  from_principal: string;
+  to_principal: string;
+  at: string;
+}
+
+/** network.link.access.answered@1.0.0 (owner: network) */
+/**
+ * Machine access request was answered or expired.
+ */
+export interface NetworkLinkAccessAnsweredPayload {
+  request_id: string;
+  status: "approved" | "denied" | "expired";
+  grant_id?: string;
+  at: string;
+}
+
+/** network.link.access.revoked@1.0.0 (owner: network) */
+/**
+ * Machine access grant was revoked.
+ */
+export interface NetworkLinkAccessRevokedPayload {
+  grant_id: string;
+  from_principal: string;
+  to_principal: string;
+  at: string;
+}
+
+/** network.agent.task.created@1.0.0 (owner: network) */
+/**
+ * Agent task was created.
+ */
+export interface NetworkAgentTaskCreatedPayload {
+  task_id: string;
+  thread: string;
+  from: string;
+  to: string;
+  at: string;
+}
+
+/** network.agent.task.updated@1.0.0 (owner: network) */
+/**
+ * Agent task status changed.
+ */
+export interface NetworkAgentTaskUpdatedPayload {
+  task_id: string;
+  thread: string;
+  status: "pending" | "running" | "completed" | "failed" | "cancelled";
+  at: string;
+}

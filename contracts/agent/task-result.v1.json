@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/task-result.v1.json",
+  "title": "AgentTaskResult",
+  "description": "Asynchronous A2A task status and optional result.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "thread",
+    "status",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]{3}_[A-Za-z0-9_-]{8,80}$"
+    },
+    "thread": {
+      "type": "string",
+      "pattern": "^[a-z]{3}_[A-Za-z0-9_-]{8,80}$"
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parts"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "user",
+            "agent"
+          ]
+        },
+        "parts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "text"
+            ],
+            "properties": {
+              "type": {
+                "const": "text"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 8000
+              }
+            }
+          }
+        }
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "error": {
+      "type": "string",
+      "maxLength": 500
+    }
+  }
+}

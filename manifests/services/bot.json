@@ -39,7 +39,8 @@
     "bot.resource.control",
     "bot.desk.session",
     "bot.machine.manage",
-    "bot.machine.watch_link"
+    "bot.machine.watch_link",
+    "bot.machine.relay"
   ],
   "eventsProduced": [
     "bot.robot.online",
@@ -50,7 +51,8 @@
   ],
   "eventsConsumed": [
     "network.account.export_requested",
-    "network.account.deleted"
+    "network.account.deleted",
+    "network.link.access.revoked"
   ],
   "namespacesOwned": [],
   "lifecycle": {

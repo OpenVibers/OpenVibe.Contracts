@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.408.0 — 2026-11-11
+
+- Define machine access requests, grants and signed token claims; the agent directory, A2A tasks and results; five Network events and four registration and relay capabilities.
+
 ## 0.407.0 — 2026-11-11
 
 The third train of the day: #451 (merged ahead of its tag) and three pull requests that had waited for a release.

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agent/directory-entry.v1.json",
+  "title": "AgentDirectoryEntry",
+  "description": "One discoverable A2A agent belonging to a person.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "kind",
+    "name",
+    "skills",
+    "status",
+    "allow_others",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "enum": [
+        "actor",
+        "codes",
+        "link-local",
+        "chat-bot",
+        "service"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "machine_id": {
+      "type": "string",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "service": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "endpoint": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 120
+      },
+      "maxItems": 100
+    },
+    "status": {
+      "enum": [
+        "online",
+        "busy",
+        "offline"
+      ]
+    },
+    "allow_others": {
+      "type": "boolean"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
