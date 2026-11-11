@@ -2,7 +2,8 @@
 
 ## 0.405.0 — 2026-11-11
 
-- Extend `community.feed-item@1` with activity kinds, calendar start times, media previews and linked items in a burst.
+- Extend `community.feed-item@1` with activity kinds, calendar start times, media previews, linked items in a burst and follower visibility.
+- Allow `community.pulse-write-request@1` to publish follower-only activity for a named person; the Pulse item marks the audience when returned to an authorized reader.
 
 ## 0.404.0 — 2026-11-11
 

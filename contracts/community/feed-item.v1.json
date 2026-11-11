@@ -38,6 +38,7 @@
       "format": "date-time",
       "description": "The start time of a Coming up calendar item; absent on other kinds."
     },
+    "visibility": { "enum": ["followers"], "description": "Present only for an item returned to a follower or its author." },
     "site": {
       "type": "string",
       "maxLength": 40,

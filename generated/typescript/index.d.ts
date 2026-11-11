@@ -213810,9 +213810,9 @@ export type CommunityPostWriteResult =
       deleted?: "thread";
     };
 
-/** community.pulse-write-request@1.0.0 (owner: community) */
+/** community.pulse-write-request@1.1.0 (owner: community) */
 /**
- * community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities (ref.service must be that service: 403 pulse.foreign_ref otherwise), with a title (whitespace collapsed, 1 to 300 characters) and an absolute http(s) url (at most 2000 characters). origin defaults to X-OV-Origin (user, ai or system; X-OV-Origin: ai always wins); an origin user item names the person in X-OV-Subject. occurred_at is an ISO time, not in the future (default now). Only public activity enters Pulse: a visibility other than public is 400 pulse.not_public. The same ref again updates the item. Unknown fields are ignored. DELETE /api/v1/pulse/items/:service/:type/:id takes no body.
+ * community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities, with a title and an absolute http(s) URL. Visibility is public by default; followers requires origin user and X-OV-Subject and is shown only to that person's followers. Private, unlisted and members items are refused. The same ref updates the item. DELETE /api/v1/pulse/items/:service/:type/:id retracts it.
  */
 export type CommunityPulseWriteRequest =
   | {
@@ -213824,7 +213824,7 @@ export type CommunityPulseWriteRequest =
       url: string;
       origin?: "user" | "ai" | "system" | null;
       occurred_at?: string | number | null;
-      visibility?: "public" | null;
+      visibility?: "public" | "followers" | null;
     }
   | NoBody;
 
@@ -213965,7 +213965,7 @@ export interface CommunityForumSpace {
   children?: unknown[];
 }
 
-/** community.pulse-item@1.0.0 (owner: community) */
+/** community.pulse-item@1.1.0 (owner: community) */
 /**
  * community.pulse-item@1: one item of the network's public activity on OpenVibe.Community (server/pulse/service.js shape), with provenance: its source entity, title, url, origin (user, ai or system), the AI or System label, the actor (a person for user items, never for AI or system ones) and when it happened.
  */
@@ -213979,6 +213979,12 @@ export interface CommunityPulseItem {
   title: string;
   url: string;
   origin: "user" | "ai" | "system";
+  /**
+   * Present only for an item returned to an authorized follower or its author.
+   */
+  visibility?: "followers";
+  starts_at?: string;
+  actor_name?: string;
   label: "AI" | "System" | null;
   /**
    * A third-party contribution is shown as via <app>.
@@ -214052,6 +214058,10 @@ export interface CommunityFeedItem {
    * The start time of a Coming up calendar item; absent on other kinds.
    */
   starts_at?: string;
+  /**
+   * Present only for an item returned to a follower or its author.
+   */
+  visibility?: "followers";
   /**
    * The source service (live, media-hub, pics, games, blog, wiki, quest, chat, today, network, community…).
    */

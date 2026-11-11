@@ -51,6 +51,9 @@
         "system"
       ]
     },
+    "visibility": { "enum": ["followers"], "description": "Present only for an item returned to an authorized follower or its author." },
+    "starts_at": { "type": "string", "format": "date-time" },
+    "actor_name": { "type": "string", "maxLength": 80 },
     "label": {
       "enum": ["AI", "System", null]
     },
