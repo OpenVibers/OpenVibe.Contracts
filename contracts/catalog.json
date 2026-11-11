@@ -1755,6 +1755,24 @@
       "status": "active"
     },
     {
+      "id": "ai.model-directory-entry",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/model-directory-entry.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.model-directory-list",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/model-directory-list.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "ai.model-read-result",
       "version": "1.0.0",
       "owner": "ai",
@@ -8516,8 +8534,17 @@
       "status": "active"
     },
     {
+      "id": "codes.model-plan",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/model-plan.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "codes.task-start-request",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "codes",
       "schema": "codes/task-start-request.v1.json",
       "visibility": "first-party",
@@ -8544,7 +8571,7 @@
     },
     {
       "id": "codes.task",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "owner": "codes",
       "schema": "codes/task.v2.json",
       "visibility": "first-party",
@@ -10808,6 +10835,15 @@
       "owner": "meme",
       "schema": "meme/entry.v1.json",
       "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "meme.caption.created",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "events/payloads/meme.caption.created.v1.json",
+      "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
     },

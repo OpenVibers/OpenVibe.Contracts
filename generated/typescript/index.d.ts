@@ -163451,6 +163451,56 @@ export interface AiModelList {
   cursor?: string | null;
 }
 
+/** ai.model-directory-entry@1.0.0 (owner: ai) */
+/**
+ * ai.model-directory-entry@1: one public model, including provider-listed models with routing off and sourced pre-list sightings. Spotted never means available.
+ */
+export type AiModelDirectoryEntry = {
+  [k: string]: unknown | undefined;
+} & {
+  id: string;
+  provider: string;
+  provider_name?: string | null;
+  model: string;
+  name: string;
+  family?: string | null;
+  version?: string | null;
+  status: "available" | "preview" | "spotted" | "retired";
+  routing_enabled: boolean;
+  context_window?: number | null;
+  max_output?: number | null;
+  type?: string;
+  modalities?: string[];
+  price?: {
+    input_per_million?: number | null;
+    output_per_million?: number | null;
+    cached_per_million?: number | null;
+    source?: string | null;
+    checked_at?: string | null;
+  };
+  source?: string | null;
+  sources?: {
+    url: string;
+    observed_at: string;
+    published_at?: string;
+  }[];
+  first_seen_at?: string | null;
+  updated_at?: string | null;
+  retired_at?: string | null;
+  [k: string]: unknown | undefined;
+};
+
+/** ai.model-directory-list@1.0.0 (owner: ai) */
+/**
+ * ai.model-directory-list@1: public model directory response; the list may include spotted, disabled and retired models.
+ */
+export interface AiModelDirectoryList {
+  generated_at?: string;
+  count: number;
+  models: AiModelDirectoryEntry[];
+  [k: string]: unknown | undefined;
+}
+
 /** ai.model-read-result@1.0.0 (owner: ai) */
 /**
  * ai.model-read-result@1: response from GET /v1/models (a list) or GET /v1/models/:id (a single model).
@@ -214053,7 +214103,7 @@ export interface CommunityCommentThread {
 
 /** community.comment-write-request@1.0.0 (owner: community) */
 /**
- * community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.
+ * community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name?, attachments? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.
  */
 export type CommunityCommentWriteRequest =
   | {
@@ -214063,6 +214113,10 @@ export type CommunityCommentWriteRequest =
       message: string;
       parent_id?: number | string | null;
       anon_name?: string | null;
+      /**
+       * @maxItems 4
+       */
+      attachments?: [] | [AiFile] | [AiFile, AiFile] | [AiFile, AiFile, AiFile] | [AiFile, AiFile, AiFile, AiFile];
     }
   | {
       value: 1 | -1 | 0 | "1" | "-1" | "0";
@@ -214106,7 +214160,7 @@ export type CommunityCommentWriteResult =
 
 /** community.comment@1.0.0 (owner: community) */
 /**
- * community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first replies. A deleted comment keeps its place with no author or message.
+ * community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first two replies. A deleted comment keeps its place with no author or message.
  */
 export interface CommunityComment {
   id: number;
@@ -214137,6 +214191,18 @@ export interface CommunityComment {
   can_edit: boolean;
   can_delete: boolean;
   replies?: {}[];
+  /**
+   * The exact comment answered; parent_id remains the top-level comment.
+   */
+  reply_to_id?: number | null;
+  reply_to?: {
+    id?: number;
+    display_name?: string;
+  } | null;
+  /**
+   * @maxItems 4
+   */
+  attachments?: [] | [AiFile] | [AiFile, AiFile] | [AiFile, AiFile, AiFile] | [AiFile, AiFile, AiFile, AiFile];
 }
 
 /** community.forum-space@1.0.0 (owner: community) */
@@ -268527,7 +268593,7 @@ export type BotCommand = {
 
 /** bot.command-result@1.0.0 (owner: bot) */
 /**
- * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data.
+ * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.
  */
 export interface BotCommandResult {
   v: 1;
@@ -268544,6 +268610,17 @@ export interface BotCommandResult {
    * A computer command's answer as the machine gave it (exec: exit_code, stdout, stderr, truncated, timed_out, duration_ms; fs: entries, the stat, content_b64, written, created; screen: format, width, height, content_b64). Present only on an ack of exec, fs or screen.
    */
   data?: {};
+  /**
+   * Whether the command reached the machine. Both senders and the device report it; absent means unknown.
+   */
+  delivery?: "delivered" | "not_delivered" | "uncertain";
+  /**
+   * Whether repeating the command is safe. safe is true only when delivery is not_delivered.
+   */
+  retry?: {
+    safe: boolean;
+    reason?: string;
+  };
 }
 
 /** bot.job-dispatch-result@1.0.0 (owner: bot) */
@@ -280137,7 +280214,454 @@ export type VideoPlaylistManageResult =
       }[];
     };
 
-/** codes.task-start-request@1.1.0 (owner: codes) */
+/** codes.model-plan@1.0.0 (owner: codes) */
+/**
+ * codes.model-plan@1: a versioned execution plan for a Codes task. Roles are attempted in list order. The ladder names AI registry ids in fallback order; auto asks AI to route. A pair requires reviewer approval, a council has two or three planner samples and a judge, and escalation advances on a failed check, refusal, or low confidence.
+ */
+export type CodesModelPlan = {
+  [k: string]: unknown | undefined;
+} & {
+  roles?: unknown[];
+} & {
+  mode: "single" | "pair" | "council" | "escalate";
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  roles:
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ]
+    | [
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        },
+        {
+          role: "planner" | "builder" | "reviewer" | "verifier";
+          model: string;
+          effort: "none" | "low" | "medium" | "high" | "xhigh" | "max";
+          samples?: number;
+          budget?: {
+            tokens?: number;
+            minutes?: number;
+            dollars?: number;
+          };
+        }
+      ];
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  ladder?:
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  checks: {
+    tests?: boolean;
+    lint?: boolean;
+    reviewer?: boolean;
+  };
+};
+
+/** codes.task-start-request@1.2.0 (owner: codes) */
 /**
  * codes.task-start-request@1: the body of POST /api/v1/tasks on OpenVibe.Codes (capability codes.task.start). A first-party service (OpenVibe.Actor) starts a coding task for a person, named with X-OV-Subject: Codes runs it on that person's own machine through OpenVibe.Run (openvibe.codes/run, plan T16), in the project of their latest task there, so the person has used openvibe.codes/run once before a service can start one for them (else 409 codes.no_project). REPO is an https git URL with no credentials; REF a branch or tag to start from (default: the repository's default branch). PROMPT is the task. AGENT names one of Codes' agents (GET /harnesses), absent for Codes' router to pick. PERMISSION: review (read-only: research, audits, reviews; nothing is changed), edit (default; the agents edit files) or full (they may also run commands: tests, installs). PUSH asks for the change on a new branch (GitHub, with the machine's GITHUB_TOKEN; never the branch it started from), PULL_REQUEST also opens a pull request. IDEMPOTENCY_KEY: a repeat for the same person with the same key answers the first task (200, created false).
  */
@@ -280148,6 +280672,8 @@ export interface CodesTaskStartRequest {
   agent?: string;
   permission?: "review" | "edit" | "full";
   goal?: AgentGoal;
+  plan?: CodesModelPlan;
+  preset?: "Fast" | "Balanced" | "Deep" | "Council";
   push?: boolean;
   pull_request?: boolean;
   idempotency_key?: string;
@@ -280357,7 +280883,7 @@ export interface CodesTask {
   } | null;
 }
 
-/** codes.task@2.0.0 (owner: codes) */
+/** codes.task@2.1.0 (owner: codes) */
 
 /** play.title-definition@1.0.0 (owner: play) */
 /**
@@ -281724,6 +282250,12 @@ export interface RunSessionCreateRequest {
    * One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere.
    */
   machine?: string;
+  /**
+   * Exact HTTP(S) origins allowed for this browser session. Run fixes the list at creation and places it only on a user-owned desk that can enforce it. This option is owner switched off by default.
+   *
+   * @maxItems 32
+   */
+  origins?: string[];
   requirements?: WorkloadRequirements;
   idempotency_key?: string;
   /**
@@ -281759,6 +282291,17 @@ export interface RunSessionControlResult {
    * The desk's answer on an ack (bot.command-result@1 data).
    */
   data?: {};
+  /**
+   * Whether the command reached the machine. Absent on older servers means unknown.
+   */
+  delivery?: "delivered" | "not_delivered" | "uncertain";
+  /**
+   * safe is true only when delivery is not_delivered.
+   */
+  retry?: {
+    safe: boolean;
+    reason?: string;
+  };
   state: "placing" | "starting" | "running" | "ended";
 }
 
@@ -282078,6 +282621,12 @@ export interface BotDeskLeaseCreateRequest {
    * Default 800.
    */
   height?: number;
+  /**
+   * The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused.
+   *
+   * @maxItems 32
+   */
+  origins?: string[];
 }
 
 /** bot.watch-link-request@1.0.0 (owner: bot) */
@@ -327410,6 +327959,16 @@ export interface MemeEntry {
   revisions?: {}[];
   url?: string;
   [k: string]: unknown | undefined;
+}
+
+/** meme.caption.created@1.0.0 (owner: meme) */
+/**
+ * meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor the owner, subject the caption, visibility internal.
+ */
+export interface MemeCaptionCreatedPayload {
+  caption_id: string;
+  owner: SubjectRef;
+  created_at: string;
 }
 
 /** meme.template@1.0.0 (owner: meme) */

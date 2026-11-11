@@ -1,0 +1,1 @@
+{"mode":"council","roles":[{"role":"planner","model":"auto","effort":"high","samples":3},{"role":"builder","model":"auto","effort":"high"},{"role":"reviewer","model":"auto","effort":"high"},{"role":"verifier","model":"auto","effort":"medium"}],"checks":{"tests":true,"reviewer":true}}

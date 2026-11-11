@@ -41,6 +41,12 @@
     "goal": {
       "$ref": "../agent/goal.v1.json"
     },
+    "plan": {
+      "$ref": "model-plan.v1.json"
+    },
+    "preset": {
+      "enum": ["Fast", "Balanced", "Deep", "Council"]
+    },
     "push": {
       "type": "boolean"
     },
@@ -65,5 +71,6 @@
       "maxLength": 256,
       "description": "The OpenVibe.Actor step id when this coding task was started from Actor."
     }
-  }
+  },
+  "not": { "required": ["plan", "preset"] }
 }

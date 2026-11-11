@@ -19194,6 +19194,237 @@
         }
       }
     },
+    "ai.model-directory-entry": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model-directory-entry.v1.json",
+        "title": "AiModelDirectoryEntry",
+        "description": "ai.model-directory-entry@1: one public model, including provider-listed models with routing off and sourced pre-list sightings. Spotted never means available.",
+        "type": "object",
+        "required": [
+          "id",
+          "provider",
+          "model",
+          "name",
+          "status",
+          "routing_enabled"
+        ],
+        "additionalProperties": true,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "spotted",
+                    "retired"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "routing_enabled": {
+                  "const": false
+                }
+              }
+            }
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "provider_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "available",
+              "preview",
+              "spotted",
+              "retired"
+            ]
+          },
+          "routing_enabled": {
+            "type": "boolean"
+          },
+          "context_window": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "max_output": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "type": {
+            "type": "string"
+          },
+          "modalities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "input_per_million": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "output_per_million": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "cached_per_million": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "source": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "checked_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "url",
+                "observed_at"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "observed_at": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "first_seen_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "retired_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "ai.model-directory-list": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model-directory-list.v1.json",
+        "title": "AiModelDirectoryList",
+        "description": "ai.model-directory-list@1: public model directory response; the list may include spotted, disabled and retired models.",
+        "type": "object",
+        "required": [
+          "models",
+          "count"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "generated_at": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "model-directory-entry.v1.json"
+            }
+          }
+        }
+      }
+    },
     "ai.model-read-result": {
       "version": "1.0.0",
       "owner": "ai",
@@ -68717,7 +68948,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/comment-write-request.v1.json",
         "title": "CommunityCommentWriteRequest",
-        "description": "community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.",
+        "description": "community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name?, attachments? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.",
         "anyOf": [
           {
             "type": "object",
@@ -68754,6 +68985,13 @@
                   "string",
                   "null"
                 ]
+              },
+              "attachments": {
+                "type": "array",
+                "maxItems": 4,
+                "items": {
+                  "$ref": "../ai/file.v1.json"
+                }
               }
             }
           },
@@ -68919,7 +69157,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/comment.v1.json",
         "title": "CommunityComment",
-        "description": "community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first replies. A deleted comment keeps its place with no author or message.",
+        "description": "community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first two replies. A deleted comment keeps its place with no author or message.",
         "type": "object",
         "required": [
           "id",
@@ -69074,6 +69312,34 @@
             "type": "array",
             "items": {
               "type": "object"
+            }
+          },
+          "reply_to_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The exact comment answered; parent_id remains the top-level comment."
+          },
+          "reply_to": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "display_name": {
+                "type": "string"
+              }
+            }
+          },
+          "attachments": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "$ref": "../ai/file.v1.json"
             }
           }
         }
@@ -83414,6 +83680,17 @@
                       "pattern": "^https?://",
                       "description": "an http or https address"
                     },
+                    "origins": {
+                      "type": "array",
+                      "maxItems": 32,
+                      "items": {
+                        "type": "string",
+                        "minLength": 8,
+                        "maxLength": 2048,
+                        "pattern": "^https?://"
+                      },
+                      "description": "Optional exact task origins. Link checks scheme, host and port and refuses other navigation and browser egress. Empty allows no network origin; absent keeps the legacy browser policy."
+                    },
                     "selector": {
                       "type": "string",
                       "minLength": 1,
@@ -83852,7 +84129,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/command-result.v1.json",
         "title": "BotCommandResult",
-        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data.",
+        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.",
         "type": "object",
         "required": [
           "v",
@@ -83912,6 +84189,33 @@
           "data": {
             "type": "object",
             "description": "A computer command's answer as the machine gave it (exec: exit_code, stdout, stderr, truncated, timed_out, duration_ms; fs: entries, the stat, content_b64, written, created; screen: format, width, height, content_b64). Present only on an ack of exec, fs or screen."
+          },
+          "delivery": {
+            "type": "string",
+            "enum": [
+              "delivered",
+              "not_delivered",
+              "uncertain"
+            ],
+            "description": "Whether the command reached the machine. Both senders and the device report it; absent means unknown."
+          },
+          "retry": {
+            "type": "object",
+            "description": "Whether repeating the command is safe. safe is true only when delivery is not_delivered.",
+            "additionalProperties": false,
+            "required": [
+              "safe"
+            ],
+            "properties": {
+              "safe": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            }
           }
         }
       }
@@ -95017,8 +95321,242 @@
         ]
       }
     },
+    "codes.model-plan": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/model-plan.v1.json",
+        "title": "CodesModelPlan",
+        "description": "codes.model-plan@1: a versioned execution plan for a Codes task. Roles are attempted in list order. The ladder names AI registry ids in fallback order; auto asks AI to route. A pair requires reviewer approval, a council has two or three planner samples and a judge, and escalation advances on a failed check, refusal, or low confidence.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mode",
+          "roles",
+          "checks"
+        ],
+        "properties": {
+          "mode": {
+            "enum": [
+              "single",
+              "pair",
+              "council",
+              "escalate"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "role",
+                "model",
+                "effort"
+              ],
+              "properties": {
+                "role": {
+                  "enum": [
+                    "planner",
+                    "builder",
+                    "reviewer",
+                    "verifier"
+                  ]
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "pattern": "^(auto|[A-Za-z0-9][A-Za-z0-9._:/@+-]*)$"
+                },
+                "effort": {
+                  "enum": [
+                    "none",
+                    "low",
+                    "medium",
+                    "high",
+                    "xhigh",
+                    "max"
+                  ]
+                },
+                "samples": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "budget": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "minProperties": 1,
+                  "properties": {
+                    "tokens": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 100000000
+                    },
+                    "minutes": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1440
+                    },
+                    "dollars": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 10000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ladder": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^(auto|[A-Za-z0-9][A-Za-z0-9._:/@+-]*)$"
+            }
+          },
+          "checks": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "tests": {
+                "type": "boolean"
+              },
+              "lint": {
+                "type": "boolean"
+              },
+              "reviewer": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "pair"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "roles": {
+                  "type": "array",
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "const": "reviewer"
+                      }
+                    },
+                    "required": [
+                      "role"
+                    ]
+                  }
+                },
+                "checks": {
+                  "type": "object",
+                  "properties": {
+                    "reviewer": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "reviewer"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "council"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "roles": {
+                  "type": "array",
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "const": "planner"
+                      },
+                      "samples": {
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 3
+                      }
+                    },
+                    "required": [
+                      "role",
+                      "samples"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "escalate"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "ladder"
+              ],
+              "properties": {
+                "ladder": {
+                  "type": "array",
+                  "minItems": 2
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "roles": {
+                "type": "array",
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "const": "builder"
+                    }
+                  },
+                  "required": [
+                    "role"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
     "codes.task-start-request": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "codes",
       "status": "active",
       "schema": {
@@ -95064,6 +95602,17 @@
           "goal": {
             "$ref": "../agent/goal.v1.json"
           },
+          "plan": {
+            "$ref": "model-plan.v1.json"
+          },
+          "preset": {
+            "enum": [
+              "Fast",
+              "Balanced",
+              "Deep",
+              "Council"
+            ]
+          },
           "push": {
             "type": "boolean"
           },
@@ -95088,6 +95637,12 @@
             "maxLength": 256,
             "description": "The OpenVibe.Actor step id when this coding task was started from Actor."
           }
+        },
+        "not": {
+          "required": [
+            "plan",
+            "preset"
+          ]
         }
       }
     },
@@ -95321,7 +95876,7 @@
       }
     },
     "codes.task@2": {
-      "version": "2.0.0",
+      "version": "2.1.0",
       "owner": "codes",
       "status": "active",
       "schema": {
@@ -95373,6 +95928,84 @@
               "null"
             ],
             "maxLength": 41
+          },
+          "model_plan": {
+            "$ref": "model-plan.v1.json"
+          },
+          "preset": {
+            "enum": [
+              "Fast",
+              "Balanced",
+              "Deep",
+              "Council"
+            ]
+          },
+          "role_runs": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "role",
+                "model",
+                "outcome",
+                "tokens",
+                "cost_usd",
+                "duration_ms"
+              ],
+              "properties": {
+                "role": {
+                  "enum": [
+                    "planner",
+                    "builder",
+                    "reviewer",
+                    "verifier"
+                  ]
+                },
+                "model": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "effort": {
+                  "enum": [
+                    "none",
+                    "low",
+                    "medium",
+                    "high",
+                    "xhigh",
+                    "max"
+                  ]
+                },
+                "outcome": {
+                  "enum": [
+                    "approved",
+                    "rejected",
+                    "passed",
+                    "failed",
+                    "refused",
+                    "low_confidence",
+                    "skipped"
+                  ]
+                },
+                "tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cost_usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "duration_ms": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "reason": {
+                  "type": "string",
+                  "maxLength": 1000
+                }
+              }
+            }
           },
           "url": {
             "type": "string",
@@ -97719,6 +98352,17 @@
             "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere."
           },
+          "origins": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 2048,
+              "pattern": "^https?://"
+            },
+            "description": "Exact HTTP(S) origins allowed for this browser session. Run fixes the list at creation and places it only on a user-owned desk that can enforce it. This option is owner switched off by default."
+          },
           "requirements": {
             "$ref": "../platform/workload-requirements.v1.json"
           },
@@ -97854,6 +98498,32 @@
           "data": {
             "type": "object",
             "description": "The desk's answer on an ack (bot.command-result@1 data)."
+          },
+          "delivery": {
+            "enum": [
+              "delivered",
+              "not_delivered",
+              "uncertain"
+            ],
+            "description": "Whether the command reached the machine. Absent on older servers means unknown."
+          },
+          "retry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "safe"
+            ],
+            "properties": {
+              "safe": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            },
+            "description": "safe is true only when delivery is not_delivered."
           },
           "state": {
             "$ref": "session.v1.json#/properties/state"
@@ -98412,6 +99082,17 @@
           "height": {
             "$ref": "desk-lease.v1.json#/properties/height",
             "description": "Default 800."
+          },
+          "origins": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 2048,
+              "pattern": "^https?://"
+            },
+            "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
           }
         }
       }
@@ -118611,6 +119292,37 @@
           }
         },
         "additionalProperties": true
+      }
+    },
+    "meme.caption.created": {
+      "version": "1.0.0",
+      "owner": "meme",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/meme.caption.created.v1.json",
+        "title": "MemeCaptionCreatedPayload",
+        "description": "meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor the owner, subject the caption, visibility internal.",
+        "type": "object",
+        "required": [
+          "caption_id",
+          "owner",
+          "created_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "caption_id": {
+            "type": "string",
+            "pattern": "^mcp_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       }
     },
     "meme.template": {

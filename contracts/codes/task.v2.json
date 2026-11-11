@@ -48,6 +48,25 @@
       ],
       "maxLength": 41
     },
+    "model_plan": { "$ref": "model-plan.v1.json" },
+    "preset": { "enum": ["Fast", "Balanced", "Deep", "Council"] },
+    "role_runs": {
+      "type": "array", "maxItems": 30,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["role", "model", "outcome", "tokens", "cost_usd", "duration_ms"],
+        "properties": {
+          "role": { "enum": ["planner", "builder", "reviewer", "verifier"] },
+          "model": { "type": "string", "maxLength": 200 },
+          "effort": { "enum": ["none", "low", "medium", "high", "xhigh", "max"] },
+          "outcome": { "enum": ["approved", "rejected", "passed", "failed", "refused", "low_confidence", "skipped"] },
+          "tokens": { "type": "integer", "minimum": 0 },
+          "cost_usd": { "type": "number", "minimum": 0 },
+          "duration_ms": { "type": "integer", "minimum": 0 },
+          "reason": { "type": "string", "maxLength": 1000 }
+        }
+      }
+    },
     "url": {
       "type": "string",
       "format": "uri",

@@ -1,0 +1,9 @@
+{
+  "id": "arena/anonymous-silver",
+  "provider": "arena",
+  "model": "anonymous-silver",
+  "name": "anonymous-silver",
+  "status": "spotted",
+  "routing_enabled": false,
+  "sources": [{"url": "https://lmarena.ai/leaderboard/text", "observed_at": "2026-11-11T00:00:00Z"}]
+}

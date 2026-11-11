@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.406.0 — 2026-11-11
+
+The second train of the day, for the five pull requests opened after 0.405.0 (one line each):
+
+- Define `meme.caption.created` for a signed-in person's public caption, with only its id and owner (#444).
+- Add `codes.model-plan@1`: execution modes, role models and effort, bounded samples and budgets, an escalation ladder
+  and required checks; task requests accept a plan or a preset, and task reads can include the resolved plan and
+  per-role usage and outcome (#445).
+- Delivery and retry on computer and browser results: `bot.command-result@1` and `run.session-control-result@1` gain
+  `delivery` (`delivered`, `not_delivered`, `uncertain`) and `retry` (`safe`, `reason`), only `not_delivered` is safe
+  to replay; optional browser `origins` on browser commands, Run session creation and Bot desk lease creation (#446).
+- Add `ai.model-directory-entry@1` and `ai.model-directory-list@1` for public model listings, with provider-listed
+  models routed off, preview and retired models, and sourced pre-list sightings; a spotted entry never implies
+  availability (#447).
+- Keep the exact reply target and its display name in Community comment reads; document the two-reply preview and four
+  Chat-compatible file references on comment writes and reads (#448).
+
 ## 0.405.0 — 2026-11-11
 
 This release train carries the contract work that was waiting on the owner's release. One line per carried pull request:

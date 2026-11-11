@@ -1,0 +1,1 @@
+{"mode":"pair","roles":[{"role":"builder","model":"auto","effort":"high","budget":{"tokens":100000,"minutes":30,"dollars":2}},{"role":"reviewer","model":"openvibe/auto","effort":"medium"}],"checks":{"tests":true,"lint":true,"reviewer":true}}
