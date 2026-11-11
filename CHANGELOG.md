@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.401.0 — 2026-11-11
+
+- Add `codes.task-summary@1` (`contracts/codes/task-summary.v1.json`): a task as the Dock's Code tab lists it (id, title, status queued|running|needs-you|done|failed|stopped, mode create|openvibe|repo, repo, started/updated at, attempt count, url, preview and PR urls), served by OpenVibe.Codes `GET /api/v1/me/tasks`.
+- Add `codes.task.updated@1` (`contracts/events/payloads/codes.task.updated.v1.json`): the one event Codes writes on every task status change for the Dock's Code tab, alongside the per-state `codes.task.*` events; `codes` lists it in `eventsProduced`.
+
 ## 0.400.0 — 2026-11-10
 
 - Regroup the sites into the owner's eight groups (plan ask 274, 2026-11-10): `site.neighbourhood` is now `watch`, `talk`, `play`, `read`, `shop`, `tools`, `make` or `build`, the same ids and order as OpenVibe.Network `frame/sites.js` GROUPS and OpenVibe.Shared `rooms.js` HOODS. Every site manifest carries its new group; merged sections point at the site that shows them (Media → Video/watch, Bench → Report/read, Play → Games/play).

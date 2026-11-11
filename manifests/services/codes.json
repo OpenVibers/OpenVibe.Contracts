@@ -53,7 +53,8 @@
     "codes.task.running",
     "codes.task.succeeded",
     "codes.task.failed",
-    "codes.task.cancelled"
+    "codes.task.cancelled",
+    "codes.task.updated"
   ],
   "eventsConsumed": [
     "run.job.queued",

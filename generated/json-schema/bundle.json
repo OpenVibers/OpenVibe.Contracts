@@ -94868,6 +94868,104 @@
         }
       }
     },
+    "codes.task-summary": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/task-summary.v1.json",
+        "title": "CodesTaskSummary",
+        "description": "codes.task-summary@1: a coding task on OpenVibe.Codes as the Dock's Code tab lists it (GET /api/v1/me/tasks, newest and running first). STATUS is the task in the Dock's words: queued (waiting for one of the person's machines), running, needs-you (it waits on the person: an approval in its inbox), done, failed or stopped. MODE is where the request started: create (built on openvibe.space, no Codes task), openvibe (one of OpenVibe's own projects) or repo (the person's own repository). STEPS counts the attempts the task has run. URL is the task's page on openvibe.codes; PREVIEW_URL is its live preview when one exists (a Space build), else null; PR_URL is the pull request it opened, else null.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "status",
+          "mode",
+          "repo",
+          "started_at",
+          "updated_at",
+          "steps",
+          "url",
+          "preview_url",
+          "pr_url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The Codes task id (tsk_ + ULID)."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "The task's first line: what was asked, in the person's own words."
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "needs-you",
+              "done",
+              "failed",
+              "stopped"
+            ],
+            "description": "The task in the Dock's words."
+          },
+          "mode": {
+            "enum": [
+              "create",
+              "openvibe",
+              "repo"
+            ],
+            "description": "Where the request started."
+          },
+          "repo": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "The repository the task works on."
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "steps": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many attempts the task has run."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "description": "The task's page on openvibe.codes."
+          },
+          "preview_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Its live preview when one exists, else null."
+          },
+          "pr_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "The pull request it opened, else null."
+          }
+        }
+      }
+    },
     "play.title-definition": {
       "version": "1.0.0",
       "owner": "play",
@@ -100008,6 +100106,107 @@
               "null"
             ],
             "maxLength": 500
+          }
+        }
+      }
+    },
+    "codes.task.updated": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/codes.task.updated.v1.json",
+        "title": "CodesTaskUpdatedPayload",
+        "description": "codes.task.updated v1 (OpenVibe.Codes): a task's status changed. The one event the Dock's Code tab follows instead of polling: every state change writes it, alongside the per-state codes.task.* event. STATE is the announced state (placed reads as running, expired as failed). URL is the task's page on openvibe.codes. Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "state",
+          "agent",
+          "repo",
+          "cost_usd",
+          "files_changed",
+          "started_at",
+          "finished_at",
+          "error",
+          "url"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^tsk_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "repo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[^/\\s]+/[^/\\s]+$",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "owner/name from the task's repository URL, or null when it is not a repository path."
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "files_changed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "description": "The task's page on openvibe.codes."
           }
         }
       }
