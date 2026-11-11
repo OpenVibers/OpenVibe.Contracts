@@ -334141,7 +334141,12 @@ export interface Metadata {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334449,7 +334454,12 @@ export interface Metadata1 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334501,7 +334511,12 @@ export interface Metadata2 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334521,7 +334536,12 @@ export interface Metadata3 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334541,7 +334561,12 @@ export interface Metadata4 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334561,7 +334586,12 @@ export interface Metadata5 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334650,7 +334680,12 @@ export interface Metadata6 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334703,7 +334738,12 @@ export interface Metadata7 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;
@@ -334751,7 +334791,12 @@ export interface Metadata8 {
     }[];
     cost_usd?: number | null;
     needs_you?: {
-      [k: string]: unknown | undefined;
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
     } | null;
     product?: string;
     ref?: string | null;

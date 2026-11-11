@@ -14,7 +14,15 @@
           "title": "Example",
           "site": "example.com"
         }
-      ]
+      ],
+      "needs_you": {
+        "id": "approval_1",
+        "question": "May I publish the result?",
+        "actions": [
+          "approve",
+          "decline"
+        ]
+      }
     }
   }
 }

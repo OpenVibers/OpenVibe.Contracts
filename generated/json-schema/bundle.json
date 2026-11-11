@@ -124794,7 +124794,29 @@
                       "object",
                       "null"
                     ],
-                    "additionalProperties": true
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "question",
+                      "actions"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 160
+                      },
+                      "question": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1000
+                      },
+                      "actions": {
+                        "type": "array",
+                        "items": {},
+                        "minItems": 1
+                      }
+                    }
                   },
                   "product": {
                     "type": "string",
