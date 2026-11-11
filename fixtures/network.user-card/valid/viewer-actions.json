@@ -1,0 +1,14 @@
+{
+  "username": "Example",
+  "profile_url": "https://openvibe.network/@Example",
+  "actions": [
+    { "id": "profile", "label": "Profile", "href": "https://openvibe.network/@Example" },
+    { "id": "message", "label": "Message", "href": "https://openvibe.chat/messages" },
+    { "id": "follow", "label": "Follow", "method": "PUT", "path": "/api/v1/me/follows/channel/Example", "state": { "following": false } },
+    { "id": "add-friend", "label": "Add friend", "method": "PUT", "path": "/api/v1/me/friends/Example", "state": { "friendship": "none" } },
+    { "id": "tip", "label": "Tip", "href": "https://openvibe.tips/Example" },
+    { "id": "mute", "label": "Mute", "method": "PUT", "path": "/api/v1/me/mutes/Example", "state": { "muted": false } },
+    { "id": "block", "label": "Block", "method": "PUT", "path": "/api/v1/me/blocks/Example", "state": { "blocked": false } },
+    { "id": "report", "label": "Report", "method": "POST", "path": "/api/v1/me/reports", "body": { "target": "Example", "reason": "other", "detail": "" }, "state": { "reported": false } }
+  ]
+}

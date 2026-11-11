@@ -11249,6 +11249,42 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.user-card",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-card.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.user-report",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-report.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.user-report-list-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-report-list-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.user-report-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-report-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

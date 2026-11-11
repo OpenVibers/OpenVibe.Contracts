@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.403.0 — 2026-11-11
+
+- Add `network.user-card@1` (ask 287): the one public user card read, now carrying viewer-aware
+  `actions` (Message, Follow/Unfollow, Add friend, Tip, Watch together, Mute, Block, Report and a
+  staff queue) beside its privacy-filtered summary. The action descriptor names either an `href`
+  to open or a Network `method` + `path` (and `body`) to call with the viewer's token.
+- Add `network.user-report@1`, `network.user-report-request@1` and
+  `network.user-report-list-result@1`: a person's report about another person, the POST body and
+  the staff queue (staff.moderation.logs).
+
 ## 0.401.0 — 2026-11-11
 
 - Add the `live.channel_points.read` capability (with `live.channel-points-page@1`): OpenVibe.Network reads one channel's points moves for the person behind a Network account through Live's internal channel-points changes read, for the gain/loss API (ask 273).

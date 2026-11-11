@@ -124455,6 +124455,351 @@
         },
         "description": "NetworkLevelBoard: one earned platform level owned by Network; experience is never bought or spent."
       }
+    },
+    "network.user-card": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/user-card.v1.json",
+        "title": "NetworkUserCard",
+        "description": "network.user-card@1 (ask 287): the one public user card read, GET /api/v1/people/:username/card on OpenVibe.Network. It is public and credential-free; a signed-in viewer may send their Network token (Authorization: Bearer …) and then also receives `actions` computed for that viewer, never cached. Without a viewer, or on the viewer's own card, `actions` carries Profile and Channel only. A missing, expired or revoked token reads as anonymous, never a 401. Hidden fields are absent, never zero, offline or a placeholder; no presence, page titles or visited URLs leave the read.",
+        "type": "object",
+        "required": [
+          "username",
+          "profile_url",
+          "actions"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_]{3,24}$"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "profile_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "level": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "streak": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "badges_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "followers": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "live": {
+            "type": "object",
+            "required": [
+              "now"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "now": {
+                "type": "boolean"
+              },
+              "site": {
+                "const": "live"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              }
+            }
+          },
+          "channel_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "active_sites": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "url"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,39}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://"
+                }
+              }
+            }
+          },
+          "actions": {
+            "type": "array",
+            "description": "What the viewer can do, by what is possible for the pair. Order is the card's order. Each action either opens somewhere (`href`) or calls a Network route with the viewer's token (`method` + `path`, and `body` where the route needs one).",
+            "items": {
+              "$ref": "#/$defs/action"
+            }
+          }
+        },
+        "$defs": {
+          "action": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "label",
+                  "href"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "label": {
+                    "$ref": "#/$defs/label"
+                  },
+                  "href": {
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https://"
+                  },
+                  "state": {
+                    "$ref": "#/$defs/state"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "label",
+                  "method",
+                  "path"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "label": {
+                    "$ref": "#/$defs/label"
+                  },
+                  "method": {
+                    "enum": [
+                      "PUT",
+                      "POST",
+                      "DELETE",
+                      "PATCH"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "pattern": "^/api/v1/"
+                  },
+                  "body": {
+                    "type": "object"
+                  },
+                  "state": {
+                    "$ref": "#/$defs/state"
+                  }
+                }
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,39}$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "state": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "following": {
+                "type": "boolean"
+              },
+              "friendship": {
+                "enum": [
+                  "none",
+                  "pending",
+                  "requested",
+                  "friends"
+                ]
+              },
+              "muted": {
+                "type": "boolean"
+              },
+              "blocked": {
+                "type": "boolean"
+              },
+              "reported": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "network.user-report": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/user-report.v1.json",
+        "title": "NetworkUserReport",
+        "description": "network.user-report@1 (ask 287): one report a person filed about another person on OpenVibe.Network. Reports never resolve themselves; staff holding staff.moderation.logs read the queue (GET /api/v1/staff/user-reports?status=open&target=usr_…&limit=), and a staff decision lives in the moderation audit log. `status` records whether staff have looked, not a verdict.",
+        "type": "object",
+        "required": [
+          "id",
+          "reporter",
+          "target",
+          "reason",
+          "detail",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reporter": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "target": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "reason": {
+            "enum": [
+              "spam",
+              "harassment",
+              "impersonation",
+              "explicit",
+              "scam",
+              "other"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "status": {
+            "enum": [
+              "open",
+              "reviewed",
+              "dismissed"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.user-report-list-result": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/user-report-list-result.v1.json",
+        "title": "NetworkUserReportListResult",
+        "description": "network.user-report-list-result@1 (ask 287): GET /api/v1/staff/user-reports on OpenVibe.Network, the staff queue for people holding staff.moderation.logs. Newest first, filtered by status (default open) and target subject, at most 200 rows (`limit`, default 50). A caller without the capability gets 403 user_reports.forbidden (problem+json).",
+        "type": "object",
+        "required": [
+          "reports"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "reports": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "$ref": "user-report.v1.json"
+            }
+          }
+        }
+      }
+    },
+    "network.user-report-request": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/user-report-request.v1.json",
+        "title": "NetworkUserReportRequest",
+        "description": "network.user-report-request@1 (ask 287): POST /api/v1/me/reports on OpenVibe.Network, a signed-in person's report about another person. `target` is their username (any case) or usr_ subject; guests cannot be named, and nobody reports themselves. The same pair may have one open report: filing again while it is open answers the open one with 200 instead of creating a duplicate (201 when it creates one).",
+        "type": "object",
+        "required": [
+          "target",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string",
+            "pattern": "^([A-Za-z0-9_]{3,24}|usr_[0-9A-HJKMNP-TV-Z]{26})$"
+          },
+          "reason": {
+            "enum": [
+              "spam",
+              "harassment",
+              "impersonation",
+              "explicit",
+              "scam",
+              "other"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        }
+      }
     }
   }
 }

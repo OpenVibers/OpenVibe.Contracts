@@ -333214,3 +333214,96 @@ export interface NetworkLevelBoard {
         ];
   };
 }
+
+/** network.user-card@1.0.0 (owner: network) */
+/**
+ * network.user-card@1 (ask 287): the one public user card read, GET /api/v1/people/:username/card on OpenVibe.Network. It is public and credential-free; a signed-in viewer may send their Network token (Authorization: Bearer …) and then also receives `actions` computed for that viewer, never cached. Without a viewer, or on the viewer's own card, `actions` carries Profile and Channel only. A missing, expired or revoked token reads as anonymous, never a 401. Hidden fields are absent, never zero, offline or a placeholder; no presence, page titles or visited URLs leave the read.
+ */
+export interface NetworkUserCard {
+  username: string;
+  display_name?: string;
+  avatar_url?: string;
+  profile_url: string;
+  level?: number;
+  streak?: number;
+  badges_count?: number;
+  followers?: number;
+  live?: {
+    now: boolean;
+    site?: "live";
+    url?: string;
+  };
+  channel_url?: string;
+  active_sites?: {
+    id: string;
+    name: string;
+    url: string;
+  }[];
+  /**
+   * What the viewer can do, by what is possible for the pair. Order is the card's order. Each action either opens somewhere (`href`) or calls a Network route with the viewer's token (`method` + `path`, and `body` where the route needs one).
+   */
+  actions: (
+    | {
+        id: string;
+        label: string;
+        href: string;
+        state?: {
+          following?: boolean;
+          friendship?: "none" | "pending" | "requested" | "friends";
+          muted?: boolean;
+          blocked?: boolean;
+          reported?: boolean;
+        };
+      }
+    | {
+        id: string;
+        label: string;
+        method: "PUT" | "POST" | "DELETE" | "PATCH";
+        path: string;
+        body?: {};
+        state?: {
+          following?: boolean;
+          friendship?: "none" | "pending" | "requested" | "friends";
+          muted?: boolean;
+          blocked?: boolean;
+          reported?: boolean;
+        };
+      }
+  )[];
+}
+
+/** network.user-report@1.0.0 (owner: network) */
+/**
+ * network.user-report@1 (ask 287): one report a person filed about another person on OpenVibe.Network. Reports never resolve themselves; staff holding staff.moderation.logs read the queue (GET /api/v1/staff/user-reports?status=open&target=usr_…&limit=), and a staff decision lives in the moderation audit log. `status` records whether staff have looked, not a verdict.
+ */
+export interface NetworkUserReport {
+  id: number;
+  reporter: string;
+  target: string;
+  reason: "spam" | "harassment" | "impersonation" | "explicit" | "scam" | "other";
+  detail: string;
+  status: "open" | "reviewed" | "dismissed";
+  created_at: string;
+  updated_at: string;
+}
+
+/** network.user-report-list-result@1.0.0 (owner: network) */
+/**
+ * network.user-report-list-result@1 (ask 287): GET /api/v1/staff/user-reports on OpenVibe.Network, the staff queue for people holding staff.moderation.logs. Newest first, filtered by status (default open) and target subject, at most 200 rows (`limit`, default 50). A caller without the capability gets 403 user_reports.forbidden (problem+json).
+ */
+export interface NetworkUserReportListResult {
+  /**
+   * @maxItems 200
+   */
+  reports: NetworkUserReport[];
+}
+
+/** network.user-report-request@1.0.0 (owner: network) */
+/**
+ * network.user-report-request@1 (ask 287): POST /api/v1/me/reports on OpenVibe.Network, a signed-in person's report about another person. `target` is their username (any case) or usr_ subject; guests cannot be named, and nobody reports themselves. The same pair may have one open report: filing again while it is open answers the open one with 200 instead of creating a duplicate (201 when it creates one).
+ */
+export interface NetworkUserReportRequest {
+  target: string;
+  reason: "spam" | "harassment" | "impersonation" | "explicit" | "scam" | "other";
+  detail?: string;
+}
