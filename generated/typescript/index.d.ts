@@ -317,9 +317,9 @@ export type IdentityResolveRequest =
     }
   | NoBody;
 
-/** identity.resolve-result@1.0.0 (owner: network) */
+/** identity.resolve-result@1.1.0 (owner: network) */
 /**
- * identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing.
+ * identity.resolve-result@1: answers of identity.subject.resolve on OpenVibe.Network. GET /internal/identity/resolve → one identity.subject-projection@1 (404 identity.subject_not_found when nothing matches); POST /internal/identity/resolve-batch → { results } keyed by each id asked, null for an id that resolves to nothing; GET /internal/identity/test-subjects → { subjects } with every account marked is_test.
  */
 export type IdentityResolveResult =
   | IdentitySubjectProjection
@@ -327,6 +327,9 @@ export type IdentityResolveResult =
       results: {
         [k: string]: (IdentitySubjectProjection | null) | undefined;
       };
+    }
+  | {
+      subjects: IdentitySubjectProjection[];
     };
 
 /** identity.trust@1.0.0 (owner: network) */
@@ -973,9 +976,9 @@ export interface VerifiedEmailCheckResult {
   verified: boolean;
 }
 
-/** identity.subject-projection@1.0.0 (owner: network) */
+/** identity.subject-projection@1.1.0 (owner: network) */
 /**
- * identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned, and every legacy id mapped to it.
+ * identity.subject-projection@1: what OpenVibe.Network's identity resolver answers about a subject (server/identity/subjects.js resolve): the SubjectRef, the Network account behind it, its display fields, whether it is banned and whether it is a test account, and every legacy id mapped to it.
  */
 export interface IdentitySubjectProjection {
   subject: SubjectRef;
@@ -990,6 +993,10 @@ export interface IdentitySubjectProjection {
     source_type: string;
     source_id: string;
   }[];
+  /**
+   * True for an account the probe and test tooling signs in as (users.is_test on Network). A public member list, feed, leaderboard or account count leaves these accounts out; their own signed-in views still work.
+   */
+  is_test?: boolean;
 }
 
 /** common.entity-ref@1.0.0 (owner: contracts) */
@@ -280885,6 +280892,51 @@ export interface CodesTask {
 
 /** codes.task@2.1.0 (owner: codes) */
 
+/** codes.task-summary@1.0.0 (owner: codes) */
+/**
+ * codes.task-summary@1: a coding task on OpenVibe.Codes as the Dock's Code tab lists it (GET /api/v1/me/tasks, newest and running first). STATUS is the task in the Dock's words: queued (waiting for one of the person's machines), running, needs-you (it waits on the person: an approval in its inbox), done, failed or stopped. MODE is where the request started: create (built on openvibe.space, no Codes task), openvibe (one of OpenVibe's own projects) or repo (the person's own repository). STEPS counts the attempts the task has run. URL is the task's page on openvibe.codes; PREVIEW_URL is its live preview when one exists (a Space build), else null; PR_URL is the pull request it opened, else null.
+ */
+export interface CodesTaskSummary {
+  /**
+   * The Codes task id (tsk_ + ULID).
+   */
+  id: string;
+  /**
+   * The task's first line: what was asked, in the person's own words.
+   */
+  title: string;
+  /**
+   * The task in the Dock's words.
+   */
+  status: "queued" | "running" | "needs-you" | "done" | "failed" | "stopped";
+  /**
+   * Where the request started.
+   */
+  mode: "create" | "openvibe" | "repo";
+  /**
+   * The repository the task works on.
+   */
+  repo: string;
+  started_at: string;
+  updated_at: string;
+  /**
+   * How many attempts the task has run.
+   */
+  steps: number;
+  /**
+   * The task's page on openvibe.codes.
+   */
+  url: string;
+  /**
+   * Its live preview when one exists, else null.
+   */
+  preview_url: string | null;
+  /**
+   * The pull request it opened, else null.
+   */
+  pr_url: string | null;
+}
+
 /** play.title-definition@1.0.0 (owner: play) */
 /**
  * A title as its own principal registers it (play.title.manage, PUT /api/v1/titles/:title). Achievements and boards are listed in display order; one left out is retired, never deleted. A board's kind never changes.
@@ -295081,6 +295133,29 @@ export interface CodesTaskCancelledPayload {
   started_at: string | null;
   finished_at: string | null;
   error: string | null;
+}
+
+/** codes.task.updated@1.0.0 (owner: codes) */
+/**
+ * codes.task.updated v1 (OpenVibe.Codes): a task's status changed. The one event the Dock's Code tab follows instead of polling: every state change writes it, alongside the per-state codes.task.* event. STATE is the announced state (placed reads as running, expired as failed). URL is the task's page on openvibe.codes. Envelope: source codes, subject { type: user, id: <owner usr_> }, visibility internal.
+ */
+export interface CodesTaskUpdatedPayload {
+  task_id: string;
+  state: "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  agent: string | null;
+  /**
+   * owner/name from the task's repository URL, or null when it is not a repository path.
+   */
+  repo: string | null;
+  cost_usd: number | null;
+  files_changed: number | null;
+  started_at: string | null;
+  finished_at: string | null;
+  error: string | null;
+  /**
+   * The task's page on openvibe.codes.
+   */
+  url: string;
 }
 
 /** domains.proposal@1.0.0 (owner: domains) */
@@ -336120,4 +336195,52 @@ export interface CodesAgentSheet {
     provider: string | null;
     capabilities: {};
   };
+}
+
+/** compare.comparison@1.0.0 (owner: compare) */
+/**
+ * A comparison of things by weighted criteria, with finite dated results and their public sources. Missing evidence is absent, never zero.
+ */
+export interface CompareComparison {
+  slug: string;
+  title: string;
+  kind: string;
+  summary: string;
+  things: {
+    id: string;
+    name: string;
+    maker: string;
+    icon: string;
+    url: string;
+  }[];
+  criteria: {
+    id: string;
+    label: string;
+    unit: string;
+    group: string;
+    better: "higher" | "lower";
+    weight: number;
+  }[];
+  results: {
+    thing: string;
+    criterion: string;
+    value: number;
+    as_of: string;
+    source: {
+      label: string;
+      url: string;
+    };
+  }[];
+  method: string;
+  sources: {
+    label: string;
+    url: string;
+  }[];
+  updated_at: string;
+  versions: {
+    id: string;
+    url: string;
+    as_of: string;
+  }[];
+  availability?: string[];
 }

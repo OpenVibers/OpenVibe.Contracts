@@ -1,0 +1,13 @@
+{
+  "id": "tsk_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
+  "title": "Make the home page faster on phones",
+  "status": "needs-you",
+  "mode": "openvibe",
+  "repo": "https://github.com/OpenVibers/OpenVibe.Live",
+  "started_at": "2026-11-10T09:00:00.000Z",
+  "updated_at": "2026-11-10T09:30:00.000Z",
+  "steps": 1,
+  "url": "https://openvibe.codes/tasks/tsk_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
+  "preview_url": null,
+  "pr_url": "https://github.com/OpenVibers/OpenVibe.Live/pull/654"
+}

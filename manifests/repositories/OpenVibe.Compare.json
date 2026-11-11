@@ -1,0 +1,23 @@
+{
+  "name": "OpenVibe.Compare",
+  "repository": "OpenVibers/OpenVibe.Compare",
+  "service": "compare",
+  "product": "Compare",
+  "stage": "alpha",
+  "version": "0.1.0",
+  "runtime": "node 22",
+  "database": "none",
+  "migrations": 0,
+  "authority": [
+    "compare.*"
+  ],
+  "domains": [
+    "openvibe.compare"
+  ],
+  "pins": {
+    "openvibe-shared": "v4.200.0"
+  },
+  "deployed": true,
+  "exposure": "live",
+  "track": "ask-297"
+}

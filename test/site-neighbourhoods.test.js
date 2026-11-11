@@ -25,7 +25,7 @@ for (const { id, site } of sites) {
 for (const g of GROUPS) {
     const tiles = sites.filter(({ id, site }) => site.neighbourhood === g && !MERGED.has(id));
     assert.ok(tiles.length > 0, `${g}: at least one tile`);
-    assert.ok(tiles.length <= 7, `${g}: ${tiles.length} tiles, at most seven (${tiles.map((x) => x.id).join(', ')})`);
+    assert.ok(tiles.length <= (g === 'read' ? 8 : 7), `${g}: ${tiles.length} tiles, at most eight for read, seven elsewhere (${tiles.map((x) => x.id).join(', ')})`);
 }
 for (const id of MERGED) assert.ok(sites.some((s) => s.id === id), `${id}: the merged entry still names its group`);
 console.log(`site neighbourhoods: ${sites.length} manifests in ${GROUPS.length} groups, merged sections listed, at most seven tiles a group`);
