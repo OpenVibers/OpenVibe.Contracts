@@ -1,0 +1,23 @@
+{
+  "type": "ACTIVITY_SNAPSHOT",
+  "timestamp": 1794355200000,
+  "messageId": "activity_1",
+  "activityType": "plan",
+  "content": {
+    "step": "read"
+  },
+  "metadata": {
+    "ov": {
+      "title": "Researching the question",
+      "kind": "read",
+      "product": "codes",
+      "sources": [
+        {
+          "url": "https://example.com",
+          "title": "Example",
+          "site": "example.com"
+        }
+      ]
+    }
+  }
+}

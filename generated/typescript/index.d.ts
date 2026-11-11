@@ -333291,78 +333291,564 @@ export interface NetworkLevelBoard {
 
 /** agent.ui-event@1.0.0 (owner: actor) */
 /**
- * agent.ui-event@1: AG-UI 1.0 event envelope with OpenVibe display metadata. CUSTOM events use custom_type ov.sources, ov.handoff, ov.approval or ov.result.
+ * agent.ui-event@1: AG-UI 1.0 event shape and event-family fields, with OpenVibe metadata.ov. AG-UI timestamps are Unix-millisecond integers; this contract requires one on every event. CUSTOM events use AG-UI name/value with ov.sources, ov.handoff, ov.approval or ov.result names.
  */
-export type AgentUiEvent = {
-  [k: string]: unknown | undefined;
-} & {
-  /**
-   * AG-UI 1.0 event discriminator.
-   */
-  type:
-    | "RUN_STARTED"
-    | "RUN_FINISHED"
-    | "RUN_ERROR"
-    | "STEP_STARTED"
-    | "STEP_FINISHED"
-    | "TEXT_MESSAGE_START"
-    | "TEXT_MESSAGE_CONTENT"
-    | "TEXT_MESSAGE_END"
-    | "TOOL_CALL_START"
-    | "TOOL_CALL_ARGS"
-    | "TOOL_CALL_END"
-    | "TOOL_CALL_RESULT"
-    | "REASONING_START"
-    | "REASONING_MESSAGE_START"
-    | "REASONING_MESSAGE_CONTENT"
-    | "REASONING_MESSAGE_END"
-    | "REASONING_MESSAGE_CHUNK"
-    | "REASONING_END"
-    | "REASONING_ENCRYPTED_VALUE"
-    | "STATE_SNAPSHOT"
-    | "STATE_DELTA"
-    | "ACTIVITY_SNAPSHOT"
-    | "ACTIVITY_DELTA"
-    | "CUSTOM";
-  /**
-   * ISO-8601 event timestamp; AG-UI permits producer timestamps.
-   */
-  timestamp: string;
-  threadId?: string;
-  runId?: string;
-  metadata?: {
-    ov?: {
-      title?: string;
-      kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
-      sources?: {
-        url: string;
-        title: string;
-        site: string;
-      }[];
-      attachments?: {}[];
-      cost_usd?: number | null;
-      needs_you?: {} | null;
-      product?: string;
-      ref?: string | null;
+export type AgentUiEvent = Event & {};
+/**
+ * Any AG-UI event. Every member is normative: there is no optional tier and no event a consumer may decline to implement. Discriminated by the type property.
+ */
+export type Event =
+  | TextMessageStartEvent
+  | TextMessageContentEvent
+  | TextMessageEndEvent
+  | TextMessageChunkEvent
+  | ToolCallStartEvent
+  | ToolCallArgsEvent
+  | ToolCallEndEvent
+  | ToolCallChunkEvent
+  | ToolCallResultEvent
+  | StateSnapshotEvent
+  | StateDeltaEvent
+  | MessagesSnapshotEvent
+  | ActivitySnapshotEvent
+  | ActivityDeltaEvent
+  | RawEvent
+  | CustomEvent
+  | RunStartedEvent
+  | RunFinishedEvent
+  | RunErrorEvent
+  | StepStartedEvent
+  | StepFinishedEvent
+  | ReasoningStartEvent
+  | ReasoningMessageStartEvent
+  | ReasoningMessageContentEvent
+  | ReasoningMessageEndEvent
+  | ReasoningMessageChunkEvent
+  | ReasoningEndEvent
+  | ReasoningEncryptedValueEvent
+  | SubagentStartedEvent
+  | SubagentFinishedEvent
+  | SubagentErrorEvent;
+/**
+ * Opens a streamed text message. The content arrives as TEXT_MESSAGE_CONTENT events and the message closes with TEXT_MESSAGE_END.
+ */
+export type TextMessageStartEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_START";
+    /**
+     * Identifies the message this stream builds, and ties the later content and end events to it.
+     */
+    messageId: string;
+    /**
+     * Who the message is from. An absent role means assistant; that meaning is normative and stated in the prose, because a validator treats a default as documentation rather than as behaviour.
+     */
+    role?: "developer" | "system" | "assistant" | "user";
+    /**
+     * An optional display name for the author, for providers that distinguish several participants in one role.
+     */
+    name?: string;
+  };
+/**
+ * Appends a fragment to a streamed text message.
+ */
+export type TextMessageContentEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_CONTENT";
+    /**
+     * The message this fragment belongs to.
+     */
+    messageId: string;
+    /**
+     * The fragment to append. May be the empty string: providers emit empty deltas as keep-alives and while a tool call is being decided, and rejecting them would kill runs that are working correctly.
+     */
+    delta: string;
+  };
+/**
+ * Closes a streamed text message.
+ */
+export type TextMessageEndEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_END";
+    /**
+     * The message being closed.
+     */
+    messageId: string;
+  };
+/**
+ * A shorthand that stands in for a start, content and end sequence, for producers that cannot know in advance where a message begins. Every field is optional because a continuation chunk omits what has not changed; which message a field-less chunk continues is a sequence question the prose specification answers.
+ */
+export type TextMessageChunkEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_CHUNK";
+    /**
+     * The message this chunk belongs to. Absent continues the message already open.
+     */
+    messageId?: string;
+    /**
+     * Who the message is from, on the chunk that opens it.
+     */
+    role?: "developer" | "system" | "assistant" | "user";
+    /**
+     * The fragment to append. May be the empty string.
+     */
+    delta?: string;
+    /**
+     * An optional display name for the author.
+     */
+    name?: string;
+  };
+/**
+ * Opens a tool call. The arguments arrive as TOOL_CALL_ARGS events and the call closes with TOOL_CALL_END.
+ */
+export type ToolCallStartEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_START";
+    /**
+     * Identifies the call, and ties the later args, end and result events to it.
+     */
+    toolCallId: string;
+    /**
+     * Which tool is being called.
+     */
+    toolCallName: string;
+    /**
+     * The assistant message that holds this call. Absent means the producer did not attribute it to one.
+     */
+    parentMessageId?: string;
+  };
+/**
+ * Appends a fragment of a tool call's arguments.
+ */
+export type ToolCallArgsEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_ARGS";
+    /**
+     * The call these arguments belong to.
+     */
+    toolCallId: string;
+    /**
+     * A fragment of the arguments, which concatenate into the call's argument text — conventionally a JSON document, though the protocol does not validate it (see FunctionCall.arguments). Deliberately a string rather than parsed JSON: a fragment is not itself a document. May be the empty string.
+     */
+    delta: string;
+  };
+/**
+ * Closes a tool call, meaning its arguments are complete.
+ */
+export type ToolCallEndEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_END";
+    /**
+     * The call being closed.
+     */
+    toolCallId: string;
+  };
+/**
+ * A shorthand that stands in for a tool call's start, args and end sequence. Every field is optional for the same reason as TEXT_MESSAGE_CHUNK.
+ */
+export type ToolCallChunkEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_CHUNK";
+    /**
+     * The call this chunk belongs to. Absent continues the call already open.
+     */
+    toolCallId?: string;
+    /**
+     * Which tool is being called, on the chunk that opens it.
+     */
+    toolCallName?: string;
+    /**
+     * The assistant message that holds this call.
+     */
+    parentMessageId?: string;
+    /**
+     * A fragment of the arguments. May be the empty string.
+     */
+    delta?: string;
+  };
+/**
+ * Carries what a tool returned. Mints a tool message rather than appending to an existing one, which is why it has its own messageId.
+ */
+export type ToolCallResultEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_RESULT";
+    /**
+     * The tool message this result becomes.
+     */
+    messageId: string;
+    /**
+     * The call being answered.
+     */
+    toolCallId: string;
+    /**
+     * What the tool returned: either plain text, or an ordered list of parts, exactly as on the tool message this event mints. A tool returning structured data serialises it into text; media travel as parts of their own.
+     */
+    content: string | ContentPart[];
+    /**
+     * Present only for symmetry with the message it mints; the value is fixed, so a producer may leave it out.
+     */
+    role?: "tool";
+  };
+/**
+ * Replaces the agent state wholesale. Sent when a delta cannot express the change, or to resynchronise a consumer.
+ */
+export type StateSnapshotEvent = BaseEvent &
+  Attributable & {
+    type: "STATE_SNAPSHOT";
+    /**
+     * The complete new state.
+     */
+    snapshot: {
+      [k: string]: unknown | undefined;
     };
+  };
+/**
+ * Changes the agent state incrementally.
+ */
+export type StateDeltaEvent = BaseEvent &
+  Attributable & {
+    type: "STATE_DELTA";
+    delta: JsonPatch;
+  };
+/**
+ * The complete set of messages the producer owns, in order. Conversation-wide rather than a plain overwrite: a consumer may keep messages of its own that no producer tracks, so exactly how a snapshot reconciles with those is behavioural and belongs in the prose. Being conversation-wide it cannot belong to a single subagent, so it carries no attribution; it does establish which subagent owns each message it contains, through the messages themselves.
+ */
+export type MessagesSnapshotEvent = BaseEvent & {
+  type: "MESSAGES_SNAPSHOT";
+  /**
+   * The messages the producer is declaring, in order.
+   */
+  messages: Message[];
+};
+/**
+ * Reports structured progress that is not conversation content, such as a step a UI renders as its own widget.
+ */
+export type ActivitySnapshotEvent = BaseEvent &
+  Attributable & {
+    type: "ACTIVITY_SNAPSHOT";
+    /**
+     * The activity message this describes.
+     */
+    messageId: string;
+    /**
+     * What kind of activity this is. An open string: the set is the producer's, not the protocol's.
+     */
+    activityType: string;
+    /**
+     * The activity's payload, open by key.
+     */
+    content: {
+      [k: string]: unknown | undefined;
+    };
+    /**
+     * Whether this snapshot overwrites the activity's existing content. Absent means it does, and that meaning is normative; only an explicit false asks a consumer to leave what is already there. It does not ask for a merge — ACTIVITY_DELTA is how content is changed incrementally. What a consumer does with a non-overwriting snapshot is behavioural and belongs in the prose.
+     */
+    replace?: boolean;
+  };
+/**
+ * Changes an activity message's content incrementally.
+ */
+export type ActivityDeltaEvent = BaseEvent &
+  Attributable & {
+    type: "ACTIVITY_DELTA";
+    /**
+     * The activity message being changed.
+     */
+    messageId: string;
+    /**
+     * What kind of activity this is.
+     */
+    activityType: string;
+    patch: JsonPatch1;
+  };
+/**
+ * Passes a provider-native event through untranslated, for consumers that need detail the protocol does not model.
+ */
+export type RawEvent = BaseEvent &
+  Attributable & {
+    type: "RAW";
+    /**
+     * The provider's own event. Any JSON value, and required: an event whose only purpose is to carry this would say nothing without it.
+     */
+    event: {
+      [k: string]: unknown | undefined;
+    };
+    /**
+     * Which provider or framework the event came from.
+     */
+    source?: string;
+  };
+/**
+ * The protocol's extension point for an application's own events. Anything a consumer does with one is outside the protocol.
+ */
+export type CustomEvent = BaseEvent &
+  Attributable & {
+    type: "CUSTOM";
+    /**
+     * What this custom event is. Required: without it a consumer cannot route the value.
+     */
+    name: "ov.sources" | "ov.handoff" | "ov.approval" | "ov.result";
+    /**
+     * The payload. Any JSON value, and required.
+     */
+    value: {
+      [k: string]: unknown | undefined;
+    };
+  };
+/**
+ * Opens a run. Run-scoped, so it carries no subagent attribution.
+ */
+export type RunStartedEvent = BaseEvent & {
+  type: "RUN_STARTED";
+  /**
+   * The conversation this run belongs to.
+   */
+  threadId: string;
+  /**
+   * Identifies this run.
+   */
+  runId: string;
+  /**
+   * The protocol version this producer speaks, such as "1.0" — the producer's own version, not an echo of the input's, which is what makes the pair a negotiation: each side declares itself and the consumer sees a downgrade the moment it happens. Absent means a producer from before the protocol carried a version.
+   */
+  protocolVersion?: string;
+  /**
+   * The run that spawned this one, when an agent invokes another agent as a separate run rather than as a subagent within one.
+   */
+  parentRunId?: string;
+  input?: RunAgentInput;
+};
+/**
+ * Closes a run that did not fail. Run-scoped, so it carries no subagent attribution.
+ */
+export type RunFinishedEvent = BaseEvent & {
+  type: "RUN_FINISHED";
+  /**
+   * The conversation this run belongs to.
+   */
+  threadId: string;
+  /**
+   * The run being closed.
+   */
+  runId: string;
+  /**
+   * The run's return value, if it has one. Any JSON value.
+   */
+  result?: {
     [k: string]: unknown | undefined;
   };
-  step_name?: string;
-  message_id?: string;
-  role?: string;
-  content?: unknown;
-  tool_call_id?: string;
-  tool_call_name?: string;
-  tool_call_args?: unknown;
-  tool_call_result?: unknown;
-  delta?: unknown;
-  patches?: unknown[];
-  snapshot?: unknown;
-  activity_type?: string;
-  value?: unknown;
-  name?: "ov.sources" | "ov.handoff" | "ov.approval" | "ov.result";
-  rawEvent?: unknown;
-  payload?: unknown;
+  /**
+   * Why the run ended. Absent means success, so every producer written before outcomes existed is already conformant.
+   */
+  outcome?: RunFinishedSuccessOutcome | RunFinishedInterruptOutcome | RunFinishedCancelledOutcome;
+  /**
+   * Token usage for the run, one entry per provider and model, so a run that invoked several models keeps them separate. A consumer that only wants totals sums across the entries. The run is the accounting boundary: usage covers every model call made within the run, calls made by its subagents included; an agent invoked as a separate run under parentRunId reports its own usage on its own terminal event; and a run that resumes an interrupted one reports only the calls it made itself, not the interrupted run's.
+   */
+  usage?: TokenUsage[];
+};
+/**
+ * Ends a run that failed. Run-scoped, so it carries no subagent attribution; a subagent that fails without ending the run reports SUBAGENT_ERROR instead.
+ */
+export type RunErrorEvent = BaseEvent & {
+  type: "RUN_ERROR";
+  /**
+   * What went wrong, for a person to read.
+   */
+  message: string;
+  /**
+   * A machine-readable error code. An open string: the protocol defines no vocabulary.
+   */
+  code?: string;
+  /**
+   * Token usage accrued before the failure, for a run that completed one or more model calls before dying. Scoped as on RUN_FINISHED: the run's own calls, subagents included.
+   */
+  usage?: TokenUsage[];
+};
+/**
+ * Opens a named step within a run, for producers whose frameworks have a step concept worth surfacing.
+ */
+export type StepStartedEvent = BaseEvent &
+  Attributable & {
+    type: "STEP_STARTED";
+    /**
+     * The step's name. Identifies it: the matching STEP_FINISHED carries the same name.
+     */
+    stepName: string;
+  };
+/**
+ * Closes a named step.
+ */
+export type StepFinishedEvent = BaseEvent &
+  Attributable & {
+    type: "STEP_FINISHED";
+    /**
+     * The step being closed.
+     */
+    stepName: string;
+  };
+/**
+ * Opens a span of reasoning. A span may contain several reasoning messages.
+ */
+export type ReasoningStartEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_START";
+    /**
+     * The span being opened.
+     */
+    messageId: string;
+  };
+/**
+ * Opens a streamed reasoning message.
+ */
+export type ReasoningMessageStartEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_START";
+    /**
+     * The reasoning message this stream builds.
+     */
+    messageId: string;
+    /**
+     * Fixed, and required rather than defaulted. The requirement is inherited from the SDKs rather than chosen.
+     */
+    role: "reasoning";
+  };
+/**
+ * Appends a fragment to a streamed reasoning message.
+ */
+export type ReasoningMessageContentEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_CONTENT";
+    /**
+     * The reasoning message this fragment belongs to.
+     */
+    messageId: string;
+    /**
+     * The fragment to append. May be the empty string.
+     */
+    delta: string;
+  };
+/**
+ * Closes a streamed reasoning message.
+ */
+export type ReasoningMessageEndEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_END";
+    /**
+     * The reasoning message being closed.
+     */
+    messageId: string;
+  };
+/**
+ * A shorthand that stands in for a reasoning message's start, content and end sequence.
+ */
+export type ReasoningMessageChunkEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_CHUNK";
+    /**
+     * The reasoning message this chunk belongs to. Absent continues the one already open.
+     */
+    messageId?: string;
+    /**
+     * The fragment to append. May be the empty string.
+     */
+    delta?: string;
+  };
+/**
+ * Closes a span of reasoning.
+ */
+export type ReasoningEndEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_END";
+    /**
+     * The span being closed.
+     */
+    messageId: string;
+  };
+/**
+ * Carries a provider's opaque, encrypted reasoning artefact, which a consumer stores and returns on a later turn without being able to read it.
+ */
+export type ReasoningEncryptedValueEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_ENCRYPTED_VALUE";
+    /**
+     * What kind of thing entityId names, which decides where the value is stored.
+     */
+    subtype: "tool-call" | "message";
+    /**
+     * What the value belongs to: a message id or a tool call id, according to subtype.
+     */
+    entityId: string;
+    /**
+     * The provider's opaque artefact.
+     */
+    encryptedValue: string;
+  };
+/**
+ * Announces that a subagent invocation has begun. Everything the subagent produces afterwards is attributed by carrying its subagentRunId, so a consumer can group the work without replaying the stream. Composed from BaseEvent alone rather than Attributable, because here subagentRunId identifies the subagent rather than attributing the event to one; attribution to an enclosing subagent is parentSubagentRunId.
+ */
+export type SubagentStartedEvent = BaseEvent & {
+  type: "SUBAGENT_STARTED";
+  /**
+   * The invocation being announced.
+   */
+  subagentRunId: string;
+  /**
+   * The subagent's name, which is reusable across invocations, unlike subagentRunId.
+   */
+  name: string;
+  /**
+   * What this subagent is for, for a consumer to display.
+   */
+  description?: string;
+  /**
+   * The subagent invocation that spawned this one, for nested delegation. Absent means the parent agent spawned it directly.
+   */
+  parentSubagentRunId?: string;
+  /**
+   * The tool call that spawned this subagent, for the pattern where agents are exposed to a model as tools. Lets a consumer tie the subagent to the call without reading rawEvent.
+   */
+  parentToolCallId?: string;
+  /**
+   * The message that held the spawning tool call.
+   */
+  parentMessageId?: string;
+};
+/**
+ * Ends a subagent invocation's segment of this run, either because the work completed or because it is suspended awaiting outside input.
+ */
+export type SubagentFinishedEvent = BaseEvent & {
+  type: "SUBAGENT_FINISHED";
+  /**
+   * The invocation being closed.
+   */
+  subagentRunId: string;
+  /**
+   * The subagent's return value, if it has one. Any JSON value, mirroring RUN_FINISHED.result.
+   */
+  result?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Why the segment ended. Absent means success. A suspended subagent is neither a success nor a failure, which is why saying so needs its own value rather than being inferred from a later interrupt.
+   */
+  outcome?: SubagentFinishedSuccessOutcome | SubagentFinishedSuspendedOutcome;
+};
+/**
+ * Reports that a subagent invocation failed. The run may continue: a parent agent is free to handle a failed subagent, which is why this is not RUN_ERROR.
+ */
+export type SubagentErrorEvent = BaseEvent & {
+  type: "SUBAGENT_ERROR";
+  /**
+   * The invocation that failed.
+   */
+  subagentRunId: string;
+  /**
+   * What went wrong, for a person to read.
+   */
+  message: string;
+  /**
+   * A machine-readable error code. An open string.
+   */
+  code?: string;
 };
 
 /** agent.run@1.0.0 (owner: actor) */

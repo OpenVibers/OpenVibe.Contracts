@@ -1,7 +1,6 @@
 {
   "type": "STEP_STARTED",
-  "timestamp": "2026-11-11T00:00:00Z",
-  "step_name": "Research",
+  "timestamp": 1794355200000,
   "metadata": {
     "ov": {
       "title": "Searching the web",
@@ -14,5 +13,6 @@
         }
       ]
     }
-  }
+  },
+  "stepName": "Research"
 }
