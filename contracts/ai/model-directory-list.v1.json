@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/model-directory-list.v1.json",
+  "title": "AiModelDirectoryList",
+  "description": "ai.model-directory-list@1: public model directory response; the list may include spotted, disabled and retired models.",
+  "type": "object",
+  "required": ["models", "count"],
+  "additionalProperties": true,
+  "properties": {
+    "generated_at": {"type": "string"},
+    "count": {"type": "integer", "minimum": 0},
+    "models": {"type": "array", "items": {"$ref": "model-directory-entry.v1.json"}}
+  }
+}

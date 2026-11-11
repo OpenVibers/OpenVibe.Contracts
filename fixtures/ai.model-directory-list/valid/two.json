@@ -1,0 +1,7 @@
+{
+  "count": 2,
+  "models": [
+    {"id": "google/gemini-preview", "provider": "google", "model": "gemini-preview", "name": "Gemini Preview", "status": "preview", "routing_enabled": false},
+    {"id": "google/gemini-old", "provider": "google", "model": "gemini-old", "name": "Gemini Old", "status": "retired", "routing_enabled": false}
+  ]
+}

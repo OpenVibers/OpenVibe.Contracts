@@ -19194,6 +19194,237 @@
         }
       }
     },
+    "ai.model-directory-entry": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model-directory-entry.v1.json",
+        "title": "AiModelDirectoryEntry",
+        "description": "ai.model-directory-entry@1: one public model, including provider-listed models with routing off and sourced pre-list sightings. Spotted never means available.",
+        "type": "object",
+        "required": [
+          "id",
+          "provider",
+          "model",
+          "name",
+          "status",
+          "routing_enabled"
+        ],
+        "additionalProperties": true,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "spotted",
+                    "retired"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "routing_enabled": {
+                  "const": false
+                }
+              }
+            }
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "provider_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "enum": [
+              "available",
+              "preview",
+              "spotted",
+              "retired"
+            ]
+          },
+          "routing_enabled": {
+            "type": "boolean"
+          },
+          "context_window": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "max_output": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "type": {
+            "type": "string"
+          },
+          "modalities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "input_per_million": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "output_per_million": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "cached_per_million": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "source": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri"
+              },
+              "checked_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "url",
+                "observed_at"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "observed_at": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "first_seen_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "retired_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "ai.model-directory-list": {
+      "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/model-directory-list.v1.json",
+        "title": "AiModelDirectoryList",
+        "description": "ai.model-directory-list@1: public model directory response; the list may include spotted, disabled and retired models.",
+        "type": "object",
+        "required": [
+          "models",
+          "count"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "generated_at": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "model-directory-entry.v1.json"
+            }
+          }
+        }
+      }
+    },
     "ai.model-read-result": {
       "version": "1.0.0",
       "owner": "ai",

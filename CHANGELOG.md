@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.406.0 — 2026-11-11
+
+- Add `ai.model-directory-entry@1` and `ai.model-directory-list@1` for public model listings, including provider-listed models with routing off, preview and retired models, and sourced pre-list sightings. A spotted entry never implies availability.
+
+## 0.405.0 — 2026-11-11
+
+This release train carries the contract work that was waiting on the owner's release. One line per carried pull request:
+
+- Add `live.layout@1`, the player layout a person keeps in their account: per stream slot and source, the place as fractions of the frame, mode `dock` or `float`, the tuck side, mute and the time, at most 60 places (#442).
+- Add `chat.command-registration-request@1` and `chat.command-registration-result@1` with the active capability `chat.commands.register`, so a consented app or an Actor agent can register a plain response command for a server its person manages (#441).
+- Catalog OpenVibe.Directory as a live service and site, replacing its parked product metadata, with its public origin, source refresh lifecycle and public-listings-only scope (#440).
+- Add `actor.agent-sheet@1` and `codes.agent-sheet@1`: the owner-scoped agent sheet responses, with current work, daily activity, approvals, computer, schedules and memory where recorded (#439).
+- Extend `community.feed-item@1`, `community.pulse-item@1` and `community.pulse-write-request@1` with activity kinds, followers-only visibility, scheduled starts, previews and links to every item in a folded burst; Community consumes Network profile updates (#438).
+- Add `chat.person-memory-result@1` and `chat.person-memory-preferences-result@1`: the public and private parts of Chat's compacted day, week and month memory, and the erase and opt-out responses (#437).
+- Add `preview_url` (and `preview_webm_url` on media) to `media.vod@1`, `media.clip@1` and the Live stream shapes: the 6 s muted hover preview beside a thumbnail (#436).
+- Add `agent.ui-event@1` with the AG-UI 1.0 event union and OpenVibe `metadata.ov`, `agent.run@1` snapshots, and the `agent-run` chat embed (#434).
+- Add `network.user-card@1` with viewer-aware actions, and `network.user-report@1`, `network.user-report-request@1` and `network.user-report-list-result@1` for a person's reports and the staff queue (#433).
+- Add `community.feed-card@1` and `community.feed-answer@1`, with preview media support (#432).
+- Add `composer.attachment@1`, `composer.prefs@1` and `composer.mention@1`, the shared composer's server-side shapes (#426).
+
+Valid and invalid fixtures cover every new shape, and the generated TypeScript, JSON Schema bundle and per-service OpenAPI files are regenerated at this version.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.
