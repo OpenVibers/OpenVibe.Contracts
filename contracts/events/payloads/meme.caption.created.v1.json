@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/events/payloads/meme.caption.created.v1.json",
   "title": "MemeCaptionCreatedPayload",
-  "description": "meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor and subject the owner, visibility internal.",
+  "description": "meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor the owner, subject the caption, visibility internal.",
   "type": "object",
   "required": ["caption_id", "owner", "created_at"],
   "additionalProperties": false,
