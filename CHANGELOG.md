@@ -3,6 +3,7 @@
 ## 0.405.0 — 2026-11-11
 
 - **Delivery and retry on computer/browser results (Release 2 item 10).** `bot.command-result@1` and `run.session-control-result@1` gain `delivery` (`delivered`, `not_delivered`, `uncertain`) and `retry` (`safe`, `reason`): only `not_delivered` is safe to repeat. Additive. Bot fixtures: valid `not-delivered-retry`, `delivered-no-retry`; invalid `bad-delivery`.
+- **Task browser origin boundary (Release 2 item 11).** Add optional `origins` to browser commands, Run session creation and Bot desk lease creation. The service validates exact origins and binds a session list to its lease; absence retains older behavior.
 
 
 ## 0.404.0 — 2026-11-11

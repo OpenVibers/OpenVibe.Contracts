@@ -82788,6 +82788,17 @@
                       "pattern": "^https?://",
                       "description": "an http or https address"
                     },
+                    "origins": {
+                      "type": "array",
+                      "maxItems": 32,
+                      "items": {
+                        "type": "string",
+                        "minLength": 8,
+                        "maxLength": 2048,
+                        "pattern": "^https?://"
+                      },
+                      "description": "Optional exact task origins. Link checks scheme, host and port and refuses other navigation and browser egress. Empty allows no network origin; absent keeps the legacy browser policy."
+                    },
                     "selector": {
                       "type": "string",
                       "minLength": 1,
@@ -97120,6 +97131,17 @@
             "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere."
           },
+          "origins": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 2048,
+              "pattern": "^https?://"
+            },
+            "description": "Exact HTTP(S) origins allowed for this browser session. Run fixes the list at creation and places it only on a user-owned desk that can enforce it. This option is owner switched off by default."
+          },
           "requirements": {
             "$ref": "../platform/workload-requirements.v1.json"
           },
@@ -97839,6 +97861,17 @@
           "height": {
             "$ref": "desk-lease.v1.json#/properties/height",
             "description": "Default 800."
+          },
+          "origins": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 2048,
+              "pattern": "^https?://"
+            },
+            "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
           }
         }
       }

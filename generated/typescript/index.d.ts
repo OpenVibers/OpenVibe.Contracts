@@ -281423,6 +281423,12 @@ export interface RunSessionCreateRequest {
    * One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere.
    */
   machine?: string;
+  /**
+   * Exact HTTP(S) origins allowed for this browser session. Run fixes the list at creation and places it only on a user-owned desk that can enforce it. This option is owner switched off by default.
+   *
+   * @maxItems 32
+   */
+  origins?: string[];
   requirements?: WorkloadRequirements;
   idempotency_key?: string;
   /**
@@ -281788,6 +281794,12 @@ export interface BotDeskLeaseCreateRequest {
    * Default 800.
    */
   height?: number;
+  /**
+   * The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused.
+   *
+   * @maxItems 32
+   */
+  origins?: string[];
 }
 
 /** bot.watch-link-request@1.0.0 (owner: bot) */
