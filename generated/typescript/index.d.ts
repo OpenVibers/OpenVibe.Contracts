@@ -327412,6 +327412,16 @@ export interface MemeEntry {
   [k: string]: unknown | undefined;
 }
 
+/** meme.caption.created@1.0.0 (owner: meme) */
+/**
+ * meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor the owner, subject the caption, visibility internal.
+ */
+export interface MemeCaptionCreatedPayload {
+  caption_id: string;
+  owner: SubjectRef;
+  created_at: string;
+}
+
 /** meme.template@1.0.0 (owner: meme) */
 /**
  * meme.template@1: a reusable meme image with its source, reuse licence and caption layout. Public templates have passed any required review.

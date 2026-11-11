@@ -10812,6 +10812,15 @@
       "status": "active"
     },
     {
+      "id": "meme.caption.created",
+      "version": "1.0.0",
+      "owner": "meme",
+      "schema": "events/payloads/meme.caption.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "meme.template",
       "version": "1.0.0",
       "owner": "meme",

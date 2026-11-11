@@ -118613,6 +118613,37 @@
         "additionalProperties": true
       }
     },
+    "meme.caption.created": {
+      "version": "1.0.0",
+      "owner": "meme",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/meme.caption.created.v1.json",
+        "title": "MemeCaptionCreatedPayload",
+        "description": "meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor the owner, subject the caption, visibility internal.",
+        "type": "object",
+        "required": [
+          "caption_id",
+          "owner",
+          "created_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "caption_id": {
+            "type": "string",
+            "pattern": "^mcp_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "owner": {
+            "$ref": "../../identity/subject-ref.v1.json"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "meme.template": {
       "version": "1.0.0",
       "owner": "meme",
