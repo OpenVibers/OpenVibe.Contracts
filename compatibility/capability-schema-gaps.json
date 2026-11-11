@@ -63,6 +63,12 @@
         "inputSchema",
         "outputSchema"
       ]
+    },
+    {
+      "id": "exchange.search.icons",
+      "missing": [
+        "inputSchema"
+      ]
     }
   ]
 }

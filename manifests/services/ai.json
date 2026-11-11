@@ -36,7 +36,8 @@
     "ai.memory.write",
     "ai.me.read",
     "ai.me.manage",
-    "ai.config.manage"
+    "ai.config.manage",
+    "exchange.search.icons"
   ],
   "eventsProduced": [
     "ai.call.recorded",
