@@ -11672,6 +11672,26 @@
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "ai.deep-dive",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/deep-dive.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-015"
+    },
+    {
+      "id": "ai.deep_dive.updated",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.deep_dive.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-015"
     }
   ]
 }

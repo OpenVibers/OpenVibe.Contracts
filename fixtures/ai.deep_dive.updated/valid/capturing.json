@@ -1,0 +1,22 @@
+{
+  "deep_dive_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "status": "running",
+  "step": "capture",
+  "progress": 0.5,
+  "steps": [
+    { "key": "plan", "status": "done" },
+    { "key": "search", "status": "done" },
+    { "key": "choose", "status": "done" },
+    { "key": "capture", "status": "running" },
+    { "key": "analyse", "status": "pending" },
+    { "key": "synthesise", "status": "pending" },
+    { "key": "report", "status": "pending" }
+  ],
+  "depth": "quick",
+  "requester": { "type": "service", "id": "exchange" },
+  "on_behalf_of": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "url": "https://openvibe.exchange/deep-dive/run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "error": null,
+  "occurred_at": "2026-11-11T10:01:00.000Z"
+}

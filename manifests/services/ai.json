@@ -46,7 +46,8 @@
     "ai.run.succeeded",
     "ai.run.failed",
     "ai.run.cached",
-    "ai.credential.failed"
+    "ai.credential.failed",
+    "ai.deep_dive.updated"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

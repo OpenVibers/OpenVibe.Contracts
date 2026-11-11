@@ -1,0 +1,14 @@
+{
+  "deep_dive_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "status": "running",
+  "step": "capture",
+  "progress": 4.5,
+  "steps": [],
+  "depth": "quick",
+  "requester": { "type": "service", "id": "exchange" },
+  "on_behalf_of": null,
+  "url": "https://openvibe.exchange/deep-dive/run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "error": null,
+  "occurred_at": "2026-11-11T10:01:00.000Z"
+}

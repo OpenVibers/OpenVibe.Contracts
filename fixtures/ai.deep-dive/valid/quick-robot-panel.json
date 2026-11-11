@@ -1,0 +1,139 @@
+{
+  "id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "schema": "ai.deep-dive@1",
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "status": "succeeded",
+  "input": {
+    "question": "a phone-first robot control panel",
+    "depth": "quick",
+    "max_sites": 6,
+    "sites": ["https://example.com/robot"]
+  },
+  "steps": [
+    { "key": "plan", "status": "done", "detail": "wrote 9 expert questions", "started_at": "2026-11-11T10:00:00.000Z", "finished_at": "2026-11-11T10:00:02.000Z" },
+    { "key": "search", "status": "done", "detail": "4 engines, 12 sources", "started_at": "2026-11-11T10:00:02.000Z", "finished_at": "2026-11-11T10:00:40.000Z" },
+    { "key": "choose", "status": "done", "detail": "6 sites chosen", "started_at": "2026-11-11T10:00:40.000Z", "finished_at": "2026-11-11T10:00:42.000Z" },
+    { "key": "capture", "status": "done", "detail": "12 captures", "started_at": "2026-11-11T10:00:42.000Z", "finished_at": "2026-11-11T10:02:30.000Z" },
+    { "key": "analyse", "status": "done", "detail": "6 sites read", "started_at": "2026-11-11T10:02:30.000Z", "finished_at": "2026-11-11T10:03:05.000Z" },
+    { "key": "synthesise", "status": "done", "detail": "8 patterns", "started_at": "2026-11-11T10:03:05.000Z", "finished_at": "2026-11-11T10:03:20.000Z" },
+    { "key": "report", "status": "done", "detail": "report ready", "started_at": "2026-11-11T10:03:20.000Z", "finished_at": "2026-11-11T10:03:21.000Z" }
+  ],
+  "sources": [
+    {
+      "id": "src_1",
+      "kind": "web",
+      "title": "A phone-first robot control panel",
+      "url": "https://example.com/robot",
+      "publisher": "example.com",
+      "engine": "openvibe",
+      "snippet": "A control panel laid out for one thumb.",
+      "license": null,
+      "read_at": "2026-11-11T10:00:10.000Z"
+    }
+  ],
+  "captures": [
+    {
+      "id": "cap_1",
+      "source_id": "src_1",
+      "url": "https://example.com/robot",
+      "final_url": "https://example.com/robot",
+      "title": "A phone-first robot control panel",
+      "captured_at": "2026-11-11T10:00:45.000Z",
+      "viewport": 390,
+      "theme": "light",
+      "full_page": true,
+      "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "width": 390,
+      "height": 2400,
+      "crops": [
+        { "id": "crop_1", "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPR", "y": 0, "height": 844 },
+        { "id": "crop_2", "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPS", "y": 844, "height": 844 }
+      ],
+      "dom": { "fonts": { "families": ["Inter"], "sizes": ["14px", "16px", "28px"] }, "colours": [{ "value": "rgb(12, 14, 18)", "share": 0.71 }] },
+      "extras": null,
+      "skip": null,
+      "cached": false
+    }
+  ],
+  "analysis": [
+    {
+      "source_id": "src_1",
+      "url": "https://example.com/robot",
+      "summary": "One thumb reaches every primary control; the live camera fills the first screen.",
+      "first_impression": "The robot's camera frame is the page.",
+      "hierarchy": "One headline, one live frame, then the controls.",
+      "density": "Spacious; four controls per screen.",
+      "type": "One family, three sizes.",
+      "colour": "Near-black on white with a single amber action.",
+      "motion": "The frame pulses when connected.",
+      "words": "Verbs on buttons, state in the status line.",
+      "strengths": ["Every control sits in the bottom third", "State is written, not only coloured"],
+      "weaknesses": ["The emergency stop is the same size as the rest"],
+      "accessibility": "The stop button has no accessible name.",
+      "speed": "The first frame arrived once the socket opened; no skeleton.",
+      "evidence": [
+        { "claim": "Controls sit in the bottom third", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_2", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" },
+        { "claim": "The stop button has no accessible name", "source_id": "src_1", "capture_id": "cap_1", "crop_id": null, "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }
+      ]
+    }
+  ],
+  "synthesis": {
+    "patterns": [
+      {
+        "name": "Live view first",
+        "what": "The camera or state view is the whole first screen, controls below it.",
+        "sites": ["src_1"],
+        "usage_count": 1,
+        "evidence": [{ "claim": "The frame is the first screen", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_1", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }]
+      }
+    ],
+    "comparison": {
+      "columns": ["Site", "First screen", "Controls"],
+      "rows": [["example.com", "live frame", "bottom third"]]
+    },
+    "best": {
+      "source_id": "src_1",
+      "what": "The live frame doubles as the connection state.",
+      "evidence": [{ "claim": "The frame carries the status line", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_1", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }]
+    },
+    "mistakes": [
+      { "what": "The emergency stop is not separated from the other controls.", "evidence": [{ "claim": "All buttons share one row", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_2", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }] }
+    ],
+    "gap": "No control panel shows what the robot is about to do before the tap is sent.",
+    "reference_tokens": {
+      "palettes": [{ "source_id": "src_1", "colours": ["#0c0e12", "#ffffff", "#f5a623"] }],
+      "type_scales": [{ "source_id": "src_1", "families": ["Inter"], "sizes": ["14px", "16px", "28px"] }],
+      "spacing": [{ "source_id": "src_1", "steps": ["4px", "8px", "16px", "24px"] }]
+    },
+    "do": ["Keep every primary control in the thumb reach of one hand"],
+    "dont": ["Do not make the stop control share the row of ordinary actions"],
+    "accessibility": ["Name every icon-only control"],
+    "speed": ["Show the frame before the socket finishes connecting"]
+  },
+  "recommendations": [
+    {
+      "id": "rec_1",
+      "what": "Put the emergency stop alone, full width, at the bottom.",
+      "why": "The best panel suggests it by layout; the failure here is that it does not.",
+      "rule": { "id": "control.destructive-separation", "status": "follows", "text": "Destructive actions are separated from ordinary ones." },
+      "evidence": [{ "claim": "The stop shares the row", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_2", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }]
+    }
+  ],
+  "receipt": {
+    "price_usd": 0.2,
+    "held_usd": 0.2,
+    "cost_usd": 0.014,
+    "captures_count": 12,
+    "synthetic": false,
+    "models": [
+      { "step": "plan", "provider": "deepseek", "model": "deepseek-v4-flash", "tokens_in": 900, "tokens_out": 320, "cost_usd": 0.0004, "ms": 1800 },
+      { "step": "choose", "provider": "deepseek", "model": "deepseek-v4-flash", "tokens_in": 2400, "tokens_out": 500, "cost_usd": 0.0007, "ms": 2100 },
+      { "step": "analyse", "provider": "deepseek", "model": "deepseek-v4-pro", "tokens_in": 12000, "tokens_out": 4000, "cost_usd": 0.012, "ms": 26000 },
+      { "step": "synthesise", "provider": "deepseek", "model": "deepseek-v4-pro", "tokens_in": 6000, "tokens_out": 2500, "cost_usd": 0.007, "ms": 12000 }
+    ]
+  },
+  "gaps": ["No Expert extras were measured at Quick depth."],
+  "created_at": "2026-11-11T10:00:00.000Z",
+  "updated_at": "2026-11-11T10:03:21.000Z",
+  "finished_at": "2026-11-11T10:03:21.000Z"
+}
