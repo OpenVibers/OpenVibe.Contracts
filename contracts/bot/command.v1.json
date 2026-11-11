@@ -472,6 +472,12 @@
                 "pattern": "^https?://",
                 "description": "an http or https address"
               },
+              "origins": {
+                "type": "array",
+                "maxItems": 32,
+                "items": { "type": "string", "minLength": 8, "maxLength": 2048, "pattern": "^https?://" },
+                "description": "Optional exact task origins. Link checks scheme, host and port and refuses other navigation and browser egress. Empty allows no network origin; absent keeps the legacy browser policy."
+              },
               "selector": {
                 "type": "string",
                 "minLength": 1,

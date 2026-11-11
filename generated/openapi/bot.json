@@ -787,6 +787,23 @@
        "description": "Default 800."
       },
       "description": "Default 800."
+     },
+     {
+      "name": "origins",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "array",
+       "maxItems": 32,
+       "items": {
+        "type": "string",
+        "minLength": 8,
+        "maxLength": 2048,
+        "pattern": "^https?://"
+       },
+       "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
+      },
+      "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
      }
     ],
     "responses": {
@@ -888,6 +905,23 @@
        "description": "Default 800."
       },
       "description": "Default 800."
+     },
+     {
+      "name": "origins",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "array",
+       "maxItems": 32,
+       "items": {
+        "type": "string",
+        "minLength": 8,
+        "maxLength": 2048,
+        "pattern": "^https?://"
+       },
+       "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
+      },
+      "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
      }
     ],
     "responses": {
@@ -2295,6 +2329,17 @@
      "height": {
       "$ref": "#/components/schemas/bot.desk-lease.v1/properties/height",
       "description": "Default 800."
+     },
+     "origins": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+       "type": "string",
+       "minLength": 8,
+       "maxLength": 2048,
+       "pattern": "^https?://"
+      },
+      "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
      }
     }
    },

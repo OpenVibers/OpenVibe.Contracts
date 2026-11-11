@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "seq": 16,
+  "ts": 1759600000016,
+  "type": "command_result",
+  "id": "op-10",
+  "result": "ack",
+  "reason": null,
+  "latency_ms": 87,
+  "delivery": "delivered",
+  "retry": {
+    "safe": false,
+    "reason": "the command already ran; repeating it runs it twice"
+  }
+}

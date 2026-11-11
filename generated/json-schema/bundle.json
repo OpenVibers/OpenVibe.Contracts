@@ -83414,6 +83414,17 @@
                       "pattern": "^https?://",
                       "description": "an http or https address"
                     },
+                    "origins": {
+                      "type": "array",
+                      "maxItems": 32,
+                      "items": {
+                        "type": "string",
+                        "minLength": 8,
+                        "maxLength": 2048,
+                        "pattern": "^https?://"
+                      },
+                      "description": "Optional exact task origins. Link checks scheme, host and port and refuses other navigation and browser egress. Empty allows no network origin; absent keeps the legacy browser policy."
+                    },
                     "selector": {
                       "type": "string",
                       "minLength": 1,
@@ -83852,7 +83863,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bot/command-result.v1.json",
         "title": "BotCommandResult",
-        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data.",
+        "description": "bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.",
         "type": "object",
         "required": [
           "v",
@@ -83912,6 +83923,33 @@
           "data": {
             "type": "object",
             "description": "A computer command's answer as the machine gave it (exec: exit_code, stdout, stderr, truncated, timed_out, duration_ms; fs: entries, the stat, content_b64, written, created; screen: format, width, height, content_b64). Present only on an ack of exec, fs or screen."
+          },
+          "delivery": {
+            "type": "string",
+            "enum": [
+              "delivered",
+              "not_delivered",
+              "uncertain"
+            ],
+            "description": "Whether the command reached the machine. Both senders and the device report it; absent means unknown."
+          },
+          "retry": {
+            "type": "object",
+            "description": "Whether repeating the command is safe. safe is true only when delivery is not_delivered.",
+            "additionalProperties": false,
+            "required": [
+              "safe"
+            ],
+            "properties": {
+              "safe": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            }
           }
         }
       }
@@ -98048,6 +98086,17 @@
             "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
             "description": "One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere."
           },
+          "origins": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 2048,
+              "pattern": "^https?://"
+            },
+            "description": "Exact HTTP(S) origins allowed for this browser session. Run fixes the list at creation and places it only on a user-owned desk that can enforce it. This option is owner switched off by default."
+          },
           "requirements": {
             "$ref": "../platform/workload-requirements.v1.json"
           },
@@ -98183,6 +98232,32 @@
           "data": {
             "type": "object",
             "description": "The desk's answer on an ack (bot.command-result@1 data)."
+          },
+          "delivery": {
+            "enum": [
+              "delivered",
+              "not_delivered",
+              "uncertain"
+            ],
+            "description": "Whether the command reached the machine. Absent on older servers means unknown."
+          },
+          "retry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "safe"
+            ],
+            "properties": {
+              "safe": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            },
+            "description": "safe is true only when delivery is not_delivered."
           },
           "state": {
             "$ref": "session.v1.json#/properties/state"
@@ -98741,6 +98816,17 @@
           "height": {
             "$ref": "desk-lease.v1.json#/properties/height",
             "description": "Default 800."
+          },
+          "origins": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 2048,
+              "pattern": "^https?://"
+            },
+            "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
           }
         }
       }

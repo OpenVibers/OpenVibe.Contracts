@@ -27,6 +27,12 @@
     "height": {
       "$ref": "desk-lease.v1.json#/properties/height",
       "description": "Default 800."
+    },
+    "origins": {
+      "type": "array",
+      "maxItems": 32,
+      "items": { "type": "string", "minLength": 8, "maxLength": 2048, "pattern": "^https?://" },
+      "description": "The session's exact browser origins, fixed for this lease. Empty allows no network origin; absent keeps the legacy policy. A shared desk that cannot enforce the list is refused."
     }
   }
 }

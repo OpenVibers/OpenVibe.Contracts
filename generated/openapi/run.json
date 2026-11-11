@@ -3426,6 +3426,32 @@
       "type": "object",
       "description": "The desk's answer on an ack (bot.command-result@1 data)."
      },
+     "delivery": {
+      "enum": [
+       "delivered",
+       "not_delivered",
+       "uncertain"
+      ],
+      "description": "Whether the command reached the machine. Absent on older servers means unknown."
+     },
+     "retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "safe"
+      ],
+      "properties": {
+       "safe": {
+        "type": "boolean"
+       },
+       "reason": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+       }
+      },
+      "description": "safe is true only when delivery is not_delivered."
+     },
      "state": {
       "$ref": "#/components/schemas/run.session.v1/properties/state"
      }
@@ -3479,6 +3505,17 @@
       "type": "string",
       "pattern": "^dev_[0-9A-HJKMNP-TV-Z]{26}$",
       "description": "One of the person's own machines, by its OpenVibe.Bot id; the session goes there or nowhere."
+     },
+     "origins": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+       "type": "string",
+       "minLength": 8,
+       "maxLength": 2048,
+       "pattern": "^https?://"
+      },
+      "description": "Exact HTTP(S) origins allowed for this browser session. Run fixes the list at creation and places it only on a user-owned desk that can enforce it. This option is owner switched off by default."
      },
      "requirements": {
       "$ref": "#/components/schemas/platform.workload-requirements.v1"
