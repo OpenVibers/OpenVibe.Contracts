@@ -5701,6 +5701,24 @@
       "status": "active"
     },
     {
+      "id": "chat.person-memory-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/person-memory-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.person-memory-preferences-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/person-memory-preferences-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.embed",
       "version": "1.0.0",
       "owner": "chat",

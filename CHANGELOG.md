@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.405.0 — 2026-11-11
+
+- Define the public and private fields of a person's compacted chat memory, and the delete and opt-out result.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.

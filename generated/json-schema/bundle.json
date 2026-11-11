@@ -63577,6 +63577,173 @@
         }
       }
     },
+    "chat.person-memory-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/person-memory-result.v1.json",
+        "title": "ChatPersonMemoryResult",
+        "description": "chat.person-memory-result@1: compacted chat memory returned by GET /api/v1/people/{username}/memory. Private fields appear only for the person and the channel owner.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "username",
+          "level",
+          "channel",
+          "entries",
+          "opted_out",
+          "enabled"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1
+          },
+          "level": {
+            "enum": [
+              "day",
+              "week",
+              "month"
+            ]
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "opted_out": {
+            "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "entries": {
+            "type": "array",
+            "maxItems": 60,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "level",
+                "period_start",
+                "channel_user_id",
+                "summary",
+                "topics",
+                "highlights",
+                "message_count"
+              ],
+              "properties": {
+                "level": {
+                  "enum": [
+                    "day",
+                    "week",
+                    "month"
+                  ]
+                },
+                "period_start": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "channel_user_id": {
+                  "type": "integer"
+                },
+                "summary": {
+                  "type": "string",
+                  "maxLength": 500
+                },
+                "topics": {
+                  "type": "array",
+                  "maxItems": 5,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "highlights": {
+                  "type": "array",
+                  "maxItems": 5,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "detail",
+                      "stream_id",
+                      "at"
+                    ],
+                    "properties": {
+                      "detail": {
+                        "type": "string",
+                        "maxLength": 180
+                      },
+                      "stream_id": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "at": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "message_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "tone": {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                "catchphrases": {
+                  "type": "array",
+                  "maxItems": 5,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "people": {
+                  "type": "array",
+                  "maxItems": 8,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "chat.person-memory-preferences-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/person-memory-preferences-result.v1.json",
+        "title": "ChatPersonMemoryPreferencesResult",
+        "description": "chat.person-memory-preferences-result@1: the person's delete or opt-out result.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "opted_out"
+        ],
+        "properties": {
+          "opted_out": {
+            "type": "boolean"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
     "chat.embed": {
       "version": "1.0.0",
       "owner": "chat",
