@@ -1,0 +1,28 @@
+{
+  "type": "RUN_STARTED",
+  "timestamp": 1794355200000,
+  "threadId": "thread_1",
+  "runId": "run_1",
+  "metadata": {
+    "ov": {
+      "title": "Researching the question",
+      "kind": "read",
+      "product": "codes",
+      "sources": [
+        {
+          "url": "https://example.com",
+          "title": "Example",
+          "site": "example.com"
+        }
+      ],
+      "needs_you": {
+        "id": "approval_1",
+        "question": "May I publish the result?",
+        "actions": [
+          "approve",
+          "decline"
+        ]
+      }
+    }
+  }
+}

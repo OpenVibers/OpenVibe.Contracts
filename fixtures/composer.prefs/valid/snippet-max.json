@@ -1,0 +1,10 @@
+{
+  "rev": 7,
+  "send_key": "enter",
+  "tools": [],
+  "density": "compact",
+  "voice": false,
+  "snippets": [
+    { "trigger": "/long", "label": "Long text", "text": "x" }
+  ]
+}

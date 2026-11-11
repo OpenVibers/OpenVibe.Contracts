@@ -5548,6 +5548,24 @@
       "status": "active"
     },
     {
+      "id": "chat.command-registration-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/command-registration-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.command-registration-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/command-registration-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.send-request",
       "version": "1.1.0",
       "owner": "chat",
@@ -5696,6 +5714,24 @@
       "version": "1.0.0",
       "owner": "chat",
       "schema": "chat/room-insight-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.person-memory-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/person-memory-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.person-memory-preferences-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/person-memory-preferences-result.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
@@ -6166,6 +6202,24 @@
       "version": "1.0.0",
       "owner": "community",
       "schema": "community/feed-item.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.feed-card",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-card.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.feed-answer",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-answer.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
@@ -11255,6 +11309,105 @@
       "version": "1.0.0",
       "owner": "network",
       "schema": "network/level-board.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "composer.attachment",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "composer/attachment.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "composer.prefs",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "composer/prefs.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "composer.mention",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "composer/mention.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.user-card",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-card.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.user-report",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-report.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.user-report-list-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-report-list-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.user-report-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/user-report-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.ui-event",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/ui-event.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.run",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/run.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "actor.agent-sheet",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/agent-sheet.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.agent-sheet",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/agent-sheet.v1.json",
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"

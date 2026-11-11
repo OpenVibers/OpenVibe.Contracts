@@ -1,0 +1,18 @@
+{
+  "type": "STEP_STARTED",
+  "timestamp": 1794355200000,
+  "metadata": {
+    "ov": {
+      "title": "Searching the web",
+      "kind": "search",
+      "sources": [
+        {
+          "url": "https://example.com",
+          "title": "Example",
+          "site": "example.com"
+        }
+      ]
+    }
+  },
+  "stepName": "Research"
+}

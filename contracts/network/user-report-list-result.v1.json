@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/user-report-list-result.v1.json",
+  "title": "NetworkUserReportListResult",
+  "description": "network.user-report-list-result@1 (ask 287): GET /api/v1/staff/user-reports on OpenVibe.Network, the staff queue for people holding staff.moderation.logs. Newest first, filtered by status (default open) and target subject, at most 200 rows (`limit`, default 50). A caller without the capability gets 403 user_reports.forbidden (problem+json).",
+  "type": "object",
+  "required": ["reports"],
+  "additionalProperties": false,
+  "properties": {
+    "reports": { "type": "array", "maxItems": 200, "items": { "$ref": "user-report.v1.json" } }
+  }
+}

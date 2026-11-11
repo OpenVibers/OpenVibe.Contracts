@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/user-report.v1.json",
+  "title": "NetworkUserReport",
+  "description": "network.user-report@1 (ask 287): one report a person filed about another person on OpenVibe.Network. Reports never resolve themselves; staff holding staff.moderation.logs read the queue (GET /api/v1/staff/user-reports?status=open&target=usr_…&limit=), and a staff decision lives in the moderation audit log. `status` records whether staff have looked, not a verdict.",
+  "type": "object",
+  "required": ["id", "reporter", "target", "reason", "detail", "status", "created_at", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "reporter": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "target": { "type": "string", "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "reason": { "enum": ["spam", "harassment", "impersonation", "explicit", "scam", "other"] },
+    "detail": { "type": "string", "maxLength": 2000 },
+    "status": { "enum": ["open", "reviewed", "dismissed"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

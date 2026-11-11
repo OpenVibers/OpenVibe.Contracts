@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/composer/prefs.v1.json",
+  "title": "ComposerPrefs",
+  "description": "composer.prefs@1: a person's composer settings, the same on every OpenVibe site because Network stores them (GET/PUT /api/v1/me/composer). `rev` is the stored revision: send the one you read back with your change, and a tab that read an older copy gets 409 with the current document instead of overwriting the other tab. `send_key` says whether Enter or Ctrl/Cmd+Enter sends. `tools` is the one order of the composer's tools and which are hidden; a tool id the client does not know is kept, so a site can add one without another site dropping the person's order. `snippets` are the person's saved inserts, triggered by typing a slash word.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rev", "send_key", "tools", "density", "voice", "snippets"],
+  "properties": {
+    "rev": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Revision of the stored document. A missing document is rev 0 with the defaults; every successful PUT answers rev + 1."
+    },
+    "send_key": {
+      "enum": ["enter", "mod-enter"],
+      "description": "enter: Enter sends and Shift+Enter breaks the line. mod-enter: Ctrl/Cmd+Enter sends and Enter breaks the line (the default on a phone keyboard is enter)."
+    },
+    "tools": {
+      "type": "array",
+      "maxItems": 100,
+      "description": "Every tool in the order the person wants them, each marked hidden or not.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "hidden"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 40, "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+          "hidden": { "type": "boolean" }
+        }
+      }
+    },
+    "density": {
+      "enum": ["comfy", "compact"],
+      "description": "How much room the composer takes: comfy is the default on a computer, compact on a phone."
+    },
+    "voice": {
+      "type": "boolean",
+      "description": "Whether the composer offers dictation (where the device has it)."
+    },
+    "snippets": {
+      "type": "array",
+      "maxItems": 50,
+      "description": "Saved inserts. Typing the trigger (a slash word such as /sig) in the composer offers the snippet.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["trigger", "label", "text"],
+        "properties": {
+          "trigger": {
+            "type": "string",
+            "pattern": "^/[a-z0-9][a-z0-9_-]{0,31}$",
+            "description": "The slash word that offers the snippet, e.g. /sig. Lower-case letters, digits, _ and - only."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "What the menu shows."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "description": "What is inserted."
+          }
+        }
+      }
+    }
+  }
+}

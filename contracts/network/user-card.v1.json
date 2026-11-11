@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/user-card.v1.json",
+  "title": "NetworkUserCard",
+  "description": "network.user-card@1 (ask 287): the one public user card read, GET /api/v1/people/:username/card on OpenVibe.Network. It is public and credential-free; a signed-in viewer may send their Network token (Authorization: Bearer …) and then also receives `actions` computed for that viewer, never cached. Without a viewer, or on the viewer's own card, `actions` carries Profile and Channel only. A missing, expired or revoked token reads as anonymous, never a 401. Hidden fields are absent, never zero, offline or a placeholder; no presence, page titles or visited URLs leave the read.",
+  "type": "object",
+  "required": ["username", "profile_url", "actions"],
+  "additionalProperties": false,
+  "properties": {
+    "username": { "type": "string", "pattern": "^[A-Za-z0-9_]{3,24}$" },
+    "display_name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "avatar_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "profile_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "level": { "type": "integer", "minimum": 0 },
+    "streak": { "type": "integer", "minimum": 0 },
+    "badges_count": { "type": "integer", "minimum": 0 },
+    "followers": { "type": "integer", "minimum": 0 },
+    "live": {
+      "type": "object",
+      "required": ["now"],
+      "additionalProperties": false,
+      "properties": {
+        "now": { "type": "boolean" },
+        "site": { "const": "live" },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+      }
+    },
+    "channel_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "active_sites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "url"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "description": "What the viewer can do, by what is possible for the pair. Order is the card's order. Each action either opens somewhere (`href`) or calls a Network route with the viewer's token (`method` + `path`, and `body` where the route needs one).",
+      "items": { "$ref": "#/$defs/action" }
+    }
+  },
+  "$defs": {
+    "action": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["id", "label", "href"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "label": { "$ref": "#/$defs/label" },
+            "href": { "type": "string", "format": "uri", "pattern": "^https://" },
+            "state": { "$ref": "#/$defs/state" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["id", "label", "method", "path"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "label": { "$ref": "#/$defs/label" },
+            "method": { "enum": ["PUT", "POST", "DELETE", "PATCH"] },
+            "path": { "type": "string", "pattern": "^/api/v1/" },
+            "body": { "type": "object" },
+            "state": { "$ref": "#/$defs/state" }
+          }
+        }
+      ]
+    },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+    "label": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "following": { "type": "boolean" },
+        "friendship": { "enum": ["none", "pending", "requested", "friends"] },
+        "muted": { "type": "boolean" },
+        "blocked": { "type": "boolean" },
+        "reported": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "username": "Example",
+  "profile_url": "https://openvibe.network/@Example",
+  "actions": [{ "id": "add-friend", "label": "Add friend", "method": "PUT", "path": "/api/v1/me/friends/Example", "state": { "friendship": "maybe" } }]
+}

@@ -1,0 +1,1 @@
+{ "reports": [{ "id": 1, "reporter": "usr_01JAB2C3D4E5F6G7H8J9K0MNV1", "target": "not-a-subject", "reason": "spam", "detail": "", "status": "open", "created_at": "2026-11-11T03:30:00Z", "updated_at": "2026-11-11T03:30:00Z" }] }

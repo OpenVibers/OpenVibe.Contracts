@@ -5,11 +5,11 @@
   "icon": "fa-address-book",
   "accent": "#84cc16",
   "tagline": "Directories that keep themselves current",
-  "description": "OpenVibe.Directory will be directories that keep themselves current: listings that update themselves instead of going stale. The product is not chartered yet; this address is parked and sends visitors to the network's front door.",
+  "description": "Source-linked directories for OpenVibe sites and tools, AI models and providers, open-source projects, and local businesses from OpenStreetMap. Each entry shows when its sources were last checked.",
   "legalProfile": "info",
-  "launch": "A charter: which directory goes first, what keeps it current, and who answers for stale listings.",
+  "launch": "Public directories, source refresh every six hours, entry pages, search, sitemap, JSON-LD, llms.txt.",
   "keywords": "openvibe directory, business directory, self-updating listings, local directory",
   "relationships": {
-    "noRepo": true
+    "service": "directory"
   }
 }

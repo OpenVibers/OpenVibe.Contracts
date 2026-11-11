@@ -209271,6 +209271,14 @@ export interface MediaVod {
   playback_url: string;
   thumbnail_url?: string | null;
   /**
+   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /t/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
+   */
+  preview_url?: string | null;
+  /**
+   * The same moment as preview_url, encoded as WebM (VP9, VP8 where the encoder has no VP9). Null while preview_url is.
+   */
+  preview_webm_url?: string | null;
+  /**
    * local, b2 or r2.
    */
   storage_provider?: string;
@@ -209363,6 +209371,14 @@ export interface MediaClip {
    */
   playback_url: string;
   thumbnail_url?: string | null;
+  /**
+   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /t/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
+   */
+  preview_url?: string | null;
+  /**
+   * The same moment as preview_url, encoded as WebM (VP9, VP8 where the encoder has no VP9). Null while preview_url is.
+   */
+  preview_webm_url?: string | null;
   storage_provider?: string;
   /**
    * public: anyone. unlisted: reached only by its exact id, never listed, noindex. private: missing to everyone but its owner and staff.
@@ -209643,6 +209659,24 @@ export interface ChatSlashCommand {
   }[];
   source?: "builtin" | "app" | "actor";
   application_id?: string | null;
+}
+
+/** chat.command-registration-request@1.0.0 (owner: chat) */
+/**
+ * chat.command-registration-request@1: an approved app or Actor agent registers a plain-response command in a server that the person named in its service token manages. The command cannot override a built-in. The template's {args} placeholder receives the invoking person's argument text; Chat posts the expanded result as that person after checking their current room rights.
+ */
+export interface ChatCommandRegistrationRequest {
+  server: string;
+  command: ChatSlashCommand;
+  response_template: string;
+}
+
+/** chat.command-registration-result@1.0.0 (owner: chat) */
+/**
+ * chat.command-registration-result@1: the command Chat stored for an approved app or Actor agent, with source and application_id derived from the verified service token.
+ */
+export interface ChatCommandRegistrationResult {
+  command: ChatSlashCommand;
 }
 
 /** chat.send-request@1.1.0 (owner: chat) */
@@ -212102,15 +212136,172 @@ export interface ChatRoomInsightResult {
   state: "ready" | "quiet" | "off";
 }
 
+/** chat.person-memory-result@1.0.0 (owner: chat) */
+/**
+ * chat.person-memory-result@1: compacted chat memory returned by GET /api/v1/people/{username}/memory. Private fields appear only for the person and the channel owner.
+ */
+export interface ChatPersonMemoryResult {
+  username: string;
+  level: "day" | "week" | "month";
+  channel: string | null;
+  opted_out: boolean;
+  enabled: boolean;
+  /**
+   * @maxItems 60
+   */
+  entries: {
+    level: "day" | "week" | "month";
+    period_start: string;
+    channel_user_id: number;
+    summary: string;
+    /**
+     * @maxItems 5
+     */
+    topics:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string];
+    /**
+     * @maxItems 5
+     */
+    highlights:
+      | []
+      | [
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          }
+        ]
+      | [
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          }
+        ]
+      | [
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          }
+        ]
+      | [
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          }
+        ]
+      | [
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          },
+          {
+            detail: string;
+            stream_id: number | null;
+            at: string | null;
+          }
+        ];
+    message_count: number;
+    tone?: string;
+    /**
+     * @maxItems 5
+     */
+    catchphrases?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string];
+    /**
+     * @maxItems 8
+     */
+    people?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string];
+  }[];
+}
+
+/** chat.person-memory-preferences-result@1.0.0 (owner: chat) */
+/**
+ * chat.person-memory-preferences-result@1: the person's delete or opt-out result.
+ */
+export interface ChatPersonMemoryPreferencesResult {
+  opted_out: boolean;
+  deleted?: boolean;
+}
+
 /** chat.embed@1.0.0 (owner: chat) */
 /**
- * chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link.
+ * chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link. An agent-run embed carries the live run and event addresses, title and status.
  */
-export interface ChatEmbed {
+export type ChatEmbed = {
+  [k: string]: unknown | undefined;
+} & {
   /**
    * What the address turned out to be; a client may draw the same card for every value.
    */
-  kind: "link" | "video" | "image" | "live" | "picture" | "design" | "post" | "profile" | "game";
+  kind: "link" | "video" | "image" | "live" | "picture" | "design" | "post" | "profile" | "game" | "agent-run";
   /**
    * The https address the message carried, after the writer's trailing punctuation was dropped.
    */
@@ -212119,9 +212310,6 @@ export interface ChatEmbed {
    * The site as it names itself (og:site_name, the provider's name, or the host).
    */
   site_name: string;
-  /**
-   * The page's or service's title, folded to plain text.
-   */
   title: string;
   /**
    * A short plain-text description, or an empty string when the source states none.
@@ -212147,7 +212335,10 @@ export interface ChatEmbed {
    * On a Live channel kind, whether it is broadcasting now. Absent on the other kinds.
    */
   live?: boolean;
-}
+  run_url?: string;
+  events_url?: string;
+  status?: "queued" | "running" | "waiting" | "needs_you" | "succeeded" | "failed" | "stopped" | "cancelled";
+};
 
 /** chat.first-chat-result@1.0.0 (owner: chat) */
 /**
@@ -212633,6 +212824,10 @@ export type LiveChannelReadResult =
         viewer_count?: number | null;
         peak_viewers?: number | null;
         thumbnail_url?: string | null;
+        /**
+         * A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail.
+         */
+        preview_url?: string | null;
         started_at?: string | null;
         ended_at?: string | null;
         /**
@@ -212934,6 +213129,10 @@ export type LiveStreamReadResult =
         viewer_count?: number | null;
         peak_viewers?: number | null;
         thumbnail_url?: string | null;
+        /**
+         * A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail.
+         */
+        preview_url?: string | null;
         started_at?: string | null;
         ended_at?: string | null;
         /**
@@ -212964,6 +213163,10 @@ export type LiveStreamReadResult =
         viewer_count?: number | null;
         peak_viewers?: number | null;
         thumbnail_url?: string | null;
+        /**
+         * A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail.
+         */
+        preview_url?: string | null;
         started_at?: string | null;
         ended_at?: string | null;
         /**
@@ -213812,7 +214015,7 @@ export type CommunityPostWriteResult =
 
 /** community.pulse-write-request@1.0.0 (owner: community) */
 /**
- * community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities (ref.service must be that service: 403 pulse.foreign_ref otherwise), with a title (whitespace collapsed, 1 to 300 characters) and an absolute http(s) url (at most 2000 characters). origin defaults to X-OV-Origin (user, ai or system; X-OV-Origin: ai always wins); an origin user item names the person in X-OV-Subject. occurred_at is an ISO time, not in the future (default now). Only public activity enters Pulse: a visibility other than public is 400 pulse.not_public. The same ref again updates the item. Unknown fields are ignored. DELETE /api/v1/pulse/items/:service/:type/:id takes no body.
+ * community.pulse-write-request@1: the body of POST /api/v1/pulse/items on OpenVibe.Community (community.pulse.write; service tokens only): an item about one of the calling service's own entities, with a title and an absolute http(s) URL. Optional media carries an HTTPS thumbnail, preview video, aspect ratio and duration for Feed cards. Visibility is public by default; followers requires origin user and X-OV-Subject and is shown only to that person's followers. Private, unlisted and members items are refused. The same ref updates the item. DELETE /api/v1/pulse/items/:service/:type/:id retracts it.
  */
 export type CommunityPulseWriteRequest =
   | {
@@ -213824,7 +214027,13 @@ export type CommunityPulseWriteRequest =
       url: string;
       origin?: "user" | "ai" | "system" | null;
       occurred_at?: string | number | null;
-      visibility?: "public" | null;
+      visibility?: "public" | "followers" | null;
+      media?: {
+        thumb?: string;
+        preview?: string | null;
+        ratio?: number;
+        length?: number;
+      };
     }
   | NoBody;
 
@@ -213979,6 +214188,12 @@ export interface CommunityPulseItem {
   title: string;
   url: string;
   origin: "user" | "ai" | "system";
+  /**
+   * Present only for an item returned to an authorized follower or its author.
+   */
+  visibility?: "followers";
+  starts_at?: string;
+  actor_name?: string;
   label: "AI" | "System" | null;
   /**
    * A third-party contribution is shown as via <app>.
@@ -214006,7 +214221,7 @@ export interface CommunityPulseItem {
 
 /** community.feed-item@1.0.0 (owner: community) */
 /**
- * community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). One stream over Pulse: a paste or a status is a post, a Live clip a clip, a Wiki page a wiki page, a Quest badge a quest, a busy Chat hour a chat, a Today event an event, and a day's new Network accounts a member. Text only (the client draws every field), https links only, and counts carry Community's own views, likes and comments where it knows them.
+ * community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). Each card keeps its source and public visibility. Scheduled calendar cards appear only before their start time; bursts can carry a group of links. Counts carry Community's own views, likes and comments where it knows them.
  */
 export interface CommunityFeedItem {
   /**
@@ -214027,7 +214242,14 @@ export interface CommunityFeedItem {
     | "quest"
     | "chat"
     | "event"
-    | "member";
+    | "member"
+    | "avatar"
+    | "banner"
+    | "paste"
+    | "site"
+    | "space"
+    | "follow"
+    | "episode";
   /**
    * Where the card opens; https unless the source itself answered an http URL.
    */
@@ -214041,6 +214263,14 @@ export interface CommunityFeedItem {
    * When it happened (Pulse provenance); null for a trending card.
    */
   at: string | null;
+  /**
+   * The start time of a Coming up calendar item; absent on other kinds.
+   */
+  starts_at?: string;
+  /**
+   * Present only for an item returned to a follower or its author.
+   */
+  visibility?: "followers";
   /**
    * The source service (live, media-hub, pics, games, blog, wiki, quest, chat, today, network, community…).
    */
@@ -214058,6 +214288,7 @@ export interface CommunityFeedItem {
    */
   media: {
     thumb: string;
+    preview?: string;
     ratio: number;
     /**
      * Seconds, when the card is a video.
@@ -214076,10 +214307,91 @@ export interface CommunityFeedItem {
    * Present on live and stream cards: true only while the channel is currently on air. A past broadcast has kind stream and live_now false.
    */
   live_now?: boolean;
+  group?: {
+    count: number;
+    /**
+     * @minItems 2
+     */
+    items: [
+      {
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      },
+      {
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      },
+      ...{
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      }[]
+    ];
+  };
   /**
    * Present only when the card needs one.
    */
   label?: "Trending" | "AI" | "System";
+}
+
+/** community.feed-card@1.0.0 (owner: community) */
+/**
+ * community.feed-card@1: one public card returned by GET /api/v1/feed on OpenVibe.Community.
+ */
+export interface CommunityFeedCard {
+  id: string;
+  kind:
+    | "live"
+    | "stream"
+    | "clip"
+    | "video"
+    | "pic"
+    | "post"
+    | "meme"
+    | "game"
+    | "update"
+    | "wiki"
+    | "quest"
+    | "chat"
+    | "event"
+    | "member";
+  url: string;
+  title: string;
+  text: string;
+  at: string | null;
+  site: string;
+  site_name: string;
+  actor: {
+    name: string | null;
+    avatar: string | null;
+  } | null;
+  media: {
+    thumb: string;
+    preview?: string | null;
+    ratio: number;
+    length?: number;
+  } | null;
+  counts: {
+    views?: number;
+    likes?: number;
+    comments?: number;
+  };
+  live_now?: boolean;
+  label?: "Trending" | "AI" | "System";
+}
+
+/** community.feed-answer@1.0.0 (owner: community) */
+/**
+ * community.feed-answer@1: the response from GET /api/v1/feed.
+ */
+export interface CommunityFeedAnswer {
+  items: CommunityFeedCard[];
+  next_cursor: string | null;
 }
 
 /** community.pulse-read-result@1.0.0 (owner: community) */
@@ -333286,5 +333598,1967 @@ export interface NetworkLevelBoard {
             rank: number;
           }
         ];
+  };
+}
+
+/** composer.attachment@1.0.0 (owner: media) */
+/**
+ * composer.attachment@1: one file a person attached to a message in the shared composer. Media stores it and answers this shape from POST /api/v1/attachments (multipart field `file`); a client keeps it until the message is sent, then names it in POST /api/v1/attachments/:id/keep. `kind` is sniffed from the bytes, never taken from the browser: image, video, audio, file or code. `thumb` is a small preview for images and video (absent for the rest), `w`/`h` the pixel size when the file is one Media can measure. An attachment nobody keeps expires after 24 hours; `expires_at` says when, and a keep extends it to the message's life.
+ */
+export interface ComposerAttachment {
+  /**
+   * The attachment id (att_ + ULID): what DELETE /api/v1/attachments/:id and POST /api/v1/attachments/:id/keep name.
+   */
+  id: string;
+  /**
+   * Decided by Media from the bytes, not the client's claim: image/video/audio when the signature matches, code for recognised source text, otherwise file. Executables are refused at upload.
+   */
+  kind: "image" | "video" | "audio" | "file" | "code";
+  /**
+   * The file's original name, sanitised for display; never a path.
+   */
+  name: string;
+  /**
+   * Bytes stored.
+   */
+  size: number;
+  /**
+   * The content type Media serves the bytes as, from the sniffed kind and format.
+   */
+  mime: string;
+  /**
+   * Absolute https URL the bytes are served at. It stays valid while the attachment exists; a kept attachment is the message's to serve.
+   */
+  url: string;
+  /**
+   * Absolute URL of a preview image: an image's own small copy or a video's first frame. Null when Media could not make one (or the kind has none).
+   */
+  thumb?: string | null;
+  /**
+   * Pixel width of an image, video or video preview; null when unknown.
+   */
+  w?: number | null;
+  /**
+   * Pixel height of an image, video or video preview; null when unknown.
+   */
+  h?: number | null;
+  /**
+   * When an unkept attachment is deleted. The upload answers now + 24 hours; a keep moves it to the kept window.
+   */
+  expires_at: string;
+}
+
+/** composer.prefs@1.0.0 (owner: network) */
+/**
+ * composer.prefs@1: a person's composer settings, the same on every OpenVibe site because Network stores them (GET/PUT /api/v1/me/composer). `rev` is the stored revision: send the one you read back with your change, and a tab that read an older copy gets 409 with the current document instead of overwriting the other tab. `send_key` says whether Enter or Ctrl/Cmd+Enter sends. `tools` is the one order of the composer's tools and which are hidden; a tool id the client does not know is kept, so a site can add one without another site dropping the person's order. `snippets` are the person's saved inserts, triggered by typing a slash word.
+ */
+export interface ComposerPrefs {
+  /**
+   * Revision of the stored document. A missing document is rev 0 with the defaults; every successful PUT answers rev + 1.
+   */
+  rev: number;
+  /**
+   * enter: Enter sends and Shift+Enter breaks the line. mod-enter: Ctrl/Cmd+Enter sends and Enter breaks the line (the default on a phone keyboard is enter).
+   */
+  send_key: "enter" | "mod-enter";
+  /**
+   * Every tool in the order the person wants them, each marked hidden or not.
+   *
+   * @maxItems 100
+   */
+  tools: {
+    id: string;
+    hidden: boolean;
+  }[];
+  /**
+   * How much room the composer takes: comfy is the default on a computer, compact on a phone.
+   */
+  density: "comfy" | "compact";
+  /**
+   * Whether the composer offers dictation (where the device has it).
+   */
+  voice: boolean;
+  /**
+   * Saved inserts. Typing the trigger (a slash word such as /sig) in the composer offers the snippet.
+   *
+   * @maxItems 50
+   */
+  snippets: {
+    /**
+     * The slash word that offers the snippet, e.g. /sig. Lower-case letters, digits, _ and - only.
+     */
+    trigger: string;
+    /**
+     * What the menu shows.
+     */
+    label: string;
+    /**
+     * What is inserted.
+     */
+    text: string;
+  }[];
+}
+
+/** composer.mention@1.0.0 (owner: network) */
+/**
+ * composer.mention@1: one thing the composer's @ menu can insert, from GET /api/v1/mentions on OpenVibe.Network. kind person (a person the caller follows first, then a public person), repo (a repository on OpenVibe Git the caller can see), site (a first-party OpenVibe site) or file (a file of the message's own context). `id` is the stable id inside its kind, `label` what the menu shows, `handle` the @name when the kind has one, `avatar` the picture, and `url` where choosing it links.
+ */
+export interface ComposerMention {
+  /**
+   * What is mentioned. The same person is a person; a repository on OpenVibe Git is a repo; a first-party OpenVibe site is a site; a file of the message's context (an attachment or a repository file) is a file.
+   */
+  kind: "person" | "repo" | "site" | "file";
+  /**
+   * The stable id inside the kind: a usr_… subject for a person, owner/name for a repo, a site id for a site, a path or attachment id for a file.
+   */
+  id: string;
+  /**
+   * What the menu shows (a display name, owner/name, the site's name, a file name).
+   */
+  label: string;
+  /**
+   * The @name when the kind has one: a person's username, a site's short name. Absent for a repo or a file.
+   */
+  handle?: string;
+  /**
+   * Absolute URL of the picture to show beside the label. Null when the kind has none (a file, a site without a mark).
+   */
+  avatar?: string | null;
+  /**
+   * Absolute https URL where choosing the mention leads: the person's profile, the repository, the site's home or the file.
+   */
+  url: string;
+}
+
+/** network.user-card@1.0.0 (owner: network) */
+/**
+ * network.user-card@1 (ask 287): the one public user card read, GET /api/v1/people/:username/card on OpenVibe.Network. It is public and credential-free; a signed-in viewer may send their Network token (Authorization: Bearer …) and then also receives `actions` computed for that viewer, never cached. Without a viewer, or on the viewer's own card, `actions` carries Profile and Channel only. A missing, expired or revoked token reads as anonymous, never a 401. Hidden fields are absent, never zero, offline or a placeholder; no presence, page titles or visited URLs leave the read.
+ */
+export interface NetworkUserCard {
+  username: string;
+  display_name?: string;
+  avatar_url?: string;
+  profile_url: string;
+  level?: number;
+  streak?: number;
+  badges_count?: number;
+  followers?: number;
+  live?: {
+    now: boolean;
+    site?: "live";
+    url?: string;
+  };
+  channel_url?: string;
+  active_sites?: {
+    id: string;
+    name: string;
+    url: string;
+  }[];
+  /**
+   * What the viewer can do, by what is possible for the pair. Order is the card's order. Each action either opens somewhere (`href`) or calls a Network route with the viewer's token (`method` + `path`, and `body` where the route needs one).
+   */
+  actions: (
+    | {
+        id: string;
+        label: string;
+        href: string;
+        state?: {
+          following?: boolean;
+          friendship?: "none" | "pending" | "requested" | "friends";
+          muted?: boolean;
+          blocked?: boolean;
+          reported?: boolean;
+        };
+      }
+    | {
+        id: string;
+        label: string;
+        method: "PUT" | "POST" | "DELETE" | "PATCH";
+        path: string;
+        body?: {};
+        state?: {
+          following?: boolean;
+          friendship?: "none" | "pending" | "requested" | "friends";
+          muted?: boolean;
+          blocked?: boolean;
+          reported?: boolean;
+        };
+      }
+  )[];
+}
+
+/** network.user-report@1.0.0 (owner: network) */
+/**
+ * network.user-report@1 (ask 287): one report a person filed about another person on OpenVibe.Network. Reports never resolve themselves; staff holding staff.moderation.logs read the queue (GET /api/v1/staff/user-reports?status=open&target=usr_…&limit=), and a staff decision lives in the moderation audit log. `status` records whether staff have looked, not a verdict.
+ */
+export interface NetworkUserReport {
+  id: number;
+  reporter: string;
+  target: string;
+  reason: "spam" | "harassment" | "impersonation" | "explicit" | "scam" | "other";
+  detail: string;
+  status: "open" | "reviewed" | "dismissed";
+  created_at: string;
+  updated_at: string;
+}
+
+/** network.user-report-list-result@1.0.0 (owner: network) */
+/**
+ * network.user-report-list-result@1 (ask 287): GET /api/v1/staff/user-reports on OpenVibe.Network, the staff queue for people holding staff.moderation.logs. Newest first, filtered by status (default open) and target subject, at most 200 rows (`limit`, default 50). A caller without the capability gets 403 user_reports.forbidden (problem+json).
+ */
+export interface NetworkUserReportListResult {
+  /**
+   * @maxItems 200
+   */
+  reports: NetworkUserReport[];
+}
+
+/** network.user-report-request@1.0.0 (owner: network) */
+/**
+ * network.user-report-request@1 (ask 287): POST /api/v1/me/reports on OpenVibe.Network, a signed-in person's report about another person. `target` is their username (any case) or usr_ subject; guests cannot be named, and nobody reports themselves. The same pair may have one open report: filing again while it is open answers the open one with 200 instead of creating a duplicate (201 when it creates one).
+ */
+export interface NetworkUserReportRequest {
+  target: string;
+  reason: "spam" | "harassment" | "impersonation" | "explicit" | "scam" | "other";
+  detail?: string;
+}
+
+/** agent.ui-event@1.0.0 (owner: actor) */
+/**
+ * agent.ui-event@1: AG-UI 1.0 event shape and event-family fields, with OpenVibe metadata.ov. AG-UI timestamps are Unix-millisecond integers; this contract requires one on every event. CUSTOM events use AG-UI name/value with ov.sources, ov.handoff, ov.approval or ov.result names.
+ */
+export type AgentUiEvent = Event & {};
+/**
+ * Any AG-UI event. Every member is normative: there is no optional tier and no event a consumer may decline to implement. Discriminated by the type property.
+ */
+export type Event =
+  | TextMessageStartEvent
+  | TextMessageContentEvent
+  | TextMessageEndEvent
+  | TextMessageChunkEvent
+  | ToolCallStartEvent
+  | ToolCallArgsEvent
+  | ToolCallEndEvent
+  | ToolCallChunkEvent
+  | ToolCallResultEvent
+  | StateSnapshotEvent
+  | StateDeltaEvent
+  | MessagesSnapshotEvent
+  | ActivitySnapshotEvent
+  | ActivityDeltaEvent
+  | RawEvent
+  | CustomEvent
+  | RunStartedEvent
+  | RunFinishedEvent
+  | RunErrorEvent
+  | StepStartedEvent
+  | StepFinishedEvent
+  | ReasoningStartEvent
+  | ReasoningMessageStartEvent
+  | ReasoningMessageContentEvent
+  | ReasoningMessageEndEvent
+  | ReasoningMessageChunkEvent
+  | ReasoningEndEvent
+  | ReasoningEncryptedValueEvent
+  | SubagentStartedEvent
+  | SubagentFinishedEvent
+  | SubagentErrorEvent;
+/**
+ * Opens a streamed text message. The content arrives as TEXT_MESSAGE_CONTENT events and the message closes with TEXT_MESSAGE_END.
+ */
+export type TextMessageStartEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_START";
+    /**
+     * Identifies the message this stream builds, and ties the later content and end events to it.
+     */
+    messageId: string;
+    /**
+     * Who the message is from. An absent role means assistant; that meaning is normative and stated in the prose, because a validator treats a default as documentation rather than as behaviour.
+     */
+    role?: "developer" | "system" | "assistant" | "user";
+    /**
+     * An optional display name for the author, for providers that distinguish several participants in one role.
+     */
+    name?: string;
+  };
+/**
+ * Appends a fragment to a streamed text message.
+ */
+export type TextMessageContentEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_CONTENT";
+    /**
+     * The message this fragment belongs to.
+     */
+    messageId: string;
+    /**
+     * The fragment to append. May be the empty string: providers emit empty deltas as keep-alives and while a tool call is being decided, and rejecting them would kill runs that are working correctly.
+     */
+    delta: string;
+  };
+/**
+ * Closes a streamed text message.
+ */
+export type TextMessageEndEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_END";
+    /**
+     * The message being closed.
+     */
+    messageId: string;
+  };
+/**
+ * A shorthand that stands in for a start, content and end sequence, for producers that cannot know in advance where a message begins. Every field is optional because a continuation chunk omits what has not changed; which message a field-less chunk continues is a sequence question the prose specification answers.
+ */
+export type TextMessageChunkEvent = BaseEvent &
+  Attributable & {
+    type: "TEXT_MESSAGE_CHUNK";
+    /**
+     * The message this chunk belongs to. Absent continues the message already open.
+     */
+    messageId?: string;
+    /**
+     * Who the message is from, on the chunk that opens it.
+     */
+    role?: "developer" | "system" | "assistant" | "user";
+    /**
+     * The fragment to append. May be the empty string.
+     */
+    delta?: string;
+    /**
+     * An optional display name for the author.
+     */
+    name?: string;
+  };
+/**
+ * Opens a tool call. The arguments arrive as TOOL_CALL_ARGS events and the call closes with TOOL_CALL_END.
+ */
+export type ToolCallStartEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_START";
+    /**
+     * Identifies the call, and ties the later args, end and result events to it.
+     */
+    toolCallId: string;
+    /**
+     * Which tool is being called.
+     */
+    toolCallName: string;
+    /**
+     * The assistant message that holds this call. Absent means the producer did not attribute it to one.
+     */
+    parentMessageId?: string;
+  };
+/**
+ * Appends a fragment of a tool call's arguments.
+ */
+export type ToolCallArgsEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_ARGS";
+    /**
+     * The call these arguments belong to.
+     */
+    toolCallId: string;
+    /**
+     * A fragment of the arguments, which concatenate into the call's argument text — conventionally a JSON document, though the protocol does not validate it (see FunctionCall.arguments). Deliberately a string rather than parsed JSON: a fragment is not itself a document. May be the empty string.
+     */
+    delta: string;
+  };
+/**
+ * Closes a tool call, meaning its arguments are complete.
+ */
+export type ToolCallEndEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_END";
+    /**
+     * The call being closed.
+     */
+    toolCallId: string;
+  };
+/**
+ * A shorthand that stands in for a tool call's start, args and end sequence. Every field is optional for the same reason as TEXT_MESSAGE_CHUNK.
+ */
+export type ToolCallChunkEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_CHUNK";
+    /**
+     * The call this chunk belongs to. Absent continues the call already open.
+     */
+    toolCallId?: string;
+    /**
+     * Which tool is being called, on the chunk that opens it.
+     */
+    toolCallName?: string;
+    /**
+     * The assistant message that holds this call.
+     */
+    parentMessageId?: string;
+    /**
+     * A fragment of the arguments. May be the empty string.
+     */
+    delta?: string;
+  };
+/**
+ * Carries what a tool returned. Mints a tool message rather than appending to an existing one, which is why it has its own messageId.
+ */
+export type ToolCallResultEvent = BaseEvent &
+  Attributable & {
+    type: "TOOL_CALL_RESULT";
+    /**
+     * The tool message this result becomes.
+     */
+    messageId: string;
+    /**
+     * The call being answered.
+     */
+    toolCallId: string;
+    /**
+     * What the tool returned: either plain text, or an ordered list of parts, exactly as on the tool message this event mints. A tool returning structured data serialises it into text; media travel as parts of their own.
+     */
+    content: string | ContentPart[];
+    /**
+     * Present only for symmetry with the message it mints; the value is fixed, so a producer may leave it out.
+     */
+    role?: "tool";
+  };
+/**
+ * One part of a message body: what a person sends in a user message, or what a tool returns in a tool message. Discriminated by type. Named by what the part is rather than by direction, because the same part travels into the model inside a user message and back out of the stream inside a tool result.
+ */
+export type ContentPart = TextPart | ImagePart | AudioPart | VideoPart | DocumentPart;
+/**
+ * Replaces the agent state wholesale. Sent when a delta cannot express the change, or to resynchronise a consumer.
+ */
+export type StateSnapshotEvent = BaseEvent &
+  Attributable & {
+    type: "STATE_SNAPSHOT";
+    /**
+     * The complete new state.
+     */
+    snapshot: {
+      [k: string]: unknown | undefined;
+    };
+  };
+/**
+ * Changes the agent state incrementally.
+ */
+export type StateDeltaEvent = BaseEvent &
+  Attributable & {
+    type: "STATE_DELTA";
+    delta: JsonPatch;
+  };
+/**
+ * A single RFC 6902 operation. Exactly one of the operation shapes must match, discriminated by op. Unlike the protocol's own objects, the operations are open: RFC 6902 section 4 requires members an operation does not define to be ignored rather than rejected, so a remove carrying a leftover value is a valid patch. Two of the RFC's rules are relations between values rather than shapes, so no static schema can express them and neither is checked here: a move whose from is a proper prefix of its path (section 4.4), and any operation whose pointer does not resolve in the target document. Both are the applier's to reject.
+ */
+export type JsonPatchOperation =
+  AddOperation | RemoveOperation | ReplaceOperation | MoveOperation | CopyOperation | TestOperation;
+/**
+ * The change, as an RFC 6902 patch against the current state. Structural validity here does not mean the patch applies: a well-formed operation may point at a path that does not exist, which RFC 6902 leaves to the applier.
+ */
+export type JsonPatch = JsonPatchOperation[];
+/**
+ * The complete set of messages the producer owns, in order. Conversation-wide rather than a plain overwrite: a consumer may keep messages of its own that no producer tracks, so exactly how a snapshot reconciles with those is behavioural and belongs in the prose. Being conversation-wide it cannot belong to a single subagent, so it carries no attribution; it does establish which subagent owns each message it contains, through the messages themselves.
+ */
+export type MessagesSnapshotEvent = BaseEvent & {
+  type: "MESSAGES_SNAPSHOT";
+  /**
+   * The messages the producer is declaring, in order.
+   */
+  messages: Message[];
+};
+/**
+ * Any message in a conversation. Discriminated by role.
+ */
+export type Message =
+  DeveloperMessage | SystemMessage | AssistantMessage | UserMessage | ToolMessage | ActivityMessage | ReasoningMessage;
+/**
+ * Instructions from the application developer.
+ */
+export type DeveloperMessage = BaseMessage & {
+  role: "developer";
+  /**
+   * The instructions. Required: a developer message with nothing in it says nothing.
+   */
+  content: string;
+};
+/**
+ * The fields shared by the developer, system, assistant and user messages. Deliberately excludes content, because a user message's content may be an array while the others are strings, and composition here intersects rather than overrides: a base that constrained content to a string would make an array content invalid. The tool, activity and reasoning messages do not compose this, because they carry no name.
+ */
+export type BaseMessage = Attributable & {
+  /**
+   * Identifies the message within the conversation.
+   */
+  id: string;
+  /**
+   * Who the message is from. Each message definition narrows this to a single value.
+   */
+  role: string;
+  /**
+   * An optional display name for the author.
+   */
+  name?: string;
+  /**
+   * A provider's opaque artefact belonging to this message, stored by a consumer and returned on a later turn.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata1;
+};
+/**
+ * Instructions from the system.
+ */
+export type SystemMessage = BaseMessage & {
+  role: "system";
+  /**
+   * The instructions. Required.
+   */
+  content: string;
+};
+/**
+ * A message from the agent. Content is optional because a turn may consist only of tool calls.
+ */
+export type AssistantMessage = BaseMessage & {
+  role: "assistant";
+  /**
+   * What the agent said, if it said anything.
+   */
+  content?: string;
+  /**
+   * The tool calls this turn made.
+   */
+  toolCalls?: ToolCall[];
+};
+/**
+ * A message from the person using the application.
+ */
+export type UserMessage = BaseMessage & {
+  role: "user";
+  /**
+   * What the person sent: either plain text, or an ordered list of parts for a multimodal message.
+   */
+  content: string | ContentPart[];
+};
+/**
+ * What a tool returned, as a message in the conversation. Stands alone rather than composing BaseMessage, because it carries no name.
+ */
+export type ToolMessage = Attributable & {
+  /**
+   * Identifies the message.
+   */
+  id: string;
+  /**
+   * Fixed. Declared here rather than inherited, because this message does not compose BaseMessage.
+   */
+  role: "tool";
+  /**
+   * What the tool returned: either plain text, or an ordered list of parts. A tool returning structured data serialises it into text; media travel as parts of their own.
+   */
+  content: string | ContentPart[];
+  /**
+   * The call this answers.
+   */
+  toolCallId: string;
+  /**
+   * Why the tool failed, when it did. Present alongside content rather than instead of it, so a partial result survives a failure.
+   */
+  error?: string;
+  /**
+   * A provider's opaque artefact belonging to this message.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata3;
+};
+/**
+ * Structured progress that is not conversation content, materialised as a message so it keeps its place in the sequence. Stands alone rather than composing BaseMessage, because its content is an object rather than a string.
+ */
+export type ActivityMessage = Attributable & {
+  /**
+   * Identifies the message.
+   */
+  id: string;
+  /**
+   * Fixed. Declared here rather than inherited, because this message does not compose BaseMessage.
+   */
+  role: "activity";
+  /**
+   * What kind of activity this is. An open string: the set is the producer's.
+   */
+  activityType: string;
+  /**
+   * The activity's payload, open by key.
+   */
+  content: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata4;
+};
+/**
+ * A span of the agent's reasoning, materialised as a message. Stands alone rather than composing BaseMessage, because it carries no name.
+ */
+export type ReasoningMessage = Attributable & {
+  /**
+   * Identifies the message.
+   */
+  id: string;
+  /**
+   * Fixed. Declared here rather than inherited, because this message does not compose BaseMessage.
+   */
+  role: "reasoning";
+  /**
+   * The reasoning text.
+   */
+  content: string;
+  /**
+   * A provider's opaque reasoning artefact belonging to this message.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata5;
+};
+/**
+ * Reports structured progress that is not conversation content, such as a step a UI renders as its own widget.
+ */
+export type ActivitySnapshotEvent = BaseEvent &
+  Attributable & {
+    type: "ACTIVITY_SNAPSHOT";
+    /**
+     * The activity message this describes.
+     */
+    messageId: string;
+    /**
+     * What kind of activity this is. An open string: the set is the producer's, not the protocol's.
+     */
+    activityType: string;
+    /**
+     * The activity's payload, open by key.
+     */
+    content: {
+      [k: string]: unknown | undefined;
+    };
+    /**
+     * Whether this snapshot overwrites the activity's existing content. Absent means it does, and that meaning is normative; only an explicit false asks a consumer to leave what is already there. It does not ask for a merge — ACTIVITY_DELTA is how content is changed incrementally. What a consumer does with a non-overwriting snapshot is behavioural and belongs in the prose.
+     */
+    replace?: boolean;
+  };
+/**
+ * Changes an activity message's content incrementally.
+ */
+export type ActivityDeltaEvent = BaseEvent &
+  Attributable & {
+    type: "ACTIVITY_DELTA";
+    /**
+     * The activity message being changed.
+     */
+    messageId: string;
+    /**
+     * What kind of activity this is.
+     */
+    activityType: string;
+    patch: JsonPatch1;
+  };
+/**
+ * The change, as an RFC 6902 patch against the activity's content.
+ */
+export type JsonPatch1 = JsonPatchOperation[];
+/**
+ * Passes a provider-native event through untranslated, for consumers that need detail the protocol does not model.
+ */
+export type RawEvent = BaseEvent &
+  Attributable & {
+    type: "RAW";
+    /**
+     * The provider's own event. Any JSON value, and required: an event whose only purpose is to carry this would say nothing without it.
+     */
+    event: {
+      [k: string]: unknown | undefined;
+    };
+    /**
+     * Which provider or framework the event came from.
+     */
+    source?: string;
+  };
+/**
+ * The protocol's extension point for an application's own events. Anything a consumer does with one is outside the protocol.
+ */
+export type CustomEvent = BaseEvent &
+  Attributable & {
+    type: "CUSTOM";
+    /**
+     * What this custom event is. Required: without it a consumer cannot route the value.
+     */
+    name: "ov.sources" | "ov.handoff" | "ov.approval" | "ov.result";
+    /**
+     * The payload. Any JSON value, and required.
+     */
+    value: {
+      [k: string]: unknown | undefined;
+    };
+  };
+/**
+ * Opens a run. Run-scoped, so it carries no subagent attribution.
+ */
+export type RunStartedEvent = BaseEvent & {
+  type: "RUN_STARTED";
+  /**
+   * The conversation this run belongs to.
+   */
+  threadId: string;
+  /**
+   * Identifies this run.
+   */
+  runId: string;
+  /**
+   * The protocol version this producer speaks, such as "1.0" — the producer's own version, not an echo of the input's, which is what makes the pair a negotiation: each side declares itself and the consumer sees a downgrade the moment it happens. Absent means a producer from before the protocol carried a version.
+   */
+  protocolVersion?: string;
+  /**
+   * The run that spawned this one, when an agent invokes another agent as a separate run rather than as a subagent within one.
+   */
+  parentRunId?: string;
+  input?: RunAgentInput;
+};
+/**
+ * Closes a run that did not fail. Run-scoped, so it carries no subagent attribution.
+ */
+export type RunFinishedEvent = BaseEvent & {
+  type: "RUN_FINISHED";
+  /**
+   * The conversation this run belongs to.
+   */
+  threadId: string;
+  /**
+   * The run being closed.
+   */
+  runId: string;
+  /**
+   * The run's return value, if it has one. Any JSON value.
+   */
+  result?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Why the run ended. Absent means success, so every producer written before outcomes existed is already conformant.
+   */
+  outcome?: RunFinishedSuccessOutcome | RunFinishedInterruptOutcome | RunFinishedCancelledOutcome;
+  /**
+   * Token usage for the run, one entry per provider and model, so a run that invoked several models keeps them separate. A consumer that only wants totals sums across the entries. The run is the accounting boundary: usage covers every model call made within the run, calls made by its subagents included; an agent invoked as a separate run under parentRunId reports its own usage on its own terminal event; and a run that resumes an interrupted one reports only the calls it made itself, not the interrupted run's.
+   */
+  usage?: TokenUsage[];
+};
+/**
+ * Something a run needs from outside before it can continue, such as an approval or a missing value.
+ */
+export type Interrupt = Attributable & {
+  /**
+   * Identifies the interrupt. A resume entry answers it by this id.
+   */
+  id: string;
+  /**
+   * Why the run stopped. An open string rather than an enumeration: the protocol does not attempt to classify every reason an agent might need input.
+   */
+  reason: string;
+  /**
+   * A human-readable prompt for whoever answers.
+   */
+  message?: string;
+  /**
+   * The tool call this interrupt concerns, when it is a tool approval.
+   */
+  toolCallId?: string;
+  /**
+   * A JSON Schema describing the answer this interrupt expects, so a consumer can build a form for it. Carried opaquely: the protocol does not constrain or validate it. Restricted to an object because TypeScript and Python both declare it that way; .NET holds it as any JSON, and the ticket that commissioned this schema lists it among the arbitrary-JSON fields. Following the two that constrain it keeps the schema from accepting documents the reference client rejects, at the cost of rejecting the boolean schemas JSON Schema also permits — a bare true for "any answer". Recorded as a known divergence rather than settled.
+   */
+  responseSchema?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * When the interrupt stops being answerable. Deliberately unconstrained rather than a date-time format, because producers already disagree about the representation and tightening it here would reject streams that work today. The documented convention is ISO 8601, and a consumer comparing this value will parse it as a date, so a value that is not one leaves the interrupt looking permanently unexpired.
+   */
+  expiresAt?: string;
+  metadata?: Metadata8;
+} & {
+  /**
+   * Identifies the interrupt. A resume entry answers it by this id.
+   */
+  id: string;
+  /**
+   * Why the run stopped. An open string rather than an enumeration: the protocol does not attempt to classify every reason an agent might need input.
+   */
+  reason: string;
+  /**
+   * A human-readable prompt for whoever answers.
+   */
+  message?: string;
+  /**
+   * The tool call this interrupt concerns, when it is a tool approval.
+   */
+  toolCallId?: string;
+  /**
+   * A JSON Schema describing the answer this interrupt expects, so a consumer can build a form for it. Carried opaquely: the protocol does not constrain or validate it. Restricted to an object because TypeScript and Python both declare it that way; .NET holds it as any JSON, and the ticket that commissioned this schema lists it among the arbitrary-JSON fields. Following the two that constrain it keeps the schema from accepting documents the reference client rejects, at the cost of rejecting the boolean schemas JSON Schema also permits — a bare true for "any answer". Recorded as a known divergence rather than settled.
+   */
+  responseSchema?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * When the interrupt stops being answerable. Deliberately unconstrained rather than a date-time format, because producers already disagree about the representation and tightening it here would reject streams that work today. The documented convention is ISO 8601, and a consumer comparing this value will parse it as a date, so a value that is not one leaves the interrupt looking permanently unexpired.
+   */
+  expiresAt?: string;
+  metadata?: Metadata8;
+};
+/**
+ * Ends a run that failed. Run-scoped, so it carries no subagent attribution; a subagent that fails without ending the run reports SUBAGENT_ERROR instead.
+ */
+export type RunErrorEvent = BaseEvent & {
+  type: "RUN_ERROR";
+  /**
+   * What went wrong, for a person to read.
+   */
+  message: string;
+  /**
+   * A machine-readable error code. An open string: the protocol defines no vocabulary.
+   */
+  code?: string;
+  /**
+   * Token usage accrued before the failure, for a run that completed one or more model calls before dying. Scoped as on RUN_FINISHED: the run's own calls, subagents included.
+   */
+  usage?: TokenUsage[];
+};
+/**
+ * Opens a named step within a run, for producers whose frameworks have a step concept worth surfacing.
+ */
+export type StepStartedEvent = BaseEvent &
+  Attributable & {
+    type: "STEP_STARTED";
+    /**
+     * The step's name. Identifies it: the matching STEP_FINISHED carries the same name.
+     */
+    stepName: string;
+  };
+/**
+ * Closes a named step.
+ */
+export type StepFinishedEvent = BaseEvent &
+  Attributable & {
+    type: "STEP_FINISHED";
+    /**
+     * The step being closed.
+     */
+    stepName: string;
+  };
+/**
+ * Opens a span of reasoning. A span may contain several reasoning messages.
+ */
+export type ReasoningStartEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_START";
+    /**
+     * The span being opened.
+     */
+    messageId: string;
+  };
+/**
+ * Opens a streamed reasoning message.
+ */
+export type ReasoningMessageStartEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_START";
+    /**
+     * The reasoning message this stream builds.
+     */
+    messageId: string;
+    /**
+     * Fixed, and required rather than defaulted. The requirement is inherited from the SDKs rather than chosen.
+     */
+    role: "reasoning";
+  };
+/**
+ * Appends a fragment to a streamed reasoning message.
+ */
+export type ReasoningMessageContentEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_CONTENT";
+    /**
+     * The reasoning message this fragment belongs to.
+     */
+    messageId: string;
+    /**
+     * The fragment to append. May be the empty string.
+     */
+    delta: string;
+  };
+/**
+ * Closes a streamed reasoning message.
+ */
+export type ReasoningMessageEndEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_END";
+    /**
+     * The reasoning message being closed.
+     */
+    messageId: string;
+  };
+/**
+ * A shorthand that stands in for a reasoning message's start, content and end sequence.
+ */
+export type ReasoningMessageChunkEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_MESSAGE_CHUNK";
+    /**
+     * The reasoning message this chunk belongs to. Absent continues the one already open.
+     */
+    messageId?: string;
+    /**
+     * The fragment to append. May be the empty string.
+     */
+    delta?: string;
+  };
+/**
+ * Closes a span of reasoning.
+ */
+export type ReasoningEndEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_END";
+    /**
+     * The span being closed.
+     */
+    messageId: string;
+  };
+/**
+ * Carries a provider's opaque, encrypted reasoning artefact, which a consumer stores and returns on a later turn without being able to read it.
+ */
+export type ReasoningEncryptedValueEvent = BaseEvent &
+  Attributable & {
+    type: "REASONING_ENCRYPTED_VALUE";
+    /**
+     * What kind of thing entityId names, which decides where the value is stored.
+     */
+    subtype: "tool-call" | "message";
+    /**
+     * What the value belongs to: a message id or a tool call id, according to subtype.
+     */
+    entityId: string;
+    /**
+     * The provider's opaque artefact.
+     */
+    encryptedValue: string;
+  };
+/**
+ * Announces that a subagent invocation has begun. Everything the subagent produces afterwards is attributed by carrying its subagentRunId, so a consumer can group the work without replaying the stream. Composed from BaseEvent alone rather than Attributable, because here subagentRunId identifies the subagent rather than attributing the event to one; attribution to an enclosing subagent is parentSubagentRunId.
+ */
+export type SubagentStartedEvent = BaseEvent & {
+  type: "SUBAGENT_STARTED";
+  /**
+   * The invocation being announced.
+   */
+  subagentRunId: string;
+  /**
+   * The subagent's name, which is reusable across invocations, unlike subagentRunId.
+   */
+  name: string;
+  /**
+   * What this subagent is for, for a consumer to display.
+   */
+  description?: string;
+  /**
+   * The subagent invocation that spawned this one, for nested delegation. Absent means the parent agent spawned it directly.
+   */
+  parentSubagentRunId?: string;
+  /**
+   * The tool call that spawned this subagent, for the pattern where agents are exposed to a model as tools. Lets a consumer tie the subagent to the call without reading rawEvent.
+   */
+  parentToolCallId?: string;
+  /**
+   * The message that held the spawning tool call.
+   */
+  parentMessageId?: string;
+};
+/**
+ * Ends a subagent invocation's segment of this run, either because the work completed or because it is suspended awaiting outside input.
+ */
+export type SubagentFinishedEvent = BaseEvent & {
+  type: "SUBAGENT_FINISHED";
+  /**
+   * The invocation being closed.
+   */
+  subagentRunId: string;
+  /**
+   * The subagent's return value, if it has one. Any JSON value, mirroring RUN_FINISHED.result.
+   */
+  result?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Why the segment ended. Absent means success. A suspended subagent is neither a success nor a failure, which is why saying so needs its own value rather than being inferred from a later interrupt.
+   */
+  outcome?: SubagentFinishedSuccessOutcome | SubagentFinishedSuspendedOutcome;
+};
+/**
+ * Reports that a subagent invocation failed. The run may continue: a parent agent is free to handle a failed subagent, which is why this is not RUN_ERROR.
+ */
+export type SubagentErrorEvent = BaseEvent & {
+  type: "SUBAGENT_ERROR";
+  /**
+   * The invocation that failed.
+   */
+  subagentRunId: string;
+  /**
+   * What went wrong, for a person to read.
+   */
+  message: string;
+  /**
+   * A machine-readable error code. An open string.
+   */
+  code?: string;
+};
+
+/**
+ * The fields every event carries, whatever its type. Composed into each event definition rather than repeated, so a change here reaches every event at once.
+ */
+export interface BaseEvent {
+  /**
+   * Which event this is. Each event definition narrows this to a single value.
+   */
+  type:
+    | "TEXT_MESSAGE_START"
+    | "TEXT_MESSAGE_CONTENT"
+    | "TEXT_MESSAGE_END"
+    | "TEXT_MESSAGE_CHUNK"
+    | "TOOL_CALL_START"
+    | "TOOL_CALL_ARGS"
+    | "TOOL_CALL_END"
+    | "TOOL_CALL_CHUNK"
+    | "TOOL_CALL_RESULT"
+    | "STATE_SNAPSHOT"
+    | "STATE_DELTA"
+    | "MESSAGES_SNAPSHOT"
+    | "ACTIVITY_SNAPSHOT"
+    | "ACTIVITY_DELTA"
+    | "RAW"
+    | "CUSTOM"
+    | "RUN_STARTED"
+    | "RUN_FINISHED"
+    | "RUN_ERROR"
+    | "STEP_STARTED"
+    | "STEP_FINISHED"
+    | "REASONING_START"
+    | "REASONING_MESSAGE_START"
+    | "REASONING_MESSAGE_CONTENT"
+    | "REASONING_MESSAGE_END"
+    | "REASONING_MESSAGE_CHUNK"
+    | "REASONING_END"
+    | "REASONING_ENCRYPTED_VALUE"
+    | "SUBAGENT_STARTED"
+    | "SUBAGENT_FINISHED"
+    | "SUBAGENT_ERROR";
+  /**
+   * When the event was created. Bounded to the range JSON numbers survive a round trip in, so the value a consumer reads is the value the producer wrote. Deliberately not a float. The unit is not constrained here, because it never has been stated normatively; every SDK that sets it in practice uses milliseconds since the Unix epoch, and a producer choosing another unit will be misread by consumers even though it validates. Nothing in the protocol computes with this value.
+   */
+  timestamp?: number;
+  /**
+   * The provider-native event this one was translated from, carried verbatim for debugging and for consumers that need detail the protocol does not model. Any JSON value.
+   */
+  rawEvent?: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata;
+}
+/**
+ * Extra information attached to this event.
+ */
+export interface Metadata {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+export interface OvSource {
+  url: string;
+  title: string;
+  site: string;
+}
+/**
+ * Composed into everything that can belong to a subagent's work: the events that describe content or progress, the message types, and each interrupt. Run-scoped events omit it — RUN_STARTED, RUN_FINISHED and RUN_ERROR describe the run itself and MESSAGES_SNAPSHOT is conversation-wide, so none of them can belong to one subagent. A tool call omits it too and inherits its containing message's attribution.
+ */
+export interface Attributable {
+  /**
+   * The subagent invocation this belongs to. Absent means the parent agent produced it directly.
+   */
+  subagentRunId?: string;
+}
+/**
+ * A text part.
+ */
+export interface TextPart {
+  /**
+   * Discriminator.
+   */
+  type: "text";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved so that a streamed part can be matched to its entry in history once assistant messages carry parts too.
+   */
+  id?: string;
+  /**
+   * The text.
+   */
+  text: string;
+  /**
+   * Extra information about this part. Unconstrained, as on the media parts. This is where a text search hit carries its source and title, rather than the protocol modelling a search-result part of its own.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * An image part.
+ */
+export interface ImagePart {
+  /**
+   * Discriminator.
+   */
+  type: "image";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the image comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained rather than an object: inherited from the SDKs, which declare it unknown rather than a record; listed under known divergences in the README rather than resolved here.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Bytes carried inline.
+ */
+export interface DataSource {
+  /**
+   * Discriminator.
+   */
+  type: "data";
+  /**
+   * The bytes, base64-encoded. contentEncoding is an annotation rather than a constraint in 2020-12, so a malformed string still validates here; rejecting one is the decoder's job.
+   */
+  value: string;
+  /**
+   * What the bytes are. Required here, unlike on a URL source, because nothing else can tell a consumer how to read them.
+   */
+  mimeType: string;
+}
+/**
+ * Bytes referenced by URL, fetched by whoever needs them.
+ */
+export interface UrlSource {
+  /**
+   * Discriminator.
+   */
+  type: "url";
+  /**
+   * The URL. Deliberately not constrained to a URI format, so a scheme a producer already uses is not rejected here.
+   */
+  value: string;
+  /**
+   * What the resource is, when the producer knows. Optional, because the response can say.
+   */
+  mimeType?: string;
+}
+/**
+ * Bytes already at the provider, named by a handle the provider issued: an OpenAI or Anthropic file id, a Gemini file URI, a storage URL only that provider can read. No bytes travel and nothing is fetched. Only the provider that minted the handle can resolve it; a peer that cannot drops the part as it drops any part it cannot use.
+ */
+export interface FileSource {
+  /**
+   * Discriminator.
+   */
+  type: "file";
+  /**
+   * The handle, exactly as the provider issued it. Opaque: a consumer MUST NOT fetch it, parse it or read a scheme out of it.
+   */
+  value: string;
+  /**
+   * Who issued the handle, when the producer knows. Optional: an agent already knows which provider it talks to. When present, SHOULD be the lowercase vendor id (openai, anthropic, google) that TokenUsage.provider uses, so a peer can tell before sending whether a handle is one it can use.
+   */
+  provider?: string;
+  /**
+   * What the file is, when the producer knows. Optional, because the provider that holds the bytes knows.
+   */
+  mimeType?: string;
+}
+/**
+ * An audio part.
+ */
+export interface AudioPart {
+  /**
+   * Discriminator.
+   */
+  type: "audio";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the audio comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained, as on the other media parts.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * A video part.
+ */
+export interface VideoPart {
+  /**
+   * Discriminator.
+   */
+  type: "video";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the video comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained, as on the other media parts.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * A document part.
+ */
+export interface DocumentPart {
+  /**
+   * Discriminator.
+   */
+  type: "document";
+  /**
+   * Identifies this part within its message. Optional, and nothing reads it yet: reserved as on the text part.
+   */
+  id?: string;
+  /**
+   * Where the document comes from.
+   */
+  source: DataSource | UrlSource | FileSource;
+  /**
+   * Extra information about this part. Unconstrained, as on the other media parts.
+   */
+  metadata?: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Inserts value at path. RFC 6902 section 4.1.
+ */
+export interface AddOperation {
+  /**
+   * Discriminator for the add operation.
+   */
+  op: "add";
+  /**
+   * Where to insert the value.
+   */
+  path: string;
+  /**
+   * The value to insert. Any JSON value, including null, which is a legitimate thing to add.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Removes the value at path. RFC 6902 section 4.2.
+ */
+export interface RemoveOperation {
+  /**
+   * Discriminator for the remove operation.
+   */
+  op: "remove";
+  /**
+   * What to remove.
+   */
+  path: string;
+}
+/**
+ * Replaces the value at path. RFC 6902 section 4.3.
+ */
+export interface ReplaceOperation {
+  /**
+   * Discriminator for the replace operation.
+   */
+  op: "replace";
+  /**
+   * What to replace.
+   */
+  path: string;
+  /**
+   * The replacement. Any JSON value, including null.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Moves the value at from to path. RFC 6902 section 4.4.
+ */
+export interface MoveOperation {
+  /**
+   * Discriminator for the move operation.
+   */
+  op: "move";
+  /**
+   * Where the value is moved from.
+   */
+  from: string;
+  /**
+   * Where the value is moved to.
+   */
+  path: string;
+}
+/**
+ * Copies the value at from to path. RFC 6902 section 4.5.
+ */
+export interface CopyOperation {
+  /**
+   * Discriminator for the copy operation.
+   */
+  op: "copy";
+  /**
+   * Where the value is copied from.
+   */
+  from: string;
+  /**
+   * Where the value is copied to.
+   */
+  path: string;
+}
+/**
+ * Asserts that the value at path equals value. RFC 6902 section 4.6.
+ */
+export interface TestOperation {
+  /**
+   * Discriminator for the test operation.
+   */
+  op: "test";
+  /**
+   * What to compare.
+   */
+  path: string;
+  /**
+   * The value the target must equal. Any JSON value, including null.
+   */
+  value: {
+    [k: string]: unknown | undefined;
+  };
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata1 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * A call an assistant message made. Carries no subagent attribution of its own and inherits its containing message's, since several calls can share one parent.
+ */
+export interface ToolCall {
+  /**
+   * Identifies the call. The answering tool message carries this as its toolCallId.
+   */
+  id: string;
+  /**
+   * The only kind of call the protocol models.
+   */
+  type: "function";
+  function: FunctionCall;
+  /**
+   * A provider's opaque artefact belonging to this call.
+   */
+  encryptedValue?: string;
+  metadata?: Metadata2;
+}
+/**
+ * What is being called, and with what.
+ */
+export interface FunctionCall {
+  /**
+   * Which tool is being called.
+   */
+  name: string;
+  /**
+   * The arguments as a JSON string, not as parsed JSON. Kept as written because a model can emit arguments that are not valid JSON, and losing them at the protocol boundary would hide the fault from the consumer that has to handle it.
+   */
+  arguments: string;
+}
+/**
+ * Extra information attached to this call. Carried here rather than folded into the containing message, because several calls can share one parent and merging them would make the result depend on their order.
+ */
+export interface Metadata2 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata3 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata4 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * Extra information attached to this message.
+ */
+export interface Metadata5 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * The request this run was started from, echoed back so a consumer that did not make the request can still see what the agent was asked.
+ */
+export interface RunAgentInput {
+  /**
+   * The conversation this run belongs to.
+   */
+  threadId: string;
+  /**
+   * Identifies this run.
+   */
+  runId: string;
+  /**
+   * The protocol version this consumer speaks, such as "1.0". Absent means the input was produced before the protocol carried a version — the versioning rules in the prose govern what each side does with that. Sent in-band rather than by the transport, so a recorded exchange stays self-describing.
+   */
+  protocolVersion?: string;
+  /**
+   * The run that spawned this one.
+   */
+  parentRunId?: string;
+  /**
+   * The state the run starts from.
+   */
+  state?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * The conversation so far, in order.
+   */
+  messages: Message[];
+  /**
+   * The tools the agent may call. Absent means none.
+   */
+  tools?: Tool[];
+  /**
+   * Ambient information for the run. Absent means none.
+   */
+  context?: Context[];
+  /**
+   * Application-specific values passed through to the agent untouched. Any JSON value.
+   */
+  forwardedProps?: {
+    [k: string]: unknown | undefined;
+  };
+  /**
+   * Answers to the interrupts that ended a previous run, when this run continues from one.
+   */
+  resume?: ResumeEntry[];
+}
+/**
+ * A tool the agent may call.
+ */
+export interface Tool {
+  /**
+   * The tool's name, as the agent will call it.
+   */
+  name: string;
+  /**
+   * What the tool does, for the agent to decide when to use it.
+   */
+  description: string;
+  /**
+   * A JSON Schema describing the tool's arguments. Carried opaquely: the protocol does not constrain or validate it. Optional, because all three SDKs already treat it that way and a tool that takes no arguments has nothing to declare; an absent schema and an empty one mean the same thing to an agent.
+   */
+  parameters?: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata6;
+}
+/**
+ * Extra information about the tool, for consumers that attach their own rendering or routing information to it.
+ */
+export interface Metadata6 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * A named piece of ambient information given to the agent for the run, distinct from the conversation.
+ */
+export interface Context {
+  /**
+   * What this context is, for the agent to interpret.
+   */
+  description: string;
+  /**
+   * The context itself.
+   */
+  value: string;
+}
+/**
+ * An answer to one interrupt, sent on the run that continues from it.
+ */
+export interface ResumeEntry {
+  /**
+   * The interrupt being answered.
+   */
+  interruptId: string;
+  /**
+   * Whether the interrupt was answered or abandoned.
+   */
+  status: "resolved" | "cancelled";
+  /**
+   * The answer the agent asked for and will act on. Any JSON value.
+   */
+  payload?: {
+    [k: string]: unknown | undefined;
+  };
+  metadata?: Metadata7;
+}
+/**
+ * Envelope information about the response, such as signatures or routing keys, as opposed to payload, which is the answer itself.
+ */
+export interface Metadata7 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * The run completed. Equivalent to an absent outcome. Closed like every other object, which is also what keeps it from carrying the suspended sibling's interrupts — a success with an interrupt still pending would be a contradiction, not an extension. A completed run may still have left frontend tool calls for the application to answer; pendingToolCallIds names them.
+ */
+export interface RunFinishedSuccessOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "success";
+  /**
+   * The tool calls this run started and left unanswered — no TOOL_CALL_RESULT in the run — for the application to answer in the next input's messages, in the order they were made. Absent or empty means the producer named none, and a consumer derives the list from the stream; otherwise it is the list, and it agrees with the stream. On the success outcome rather than the event because a run that stopped on a frontend tool call is a completed run: whether the application continues the thread is its own decision, so the producer reports what it knows and no more.
+   */
+  pendingToolCallIds?: string[];
+}
+/**
+ * The run is paused, waiting for something outside it. Resuming means starting a new run whose resume entries answer these interrupts.
+ */
+export interface RunFinishedInterruptOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "interrupt";
+  /**
+   * What the run is waiting for. At least one: an interrupt outcome with nothing to answer would leave a consumer with nothing to do.
+   *
+   * @minItems 1
+   */
+  interrupts: [Interrupt, ...Interrupt[]];
+}
+/**
+ * Extra information attached to this interrupt.
+ */
+export interface Metadata8 {
+  ov?: {
+    title?: string;
+    kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+    sources?: OvSource[];
+    attachments?: {
+      [k: string]: unknown | undefined;
+    }[];
+    cost_usd?: number | null;
+    needs_you?: {
+      id: string;
+      question: string;
+      /**
+       * @minItems 1
+       */
+      actions: [unknown, ...unknown[]];
+    } | null;
+    product?: string;
+    ref?: string | null;
+  };
+  [k: string]: unknown | undefined;
+}
+/**
+ * The run was stopped before it completed, by whoever was running it, and did not fail. Neither success nor interrupt: nothing was produced as a result, and nothing is waited for, so the next run on the thread is an ordinary new run rather than a resume. Closed like its siblings: a cancelled run has no interrupts to carry. Named in the schema before 1.0 because an outcome a consumer does not recognise is stripped and read as success — a cancellation added later would reach every 1.0 consumer as a completed run.
+ */
+export interface RunFinishedCancelledOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "cancelled";
+}
+/**
+ * Token counts for one provider and model, in the protocol's own accounting: every count is either a total or a named part of one, so entries from different providers add up without double-counting. inputTokens and outputTokens are the totals; reasoningTokens, cachedInputTokens and cacheWriteInputTokens are parts of them, never additions to them; totalTokens is the two totals summed. Every field is a label or a number — nothing content-bearing or identifying, no prompts, completions, messages, or thread, run and user identifiers.
+ */
+export interface TokenUsage {
+  /**
+   * Which provider served the request.
+   */
+  provider?: string;
+  /**
+   * Which model served the request.
+   */
+  model?: string;
+  /**
+   * Every prompt token the call was charged for: tokens read from a provider cache, tokens written to one, and audio or other non-text input all count here. cachedInputTokens and cacheWriteInputTokens break this number down and are never added to it — a provider that reports its cache counts beside a smaller input count has them added in by the producer before the entry leaves. Bounded like timestamp and for the same reason: a count above the JSON safe-integer range does not survive a round trip, so a consumer would silently read a different number than the producer wrote.
+   */
+  inputTokens?: number;
+  /**
+   * Every generated token, reasoning included where the provider distinguishes it. reasoningTokens breaks this number down and is never added to it — a provider that reports reasoning tokens beside a smaller completion count has them added in by the producer.
+   */
+  outputTokens?: number;
+  /**
+   * inputTokens plus outputTokens, under the accounting above. A producer MAY compute it rather than copy a provider's total, and copies a provider's total only when that total counts the same way, so a consumer can read this field as the sum of the other two.
+   */
+  totalTokens?: number;
+  /**
+   * Output tokens spent on reasoning, where the provider distinguishes them. Part of outputTokens, not in addition to it.
+   */
+  reasoningTokens?: number;
+  /**
+   * Input tokens read from a provider cache. Part of inputTokens, not in addition to it, and disjoint from cacheWriteInputTokens.
+   */
+  cachedInputTokens?: number;
+  /**
+   * Input tokens written to a provider cache on this call, where the provider distinguishes them. Part of inputTokens, not in addition to it, and disjoint from cachedInputTokens. Its own field because providers price a cache write differently from a cache read, so a consumer computing cost cannot do without it.
+   */
+  cacheWriteInputTokens?: number;
+}
+/**
+ * The subagent completed its work. Equivalent to an absent outcome.
+ */
+export interface SubagentFinishedSuccessOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "success";
+}
+/**
+ * The subagent is paused awaiting outside input. Terminal for this stream, not for the subagent: a later run may continue the same invocation once the interrupts are answered.
+ */
+export interface SubagentFinishedSuspendedOutcome {
+  /**
+   * Discriminator.
+   */
+  type: "suspended";
+  /**
+   * The run-level interrupts this subagent raised itself. May be empty or absent: a subagent suspended because a descendant interrupted owns no interrupt of its own.
+   */
+  interruptIds?: string[];
+}
+
+/** agent.run@1.0.0 (owner: actor) */
+/**
+ * agent.run@1 snapshot of a run and its current plan, steps, sources, result, timestamps and cost.
+ */
+export interface AgentRun {
+  id: string;
+  product: string;
+  title: string;
+  status: "queued" | "running" | "waiting" | "needs_you" | "succeeded" | "failed" | "stopped" | "cancelled";
+  plan: {
+    title: string;
+    status: "todo" | "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+  }[];
+  steps: {
+    title: string;
+    status: "todo" | "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+    [k: string]: unknown | undefined;
+  }[];
+  sources: {
+    url: string;
+    title: string;
+    site: string;
+  }[];
+  result: {} | null;
+  started_at: string;
+  ended_at: string | null;
+  cost_usd: number | null;
+}
+
+/** actor.agent-sheet@1.0.0 (owner: actor) */
+/**
+ * actor.agent-sheet@1: one owner-scoped read of an Actor agent's current work, history, approvals, computer, schedules and memory. GET /api/v1/me/agents/:id?view=sheet; never cache this answer.
+ */
+export interface ActorAgentSheet {
+  agent: {
+    id: string;
+    name: string;
+    face: string | null;
+    state: "working" | "idle" | "paused";
+    instructions: string;
+    voice: string | null;
+    [k: string]: unknown | undefined;
+  };
+  now: null | {
+    id: string;
+    task: string;
+    state: string;
+    cost_usd: number;
+    result?: unknown;
+    computer?: unknown;
+    [k: string]: unknown | undefined;
+  };
+  work: {
+    id: string;
+    task: string;
+    state: string;
+    cost_usd: number;
+    result?: unknown;
+    computer?: unknown;
+    [k: string]: unknown | undefined;
+  }[];
+  asks: {
+    id: string;
+    state: string;
+    what: string;
+    why?: string | null;
+    touch?: string | {} | null;
+    [k: string]: unknown | undefined;
+  }[];
+  asks_empty: string | null;
+  computer: null | {
+    url?: string | null;
+    open?: string | null;
+    [k: string]: unknown | undefined;
+  };
+  schedules: {
+    next_run_at?: string | null;
+    last_run_at?: string | null;
+    last_result?: string | null;
+    [k: string]: unknown | undefined;
+  }[];
+  memory: {
+    id: string;
+    text: string;
+    source?: string;
+    [k: string]: unknown | undefined;
+  }[];
+  activity: {
+    [k: string]: unknown | undefined;
+  }[];
+}
+
+/** codes.agent-sheet@1.0.0 (owner: codes) */
+/**
+ * codes.agent-sheet@1: one owner's coding harness, its real attempts, outcomes and machine availability. Empty memory, schedule and computer sections mean Codes has no such per-harness records. GET /api/v1/me/agents/:id/sheet; never cache this answer.
+ */
+export interface CodesAgentSheet {
+  agent: {
+    id: string;
+    name: string;
+    face: null;
+    state: string;
+    kind: "coding harness";
+    availability: {} | null;
+  };
+  now: null | {
+    id: string;
+    task_id: string;
+    title: string;
+    what: string | null;
+    result: string | null;
+    state: string;
+    outcome: string | null;
+    cost_usd: number | null;
+    machine: string | null;
+    repo: string | null;
+    started_at: string;
+    finished_at: string | null;
+    url: string;
+  };
+  work: {
+    id: string;
+    task_id: string;
+    title: string;
+    what: string | null;
+    result: string | null;
+    state: string;
+    outcome: string | null;
+    cost_usd: number | null;
+    machine: string | null;
+    repo: string | null;
+    started_at: string;
+    finished_at: string | null;
+    url: string;
+  }[];
+  activity: {
+    day: string;
+    entries: {}[];
+  }[];
+  /**
+   * @maxItems 0
+   */
+  asks: [];
+  asks_empty: string;
+  computer: null;
+  /**
+   * @maxItems 0
+   */
+  schedules: [];
+  /**
+   * @maxItems 0
+   */
+  memory: [];
+  identity: {
+    provider: string | null;
+    capabilities: {};
   };
 }

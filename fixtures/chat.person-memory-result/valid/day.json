@@ -1,0 +1,16 @@
+{
+  "username": "alice",
+  "level": "day",
+  "channel": "streamer",
+  "enabled": true,
+  "opted_out": false,
+  "entries": [{
+    "level": "day",
+    "period_start": "2026-11-11",
+    "channel_user_id": 42,
+    "summary": "Alice discussed a game with chat.",
+    "topics": ["game"],
+    "highlights": [{ "detail": "A game win", "stream_id": 123, "at": "2026-11-11 04:00:00" }],
+    "message_count": 25
+  }]
+}

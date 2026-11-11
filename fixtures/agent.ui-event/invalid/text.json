@@ -1,0 +1,19 @@
+{
+  "type": "TEXT_MESSAGE_CONTENT",
+  "timestamp": 1794355200000,
+  "delta": "Reading source",
+  "metadata": {
+    "ov": {
+      "title": "Researching the question",
+      "kind": "read",
+      "product": "codes",
+      "sources": [
+        {
+          "url": "https://example.com",
+          "title": "Example",
+          "site": "example.com"
+        }
+      ]
+    }
+  }
+}

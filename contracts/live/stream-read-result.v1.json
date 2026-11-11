@@ -92,6 +92,13 @@
                   "null"
                 ]
               },
+              "preview_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail."
+              },
               "started_at": {
                 "type": [
                   "string",
@@ -205,6 +212,13 @@
                 "string",
                 "null"
               ]
+            },
+            "preview_url": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "A cheap live preview of the stream, when Live has one: while it is being recorded, Media's DVR HLS playlist at the live edge (/v/<vod>/dvr.m3u8, full-resolution, no extra encode). Null when there is no active recording; the player keeps the thumbnail."
             },
             "started_at": {
               "type": [

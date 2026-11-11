@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/command-registration-result.v1.json",
+  "title": "Chat command registration result",
+  "description": "chat.command-registration-result@1: the command Chat stored for an approved app or Actor agent, with source and application_id derived from the verified service token.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["command"],
+  "properties": {
+    "command": { "$ref": "command.v1.json" }
+  }
+}

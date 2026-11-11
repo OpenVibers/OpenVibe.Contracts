@@ -1,0 +1,15 @@
+{
+  "rev": 0,
+  "send_key": "mod-enter",
+  "tools": [
+    { "id": "attach", "hidden": false },
+    { "id": "camera", "hidden": false },
+    { "id": "voice", "hidden": false },
+    { "id": "gif", "hidden": true }
+  ],
+  "density": "comfy",
+  "voice": true,
+  "snippets": [
+    { "trigger": "/sig", "label": "My signature", "text": "— Sam" }
+  ]
+}

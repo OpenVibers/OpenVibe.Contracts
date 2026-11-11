@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/user-report-request.v1.json",
+  "title": "NetworkUserReportRequest",
+  "description": "network.user-report-request@1 (ask 287): POST /api/v1/me/reports on OpenVibe.Network, a signed-in person's report about another person. `target` is their username (any case) or usr_ subject; guests cannot be named, and nobody reports themselves. The same pair may have one open report: filing again while it is open answers the open one with 200 instead of creating a duplicate (201 when it creates one).",
+  "type": "object",
+  "required": ["target", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "target": { "type": "string", "pattern": "^([A-Za-z0-9_]{3,24}|usr_[0-9A-HJKMNP-TV-Z]{26})$" },
+    "reason": { "enum": ["spam", "harassment", "impersonation", "explicit", "scam", "other"] },
+    "detail": { "type": "string", "maxLength": 2000 }
+  }
+}

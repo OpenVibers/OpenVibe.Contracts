@@ -1,0 +1,17 @@
+{
+  "username": "Example",
+  "display_name": "Example",
+  "avatar_url": "https://openvibe.network/avatar/Example?s=160",
+  "profile_url": "https://openvibe.network/@Example",
+  "level": 4,
+  "streak": 3,
+  "badges_count": 2,
+  "followers": 10,
+  "live": { "now": true, "site": "live", "url": "https://openvibe.live/@Example" },
+  "channel_url": "https://openvibe.live/@Example",
+  "active_sites": [{ "id": "live", "name": "Live", "url": "https://openvibe.live" }],
+  "actions": [
+    { "id": "profile", "label": "Profile", "href": "https://openvibe.network/@Example" },
+    { "id": "channel", "label": "Channel", "href": "https://openvibe.live/@Example" }
+  ]
+}

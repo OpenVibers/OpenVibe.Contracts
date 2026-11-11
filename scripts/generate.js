@@ -85,8 +85,9 @@ function onlyOnce(ts, title, owned, emitted) {
         const schema = schemas.get(entry.schema);
         const bundleKey = majors.get(entry.id) > 1 ? `${entry.id}@${entry.version.split('.')[0]}` : entry.id;
         bundle.contracts[bundleKey] = { version: entry.version, owner: entry.owner, status: entry.status, schema };
+        // AG-UI's event union references its local protocol definitions from its public types.
         const ts = await compile(inlineDefs(schema, file), schema.title, {
-            bannerComment: '', cwd: path.dirname(file), declareExternallyReferenced: false,
+            bannerComment: '', cwd: path.dirname(file), declareExternallyReferenced: schema.title === 'AgentUiEvent',
             additionalProperties: false, strictIndexSignatures: true, format: true,
             $refOptions: { resolve: { http: false } },
         });

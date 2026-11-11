@@ -1,0 +1,5 @@
+{
+  "username": "Example",
+  "profile_url": "https://openvibe.network/@Example",
+  "actions": [{ "id": "profile", "label": "Profile", "href": "http://openvibe.network/@Example" }]
+}

@@ -1,0 +1,5 @@
+{
+  "username": "Example",
+  "profile_url": "https://openvibe.network/@Example",
+  "actions": [{ "id": "message", "label": "Message", "state": {} }]
+}

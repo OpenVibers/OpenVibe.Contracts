@@ -1,0 +1,14 @@
+{
+  "id": "p:42",
+  "kind": "clip",
+  "url": "https://openvibe.live/clip/42",
+  "title": "A highlight",
+  "text": "A short clip",
+  "at": "2026-11-10T12:00:00.000Z",
+  "site": "live",
+  "site_name": "Live",
+  "actor": { "name": "Ada", "avatar": null },
+  "media": { "thumb": "https://openvibe.media/42.webp", "preview": "https://openvibe.media/42.mp4", "ratio": 1.7778, "length": 18 },
+  "counts": { "views": 12, "likes": 3, "comments": 1 },
+  "live_now": false
+}

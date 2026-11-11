@@ -1,0 +1,11 @@
+{
+  "agent": {"id": "agt_00000000000000000000000000", "name": "Helper", "face": null, "state": "idle", "instructions": "Help with alerts", "voice": null},
+  "now": null,
+  "work": [],
+  "asks": [],
+  "asks_empty": "Requests to approve or decline will appear here.",
+  "computer": null,
+  "schedules": [{"schedule": "off", "next_run_at": null, "last_run_at": null, "last_result": null}],
+  "memory": [],
+  "activity": []
+}

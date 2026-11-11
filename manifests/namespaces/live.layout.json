@@ -1,0 +1,82 @@
+{
+  "namespace": "live.layout",
+  "owner": "live",
+  "version": 1,
+  "description": "Where this person put each picture-in-picture on OpenVibe.Live: per stream slot and source, the place, whether it is docked or floating, tucked to a side, muted, and when it last moved. Live keeps a browser copy too; this record follows the person to another device. Private.",
+  "writers": [
+    "owner",
+    "user"
+  ],
+  "publicFields": [],
+  "quotaBytes": 8192,
+  "onOwnerRemoved": "retain-readonly",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "pip"
+    ],
+    "properties": {
+      "pip": {
+        "type": "object",
+        "maxProperties": 60,
+        "additionalProperties": false,
+        "propertyNames": {
+          "pattern": "^[0-9]{1,12}:[0-9]{1,12}$"
+        },
+        "patternProperties": {
+          "^[0-9]{1,12}:[0-9]{1,12}$": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "x",
+              "y",
+              "w",
+              "mode",
+              "tuck",
+              "muted",
+              "at"
+            ],
+            "properties": {
+              "x": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "w": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "mode": {
+                "enum": [
+                  "dock",
+                  "float"
+                ]
+              },
+              "tuck": {
+                "enum": [
+                  "left",
+                  "right",
+                  null
+                ]
+              },
+              "muted": {
+                "type": "boolean"
+              },
+              "at": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

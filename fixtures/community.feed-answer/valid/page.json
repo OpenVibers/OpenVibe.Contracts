@@ -1,0 +1,16 @@
+{
+  "items": [{
+    "id": "p:42",
+    "kind": "post",
+    "url": "https://openvibe.community/p/42",
+    "title": "A post",
+    "text": "Hello",
+    "at": null,
+    "site": "community",
+    "site_name": "Community",
+    "actor": null,
+    "media": null,
+    "counts": {}
+  }],
+  "next_cursor": null
+}
