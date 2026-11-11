@@ -1,0 +1,74 @@
+{
+  "version": "0.1.0",
+  "status": "alpha",
+  "lifecycle": {
+    "liveness": {
+      "endpoint": "/api/health",
+      "means": "the process is up and answers HTTP; it checks nothing else"
+    },
+    "shutdown": {
+      "signal": "SIGTERM",
+      "deadlineSeconds": 10,
+      "drains": [
+        "HTTP server closed"
+      ]
+    },
+    "startupRecovery": {
+      "resumes": [
+        {
+          "kind": "state",
+          "what": "Stateless public reads; restart clears only the ten-minute cache."
+        }
+      ]
+    },
+    "rollback": {
+      "conditions": [
+        "automatic: ovhost deploy puts the previous sha back and restarts again when the ready URL does not answer 2xx within ready.timeoutSeconds after the restart (exit 3)",
+        "manual: ovhost rollback <service> --to <sha>"
+      ],
+      "window": "automatic only while ovhost waits for readiness after the restart; manual afterwards, as long as no blocker applies",
+      "blockers": {
+        "none": "No database, writes or migrations."
+      }
+    },
+    "contracts": {
+      "range": ">=0.402.0 <1.0.0"
+    },
+    "leases": {
+      "none": "no claims: one process serves the site"
+    }
+  },
+  "id": "compare",
+  "name": "OpenVibe.Compare",
+  "repository": "OpenVibers/OpenVibe.Compare",
+  "domains": [
+    "openvibe.compare"
+  ],
+  "publicOrigin": "https://openvibe.compare",
+  "internalOrigin": "http://127.0.0.1:5280",
+  "health": "/api/health",
+  "ready": "/api/ready",
+  "contractRanges": {
+    "openvibe-contracts": ">=0.402.0 <1.0.0"
+  },
+  "exposure": {
+    "state": "live",
+    "publicSite": "service"
+  },
+  "capabilities": [],
+  "eventsProduced": [],
+  "eventsConsumed": [],
+  "namespacesOwned": [
+    "compare.*"
+  ],
+  "notes": "Stateless public read service. Prices from Exchange, measured results from Bench, harness catalog from Codes and plans from Billing; ten-minute server cache. Builder and version history deferred.",
+  "site": {
+    "name": "Compare",
+    "icon": "compare",
+    "tagline": "Compare anything",
+    "what": "Dated sources, transparent methods and your priorities across models, coding agents and OpenVibe plans.",
+    "legalProfile": "info",
+    "position": 80,
+    "neighbourhood": "read"
+  }
+}

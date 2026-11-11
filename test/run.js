@@ -38,6 +38,7 @@ function sub(file, ...args) {
     for (const line of skipsIn(`${r.stdout}${r.stderr}`)) if (!skips.includes(line)) skips.push(line);
 }
 
+sub(path.join(ROOT, 'test/compare-comparison.test.js'));
 sub(path.join(ROOT, 'test/link-brand.test.js'));
 sub(path.join(ROOT, 'test/link-compute.test.js'));
 sub(path.join(ROOT, 'test/money-reasons.test.js'));

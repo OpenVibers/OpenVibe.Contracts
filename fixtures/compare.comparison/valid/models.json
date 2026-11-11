@@ -1,0 +1,87 @@
+{
+  "slug": "ai-models",
+  "title": "AI models",
+  "kind": "ai.models",
+  "summary": "Provider prices and measured Bench results. Unmeasured quality stays unknown.",
+  "things": [
+    {
+      "id": "maker/a",
+      "name": "A",
+      "maker": "maker",
+      "url": "https://openvibe.exchange/models/maker/a",
+      "icon": "model"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "input",
+      "label": "Input price",
+      "unit": "USD / 1M tokens",
+      "better": "lower",
+      "weight": 40,
+      "group": "Price"
+    },
+    {
+      "id": "output",
+      "label": "Output price",
+      "unit": "USD / 1M tokens",
+      "better": "lower",
+      "weight": 40,
+      "group": "Price"
+    },
+    {
+      "id": "quality",
+      "label": "Arena quality",
+      "unit": "Elo",
+      "better": "higher",
+      "weight": 20,
+      "group": "Quality"
+    },
+    {
+      "id": "speed",
+      "label": "Median response time",
+      "unit": "ms",
+      "better": "lower",
+      "weight": 0,
+      "group": "Speed"
+    }
+  ],
+  "results": [
+    {
+      "thing": "maker/a",
+      "criterion": "input",
+      "value": 1,
+      "as_of": "2026-11-10T00:00:00.000Z",
+      "source": {
+        "label": "undefined price book",
+        "url": "https://example.com"
+      }
+    },
+    {
+      "thing": "maker/a",
+      "criterion": "output",
+      "value": 2,
+      "as_of": "2026-11-10T00:00:00.000Z",
+      "source": {
+        "label": "undefined price book",
+        "url": "https://example.com"
+      }
+    }
+  ],
+  "method": "Weights use min–max normalization within this comparison (higher or lower as labelled), then a weighted mean on a 0–100 scale. Equal values receive 50. Criteria with no measurements are excluded. A thing missing any selected, measured criterion is unranked; missing is never zero. All-zero weights give no ranking. Scores express these preferences, not statistical significance. Dates are source dates or explicitly labelled observation dates. No costs or benchmark results are estimated. Different benchmark versions are separate criteria. Builder and version history are reserved for a later release. Prices use the cheapest dated offer by input + output price; both prices come from that same provider. Arena quality requires at least ten judged games and exact model identity. Speed is total response time, not tokens per second.",
+  "sources": [
+    {
+      "label": "market",
+      "url": "https://api.openvibe.exchange/api/v1/exchange/market"
+    },
+    {
+      "label": "quality",
+      "url": "https://bench.openvibe.services/api/v1/boards/chat.arena"
+    }
+  ],
+  "updated_at": "2026-11-10T00:00:00.000Z",
+  "versions": [],
+  "availability": [
+    "quality is unavailable; no values have been filled in."
+  ]
+}
