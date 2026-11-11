@@ -65609,6 +65609,96 @@
         ]
       }
     },
+    "live.channel-points-page": {
+      "version": "1.0.0",
+      "owner": "live",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/live/channel-points-page.v1.json",
+        "title": "LiveChannelPointsPage",
+        "description": "live.channel-points-page@1: the answer of GET /internal/channel-points/changes?network_user_id=&since_id=&streamer_id=&limit= on OpenVibe.Live (live.channel_points.read, Network service token, loopback): one channel's points moves for the person behind the Network account, oldest first, from Live's own channel_points_log. moves carry the ledger's id, the streamer, the ISO time, the signed delta and the raw reason; balance is that channel's points (null without streamer_id); cursor is the newest move seen, next_since pages when more exist (null on the last). 400 without network_user_id or with a bad streamer_id, 404 for an unlinked account.",
+        "type": "object",
+        "required": [
+          "ok",
+          "user_id",
+          "streamer_id",
+          "balance",
+          "moves",
+          "cursor",
+          "next_since"
+        ],
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "user_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "streamer_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "balance": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "moves": {
+            "type": "array",
+            "maxItems": 501,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "streamer_id",
+                "at",
+                "delta",
+                "reason"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "streamer_id": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "at": {
+                  "type": "string"
+                },
+                "delta": {
+                  "type": "integer"
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "cursor": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next_since": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          }
+        }
+      }
+    },
     "live.follower-page": {
       "version": "1.0.0",
       "owner": "live",
