@@ -327102,7 +327102,7 @@ export interface MemeEntry {
 
 /** meme.caption.created@1.0.0 (owner: meme) */
 /**
- * meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor and subject the owner, visibility internal.
+ * meme.caption.created v1 (OpenVibe.Meme): a signed-in person saved a public caption. The event names only its id and owner, never the caption text, template, or other people's content. Envelope source meme, actor the owner, subject the caption, visibility internal.
  */
 export interface MemeCaptionCreatedPayload {
   caption_id: string;
