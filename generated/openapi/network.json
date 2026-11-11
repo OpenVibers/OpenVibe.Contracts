@@ -9826,7 +9826,9 @@
         "additionalProperties": false,
         "required": [
          "dock",
-         "order"
+         "order",
+         "w",
+         "h"
         ],
         "properties": {
          "dock": {
@@ -9841,9 +9843,19 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 63
+         },
+         "w": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 24
+         },
+         "h": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 24
          }
         },
-        "description": "For an overlay: the edge the part docks to, and its order along that edge."
+        "description": "For an overlay: the edge the part docks to, its order along that edge, and its size in cells."
        }
       ]
      },

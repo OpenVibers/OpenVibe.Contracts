@@ -339255,6 +339255,8 @@ export interface UiLayout {
         | {
             dock: "left" | "right" | "top" | "bottom";
             order: number;
+            w: number;
+            h: number;
           };
       style: {
         /**
@@ -339289,6 +339291,8 @@ export interface UiLayout {
         | {
             dock: "left" | "right" | "top" | "bottom";
             order: number;
+            w: number;
+            h: number;
           };
       style: {
         /**
