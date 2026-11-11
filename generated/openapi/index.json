@@ -173,8 +173,8 @@
       "service": "media-hub",
       "name": "OpenVibe.MediaHub",
       "origin": "https://openvibe.video",
-      "operations": 8,
-      "capabilities": 2
+      "operations": 9,
+      "capabilities": 3
     },
     {
       "service": "network",
