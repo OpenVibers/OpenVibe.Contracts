@@ -11258,6 +11258,24 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "actor.agent-sheet",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "actor/agent-sheet.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "codes.agent-sheet",
+      "version": "1.0.0",
+      "owner": "codes",
+      "schema": "codes/agent-sheet.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

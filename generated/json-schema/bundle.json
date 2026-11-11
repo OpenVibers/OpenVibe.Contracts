@@ -124594,6 +124594,465 @@
         },
         "description": "NetworkLevelBoard: one earned platform level owned by Network; experience is never bought or spent."
       }
+    },
+    "actor.agent-sheet": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/actor/agent-sheet.v1.json",
+        "title": "ActorAgentSheet",
+        "description": "actor.agent-sheet@1: one owner-scoped read of an Actor agent's current work, history, approvals, computer, schedules and memory. GET /api/v1/me/agents/:id?view=sheet; never cache this answer.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "agent",
+          "now",
+          "work",
+          "asks",
+          "asks_empty",
+          "computer",
+          "schedules",
+          "memory",
+          "activity"
+        ],
+        "properties": {
+          "agent": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "id",
+              "name",
+              "face",
+              "state",
+              "instructions",
+              "voice"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "face": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "enum": [
+                  "working",
+                  "idle",
+                  "paused"
+                ]
+              },
+              "instructions": {
+                "type": "string"
+              },
+              "voice": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "now": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/work"
+              }
+            ]
+          },
+          "work": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/work"
+            }
+          },
+          "asks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "state",
+                "what"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "what": {
+                  "type": "string"
+                },
+                "why": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "touch": {
+                  "type": [
+                    "string",
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "asks_empty": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "computer": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "open": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "additionalProperties": true
+              }
+            ]
+          },
+          "schedules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "next_run_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "last_run_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "last_result": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "memory": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "text"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "activity": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "$defs": {
+          "work": {
+            "type": "object",
+            "required": [
+              "id",
+              "task",
+              "state",
+              "cost_usd"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "task": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "result": {},
+              "computer": {}
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "codes.agent-sheet": {
+      "version": "1.0.0",
+      "owner": "codes",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/codes/agent-sheet.v1.json",
+        "title": "CodesAgentSheet",
+        "description": "codes.agent-sheet@1: one owner's coding harness, its real attempts, outcomes and machine availability. Empty memory, schedule and computer sections mean Codes has no such per-harness records. GET /api/v1/me/agents/:id/sheet; never cache this answer.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "agent",
+          "now",
+          "work",
+          "activity",
+          "asks",
+          "asks_empty",
+          "computer",
+          "schedules",
+          "memory",
+          "identity"
+        ],
+        "properties": {
+          "agent": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "face",
+              "state",
+              "kind",
+              "availability"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "face": {
+                "type": "null"
+              },
+              "state": {
+                "type": "string"
+              },
+              "kind": {
+                "const": "coding harness"
+              },
+              "availability": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "now": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/work"
+              }
+            ]
+          },
+          "work": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/work"
+            }
+          },
+          "activity": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "day",
+                "entries"
+              ],
+              "properties": {
+                "day": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "entries": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "asks": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "asks_empty": {
+            "type": "string"
+          },
+          "computer": {
+            "type": "null"
+          },
+          "schedules": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "memory": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "identity": {
+            "type": "object",
+            "required": [
+              "provider",
+              "capabilities"
+            ],
+            "properties": {
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "capabilities": {
+                "type": "object"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "$defs": {
+          "work": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "task_id",
+              "title",
+              "what",
+              "result",
+              "state",
+              "outcome",
+              "cost_usd",
+              "machine",
+              "repo",
+              "started_at",
+              "finished_at",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "task_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "what": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "result": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "type": "string"
+              },
+              "outcome": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cost_usd": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "machine": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "repo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "started_at": {
+                "type": "string"
+              },
+              "finished_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

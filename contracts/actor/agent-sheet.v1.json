@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/actor/agent-sheet.v1.json",
+  "title": "ActorAgentSheet",
+  "description": "actor.agent-sheet@1: one owner-scoped read of an Actor agent's current work, history, approvals, computer, schedules and memory. GET /api/v1/me/agents/:id?view=sheet; never cache this answer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent", "now", "work", "asks", "asks_empty", "computer", "schedules", "memory", "activity"],
+  "properties": {
+    "agent": {
+      "type": "object", "additionalProperties": true,
+      "required": ["id", "name", "face", "state", "instructions", "voice"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^agt_[0-9A-HJKMNP-TV-Z]{26}$"},
+        "name": {"type": "string"},
+        "face": {"type": ["string", "null"]},
+        "state": {"enum": ["working", "idle", "paused"]},
+        "instructions": {"type": "string"},
+        "voice": {"type": ["string", "null"]}
+      }
+    },
+    "now": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/work"}]},
+    "work": {"type": "array", "items": {"$ref": "#/$defs/work"}},
+    "asks": {"type": "array", "items": {"type": "object", "required": ["id", "state", "what"], "properties": {"id": {"type": "string"}, "state": {"type": "string"}, "what": {"type": "string"}, "why": {"type": ["string", "null"]}, "touch": {"type": ["string", "object", "null"]}}, "additionalProperties": true}},
+    "asks_empty": {"type": ["string", "null"]},
+    "computer": {"oneOf": [{"type": "null"}, {"type": "object", "properties": {"url": {"type": ["string", "null"]}, "open": {"type": ["string", "null"]}}, "additionalProperties": true}]},
+    "schedules": {"type": "array", "items": {"type": "object", "properties": {"next_run_at": {"type": ["string", "null"]}, "last_run_at": {"type": ["string", "null"]}, "last_result": {"type": ["string", "null"]}}, "additionalProperties": true}},
+    "memory": {"type": "array", "items": {"type": "object", "required": ["id", "text"], "properties": {"id": {"type": "string"}, "text": {"type": "string"}, "source": {"type": "string"}}, "additionalProperties": true}},
+    "activity": {"type": "array", "items": {"type": "object", "additionalProperties": true}}
+  },
+  "$defs": {
+    "work": {"type": "object", "required": ["id", "task", "state", "cost_usd"], "properties": {"id": {"type": "string"}, "task": {"type": "string"}, "state": {"type": "string"}, "cost_usd": {"type": "number", "minimum": 0}, "result": {}, "computer": {}}, "additionalProperties": true}
+  }
+}

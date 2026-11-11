@@ -333288,3 +333288,133 @@ export interface NetworkLevelBoard {
         ];
   };
 }
+
+/** actor.agent-sheet@1.0.0 (owner: actor) */
+/**
+ * actor.agent-sheet@1: one owner-scoped read of an Actor agent's current work, history, approvals, computer, schedules and memory. GET /api/v1/me/agents/:id?view=sheet; never cache this answer.
+ */
+export interface ActorAgentSheet {
+  agent: {
+    id: string;
+    name: string;
+    face: string | null;
+    state: "working" | "idle" | "paused";
+    instructions: string;
+    voice: string | null;
+    [k: string]: unknown | undefined;
+  };
+  now: null | {
+    id: string;
+    task: string;
+    state: string;
+    cost_usd: number;
+    result?: unknown;
+    computer?: unknown;
+    [k: string]: unknown | undefined;
+  };
+  work: {
+    id: string;
+    task: string;
+    state: string;
+    cost_usd: number;
+    result?: unknown;
+    computer?: unknown;
+    [k: string]: unknown | undefined;
+  }[];
+  asks: {
+    id: string;
+    state: string;
+    what: string;
+    why?: string | null;
+    touch?: string | {} | null;
+    [k: string]: unknown | undefined;
+  }[];
+  asks_empty: string | null;
+  computer: null | {
+    url?: string | null;
+    open?: string | null;
+    [k: string]: unknown | undefined;
+  };
+  schedules: {
+    next_run_at?: string | null;
+    last_run_at?: string | null;
+    last_result?: string | null;
+    [k: string]: unknown | undefined;
+  }[];
+  memory: {
+    id: string;
+    text: string;
+    source?: string;
+    [k: string]: unknown | undefined;
+  }[];
+  activity: {
+    [k: string]: unknown | undefined;
+  }[];
+}
+
+/** codes.agent-sheet@1.0.0 (owner: codes) */
+/**
+ * codes.agent-sheet@1: one owner's coding harness, its real attempts, outcomes and machine availability. Empty memory, schedule and computer sections mean Codes has no such per-harness records. GET /api/v1/me/agents/:id/sheet; never cache this answer.
+ */
+export interface CodesAgentSheet {
+  agent: {
+    id: string;
+    name: string;
+    face: null;
+    state: string;
+    kind: "coding harness";
+    availability: {} | null;
+  };
+  now: null | {
+    id: string;
+    task_id: string;
+    title: string;
+    what: string | null;
+    result: string | null;
+    state: string;
+    outcome: string | null;
+    cost_usd: number | null;
+    machine: string | null;
+    repo: string | null;
+    started_at: string;
+    finished_at: string | null;
+    url: string;
+  };
+  work: {
+    id: string;
+    task_id: string;
+    title: string;
+    what: string | null;
+    result: string | null;
+    state: string;
+    outcome: string | null;
+    cost_usd: number | null;
+    machine: string | null;
+    repo: string | null;
+    started_at: string;
+    finished_at: string | null;
+    url: string;
+  }[];
+  activity: {
+    day: string;
+    entries: {}[];
+  }[];
+  /**
+   * @maxItems 0
+   */
+  asks: [];
+  asks_empty: string;
+  computer: null;
+  /**
+   * @maxItems 0
+   */
+  schedules: [];
+  /**
+   * @maxItems 0
+   */
+  memory: [];
+  identity: {
+    provider: string | null;
+    capabilities: {};
+  };
+}
