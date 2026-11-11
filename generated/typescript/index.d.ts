@@ -212825,6 +212825,29 @@ export type LiveUrlRegistryRefreshResult =
       error: string;
     };
 
+/** live.channel-points-page@1.0.0 (owner: live) */
+/**
+ * live.channel-points-page@1: the answer of GET /internal/channel-points/changes?network_user_id=&since_id=&streamer_id=&limit= on OpenVibe.Live (live.channel_points.read, Network service token, loopback): one channel's points moves for the person behind the Network account, oldest first, from Live's own channel_points_log. moves carry the ledger's id, the streamer, the ISO time, the signed delta and the raw reason; balance is that channel's points (null without streamer_id); cursor is the newest move seen, next_since pages when more exist (null on the last). 400 without network_user_id or with a bad streamer_id, 404 for an unlinked account.
+ */
+export interface LiveChannelPointsPage {
+  ok: true;
+  user_id: number;
+  streamer_id: number | null;
+  balance: number | null;
+  /**
+   * @maxItems 501
+   */
+  moves: {
+    id: number;
+    streamer_id: number;
+    at: string;
+    delta: number;
+    reason: string | null;
+  }[];
+  cursor: number;
+  next_since: number | null;
+}
+
 /** live.follower-page@1.0.0 (owner: live) */
 /**
  * live.follower-page@1: the answer of GET /internal/followers?stream_id=&limit=&after= on OpenVibe.Live (live.follower.read, service token, loopback): the followers of the channel that streams stream_id, for Network's go-live notifications. A follower is named by their Network subject when Live knows it, else their Network user id. next is the cursor for the following page (null on the last). 400 without stream_id, 404 for an unknown stream.

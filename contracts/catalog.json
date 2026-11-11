@@ -5909,6 +5909,15 @@
       "status": "active"
     },
     {
+      "id": "live.channel-points-page",
+      "version": "1.0.0",
+      "owner": "live",
+      "schema": "live/channel-points-page.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "live.follower-page",
       "version": "1.0.0",
       "owner": "live",
