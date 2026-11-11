@@ -146,10 +146,6 @@
     },
     "value": {},
     "name": {
-      "type": "string"
-    },
-    "rawEvent": {},
-    "custom_type": {
       "type": "string",
       "enum": [
         "ov.sources",
@@ -158,6 +154,7 @@
         "ov.result"
       ]
     },
+    "rawEvent": {},
     "payload": {}
   },
   "$defs": {
@@ -188,5 +185,25 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "CUSTOM"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "name",
+          "value"
+        ]
+      }
+    }
+  ]
 }

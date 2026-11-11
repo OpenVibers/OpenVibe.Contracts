@@ -333293,7 +333293,9 @@ export interface NetworkLevelBoard {
 /**
  * agent.ui-event@1: AG-UI 1.0 event envelope with OpenVibe display metadata. CUSTOM events use custom_type ov.sources, ov.handoff, ov.approval or ov.result.
  */
-export interface AgentUiEvent {
+export type AgentUiEvent = {
+  [k: string]: unknown | undefined;
+} & {
   /**
    * AG-UI 1.0 event discriminator.
    */
@@ -333358,11 +333360,10 @@ export interface AgentUiEvent {
   snapshot?: unknown;
   activity_type?: string;
   value?: unknown;
-  name?: string;
+  name?: "ov.sources" | "ov.handoff" | "ov.approval" | "ov.result";
   rawEvent?: unknown;
-  custom_type?: "ov.sources" | "ov.handoff" | "ov.approval" | "ov.result";
   payload?: unknown;
-}
+};
 
 /** agent.run@1.0.0 (owner: actor) */
 /**
