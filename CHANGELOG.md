@@ -2,6 +2,9 @@
 
 ## 0.410.0 — 2026-11-11
 
+A train of three pull requests: the layouts of make-your-own-controls (#455), Elements stage 1 (#456) and the deep dive
+(#457).
+
 - Add `ui.surface@1` (the catalog of a surface's parts, their minimum sizes, styles, bindings and
   `never_covers` rules), `ui.layout@1` (a person's arrangement on one device class, with its name, author and
   sharing), `ui.layout-request@1` (catalog, current layout, words and device for the AI task) and
@@ -13,7 +16,27 @@
 - Add `ai.layout.suggest` (first-party, `POST /api/v1/ui/layout/suggest`) and `network.layout.read` (first-party,
   `GET /api/v1/people/:subject/layouts/:surface`), and list them in the AI and Network manifests.
 - The fixtures cover a bot-controls catalog, a phone layout, a docked overlay, a suggestion and a refusal, a
-  request and the event; the suite checks part ids, theme tokens, never_covers targets and the 44 px minimum.
+  request and the event; the suite checks part ids, theme tokens, never_covers targets and the 44 px minimum. (#455)
+- Add `ui.element@1`: a look from OpenVibe.Design's components and the theme's tokens, a recipe (triggers, conditions,
+  actions), the capabilities the element declares, an optional mod reference (id, version, digest) and its sharing.
+  The store assigns the id and revision; a draft has neither.
+- Add `ui.trigger@1` (press, hold, double-press, key, gamepad, chat command and text, follow, tip, AI Moment, Rundown
+  topic, timer, schedule, robot telemetry and event, stream start and end, viewer count, another element's event) and
+  `ui.action@1` (robot, chat, screen, stream, AI, Actor, webhook and tip-goal actions), each action carrying the product
+  that authorises it. `ui.action@1`'s `$defs.capability` is the one list an element's `capabilities` draws from.
+- Add `ui.element-state@1`: the element's own store (counters, scores, lists), with a revision that grows per accepted
+  change and values that are booleans, numbers, short strings or lists of them, never objects.
+- Add `live.element.pressed@1` and `live.element.state@1`: a press with the presser's public name and the trigger, and
+  the store with its revision, written by Live.
+- Fixtures cover a gallery dance button, a chat counter, a mod element, trigger and action variants, the state, and
+  both events; `test/elements.test.js` holds the capability list to the action catalog, each kind to its product, and
+  the recipe to the element's declared capabilities. (#456)
+- Add `ai.deep-dive@1`: a deep dive run's report as OpenVibe.AI's `design.deep_dive` workflow produces it for
+  OpenVibe.Exchange and OpenVibe.Design — the question and depth, the seven steps, every source, every capture (a
+  private Media object per viewport and theme, with its DOM facts and Expert extras), the per-site analysis, the
+  synthesis, the recommendations checked against OpenVibe's rules, and the receipt. Every claim carries its evidence.
+- Add `ai.deep_dive.updated@1`, the event AI writes on each step transition and at the end, so a page can follow a
+  run without polling and Design can attach a finished report. (#457)
 
 ## 0.409.0 — 2026-11-11
 
