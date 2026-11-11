@@ -3,8 +3,12 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 const contracts = require('..');
 const root = path.join(__dirname, '..', 'fixtures', 'agent.ui-event');
+execFileSync(process.execPath, [path.join(__dirname, '..', 'scripts', 'generate.js'), '--check'], {
+    cwd: path.join(__dirname, '..'), stdio: 'pipe',
+});
 for (const kind of ['valid', 'invalid']) {
     for (const file of fs.readdirSync(path.join(root, kind)).filter((name) => name.endsWith('.json'))) {
         const event = JSON.parse(fs.readFileSync(path.join(root, kind, file), 'utf8'));
