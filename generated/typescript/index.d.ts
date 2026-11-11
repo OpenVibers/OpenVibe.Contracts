@@ -209271,7 +209271,7 @@ export interface MediaVod {
   playback_url: string;
   thumbnail_url?: string | null;
   /**
-   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /p/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
+   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /t/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
    */
   preview_url?: string | null;
   /**
@@ -209372,7 +209372,7 @@ export interface MediaClip {
   playback_url: string;
   thumbnail_url?: string | null;
   /**
-   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /p/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
+   * The hover preview of this item: about 6 s, muted, 320 px wide, MP4 H.264, stored beside its thumbnail and served at /t/<name>. Null until the preview.make job has made it (audio-only, private and too-short items never get one).
    */
   preview_url?: string | null;
   /**
