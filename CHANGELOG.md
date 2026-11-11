@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.406.0 — 2026-11-11
+
+- Define `meme.caption.created` for a signed-in person's public caption, with only its id and owner.
+
+## 0.405.0 — 2026-11-11
+
+- Reserved for the pending Contracts release train in pull request #443; its entries merge before 0.406.0 is released.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.

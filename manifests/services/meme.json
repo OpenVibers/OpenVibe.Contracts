@@ -16,7 +16,7 @@
     "publicSite": "service"
   },
   "capabilities": [],
-  "eventsProduced": [],
+  "eventsProduced": ["meme.caption.created"],
   "eventsConsumed": [],
   "namespacesOwned": [
     "meme.*"
