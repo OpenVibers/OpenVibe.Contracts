@@ -1,0 +1,13 @@
+{
+  "id": "agt_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "owner": "usr_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "kind": "link-local",
+  "name": "Codex",
+  "machine_id": "lnk_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "skills": [
+    "code"
+  ],
+  "status": "online",
+  "allow_others": false,
+  "updated_at": "2026-11-11T00:00:00Z"
+}

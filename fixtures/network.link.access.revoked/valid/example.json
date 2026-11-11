@@ -1,0 +1,6 @@
+{
+  "grant_id": "grt_12345678",
+  "from_principal": "lnk_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "to_principal": "lnk_BBBBBBBBBBBBBBBBBBBBBBBBBB",
+  "at": "2026-11-11T00:00:00Z"
+}

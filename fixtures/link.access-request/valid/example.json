@@ -1,0 +1,14 @@
+{
+  "id": "req_12345678",
+  "from_principal": "lnk_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "to_principal": "lnk_BBBBBBBBBBBBBBBBBBBBBBBBBB",
+  "from_owner": "usr_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "to_owner": "usr_BBBBBBBBBBBBBBBBBBBBBBBBBB",
+  "scopes": [
+    "agent"
+  ],
+  "status": "pending",
+  "requested_at": "2026-11-11T00:00:00Z",
+  "expires_at": "2026-11-11T01:00:00Z",
+  "duration_seconds": 3600
+}

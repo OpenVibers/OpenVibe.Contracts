@@ -1,0 +1,12 @@
+{
+  "iss": "https://openvibe.network",
+  "aud": "lnk_BBBBBBBBBBBBBBBBBBBBBBBBBB",
+  "sub": "lnk_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "jti": "tok_12345678",
+  "grant_id": "grt_12345678",
+  "scopes": [
+    "agent"
+  ],
+  "iat": 1794355200,
+  "exp": 1794358800
+}

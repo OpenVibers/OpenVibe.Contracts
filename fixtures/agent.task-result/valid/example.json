@@ -1,0 +1,14 @@
+{
+  "id": "tsk_12345678",
+  "thread": "thr_12345678",
+  "status": "completed",
+  "result": {
+    "parts": [
+      {
+        "type": "text",
+        "text": "Done"
+      }
+    ]
+  },
+  "updated_at": "2026-11-11T00:00:00Z"
+}

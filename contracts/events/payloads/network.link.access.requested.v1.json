@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.link.access.requested.v1.json",
+  "title": "NetworkLinkAccessRequestedPayload",
+  "description": "Machine access request was created.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "from_principal",
+    "to_principal",
+    "at"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-z]{3}_[A-Za-z0-9_-]{8,80}$"
+    },
+    "from_principal": {
+      "type": "string",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "to_principal": {
+      "type": "string",
+      "pattern": "^lnk_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

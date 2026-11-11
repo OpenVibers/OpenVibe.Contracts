@@ -11474,6 +11474,105 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "link.access-request",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "link/access-request.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "link.access-grant",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "link/access-grant.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "link.access-grant-token",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "link/access-grant-token.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.directory-entry",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "agent/directory-entry.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.task",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "agent/task.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.task-result",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "agent/task-result.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.link.access.requested",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.link.access.requested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.link.access.answered",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.link.access.answered.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.link.access.revoked",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.link.access.revoked.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.agent.task.created",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.agent.task.created.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.agent.task.updated",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.agent.task.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "to": "agt_BBBBBBBBBBBBBBBBBBBBBBBBBB",
+  "from": "agt_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "on_behalf_of": "usr_AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "thread": "thr_12345678",
+  "message": {
+    "role": "user",
+    "parts": [
+      {
+        "type": "text",
+        "text": "Hello"
+      }
+    ]
+  }
+}
