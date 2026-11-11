@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.405.0 — 2026-11-11
+
+- Keep the exact reply target and its display name in Community comment reads; document the two-reply preview and four Chat-compatible file references on comment writes and reads.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.
