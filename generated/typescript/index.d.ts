@@ -212102,6 +212102,53 @@ export interface ChatRoomInsightResult {
   state: "ready" | "quiet" | "off";
 }
 
+/** chat.embed@1.0.0 (owner: chat) */
+/**
+ * chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link.
+ */
+export interface ChatEmbed {
+  /**
+   * What the address turned out to be; a client may draw the same card for every value.
+   */
+  kind: "link" | "video" | "image" | "live" | "picture" | "design" | "post" | "profile" | "game";
+  /**
+   * The https address the message carried, after the writer's trailing punctuation was dropped.
+   */
+  url: string;
+  /**
+   * The site as it names itself (og:site_name, the provider's name, or the host).
+   */
+  site_name: string;
+  /**
+   * The page's or service's title, folded to plain text.
+   */
+  title: string;
+  /**
+   * A short plain-text description, or an empty string when the source states none.
+   */
+  description: string;
+  /**
+   * The preview picture, only when it already lives on OpenVibe.Media; null when the source's picture would have to be hot-linked.
+   */
+  image: string | null;
+  /**
+   * The picture's stated width in pixels, or 0.
+   */
+  width: number;
+  /**
+   * The picture's stated height in pixels, or 0.
+   */
+  height: number;
+  /**
+   * On OpenVibe's own kinds, the person or channel the thing belongs to (a Live channel's handle, a Video channel, a post's author, a profile's handle, a Games world's owner). Absent on an ordinary link.
+   */
+  by?: string;
+  /**
+   * On a Live channel kind, whether it is broadcasting now. Absent on the other kinds.
+   */
+  live?: boolean;
+}
+
 /** chat.first-chat-result@1.0.0 (owner: chat) */
 /**
  * chat.first-chat-result@1: the answer of GET /internal/chat/first-chat?channel_id&identity on OpenVibe.Chat (capability chat.analysis.read), OpenVibe.Live's welcome check (isFirstChatInChannel): first is true when identity (user:<user_id>, anon:<anonId> or ext:<prefixed username>) has never chatted in the channel, from stream_first_chats, and false when it has. channel_id is the channel owner's Live user id (stream_first_chats.channel_user_id), not Chat's ctx_channels.id. A failure is chat.ingress-ack@1's error.
@@ -269721,7 +269768,7 @@ export interface SpaceModerationActionPayload {
 
 /** actor.task-create-request@1.0.0 (owner: actor) */
 /**
- * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agent-systems, the public catalog (routing still checks that it can take the task); AGENT_ID names one of the caller's own agent contacts from GET /api/v1/agents to run this task as (absent: Vibe, their first agent). LEVEL is the thread's approval level; the effective level is the higher of the agent's own level and this one, inherited along the person's own parent chain and never from outside work. IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict. WEBHOOKS (at most 8): each an https URL and the state changes to deliver there (the names of platform.task@1 `state`). Actor signs every delivery with a secret it mints for the task, returned once as `webhook_secret` in the answer that created it (and in an idempotent repeat), and POSTs actor.task-webhook@1 through its egress guard: public addresses only, ports 443 or 8443, no credentials in the URL, never a redirect. A URL that cannot be delivered to is refused 422 actor.webhook.refused. A webhook may instead name a project secret (`secret_ref`, ADR-056): its deliveries are then signed by OpenVibe.Network with that secret, in the same headers, and no webhook_secret is minted when every webhook names one. A secret_ref on a task outside a project is refused 422 actor.webhook.secret_unavailable.
+ * actor.task-create-request@1: the body of POST /api/v1/tasks on OpenVibe.Actor (capability actor.task.create), the creation subset of platform.task@1. TASK is the instruction in plain words. MODE is the planner objective (default balanced). BUDGET caps what this task may cost (per_task_usd) and what the caller's tasks may cost in one UTC day (per_day_usd); either may be left out for the person's free-allowance defaults, and a value above the person's tier is refused 422 actor.budget.over_tier, never silently lowered. AGENT pins one agent system by its id from GET /api/v1/agent-systems, the public catalog (routing still checks that it can take the task); AGENT_ID names one of the caller's own agent contacts from GET /api/v1/agents to run this task as (absent: Vibe, their first agent). LEVEL is the thread's approval level; the effective level is the higher of the agent's own level and this one, inherited along the person's own parent chain and never from outside work. IDEMPOTENCY_KEY: a repeat from the same requester within 24 h with an identical body answers the first task (200), with a different body 409 actor.idempotency.conflict. WEBHOOKS (at most 8): each an https URL and the state changes to deliver there (the names of platform.task@1 `state`). Actor signs every delivery with a secret it mints for the task, returned once as `webhook_secret` in the answer that created it (and in an idempotent repeat), and POSTs actor.task-webhook@1 through its egress guard: public addresses only, ports 443 or 8443, no credentials in the URL, never a redirect. A URL that cannot be delivered to is refused 422 actor.webhook.refused. A webhook may instead name a project secret (`secret_ref`, ADR-056): its deliveries are then signed by OpenVibe.Network with that secret, in the same headers, and no webhook_secret is minted when every webhook names one. A secret_ref on a task outside a project is refused 422 actor.webhook.secret_unavailable. CONVERSATION names the product conversation this task answers ({ product, id }); TOOLS names the registry tool names the run may call (an empty array answers with no tool calls; a name nothing offers is said aloud in the run, never silently dropped); MODEL names one exact model id, resolved like one the person picked themselves. All three are the one-engine slice: a product has Actor answer one turn of its own conversation. TIER is the content tier (standard or uncensored): uncensored needs the person the task is for, and OpenVibe.AI checks that person's 18+ confirmation on the account before it answers on that tier.
  */
 export interface ActorTaskCreateRequest {
   /**
@@ -271497,6 +271544,33 @@ export interface ActorTaskCreateRequest {
    * The thread's approval level. The effective level is max(the agent's level, this level, the levels of the person's own parent tasks). The always-ask floor still applies.
    */
   level?: "ask" | "auto-edits" | "approve-for-me" | "full";
+  /**
+   * The product conversation this task answers. Stored on the task so a later query can find the turn's task; the product keeps the task id beside its own conversation.
+   */
+  conversation?: {
+    /**
+     * The product whose conversation this task answers (exchange, chat, …).
+     */
+    product: string;
+    /**
+     * That product's key for the conversation and turn.
+     */
+    id: string;
+  };
+  /**
+   * The registry tool names the run may call. An empty array answers with no tool calls; a name nothing offers is said aloud in the run, never silently dropped.
+   *
+   * @maxItems 64
+   */
+  tools?: string[];
+  /**
+   * One exact model id, resolved by OpenVibe.AI like one the person picked themselves. Omitted: Actor answers on its default.
+   */
+  model?: string;
+  /**
+   * The content tier this task answers under. STANDARD is what every request gets. UNCENSORED is only for a task that names the person it is for (a person acting for themselves, or a first-party service naming them): OpenVibe.AI checks that person's 18+ confirmation on the account and refuses the tier without it. A task with no person, or one whose person has not confirmed, is answered on the standard tier. The hard floor (nothing sexual involving a minor) holds on every tier.
+   */
+  tier?: "standard" | "uncensored";
 }
 
 /** actor.agent-manage-request@1.0.0 (owner: actor) */

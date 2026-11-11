@@ -1,8 +1,14 @@
 # Changelog
 
-## 0.403.0 — 2026-11-11
+## 0.404.0 — 2026-11-11
 
 - Add `community.feed-card@1` and `community.feed-answer@1` for the public Feed API response.
+
+## 0.403.0 — 2026-11-11
+
+- Extend `actor.task-create-request@1` with conversation, tools, model and optional content tier fields for Actor turns; uncensored content is available only when a task names the person it is for.
+- Deprecate the account-merge contracts after removal of the feature across services; retain the released schemas.
+- Add `chat.embed@1` as the shared address preview shape for chat clients.
 
 ## 0.402.0 — 2026-11-11
 
