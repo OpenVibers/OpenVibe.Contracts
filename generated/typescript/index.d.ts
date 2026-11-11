@@ -338948,7 +338948,7 @@ export interface LiveElementPressedPayload {
 
 /** live.element.state@1.0.0 (owner: live) */
 /**
- * live.element.state v1 (OpenVibe.Live server/elements): an element's own store changed, broadcast to everyone watching through Live's existing events path. Same fields as ui.element-state@1: the channel, the element instance, a revision that grows by one per accepted change, the values themselves and when. It is public state (a counter, a score, a wheel's entries), never the presser's data: a value may not be an object, a markup string or a URL, and the payload carries no account.
+ * live.element.state v1 (OpenVibe.Live server/elements): an element's own store changed, broadcast to everyone watching through Live's existing events path. Carries the channel's public facts and the same store as ui.element-state@1: the element instance, a revision that grows by one per accepted change, the values themselves and when. It is public state (a counter, a score, a wheel's entries), never the presser's data: a value may not be an object, a markup string or a URL, and the payload carries no account.
  */
 export interface LiveElementStatePayload {
   channel: {
