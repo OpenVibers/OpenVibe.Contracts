@@ -2530,6 +2530,133 @@
  },
  "components": {
   "schemas": {
+   "ai.file.v1": {
+    "title": "AiFile",
+    "description": "ai.file@1: a person attachment or model-produced artifact stored by Media. The reference is metadata only; file bytes are never embedded in an AI turn.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "id",
+     "name",
+     "media_type",
+     "size",
+     "storage",
+     "access",
+     "read"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+     },
+     "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+     },
+     "media_type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+     },
+     "size": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "provider",
+       "key"
+      ],
+      "properties": {
+       "provider": {
+        "const": "media"
+       },
+       "key": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+       }
+      }
+     },
+     "access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "readers"
+      ],
+      "properties": {
+       "readers": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 200
+        }
+       }
+      }
+     },
+     "read": {
+      "oneOf": [
+       {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "method"
+        ],
+        "properties": {
+         "method": {
+          "enum": [
+           "text",
+           "pages",
+           "image",
+           "audio_transcript"
+          ]
+         },
+         "content": {
+          "type": "string"
+         },
+         "pages": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "method",
+         "reason"
+        ],
+        "properties": {
+         "method": {
+          "const": "not_readable"
+         },
+         "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+         }
+        }
+       }
+      ]
+     },
+     "role": {
+      "enum": [
+       "input",
+       "artifact"
+      ]
+     }
+    }
+   },
    "common.entity-ref.v1": {
     "title": "EntityRef",
     "description": "Typed reference to another service's entity. Store this instead of a foreign key; resolve a display projection from the owner.",
@@ -2909,7 +3036,7 @@
    },
    "community.comment-write-request.v1": {
     "title": "CommunityCommentWriteRequest",
-    "description": "community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.",
+    "description": "community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name?, attachments? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.",
     "anyOf": [
      {
       "type": "object",
@@ -2946,6 +3073,13 @@
          "string",
          "null"
         ]
+       },
+       "attachments": {
+        "type": "array",
+        "maxItems": 4,
+        "items": {
+         "$ref": "#/components/schemas/ai.file.v1"
+        }
        }
       }
      },
@@ -3097,7 +3231,7 @@
    },
    "community.comment.v1": {
     "title": "CommunityComment",
-    "description": "community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first replies. A deleted comment keeps its place with no author or message.",
+    "description": "community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first two replies. A deleted comment keeps its place with no author or message.",
     "type": "object",
     "required": [
      "id",
@@ -3252,6 +3386,34 @@
       "type": "array",
       "items": {
        "type": "object"
+      }
+     },
+     "reply_to_id": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "description": "The exact comment answered; parent_id remains the top-level comment."
+     },
+     "reply_to": {
+      "type": [
+       "object",
+       "null"
+      ],
+      "properties": {
+       "id": {
+        "type": "integer"
+       },
+       "display_name": {
+        "type": "string"
+       }
+      }
+     },
+     "attachments": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+       "$ref": "#/components/schemas/ai.file.v1"
       }
      }
     }

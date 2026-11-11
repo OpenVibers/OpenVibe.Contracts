@@ -214103,7 +214103,7 @@ export interface CommunityCommentThread {
 
 /** community.comment-write-request@1.0.0 (owner: community) */
 /**
- * community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.
+ * community.comment-write-request@1: bodies of community.comment.write on OpenVibe.Community (people, anonymous people with a name where the thread allows it, and services acting as X-OV-Subject or as AI). POST /api/v1/comments/threads/resolve: { ref } — get or create the thread of an entity (browsers only for the allow-listed entity types; a label is taken only from a service). POST /api/v1/comments/threads/:id/comments: { message, parent_id?, anon_name?, attachments? } (message trimmed, at most 5000 characters; a reply to a reply joins the top-level comment). POST /api/v1/comments/:commentId/votes: { value: 1 | -1 | 0 } (people). GET /api/v1/comments/threads/:id and DELETE /api/v1/comments/:commentId take no body. Unknown fields are ignored.
  */
 export type CommunityCommentWriteRequest =
   | {
@@ -214113,6 +214113,10 @@ export type CommunityCommentWriteRequest =
       message: string;
       parent_id?: number | string | null;
       anon_name?: string | null;
+      /**
+       * @maxItems 4
+       */
+      attachments?: [] | [AiFile] | [AiFile, AiFile] | [AiFile, AiFile, AiFile] | [AiFile, AiFile, AiFile, AiFile];
     }
   | {
       value: 1 | -1 | 0 | "1" | "-1" | "0";
@@ -214156,7 +214160,7 @@ export type CommunityCommentWriteResult =
 
 /** community.comment@1.0.0 (owner: community) */
 /**
- * community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first replies. A deleted comment keeps its place with no author or message.
+ * community.comment@1: one comment in an embeddable comment thread on OpenVibe.Community (server/comments/service.js shapeComment), with its author (or anonymous name), score and the caller's vote, reply count and, for top-level comments in a page, the first two replies. A deleted comment keeps its place with no author or message.
  */
 export interface CommunityComment {
   id: number;
@@ -214187,6 +214191,18 @@ export interface CommunityComment {
   can_edit: boolean;
   can_delete: boolean;
   replies?: {}[];
+  /**
+   * The exact comment answered; parent_id remains the top-level comment.
+   */
+  reply_to_id?: number | null;
+  reply_to?: {
+    id?: number;
+    display_name?: string;
+  } | null;
+  /**
+   * @maxItems 4
+   */
+  attachments?: [] | [AiFile] | [AiFile, AiFile] | [AiFile, AiFile, AiFile] | [AiFile, AiFile, AiFile, AiFile];
 }
 
 /** community.forum-space@1.0.0 (owner: community) */
