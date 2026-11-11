@@ -6162,6 +6162,24 @@
       "status": "active"
     },
     {
+      "id": "community.feed-card",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-card.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "community.feed-answer",
+      "version": "1.0.0",
+      "owner": "community",
+      "schema": "community/feed-answer.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "community.pulse-read-result",
       "version": "1.0.0",
       "owner": "community",

@@ -214035,6 +214035,61 @@ export interface CommunityFeedItem {
   label?: "Trending" | "AI" | "System";
 }
 
+/** community.feed-card@1.0.0 (owner: community) */
+/**
+ * community.feed-card@1: one public card returned by GET /api/v1/feed on OpenVibe.Community.
+ */
+export interface CommunityFeedCard {
+  id: string;
+  kind:
+    | "live"
+    | "stream"
+    | "clip"
+    | "video"
+    | "pic"
+    | "post"
+    | "meme"
+    | "game"
+    | "update"
+    | "wiki"
+    | "quest"
+    | "chat"
+    | "event"
+    | "member";
+  url: string;
+  title: string;
+  text: string;
+  at: string | null;
+  site: string;
+  site_name: string;
+  actor: {
+    name: string | null;
+    avatar: string | null;
+  } | null;
+  media: {
+    thumb: string;
+    preview?: string | null;
+    ratio: number;
+    length?: number;
+  } | null;
+  counts: {
+    views?: number;
+    likes?: number;
+    comments?: number;
+  };
+  live_now?: boolean;
+  label?: "Trending" | "AI" | "System";
+}
+
+/** community.feed-answer@1.0.0 (owner: community) */
+/**
+ * community.feed-answer@1: the response from GET /api/v1/feed.
+ */
+export interface CommunityFeedAnswer {
+  items: CommunityFeedCard[];
+  next_cursor: string | null;
+}
+
 /** community.pulse-read-result@1.0.0 (owner: community) */
 /**
  * community.pulse-read-result@1: answers of community.pulse.read on OpenVibe.Community (anyone). GET /api/v1/pulse?origin=user|ai|system&after=&limit= → { items, next_cursor } (newest first, at most 100; an unknown origin or a cursor this API did not issue is 400). GET /pulse is the same activity as an HTML page.

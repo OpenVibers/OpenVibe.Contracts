@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.403.0 — 2026-11-11
+
+- Add `community.feed-card@1` and `community.feed-answer@1` for the public Feed API response.
+
 ## 0.402.0 — 2026-11-11
 
 - Activate `download.file.read` for grant-bound, per-file reads by agents on openvibe.download; the capability alone does not provide drive listing or access without an owner's active grant.
