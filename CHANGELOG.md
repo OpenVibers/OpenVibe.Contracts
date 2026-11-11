@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.405.0 — 2026-11-11
+
+- Extend `community.feed-item@1` with activity kinds, calendar start times, media previews and linked items in a burst.
+
 ## 0.404.0 — 2026-11-11
 
 - Add owner-only Run compute configuration capability for Network admin proxy.

@@ -214004,9 +214004,9 @@ export interface CommunityPulseItem {
   text?: string;
 }
 
-/** community.feed-item@1.0.0 (owner: community) */
+/** community.feed-item@1.1.0 (owner: community) */
 /**
- * community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). One stream over Pulse: a paste or a status is a post, a Live clip a clip, a Wiki page a wiki page, a Quest badge a quest, a busy Chat hour a chat, a Today event an event, and a day's new Network accounts a member. Text only (the client draws every field), https links only, and counts carry Community's own views, likes and comments where it knows them.
+ * community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). Each card keeps its source and public visibility. Scheduled calendar cards appear only before their start time; bursts can carry a group of links. Counts carry Community's own views, likes and comments where it knows them.
  */
 export interface CommunityFeedItem {
   /**
@@ -214027,7 +214027,14 @@ export interface CommunityFeedItem {
     | "quest"
     | "chat"
     | "event"
-    | "member";
+    | "member"
+    | "avatar"
+    | "banner"
+    | "paste"
+    | "site"
+    | "space"
+    | "follow"
+    | "episode";
   /**
    * Where the card opens; https unless the source itself answered an http URL.
    */
@@ -214041,6 +214048,10 @@ export interface CommunityFeedItem {
    * When it happened (Pulse provenance); null for a trending card.
    */
   at: string | null;
+  /**
+   * The start time of a Coming up calendar item; absent on other kinds.
+   */
+  starts_at?: string;
   /**
    * The source service (live, media-hub, pics, games, blog, wiki, quest, chat, today, network, community…).
    */
@@ -214058,6 +214069,7 @@ export interface CommunityFeedItem {
    */
   media: {
     thumb: string;
+    preview?: string;
     ratio: number;
     /**
      * Seconds, when the card is a video.
@@ -214076,6 +214088,32 @@ export interface CommunityFeedItem {
    * Present on live and stream cards: true only while the channel is currently on air. A past broadcast has kind stream and live_now false.
    */
   live_now?: boolean;
+  group?: {
+    count: number;
+    /**
+     * @minItems 2
+     */
+    items: [
+      {
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      },
+      {
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      },
+      ...{
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      }[]
+    ];
+  };
   /**
    * Present only when the card needs one.
    */

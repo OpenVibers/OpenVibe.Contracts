@@ -69014,14 +69014,14 @@
       }
     },
     "community.feed-item": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "community",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/community/feed-item.v1.json",
         "title": "CommunityFeedItem",
-        "description": "community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). One stream over Pulse: a paste or a status is a post, a Live clip a clip, a Wiki page a wiki page, a Quest badge a quest, a busy Chat hour a chat, a Today event an event, and a day's new Network accounts a member. Text only (the client draws every field), https links only, and counts carry Community's own views, likes and comments where it knows them.",
+        "description": "community.feed-item@1: one card of the menu's Feed on every OpenVibe site (GET /api/v1/feed, OpenVibe.Community server/pulse/feed.js). Each card keeps its source and public visibility. Scheduled calendar cards appear only before their start time; bursts can carry a group of links. Counts carry Community's own views, likes and comments where it knows them.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -69059,7 +69059,14 @@
               "quest",
               "chat",
               "event",
-              "member"
+              "member",
+              "avatar",
+              "banner",
+              "paste",
+              "site",
+              "space",
+              "follow",
+              "episode"
             ]
           },
           "url": {
@@ -69084,6 +69091,11 @@
             ],
             "format": "date-time",
             "description": "When it happened (Pulse provenance); null for a trending card."
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start time of a Coming up calendar item; absent on other kinds."
           },
           "site": {
             "type": "string",
@@ -69138,6 +69150,11 @@
                 "pattern": "^https://",
                 "maxLength": 2000
               },
+              "preview": {
+                "type": "string",
+                "pattern": "^https://",
+                "maxLength": 2000
+              },
               "ratio": {
                 "type": "number",
                 "exclusiveMinimum": 0
@@ -69172,6 +69189,52 @@
           "live_now": {
             "type": "boolean",
             "description": "Present on live and stream cards: true only while the channel is currently on air. A past broadcast has kind stream and live_now false."
+          },
+          "group": {
+            "type": "object",
+            "required": [
+              "count",
+              "items"
+            ],
+            "properties": {
+              "count": {
+                "type": "integer",
+                "minimum": 2
+              },
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "url",
+                    "title",
+                    "media"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "pattern": "^https://"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "media": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
           },
           "label": {
             "enum": [

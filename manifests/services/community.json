@@ -44,6 +44,7 @@
     "network.account.deleted",
     "network.account.export_requested",
     "network.block.changed",
+    "network.user.updated",
     "network.user.token_valid_after"
   ],
   "namespacesOwned": [
