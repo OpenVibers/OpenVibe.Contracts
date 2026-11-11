@@ -266,6 +266,20 @@
       "since": "0.372.0",
       "removeAfter": "1.0.0",
       "reason": "The machine product Node became OpenVibe Link: the network.node.revoked event became network.link.revoked and its principal ids move to lnk_ (2026-11-09)"
+    },
+    {
+      "id": "network.subject.merged",
+      "replacement": "network.account.deleted@1",
+      "since": "0.399.0",
+      "removeAfter": "1.0.0",
+      "reason": "OpenVibe no longer supports merging accounts; use account deletion only when the person wants to close an account (2026-11-10)"
+    },
+    {
+      "id": "network.account-merge-result",
+      "replacement": "network.account.deleted@1",
+      "since": "0.399.0",
+      "removeAfter": "1.0.0",
+      "reason": "OpenVibe no longer supports account merges; account deletion is the remaining account-closing flow (2026-11-10)"
     }
   ]
 }

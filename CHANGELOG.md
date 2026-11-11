@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.402.0 — 2026-11-11
+
+- Extend `actor.task-create-request@1` with conversation, tools, model and optional content tier fields for Actor turns; uncensored content is available only when a task names the person it is for.
+- Deprecate the account-merge contracts after removal of the feature across services; retain the released schemas.
+- Add `chat.embed@1` as the shared address preview shape for chat clients.
+
 ## 0.401.0 — 2026-11-11
 
 - Add the `live.channel_points.read` capability (with `live.channel-points-page@1`): OpenVibe.Network reads one channel's points moves for the person behind a Network account through Live's internal channel-points changes read, for the gain/loss API (ask 273).
