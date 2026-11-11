@@ -1,0 +1,18 @@
+{
+  "type": "STEP_STARTED",
+  "timestamp": "2026-11-11T00:00:00Z",
+  "step_name": "Research",
+  "metadata": {
+    "ov": {
+      "title": "Searching the web",
+      "kind": "search",
+      "sources": [
+        {
+          "url": "https://example.com",
+          "title": "Example",
+          "site": "example.com"
+        }
+      ]
+    }
+  }
+}

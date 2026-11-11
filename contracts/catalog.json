@@ -11258,6 +11258,24 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "agent.ui-event",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/ui-event.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "agent.run",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agent/run.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }

@@ -63585,7 +63585,7 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/chat/embed.v1.json",
         "title": "ChatEmbed",
-        "description": "chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link.",
+        "description": "chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link. An agent-run embed carries the live run and event addresses, title and status.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -63610,7 +63610,8 @@
               "design",
               "post",
               "profile",
-              "game"
+              "game",
+              "agent-run"
             ],
             "description": "What the address turned out to be; a client may draw the same card for every value."
           },
@@ -63629,8 +63630,7 @@
           "title": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 120,
-            "description": "The page's or service's title, folded to plain text."
+            "maxLength": 240
           },
           "description": {
             "type": "string",
@@ -63666,6 +63666,30 @@
           "live": {
             "type": "boolean",
             "description": "On a Live channel kind, whether it is broadcasting now. Absent on the other kinds."
+          },
+          "run_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048
+          },
+          "events_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "waiting",
+              "needs_you",
+              "succeeded",
+              "failed",
+              "stopped",
+              "cancelled"
+            ]
           }
         }
       }
@@ -124593,6 +124617,378 @@
           }
         },
         "description": "NetworkLevelBoard: one earned platform level owned by Network; experience is never bought or spent."
+      }
+    },
+    "agent.ui-event": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "additionalProperties": false,
+        "$id": "https://openvibe.network/contracts/agent/ui-event.v1.json",
+        "title": "AgentUiEvent",
+        "description": "agent.ui-event@1: AG-UI 1.0 event envelope with OpenVibe display metadata. CUSTOM events use custom_type ov.sources, ov.handoff, ov.approval or ov.result.",
+        "required": [
+          "type",
+          "timestamp"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "RUN_STARTED",
+              "RUN_FINISHED",
+              "RUN_ERROR",
+              "STEP_STARTED",
+              "STEP_FINISHED",
+              "TEXT_MESSAGE_START",
+              "TEXT_MESSAGE_CONTENT",
+              "TEXT_MESSAGE_END",
+              "TOOL_CALL_START",
+              "TOOL_CALL_ARGS",
+              "TOOL_CALL_END",
+              "TOOL_CALL_RESULT",
+              "REASONING_START",
+              "REASONING_MESSAGE_START",
+              "REASONING_MESSAGE_CONTENT",
+              "REASONING_MESSAGE_END",
+              "REASONING_MESSAGE_CHUNK",
+              "REASONING_END",
+              "REASONING_ENCRYPTED_VALUE",
+              "STATE_SNAPSHOT",
+              "STATE_DELTA",
+              "ACTIVITY_SNAPSHOT",
+              "ACTIVITY_DELTA",
+              "CUSTOM"
+            ],
+            "description": "AG-UI 1.0 event discriminator."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 event timestamp; AG-UI permits producer timestamps."
+          },
+          "threadId": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "runId": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "ov": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 160
+                  },
+                  "kind": {
+                    "enum": [
+                      "search",
+                      "fetch",
+                      "read",
+                      "edit",
+                      "run",
+                      "browse",
+                      "ask",
+                      "think",
+                      "note",
+                      "agent",
+                      "plan"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/source"
+                    }
+                  },
+                  "attachments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "cost_usd": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "needs_you": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "product": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "step_name": {
+            "type": "string"
+          },
+          "message_id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "content": {},
+          "tool_call_id": {
+            "type": "string"
+          },
+          "tool_call_name": {
+            "type": "string"
+          },
+          "tool_call_args": {},
+          "tool_call_result": {},
+          "delta": {},
+          "patches": {
+            "type": "array"
+          },
+          "snapshot": {},
+          "activity_type": {
+            "type": "string"
+          },
+          "value": {},
+          "name": {
+            "type": "string"
+          },
+          "rawEvent": {},
+          "custom_type": {
+            "type": "string",
+            "enum": [
+              "ov.sources",
+              "ov.handoff",
+              "ov.approval",
+              "ov.result"
+            ]
+          },
+          "payload": {}
+        },
+        "$defs": {
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "title",
+              "site"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 2048
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "site": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          }
+        }
+      }
+    },
+    "agent.run": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "additionalProperties": false,
+        "$id": "https://openvibe.network/contracts/agent/run.v1.json",
+        "title": "AgentRun",
+        "description": "agent.run@1 snapshot of a run and its current plan, steps, sources, result, timestamps and cost.",
+        "required": [
+          "id",
+          "product",
+          "title",
+          "status",
+          "plan",
+          "steps",
+          "sources",
+          "result",
+          "started_at",
+          "ended_at",
+          "cost_usd"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "product": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "waiting",
+              "needs_you",
+              "succeeded",
+              "failed",
+              "stopped",
+              "cancelled"
+            ]
+          },
+          "plan": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "status"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 240
+                },
+                "status": {
+                  "enum": [
+                    "todo",
+                    "running",
+                    "waiting",
+                    "needs_you",
+                    "done",
+                    "failed",
+                    "stopped"
+                  ]
+                }
+              }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/step"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/source"
+            }
+          },
+          "result": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "cost_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          }
+        },
+        "$defs": {
+          "step": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "title",
+              "status"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              },
+              "status": {
+                "enum": [
+                  "todo",
+                  "running",
+                  "waiting",
+                  "needs_you",
+                  "done",
+                  "failed",
+                  "stopped"
+                ]
+              }
+            }
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "title",
+              "site"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://",
+                "maxLength": 2048
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "site": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          }
+        }
       }
     }
   }

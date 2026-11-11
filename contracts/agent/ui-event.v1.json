@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "$id": "https://openvibe.network/contracts/agent/ui-event.v1.json",
+  "title": "AgentUiEvent",
+  "description": "agent.ui-event@1: AG-UI 1.0 event envelope with OpenVibe display metadata. CUSTOM events use custom_type ov.sources, ov.handoff, ov.approval or ov.result.",
+  "required": [
+    "type",
+    "timestamp"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "RUN_STARTED",
+        "RUN_FINISHED",
+        "RUN_ERROR",
+        "STEP_STARTED",
+        "STEP_FINISHED",
+        "TEXT_MESSAGE_START",
+        "TEXT_MESSAGE_CONTENT",
+        "TEXT_MESSAGE_END",
+        "TOOL_CALL_START",
+        "TOOL_CALL_ARGS",
+        "TOOL_CALL_END",
+        "TOOL_CALL_RESULT",
+        "REASONING_START",
+        "REASONING_MESSAGE_START",
+        "REASONING_MESSAGE_CONTENT",
+        "REASONING_MESSAGE_END",
+        "REASONING_MESSAGE_CHUNK",
+        "REASONING_END",
+        "REASONING_ENCRYPTED_VALUE",
+        "STATE_SNAPSHOT",
+        "STATE_DELTA",
+        "ACTIVITY_SNAPSHOT",
+        "ACTIVITY_DELTA",
+        "CUSTOM"
+      ],
+      "description": "AG-UI 1.0 event discriminator."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 event timestamp; AG-UI permits producer timestamps."
+    },
+    "threadId": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "runId": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "ov": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string",
+              "maxLength": 160
+            },
+            "kind": {
+              "enum": [
+                "search",
+                "fetch",
+                "read",
+                "edit",
+                "run",
+                "browse",
+                "ask",
+                "think",
+                "note",
+                "agent",
+                "plan"
+              ]
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/source"
+              }
+            },
+            "attachments": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "cost_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "needs_you": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "product": {
+              "type": "string"
+            },
+            "ref": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "step_name": {
+      "type": "string"
+    },
+    "message_id": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "content": {},
+    "tool_call_id": {
+      "type": "string"
+    },
+    "tool_call_name": {
+      "type": "string"
+    },
+    "tool_call_args": {},
+    "tool_call_result": {},
+    "delta": {},
+    "patches": {
+      "type": "array"
+    },
+    "snapshot": {},
+    "activity_type": {
+      "type": "string"
+    },
+    "value": {},
+    "name": {
+      "type": "string"
+    },
+    "rawEvent": {},
+    "custom_type": {
+      "type": "string",
+      "enum": [
+        "ov.sources",
+        "ov.handoff",
+        "ov.approval",
+        "ov.result"
+      ]
+    },
+    "payload": {}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "title",
+        "site"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "maxLength": 2048
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "site": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      }
+    }
+  }
+}

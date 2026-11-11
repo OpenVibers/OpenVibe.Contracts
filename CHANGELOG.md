@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.404.0 — 2026-11-11
+
+- Add `agent.ui-event@1` and `agent.run@1` for AG-UI events and run snapshots; add the `agent-run` chat embed kind.
+
 ## 0.403.0 — 2026-11-11
 
 - Extend `actor.task-create-request@1` with conversation, tools, model and optional content tier fields for Actor turns; uncensored content is available only when a task names the person it is for.

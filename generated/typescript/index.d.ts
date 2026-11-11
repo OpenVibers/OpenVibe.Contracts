@@ -212104,13 +212104,13 @@ export interface ChatRoomInsightResult {
 
 /** chat.embed@1.0.0 (owner: chat) */
 /**
- * chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link.
+ * chat.embed@1: one address preview under a chat message, the same shape for every client (OpenVibe.Chat, Live's chat and the Dock). A message carries `embeds` in the order the addresses appeared in its text, at most three; it is empty while the background job is still reading, and the client draws each one as the same card. The fields are data, never markup: a client escapes them (title, description, site_name, by) before drawing them. url is the address the writer sent, https only. image is an OpenVibe.Media address or null: another site's picture is never hot-linked. width and height are the picture's stated size, or 0. kind names what was found: an ordinary page (`link`), a video (`video`), a picture (`image`), a Live channel (`live`), a Pics picture (`picture`), a Design item (`design`), a Community post (`post`), a Network profile (`profile`) or a Games world (`game`). OpenVibe's own kinds are resolved through that service's public API, never by reading its page, and carry by (the person or channel the thing belongs to) and, for Live, live (whether the channel is broadcasting now); both are absent on an ordinary link. An agent-run embed carries the live run and event addresses, title and status.
  */
 export interface ChatEmbed {
   /**
    * What the address turned out to be; a client may draw the same card for every value.
    */
-  kind: "link" | "video" | "image" | "live" | "picture" | "design" | "post" | "profile" | "game";
+  kind: "link" | "video" | "image" | "live" | "picture" | "design" | "post" | "profile" | "game" | "agent-run";
   /**
    * The https address the message carried, after the writer's trailing punctuation was dropped.
    */
@@ -212119,9 +212119,6 @@ export interface ChatEmbed {
    * The site as it names itself (og:site_name, the provider's name, or the host).
    */
   site_name: string;
-  /**
-   * The page's or service's title, folded to plain text.
-   */
   title: string;
   /**
    * A short plain-text description, or an empty string when the source states none.
@@ -212147,6 +212144,9 @@ export interface ChatEmbed {
    * On a Live channel kind, whether it is broadcasting now. Absent on the other kinds.
    */
   live?: boolean;
+  run_url?: string;
+  events_url?: string;
+  status?: "queued" | "running" | "waiting" | "needs_you" | "succeeded" | "failed" | "stopped" | "cancelled";
 }
 
 /** chat.first-chat-result@1.0.0 (owner: chat) */
@@ -333287,4 +333287,108 @@ export interface NetworkLevelBoard {
           }
         ];
   };
+}
+
+/** agent.ui-event@1.0.0 (owner: actor) */
+/**
+ * agent.ui-event@1: AG-UI 1.0 event envelope with OpenVibe display metadata. CUSTOM events use custom_type ov.sources, ov.handoff, ov.approval or ov.result.
+ */
+export interface AgentUiEvent {
+  /**
+   * AG-UI 1.0 event discriminator.
+   */
+  type:
+    | "RUN_STARTED"
+    | "RUN_FINISHED"
+    | "RUN_ERROR"
+    | "STEP_STARTED"
+    | "STEP_FINISHED"
+    | "TEXT_MESSAGE_START"
+    | "TEXT_MESSAGE_CONTENT"
+    | "TEXT_MESSAGE_END"
+    | "TOOL_CALL_START"
+    | "TOOL_CALL_ARGS"
+    | "TOOL_CALL_END"
+    | "TOOL_CALL_RESULT"
+    | "REASONING_START"
+    | "REASONING_MESSAGE_START"
+    | "REASONING_MESSAGE_CONTENT"
+    | "REASONING_MESSAGE_END"
+    | "REASONING_MESSAGE_CHUNK"
+    | "REASONING_END"
+    | "REASONING_ENCRYPTED_VALUE"
+    | "STATE_SNAPSHOT"
+    | "STATE_DELTA"
+    | "ACTIVITY_SNAPSHOT"
+    | "ACTIVITY_DELTA"
+    | "CUSTOM";
+  /**
+   * ISO-8601 event timestamp; AG-UI permits producer timestamps.
+   */
+  timestamp: string;
+  threadId?: string;
+  runId?: string;
+  metadata?: {
+    ov?: {
+      title?: string;
+      kind?: "search" | "fetch" | "read" | "edit" | "run" | "browse" | "ask" | "think" | "note" | "agent" | "plan";
+      sources?: {
+        url: string;
+        title: string;
+        site: string;
+      }[];
+      attachments?: {}[];
+      cost_usd?: number | null;
+      needs_you?: {} | null;
+      product?: string;
+      ref?: string | null;
+    };
+    [k: string]: unknown | undefined;
+  };
+  step_name?: string;
+  message_id?: string;
+  role?: string;
+  content?: unknown;
+  tool_call_id?: string;
+  tool_call_name?: string;
+  tool_call_args?: unknown;
+  tool_call_result?: unknown;
+  delta?: unknown;
+  patches?: unknown[];
+  snapshot?: unknown;
+  activity_type?: string;
+  value?: unknown;
+  name?: string;
+  rawEvent?: unknown;
+  custom_type?: "ov.sources" | "ov.handoff" | "ov.approval" | "ov.result";
+  payload?: unknown;
+}
+
+/** agent.run@1.0.0 (owner: actor) */
+/**
+ * agent.run@1 snapshot of a run and its current plan, steps, sources, result, timestamps and cost.
+ */
+export interface AgentRun {
+  id: string;
+  product: string;
+  title: string;
+  status: "queued" | "running" | "waiting" | "needs_you" | "succeeded" | "failed" | "stopped" | "cancelled";
+  plan: {
+    title: string;
+    status: "todo" | "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+  }[];
+  steps: {
+    title: string;
+    status: "todo" | "running" | "waiting" | "needs_you" | "done" | "failed" | "stopped";
+    [k: string]: unknown | undefined;
+  }[];
+  sources: {
+    url: string;
+    title: string;
+    site: string;
+  }[];
+  result: {} | null;
+  started_at: string;
+  ended_at: string | null;
+  cost_usd: number | null;
 }
