@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.406.0 — 2026-11-10
+## 0.405.0 — 2026-11-10
 
-- Add the public `chat.commands.register` capability for an approved app or Actor agent to register a plain response slash command in a server its user manages. Chat checks the invoking person's room permissions before posting; the grant does not confer moderation rights.
+- Add `chat.command-registration-request@1`, `chat.command-registration-result@1`, and the public `chat.commands.register` capability for an approved app or Actor agent to register a plain response slash command in a server its user manages. Chat checks the invoking person's room permissions before posting; the grant does not confer moderation rights.
 
 ## 0.404.0 — 2026-11-11
 

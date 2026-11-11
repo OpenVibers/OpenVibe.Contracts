@@ -1,0 +1,4 @@
+{
+  "server": "command-tests",
+  "command": { "name": "hello", "description": "Say hello", "options": [] }
+}

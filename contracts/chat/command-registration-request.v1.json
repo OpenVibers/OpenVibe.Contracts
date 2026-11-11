@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/chat/command-registration-request.v1.json",
+  "title": "Chat command registration request",
+  "description": "chat.command-registration-request@1: an approved app or Actor agent registers a plain-response command in a server that the person named in its service token manages. The command cannot override a built-in. The template's {args} placeholder receives the invoking person's argument text; Chat posts the expanded result as that person after checking their current room rights.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["server", "command", "response_template"],
+  "properties": {
+    "server": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,31}$" },
+    "command": { "$ref": "command.v1.json" },
+    "response_template": { "type": "string", "minLength": 1, "maxLength": 2000 }
+  }
+}

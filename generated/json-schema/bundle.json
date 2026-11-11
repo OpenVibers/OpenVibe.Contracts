@@ -60116,6 +60116,59 @@
         }
       }
     },
+    "chat.command-registration-request": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/command-registration-request.v1.json",
+        "title": "Chat command registration request",
+        "description": "chat.command-registration-request@1: an approved app or Actor agent registers a plain-response command in a server that the person named in its service token manages. The command cannot override a built-in. The template's {args} placeholder receives the invoking person's argument text; Chat posts the expanded result as that person after checking their current room rights.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "server",
+          "command",
+          "response_template"
+        ],
+        "properties": {
+          "server": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,31}$"
+          },
+          "command": {
+            "$ref": "command.v1.json"
+          },
+          "response_template": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        }
+      }
+    },
+    "chat.command-registration-result": {
+      "version": "1.0.0",
+      "owner": "chat",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/chat/command-registration-result.v1.json",
+        "title": "Chat command registration result",
+        "description": "chat.command-registration-result@1: the command Chat stored for an approved app or Actor agent, with source and application_id derived from the verified service token.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "command": {
+            "$ref": "command.v1.json"
+          }
+        }
+      }
+    },
     "chat.send-request": {
       "version": "1.1.0",
       "owner": "chat",

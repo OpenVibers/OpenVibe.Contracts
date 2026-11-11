@@ -209645,6 +209645,24 @@ export interface ChatSlashCommand {
   application_id?: string | null;
 }
 
+/** chat.command-registration-request@1.0.0 (owner: chat) */
+/**
+ * chat.command-registration-request@1: an approved app or Actor agent registers a plain-response command in a server that the person named in its service token manages. The command cannot override a built-in. The template's {args} placeholder receives the invoking person's argument text; Chat posts the expanded result as that person after checking their current room rights.
+ */
+export interface ChatCommandRegistrationRequest {
+  server: string;
+  command: ChatSlashCommand;
+  response_template: string;
+}
+
+/** chat.command-registration-result@1.0.0 (owner: chat) */
+/**
+ * chat.command-registration-result@1: the command Chat stored for an approved app or Actor agent, with source and application_id derived from the verified service token.
+ */
+export interface ChatCommandRegistrationResult {
+  command: ChatSlashCommand;
+}
+
 /** chat.send-request@1.1.0 (owner: chat) */
 /**
  * chat.send-request@1: what a sender hands OpenVibe.Chat to post a chat line (chat.message.send). From a browser, a frame on WS /ws/chat of type chat in the room the socket joined (the text is trimmed; empty or longer than 6000 characters is dropped, the channel's own max_message_length is enforced after that; a line starting with ! or / is a command, not a message). From Live's bridge, POST /internal/live/calls: a chat.live_bridge.write batch in which every op that sends a message (a chat or dm frame, db saveChatMessage, deployNotice) also needs chat.message.send; without it that op alone is refused. From a first-party service, POST /internal/chat/messages: one line (or one DM) that Chat stores, broadcasts to the room (with mirror, also to global chat and the streamer rooms), reads aloud (tts) and answers with the real id; applied once per (caller, key), the same key with another body gets 409.

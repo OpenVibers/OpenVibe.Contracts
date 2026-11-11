@@ -5548,6 +5548,24 @@
       "status": "active"
     },
     {
+      "id": "chat.command-registration-request",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/command-registration-request.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "chat.command-registration-result",
+      "version": "1.0.0",
+      "owner": "chat",
+      "schema": "chat/command-registration-result.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "chat.send-request",
       "version": "1.1.0",
       "owner": "chat",
