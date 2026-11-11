@@ -1,0 +1,10 @@
+{
+  "kind": "link",
+  "url": "https://example.com/a-story",
+  "site_name": "Example",
+  "title": "A story & its title",
+  "description": "What happened, in one short paragraph.",
+  "image": "https://openvibe.media/objects/pic.jpg",
+  "width": 640,
+  "height": 360
+}
