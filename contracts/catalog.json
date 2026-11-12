@@ -3022,6 +3022,26 @@
       "adr": "ADR-014"
     },
     {
+      "id": "media.engaged",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.engaged.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
+      "id": "media.viewed",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "events/payloads/media.viewed.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-004"
+    },
+    {
       "id": "live.setup.task_completed",
       "version": "1.0.0",
       "owner": "live",
@@ -5452,6 +5472,15 @@
       "version": "1.0.0",
       "owner": "media",
       "schema": "media/clip.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "media.view-request",
+      "version": "1.0.0",
+      "owner": "media",
+      "schema": "media/view-request.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
