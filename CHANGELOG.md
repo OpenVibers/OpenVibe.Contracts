@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.412.0 — 2026-11-12
+
+One view API for every content kind (the owner, 11-12): a preview in the feed and a watch on a page count the same
+item once, and Report can say how many people watched and how many stayed.
+
+- Add `media.view-request@1`: `POST /api/v1/views` { ref: { service, kind, id }, how: preview | watch | live, seconds,
+  of_seconds?, session } on OpenVibe.Media (batched by `{ events: [ … ] }`, at most 20), with the preview/engaged
+  thresholds and the 30-minute per-viewer window.
+- Add the `media.viewed` and `media.engaged` events: the counted view and the first engagement for an item, with the
+  optional Report dimensions site and creator and no IP, user agent or raw session id.
+- Fixtures for both events and the request, and the generated JSON Schema and TypeScript.
+
 ## 0.411.1 — 2026-11-12
 
 - Add the `code` category to `sources.source@1`, `sources.item@1`, `sources.category@1` and `sources.source-write-request@1`: GitHub repositories (trending, top, new and star-gain rankings) enter OpenVibe.Sources under one category, with a 30-day item window. Additive: no existing field changes, and an older reader ignores the new enum value.

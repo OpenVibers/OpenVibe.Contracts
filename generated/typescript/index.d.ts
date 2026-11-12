@@ -178948,6 +178948,87 @@ export interface MediaUsageRecordedPayload {
   revision?: number;
 }
 
+/** media.engaged@1.0.0 (owner: media) */
+/**
+ * media.engaged v1 (OpenVibe.Media server/views/service.js, POST /api/v1/views). A viewer became engaged with an item for the first time: they watched 30 seconds or a third of its length (whichever came first, of_seconds known) on a watch, or 60 seconds of a live stream. One event per person (or anonymous session) per item, ever, however many heartbeats follow. ref names the item in its owner's id space; site and creator are the same optional Report dimensions as media.viewed. seconds is the cumulative watch time that reached the threshold, threshold the number that was needed. No IP address, user agent or raw anonymous session id is in the payload or stored with the view. Events are outbox rows written with the count in the same transaction and relayed to OpenVibe.Events; subject { type: <kind>, id: <id> }, visibility internal, actor service:media.
+ */
+export interface MediaEngagedPayload {
+  ref: {
+    service: string;
+    kind: string;
+    id: string;
+    /**
+     * The site the view happened on, or null when it is the owning service.
+     */
+    site?: string | null;
+    /**
+     * The creator's canonical subject or channel username, or null when unknown.
+     */
+    creator?: string | null;
+  };
+  /**
+   * A preview never engages.
+   */
+  how: "watch" | "live";
+  /**
+   * When Media marked the viewer engaged.
+   */
+  occurred_at: string;
+  /**
+   * The cumulative watch time that reached the threshold.
+   */
+  seconds: number;
+  /**
+   * The seconds that were needed: 60 for a live stream, else min(30, of_seconds / 3) when of_seconds was known, otherwise 30.
+   */
+  threshold: number;
+  /**
+   * The item's length when the client knew it.
+   */
+  of_seconds?: number | null;
+  /**
+   * Live watchers Media saw at that moment (how = live), null otherwise.
+   */
+  concurrent?: number | null;
+}
+
+/** media.viewed@1.0.0 (owner: media) */
+/**
+ * media.viewed v1 (OpenVibe.Media server/views/service.js, POST /api/v1/views). A view counted for an item: one per person (or anonymous session) per item per 30 minutes; a preview counts from 1 second and a watch or live view when playback started. ref names the item in its owner's id space (service, kind, id). how is preview, watch or live. site is the site the view happened on when it differs from the owner, creator the creator's canonical subject or channel username when known, both for Report and never required. seconds is the cumulative watch time the event carried; of_seconds the item's length when known; concurrent is the number of live watchers Media saw at that moment for a live view, null otherwise. No IP address, user agent or raw anonymous session id is in the payload or stored with the view. Events are outbox rows written with the count in the same transaction and relayed to OpenVibe.Events; subject { type: <kind>, id: <id> }, visibility internal, actor service:media.
+ */
+export interface MediaViewedPayload {
+  ref: {
+    service: string;
+    kind: string;
+    id: string;
+    /**
+     * The site the view happened on, or null when it is the owning service.
+     */
+    site?: string | null;
+    /**
+     * The creator's canonical subject or channel username, or null when unknown.
+     */
+    creator?: string | null;
+  };
+  how: "preview" | "watch" | "live";
+  /**
+   * When Media counted the view.
+   */
+  occurred_at: string;
+  /**
+   * The cumulative watch time this view carried.
+   */
+  seconds?: number | null;
+  /**
+   * The item's length when the client knew it.
+   */
+  of_seconds?: number | null;
+  /**
+   * Live watchers Media saw at that moment (how = live), null otherwise.
+   */
+  concurrent?: number | null;
+}
+
 /** live.setup.task_completed@1.0.0 (owner: live) */
 /**
  * live.setup.task_completed v1 (OpenVibe.Live server/streaming/setup-progress.js): a streamer finished one of the tasks of Live's go-live setup hub for the first time (their first stream slot, first custom emote, first follower, ...). Live records each task once per person (live_setup_tasks) and writes this event to its outbox in the same transaction, when it next works out the person's progress. OpenVibe.Quest turns each task into a quest (owner Q16: Live's setup steps become quests). Envelope: subject { type: user, id: usr_... } the streamer, actor the same person, visibility internal. Never carries what the person made, only which task it was.
@@ -209472,6 +209553,54 @@ export interface MediaClip {
    * UTC 'YYYY-MM-DD HH:MM:SS' as the store keeps it.
    */
   created_at: string;
+}
+
+/** media.view-request@1.0.0 (owner: media) */
+/**
+ * media.view-request@1: one view or watch heartbeat as a client sends it to OpenVibe.Media's POST /api/v1/views (the one view API for every content kind). ref names the item in its owner's id space: service is the service that owns it (media, live, network…), kind is that service's type (vod, clip, recording, stream, feed…), id is the item id. how is preview (a feed preview that has played), watch (a watch page) or live (a live stream). seconds is the cumulative number of seconds this session has watched the item — a retry or a seek sends the same or a larger number and is not counted twice; preview counts a view from 1 second, engaged is reached at 30 seconds or a third of of_seconds (whichever is first) for a watch, or 60 seconds for a live stream. of_seconds is the item's length when the client knows it. session is the anonymous session id the client keeps for a signed-out viewer (an opaque 8–128 character string); a signed-in viewer's Network token is used instead when sent. The server stores no IP address and no user agent with a view, dedupes one view per person or anonymous session per item per 30 minutes, never counts a declared bot or a crawler's user agent, accepts at most 20 events in one call (the batch is { events: [request, …] }) and rate-limits by session. A successful answer is a list of per-event results: accepted, counted, engaged and a reason when it was not counted.
+ */
+export interface MediaViewRequest {
+  /**
+   * The item being viewed.
+   */
+  ref: {
+    /**
+     * The owning service: media, live, network, community…
+     */
+    service: string;
+    /**
+     * The owner's type: vod, clip, recording, stream, feed…
+     */
+    kind: string;
+    /**
+     * The item id in the owner's space, as a string.
+     */
+    id: string;
+    /**
+     * Optional: the site the view happened on, when it differs from the owning service (the Feed counts a clip on network). Used only for Report's per-site numbers.
+     */
+    site?: string;
+    /**
+     * Optional: the creator's canonical subject (usr_…) or channel username, when the caller knows it. Used only for Report's per-creator numbers; a Media item's owner is resolved by Media when absent.
+     */
+    creator?: string;
+  };
+  /**
+   * preview: a silent preview in the feed; watch: a watch page; live: a live stream being watched now.
+   */
+  how: "preview" | "watch" | "live";
+  /**
+   * Cumulative seconds watched in this session for this item. Send the same number on a retry; send a larger one as playback continues.
+   */
+  seconds: number;
+  /**
+   * The item's length when the client knows it: engaged comes at min(30, of_seconds / 3) for a watch.
+   */
+  of_seconds?: number;
+  /**
+   * The anonymous session id the client keeps for a signed-out viewer. Required when no Network user token is sent; never stored raw (Media keeps a keyed hash).
+   */
+  session?: string;
 }
 
 /** media.file-read-result@1.0.0 (owner: media) */

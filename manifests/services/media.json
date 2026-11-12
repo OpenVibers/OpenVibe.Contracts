@@ -62,6 +62,7 @@
   "eventsProduced": [
     "media.clip.failed",
     "media.clip.ready",
+    "media.engaged",
     "media.index_document.deleted",
     "media.index_document.upserted",
     "media.job.cancelled",
@@ -84,6 +85,7 @@
     "media.storage.alert",
     "media.storage.recovered",
     "media.usage.recorded",
+    "media.viewed",
     "media.vod.failed",
     "media.vod.ready"
   ],
