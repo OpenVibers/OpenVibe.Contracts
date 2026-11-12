@@ -1,0 +1,11 @@
+{
+  "site": { "id": "live", "name": "Live", "host": "openvibe.live" },
+  "commands": [
+    { "name": "clip", "hint": "Make a clip of the stream", "insert": "/clip ", "kind": "site", "needs_sign_in": true },
+    { "name": "ask", "hint": "Ask Vibe: an answer with its sources", "insert": "/ask ", "kind": "network", "needs_sign_in": true },
+    { "name": "do", "hint": "Hand it to your agent: Actor plans and runs it", "insert": "/do ", "kind": "network", "needs_sign_in": true },
+    { "name": "remind", "hint": "Have Today remind you", "insert": "/remind ", "kind": "network", "needs_sign_in": true },
+    { "name": "timer", "hint": "Start a focus timer in the Dock", "insert": "/timer ", "kind": "network", "needs_sign_in": true },
+    { "name": "sig", "hint": "Signature", "insert": "— Sam", "kind": "mine", "needs_sign_in": false }
+  ]
+}

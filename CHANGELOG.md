@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.413.0 — 2026-11-12
+
+The composer's Reach (Post · Ask · Do, stage R3; Network R3): what its `/` and `@` menus offer.
+
+- Add `frame.commands@1`: `GET /api/frame/commands?site=<host>&q=` on OpenVibe.Network, the command rows a composer
+  offers on one site — the network's `/ask`, `/do`, `/remind` and `/timer`, the site's own from its Frame manifest,
+  and a signed-in person's saved composer snippets — each with its hint, the text a pick inserts, its kind and whether
+  it needs a signed-in person.
+- Add `frame.mentions@1`: `GET /api/frame/mentions?q=&site=` on OpenVibe.Network, at most eight rows for the `@` menu:
+  public people (with a handle, display name and an OpenVibe.Media avatar only), the person's own agents from the agent
+  directory, open OpenVibe sites and Live's public channels. People first; signed out, public people only; no email or
+  private account field.
+- Fixtures for both (valid and invalid) and the generated JSON Schema and TypeScript.
+
 ## 0.412.0 — 2026-11-12
 
 One agent system, stage 2: one run shape for Actor, Codes and Run, and the step event that follows it.
