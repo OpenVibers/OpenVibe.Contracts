@@ -751,6 +751,99 @@
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]{0,60}$",
       "description": "A child run's role in its parent's play (one of the play's role ids: planner, executor, advisor, grader, reviewer, searcher, worker…)."
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Since 1.4.0 (one-system-v2.md §4): what the run measured. CHARGED_USD is what the providers charged (null when unknown), ESTIMATED_USD only where nothing was charged; tokens with cache reads and writes; latency; steps; EXIT is how it ended, named; EVIDENCE is the checkable proof of success (a test, a schema, a grader of another model family, a person).",
+      "properties": {
+        "charged_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "estimated_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "tokens_in": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_read": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_write": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exit": {
+          "enum": [
+            "done",
+            "limits",
+            "timeout",
+            "format_error",
+            "refused",
+            "tool_error",
+            "stopped",
+            "error"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "passed"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "test",
+                  "schema",
+                  "grader",
+                  "person",
+                  "decision"
+                ]
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "detail": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

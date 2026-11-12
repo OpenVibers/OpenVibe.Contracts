@@ -1,0 +1,39 @@
+{
+  "id": "job_01JD8C4QJ7Z3K9W2X5V6N1M0PA",
+  "kind": "check",
+  "title": "OpenVibe.Shared #513: test",
+  "status": "passed",
+  "trust": "public",
+  "repo": {
+    "url": "https://github.com/OpenVibers/OpenVibe.Shared",
+    "ref": "own-icon-markup-1112",
+    "sha": "768ed2a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6"
+  },
+  "run": {
+    "workflow": ".github/workflows/ci.yml",
+    "job": "test"
+  },
+  "needs": {
+    "os": "linux",
+    "cpus": 2,
+    "memory_mb": 4096,
+    "node": "22"
+  },
+  "budget": {
+    "seconds": 1800
+  },
+  "placement": {
+    "node": "lnk_01M78BBHN4QDE4NP06T8J5N0NR",
+    "name": "ov-node-01",
+    "why": "free, idle, 100% of its last 20 checks finished",
+    "placed_at": "2026-11-12T23:00:00Z"
+  },
+  "attempts": 1,
+  "result": {
+    "exit": "passed",
+    "summary": "41/41 test files passed",
+    "duration_ms": 412000
+  },
+  "created_at": "2026-11-12T23:00:00Z",
+  "updated_at": "2026-11-12T23:00:00Z"
+}

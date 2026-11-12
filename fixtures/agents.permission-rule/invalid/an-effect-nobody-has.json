@@ -1,0 +1,4 @@
+{
+  "action": "machine:shell",
+  "effect": "maybe"
+}

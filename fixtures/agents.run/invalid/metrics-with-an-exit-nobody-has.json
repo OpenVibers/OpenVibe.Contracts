@@ -1,0 +1,32 @@
+{
+  "id": "tsk_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "owner": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "agent": {
+    "id": "agt_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+    "name": "Vibe",
+    "product": "actor"
+  },
+  "parent_run": null,
+  "budget": {
+    "usd": 2.5,
+    "tokens": 200000,
+    "seconds": 600,
+    "steps": 40
+  },
+  "status": "running",
+  "created_at": "2026-11-12T10:00:00Z",
+  "updated_at": "2026-11-12T10:00:12Z",
+  "result_summary": null,
+  "cost": {
+    "usd": 0.031,
+    "tokens": 4210,
+    "seconds": 12,
+    "steps": 3
+  },
+  "metrics": {
+    "exit": "crashed"
+  }
+}

@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.420.0 — 2026-11-12
+
+**One agent system, measured.** These contracts carry the decisions in `one-system-v2.md`, which come from reading 24
+open agent projects.
+
+- **`agents.blueprint@1` 1.1.0:**
+  - `rules.sandbox` (read-only · workspace-write · full) and `rules.network` (none · public · listed domains): Codex's
+    three axes per run, next to the level that was already there.
+  - `starters`: one-tap first asks, Goose's activities.
+- **`agents.permission-rule@1`:** a permission as data, from Gemini CLI and OpenCode.
+  - It has an action (a tool, or a pattern), a resource, an effect (allow · ask · deny), and `when`: attended,
+    unattended or any.
+  - The last rule that matches wins.
+  - Unattended work never waits on an ask.
+  - The floor asks whatever a rule says.
+- **`agents.job@1`:** one job placed on a machine. Its kinds are check, review, build, eval, improve, desk and model.
+  It carries:
+  - what it needs from the place, and its trust (public code only, or the owner's own machines);
+  - its budget, its placement with the reason, and its attempts;
+  - a result with a named exit and a link to the masked log.
+  
+  Secrets never travel in a job.
+- **`agents.run@1` 1.4.0:** `metrics`, with:
+  - the charged cost first (an estimate only where nothing was charged);
+  - tokens with cache reads and writes, latency and steps;
+  - a named exit;
+  - the checkable evidence of success (a test, a schema, a grader, a person, a Decision with its probability).
+- **Fixtures:** a blueprint with sandbox, network and starters; three rules; a check placed on a shared node, and a
+  queued review; a run with metrics; and refusals for each.
+
 ## 0.419.1 — 2026-11-12
 
 **`actor.agent.manage` lists the blueprint routes** Actor serves: the person's blueprints and the public gallery, one

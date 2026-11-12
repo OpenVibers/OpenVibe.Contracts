@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/permission-rule.v1.json",
+  "title": "AgentsPermissionRule",
+  "description": "agents.permission-rule@1 (one-system-v2.md §3.2; Gemini CLI and OpenCode): one permission as data. ACTION is a tool (agents.blueprint@1's hands names, e.g. ov:live.chat.post, machine:shell) or a pattern with * ; RESOURCE narrows it (a path glob, a domain, a command prefix); EFFECT is allow, ask or deny. Rules are read in order and the LAST one that matches wins. WHEN says whether the rule holds while a person is present (attended), in scheduled or triggered work nobody watches (unattended: an ask there settles by the run's level, never waits), or both. The floor (money, passwords, deletions, new recipients, posting in a person's name) asks whatever a rule says.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action",
+    "effect"
+  ],
+  "properties": {
+    "action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[a-z*][a-z0-9_.:*/@-]*$"
+    },
+    "resource": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "A path glob (src/**), a domain (*.example.org), or a command prefix (npm test)."
+    },
+    "effect": {
+      "enum": [
+        "allow",
+        "ask",
+        "deny"
+      ]
+    },
+    "when": {
+      "enum": [
+        "attended",
+        "unattended",
+        "any"
+      ],
+      "description": "Absent: any."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    }
+  }
+}

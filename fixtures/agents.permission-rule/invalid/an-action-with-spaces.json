@@ -1,0 +1,4 @@
+{
+  "action": "rm -rf /",
+  "effect": "allow"
+}
