@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/job.v1.json",
+  "title": "AgentsJob",
+  "description": "agents.job@1 (one-system-v2.md §7): one job placed on a machine: a check (a repository's tests or one workflow job), a review (an agent of another family reads a diff), a build, an eval, an improvement candidate, a desk or a model. NEEDS is what the place must have; TRUST is public (public code only, no secret ever reaches the place, so community nodes may take it) or owner (only the owner's own machines). PLACEMENT is the scheduler's: cheapest that can, least busy, most reliable; a job that fails because its place went away is tried on another (ATTEMPTS). RESULT carries a named exit, the duration and a link to the masked log. Secrets never travel in a job: a place gets a short-lived token scoped to that one job.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "status",
+    "trust",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^job_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "kind": {
+      "enum": [
+        "check",
+        "review",
+        "build",
+        "eval",
+        "improve",
+        "desk",
+        "model"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "placed",
+        "running",
+        "passed",
+        "failed",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "trust": {
+      "enum": [
+        "public",
+        "owner"
+      ]
+    },
+    "repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "sha"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "maxLength": 500,
+          "pattern": "^https://"
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What to run: one command, or one job of a workflow file (act's semantics: stages of steps, outputs through files).",
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "workflow": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "job": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "matrix": {
+          "type": "object",
+          "maxProperties": 20
+        }
+      }
+    },
+    "needs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "os": {
+          "enum": [
+            "linux",
+            "macos",
+            "windows",
+            "android"
+          ]
+        },
+        "cpus": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "memory_mb": {
+          "type": "integer",
+          "minimum": 64,
+          "maximum": 2097152
+        },
+        "gpu": {
+          "type": "boolean"
+        },
+        "node": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "browser": {
+          "type": "boolean"
+        },
+        "tools": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,40}$"
+          }
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000
+        }
+      }
+    },
+    "placement": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "node": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "placed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "attempts": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 20
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "exit"
+      ],
+      "properties": {
+        "exit": {
+          "enum": [
+            "passed",
+            "failed",
+            "timeout",
+            "limits",
+            "place_lost",
+            "refused",
+            "error",
+            "cancelled"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "log_url": {
+          "type": "string",
+          "maxLength": 2000,
+          "pattern": "^https://"
+        },
+        "charged_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000
+        }
+      }
+    },
+    "parent_run": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The run that asked for it (agents.run@1 ref), when one did."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

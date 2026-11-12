@@ -343083,7 +343083,7 @@ export interface FrameMentions {
       ];
 }
 
-/** agents.run@1.3.0 (owner: actor) */
+/** agents.run@1.4.0 (owner: actor) */
 /**
  * agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. Since 1.1.0 (agent-engine.md) a run also says what a person calls it (TITLE), what sort it is (KIND), where it lives (REF on the Frame, URL on its product), which model runs it and where, what it is doing now (DOING), what it waits for (WAITING), its last line (PREVIEW), where it was asked (CONTEXT) and what it made (OUTPUTS); a chat with Vibe is a run of KIND chat that is waiting for a message. Every added field is optional. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1. Since 1.2.0 (agent-engine.md §§3-5, from the code study) a run may also say why it exists (MANDATE: an ask taken in from the feed, a room, an issue), what it continues (LINEAGE: a fork, a hand-off, a regenerated turn), the play its tree follows and a child's ROLE in it, what its agent's harness can do (AGENT.CAPABILITIES), and what it spent on each rung of the ladder (COST.BY). Every added field is optional.
  */
@@ -346561,6 +346561,1325 @@ export interface AgentsRun {
    * A child run's role in its parent's play (one of the play's role ids: planner, executor, advisor, grader, reviewer, searcher, worker…).
    */
   role?: string;
+  /**
+   * Since 1.4.0 (one-system-v2.md §4): what the run measured. CHARGED_USD is what the providers charged (null when unknown), ESTIMATED_USD only where nothing was charged; tokens with cache reads and writes; latency; steps; EXIT is how it ended, named; EVIDENCE is the checkable proof of success (a test, a schema, a grader of another model family, a person).
+   */
+  metrics?: {
+    charged_usd?: number | null;
+    estimated_usd?: number | null;
+    tokens_in?: number;
+    tokens_out?: number;
+    cache_read?: number;
+    cache_write?: number;
+    latency_ms?: number;
+    steps?: number;
+    exit?: "done" | "limits" | "timeout" | "format_error" | "refused" | "tool_error" | "stopped" | "error";
+    /**
+     * @maxItems 20
+     */
+    evidence?:
+      | []
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ];
+  };
 }
 
 /** agents.step@1.2.0 (owner: actor) */
@@ -361480,6 +362799,1325 @@ export interface AgentsRunUpdatedPayload {
    * A child run's role in its parent's play (one of the play's role ids: planner, executor, advisor, grader, reviewer, searcher, worker…).
    */
   role?: string;
+  /**
+   * Since 1.4.0 (one-system-v2.md §4): what the run measured. CHARGED_USD is what the providers charged (null when unknown), ESTIMATED_USD only where nothing was charged; tokens with cache reads and writes; latency; steps; EXIT is how it ended, named; EVIDENCE is the checkable proof of success (a test, a schema, a grader of another model family, a person).
+   */
+  metrics?: {
+    charged_usd?: number | null;
+    estimated_usd?: number | null;
+    tokens_in?: number;
+    tokens_out?: number;
+    cache_read?: number;
+    cache_write?: number;
+    latency_ms?: number;
+    steps?: number;
+    exit?: "done" | "limits" | "timeout" | "format_error" | "refused" | "tool_error" | "stopped" | "error";
+    /**
+     * @maxItems 20
+     */
+    evidence?:
+      | []
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ]
+      | [
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          },
+          {
+            kind: "test" | "schema" | "grader" | "person" | "decision";
+            passed: boolean;
+            detail?: string;
+            probability?: number;
+          }
+        ];
+  };
 }
 
 /** agents.play@1.0.0 (owner: network) */
@@ -368810,9 +371448,9 @@ export interface AgentsSource {
   updated_at?: string;
 }
 
-/** agents.blueprint@1.0.0 (owner: actor) */
+/** agents.blueprint@1.1.0 (owner: actor) */
 /**
- * agents.blueprint@1 (agent-blueprints.md, 2026-11-12): an agent anyone can read, change, share and run, as one small document of ten parts. FACE is how it looks and sounds (Design), BRAIN which models it may use and what it may pay (Exchange), KNOWS its instructions, skills and knowledge, HANDS the tools it may use (allowed or ask first), PLACES where its work runs (your machines, machines shared with you, OpenVibe computers, a sandbox; Link), MEMORY what it keeps, RULES its approval level, budget and who may ask it, WHEN what starts it, MAKES what it answers with and whether other agents and apps may call it, TEAM a play whose roles are other blueprints. INPUTS are what an installer fills in ({{id}} in KNOWS and WHEN); NEEDS are what an installer must connect first. A blueprint carries no secret and grants nothing: it asks, and an install (agents.install@1) is the installer agreeing. A published version never changes; a new version that asks for more waits for each installer's yes. Money, passwords, deletions, new recipients and posting in a person's name always ask, whatever the level: no field lowers that floor. openvibe-sdk/agents/blueprint validates, fills, compiles and prices one.
+ * agents.blueprint@1 (agent-blueprints.md, 2026-11-12): an agent anyone can read, change, share and run, as one small document of ten parts. FACE is how it looks and sounds (Design), BRAIN which models it may use and what it may pay (Exchange), KNOWS its instructions, skills and knowledge, HANDS the tools it may use (allowed or ask first), PLACES where its work runs (your machines, machines shared with you, OpenVibe computers, a sandbox; Link), MEMORY what it keeps, RULES its approval level, budget and who may ask it, WHEN what starts it, MAKES what it answers with and whether other agents and apps may call it, TEAM a play whose roles are other blueprints. INPUTS are what an installer fills in ({{id}} in KNOWS and WHEN); NEEDS are what an installer must connect first. A blueprint carries no secret and grants nothing: it asks, and an install (agents.install@1) is the installer agreeing. A published version never changes; a new version that asks for more waits for each installer's yes. Money, passwords, deletions, new recipients and posting in a person's name always ask, whatever the level: no field lowers that floor. openvibe-sdk/agents/blueprint validates, fills, compiles and prices one. Since 1.1.0: RULES.SANDBOX and RULES.NETWORK (what its work may write and reach) and STARTERS (one-tap first asks).
  */
 export type AgentsBlueprint = {
   [k: string]: unknown | undefined;
@@ -371582,6 +374220,109 @@ export type AgentsBlueprint = {
   created_at?: string;
   updated_at?: string;
   published_at?: string | null;
+  /**
+   * Since 1.1.0 (Goose's activities): the buttons that start a run with one tap, each a label and the words it sends.
+   *
+   * @maxItems 6
+   */
+  starters?:
+    | []
+    | [
+        {
+          label: string;
+          text: string;
+        }
+      ]
+    | [
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        }
+      ]
+    | [
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        }
+      ]
+    | [
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        }
+      ]
+    | [
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        }
+      ]
+    | [
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        },
+        {
+          label: string;
+          text: string;
+        }
+      ];
 };
 
 /** agents.install@1.0.0 (owner: actor) */
@@ -371888,6 +374629,218 @@ export interface AgentsInstall {
    */
   pending?: string | null;
   installed_at: string;
+  updated_at?: string;
+}
+
+/** agents.permission-rule@1.0.0 (owner: actor) */
+/**
+ * agents.permission-rule@1 (one-system-v2.md §3.2; Gemini CLI and OpenCode): one permission as data. ACTION is a tool (agents.blueprint@1's hands names, e.g. ov:live.chat.post, machine:shell) or a pattern with * ; RESOURCE narrows it (a path glob, a domain, a command prefix); EFFECT is allow, ask or deny. Rules are read in order and the LAST one that matches wins. WHEN says whether the rule holds while a person is present (attended), in scheduled or triggered work nobody watches (unattended: an ask there settles by the run's level, never waits), or both. The floor (money, passwords, deletions, new recipients, posting in a person's name) asks whatever a rule says.
+ */
+export interface AgentsPermissionRule {
+  action: string;
+  /**
+   * A path glob (src/**), a domain (*.example.org), or a command prefix (npm test).
+   */
+  resource?: string;
+  effect: "allow" | "ask" | "deny";
+  /**
+   * Absent: any.
+   */
+  when?: "attended" | "unattended" | "any";
+  reason?: string;
+}
+
+/** agents.job@1.0.0 (owner: actor) */
+/**
+ * agents.job@1 (one-system-v2.md §7): one job placed on a machine: a check (a repository's tests or one workflow job), a review (an agent of another family reads a diff), a build, an eval, an improvement candidate, a desk or a model. NEEDS is what the place must have; TRUST is public (public code only, no secret ever reaches the place, so community nodes may take it) or owner (only the owner's own machines). PLACEMENT is the scheduler's: cheapest that can, least busy, most reliable; a job that fails because its place went away is tried on another (ATTEMPTS). RESULT carries a named exit, the duration and a link to the masked log. Secrets never travel in a job: a place gets a short-lived token scoped to that one job.
+ */
+export interface AgentsJob {
+  id: string;
+  kind: "check" | "review" | "build" | "eval" | "improve" | "desk" | "model";
+  title?: string;
+  status: "queued" | "placed" | "running" | "passed" | "failed" | "cancelled" | "expired";
+  trust: "public" | "owner";
+  repo?: {
+    url: string;
+    ref?: string;
+    sha: string;
+  };
+  /**
+   * What to run: one command, or one job of a workflow file (act's semantics: stages of steps, outputs through files).
+   */
+  run?: {
+    command?: string;
+    workflow?: string;
+    job?: string;
+    matrix?: {};
+  };
+  needs?: {
+    os?: "linux" | "macos" | "windows" | "android";
+    cpus?: number;
+    memory_mb?: number;
+    gpu?: boolean;
+    node?: string;
+    browser?: boolean;
+    /**
+     * @maxItems 20
+     */
+    tools?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+  };
+  budget?: {
+    seconds?: number;
+    usd?: number;
+  };
+  placement?: {
+    node?: string;
+    name?: string;
+    why?: string;
+    placed_at?: string;
+  } | null;
+  attempts?: number;
+  result?: {
+    exit: "passed" | "failed" | "timeout" | "limits" | "place_lost" | "refused" | "error" | "cancelled";
+    summary?: string;
+    duration_ms?: number;
+    log_url?: string;
+    charged_usd?: number;
+  } | null;
+  /**
+   * The run that asked for it (agents.run@1 ref), when one did.
+   */
+  parent_run?: string;
+  created_at: string;
   updated_at?: string;
 }
 

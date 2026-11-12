@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/agents/blueprint.v1.json",
   "title": "AgentsBlueprint",
-  "description": "agents.blueprint@1 (agent-blueprints.md, 2026-11-12): an agent anyone can read, change, share and run, as one small document of ten parts. FACE is how it looks and sounds (Design), BRAIN which models it may use and what it may pay (Exchange), KNOWS its instructions, skills and knowledge, HANDS the tools it may use (allowed or ask first), PLACES where its work runs (your machines, machines shared with you, OpenVibe computers, a sandbox; Link), MEMORY what it keeps, RULES its approval level, budget and who may ask it, WHEN what starts it, MAKES what it answers with and whether other agents and apps may call it, TEAM a play whose roles are other blueprints. INPUTS are what an installer fills in ({{id}} in KNOWS and WHEN); NEEDS are what an installer must connect first. A blueprint carries no secret and grants nothing: it asks, and an install (agents.install@1) is the installer agreeing. A published version never changes; a new version that asks for more waits for each installer's yes. Money, passwords, deletions, new recipients and posting in a person's name always ask, whatever the level: no field lowers that floor. openvibe-sdk/agents/blueprint validates, fills, compiles and prices one.",
+  "description": "agents.blueprint@1 (agent-blueprints.md, 2026-11-12): an agent anyone can read, change, share and run, as one small document of ten parts. FACE is how it looks and sounds (Design), BRAIN which models it may use and what it may pay (Exchange), KNOWS its instructions, skills and knowledge, HANDS the tools it may use (allowed or ask first), PLACES where its work runs (your machines, machines shared with you, OpenVibe computers, a sandbox; Link), MEMORY what it keeps, RULES its approval level, budget and who may ask it, WHEN what starts it, MAKES what it answers with and whether other agents and apps may call it, TEAM a play whose roles are other blueprints. INPUTS are what an installer fills in ({{id}} in KNOWS and WHEN); NEEDS are what an installer must connect first. A blueprint carries no secret and grants nothing: it asks, and an install (agents.install@1) is the installer agreeing. A published version never changes; a new version that asks for more waits for each installer's yes. Money, passwords, deletions, new recipients and posting in a person's name always ask, whatever the level: no field lowers that floor. openvibe-sdk/agents/blueprint validates, fills, compiles and prices one. Since 1.1.0: RULES.SANDBOX and RULES.NETWORK (what its work may write and reach) and STARTERS (one-tap first asks).",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -81,13 +81,13 @@
         "null"
       ],
       "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
-      "description": "The version it was remixed from (bp_…@N); the gallery credits it."
+      "description": "The version it was remixed from (bp_\u2026@N); the gallery credits it."
     },
     "licence": {
       "type": "string",
       "minLength": 1,
       "maxLength": 60,
-      "description": "An SPDX id (MIT, CC-BY-4.0, …) for remixes; absent means remixes need the author's yes."
+      "description": "An SPDX id (MIT, CC-BY-4.0, \u2026) for remixes; absent means remixes need the author's yes."
     },
     "tags": {
       "type": "array",
@@ -201,7 +201,7 @@
           "what": {
             "type": "string",
             "pattern": "^[a-z0-9][a-z0-9_.-]{0,60}$",
-            "description": "machine: gpu, desk, browser, linux, windows, macos, android; key and plan: a provider (gemini, openai, …); app: a Connect app; robot: a manifest id."
+            "description": "machine: gpu, desk, browser, linux, windows, macos, android; key and plan: a provider (gemini, openai, \u2026); app: a Connect app; robot: a manifest id."
           },
           "why": {
             "type": "string",
@@ -490,7 +490,7 @@
         "tools": {
           "type": "array",
           "maxItems": 64,
-          "description": "ov:<product>.<tool> a product's tool on the one MCP endpoint; tools:<app> an openvibe.tools app; connect:<app> a Connect app; mcp:https://… the installer's own server; machine:files|shell|desk|browser|screen on its PLACE; robot:<command> a robot's manifest command; harness:<name> a coding harness for code work; agent:bp_…|agt_… another agent as a tool. MODE ask: every use asks first.",
+          "description": "ov:<product>.<tool> a product's tool on the one MCP endpoint; tools:<app> an openvibe.tools app; connect:<app> a Connect app; mcp:https://\u2026 the installer's own server; machine:files|shell|desk|browser|screen on its PLACE; robot:<command> a robot's manifest command; harness:<name> a coding harness for code work; agent:bp_\u2026|agt_\u2026 another agent as a tool. MODE ask: every use asks first.",
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -651,6 +651,62 @@
               ]
             }
           }
+        },
+        "sandbox": {
+          "enum": [
+            "read-only",
+            "workspace-write",
+            "full"
+          ],
+          "description": "Since 1.1.0 (Codex's three axes): what its work may write. read-only: nothing; workspace-write: the run's own workspace, never .git/hooks or the agent's own config; full: anything the place allows. Absent: workspace-write."
+        },
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode"
+          ],
+          "description": "Since 1.1.0: where its work may connect. none, public (the public internet only, never private addresses), or listed (only DOMAINS).",
+          "properties": {
+            "mode": {
+              "enum": [
+                "none",
+                "public",
+                "listed"
+              ]
+            },
+            "domains": {
+              "type": "array",
+              "maxItems": 50,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(\\*\\.)?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$"
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "const": "listed"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "domains"
+                ],
+                "properties": {
+                  "domains": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          ]
         }
       },
       "allOf": [
@@ -926,6 +982,31 @@
         "null"
       ],
       "format": "date-time"
+    },
+    "starters": {
+      "type": "array",
+      "maxItems": 6,
+      "description": "Since 1.1.0 (Goose's activities): the buttons that start a run with one tap, each a label and the words it sends.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label",
+          "text"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      }
     }
   },
   "allOf": [

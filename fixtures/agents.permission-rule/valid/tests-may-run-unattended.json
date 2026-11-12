@@ -1,0 +1,7 @@
+{
+  "action": "machine:shell",
+  "resource": "npm test",
+  "effect": "allow",
+  "when": "unattended",
+  "reason": "Checks run with nobody watching."
+}

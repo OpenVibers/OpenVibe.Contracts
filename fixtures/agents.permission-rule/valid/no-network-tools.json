@@ -1,0 +1,4 @@
+{
+  "action": "mcp:*",
+  "effect": "deny"
+}

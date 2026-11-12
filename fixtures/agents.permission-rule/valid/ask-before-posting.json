@@ -1,0 +1,5 @@
+{
+  "action": "ov:live.chat.post",
+  "effect": "ask",
+  "when": "attended"
+}
