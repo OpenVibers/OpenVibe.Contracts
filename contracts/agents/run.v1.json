@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/agents/run.v1.json",
   "title": "AgentsRun",
-  "description": "agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. Since 1.1.0 (agent-engine.md) a run also says what a person calls it (TITLE), what sort it is (KIND), where it lives (REF on the Frame, URL on its product), which model runs it and where, what it is doing now (DOING), what it waits for (WAITING), its last line (PREVIEW), where it was asked (CONTEXT) and what it made (OUTPUTS); a chat with Vibe is a run of KIND chat that is waiting for a message. Every added field is optional. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1.",
+  "description": "agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. Since 1.1.0 (agent-engine.md) a run also says what a person calls it (TITLE), what sort it is (KIND), where it lives (REF on the Frame, URL on its product), which model runs it and where, what it is doing now (DOING), what it waits for (WAITING), its last line (PREVIEW), where it was asked (CONTEXT) and what it made (OUTPUTS); a chat with Vibe is a run of KIND chat that is waiting for a message. Every added field is optional. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1. Since 1.2.0 (agent-engine.md §§3-5, from the code study) a run may also say why it exists (MANDATE: an ask taken in from the feed, a room, an issue), what it continues (LINEAGE: a fork, a hand-off, a regenerated turn), the play its tree follows and a child's ROLE in it, what its agent's harness can do (AGENT.CAPABILITIES), and what it spent on each rung of the ladder (COST.BY). Every added field is optional.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -34,7 +34,7 @@
       "required": [
         "id"
       ],
-      "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it.",
+      "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it. Since 1.2.0, CAPABILITIES says what its harness can do.",
       "properties": {
         "id": {
           "type": "string",
@@ -72,6 +72,29 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9-]{0,59}$",
           "description": "The loop that runs it: openvibe (the SDK's own), or another harness run through an adapter (codex, claude-code, opencode, deepseek, …)."
+        },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 20,
+          "description": "What the agent's harness can do, so the Dispatcher chooses by capability and never by name: resume and fork a thread, ask approvals, read images, start sub-agents, use desks, browse, search the web, use MCP tools, plan before acting, read and write files, run a shell, speak and listen.",
+          "items": {
+            "enum": [
+              "resume",
+              "fork",
+              "approvals",
+              "images",
+              "subagents",
+              "desks",
+              "browser",
+              "web-search",
+              "mcp",
+              "plan-mode",
+              "files",
+              "shell",
+              "voice"
+            ]
+          }
         }
       }
     },
@@ -157,6 +180,103 @@
         "steps": {
           "type": "integer",
           "minimum": 0
+        },
+        "by": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "The spend by rung of the Dispatcher's ladder (agent-engine.md §3): MACHINE, a model on the person's own computer (free); PLAN, a signed-in plan through its harness (flat); KEY, the person's own provider key (no fee); ALLOWANCE, OpenVibe's free allowance; CREDITS, bought (Exchange's offers). The parts add up to the run's own totals.",
+          "properties": {
+            "machine": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "seconds": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "plan": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "seconds": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "key": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "seconds": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "allowance": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "seconds": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "credits": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "usd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "seconds": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -493,6 +613,139 @@
       ],
       "format": "date-time",
       "description": "When the run reached an end status. Null while it has not."
+    },
+    "mandate": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "asked_by",
+        "strength"
+      ],
+      "description": "Why the run exists when it came through intake (agent-engine.md §5): SOURCE is where the ask was made; THREAD is the conversation it was made in (a post, a room, an issue: its service, kind and id, and its address), where the run answers and from which later messages reach it; ASKED_BY is who asked; STRENGTH says whether they asked outright (explicit) or the Source's rule read an ask in what they wrote (inferred: such a run confirms before it acts); SCOPE says in words what the run may do for them. Null (or absent) for a run a person started themselves.",
+      "properties": {
+        "source": {
+          "enum": [
+            "feed",
+            "chat",
+            "comments",
+            "git",
+            "composer",
+            "notifications",
+            "mail",
+            "schedule",
+            "goal",
+            "webhook",
+            "machine"
+          ]
+        },
+        "thread": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "service",
+            "kind",
+            "id"
+          ],
+          "properties": {
+            "service": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,40}$"
+            },
+            "kind": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,40}$"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://",
+              "maxLength": 2048
+            }
+          }
+        },
+        "asked_by": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "user",
+                "agent",
+                "service"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          }
+        },
+        "strength": {
+          "enum": [
+            "explicit",
+            "inferred"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "lineage": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "how"
+      ],
+      "description": "Where the run came from when it continues another (agent-engine.md, from the code study): FROM is that run's ref; AT_TURN is the turn it was taken from (agents.step@1's TURN; the steps before it are the new run's history); HOW is fork (a person branched the conversation), handoff (another harness or model took it on, with a written summary as its first step) or regenerate (the same turn answered again). Null for a run that starts fresh.",
+      "properties": {
+        "from": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,40}:[A-Za-z0-9._~-]{1,160}$",
+          "description": "A run's ref: the product, a colon, the product's own run id (agents.run@1's REF)."
+        },
+        "at_turn": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "how": {
+          "enum": [
+            "fork",
+            "handoff",
+            "regenerate"
+          ]
+        }
+      }
+    },
+    "play": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,60}$",
+      "description": "The play (agents.play@1's ID) this run's tree follows: solo, advisor, plan-execute, fan-out, team, grader-loop, research-build, issue-to-pr, watch, or a person's own. On a child run it is its parent's."
+    },
+    "role": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,60}$",
+      "description": "A child run's role in its parent's play (one of the play's role ids: planner, executor, advisor, grader, reviewer, searcher, worker…)."
     }
   }
 }

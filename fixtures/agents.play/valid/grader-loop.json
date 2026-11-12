@@ -1,0 +1,42 @@
+{
+  "id": "grader-loop",
+  "name": "Grader loop",
+  "summary": "Do it again until a grader of another model family says it meets the bar.",
+  "roles": [
+    {
+      "id": "doer",
+      "does": "Do the task; take the grader's notes into the next round.",
+      "model": "same"
+    },
+    {
+      "id": "grader",
+      "does": "Check the work against the bar and say pass, or what is missing.",
+      "model": "other-family"
+    }
+  ],
+  "phases": [
+    {
+      "id": "do",
+      "roles": [
+        "doer"
+      ]
+    },
+    {
+      "id": "check",
+      "roles": [
+        "grader"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "by": "grader",
+      "of": "doer",
+      "bar": "Every claim has a source; nothing the person asked for is missing."
+    }
+  ],
+  "stop": {
+    "when": "passes",
+    "rounds": 4
+  }
+}

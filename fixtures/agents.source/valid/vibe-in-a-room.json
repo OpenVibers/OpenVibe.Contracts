@@ -1,0 +1,26 @@
+{
+  "id": "src_01K9R5GHJKMN",
+  "kind": "chat",
+  "owner": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "on": true,
+  "where": {
+    "service": "chat",
+    "kind": "room",
+    "id": "design-crit",
+    "url": "https://openvibe.chat/r/design-crit"
+  },
+  "who": {
+    "may": "list",
+    "list": [
+      "usr_01K9R6PQRSTVWXYZ0123456789"
+    ]
+  },
+  "rule": "A message that names @Vibe.",
+  "creates": {
+    "kind": "chat"
+  },
+  "answer": "reply"
+}

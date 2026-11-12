@@ -11760,7 +11760,7 @@
     },
     {
       "id": "agents.run",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "actor",
       "schema": "agents/run.v1.json",
       "visibility": "public",
@@ -11770,7 +11770,7 @@
     },
     {
       "id": "agents.step",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "actor",
       "schema": "agents/step.v1.json",
       "visibility": "public",
@@ -11800,7 +11800,7 @@
     },
     {
       "id": "agents.run-start",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "agents/run-start.v1.json",
       "visibility": "public",
@@ -11824,6 +11824,26 @@
       "owner": "actor",
       "schema": "events/payloads/agents.run.updated.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "agents.play",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "agents/play.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "agents.source",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "agents/source.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-044"

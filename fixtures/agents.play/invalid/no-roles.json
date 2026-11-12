@@ -1,0 +1,8 @@
+{
+  "id": "empty",
+  "name": "Empty",
+  "roles": [],
+  "stop": {
+    "when": "done"
+  }
+}

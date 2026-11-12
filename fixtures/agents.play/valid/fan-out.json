@@ -1,0 +1,50 @@
+{
+  "id": "fan-out",
+  "name": "Fan-out",
+  "summary": "Split the work across many small agents, then merge.",
+  "roles": [
+    {
+      "id": "splitter",
+      "does": "Split the work into parts that do not touch each other.",
+      "model": "strong"
+    },
+    {
+      "id": "worker",
+      "does": "Do one part.",
+      "model": "small",
+      "count": {
+        "min": 1,
+        "max": 16
+      }
+    },
+    {
+      "id": "merger",
+      "does": "Merge the parts and check they fit.",
+      "model": "strong"
+    }
+  ],
+  "phases": [
+    {
+      "id": "split",
+      "roles": [
+        "splitter"
+      ]
+    },
+    {
+      "id": "work",
+      "roles": [
+        "worker"
+      ],
+      "parallel": true
+    },
+    {
+      "id": "merge",
+      "roles": [
+        "merger"
+      ]
+    }
+  ],
+  "stop": {
+    "when": "done"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "text": "Write the patch notes for 4.225.0 and have them checked",
+  "kind": "task",
+  "play": "grader-loop"
+}

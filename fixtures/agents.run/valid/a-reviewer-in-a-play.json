@@ -1,0 +1,53 @@
+{
+  "id": "tsk_01K9R4C5D6E7F8G9H0J1K2M3NP",
+  "ref": "codes:tsk_01K9R4C5D6E7F8G9H0J1K2M3NP",
+  "kind": "code",
+  "title": "Review: a dark mode toggle",
+  "owner": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "agent": {
+    "id": "orchestrator",
+    "name": "Codes",
+    "product": "codes",
+    "glyph": "code",
+    "hue": 262,
+    "harness": "codex"
+  },
+  "target": "openvibe",
+  "status": "running",
+  "doing": {
+    "text": "Reading OpenVibe.Live's overlay code",
+    "glyph": "book-open"
+  },
+  "model": {
+    "id": "plans/codex|gpt-6-sol",
+    "source": "plans",
+    "name": "GPT-6 Sol",
+    "effort": "xhigh"
+  },
+  "where": {
+    "kind": "runner",
+    "id": "run_ws1",
+    "name": "Workstation"
+  },
+  "outputs": [],
+  "counts": {
+    "steps": 6
+  },
+  "budget": {
+    "usd": 5,
+    "steps": 400
+  },
+  "cost": {
+    "usd": 0.84,
+    "steps": 41
+  },
+  "created_at": "2026-11-12T10:00:00Z",
+  "updated_at": "2026-11-12T10:09:30Z",
+  "ended_at": null,
+  "parent_run": "tsk_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "play": "issue-to-pr",
+  "role": "reviewer"
+}

@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/source.v1.json",
+  "title": "AgentsSource",
+  "description": "agents.source@1 (agent-engine.md §5, 2026-11-12): one place where asks are taken in without opening an agent app, and how. KIND is the place (the feed, chat rooms and DMs, comments, git.openvibe.codes, a composer, notifications, mail, a schedule or a goal, a webhook, a machine's events); ON turns it on; WHO says whose words may start work there (only its owner, a list of people, their followers, or anyone); RULE says in words what counts as an ask; CREATES is the run an accepted ask becomes (its kind, target, agent and play); BUDGET is each such run's hard limit; ANSWER is how the run speaks back on the thread (a reply, a card that follows the run, a notice, or nothing). Intake stores the ask first and acts after, with backoff; an inferred ask confirms before it acts (agents.run@1's MANDATE.STRENGTH).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "owner",
+    "on",
+    "who",
+    "creates"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^src_[A-Za-z0-9]{8,40}$"
+    },
+    "kind": {
+      "enum": [
+        "feed",
+        "chat",
+        "comments",
+        "git",
+        "composer",
+        "notifications",
+        "mail",
+        "schedule",
+        "goal",
+        "webhook",
+        "machine"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "user",
+            "agent",
+            "service"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      }
+    },
+    "on": {
+      "type": "boolean"
+    },
+    "where": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "service"
+      ],
+      "description": "Which one of that kind: a room, a repository, a feed, a machine.",
+      "properties": {
+        "service": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,40}$"
+        },
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,40}$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "maxLength": 2048
+        }
+      }
+    },
+    "who": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may"
+      ],
+      "properties": {
+        "may": {
+          "enum": [
+            "owner",
+            "list",
+            "followers",
+            "anyone"
+          ]
+        },
+        "list": {
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^usr_[A-Za-z0-9]{6,40}$"
+          }
+        }
+      }
+    },
+    "rule": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "What counts as an ask here, in words (a post that asks for a feature or reports a bug; a message that names @Vibe)."
+    },
+    "creates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "chat",
+            "ask",
+            "task",
+            "code",
+            "machine",
+            "goal"
+          ]
+        },
+        "target": {
+          "description": "What a code run works on. new: a new project in the person's own space. openvibe: OpenVibe itself; the orchestrator finds the repositories and opens pull requests, never merges. An object names one repository.",
+          "anyOf": [
+            {
+              "enum": [
+                "new",
+                "openvibe"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "repo"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "description": "owner/name, or the repository's address."
+                },
+                "branch": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            }
+          ]
+        },
+        "agent": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "play": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,60}$",
+          "description": "The play (agents.play@1's ID) this run's tree follows: solo, advisor, plan-execute, fan-out, team, grader-loop, research-build, issue-to-pr, watch, or a person's own. On a child run it is its parent's."
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "answer": {
+      "enum": [
+        "reply",
+        "card",
+        "notice",
+        "none"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

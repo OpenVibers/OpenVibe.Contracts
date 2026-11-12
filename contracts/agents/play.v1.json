@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/play.v1.json",
+  "title": "AgentsPlay",
+  "description": "agents.play@1 (agent-engine.md §4, 2026-11-12): a named way for several agents to work on one ask, as data, so a person or an AI can write one and openvibe.run can list it. ROLES are the agents it uses (each with what it does, the size of model it wants, and how many may run at once); PHASES run in order, the roles in a phase together when PARALLEL; CHECKS say who checks whose work, against a written BAR; STOP says when the play is over; BUDGET.SPLIT gives each role its share of the parent's budget. The orchestrator turns a play into child runs (agents.run@1's PARENT_RUN, PLAY and ROLE). Rules every play keeps, whatever it says: a child's end never ends its parent; a person's message never waits behind new work; a child's budget is a slice of its parent's.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "roles",
+    "stop"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,60}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000,
+      "description": "When to use it, in a sentence or two."
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "does"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,60}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "does": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "What this role does, as its instructions begin."
+          },
+          "model": {
+            "enum": [
+              "small",
+              "strong",
+              "same",
+              "other-family"
+            ],
+            "description": "small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader)."
+          },
+          "agent": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "description": "A particular agent's id, when the role is always the same agent."
+          },
+          "count": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 64
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 64
+              }
+            }
+          },
+          "consults": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 50,
+            "description": "How many times another role may consult this one (an advisor's limit)."
+          }
+        }
+      }
+    },
+    "phases": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "roles"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,60}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,60}$"
+            }
+          },
+          "parallel": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "by",
+          "of"
+        ],
+        "properties": {
+          "by": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,60}$"
+          },
+          "of": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,60}$"
+          },
+          "bar": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "What passing means, in words the checker can apply."
+          }
+        }
+      }
+    },
+    "stop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "when"
+      ],
+      "properties": {
+        "when": {
+          "enum": [
+            "done",
+            "passes",
+            "rounds",
+            "person"
+          ],
+          "description": "done: when the last phase ends; passes: when the checks pass; rounds: after ROUNDS rounds; person: when the person says so."
+        },
+        "rounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "split": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9-]{0,60}$"
+          },
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "description": "Each role's share of the parent's budget (the shares add up to at most 1)."
+        }
+      }
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "public"
+      ]
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "user",
+            "agent",
+            "service"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      }
+    }
+  }
+}
