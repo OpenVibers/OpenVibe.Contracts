@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.418.1 — 2026-11-12
+
+**LOOI's manifest, exactly as the P7 list says it, and not frozen until Maticus has checked it.** The head has its own
+delivery window (1–300 ms; 500 ms is its lifetime on the Live tray, head-only profiles use 300), the top-level
+`battery` (0–100, polled) is a reading of its own, and `p7_battery`'s `unverified` is listed as a field that comes only
+with a read at connect or a stale value. `bot.robot-manifest@1` readings take `optional`: the fields that come only
+sometimes. 0.418.0 marked the example frozen before the maker's check; `frozen` is now false until he confirms it.
+
 ## 0.418.0 — 2026-11-12
 
 **A robot's own manifest:** `bot.robot-manifest@1` (public, ADR-043) is what a robot's driver says the robot can do,
