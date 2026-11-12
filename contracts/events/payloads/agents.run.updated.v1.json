@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/agents.run.updated.v1.json",
+  "title": "AgentsRunUpdatedPayload",
+  "description": "agents.run.updated v1 (agent-engine.md, 2026-11-12). A run changed in a way a list shows: it started, its status, title, doing, waiting or preview changed, or it ended. The payload is the run's agents.run@1 snapshot, whole. OpenVibe.Events carries it with the run's owner as the subject, the product that stores it as the source and visibility subject, so the person's run list anywhere stays current without polling. A step is agents.step.appended; this event is not sent for every step, only when the snapshot a list draws changed (at most about once a second per run).",
+  "$ref": "../../agents/run.v1.json"
+}
