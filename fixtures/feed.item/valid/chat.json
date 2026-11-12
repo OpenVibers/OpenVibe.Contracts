@@ -1,0 +1,16 @@
+{
+  "id": "f:example:chat:1",
+  "kind": "chat",
+  "url": "https://openvibe.chat/r/feed",
+  "title": "A busy hour in #feed",
+  "text": "28 messages",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "chat",
+  "site_name": "Chat",
+  "actor": null,
+  "subject": null,
+  "media": null,
+  "counts": {
+    "people": 9
+  }
+}

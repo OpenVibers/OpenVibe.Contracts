@@ -1,0 +1,17 @@
+{
+  "id": "f:example:quest:1",
+  "kind": "quest",
+  "url": "https://openvibe.quest/",
+  "title": "Finished a quest: first broadcast",
+  "text": "",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "quest",
+  "site_name": "Quest",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {}
+}

@@ -341444,3 +341444,155 @@ export interface FrameAskRequest {
     text?: string;
   };
 }
+
+/** feed.item@1.0.0 (owner: network) */
+/**
+ * feed.item@1: one card of OpenVibe's one feed, served by OpenVibe.Network (GET /api/v1/feed and GET /api/frame/feed; OpenVibe.Community's Pulse reads the same feed). Every card names the service it came from, a stable id, its own link, and only public or follower-visible activity. Kinds: post, pic, clip, video, live, stream, rundown, quest, member, chat, event, wiki, update, work, deal, news, report, poll, game, meme, paste, episode, space, avatar, banner, follow, site.
+ */
+export interface FeedItem {
+  /**
+   * Stable across feeds and restarts: f:<service>:<type>:<id> for a source item and t:<site>:<url> for a trending card.
+   */
+  id: string;
+  /**
+   * What happened. live is a channel on air now (a go-live that ended is stream); stream is a past broadcast, including a watched-together summary; work is one grouped row of new jobs per hour; report is a number with its trend.
+   */
+  kind:
+    | "post"
+    | "pic"
+    | "clip"
+    | "video"
+    | "live"
+    | "stream"
+    | "rundown"
+    | "quest"
+    | "member"
+    | "chat"
+    | "event"
+    | "wiki"
+    | "update"
+    | "work"
+    | "deal"
+    | "news"
+    | "report"
+    | "poll"
+    | "game"
+    | "meme"
+    | "paste"
+    | "episode"
+    | "space"
+    | "avatar"
+    | "banner"
+    | "follow"
+    | "site";
+  /**
+   * The thing itself: the post, stream, job board, report page or wiki page.
+   */
+  url: string;
+  title: string;
+  /**
+   * The source's first 280 characters, on one line; empty when it has none.
+   */
+  text: string;
+  /**
+   * When it happened; null only for a trending card.
+   */
+  at: string | null;
+  /**
+   * When a scheduled event begins; present only on event cards.
+   */
+  starts_at?: string;
+  /**
+   * The source service: live, community, media-hub, pics, games, quest, chat, today, work, deals, news, report, wiki, blog, tools, network…
+   */
+  site: string;
+  site_name: string;
+  /**
+   * Who did it; null for AI, system, aggregate and trending cards.
+   */
+  actor: {
+    name: string | null;
+    avatar: string | null;
+  } | null;
+  /**
+   * The acting person's subject, when one is known; null for AI, system and aggregate cards. The Following filter and For you ranking read it.
+   */
+  subject: string | null;
+  /**
+   * The card's first picture, as a Media thumbnail; null when it has none.
+   */
+  media: {
+    thumb: string;
+    preview?: string;
+    ratio: number;
+    /**
+     * Seconds, when the card is a video.
+     */
+    length?: number;
+  } | null;
+  /**
+   * The numbers the source knows; each present only when it knows it.
+   */
+  counts: {
+    views?: number;
+    likes?: number;
+    comments?: number;
+    /**
+     * People who watched a stream (peak for a past broadcast).
+     */
+    watchers?: number;
+    /**
+     * A count a report card is about (people online, jobs, stories).
+     */
+    people?: number;
+  };
+  /**
+   * Present on live and stream cards: true only while the channel is on air.
+   */
+  live_now?: boolean;
+  /**
+   * Present on report cards: which way the number moved and by how much.
+   */
+  trend?: {
+    direction: "up" | "down" | "flat";
+    pct?: number;
+    previous?: number;
+  };
+  /**
+   * A run of the same kind folded into one card (two or more items).
+   */
+  group?: {
+    count: number;
+    /**
+     * @minItems 2
+     */
+    items: [
+      {
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      },
+      {
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      },
+      ...{
+        id: string;
+        url: string;
+        title: string;
+        media: {} | null;
+      }[]
+    ];
+  };
+  /**
+   * Present only when the card needs one.
+   */
+  label?: "Trending" | "AI" | "System" | "Live";
+  /**
+   * Present only for an item returned to a follower or its author; never public.
+   */
+  visibility?: "followers";
+}

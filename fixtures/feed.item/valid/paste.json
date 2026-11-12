@@ -1,0 +1,20 @@
+{
+  "id": "f:example:paste:1",
+  "kind": "paste",
+  "url": "https://openvibe.community/p/example",
+  "title": "A paste",
+  "text": "print(\"hello\")",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "community",
+  "site_name": "Community",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {
+    "views": 10,
+    "likes": 1
+  }
+}

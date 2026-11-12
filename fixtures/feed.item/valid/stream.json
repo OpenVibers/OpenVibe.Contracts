@@ -1,0 +1,21 @@
+{
+  "id": "f:example:stream:1",
+  "kind": "stream",
+  "url": "https://openvibe.live/@alex",
+  "title": "312 people watched Alex tonight",
+  "text": "A watched-together stream.",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "live",
+  "site_name": "Live",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {
+    "watchers": 312,
+    "views": 410
+  },
+  "live_now": false
+}

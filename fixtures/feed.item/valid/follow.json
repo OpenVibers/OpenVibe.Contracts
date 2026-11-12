@@ -1,0 +1,17 @@
+{
+  "id": "f:example:follow:1",
+  "kind": "follow",
+  "url": "https://openvibe.live/@alex",
+  "title": "Alex followed Maticus",
+  "text": "",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "network",
+  "site_name": "Network",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {}
+}

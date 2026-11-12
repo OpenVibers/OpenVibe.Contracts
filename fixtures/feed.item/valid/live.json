@@ -1,0 +1,21 @@
+{
+  "id": "f:example:live:1",
+  "kind": "live",
+  "url": "https://openvibe.live/@alex",
+  "title": "Alex went live: building a feed",
+  "text": "",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "live",
+  "site_name": "Live",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {
+    "watchers": 12
+  },
+  "live_now": true,
+  "label": "Live"
+}

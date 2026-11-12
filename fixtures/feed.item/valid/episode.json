@@ -1,0 +1,14 @@
+{
+  "id": "f:example:episode:1",
+  "kind": "episode",
+  "url": "https://openvibe.live/rundown/e/3005",
+  "title": "Rundown: an episode",
+  "text": "A logline",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "live",
+  "site_name": "Live",
+  "actor": null,
+  "subject": null,
+  "media": null,
+  "counts": {}
+}

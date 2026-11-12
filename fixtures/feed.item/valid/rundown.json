@@ -1,0 +1,18 @@
+{
+  "id": "f:example:rundown:1",
+  "kind": "rundown",
+  "url": "https://openvibe.live/rundown/e/3005",
+  "title": "Rundown: the case for a feed",
+  "text": "What the episode was about.",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "live",
+  "site_name": "Live",
+  "actor": null,
+  "subject": null,
+  "media": {
+    "thumb": "https://openvibe.media/t/episode.jpg",
+    "ratio": 1.777
+  },
+  "counts": {},
+  "label": "System"
+}

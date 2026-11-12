@@ -1,0 +1,21 @@
+{
+  "id": "f:example:video:1",
+  "kind": "video",
+  "url": "https://openvibe.example/reference",
+  "title": "An example video",
+  "text": "",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "example",
+  "site_name": "Example",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {},
+  "group": {
+    "count": 1,
+    "items": []
+  }
+}
