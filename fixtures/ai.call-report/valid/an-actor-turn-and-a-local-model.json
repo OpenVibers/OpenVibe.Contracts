@@ -1,0 +1,49 @@
+{
+  "calls": [
+    {
+      "system": "actor",
+      "turn_id": "tsk_01JD8C4QJ7Z3K9W2X5V6N1M0PA:3",
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "surface": "actor.task",
+      "paid_by": "openvibe_key",
+      "input": 12000,
+      "output": 800,
+      "reasoning": 0,
+      "cache_read": 9000,
+      "cache_write": 0,
+      "cache_write_ttl": null,
+      "images": 0,
+      "audio_seconds": 0,
+      "video_seconds": 0,
+      "latency_ms": 4100,
+      "ttft_ms": 610,
+      "attempts": 1,
+      "outcome": "succeeded",
+      "at": "2026-11-12T23:30:00Z",
+      "operation": "chat",
+      "streamed": true,
+      "tps": 88.4,
+      "task": "actor.task",
+      "task_id": "tsk_01JD8C4QJ7Z3K9W2X5V6N1M0PA",
+      "harness": "openvibe",
+      "place": "provider",
+      "tool_calls": 2
+    },
+    {
+      "system": "node",
+      "run_id": "cmd_01JD8C4QJ7Z3K9W2X5V6N1M0PB",
+      "provider": "ollama",
+      "model": "qwen2.5:3b",
+      "outcome": "succeeded",
+      "at": "2026-11-12T23:30:00Z",
+      "operation": "chat",
+      "streamed": true,
+      "ttft_ms": 900,
+      "tps": 12.5,
+      "place": "machine",
+      "input": 300,
+      "output": 120
+    }
+  ]
+}

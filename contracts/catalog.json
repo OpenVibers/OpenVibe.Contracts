@@ -1643,13 +1643,31 @@
     },
     {
       "id": "ai.call.recorded",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "schema": "events/payloads/ai.call.recorded.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-033"
+    },
+    {
+      "id": "ai.call-report",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/call-report.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "report.ai-performance",
+      "version": "1.0.0",
+      "owner": "report",
+      "schema": "report/ai-performance.v1.json",
+      "visibility": "internal",
+      "compatibility": "backward",
+      "status": "active"
     },
     {
       "id": "ai.run.queued",

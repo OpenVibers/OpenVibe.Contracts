@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/call-report.v1.json",
+  "title": "AiCallReport",
+  "description": "ai.call-report@1 (ai-metrics.md): up to 100 AI calls a product made without OpenVibe.AI (Actor’s own model calls, a Codes harness turn, a local model on a person’s machine through Bot, Vibe), sent to AI’s POST /api/v1/usage/calls with the capability ai.usage.report. Each call is ai.call.recorded@1’s shape; the price is optional (AI prices from its rate cards: the charged amount first, then the list price) and SYSTEM + RUN_ID or TURN_ID is the idempotency key (a call sent twice is recorded once). AI publishes each as ai.call.recorded@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "calls"
+  ],
+  "properties": {
+    "calls": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": [
+          "system",
+          "provider",
+          "model",
+          "outcome",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "description": "The person the call was made for, or null when the call was anonymous."
+          },
+          "attribution": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "The site or app the call came from, as '<type>:<id>' (for example 'site:design'), empty when nothing is known."
+          },
+          "surface": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "The product surface: 'design.generate', 'codes.turn', 'ai.generate'. Free text, so a new surface needs no new contract."
+          },
+          "system": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "What ran: 'ai', 'harness:claude-code', 'harness:codex', 'actor', 'node'."
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "effort": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "description": "The reasoning effort the call asked for, when it asked for one."
+          },
+          "paid_by": {
+            "type": "string",
+            "enum": [
+              "own_key",
+              "openvibe_key",
+              "plan",
+              "own_machine",
+              "free_tier",
+              "network_allowance",
+              "org_key"
+            ]
+          },
+          "paid_by_detail": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200,
+            "description": "Which key or plan paid, for example 'anthropic ...a1b2' or 'claude-max'. Never a whole secret."
+          },
+          "input": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The uncached input tokens. Cache reads and cache writes are counted on their own fields."
+          },
+          "output": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reasoning": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cache_read": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cache_write": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cache_write_ttl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "5m",
+              "1h",
+              null
+            ],
+            "description": "How long the written cache entry lives, when the provider says."
+          },
+          "images": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "audio_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "video_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "list_cost_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What the tokens cost at the human-typed list prices. Optional here: AI prices a call that brings no price from its own rate cards."
+          },
+          "charged_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What the payer was actually charged. A person's own key is never charged here: 0. Optional here: AI prices a call that brings no price from its own rate cards."
+          },
+          "fee_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The network's fee on top of the cost, when the OpenVibe key paid. Optional here: AI prices a call that brings no price from its own rate cards."
+          },
+          "cache_saved_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "What the cached tokens saved against the plain input price. Optional here: AI prices a call that brings no price from its own rate cards."
+          },
+          "price_source": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Where the prices came from: 'models' (a person's typed model row), 'pricing' (AI_PRICING_JSON), 'flat' (the flat rates), 'no cache price' (no cache price is typed, so the cache tokens are priced at the input price). Optional here: AI prices a call that brings no price from its own rate cards."
+          },
+          "price_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "description": "The day the price was checked, when it was. Optional here: AI prices a call that brings no price from its own rate cards."
+          },
+          "latency_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "ttft_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Time to the first token, when the call streamed and it was measured."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "succeeded",
+              "failed",
+              "cancelled",
+              "cached"
+            ]
+          },
+          "run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "turn_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "operation": {
+            "enum": [
+              "chat",
+              "completion",
+              "embedding",
+              "image",
+              "image_edit",
+              "speech",
+              "transcription",
+              "translation",
+              "rerank",
+              "moderation",
+              "decision",
+              "realtime",
+              "batch",
+              "tool",
+              "other",
+              null
+            ],
+            "description": "Since 1.1.0: what kind of call it was."
+          },
+          "streamed": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Since 1.1.0: whether the answer came as a stream (TTFT is only measured on one)."
+          },
+          "tps": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Since 1.1.0: output tokens per second after the first token (decode speed); null when not streamed or too short to measure."
+          },
+          "queue_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Since 1.1.0: time waiting before the call was sent (a queue, a rate gate)."
+          },
+          "task": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "description": "Since 1.1.0: the task kind the call served (a task name, a workflow key, chat.reply, code.turn)."
+          },
+          "task_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120,
+            "description": "Since 1.1.0: the task or run this call is one step of, so cost and time add up per task."
+          },
+          "task_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Since 1.1.0: on the last call of a task, the whole task’s wall time."
+          },
+          "harness": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60,
+            "description": "Since 1.1.0: the harness that made the call (openvibe, dsh, codex, claude-code, gemini-cli, opencode …)."
+          },
+          "place": {
+            "enum": [
+              "provider",
+              "machine",
+              "community",
+              "plan",
+              "host",
+              null
+            ],
+            "description": "Since 1.1.0: where the model ran: a provider’s API, the person’s own machine, a community machine, a signed-in plan, OpenVibe’s own hosts."
+          },
+          "error_class": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60,
+            "description": "Since 1.1.0: on a failure, its class (rate_limited, timeout, context_length, refused, auth, server, network, invalid)."
+          },
+          "fallbacks": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 50,
+            "description": "Since 1.1.0: how many offers failed before the one that answered."
+          },
+          "cache_hit": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Since 1.1.0: true when the whole answer came from OpenVibe’s exact answer cache (no model ran)."
+          },
+          "tool_calls": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Since 1.1.0: tool calls the model asked for in this call."
+          },
+          "region": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40,
+            "description": "Since 1.1.0: the provider region or data centre, when known."
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "run_id"
+            ]
+          },
+          {
+            "required": [
+              "turn_id"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
