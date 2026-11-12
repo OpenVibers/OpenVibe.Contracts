@@ -13,6 +13,9 @@ OpenVibe release (the plan in Maticus's LOOI thread, 11-10; his P7 command list 
 - **Telemetry:** a key, its fields (ranges, `boolean`, `string`, `ms`, `integer`, `number`, or a list of values),
   unit and range, `source` (`poll`, `push`, `connect`), `fresh_ms`, and its control (meter, readout, badge, list).
 - **`frozen`:** true once the maker and OpenVibe have checked a version against the driver's real command list.
+- **`ui.surface@1` parts say what they send or show:** optional `command` and `reads`, in the manifest's terms, so
+  OpenVibe AI knows a part's ranges, lifetime, release and rate when it arranges a panel or writes a control. They
+  grant nothing: the product's gate still checks every command. A new example is LOOI's panel built from its manifest.
 - Fixtures: LOOI 1.0.0 through the P7 tray (drive 500 ms life, delivery 1–300, release stop; head 500 ms, hold;
   headlights delivery 1–250, 50 ms left, 2 a second, latched; battery by poll with `at` in ms; who is driving), and
   three refusals (motion without a release, an actuator without its name, motion that is never released).

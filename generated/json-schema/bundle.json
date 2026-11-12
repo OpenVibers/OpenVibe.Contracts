@@ -131748,6 +131748,14 @@
                   "pattern": "^[a-z][a-z0-9_.-]{0,39}$"
                 },
                 "description": "The parts this part must never cover, in addition to the surface-wide rule that nothing covers a required part."
+              },
+              "command": {
+                "$ref": "../bot/robot-manifest.v1.json#/$defs/command",
+                "description": "What pressing or moving this part sends, in the robot manifest's terms (bot.robot-manifest@1, 0.418.0): kind and class, the value's ranges, lifetime, delivery window, release and rate. OpenVibe AI reads it when it suggests a layout or writes a control; it grants nothing: the product's gate checks every command."
+              },
+              "reads": {
+                "$ref": "../bot/robot-manifest.v1.json#/$defs/reading",
+                "description": "What this part shows, in the robot manifest's terms: the telemetry key, its fields, unit, range and source."
               }
             }
           }

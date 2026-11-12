@@ -339015,6 +339015,133 @@ export interface UiSurface {
        * @maxItems 32
        */
       never_covers?: string[];
+      /**
+       * What pressing or moving this part sends, in the robot manifest's terms (bot.robot-manifest@1, 0.418.0): kind and class, the value's ranges, lifetime, delivery window, release and rate. OpenVibe AI reads it when it suggests a layout or writes a control; it grants nothing: the product's gate checks every command.
+       */
+      command?: {
+        [k: string]: unknown | undefined;
+      } & {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * What this part shows, in the robot manifest's terms: the telemetry key, its fields, unit, range and source.
+       */
+      reads?: {
+        /**
+         * Where the reading arrives: a top-level telemetry key (battery) or a sensors key (p7_commander).
+         */
+        key: string;
+        label?: string;
+        unit?: string;
+        /**
+         * [least, most], inclusive.
+         *
+         * @minItems 2
+         * @maxItems 2
+         */
+        range?: [number, number];
+        fields?: {
+          /**
+           * One field of a value or a reading: a numeric range, "boolean", "string", "ms" (a time in milliseconds since the epoch), or the list of the values it may take.
+           */
+          [k: string]:
+            | (
+                | [number, number]
+                | ("boolean" | "string" | "ms" | "integer" | "number")
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string, string, string, string]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+              )
+            | undefined;
+        };
+        /**
+         * poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after).
+         */
+        source?: "poll" | "push" | "connect";
+        /**
+         * A reading older than this is shown as stale.
+         */
+        fresh_ms?: number;
+        /**
+         * The control that shows it.
+         */
+        control: "meter" | "readout" | "badge" | "list";
+      };
     },
     ...{
       /**
@@ -339493,6 +339620,133 @@ export interface UiSurface {
        * @maxItems 32
        */
       never_covers?: string[];
+      /**
+       * What pressing or moving this part sends, in the robot manifest's terms (bot.robot-manifest@1, 0.418.0): kind and class, the value's ranges, lifetime, delivery window, release and rate. OpenVibe AI reads it when it suggests a layout or writes a control; it grants nothing: the product's gate checks every command.
+       */
+      command?: {
+        [k: string]: unknown | undefined;
+      } & {
+        [k: string]: unknown | undefined;
+      };
+      /**
+       * What this part shows, in the robot manifest's terms: the telemetry key, its fields, unit, range and source.
+       */
+      reads?: {
+        /**
+         * Where the reading arrives: a top-level telemetry key (battery) or a sensors key (p7_commander).
+         */
+        key: string;
+        label?: string;
+        unit?: string;
+        /**
+         * [least, most], inclusive.
+         *
+         * @minItems 2
+         * @maxItems 2
+         */
+        range?: [number, number];
+        fields?: {
+          /**
+           * One field of a value or a reading: a numeric range, "boolean", "string", "ms" (a time in milliseconds since the epoch), or the list of the values it may take.
+           */
+          [k: string]:
+            | (
+                | [number, number]
+                | ("boolean" | "string" | "ms" | "integer" | "number")
+                | [string]
+                | [string, string]
+                | [string, string, string]
+                | [string, string, string, string]
+                | [string, string, string, string, string]
+                | [string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string, string, string]
+                | [string, string, string, string, string, string, string, string, string, string, string, string]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+                | [
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string,
+                    string
+                  ]
+              )
+            | undefined;
+        };
+        /**
+         * poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after).
+         */
+        source?: "poll" | "push" | "connect";
+        /**
+         * A reading older than this is shown as stale.
+         */
+        fresh_ms?: number;
+        /**
+         * The control that shows it.
+         */
+        control: "meter" | "readout" | "badge" | "list";
+      };
     }[]
   ];
 }
