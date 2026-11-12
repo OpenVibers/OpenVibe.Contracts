@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/step.v1.json",
+  "title": "AgentsStep",
+  "description": "agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "seq",
+    "kind",
+    "started_at"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "The run this step belongs to (agents.run@1's id)."
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The run's own order for this entry, starting at 1 and never renumbered. ?after=SEQ reads the entries after it."
+    },
+    "kind": {
+      "enum": [
+        "think",
+        "tool",
+        "message",
+        "approval",
+        "child",
+        "file"
+      ],
+      "description": "think: a plan, a check or reasoning. tool: a tool call or its result. message: words for the person. approval: the run asked its person. child: a sub-agent run or a hand-off. file: a file the run made."
+    },
+    "text": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 65536,
+      "description": "What a person reads for this step: the plan line, the message, the short tool answer or the file's name. Never a prompt or a secret."
+    },
+    "tool_call": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "The tool this entry called. On a product that logs a call and its result as two steps, the call names the tool and the result entry has no TOOL_CALL.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "input": {
+          "description": "The call's input, as the product recorded it: an object, a short summary string, or null. Credential-shaped fields are already redacted."
+        }
+      }
+    },
+    "result": {
+      "type": [
+        "string",
+        "object",
+        "array",
+        "number",
+        "boolean",
+        "null"
+      ],
+      "description": "What the step answered: a tool's output, a check's verdict, a file's reference. Any JSON; never a credential."
+    },
+    "cost": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "What this step spent, when the product meters per step. Null when it meters per run only.",
+      "properties": {
+        "usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the step ended, when the product records an end. A product that logs a point event sets it to the event's time; null when the step is still open."
+    },
+    "child_run": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160,
+      "description": "The child run this step started, on KIND child. Null elsewhere."
+    }
+  }
+}

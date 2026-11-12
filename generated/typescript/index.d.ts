@@ -341444,3 +341444,369 @@ export interface FrameAskRequest {
     text?: string;
   };
 }
+
+/** agents.run@1.0.0 (owner: actor) */
+/**
+ * agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1.
+ */
+export interface AgentsRun {
+  /**
+   * The product's own run id (Actor's tsk_…, Codes' tsk_…, a Run job's job_…). Unique within its product and never reused.
+   */
+  id: string;
+  /**
+   * The person or agent the run belongs to: the subject the work is done for.
+   */
+  owner: SubjectRef;
+  /**
+   * The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …).
+   */
+  agent: {
+    id: string;
+    name?: string;
+    product?: string;
+  };
+  /**
+   * The run that started this one (a sub-agent), or null. The parent's run card nests children; the child's budget is a slice of the parent's.
+   */
+  parent_run?: string | null;
+  /**
+   * The hard limit the run may not exceed. A field that is absent is not limited. USD is money; TOKENS counts model tokens in and out; SECONDS is wall time; STEPS counts the appended steps.
+   */
+  budget?: {
+    usd?: number;
+    tokens?: number;
+    seconds?: number;
+    steps?: number;
+  };
+  /**
+   * planning: accepted, no step yet. running: a step is under way. waiting: the run waits for its person (an approval or a takeover) and costs nothing. done, failed and stopped are the end statuses; an end status never changes.
+   */
+  status: "planning" | "running" | "waiting" | "done" | "failed" | "stopped";
+  created_at: string;
+  /**
+   * When the run last changed: its newest step, its end, or its creation when nothing has happened yet.
+   */
+  updated_at: string;
+  /**
+   * What the run answered or what is left, in plain words, for a run card. The full result stays the product's (Actor's result, Codes' result.summary). Null until there is one.
+   */
+  result_summary?: string | null;
+  /**
+   * What the run has spent so far, to the product's own precision. Null before anything is known.
+   */
+  cost?: {
+    usd?: number;
+    tokens?: number;
+    seconds?: number;
+    steps?: number;
+  } | null;
+}
+
+/** agents.step@1.0.0 (owner: actor) */
+/**
+ * agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored.
+ */
+export interface AgentsStep {
+  /**
+   * The run this step belongs to (agents.run@1's id).
+   */
+  run_id: string;
+  /**
+   * The run's own order for this entry, starting at 1 and never renumbered. ?after=SEQ reads the entries after it.
+   */
+  seq: number;
+  /**
+   * think: a plan, a check or reasoning. tool: a tool call or its result. message: words for the person. approval: the run asked its person. child: a sub-agent run or a hand-off. file: a file the run made.
+   */
+  kind: "think" | "tool" | "message" | "approval" | "child" | "file";
+  /**
+   * What a person reads for this step: the plan line, the message, the short tool answer or the file's name. Never a prompt or a secret.
+   */
+  text?: string | null;
+  /**
+   * The tool this entry called. On a product that logs a call and its result as two steps, the call names the tool and the result entry has no TOOL_CALL.
+   */
+  tool_call?: {
+    name: string;
+    /**
+     * The call's input, as the product recorded it: an object, a short summary string, or null. Credential-shaped fields are already redacted.
+     */
+    input?: {
+      [k: string]: unknown | undefined;
+    };
+  } | null;
+  /**
+   * What the step answered: a tool's output, a check's verdict, a file's reference. Any JSON; never a credential.
+   */
+  result?: string | {} | unknown[] | number | boolean | null;
+  /**
+   * What this step spent, when the product meters per step. Null when it meters per run only.
+   */
+  cost?: {
+    usd?: number;
+    tokens?: number;
+    seconds?: number;
+  } | null;
+  started_at: string;
+  /**
+   * When the step ended, when the product records an end. A product that logs a point event sets it to the event's time; null when the step is still open.
+   */
+  ended_at?: string | null;
+  /**
+   * The child run this step started, on KIND child. Null elsewhere.
+   */
+  child_run?: string | null;
+}
+
+/** agents.approval@1.0.0 (owner: actor) */
+/**
+ * agents.approval@1 (one agent system, 2026-11-12): a run stopped at a step to ask its person before it acts. WHAT is the act in plain words; OPTIONS are the answers the product offers, each with an id and the words a person reads; DECIDED_BY and DECIDED_AT are absent (or null) while it waits; ANSWER is the chosen option's id (or the person's own words, when the product allows them). Nothing the approval covers runs before the answer, and an answer decided once is never decided again. The approval is attached to the run's step (STEP_SEQ), so a step log and an approval list line up. OpenVibe.Actor's approval inbox and OpenVibe.Codes' tool approvals are the same shape; the product keeps the grant.
+ */
+export interface AgentsApproval {
+  /**
+   * The product's own approval id (apr_…), when it has one; STEP_SEQ is still the link to the run.
+   */
+  id?: string;
+  run_id: string;
+  /**
+   * The seq of the run's step that asked (agents.step@1's seq).
+   */
+  step_seq: number;
+  /**
+   * The act in plain words, with its exact target: "post this to your feed", "run rm -rf build on your machine". Never a raw tool payload.
+   */
+  what: string;
+  /**
+   * The answers the product offers, in the order to show them. The floor categories (money, a password, a deletion, a new recipient) are asked every time and have no standing permission.
+   *
+   * @minItems 1
+   * @maxItems 8
+   */
+  options:
+    | [
+        {
+          id: string;
+          label: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        }
+      ]
+    | [
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        },
+        {
+          id: string;
+          label: string;
+        }
+      ];
+  /**
+   * Who answered: a person subject, a service or an agent.
+   */
+  decided_by?: SubjectRef | null;
+  decided_at?: string | null;
+  /**
+   * The chosen option's id, or the person's own words when the product allows them. Null while it waits.
+   */
+  answer?: string | null;
+}
+
+/** agents.step.appended@1.0.0 (owner: actor) */
+/**
+ * agents.step.appended v1 (one agent system, 2026-11-12). A step was appended to a run: the payload is the appended agents.step@1, whole. OpenVibe.Events carries it with the run's owner as the subject, the product that ran it as the source (actor, codes, run, …) and visibility subject; a reader follows a run live without polling the step log. The namespace is agents (hyphen-free: Events namespaces cannot contain a hyphen). One producer per run: the product that stores the run publishes its steps, and the step's own product names the agent.
+ */
+export interface AgentsStepAppendedPayload {
+  /**
+   * The run this step belongs to (agents.run@1's id).
+   */
+  run_id: string;
+  /**
+   * The run's own order for this entry, starting at 1 and never renumbered. ?after=SEQ reads the entries after it.
+   */
+  seq: number;
+  /**
+   * think: a plan, a check or reasoning. tool: a tool call or its result. message: words for the person. approval: the run asked its person. child: a sub-agent run or a hand-off. file: a file the run made.
+   */
+  kind: "think" | "tool" | "message" | "approval" | "child" | "file";
+  /**
+   * What a person reads for this step: the plan line, the message, the short tool answer or the file's name. Never a prompt or a secret.
+   */
+  text?: string | null;
+  /**
+   * The tool this entry called. On a product that logs a call and its result as two steps, the call names the tool and the result entry has no TOOL_CALL.
+   */
+  tool_call?: {
+    name: string;
+    /**
+     * The call's input, as the product recorded it: an object, a short summary string, or null. Credential-shaped fields are already redacted.
+     */
+    input?: {
+      [k: string]: unknown | undefined;
+    };
+  } | null;
+  /**
+   * What the step answered: a tool's output, a check's verdict, a file's reference. Any JSON; never a credential.
+   */
+  result?: string | {} | unknown[] | number | boolean | null;
+  /**
+   * What this step spent, when the product meters per step. Null when it meters per run only.
+   */
+  cost?: {
+    usd?: number;
+    tokens?: number;
+    seconds?: number;
+  } | null;
+  started_at: string;
+  /**
+   * When the step ended, when the product records an end. A product that logs a point event sets it to the event's time; null when the step is still open.
+   */
+  ended_at?: string | null;
+  /**
+   * The child run this step started, on KIND child. Null elsewhere.
+   */
+  child_run?: string | null;
+}

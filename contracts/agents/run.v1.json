@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/run.v1.json",
+  "title": "AgentsRun",
+  "description": "agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "agent",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "The product's own run id (Actor's tsk_…, Codes' tsk_…, a Run job's job_…). Unique within its product and never reused."
+    },
+    "owner": {
+      "description": "The person or agent the run belongs to: the subject the work is done for.",
+      "allOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ]
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "product": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      }
+    },
+    "parent_run": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160,
+      "description": "The run that started this one (a sub-agent), or null. The parent's run card nests children; the child's budget is a slice of the parent's."
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The hard limit the run may not exceed. A field that is absent is not limited. USD is money; TOKENS counts model tokens in and out; SECONDS is wall time; STEPS counts the appended steps.",
+      "properties": {
+        "usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "planning",
+        "running",
+        "waiting",
+        "done",
+        "failed",
+        "stopped"
+      ],
+      "description": "planning: accepted, no step yet. running: a step is under way. waiting: the run waits for its person (an approval or a takeover) and costs nothing. done, failed and stopped are the end statuses; an end status never changes."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the run last changed: its newest step, its end, or its creation when nothing has happened yet."
+    },
+    "result_summary": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 8000,
+      "description": "What the run answered or what is left, in plain words, for a run card. The full result stays the product's (Actor's result, Codes' result.summary). Null until there is one."
+    },
+    "cost": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "What the run has spent so far, to the product's own precision. Null before anything is known.",
+      "properties": {
+        "usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
