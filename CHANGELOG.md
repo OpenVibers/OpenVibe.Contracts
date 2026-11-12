@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.411.0 — 2026-11-12
+
+The composer's Frame (Post · Ask · Do; Network #858): what its Model sheet lists and what an Ask sends.
+
+- Add `frame.choices@1`: `GET /api/frame/choices?task=` on OpenVibe.Network, the models a composer offers for a task in
+  groups (OpenVibe's, the person's keys, computers and plans), each row with its maker, price per million tokens in and
+  out, speed, Report score and its Exchange page, plus the recommended and current choice.
+- Add `frame.ask@1`: the body of `POST /api/frame/ask`, the question, the model (a row id or `{ model, source, machine }`),
+  the sources to search (`web`, `openvibe`, `mine`, `page`), the depth and the files and page context it carries.
+- Fixtures for both (valid and invalid) and the generated JSON Schema and TypeScript.
+
 ## 0.410.0 — 2026-11-11
 
 A train of three pull requests: the layouts of make-your-own-controls (#455), Elements stage 1 (#456) and the deep dive

@@ -1,0 +1,9 @@
+{
+  "text": "What changed in the search fabric this week?",
+  "model": { "model": "openai/gpt-5-mini", "source": "openvibe" },
+  "sources": ["web", "openvibe", "page"],
+  "depth": "balanced",
+  "refs": [{ "kind": "post", "id": "p_1", "title": "A post", "url": "https://openvibe.community/p/1" }],
+  "files": ["med_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3"],
+  "context": { "site": "openvibe.community", "url": "https://openvibe.community/p/1", "title": "A post", "kind": "post", "id": "p_1", "text": "The page." }
+}

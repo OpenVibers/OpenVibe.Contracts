@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/frame/ask.v1.json",
+  "title": "FrameAskRequest",
+  "description": "frame.ask@1: the body of POST /api/frame/ask. One question on the chosen model, with the Search Fabric's results for the chosen sources in its prompt; the answer is a Network run whose AG-UI events are at GET /api/v1/runs/:id/events, and its ANSWER event carries { answer, citations: [{ n, title, url, site }] }. A person only: the person's own token pays OpenVibe.AI. model names a row from frame.choices@1, or its id (the OpenVibe source); omitted, the task's recommended choice answers. sources are what the answer may read: web (OpenVibe's index, then the paid ladder), openvibe (the network scope), mine (the person's own things) and page (the site's context). depth deep asks Search's deep ladder and gives the answer longer output. refs are typed references and files are Media ids; both go to the model on this turn.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "text"
+  ],
+  "properties": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000,
+      "description": "The question."
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9._:/@+-]+$"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "model"
+          ],
+          "properties": {
+            "model": {
+              "type": "string",
+              "maxLength": 200,
+              "pattern": "^[A-Za-z0-9._:/@+-]+$"
+            },
+            "source": {
+              "enum": [
+                "openvibe",
+                "keys",
+                "machines"
+              ]
+            },
+            "machine": {
+              "type": "string",
+              "maxLength": 40,
+              "pattern": "^(any|dev_[0-9A-HJKMNP-TV-Z]{26})$"
+            }
+          }
+        }
+      ]
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "id"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "id": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 2048,
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+              },
+              "media_id": {
+                "type": "string",
+                "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+              }
+            },
+            "anyOf": [
+              {
+                "required": [
+                  "id"
+                ]
+              },
+              {
+                "required": [
+                  "media_id"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "sources": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "web",
+          "openvibe",
+          "mine",
+          "page"
+        ]
+      },
+      "default": [
+        "web"
+      ]
+    },
+    "depth": {
+      "enum": [
+        "quick",
+        "balanced",
+        "deep"
+      ],
+      "default": "balanced"
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "site": {
+          "type": "string",
+          "maxLength": 253
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2048,
+          "format": "uri"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "kind": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 8000,
+          "description": "The page's text, when the site passes it."
+        }
+      }
+    }
+  }
+}

@@ -341344,3 +341344,99 @@ export interface AiDeepDiveUpdatedPayload {
   } | null;
   occurred_at: string;
 }
+
+/** frame.choices@1.0.0 (owner: network) */
+/**
+ * frame.choices@1: what a composer's Model sheet shows. GET /api/frame/choices?task=chat|agent|code|image|research answers this. recommended and choice are the resolved model and where it comes from; groups are OpenVibe's models (enriched from OpenVibe.Exchange with the maker, the price per million tokens in and out, the measured speed, the rating and the model's Exchange page), the person's own keys, their computers, and their plans. An 18+ row appears only when the person opted in (adult). A group may carry a note when it has no rows or a part of the answer is unavailable.
+ */
+export interface FrameChoices {
+  task: "chat" | "agent" | "code" | "image" | "research";
+  recommended: {
+    model: string;
+    source: "openvibe" | "keys" | "machines";
+    machine?: string;
+  };
+  choice: {
+    model: string;
+    source: "openvibe" | "keys" | "machines";
+    machine?: string;
+  };
+  /**
+   * The person may see 18+ models.
+   */
+  adult?: boolean;
+  groups: {
+    id: "openvibe" | "keys" | "machines" | "plans";
+    title: string;
+    rows: {
+      model: string;
+      source: "openvibe" | "keys" | "machines" | "plans";
+      machine?: string;
+      name: string;
+      maker: string | null;
+      price: null | {
+        in: number | null;
+        out: number | null;
+        unit: "USD per 1M tokens";
+      };
+      free: boolean;
+      /**
+       * Median latency in milliseconds, where measured.
+       */
+      speed?: number;
+      /**
+       * Report's rating or Bench's benchmark, where one exists.
+       */
+      score?: number;
+      url?: string;
+      adult?: boolean;
+    }[];
+    /**
+     * Why a group is empty or partial.
+     */
+    note?: string;
+  }[];
+}
+
+/** frame.ask@1.0.0 (owner: network) */
+/**
+ * frame.ask@1: the body of POST /api/frame/ask. One question on the chosen model, with the Search Fabric's results for the chosen sources in its prompt; the answer is a Network run whose AG-UI events are at GET /api/v1/runs/:id/events, and its ANSWER event carries { answer, citations: [{ n, title, url, site }] }. A person only: the person's own token pays OpenVibe.AI. model names a row from frame.choices@1, or its id (the OpenVibe source); omitted, the task's recommended choice answers. sources are what the answer may read: web (OpenVibe's index, then the paid ladder), openvibe (the network scope), mine (the person's own things) and page (the site's context). depth deep asks Search's deep ladder and gives the answer longer output. refs are typed references and files are Media ids; both go to the model on this turn.
+ */
+export interface FrameAskRequest {
+  /**
+   * The question.
+   */
+  text: string;
+  model?:
+    | string
+    | {
+        model: string;
+        source?: "openvibe" | "keys" | "machines";
+        machine?: string;
+      };
+  refs?: {
+    kind: string;
+    id: string;
+    title?: string;
+    url?: string;
+  }[];
+  files?: (
+    | string
+    | {
+        [k: string]: unknown | undefined;
+      }
+  )[];
+  sources?: ("web" | "openvibe" | "mine" | "page")[];
+  depth?: "quick" | "balanced" | "deep";
+  context?: {
+    site?: string;
+    url?: string;
+    title?: string;
+    kind?: string;
+    id?: string;
+    /**
+     * The page's text, when the site passes it.
+     */
+    text?: string;
+  };
+}

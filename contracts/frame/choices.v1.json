@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/frame/choices.v1.json",
+  "title": "FrameChoices",
+  "description": "frame.choices@1: what a composer's Model sheet shows. GET /api/frame/choices?task=chat|agent|code|image|research answers this. recommended and choice are the resolved model and where it comes from; groups are OpenVibe's models (enriched from OpenVibe.Exchange with the maker, the price per million tokens in and out, the measured speed, the rating and the model's Exchange page), the person's own keys, their computers, and their plans. An 18+ row appears only when the person opted in (adult). A group may carry a note when it has no rows or a part of the answer is unavailable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task",
+    "recommended",
+    "choice",
+    "groups"
+  ],
+  "properties": {
+    "task": {
+      "enum": [
+        "chat",
+        "agent",
+        "code",
+        "image",
+        "research"
+      ]
+    },
+    "recommended": {
+      "$ref": "#/$defs/choice"
+    },
+    "choice": {
+      "$ref": "#/$defs/choice"
+    },
+    "adult": {
+      "type": "boolean",
+      "description": "The person may see 18+ models."
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "rows"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "openvibe",
+              "keys",
+              "machines",
+              "plans"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/row"
+            }
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Why a group is empty or partial."
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model",
+        "source"
+      ],
+      "properties": {
+        "model": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9._:/@+-]+$"
+        },
+        "source": {
+          "enum": [
+            "openvibe",
+            "keys",
+            "machines"
+          ]
+        },
+        "machine": {
+          "type": "string",
+          "maxLength": 40,
+          "pattern": "^(any|dev_[0-9A-HJKMNP-TV-Z]{26})$"
+        }
+      }
+    },
+    "price": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "in",
+        "out",
+        "unit"
+      ],
+      "properties": {
+        "in": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "out": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "unit": {
+          "const": "USD per 1M tokens"
+        }
+      }
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model",
+        "source",
+        "name",
+        "maker",
+        "price",
+        "free"
+      ],
+      "properties": {
+        "model": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9._:/@+| -]+$"
+        },
+        "source": {
+          "enum": [
+            "openvibe",
+            "keys",
+            "machines",
+            "plans"
+          ]
+        },
+        "machine": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "maker": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "price": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/price"
+            }
+          ]
+        },
+        "free": {
+          "type": "boolean"
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Median latency in milliseconds, where measured."
+        },
+        "score": {
+          "type": "number",
+          "description": "Report's rating or Bench's benchmark, where one exists."
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2048,
+          "format": "uri"
+        },
+        "adult": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
