@@ -20,24 +20,25 @@
     "note": "the public API (OpenAI-compatible /v1 and the six operations); its human pages moved to OpenVibe.Exchange on 2026-11-07 and answer 301 there. A run receipt (/runs/:id) and the operator console stay for the person signed in"
   },
   "capabilities": [
+    "ai.actions.read",
     "ai.app.run",
+    "ai.batches.create",
+    "ai.batches.read",
+    "ai.config.manage",
     "ai.credential.manage",
+    "ai.layout.suggest",
+    "ai.me.manage",
+    "ai.me.read",
+    "ai.memory.read",
+    "ai.memory.write",
     "ai.model.read",
     "ai.provider.manage",
     "ai.quota.attribution.manage",
-    "ai.batches.create",
-    "ai.batches.read",
     "ai.run.create",
     "ai.run.read",
     "ai.usage.read",
+    "ai.usage.report",
     "ai.workflow.manage",
-    "ai.actions.read",
-    "ai.memory.read",
-    "ai.memory.write",
-    "ai.me.read",
-    "ai.me.manage",
-    "ai.layout.suggest",
-    "ai.config.manage",
     "exchange.search.icons"
   ],
   "eventsProduced": [
@@ -90,14 +91,14 @@
       ],
       "window": "automatic only while ovhost waits for readiness after the restart (30 s in host.example.json); manual afterwards, as long as no blocker applies",
       "blockers": {
-        "none": "the schema code only adds (CREATE \u2026 IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
+        "none": "the schema code only adds (CREATE … IF NOT EXISTS, ADD COLUMN; no DROP, RENAME or table rebuild), which an older release ignores"
       }
     },
     "contracts": {
       "range": ">=0.6.0 <1.0.0"
     },
     "leases": {
-      "none": "no claims: one process owns its PostgreSQL database (ov_ai); a run is taken with a compare-and-set on its status (queued \u2192 running)"
+      "none": "no claims: one process owns its PostgreSQL database (ov_ai); a run is taken with a compare-and-set on its status (queued → running)"
     }
   },
   "notes": "Providers, models, routing profiles, versioned prompt templates and workflows, runs, request logs, citations, scoped cache, quotas and audit. Workflow output is a draft/evidence package attributed to workflow + model + run. ai.run.queued|succeeded|failed|cached have payload contracts (v0.30.0, status planned): AI publishes them once its Events client is wired in; it publishes none today. ai.run.create takes ai.run-request@1 and returns ai.run@1. Produces ai.run@1 effort_requested, effort_applied, effort_rung and ladder receipts; consumes ai.effort@1 and ai.run-request@1 effort/ladder metadata. Actor consumes those receipts; AI does not authorize agent tickets.",

@@ -1,0 +1,13 @@
+{
+  "calls": [
+    {
+      "system": "actor",
+      "run_id": "r1",
+      "provider": "deepseek",
+      "model": "x",
+      "outcome": "succeeded",
+      "at": "2026-11-12T23:30:00Z",
+      "operation": "telepathy"
+    }
+  ]
+}

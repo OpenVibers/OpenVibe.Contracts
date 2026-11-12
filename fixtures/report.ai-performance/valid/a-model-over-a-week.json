@@ -1,0 +1,74 @@
+{
+  "group": "model",
+  "key": "deepseek-v4-flash",
+  "provider": "deepseek",
+  "range": {
+    "from": "2026-11-05",
+    "to": "2026-11-12"
+  },
+  "calls": 18420,
+  "succeeded": 18311,
+  "errors": 109,
+  "success_rate": 0.9941,
+  "fallback_rate": 0.012,
+  "streamed_share": 0.71,
+  "cache_hit_rate": 0.04,
+  "cache_read_share": 0.63,
+  "ttft_ms": {
+    "p50": 540,
+    "p90": 980,
+    "p95": 1310,
+    "n": 13080
+  },
+  "latency_ms": {
+    "p50": 3900,
+    "p90": 9100,
+    "p95": 12800,
+    "n": 18420
+  },
+  "tps": {
+    "p50": 86,
+    "p90": 121,
+    "p95": 133,
+    "n": 12990
+  },
+  "tokens": {
+    "input": 210000000,
+    "output": 9100000,
+    "reasoning": 0,
+    "cache_read": 132000000,
+    "cache_write": 0
+  },
+  "cost": {
+    "charged_usd": 61.2,
+    "list_usd": 74.9,
+    "cache_saved_usd": 19.8,
+    "per_call_usd": 0.0033,
+    "per_million_output_usd": 6.72
+  },
+  "tasks": {
+    "count": 4120,
+    "cost_per_task_usd": {
+      "p50": 0.006,
+      "p90": 0.031,
+      "p95": 0.05,
+      "n": 4120
+    },
+    "time_per_task_ms": {
+      "p50": 14000,
+      "p90": 61000,
+      "p95": 98000,
+      "n": 4120
+    }
+  },
+  "top_errors": [
+    {
+      "error_class": "rate_limited",
+      "count": 71
+    },
+    {
+      "error_class": "timeout",
+      "count": 30
+    }
+  ]
+}

@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.421.0 — 2026-11-12
+
+**Every AI call, measured everywhere** (ai-metrics.md).
+
+- **`ai.call.recorded@1` 1.1.0** adds, all optional:
+  - `operation` (chat, completion, embedding, image, image edit, speech, transcription, translation, rerank,
+    moderation, decision, realtime, batch, tool);
+  - `streamed`, and `tps` (the decode speed after the first token);
+  - `queue_ms`;
+  - `task`, `task_id` and `task_ms`, so cost and time add up per task;
+  - `harness`, and `place` (provider, the person's machine, community, a plan, OpenVibe's hosts);
+  - `error_class`, `fallbacks` and `cache_hit` (an exact-cache answer);
+  - `tool_calls` and `region`.
+- **`ai.call-report@1`:** up to 100 calls a product made without OpenVibe.AI (Actor, Codes harness turns, Link's local
+  models through Bot, Vibe). They go to AI's `POST /api/v1/usage/calls`. AI prices any that bring no price, records
+  each once (by system + run or turn id) and publishes `ai.call.recorded@1`. The capability is `ai.usage.report`.
+- **`report.ai-performance@1`:** how calls performed for one group (model, provider, operation, system, task, place,
+  harness):
+  - success, fallback, streamed and cache-hit rates;
+  - TTFT, latency and tokens per second at p50, p90 and p95;
+  - tokens, charged and list cost, and cache savings;
+  - cost and time per task;
+  - the top errors.
+
+  Public answers group by model, provider or operation, with at least 20 calls.
+
 ## 0.420.0 — 2026-11-12
 
 **One agent system, measured.** These contracts carry the decisions in `one-system-v2.md`, which come from reading 24

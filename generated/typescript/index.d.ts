@@ -162831,9 +162831,9 @@ export interface AiRunError {
   retry_at?: string | null;
 }
 
-/** ai.call.recorded@1.0.0 (owner: ai) */
+/** ai.call.recorded@1.1.0 (owner: ai) */
 /**
- * ai.call.recorded v1 (plan L40, one AI meter across the network). One AI call, wherever it happened: OpenVibe.AI's own runs, a harness turn in Codes, an Actor task, Vibe, a local model on a person's own machine. who and where: subject (the person, or null when the call is anonymous), attribution (the site or app the call came from, free text such as 'site:design'), surface (the product surface, free text such as 'design.generate' or 'codes.turn'). what ran: system (ai, harness:claude-code, harness:codex, actor, node), provider, model, effort. who paid: paid_by (own_key, openvibe_key, plan, own_machine, free_tier, network_allowance, org_key) and paid_by_detail (for example 'anthropic ...a1b2' for a person's own key, or 'claude-max' for a plan). tokens: input (the UNCACHED input tokens), output, reasoning, cache_read, cache_write (with cache_write_ttl 5m or 1h), images, audio_seconds, video_seconds. money, in USD: list_cost_usd (what the tokens cost at the human-typed list prices), charged_usd (what the payer was actually charged), fee_usd (the network's fee on top), cache_saved_usd (what the cache saved against the plain input price). price_source says where the prices came from ('models', 'pricing', 'flat', or 'no cache price' when no cache price is typed and the cache tokens are priced at the input price), price_date the day the price was checked. how it went: latency_ms, ttft_ms, attempts, outcome. ids: run_id or turn_id, and at. The record carries NO prompt and NO answer text, ever. A ledger (OpenVibe.AI) rolls the records up; a record consumed twice is stored once (idempotent by system and run_id or turn_id). Envelope: subject { type: run, id: <run_id> } or { type: user, id: <subject> }, visibility internal, priority low, actor service:ai.
+ * ai.call.recorded v1 (plan L40, one AI meter across the network). One AI call, wherever it happened: OpenVibe.AI's own runs, a harness turn in Codes, an Actor task, Vibe, a local model on a person's own machine. who and where: subject (the person, or null when the call is anonymous), attribution (the site or app the call came from, free text such as 'site:design'), surface (the product surface, free text such as 'design.generate' or 'codes.turn'). what ran: system (ai, harness:claude-code, harness:codex, actor, node), provider, model, effort. who paid: paid_by (own_key, openvibe_key, plan, own_machine, free_tier, network_allowance, org_key) and paid_by_detail (for example 'anthropic ...a1b2' for a person's own key, or 'claude-max' for a plan). tokens: input (the UNCACHED input tokens), output, reasoning, cache_read, cache_write (with cache_write_ttl 5m or 1h), images, audio_seconds, video_seconds. money, in USD: list_cost_usd (what the tokens cost at the human-typed list prices), charged_usd (what the payer was actually charged), fee_usd (the network's fee on top), cache_saved_usd (what the cache saved against the plain input price). price_source says where the prices came from ('models', 'pricing', 'flat', or 'no cache price' when no cache price is typed and the cache tokens are priced at the input price), price_date the day the price was checked. how it went: latency_ms, ttft_ms, attempts, outcome. ids: run_id or turn_id, and at. The record carries NO prompt and NO answer text, ever. A ledger (OpenVibe.AI) rolls the records up; a record consumed twice is stored once (idempotent by system and run_id or turn_id). Envelope: subject { type: run, id: <run_id> } or { type: user, id: <subject> }, visibility internal, priority low, actor service:ai. Since 1.1.0 (ai-metrics.md): OPERATION, STREAMED, TPS, QUEUE_MS, TASK, TASK_ID, TASK_MS, HARNESS, PLACE, ERROR_CLASS, FALLBACKS, CACHE_HIT, TOOL_CALLS and REGION, all optional. Products other than AI send their calls to POST /api/v1/usage/calls (ai.call-report@1); AI prices and publishes them.
  */
 export interface AiCallRecordedPayload {
   /**
@@ -162912,6 +162912,254 @@ export interface AiCallRecordedPayload {
   run_id?: string | null;
   turn_id?: string | null;
   at: string;
+  /**
+   * Since 1.1.0: what kind of call it was.
+   */
+  operation?:
+    | "chat"
+    | "completion"
+    | "embedding"
+    | "image"
+    | "image_edit"
+    | "speech"
+    | "transcription"
+    | "translation"
+    | "rerank"
+    | "moderation"
+    | "decision"
+    | "realtime"
+    | "batch"
+    | "tool"
+    | "other"
+    | null;
+  /**
+   * Since 1.1.0: whether the answer came as a stream (TTFT is only measured on one).
+   */
+  streamed?: boolean | null;
+  /**
+   * Since 1.1.0: output tokens per second after the first token (decode speed); null when not streamed or too short to measure.
+   */
+  tps?: number | null;
+  /**
+   * Since 1.1.0: time waiting before the call was sent (a queue, a rate gate).
+   */
+  queue_ms?: number | null;
+  /**
+   * Since 1.1.0: the task kind the call served (a task name, a workflow key, chat.reply, code.turn).
+   */
+  task?: string | null;
+  /**
+   * Since 1.1.0: the task or run this call is one step of, so cost and time add up per task.
+   */
+  task_id?: string | null;
+  /**
+   * Since 1.1.0: on the last call of a task, the whole task’s wall time.
+   */
+  task_ms?: number | null;
+  /**
+   * Since 1.1.0: the harness that made the call (openvibe, dsh, codex, claude-code, gemini-cli, opencode …).
+   */
+  harness?: string | null;
+  /**
+   * Since 1.1.0: where the model ran: a provider’s API, the person’s own machine, a community machine, a signed-in plan, OpenVibe’s own hosts.
+   */
+  place?: "provider" | "machine" | "community" | "plan" | "host" | null;
+  /**
+   * Since 1.1.0: on a failure, its class (rate_limited, timeout, context_length, refused, auth, server, network, invalid).
+   */
+  error_class?: string | null;
+  /**
+   * Since 1.1.0: how many offers failed before the one that answered.
+   */
+  fallbacks?: number | null;
+  /**
+   * Since 1.1.0: true when the whole answer came from OpenVibe’s exact answer cache (no model ran).
+   */
+  cache_hit?: boolean | null;
+  /**
+   * Since 1.1.0: tool calls the model asked for in this call.
+   */
+  tool_calls?: number | null;
+  /**
+   * Since 1.1.0: the provider region or data centre, when known.
+   */
+  region?: string | null;
+}
+
+/** ai.call-report@1.0.0 (owner: ai) */
+/**
+ * ai.call-report@1 (ai-metrics.md): up to 100 AI calls a product made without OpenVibe.AI (Actor’s own model calls, a Codes harness turn, a local model on a person’s machine through Bot, Vibe), sent to AI’s POST /api/v1/usage/calls with the capability ai.usage.report. Each call is ai.call.recorded@1’s shape; the price is optional (AI prices from its rate cards: the charged amount first, then the list price) and SYSTEM + RUN_ID or TURN_ID is the idempotency key (a call sent twice is recorded once). AI publishes each as ai.call.recorded@1.
+ */
+export interface AiCallReport {
+  /**
+   * @minItems 1
+   * @maxItems 100
+   */
+  calls: [
+    (
+      | {
+          [k: string]: unknown | undefined;
+        }
+      | {
+          [k: string]: unknown | undefined;
+        }
+    ),
+    ...(
+      | {
+          [k: string]: unknown | undefined;
+        }
+      | {
+          [k: string]: unknown | undefined;
+        }
+    )[]
+  ];
+}
+
+/** report.ai-performance@1.0.0 (owner: report) */
+/**
+ * report.ai-performance@1 (ai-metrics.md): how AI calls performed over a range, for one group (a model, a provider, an operation, a system, a task). Percentiles come from log-scale histograms (within one bucket’s width). Public answers group by model, provider or operation only and show a group with at least 20 calls; system and task groups are for staff. Money is USD; tokens per second is the decode speed after the first token; cost per task sums the calls that share a task id.
+ */
+export interface ReportAiPerformance {
+  group: "model" | "provider" | "operation" | "system" | "task" | "place" | "harness";
+  key: string;
+  provider?: string | null;
+  range?: {
+    from?: string;
+    to?: string;
+  };
+  calls: number;
+  succeeded?: number;
+  errors?: number;
+  success_rate?: number | null;
+  fallback_rate?: number | null;
+  streamed_share?: number | null;
+  cache_hit_rate?: number | null;
+  /**
+   * Cache-read tokens as a share of all input tokens.
+   */
+  cache_read_share?: number | null;
+  ttft_ms?: {
+    p50?: number | null;
+    p90?: number | null;
+    p95?: number | null;
+    n?: number;
+  };
+  latency_ms?: {
+    p50?: number | null;
+    p90?: number | null;
+    p95?: number | null;
+    n?: number;
+  };
+  tps?: {
+    p50?: number | null;
+    p90?: number | null;
+    p95?: number | null;
+    n?: number;
+  };
+  tokens?: {
+    input?: number;
+    output?: number;
+    reasoning?: number;
+    cache_read?: number;
+    cache_write?: number;
+  };
+  cost?: {
+    charged_usd?: number;
+    list_usd?: number;
+    cache_saved_usd?: number;
+    per_call_usd?: number | null;
+    per_million_output_usd?: number | null;
+  };
+  tasks?: {
+    count?: number;
+    cost_per_task_usd?: {
+      p50?: number | null;
+      p90?: number | null;
+      p95?: number | null;
+      n?: number;
+    };
+    time_per_task_ms?: {
+      p50?: number | null;
+      p90?: number | null;
+      p95?: number | null;
+      n?: number;
+    };
+  } | null;
+  /**
+   * @maxItems 5
+   */
+  top_errors?:
+    | []
+    | [
+        {
+          error_class: string;
+          count: number;
+        }
+      ]
+    | [
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        }
+      ]
+    | [
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        }
+      ]
+    | [
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        }
+      ]
+    | [
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        },
+        {
+          error_class: string;
+          count: number;
+        }
+      ];
 }
 
 /** ai.run.queued@1.0.0 (owner: ai) */
