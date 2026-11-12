@@ -38,7 +38,8 @@
   "eventsProduced": [
     "agent.step.started",
     "agent.step.updated",
-    "agent.step.ended"
+    "agent.step.ended",
+    "agents.step.appended"
   ],
   "eventsConsumed": [
     "network.account.export_requested",

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.412.0 — 2026-11-12
+## 0.414.0 — 2026-11-12
 
 One feed for all of OpenVibe: the card OpenVibe.Network serves from /api/v1/feed and /api/frame/feed, and that
 OpenVibe.Community's Pulse reads instead of its own collector.
@@ -12,6 +12,38 @@ OpenVibe.Community's Pulse reads instead of its own collector.
 - Fixtures for every kind, plus invalid ones (unknown kind, missing id, a URL without a scheme, a negative count, a
   subject that is not a usr_ id, private visibility, a one-item group, a trend without a direction), and the
   generated JSON Schema and TypeScript. Additive and new: no existing contract changes.
+
+## 0.413.0 — 2026-11-12
+
+The composer's Reach (Post · Ask · Do, stage R3; Network R3): what its `/` and `@` menus offer.
+
+- Add `frame.commands@1`: `GET /api/frame/commands?site=<host>&q=` on OpenVibe.Network, the command rows a composer
+  offers on one site — the network's `/ask`, `/do`, `/remind` and `/timer`, the site's own from its Frame manifest,
+  and a signed-in person's saved composer snippets — each with its hint, the text a pick inserts, its kind and whether
+  it needs a signed-in person.
+- Add `frame.mentions@1`: `GET /api/frame/mentions?q=&site=` on OpenVibe.Network, at most eight rows for the `@` menu:
+  public people (with a handle, display name and an OpenVibe.Media avatar only), the person's own agents from the agent
+  directory, open OpenVibe sites and Live's public channels. People first; signed out, public people only; no email or
+  private account field.
+- Fixtures for both (valid and invalid) and the generated JSON Schema and TypeScript.
+
+## 0.412.0 — 2026-11-12
+
+One agent system, stage 2: one run shape for Actor, Codes and Run, and the step event that follows it.
+
+- Add `agents.run@1`: a run's id, owner, agent and product, parent run, budget (USD, tokens, seconds and steps),
+  status (`planning`, `running`, `waiting`, `done`, `failed`, `stopped`), created and updated times, a result summary
+  and what it spent. One shape for OpenVibe.Actor, OpenVibe.Codes and OpenVibe.Run.
+- Add `agents.step@1`: one entry of a run's append-only log (run id, seq, kind `think|tool|message|approval|child|file`,
+  text, the tool call and its input, the result, the step's cost, start and end, and the child run it started).
+- Add `agents.approval@1`: an ask attached to a run's step (what, the options with their labels, who decided and when,
+  and the answer).
+- Add the event `agents.step.appended@1`: the appended step as the payload, on OpenVibe.Events. The `agents` namespace
+  is hyphen-free because an event type cannot carry a hyphen; Actor registers the producer.
+- Add valid and invalid fixtures for all four, the generated JSON Schema, TypeScript and per-service OpenAPI, and
+  `docs/agents-runs.md`: which field of Actor's `tasks`/`task_events` and Codes' `run_tasks`/`codes_session_lines`/
+  `codes_approvals` becomes which field of the new shape, and what does not fit (Actor's `needs_you`, per-step cost,
+  split tool call/result entries, and Codes' attempts as one flat run).
 
 ## 0.411.1 — 2026-11-12
 

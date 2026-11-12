@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/agents.step.appended.v1.json",
+  "title": "AgentsStepAppendedPayload",
+  "description": "agents.step.appended v1 (one agent system, 2026-11-12). A step was appended to a run: the payload is the appended agents.step@1, whole. OpenVibe.Events carries it with the run's owner as the subject, the product that ran it as the source (actor, codes, run, …) and visibility subject; a reader follows a run live without polling the step log. The namespace is agents (hyphen-free: Events namespaces cannot contain a hyphen). One producer per run: the product that stores the run publishes its steps, and the step's own product names the agent.",
+  "$ref": "../../agents/step.v1.json"
+}
