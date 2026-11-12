@@ -1,0 +1,8 @@
+{
+  "ref": { "service": "media", "kind": "clip", "id": "7" },
+  "how": "watch",
+  "occurred_at": "2026-11-12T10:04:05.123Z",
+  "seconds": 30,
+  "threshold": 30,
+  "of_seconds": 120
+}

@@ -1,0 +1,8 @@
+{
+  "ref": { "service": "live", "kind": "stream", "id": "311", "site": "network", "creator": "maticus" },
+  "how": "live",
+  "occurred_at": "2026-11-12T10:04:05.123Z",
+  "seconds": 61,
+  "of_seconds": null,
+  "concurrent": 12
+}

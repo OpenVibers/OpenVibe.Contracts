@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/media.engaged.v1.json",
+  "title": "MediaEngagedPayload",
+  "description": "media.engaged v1 (OpenVibe.Media server/views/service.js, POST /api/v1/views). A viewer became engaged with an item for the first time: they watched 30 seconds or a third of its length (whichever came first, of_seconds known) on a watch, or 60 seconds of a live stream. One event per person (or anonymous session) per item, ever, however many heartbeats follow. ref names the item in its owner's id space; site and creator are the same optional Report dimensions as media.viewed. seconds is the cumulative watch time that reached the threshold, threshold the number that was needed. No IP address, user agent or raw anonymous session id is in the payload or stored with the view. Events are outbox rows written with the count in the same transaction and relayed to OpenVibe.Events; subject { type: <kind>, id: <id> }, visibility internal, actor service:media.",
+  "type": "object",
+  "required": ["ref", "how", "occurred_at", "seconds", "threshold"],
+  "additionalProperties": false,
+  "properties": {
+    "ref": {
+      "type": "object",
+      "required": ["service", "kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "service": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+        "kind": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$" },
+        "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "site": { "type": ["string", "null"], "maxLength": 40, "description": "The site the view happened on, or null when it is the owning service." },
+        "creator": { "type": ["string", "null"], "maxLength": 200, "description": "The creator's canonical subject or channel username, or null when unknown." }
+      }
+    },
+    "how": { "type": "string", "enum": ["watch", "live"], "description": "A preview never engages." },
+    "occurred_at": { "type": "string", "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,3})?Z$", "description": "When Media marked the viewer engaged." },
+    "seconds": { "type": "number", "minimum": 1, "maximum": 86400, "description": "The cumulative watch time that reached the threshold." },
+    "threshold": { "type": "number", "minimum": 1, "maximum": 60, "description": "The seconds that were needed: 60 for a live stream, else min(30, of_seconds / 3) when of_seconds was known, otherwise 30." },
+    "of_seconds": { "type": ["number", "null"], "exclusiveMinimum": 0, "maximum": 86400, "description": "The item's length when the client knew it." },
+    "concurrent": { "type": ["integer", "null"], "minimum": 1, "description": "Live watchers Media saw at that moment (how = live), null otherwise." }
+  }
+}

@@ -13,6 +13,18 @@ Small hobby robots: the panel's Stop is one ordinary, optional control that send
 - `ui.surface@1`: Stop is not a required part; `ui.action@1` no longer names an E-STOP; `ui.trigger@1` adds `stop`.
 - Manifests and ADRs use Stop; `bot.resource.control` stop sends halt and resume is a calm no-op.
 
+## 0.416.0 — 2026-11-12
+
+One view API for every content kind (the owner, 11-12): a preview in the feed and a watch on a page count the same
+item once, and Report can say how many people watched and how many stayed.
+
+- Add `media.view-request@1`: `POST /api/v1/views` { ref: { service, kind, id }, how: preview | watch | live, seconds,
+  of_seconds?, session } on OpenVibe.Media (batched by `{ events: [ … ] }`, at most 20), with the preview/engaged
+  thresholds and the 30-minute per-viewer window.
+- Add the `media.viewed` and `media.engaged` events: the counted view and the first engagement for an item, with the
+  optional Report dimensions site and creator and no IP, user agent or raw session id.
+- Fixtures for both events and the request, and the generated JSON Schema and TypeScript.
+
 ## 0.415.0 — 2026-11-12
 
 One feed for all of OpenVibe: the card OpenVibe.Network serves from /api/v1/feed and /api/frame/feed, and that
