@@ -8,7 +8,7 @@
   "additionalProperties": false,
   "properties": {
     "key": {
-      "enum": ["news", "blog", "reviews", "deals", "coupons", "trade", "hosting", "crowdfunding", "games", "housing", "food", "jobs"],
+      "enum": ["news", "blog", "reviews", "deals", "coupons", "trade", "hosting", "crowdfunding", "games", "housing", "food", "jobs", "code"],
       "description": "The category's key: the same value sources.source@1's category and sources.item@1's category carry."
     },
     "retention": {

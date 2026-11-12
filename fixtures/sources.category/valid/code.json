@@ -1,0 +1,7 @@
+{
+  "key": "code",
+  "retention": {
+    "days": 30,
+    "reason": "code repositories are current rankings; a month keeps the tracked set through a failed pull"
+  }
+}

@@ -11728,6 +11728,46 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "agents.run",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agents/run.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "agents.step",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agents/step.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "agents.approval",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agents/approval.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
+      "id": "agents.step.appended",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "events/payloads/agents.step.appended.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
     }
   ]
 }
