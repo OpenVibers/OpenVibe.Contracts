@@ -341440,3 +341440,1046 @@ export interface FrameAskRequest {
     text?: string;
   };
 }
+
+/** frame.commands@1.0.0 (owner: network) */
+/**
+ * frame.commands@1: what a composer's `/` menu offers on one site. GET /api/frame/commands?site=<host>&q= answers this. Every site offers the network's /ask (Vibe answers with sources), /do (Actor plans and runs it), /remind (Today remembers it) and /timer (the Dock's focus timer); a site adds its own from its Frame manifest's site.commands, and a signed-in person's saved composer snippets are theirs. The site's own rows come first because they fit that box, then the network's, then the person's own; a name appears once. q filters by name prefix or hint. `name` is the word after the slash (no slash), `insert` is the text a pick puts in the box, `kind` is where the row came from, and `needs_sign_in` says the command acts for a person, so a signed-out box may offer it and then sign in. A signed-out answer is public, max-age=60, held a minute; a signed-in one is private, no-store.
+ */
+export interface FrameCommands {
+  /**
+   * The site the composer asked about; null when the host is not an OpenVibe site (the network's four still answer).
+   */
+  site: null | {
+    /**
+     * The site's Frame id (the icon name), e.g. live.
+     */
+    id: string;
+    name: string;
+    host: string;
+  };
+  /**
+   * @maxItems 50
+   */
+  commands: {
+    /**
+     * The word after the slash: ask, do, remind, timer, or a site's or person's own.
+     */
+    name: string;
+    /**
+     * One line the composer's popover shows beside the command.
+     */
+    hint: string;
+    /**
+     * The text a pick puts in the box: the command, a space, ready for its arguments.
+     */
+    insert: string;
+    /**
+     * The network's four, the site's own from its manifest, or the person's saved composer snippet.
+     */
+    kind: "network" | "site" | "mine";
+    /**
+     * The command acts for a person; a signed-out composer may offer it and then sign in.
+     */
+    needs_sign_in: boolean;
+  }[];
+}
+
+/** frame.mentions@1.0.0 (owner: network) */
+/**
+ * frame.mentions@1: what a composer's `@` menu shows. GET /api/frame/mentions?q=&site= answers this. People are Network accounts (public username, display name, canonical subject id and, only when the picture is an OpenVibe.Media one, its avatar); agents are the person's own rows from Network's agent directory; sites are the open OpenVibe places from the Frame; channels are Live's public channels. At most eight rows, people first, then the person's agents, then places; the site the box is on is not suggested back. Signed out answers public people only. A person row never carries an email, a numeric account id, a role or any other account field. `q` matches usernames, display names, agent names and place names. The read is rate-limited per actor (120 a minute in memory; HTTP 429 with Retry-After past it): signed in that is the person, signed out a hash of the address. A signed-out answer is public, max-age=60; a signed-in one is private, no-store.
+ */
+export interface FrameMentions {
+  /**
+   * @maxItems 8
+   */
+  mentions:
+    | []
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ]
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ]
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ]
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ]
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ]
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ]
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ]
+    | [
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        },
+        {
+          kind: "person" | "agent" | "site" | "channel";
+          /**
+           * A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username.
+           */
+          id: string;
+          /**
+           * What the menu shows: a display name, an agent's name, an OpenVibe site or a channel.
+           */
+          label: string;
+          /**
+           * The public @handle or site id, when the row has one.
+           */
+          handle?: string;
+          /**
+           * A short second line for an agent, e.g. actor · online.
+           */
+          sub?: string;
+          /**
+           * A public OpenVibe.Media picture; never a Network-served, private or third-party URL.
+           */
+          avatar?: string;
+          /**
+           * The public page the row opens.
+           */
+          url?: string;
+        }
+      ];
+}

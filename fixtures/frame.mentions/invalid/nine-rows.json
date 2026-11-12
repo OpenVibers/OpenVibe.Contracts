@@ -1,0 +1,13 @@
+{
+  "mentions": [
+    { "kind": "site", "id": "live", "label": "Live", "handle": "live", "url": "https://openvibe.live/" },
+    { "kind": "site", "id": "tools", "label": "Tools", "handle": "tools", "url": "https://openvibe.tools/" },
+    { "kind": "site", "id": "games", "label": "Games", "handle": "games", "url": "https://openvibe.games/" },
+    { "kind": "site", "id": "chat", "label": "Chat", "handle": "chat", "url": "https://openvibe.chat/" },
+    { "kind": "site", "id": "network", "label": "Network", "handle": "network", "url": "https://openvibe.network/" },
+    { "kind": "site", "id": "wiki", "label": "Wiki", "handle": "wiki", "url": "https://openvibe.wiki/" },
+    { "kind": "site", "id": "blog", "label": "Blog", "handle": "blog", "url": "https://openvibe.blog/" },
+    { "kind": "site", "id": "news", "label": "News", "handle": "news", "url": "https://openvibe.news/" },
+    { "kind": "site", "id": "community", "label": "Community", "handle": "community", "url": "https://openvibe.community/" }
+  ]
+}

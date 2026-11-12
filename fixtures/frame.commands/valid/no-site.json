@@ -1,0 +1,7 @@
+{
+  "site": null,
+  "commands": [
+    { "name": "ask", "hint": "Ask Vibe: an answer with its sources", "insert": "/ask ", "kind": "network", "needs_sign_in": true },
+    { "name": "timer", "hint": "Start a focus timer in the Dock", "insert": "/timer ", "kind": "network", "needs_sign_in": true }
+  ]
+}

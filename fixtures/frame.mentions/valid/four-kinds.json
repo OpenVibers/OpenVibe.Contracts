@@ -1,0 +1,9 @@
+{
+  "mentions": [
+    { "kind": "person", "id": "usr_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3", "label": "Ana Followed", "handle": "ana",
+      "avatar": "https://openvibe.media/p/ana/screenshot", "url": "https://openvibe.network/@ana" },
+    { "kind": "agent", "id": "agt_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3", "label": "Actor", "sub": "actor · online" },
+    { "kind": "site", "id": "live", "label": "Live", "handle": "live", "url": "https://openvibe.live/" },
+    { "kind": "channel", "id": "streamer", "label": "Streamer One", "handle": "streamer", "url": "https://openvibe.live/@streamer" }
+  ]
+}

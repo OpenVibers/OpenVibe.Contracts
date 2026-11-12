@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/frame/mentions.v1.json",
+  "title": "FrameMentions",
+  "description": "frame.mentions@1: what a composer's `@` menu shows. GET /api/frame/mentions?q=&site= answers this. People are Network accounts (public username, display name, canonical subject id and, only when the picture is an OpenVibe.Media one, its avatar); agents are the person's own rows from Network's agent directory; sites are the open OpenVibe places from the Frame; channels are Live's public channels. At most eight rows, people first, then the person's agents, then places; the site the box is on is not suggested back. Signed out answers public people only. A person row never carries an email, a numeric account id, a role or any other account field. `q` matches usernames, display names, agent names and place names. The read is rate-limited per actor (120 a minute in memory; HTTP 429 with Retry-After past it): signed in that is the person, signed out a hash of the address. A signed-out answer is public, max-age=60; a signed-in one is private, no-store.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "mentions"
+  ],
+  "properties": {
+    "mentions": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/mention"
+      }
+    }
+  },
+  "$defs": {
+    "mention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "label"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "person",
+            "agent",
+            "site",
+            "channel"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "A person's canonical usr_… subject, an agent's agt_… id, a site id, or a Live username."
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "What the menu shows: a display name, an agent's name, an OpenVibe site or a channel."
+        },
+        "handle": {
+          "type": "string",
+          "maxLength": 40,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,39}$",
+          "description": "The public @handle or site id, when the row has one."
+        },
+        "sub": {
+          "type": "string",
+          "maxLength": 80,
+          "description": "A short second line for an agent, e.g. actor · online."
+        },
+        "avatar": {
+          "type": "string",
+          "maxLength": 500,
+          "format": "uri",
+          "pattern": "^https://openvibe\\.media/",
+          "description": "A public OpenVibe.Media picture; never a Network-served, private or third-party URL."
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 500,
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "The public page the row opens."
+        }
+      }
+    }
+  }
+}
