@@ -1,0 +1,8 @@
+{
+  "text": "Same idea, but for a phone screen",
+  "lineage": {
+    "from": "chat:c_8f3k2m",
+    "at_turn": 3,
+    "how": "fork"
+  }
+}

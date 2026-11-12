@@ -1,0 +1,29 @@
+{
+  "run_id": "tsk_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "seq": 7,
+  "kind": "tool",
+  "from": "tool",
+  "status": "done",
+  "title": "Typing in the search box",
+  "glyph": "search",
+  "text": "Typed \"mechanical keyboard 75%\" in the search box.",
+  "tool_call": {
+    "name": "computer.type",
+    "input": {
+      "text": "mechanical keyboard 75%"
+    }
+  },
+  "desk": {
+    "id": "desk_private_1",
+    "still_url": "https://openvibe.media/s/still_01K9R2V6M8Q4T0B7C3D5E9F2GH.jpg",
+    "action": {
+      "type": "type",
+      "x": 512,
+      "y": 96,
+      "text": "mechanical keyboard 75%"
+    }
+  },
+  "started_at": "2026-11-12T10:03:00Z",
+  "ended_at": "2026-11-12T10:03:01Z",
+  "turn": -1
+}

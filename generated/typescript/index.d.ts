@@ -342623,9 +342623,9 @@ export interface FrameMentions {
       ];
 }
 
-/** agents.run@1.1.0 (owner: actor) */
+/** agents.run@1.2.0 (owner: actor) */
 /**
- * agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. Since 1.1.0 (agent-engine.md) a run also says what a person calls it (TITLE), what sort it is (KIND), where it lives (REF on the Frame, URL on its product), which model runs it and where, what it is doing now (DOING), what it waits for (WAITING), its last line (PREVIEW), where it was asked (CONTEXT) and what it made (OUTPUTS); a chat with Vibe is a run of KIND chat that is waiting for a message. Every added field is optional. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1.
+ * agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. Since 1.1.0 (agent-engine.md) a run also says what a person calls it (TITLE), what sort it is (KIND), where it lives (REF on the Frame, URL on its product), which model runs it and where, what it is doing now (DOING), what it waits for (WAITING), its last line (PREVIEW), where it was asked (CONTEXT) and what it made (OUTPUTS); a chat with Vibe is a run of KIND chat that is waiting for a message. Every added field is optional. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1. Since 1.2.0 (agent-engine.md §§3-5, from the code study) a run may also say why it exists (MANDATE: an ask taken in from the feed, a room, an issue), what it continues (LINEAGE: a fork, a hand-off, a regenerated turn), the play its tree follows and a child's ROLE in it, what its agent's harness can do (AGENT.CAPABILITIES), and what it spent on each rung of the ladder (COST.BY). Every added field is optional.
  */
 export interface AgentsRun {
   /**
@@ -342637,7 +342637,7 @@ export interface AgentsRun {
    */
   owner: SubjectRef;
   /**
-   * The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it.
+   * The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it. Since 1.2.0, CAPABILITIES says what its harness can do.
    */
   agent: {
     id: string;
@@ -342659,6 +342659,3201 @@ export interface AgentsRun {
      * The loop that runs it: openvibe (the SDK's own), or another harness run through an adapter (codex, claude-code, opencode, deepseek, …).
      */
     harness?: string;
+    /**
+     * What the agent's harness can do, so the Dispatcher chooses by capability and never by name: resume and fork a thread, ask approvals, read images, start sub-agents, use desks, browse, search the web, use MCP tools, plan before acting, read and write files, run a shell, speak and listen.
+     *
+     * @maxItems 20
+     */
+    capabilities?:
+      | []
+      | [
+          | "resume"
+          | "fork"
+          | "approvals"
+          | "images"
+          | "subagents"
+          | "desks"
+          | "browser"
+          | "web-search"
+          | "mcp"
+          | "plan-mode"
+          | "files"
+          | "shell"
+          | "voice"
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ];
   };
   /**
    * The run that started this one (a sub-agent), or null. The parent's run card nests children; the child's budget is a slice of the parent's.
@@ -342694,6 +345889,36 @@ export interface AgentsRun {
     tokens?: number;
     seconds?: number;
     steps?: number;
+    /**
+     * The spend by rung of the Dispatcher's ladder (agent-engine.md §3): MACHINE, a model on the person's own computer (free); PLAN, a signed-in plan through its harness (flat); KEY, the person's own provider key (no fee); ALLOWANCE, OpenVibe's free allowance; CREDITS, bought (Exchange's offers). The parts add up to the run's own totals.
+     */
+    by?: {
+      machine?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      plan?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      key?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      allowance?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      credits?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+    };
   } | null;
   /**
    * What a person calls this run: a chat's name, a task's goal in a few words.
@@ -342824,11 +346049,59 @@ export interface AgentsRun {
    * When the run reached an end status. Null while it has not.
    */
   ended_at?: string | null;
+  /**
+   * Why the run exists when it came through intake (agent-engine.md §5): SOURCE is where the ask was made; THREAD is the conversation it was made in (a post, a room, an issue: its service, kind and id, and its address), where the run answers and from which later messages reach it; ASKED_BY is who asked; STRENGTH says whether they asked outright (explicit) or the Source's rule read an ask in what they wrote (inferred: such a run confirms before it acts); SCOPE says in words what the run may do for them. Null (or absent) for a run a person started themselves.
+   */
+  mandate?: {
+    source:
+      | "feed"
+      | "chat"
+      | "comments"
+      | "git"
+      | "composer"
+      | "notifications"
+      | "mail"
+      | "schedule"
+      | "goal"
+      | "webhook"
+      | "machine";
+    thread?: {
+      service: string;
+      kind: string;
+      id: string;
+      url?: string;
+    };
+    asked_by: {
+      type: "user" | "agent" | "service";
+      id: string;
+    };
+    strength: "explicit" | "inferred";
+    scope?: string;
+  } | null;
+  /**
+   * Where the run came from when it continues another (agent-engine.md, from the code study): FROM is that run's ref; AT_TURN is the turn it was taken from (agents.step@1's TURN; the steps before it are the new run's history); HOW is fork (a person branched the conversation), handoff (another harness or model took it on, with a written summary as its first step) or regenerate (the same turn answered again). Null for a run that starts fresh.
+   */
+  lineage?: {
+    /**
+     * A run's ref: the product, a colon, the product's own run id (agents.run@1's REF).
+     */
+    from: string;
+    at_turn?: number;
+    how: "fork" | "handoff" | "regenerate";
+  } | null;
+  /**
+   * The play (agents.play@1's ID) this run's tree follows: solo, advisor, plan-execute, fan-out, team, grader-loop, research-build, issue-to-pr, watch, or a person's own. On a child run it is its parent's.
+   */
+  play?: string;
+  /**
+   * A child run's role in its parent's play (one of the play's role ids: planner, executor, advisor, grader, reviewer, searcher, worker…).
+   */
+  role?: string;
 }
 
-/** agents.step@1.1.0 (owner: actor) */
+/** agents.step@1.2.0 (owner: actor) */
 /**
- * agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored. Since 1.1.0 (agent-engine.md) a step also says who spoke (FROM: the person's own words are steps too), whether it is still under way (STATUS), a short TITLE and GLYPH for a tool or a thought, the files that go with it (ATTACHMENTS), numbered SOURCES, a rich card (UI) and, where a computer was used, the DESK picture and action for replay. Every added field is optional.
+ * agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored. Since 1.1.0 (agent-engine.md) a step also says who spoke (FROM: the person's own words are steps too), whether it is still under way (STATUS), a short TITLE and GLYPH for a tool or a thought, the files that go with it (ATTACHMENTS), numbered SOURCES, a rich card (UI) and, where a computer was used, the DESK picture and action for replay. Every added field is optional. Since 1.2.0 a step says the TURN it belongs to.
  */
 export interface AgentsStep {
   /**
@@ -346559,6 +349832,10 @@ export interface AgentsStep {
       text?: string;
     };
   };
+  /**
+   * The turn the step belongs to. A person's message opens a turn (turn 0 is what the run started with); every step until their next message is in it. A fork, a hand-off or a regenerated answer starts at a turn boundary (agents.run@1's LINEAGE.AT_TURN).
+   */
+  turn?: number;
 }
 
 /** agents.approval@1.0.0 (owner: actor) */
@@ -350490,11 +353767,15 @@ export interface AgentsStepAppendedPayload {
       text?: string;
     };
   };
+  /**
+   * The turn the step belongs to. A person's message opens a turn (turn 0 is what the run started with); every step until their next message is in it. A fork, a hand-off or a regenerated answer starts at a turn boundary (agents.run@1's LINEAGE.AT_TURN).
+   */
+  turn?: number;
 }
 
-/** agents.run-start@1.0.0 (owner: network) */
+/** agents.run-start@1.1.0 (owner: network) */
 /**
- * agents.run-start@1 (agent-engine.md, 2026-11-12): what starts a run, the same on every product's POST /api/v1/runs and on the Frame's POST /api/frame/runs. Only TEXT is required: the goal, the question or the first message, in the person's own words. KIND chooses the sort of run (agents.run@1's kinds); absent, the Frame's orchestrator decides whether to answer, plan, or hand the work to another product as a child run. AGENT names who does it (an agent's id; auto lets the product choose). MODEL and WHERE are the picker's choices; TARGET is a code run's (new, openvibe or a repository); CONTEXT is where it was asked; ATTACHMENTS are files by Media id or address; SOURCES and DEPTH are an answer's (frame.ask@1's); PARENT_RUN makes it a sub-agent's run inside its parent's budget; BUDGET is its own hard limit. An Idempotency-Key header makes a repeated start return the first run.
+ * agents.run-start@1 (agent-engine.md, 2026-11-12): what starts a run, the same on every product's POST /api/v1/runs and on the Frame's POST /api/frame/runs. Only TEXT is required: the goal, the question or the first message, in the person's own words. KIND chooses the sort of run (agents.run@1's kinds); absent, the Frame's orchestrator decides whether to answer, plan, or hand the work to another product as a child run. AGENT names who does it (an agent's id; auto lets the product choose). MODEL and WHERE are the picker's choices; TARGET is a code run's (new, openvibe or a repository); CONTEXT is where it was asked; ATTACHMENTS are files by Media id or address; SOURCES and DEPTH are an answer's (frame.ask@1's); PARENT_RUN makes it a sub-agent's run inside its parent's budget; BUDGET is its own hard limit. An Idempotency-Key header makes a repeated start return the first run. Since 1.1.0 a start may name a PLAY, continue another run (LINEAGE), and carry intake's MANDATE.
  */
 export interface AgentsRunStart {
   text: string;
@@ -354190,6 +357471,50 @@ export interface AgentsRunStart {
     seconds?: number;
     steps?: number;
   };
+  /**
+   * The play to run (agents.play@1's ID); absent, the orchestrator chooses (most asks are solo).
+   */
+  play?: string;
+  /**
+   * Set by intake, never by a browser: the Source, thread and asker the run is answering (agents.run@1's MANDATE). A product ignores it from a caller that is not the intake service.
+   */
+  mandate?: {
+    source:
+      | "feed"
+      | "chat"
+      | "comments"
+      | "git"
+      | "composer"
+      | "notifications"
+      | "mail"
+      | "schedule"
+      | "goal"
+      | "webhook"
+      | "machine";
+    thread?: {
+      service: string;
+      kind: string;
+      id: string;
+      url?: string;
+    };
+    asked_by: {
+      type: "user" | "agent" | "service";
+      id: string;
+    };
+    strength: "explicit" | "inferred";
+    scope?: string;
+  } | null;
+  /**
+   * Start as a continuation of another run of the same person: a fork at a turn, a hand-off, or a regenerated turn (agents.run@1's LINEAGE).
+   */
+  lineage?: {
+    /**
+     * A run's ref: the product, a colon, the product's own run id (agents.run@1's REF).
+     */
+    from: string;
+    at_turn?: number;
+    how: "fork" | "handoff" | "regenerate";
+  } | null;
 }
 
 /** agents.event@1.0.0 (owner: network) */
@@ -354223,7 +357548,7 @@ export interface AgentsRunUpdatedPayload {
    */
   owner: SubjectRef;
   /**
-   * The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it.
+   * The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it. Since 1.2.0, CAPABILITIES says what its harness can do.
    */
   agent: {
     id: string;
@@ -354245,6 +357570,3201 @@ export interface AgentsRunUpdatedPayload {
      * The loop that runs it: openvibe (the SDK's own), or another harness run through an adapter (codex, claude-code, opencode, deepseek, …).
      */
     harness?: string;
+    /**
+     * What the agent's harness can do, so the Dispatcher chooses by capability and never by name: resume and fork a thread, ask approvals, read images, start sub-agents, use desks, browse, search the web, use MCP tools, plan before acting, read and write files, run a shell, speak and listen.
+     *
+     * @maxItems 20
+     */
+    capabilities?:
+      | []
+      | [
+          | "resume"
+          | "fork"
+          | "approvals"
+          | "images"
+          | "subagents"
+          | "desks"
+          | "browser"
+          | "web-search"
+          | "mcp"
+          | "plan-mode"
+          | "files"
+          | "shell"
+          | "voice"
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ]
+      | [
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          ),
+          (
+            | "resume"
+            | "fork"
+            | "approvals"
+            | "images"
+            | "subagents"
+            | "desks"
+            | "browser"
+            | "web-search"
+            | "mcp"
+            | "plan-mode"
+            | "files"
+            | "shell"
+            | "voice"
+          )
+        ];
   };
   /**
    * The run that started this one (a sub-agent), or null. The parent's run card nests children; the child's budget is a slice of the parent's.
@@ -354280,6 +360800,36 @@ export interface AgentsRunUpdatedPayload {
     tokens?: number;
     seconds?: number;
     steps?: number;
+    /**
+     * The spend by rung of the Dispatcher's ladder (agent-engine.md §3): MACHINE, a model on the person's own computer (free); PLAN, a signed-in plan through its harness (flat); KEY, the person's own provider key (no fee); ALLOWANCE, OpenVibe's free allowance; CREDITS, bought (Exchange's offers). The parts add up to the run's own totals.
+     */
+    by?: {
+      machine?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      plan?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      key?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      allowance?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+      credits?: {
+        usd?: number;
+        tokens?: number;
+        seconds?: number;
+      };
+    };
   } | null;
   /**
    * What a person calls this run: a chat's name, a task's goal in a few words.
@@ -354410,6 +360960,7382 @@ export interface AgentsRunUpdatedPayload {
    * When the run reached an end status. Null while it has not.
    */
   ended_at?: string | null;
+  /**
+   * Why the run exists when it came through intake (agent-engine.md §5): SOURCE is where the ask was made; THREAD is the conversation it was made in (a post, a room, an issue: its service, kind and id, and its address), where the run answers and from which later messages reach it; ASKED_BY is who asked; STRENGTH says whether they asked outright (explicit) or the Source's rule read an ask in what they wrote (inferred: such a run confirms before it acts); SCOPE says in words what the run may do for them. Null (or absent) for a run a person started themselves.
+   */
+  mandate?: {
+    source:
+      | "feed"
+      | "chat"
+      | "comments"
+      | "git"
+      | "composer"
+      | "notifications"
+      | "mail"
+      | "schedule"
+      | "goal"
+      | "webhook"
+      | "machine";
+    thread?: {
+      service: string;
+      kind: string;
+      id: string;
+      url?: string;
+    };
+    asked_by: {
+      type: "user" | "agent" | "service";
+      id: string;
+    };
+    strength: "explicit" | "inferred";
+    scope?: string;
+  } | null;
+  /**
+   * Where the run came from when it continues another (agent-engine.md, from the code study): FROM is that run's ref; AT_TURN is the turn it was taken from (agents.step@1's TURN; the steps before it are the new run's history); HOW is fork (a person branched the conversation), handoff (another harness or model took it on, with a written summary as its first step) or regenerate (the same turn answered again). Null for a run that starts fresh.
+   */
+  lineage?: {
+    /**
+     * A run's ref: the product, a colon, the product's own run id (agents.run@1's REF).
+     */
+    from: string;
+    at_turn?: number;
+    how: "fork" | "handoff" | "regenerate";
+  } | null;
+  /**
+   * The play (agents.play@1's ID) this run's tree follows: solo, advisor, plan-execute, fan-out, team, grader-loop, research-build, issue-to-pr, watch, or a person's own. On a child run it is its parent's.
+   */
+  play?: string;
+  /**
+   * A child run's role in its parent's play (one of the play's role ids: planner, executor, advisor, grader, reviewer, searcher, worker…).
+   */
+  role?: string;
+}
+
+/** agents.play@1.0.0 (owner: network) */
+/**
+ * agents.play@1 (agent-engine.md §4, 2026-11-12): a named way for several agents to work on one ask, as data, so a person or an AI can write one and openvibe.run can list it. ROLES are the agents it uses (each with what it does, the size of model it wants, and how many may run at once); PHASES run in order, the roles in a phase together when PARALLEL; CHECKS say who checks whose work, against a written BAR; STOP says when the play is over; BUDGET.SPLIT gives each role its share of the parent's budget. The orchestrator turns a play into child runs (agents.run@1's PARENT_RUN, PLAY and ROLE). Rules every play keeps, whatever it says: a child's end never ends its parent; a person's message never waits behind new work; a child's budget is a slice of its parent's.
+ */
+export interface AgentsPlay {
+  id: string;
+  version?: number;
+  name: string;
+  /**
+   * When to use it, in a sentence or two.
+   */
+  summary?: string;
+  /**
+   * @minItems 1
+   * @maxItems 12
+   */
+  roles:
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * What this role does, as its instructions begin.
+           */
+          does: string;
+          /**
+           * small: the cheapest that can; strong: the best available; same: the parent's; other-family: a model of another family than the one it checks (a grader).
+           */
+          model?: "small" | "strong" | "same" | "other-family";
+          /**
+           * A particular agent's id, when the role is always the same agent.
+           */
+          agent?: string;
+          count?: {
+            min?: number;
+            max?: number;
+          };
+          /**
+           * How many times another role may consult this one (an advisor's limit).
+           */
+          consults?: number;
+        }
+      ];
+  /**
+   * @maxItems 20
+   */
+  phases?:
+    | []
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ]
+    | [
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        },
+        {
+          id: string;
+          name?: string;
+          /**
+           * @minItems 1
+           * @maxItems 12
+           */
+          roles:
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string];
+          parallel?: boolean;
+        }
+      ];
+  /**
+   * @maxItems 12
+   */
+  checks?:
+    | []
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ]
+    | [
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        },
+        {
+          by: string;
+          of: string;
+          /**
+           * What passing means, in words the checker can apply.
+           */
+          bar?: string;
+        }
+      ];
+  stop: {
+    /**
+     * done: when the last phase ends; passes: when the checks pass; rounds: after ROUNDS rounds; person: when the person says so.
+     */
+    when: "done" | "passes" | "rounds" | "person";
+    rounds?: number;
+  };
+  budget?: {
+    /**
+     * Each role's share of the parent's budget (the shares add up to at most 1).
+     */
+    split?: {
+      [k: string]: number | undefined;
+    };
+  };
+  visibility?: "private" | "public";
+  author?: {
+    type: "user" | "agent" | "service";
+    id: string;
+  };
+}
+
+/** agents.source@1.0.0 (owner: network) */
+/**
+ * agents.source@1 (agent-engine.md §5, 2026-11-12): one place where asks are taken in without opening an agent app, and how. KIND is the place (the feed, chat rooms and DMs, comments, git.openvibe.codes, a composer, notifications, mail, a schedule or a goal, a webhook, a machine's events); ON turns it on; WHO says whose words may start work there (only its owner, a list of people, their followers, or anyone); RULE says in words what counts as an ask; CREATES is the run an accepted ask becomes (its kind, target, agent and play); BUDGET is each such run's hard limit; ANSWER is how the run speaks back on the thread (a reply, a card that follows the run, a notice, or nothing). Intake stores the ask first and acts after, with backoff; an inferred ask confirms before it acts (agents.run@1's MANDATE.STRENGTH).
+ */
+export interface AgentsSource {
+  id: string;
+  kind:
+    | "feed"
+    | "chat"
+    | "comments"
+    | "git"
+    | "composer"
+    | "notifications"
+    | "mail"
+    | "schedule"
+    | "goal"
+    | "webhook"
+    | "machine";
+  name?: string;
+  owner: {
+    type: "user" | "agent" | "service";
+    id: string;
+  };
+  on: boolean;
+  /**
+   * Which one of that kind: a room, a repository, a feed, a machine.
+   */
+  where?: {
+    service: string;
+    kind?: string;
+    id?: string;
+    url?: string;
+  };
+  who: {
+    may: "owner" | "list" | "followers" | "anyone";
+    /**
+     * @maxItems 200
+     */
+    list?: string[];
+  };
+  /**
+   * What counts as an ask here, in words (a post that asks for a feature or reports a bug; a message that names @Vibe).
+   */
+  rule?: string;
+  creates: {
+    kind: "chat" | "ask" | "task" | "code" | "machine" | "goal";
+    /**
+     * What a code run works on. new: a new project in the person's own space. openvibe: OpenVibe itself; the orchestrator finds the repositories and opens pull requests, never merges. An object names one repository.
+     */
+    target?:
+      | ("new" | "openvibe")
+      | {
+          /**
+           * owner/name, or the repository's address.
+           */
+          repo: string;
+          branch?: string;
+        };
+    agent?: string;
+    /**
+     * The play (agents.play@1's ID) this run's tree follows: solo, advisor, plan-execute, fan-out, team, grader-loop, research-build, issue-to-pr, watch, or a person's own. On a child run it is its parent's.
+     */
+    play?: string;
+  };
+  budget?: {
+    usd?: number;
+    tokens?: number;
+    seconds?: number;
+    steps?: number;
+  };
+  answer?: "reply" | "card" | "notice" | "none";
+  created_at?: string;
+  updated_at?: string;
 }
 
 /** feed.item@1.0.0 (owner: network) */

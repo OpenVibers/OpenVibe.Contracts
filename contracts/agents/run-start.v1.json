@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/agents/run-start.v1.json",
   "title": "AgentsRunStart",
-  "description": "agents.run-start@1 (agent-engine.md, 2026-11-12): what starts a run, the same on every product's POST /api/v1/runs and on the Frame's POST /api/frame/runs. Only TEXT is required: the goal, the question or the first message, in the person's own words. KIND chooses the sort of run (agents.run@1's kinds); absent, the Frame's orchestrator decides whether to answer, plan, or hand the work to another product as a child run. AGENT names who does it (an agent's id; auto lets the product choose). MODEL and WHERE are the picker's choices; TARGET is a code run's (new, openvibe or a repository); CONTEXT is where it was asked; ATTACHMENTS are files by Media id or address; SOURCES and DEPTH are an answer's (frame.ask@1's); PARENT_RUN makes it a sub-agent's run inside its parent's budget; BUDGET is its own hard limit. An Idempotency-Key header makes a repeated start return the first run.",
+  "description": "agents.run-start@1 (agent-engine.md, 2026-11-12): what starts a run, the same on every product's POST /api/v1/runs and on the Frame's POST /api/frame/runs. Only TEXT is required: the goal, the question or the first message, in the person's own words. KIND chooses the sort of run (agents.run@1's kinds); absent, the Frame's orchestrator decides whether to answer, plan, or hand the work to another product as a child run. AGENT names who does it (an agent's id; auto lets the product choose). MODEL and WHERE are the picker's choices; TARGET is a code run's (new, openvibe or a repository); CONTEXT is where it was asked; ATTACHMENTS are files by Media id or address; SOURCES and DEPTH are an answer's (frame.ask@1's); PARENT_RUN makes it a sub-agent's run inside its parent's budget; BUDGET is its own hard limit. An Idempotency-Key header makes a repeated start return the first run. Since 1.1.0 a start may name a PLAY, continue another run (LINEAGE), and carry intake's MANDATE.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -260,6 +260,134 @@
         "steps": {
           "type": "integer",
           "minimum": 1
+        }
+      }
+    },
+    "play": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,60}$",
+      "description": "The play to run (agents.play@1's ID); absent, the orchestrator chooses (most asks are solo)."
+    },
+    "mandate": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "asked_by",
+        "strength"
+      ],
+      "description": "Set by intake, never by a browser: the Source, thread and asker the run is answering (agents.run@1's MANDATE). A product ignores it from a caller that is not the intake service.",
+      "properties": {
+        "source": {
+          "enum": [
+            "feed",
+            "chat",
+            "comments",
+            "git",
+            "composer",
+            "notifications",
+            "mail",
+            "schedule",
+            "goal",
+            "webhook",
+            "machine"
+          ]
+        },
+        "thread": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "service",
+            "kind",
+            "id"
+          ],
+          "properties": {
+            "service": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,40}$"
+            },
+            "kind": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,40}$"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://",
+              "maxLength": 2048
+            }
+          }
+        },
+        "asked_by": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "user",
+                "agent",
+                "service"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          }
+        },
+        "strength": {
+          "enum": [
+            "explicit",
+            "inferred"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "lineage": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "how"
+      ],
+      "description": "Start as a continuation of another run of the same person: a fork at a turn, a hand-off, or a regenerated turn (agents.run@1's LINEAGE).",
+      "properties": {
+        "from": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,40}:[A-Za-z0-9._~-]{1,160}$",
+          "description": "A run's ref: the product, a colon, the product's own run id (agents.run@1's REF)."
+        },
+        "at_turn": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "how": {
+          "enum": [
+            "fork",
+            "handoff",
+            "regenerate"
+          ]
         }
       }
     }

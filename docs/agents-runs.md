@@ -160,6 +160,40 @@ writer of 0.412.0 stays valid.
 **A conversation is a run that is `waiting` for a `message`.** The same status covers an approval (`for: approval`)
 and something only the person can do (`for: takeover`), so no reader needs a second model for chats.
 
+### Who asked, what it continues, how several agents share it (0.417.0)
+
+From the agent engine's code study (agent-engine.md §§3-5). Every field is optional.
+
+- `agents.run@1` (1.2.0):
+  - **`mandate`:** why a run exists when it came through intake. Its `source` is where the ask was made (the feed, a
+    room, comments, git, a composer, notifications, mail, a schedule or goal, a webhook, a machine). Its `thread` is
+    where the run answers. `asked_by` says who asked. `strength` is `explicit`, or `inferred`, and an inferred ask
+    confirms before it acts. `scope` says in words what the run may do.
+  - **`lineage`:** what a run continues. `from` is that run's ref and `at_turn` its turn; `how` is `fork`, `handoff`
+    (another harness or model takes it on, with a written summary as its first step) or `regenerate`.
+  - **`play` and `role`:** the play a run tree follows, and a child's part in it.
+  - **`agent.capabilities`:** what the harness can do: resume, fork, approvals, images, sub-agents, desks, browser,
+    web search, MCP, plan mode, files, shell, voice. The Dispatcher chooses by capability, never by name.
+  - **`cost.by`:** the spend on each rung of the ladder: `machine` (the person's own computer), `plan` (a signed-in
+    plan), `key` (their own key), `allowance` (OpenVibe's free part) and `credits`.
+- **`agents.step@1` (1.2.0) adds `turn`.** A person's message opens a turn. Forks and regenerated answers start on a
+  turn's boundary.
+- **`agents.run-start@1` (1.1.0)** takes a `play`, a `lineage` (to fork or hand off), and, from intake only, a
+  `mandate`.
+- **`agents.play@1`:** a play as data.
+  - Its `roles` say what each does, the size of model it wants (`small`, `strong`, `same`, `other-family`), how many
+    run at once, and how often it may be consulted.
+  - `phases` run in order, a phase's roles together when it is `parallel`. `checks` say who checks whom against a
+    written `bar`, and `stop` says when the play is over (`done`, `passes`, `rounds`, `person`).
+  - `budget.split` gives each role its share of the parent's budget.
+  - The stock plays: solo, advisor, plan-execute, fan-out, team, grader-loop, research-build, issue-to-pr and watch.
+- **`agents.source@1`:** one place where asks are taken in, and how.
+  - `who` may ask there: its `owner`, a `list` of people, `followers` or `anyone`. The `rule` says in words what
+    counts as an ask.
+  - `creates` is the run an ask becomes, with its kind, target, agent and play. `budget` caps each such run.
+  - `answer` is how the run speaks back: a `reply`, a `card`, a `notice` or `none`.
+  - Intake stores the ask first and acts afterwards.
+
 ### The Run API
 
 The same routes on every product (`/api/v1`) and, for every product at once, on the Frame (`/api/frame`, where the id

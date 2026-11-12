@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/agents/step.v1.json",
   "title": "AgentsStep",
-  "description": "agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored. Since 1.1.0 (agent-engine.md) a step also says who spoke (FROM: the person's own words are steps too), whether it is still under way (STATUS), a short TITLE and GLYPH for a tool or a thought, the files that go with it (ATTACHMENTS), numbered SOURCES, a rich card (UI) and, where a computer was used, the DESK picture and action for replay. Every added field is optional.",
+  "description": "agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored. Since 1.1.0 (agent-engine.md) a step also says who spoke (FROM: the person's own words are steps too), whether it is still under way (STATUS), a short TITLE and GLYPH for a tool or a thought, the files that go with it (ATTACHMENTS), numbered SOURCES, a rich card (UI) and, where a computer was used, the DESK picture and action for replay. Every added field is optional. Since 1.2.0 a step says the TURN it belongs to.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -321,6 +321,11 @@
           }
         }
       }
+    },
+    "turn": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The turn the step belongs to. A person's message opens a turn (turn 0 is what the run started with); every step until their next message is in it. A fork, a hand-off or a regenerated answer starts at a turn boundary (agents.run@1's LINEAGE.AT_TURN)."
     }
   }
 }

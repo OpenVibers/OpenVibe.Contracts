@@ -1,0 +1,30 @@
+{
+  "id": "src_01K9R5ABCDEF",
+  "kind": "carrier-pigeon",
+  "name": "Asks on my feed",
+  "owner": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "on": true,
+  "where": {
+    "service": "community",
+    "kind": "feed",
+    "id": "home"
+  },
+  "who": {
+    "may": "owner"
+  },
+  "rule": "A post that asks for a feature or reports a bug in OpenVibe.",
+  "creates": {
+    "kind": "code",
+    "target": "openvibe",
+    "play": "issue-to-pr"
+  },
+  "budget": {
+    "usd": 5
+  },
+  "answer": "card",
+  "created_at": "2026-11-12T11:00:00Z",
+  "updated_at": "2026-11-12T11:00:00Z"
+}

@@ -1,17 +1,32 @@
 # Changelog
 
-## Unreleased — a plain Stop, not an E-STOP
+## 0.417.0 — 2026-11-12
 
-Small hobby robots: the panel's Stop is one ordinary, optional control that sends the machine's own halt.
+**The agent engine's next shapes:** who asked, what a run continues, how several agents share one ask, and where the
+money went (agent-engine.md §§3-5, from the code study). Every field is optional and the new contracts are new.
 
-- `bot.robot@1`: the description and the old latch field say it is legacy (always false); schemas are unchanged.
-- `bot.device-message@1`: the old latch frame and the `estop_*` fields are described as legacy names devices may still
-  send, not as a remote latch; Bot's config always sends the latch false.
-- `bot.command-result@1`, `bot.robot-control-result@1`, `bot.robot-manage-result@1`, `bot.command.refused@1`: the old
-  stop endpoint and refusal code are gone from the descriptions.
-- `bot.estop.set@1` and `bot.estop.cleared@1` are retired (fixtures and schemas stay for the contract window).
-- `ui.surface@1`: Stop is not a required part; `ui.action@1` no longer names an E-STOP; `ui.trigger@1` adds `stop`.
-- Manifests and ADRs use Stop; `bot.resource.control` stop sends halt and resume is a calm no-op.
+- **`agents.run@1` 1.2.0:**
+  - `mandate`: an ask taken in from the feed, a room, an issue: where, by whom, explicit or inferred, and the scope;
+  - `lineage`: a fork, a hand-off or a regenerated turn, with the run and turn it came from;
+  - `play` and `role`;
+  - `agent.capabilities`;
+  - `cost.by`: the spend on each rung of the ladder (machine, plan, key, allowance, credits).
+- **`agents.step@1` 1.2.0:** `turn`.
+- **`agents.run-start@1` 1.1.0:** `play`, `lineage`, and `mandate` (from intake only).
+- **New `agents.play@1`:** a play as data, made of roles, phases, checks, a stop rule and a budget split. Fixtures:
+  advisor, grader loop, fan-out.
+- **New `agents.source@1`:** one place asks are taken in: who may ask, what counts as an ask, the run it becomes, its
+  budget, and how the run answers. Fixtures: the owner's feed, Vibe in a room.
+- **Stop is a plain control.** On small hobby robots, the panel's Stop is one ordinary, optional control that sends
+  the machine's own halt:
+  - `bot.robot@1`: the description and the old latch field say it is legacy (always false); schemas are unchanged.
+  - `bot.device-message@1`: the old latch frame and the `estop_*` fields are described as legacy names devices may
+    still send, not as a remote latch; Bot's config always sends the latch false.
+  - `bot.command-result@1`, `bot.robot-control-result@1`, `bot.robot-manage-result@1`, `bot.command.refused@1`: the
+    old stop endpoint and refusal code are gone from the descriptions.
+  - `bot.estop.set@1` and `bot.estop.cleared@1` are retired (fixtures and schemas stay for the contract window).
+  - `ui.surface@1`: Stop is not a required part; `ui.action@1` names Stop alone; `ui.trigger@1` adds `stop`.
+  - Manifests and ADRs use Stop; `bot.resource.control` stop sends halt and resume is a calm no-op.
 
 ## 0.416.0 — 2026-11-12
 

@@ -1,0 +1,43 @@
+{
+  "id": "advisor",
+  "version": 1,
+  "name": "Advisor",
+  "summary": "A small model does the work and asks a strong one at the few hard decisions.",
+  "roles": [
+    {
+      "id": "executor",
+      "name": "Executor",
+      "does": "Do the task step by step. Ask the advisor only when a decision is hard to undo.",
+      "model": "small"
+    },
+    {
+      "id": "advisor",
+      "name": "Advisor",
+      "does": "Answer the executor's question in a few sentences: what to do and why.",
+      "model": "strong",
+      "consults": 3
+    }
+  ],
+  "phases": [
+    {
+      "id": "work",
+      "roles": [
+        "executor"
+      ]
+    }
+  ],
+  "stop": {
+    "when": "done"
+  },
+  "budget": {
+    "split": {
+      "executor": 0.7,
+      "advisor": 0.3
+    }
+  },
+  "visibility": "public",
+  "author": {
+    "type": "service",
+    "id": "network"
+  }
+}
