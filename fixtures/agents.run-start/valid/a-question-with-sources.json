@@ -1,0 +1,9 @@
+{
+  "text": "What happened in tech news today?",
+  "kind": "ask",
+  "sources": [
+    "web",
+    "openvibe"
+  ],
+  "depth": "balanced"
+}

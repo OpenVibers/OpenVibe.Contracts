@@ -132,3 +132,49 @@ tool_result`.
 - **The event is a contract, not yet a producer.** OpenVibe.Events accepts `agents.step.appended`; Actor's
   read-only API does not publish it yet. The engine that appends the step is the publisher (one producer per run),
   with the run's owner as the subject and the product as the source.
+
+## 0.414.0: the whole run (the agent engine)
+
+Design: `~/openvibe/research-2026-11-12/agent-engine.md`. **Everything a person asks an AI to do on OpenVibe is a run,
+and a run is a thread of steps**: a chat with Vibe, a question in a composer, a task for your agent, a coding task, a
+job on a machine. The 0.412.0 shapes were the core; 0.414.0 grows them with optional fields only, so every reader and
+writer of 0.412.0 stays valid.
+
+- `agents.run@1` (1.1.0) adds:
+  - **what it is:** `title`, `kind` (`chat`, `ask`, `task`, `code`, `machine`, `goal`, or a product's own);
+  - **where it lives:** `ref` (`<product>:<id>`, its address on the Frame), `url` (its page on its product);
+  - **how it runs:** `model` (`id`, `source`, `name`, `effort`), `where` (`openvibe`, `machine`, `runner`,
+    `this-computer`), `target` (a code run's: `new`, `openvibe`, or `{ repo }`);
+  - **its state for a list:** `doing` (`text`, `glyph`: the icon on its agent's face), `waiting` (`for`: `message`,
+    `approval`, `takeover` or `payment`), `preview` (the last line), `counts`, `ended_at`;
+  - **around it:** `context` (where it was asked), `outputs` (what it made), `visibility`;
+  - **its agent's face:** `agent.glyph`, `agent.hue`, `agent.avatar_url`, `agent.harness`. A chat's persona is that
+    run's `agent`.
+- `agents.step@1` (1.1.0) adds `from` (`person`, `agent`, `system`, `tool`: a person's own words are steps), `author`,
+  `status` (`running`, `done`, `failed`), `title`, `glyph`, `attachments`, `sources`, `ui` (a rich card: `type` and
+  `data`; a reader that does not know the type shows `text`) and `desk` (the picture and action, for replay).
+- `agents.run-start@1` is what starts a run: only `text` is required.
+- `agents.event@1` is one event of a run's stream: `run`, `step`, `delta`, `approval` or `end`.
+- `agents.run.updated` (event, `@1`) is the run's snapshot on OpenVibe.Events when what a list draws changed.
+
+**A conversation is a run that is `waiting` for a `message`.** The same status covers an approval (`for: approval`)
+and something only the person can do (`for: takeover`), so no reader needs a second model for chats.
+
+### The Run API
+
+The same routes on every product (`/api/v1`) and, for every product at once, on the Frame (`/api/frame`, where the id
+is the run's `ref`):
+
+| | |
+|---|---|
+| `GET /runs?kind=&status=&q=&limit=&cursor=` | the caller's runs, newest first: `{ runs, next }` |
+| `POST /runs` | start one (`agents.run-start@1`; `Idempotency-Key` returns the first run again): `201` the run |
+| `GET /runs/{id}` | one run |
+| `GET /runs/{id}/steps?after=&limit=` | its thread: `{ steps, next }` |
+| `GET /runs/{id}/events` | its stream (`agents.event@1` as server-sent events; `Last-Event-ID` is a step's seq) |
+| `POST /runs/{id}/messages` | say something to it (`{ text, attachments }`): `201` the step |
+| `POST /runs/{id}/stop` | stop it |
+| `POST /runs/{id}/approvals/{approval}` | answer an approval (`{ answer }`) |
+
+`openvibe-sdk/agents` is the client (`runs`, `approvals`, the desks calls) and the kit a product mounts to serve these
+routes from its own store.

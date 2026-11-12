@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.414.0 — 2026-11-12
+
+The whole run (the agent engine, `docs/agents-runs.md`; design `agent-engine.md`). The owner, 11-12, with the menu's
+Chat · Code · Agents switch crossed out: "one new unified agent … the same agentic system, shared across agents, code
+and chat". Everything a person asks an AI to do is one shape: a run, and its thread of steps.
+
+- `agents.run@1` 1.1.0, optional fields only:
+  - `title`, `kind`, `ref` (its address on the Frame), `url`;
+  - `model`, `where`, `target`;
+  - `doing`, `waiting`, `preview`, `counts`, `ended_at`;
+  - `context`, `outputs`, `visibility`;
+  - the agent's face: `agent.glyph`, `agent.hue`, `agent.avatar_url`, `agent.harness`.
+- `agents.step@1` 1.1.0, optional fields only: `from`, `author`, `status`, `title`, `glyph`, `attachments`, `sources`,
+  `ui` (a rich card) and `desk`.
+- Add `agents.run-start@1`: what starts a run on any product and on the Frame. Only `text` is required.
+- Add `agents.event@1`: a run's stream (`run`, `step`, `delta`, `approval`, `end`).
+- Add the event `agents.run.updated` (`@1`): the run's snapshot on OpenVibe.Events when what a list draws changed.
+- A conversation is a run that is `waiting` for a `message`; an approval and a takeover are the same status with
+  another `for`.
+
 ## 0.413.0 — 2026-11-12
 
 The composer's Reach (Post · Ask · Do, stage R3; Network R3): what its `/` and `@` menus offer.

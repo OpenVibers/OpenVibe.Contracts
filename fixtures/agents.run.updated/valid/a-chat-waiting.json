@@ -1,0 +1,49 @@
+{
+  "id": "c_8f3k2m",
+  "ref": "chat:c_8f3k2m",
+  "kind": "chat",
+  "title": "Keyboard Scout",
+  "owner": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "agent": {
+    "id": "vibe",
+    "name": "Keyboard Scout",
+    "product": "chat",
+    "glyph": "search",
+    "hue": 212,
+    "harness": "openvibe"
+  },
+  "status": "waiting",
+  "waiting": {
+    "for": "message",
+    "since": "2026-11-12T10:02:00Z"
+  },
+  "preview": {
+    "text": "Three picks under $90, with sources.",
+    "from": "agent",
+    "at": "2026-11-12T10:02:00Z"
+  },
+  "model": {
+    "id": "openvibe/auto",
+    "source": "openvibe",
+    "name": "Auto"
+  },
+  "where": {
+    "kind": "openvibe"
+  },
+  "context": {
+    "site": "deals",
+    "url": "https://openvibe.deals/",
+    "title": "Deals"
+  },
+  "url": "https://openvibe.chat/vibe/c_8f3k2m",
+  "counts": {
+    "steps": 6,
+    "unread": 1
+  },
+  "visibility": "private",
+  "created_at": "2026-11-12T10:00:00Z",
+  "updated_at": "2026-11-12T10:02:00Z"
+}
