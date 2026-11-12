@@ -17,7 +17,7 @@
     },
     {
       "title": "Safe on the device",
-      "text": "Dead-man stop, command limits and local emergency stop."
+      "text": "Dead-man stop, command limits and a plain optional Stop."
     },
     {
       "title": "Stream it",
@@ -47,7 +47,7 @@
     },
     {
       "question": "How does it keep the robot safe?",
-      "answer": "The device stops its motors by itself when commands or the connection stop. There is an emergency stop in the panel, limits on speed, range and time, and every command is logged."
+      "answer": "The device stops its motors by itself when commands or the connection stop. Stop is one optional button that sends the machine's own stop, limits cap speed, range and time, and every command is logged."
     },
     {
       "question": "What will it cost?",

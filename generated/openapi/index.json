@@ -40,7 +40,7 @@
       "service": "bot",
       "name": "OpenVibe.Bot",
       "origin": "https://openvibe.bot",
-      "operations": 32,
+      "operations": 30,
       "capabilities": 12
     },
     {

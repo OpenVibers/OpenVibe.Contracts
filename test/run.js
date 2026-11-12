@@ -1341,6 +1341,25 @@ sub(path.join(__dirname, 'exchange-c2.test.js'));
         'actor.voice@1 does not call the hash a signature');
 }
 
+// The words: these are small hobby robots. No page, doc or AGENTS.md says E-STOP, estop or
+// emergency stop; an inline code name for a legacy protocol field is skipped.
+{
+    const files = ['README.md', 'AGENTS.md', 'STATUS.json'].map((f) => path.join(ROOT, f));
+    const walk = (dir) => {
+        for (const name of fs.readdirSync(dir)) {
+            const p = path.join(dir, name);
+            if (fs.statSync(p).isDirectory()) walk(p);
+            else if (p.endsWith('.md')) files.push(p);
+        }
+    };
+    walk(path.join(ROOT, 'docs'));
+    const bad = /(^|[^A-Za-z])e-?stop([^A-Za-z]|$)|emergency\s+stop/i;
+    for (const file of files) {
+        let text = fs.readFileSync(file, 'utf8').replace(/```[\s\S]*?```/g, '').replace(/`[^`]*`/g, '');
+        ok(!bad.test(text), `${path.relative(ROOT, file)} says E-STOP; write Stop`);
+    }
+}
+
 console.log(skips.length
     ? `openvibe-contracts: ${n} checks passed, ${skips.length} skipped (${skips.join(' | ')})${strict ? ' — strict: skips fail the run' : ''}`
     : `openvibe-contracts: ${n} checks passed`);

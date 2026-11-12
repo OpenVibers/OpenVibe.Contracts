@@ -7344,7 +7344,7 @@
       "schema": "events/payloads/bot.estop.set.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active",
+      "status": "retired",
       "adr": "ADR-043"
     },
     {
@@ -7354,7 +7354,7 @@
       "schema": "events/payloads/bot.estop.cleared.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
-      "status": "active",
+      "status": "retired",
       "adr": "ADR-043"
     },
     {

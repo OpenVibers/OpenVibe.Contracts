@@ -217809,7 +217809,7 @@ export type JobFrame =
        */
       id: string;
       /**
-       * exited: the process ended by itself; cancelled: `job_cancel`; ttl: `ttl_ms` ran out; limit: a `limits` cap was hit; stopped: the local kill switch or e-stop; failed: the worker could not run it (spawn error, missing artifact)
+       * exited: the process ended by itself; cancelled: `job_cancel`; ttl: `ttl_ms` ran out; limit: a `limits` cap was hit; stopped: the local kill switch or Stop; failed: the worker could not run it (spawn error, missing artifact)
        */
       reason: "exited" | "cancelled" | "ttl" | "limit" | "stopped" | "failed";
       /**
@@ -219071,7 +219071,7 @@ export interface ObjectZoneUsage {
 
 /** bot.robot@1.0.0 (owner: bot) */
 /**
- * bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs, who may drive it (access_policy) and the latched e-stop.
+ * bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false.
  */
 export interface BotRobot {
   id: string;
@@ -219080,6 +219080,9 @@ export interface BotRobot {
   profile_version?: unknown;
   access_policy: "private" | "invite" | "queue";
   limits: {};
+  /**
+   * The old stop-latch field, kept for the contract window: Bot sends latched false and never reads or writes it. A later contract migration removes it.
+   */
   estop: {
     latched: boolean;
     by: string | null;
@@ -219181,7 +219184,7 @@ export type BotRobotManageRequest =
 
 /** bot.robot-manage-result@1.0.0 (owner: bot) */
 /**
- * bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and POST …/robots/:id/estop/clear → { robot }; DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.
+ * bot.robot-manage-result@1: answers of bot.robot.manage on OpenVibe.Bot. POST /api/v1/robots → 201 { robot, pairing }; PATCH …/robots/:id and DELETE …/robots/:id → 204 (no body); POST …/robots/:id/pairing-code → 201 { code, expires_at, installer }; POST …/robots/:id/operators → 201 { operators }; DELETE …/robots/:id/operators/:subject → { operators }; POST …/devices/:id/rotate and /revoke → bot.device-connect-result@1.
  */
 export type BotRobotManageResult =
   | {
@@ -219214,7 +219217,7 @@ export type BotRobotManageResult =
   | BotDeviceConnectResult;
 /** bot.robot-control-result@1.0.0 (owner: bot) */
 /**
- * bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. POST /api/v1/robots/:id/estop → { robot } with its e-stop as it now stands.
+ * bot.robot-control-result@1: answers of bot.robot.control on OpenVibe.Bot. It now describes the shape of a robot answer; the old stop endpoint is gone.
  */
 export interface BotRobotControlResult {
   robot: BotRobot;
@@ -219435,6 +219438,9 @@ export type BotDeviceMessage =
         heartbeat_ms?: number;
       };
       allowed_commands: ("drive" | "actuator" | "ptz" | "say" | "display" | "halt")[];
+      /**
+       * The old latch field: Bot always sends false and no longer latches anything.
+       */
       estop_latched: boolean;
       /**
        * Vibe by voice: the owner turned it on for this machine, so it may listen for its call word and send voice_ask (absent or false: it does not).
@@ -268733,7 +268739,7 @@ export type BotCommand = {
 
 /** bot.command-result@1.0.0 (owner: bot) */
 /**
- * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.estop_latched, bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.
+ * bot.command-result@1: the command_result frame OpenVibe.Bot answers a bot.command@1 with on the operator WebSocket (server/realtime.js). result: ack or nack (the device answered; reason is its fault code, latency_ms the round trip), refused (the gate refused it; code is Bot's refusal code such as bot.cooldown or bot.device_offline, and reason says why), expired (no answer before the deadline) or pending (the same id is still in flight). cached is true when a repeated id is answered from the first result. An ack of a computer command (exec, fs, screen) carries its answer in data. delivery says whether the command reached the machine (delivered, not_delivered, uncertain); retry says whether repeating it is safe. Only not_delivered is safe to repeat: a delivered command already ran, and an uncertain one may have.
  */
 export interface BotCommandResult {
   v: 1;
@@ -269048,7 +269054,7 @@ export interface BotRobotOfflinePayload {
 
 /** bot.estop.set@1.0.0 (owner: bot) */
 /**
- * bot.estop.set v1 (OpenVibe.Bot server/domain/index.js writeEstop). The e-stop latched. by is the user subject, the service token's sub or the device id that set it; principal_kind says which. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ * bot.estop.set v1 (OpenVibe.Bot server/domain/index.js writeEstop). Legacy event: the old stop latch. Bot no longer emits it; kept for the contract window. by is the user subject, the service token's sub or the device id that set it; principal_kind says which. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
  */
 export interface BotEstopSetPayload {
   robot_id: string;
@@ -269058,7 +269064,7 @@ export interface BotEstopSetPayload {
 
 /** bot.estop.cleared@1.0.0 (owner: bot) */
 /**
- * bot.estop.cleared v1 (OpenVibe.Bot server/domain/index.js writeEstop via clearEstop). The owner cleared the latched e-stop (only the owner can); principal_kind is user, and Bot sends by as null. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ * bot.estop.cleared v1 (OpenVibe.Bot server/domain/index.js writeEstop via clearEstop). Legacy event: the old stop latch was cleared. Bot no longer emits it; kept for the contract window. principal_kind is user, and Bot sends by as null. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
  */
 export interface BotEstopClearedPayload {
   robot_id: string;
@@ -269068,7 +269074,7 @@ export interface BotEstopClearedPayload {
 
 /** bot.command.refused@1.0.0 (owner: bot) */
 /**
- * bot.command.refused v1 (OpenVibe.Bot server/domain/index.js auditCommand). The gate refused a command (role, allowlist, limits, policy, e-stop, cooldown, turn, device offline) or a device reported an e-stop for a robot it is not attached to (kind estop_state). reason is Bot's refusal code; ids, kinds and codes only, never the value. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
+ * bot.command.refused v1 (OpenVibe.Bot server/domain/index.js auditCommand). The gate refused a command (role, allowlist, limits, policy, cooldown, turn, device offline). reason is Bot's refusal code; ids, kinds and codes only, never the value. Envelope: subject { type: robot, id: <robot id> }, visibility internal, priority important, actor service:bot.
  */
 export interface BotCommandRefusedPayload {
   robot_id: string;
@@ -338391,7 +338397,7 @@ export interface UiSurface {
       name: string;
       kind: "stick" | "button" | "slider" | "readout" | "video" | "list";
       /**
-       * A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused.
+       * A required part is always visible and at its minimum size. A layout that hides or shrinks it is refused. Stop is not required: it is an ordinary part a person may add.
        */
       required: boolean;
       /**
@@ -338869,7 +338875,7 @@ export interface UiSurface {
       name: string;
       kind: "stick" | "button" | "slider" | "readout" | "video" | "list";
       /**
-       * A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused.
+       * A required part is always visible and at its minimum size. A layout that hides or shrinks it is refused. Stop is not required: it is an ordinary part a person may add.
        */
       required: boolean;
       /**
@@ -339663,7 +339669,7 @@ export interface NetworkLayoutChangedPayload {
 
 /** ui.action@1.0.0 (owner: contracts) */
 /**
- * ui.action@1: one action an Element's recipe may request, from the fixed catalog, with the product that authorises it. An element never has a power of its own: the host asks the product named here, and that product checks the presser's role, the element's declared capability, its cooldown and cost, and its own owner limits before it does anything. kind is also the capability id an element declares in ui.element@1, and product is fixed by kind: bot for robot.drive_pulse, robot.head_preset, robot.headlight, robot.say and robot.macro; chat for chat.message, chat.pin and chat.poll; live for the screen, stream and webhook actions; ai for ai.ask; actor for actor.task; billing for money.tip_goal. A robot action is a request through Bot's existing command path: turns, Stop, the e-stop and owner takeover are never bypassed. Money never moves from an action without Billing's own confirmation.
+ * ui.action@1: one action an Element's recipe may request, from the fixed catalog, with the product that authorises it. An element never has a power of its own: the host asks the product named here, and that product checks the presser's role, the element's declared capability, its cooldown and cost, and its own owner limits before it does anything. kind is also the capability id an element declares in ui.element@1, and product is fixed by kind: bot for robot.drive_pulse, robot.head_preset, robot.headlight, robot.say and robot.macro; chat for chat.message, chat.pin and chat.poll; live for the screen, stream and webhook actions; ai for ai.ask; actor for actor.task; billing for money.tip_goal. A robot action is a request through Bot's existing command path: turns, Stop and owner takeover are never bypassed. Money never moves from an action without Billing's own confirmation.
  */
 export type UiAction =
   | {
@@ -340362,7 +340368,7 @@ export type UiTrigger =
     }
   | {
       kind: "robot_event";
-      event: "estop" | "stopped" | "disconnected" | "command_refused" | "button";
+      event: "stop" | "estop" | "stopped" | "disconnected" | "command_refused" | "button";
     }
   | {
       kind: "stream_start";

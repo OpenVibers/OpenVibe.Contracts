@@ -25,7 +25,7 @@ link.
   leases and physical safety — not universal device identity."*
 - **What the code already does** (OpenVibe Link, `origin/main`): one Go static binary per platform — pairing
   (device credential or a Network node principal), one outbound WebSocket to `wss://openvibe.bot/device`, heartbeats
-  and a deadman, owner limits clamped before any driver sees a value, a persisted e-stop and a local kill switch, a
+  and a deadman, owner limits clamped before any driver sees a value, a persisted stop and a local kill switch, a
   plugin supervisor, WHIP video publishing (pion), and the system service (systemd, launchd, Windows). Plugins are
   separate processes over JSON lines: `dryrun`, `adeept_adr036`, `cozmo`. The job worker runs `platform.job@1`
   `function`/`code` jobs from locally declared artifacts only, with namespaces, a seccomp allowlist, CPU/memory/wall
