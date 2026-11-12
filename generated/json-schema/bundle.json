@@ -82435,6 +82435,321 @@
         }
       }
     },
+    "bot.robot-manifest": {
+      "version": "1.0.0",
+      "owner": "bot",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bot/robot-manifest.v1.json",
+        "title": "BotRobotManifest",
+        "description": "bot.robot-manifest@1: what a robot's driver says the robot can do, written and versioned by the driver's maker (a Link plugin's author), so a new control is a version bump of the manifest instead of an OpenVibe release. Each command names its kind, its class (motion moves something and is held to a lifetime and a release; state sets something that stays, like a light; action happens once), its value's fields and ranges, how long it lives, the delivery window Bot gives it, the time it must still have left when the robot reads it, how often it may be sent, what the robot does when no fresh command comes (release), and which control draws it. Each telemetry entry names a reading the driver reports, its fields, its unit and range, where it comes from, and the control that shows it. Bot derives the panel and the ui.surface@1 parts from it, Link forwards only the kinds it declares, and OpenVibe AI reads the same facts when it suggests a layout or writes a control. The manifest is data: no code and no addresses.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "version",
+          "commands"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,39}$",
+            "description": "The robot model this manifest describes, e.g. looi. The same id as its Bot profile."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "What people call the robot."
+          },
+          "by": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,40}$",
+            "description": "The maker of the driver that publishes this manifest (an OpenVibe username)."
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+            "description": "The manifest's own version (semver). A new or changed command is a new version; a frozen version is never edited."
+          },
+          "frozen": {
+            "type": "boolean",
+            "description": "True once the maker and OpenVibe have checked this version against the driver's real command list: it is the contract both sides hold to."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "commands": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "$ref": "#/$defs/command"
+            }
+          },
+          "telemetry": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "$ref": "#/$defs/reading"
+            }
+          }
+        },
+        "$defs": {
+          "range": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number"
+            },
+            "description": "[least, most], inclusive."
+          },
+          "field": {
+            "description": "One field of a value or a reading: a numeric range, \"boolean\", \"string\", \"ms\" (a time in milliseconds since the epoch), or the list of the values it may take.",
+            "oneOf": [
+              {
+                "$ref": "#/$defs/range"
+              },
+              {
+                "enum": [
+                  "boolean",
+                  "string",
+                  "ms",
+                  "integer",
+                  "number"
+                ]
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 16,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+                }
+              }
+            ]
+          },
+          "fields": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 12,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]{0,31}$"
+            },
+            "additionalProperties": {
+              "$ref": "#/$defs/field"
+            }
+          },
+          "window": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "min",
+              "max"
+            ],
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 60000
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 60000
+              }
+            },
+            "description": "A window in milliseconds, inclusive."
+          },
+          "command": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "class",
+              "value",
+              "control"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,31}$",
+                "description": "The command kind on the wire (drive, actuator, headlight, ...)."
+              },
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,31}$",
+                "description": "For a kind that carries a name (actuator): which one, e.g. head."
+              },
+              "class": {
+                "enum": [
+                  "motion",
+                  "state",
+                  "action"
+                ],
+                "description": "motion moves something and has a lifetime and a release; state sets something that stays (a light); action happens once."
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "value": {
+                "$ref": "#/$defs/fields",
+                "description": "The value's fields: for drive { throttle: [-1, 1], steer: [-1, 1] }, for a light { on: \"boolean\" }."
+              },
+              "lifetime_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 60000,
+                "description": "The longest one command may act for (a cap the robot enforces too)."
+              },
+              "delivery_ms": {
+                "$ref": "#/$defs/window",
+                "description": "The deadline Bot gives the command after issuing it: the window the driver accepts it in."
+              },
+              "min_left_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 60000,
+                "description": "The time a command must still have left of its life when the robot reads it, or the robot refuses it."
+              },
+              "rate_per_s": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 100,
+                "description": "At most this many a second, shared by every source."
+              },
+              "release": {
+                "enum": [
+                  "stop",
+                  "hold",
+                  "none"
+                ],
+                "description": "What the robot does when no fresh command comes in time: stop (to zero), hold (stays where it is), none (a state is not released)."
+              },
+              "latched": {
+                "type": "boolean",
+                "description": "The robot keeps the last state until it is told otherwise (a light)."
+              },
+              "confirm": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                "description": "The telemetry key that reports what the robot really did."
+              },
+              "control": {
+                "enum": [
+                  "stick",
+                  "slider",
+                  "toggle",
+                  "button",
+                  "pad"
+                ],
+                "description": "The control the panel draws for it."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "class": {
+                      "const": "motion"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "lifetime_ms",
+                    "release"
+                  ],
+                  "properties": {
+                    "release": {
+                      "enum": [
+                        "stop",
+                        "hold"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "actuator"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "name"
+                  ]
+                }
+              }
+            ]
+          },
+          "reading": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "key",
+              "control"
+            ],
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                "description": "Where the reading arrives: a top-level telemetry key (battery) or a sensors key (p7_commander)."
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "unit": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "range": {
+                "$ref": "#/$defs/range"
+              },
+              "fields": {
+                "$ref": "#/$defs/fields"
+              },
+              "source": {
+                "enum": [
+                  "poll",
+                  "push",
+                  "connect"
+                ],
+                "description": "poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after)."
+              },
+              "fresh_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3600000,
+                "description": "A reading older than this is shown as stale."
+              },
+              "control": {
+                "enum": [
+                  "meter",
+                  "readout",
+                  "badge",
+                  "list"
+                ],
+                "description": "The control that shows it."
+              }
+            }
+          }
+        }
+      }
+    },
     "bot.device-message": {
       "version": "1.0.0",
       "owner": "bot",
@@ -131433,6 +131748,14 @@
                   "pattern": "^[a-z][a-z0-9_.-]{0,39}$"
                 },
                 "description": "The parts this part must never cover, in addition to the surface-wide rule that nothing covers a required part."
+              },
+              "command": {
+                "$ref": "../bot/robot-manifest.v1.json#/$defs/command",
+                "description": "What pressing or moving this part sends, in the robot manifest's terms (bot.robot-manifest@1, 0.418.0): kind and class, the value's ranges, lifetime, delivery window, release and rate. OpenVibe AI reads it when it suggests a layout or writes a control; it grants nothing: the product's gate checks every command."
+              },
+              "reads": {
+                "$ref": "../bot/robot-manifest.v1.json#/$defs/reading",
+                "description": "What this part shows, in the robot manifest's terms: the telemetry key, its fields, unit, range and source."
               }
             }
           }

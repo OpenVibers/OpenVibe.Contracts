@@ -1,0 +1,117 @@
+{
+  "id": "looi",
+  "name": "LOOI",
+  "by": "maticus",
+  "version": "1.0.0",
+  "frozen": true,
+  "description": "LOOI through the P7 tray (Maticus's driver), as checked against the tray's real command list on 2026-11-12.",
+  "commands": [
+    {
+      "kind": "drive",
+      "class": "motion",
+      "label": "Drive",
+      "value": {
+        "throttle": [
+          -1,
+          1
+        ],
+        "steer": [
+          -1,
+          1
+        ]
+      },
+      "lifetime_ms": 500,
+      "delivery_ms": {
+        "min": 1,
+        "max": 300
+      },
+      "release": "stop",
+      "control": "stick"
+    },
+    {
+      "kind": "actuator",
+      "class": "motion",
+      "label": "Head",
+      "value": {
+        "head": [
+          -1,
+          1
+        ]
+      },
+      "lifetime_ms": 500,
+      "release": "hold",
+      "control": "slider"
+    },
+    {
+      "kind": "headlight",
+      "class": "state",
+      "label": "Headlights",
+      "value": {
+        "on": "boolean"
+      },
+      "delivery_ms": {
+        "min": 1,
+        "max": 250
+      },
+      "min_left_ms": 50,
+      "rate_per_s": 2,
+      "release": "none",
+      "latched": true,
+      "confirm": "p7_headlight",
+      "control": "toggle"
+    }
+  ],
+  "telemetry": [
+    {
+      "key": "p7_battery",
+      "label": "Battery",
+      "unit": "%",
+      "range": [
+        0,
+        100
+      ],
+      "fields": {
+        "pct": [
+          0,
+          100
+        ],
+        "usb": "boolean",
+        "raw": "integer",
+        "at": "ms"
+      },
+      "source": "poll",
+      "control": "meter"
+    },
+    {
+      "key": "p7_commander",
+      "label": "Who is driving",
+      "fields": {
+        "subject": "string",
+        "role": [
+          "owner",
+          "mod",
+          "operator"
+        ],
+        "channel": [
+          "drive",
+          "head",
+          "headlight"
+        ],
+        "at": "ms"
+      },
+      "source": "push",
+      "control": "badge"
+    },
+    {
+      "key": "p7_headlight",
+      "label": "Headlights",
+      "fields": {
+        "commanded": "boolean",
+        "pending": "boolean",
+        "physical_state_verified": "boolean"
+      },
+      "source": "push",
+      "control": "badge"
+    }
+  ]
+}

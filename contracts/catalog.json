@@ -7248,6 +7248,16 @@
       "adr": "ADR-043"
     },
     {
+      "id": "bot.robot-manifest",
+      "version": "1.0.0",
+      "owner": "bot",
+      "schema": "bot/robot-manifest.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-043"
+    },
+    {
       "id": "bot.device-message",
       "version": "1.0.0",
       "owner": "bot",

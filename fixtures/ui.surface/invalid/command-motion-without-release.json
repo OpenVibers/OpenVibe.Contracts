@@ -1,0 +1,339 @@
+{
+  "id": "bot.controls",
+  "version": 1,
+  "name": "Robot controls",
+  "description": "LOOI's panel from its manifest (LOOI 1.0.0): each part says what it sends or shows, for the AI that arranges it.",
+  "devices": [
+    "phone",
+    "tablet",
+    "computer"
+  ],
+  "grid": {
+    "columns": {
+      "phone": 4,
+      "tablet": 8,
+      "computer": 12
+    },
+    "cell_px": {
+      "phone": 44,
+      "tablet": 44,
+      "computer": 44
+    }
+  },
+  "theme_tokens": [
+    "accent",
+    "surface",
+    "surface-raised",
+    "text",
+    "muted",
+    "danger",
+    "warning",
+    "success"
+  ],
+  "parts": [
+    {
+      "id": "stick",
+      "name": "Drive stick",
+      "kind": "stick",
+      "required": false,
+      "pressed": true,
+      "min": {
+        "w": 2,
+        "h": 2
+      },
+      "styles": {
+        "tints": [
+          "surface",
+          "accent"
+        ],
+        "shapes": [
+          "round",
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight"
+        ],
+        "gamepad": [
+          "left-stick"
+        ]
+      },
+      "never_covers": [
+        "stop"
+      ],
+      "command": {
+        "kind": "drive",
+        "class": "motion",
+        "label": "Drive",
+        "value": {
+          "throttle": [
+            -1,
+            1
+          ],
+          "steer": [
+            -1,
+            1
+          ]
+        },
+        "lifetime_ms": 500,
+        "delivery_ms": {
+          "min": 1,
+          "max": 300
+        },
+        "control": "stick"
+      }
+    },
+    {
+      "id": "head",
+      "name": "Head",
+      "kind": "slider",
+      "required": false,
+      "pressed": true,
+      "min": {
+        "w": 2,
+        "h": 1
+      },
+      "styles": {
+        "tints": [
+          "accent",
+          "surface"
+        ],
+        "shapes": [
+          "round",
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [
+          "q",
+          "e"
+        ],
+        "gamepad": []
+      },
+      "never_covers": [
+        "stop"
+      ],
+      "command": {
+        "kind": "actuator",
+        "name": "head",
+        "class": "motion",
+        "label": "Head",
+        "value": {
+          "head": [
+            -1,
+            1
+          ]
+        },
+        "lifetime_ms": 500,
+        "release": "hold",
+        "control": "slider"
+      }
+    },
+    {
+      "id": "headlight",
+      "name": "Headlights",
+      "kind": "button",
+      "required": false,
+      "pressed": true,
+      "min": {
+        "w": 2,
+        "h": 1
+      },
+      "styles": {
+        "tints": [
+          "surface",
+          "accent"
+        ],
+        "shapes": [
+          "round",
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [
+          "l"
+        ],
+        "gamepad": []
+      },
+      "never_covers": [
+        "stop"
+      ],
+      "command": {
+        "kind": "headlight",
+        "class": "state",
+        "label": "Headlights",
+        "value": {
+          "on": "boolean"
+        },
+        "delivery_ms": {
+          "min": 1,
+          "max": 250
+        },
+        "min_left_ms": 50,
+        "rate_per_s": 2,
+        "release": "none",
+        "latched": true,
+        "confirm": "p7_headlight",
+        "control": "toggle"
+      }
+    },
+    {
+      "id": "battery",
+      "name": "Battery",
+      "kind": "readout",
+      "required": false,
+      "pressed": false,
+      "min": {
+        "w": 1,
+        "h": 1
+      },
+      "styles": {
+        "tints": [
+          "text",
+          "surface"
+        ],
+        "shapes": [
+          "round",
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [],
+        "gamepad": []
+      },
+      "reads": {
+        "key": "p7_battery",
+        "label": "Battery",
+        "unit": "%",
+        "range": [
+          0,
+          100
+        ],
+        "fields": {
+          "pct": [
+            0,
+            100
+          ],
+          "usb": "boolean",
+          "raw": "integer",
+          "at": "ms"
+        },
+        "source": "poll",
+        "control": "meter"
+      }
+    },
+    {
+      "id": "commander",
+      "name": "Who is driving",
+      "kind": "readout",
+      "required": false,
+      "pressed": false,
+      "min": {
+        "w": 2,
+        "h": 1
+      },
+      "styles": {
+        "tints": [
+          "text",
+          "surface"
+        ],
+        "shapes": [
+          "round",
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [],
+        "gamepad": []
+      },
+      "reads": {
+        "key": "p7_commander",
+        "label": "Who is driving",
+        "fields": {
+          "subject": "string",
+          "role": [
+            "owner",
+            "mod",
+            "operator"
+          ],
+          "channel": [
+            "drive",
+            "head",
+            "headlight"
+          ],
+          "at": "ms"
+        },
+        "source": "push",
+        "control": "badge"
+      }
+    },
+    {
+      "id": "stop",
+      "name": "Stop",
+      "kind": "button",
+      "required": false,
+      "pressed": true,
+      "min": {
+        "w": 1,
+        "h": 1,
+        "px": 44
+      },
+      "styles": {
+        "tints": [
+          "surface"
+        ],
+        "shapes": [
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [
+          "Space"
+        ],
+        "gamepad": [
+          "south"
+        ]
+      }
+    }
+  ]
+}

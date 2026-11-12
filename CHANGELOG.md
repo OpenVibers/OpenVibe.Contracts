@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.418.0 — 2026-11-12
+
+**A robot's own manifest:** `bot.robot-manifest@1` (public, ADR-043) is what a robot's driver says the robot can do,
+written and versioned by the driver's maker, so a new control is a version bump of the manifest instead of an
+OpenVibe release (the plan in Maticus's LOOI thread, 11-10; his P7 command list on 11-12 is its first frozen version).
+
+- **Commands:** kind, class (`motion`, `state`, `action`), the value's fields and ranges, `lifetime_ms`, the
+  `delivery_ms` window Bot gives it, `min_left_ms` on arrival, `rate_per_s`, `release` (`stop`, `hold`, `none`;
+  motion must stop or hold), `latched`, the telemetry key that `confirm`s it, and the `control` the panel draws
+  (stick, slider, toggle, button, pad). An actuator names which one.
+- **Telemetry:** a key, its fields (ranges, `boolean`, `string`, `ms`, `integer`, `number`, or a list of values),
+  unit and range, `source` (`poll`, `push`, `connect`), `fresh_ms`, and its control (meter, readout, badge, list).
+- **`frozen`:** true once the maker and OpenVibe have checked a version against the driver's real command list.
+- **`ui.surface@1` parts say what they send or show:** optional `command` and `reads`, in the manifest's terms, so
+  OpenVibe AI knows a part's ranges, lifetime, release and rate when it arranges a panel or writes a control. They
+  grant nothing: the product's gate still checks every command. A new example is LOOI's panel built from its manifest.
+- Fixtures: LOOI 1.0.0 through the P7 tray (drive 500 ms life, delivery 1–300, release stop; head 500 ms, hold;
+  headlights delivery 1–250, 50 ms left, 2 a second, latched; battery by poll with `at` in ms; who is driving), and
+  three refusals (motion without a release, an actuator without its name, motion that is never released).
+
 ## 0.417.0 — 2026-11-12
 
 **The agent engine's next shapes:** who asked, what a run continues, how several agents share one ask, and where the
