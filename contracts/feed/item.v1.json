@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/feed/item.v1.json",
+  "title": "FeedItem",
+  "description": "feed.item@1: one card of OpenVibe's one feed, served by OpenVibe.Network (GET /api/v1/feed and GET /api/frame/feed; OpenVibe.Community's Pulse reads the same feed). Every card names the service it came from, a stable id, its own link, and only public or follower-visible activity. Kinds: post, pic, clip, video, live, stream, rundown, quest, member, chat, event, wiki, update, work, deal, news, report, poll, game, meme, paste, episode, space, avatar, banner, follow, site.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "url", "title", "text", "at", "site", "site_name", "actor", "subject", "media", "counts"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Stable across feeds and restarts: f:<service>:<type>:<id> for a source item and t:<site>:<url> for a trending card."
+    },
+    "kind": {
+      "description": "What happened. live is a channel on air now (a go-live that ended is stream); stream is a past broadcast, including a watched-together summary; work is one grouped row of new jobs per hour; report is a number with its trend.",
+      "enum": ["post", "pic", "clip", "video", "live", "stream", "rundown", "quest", "member", "chat", "event", "wiki", "update", "work", "deal", "news", "report", "poll", "game", "meme", "paste", "episode", "space", "avatar", "banner", "follow", "site"]
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https?://",
+      "maxLength": 2000,
+      "description": "The thing itself: the post, stream, job board, report page or wiki page."
+    },
+    "title": { "type": "string", "maxLength": 300 },
+    "text": {
+      "type": "string",
+      "maxLength": 280,
+      "description": "The source's first 280 characters, on one line; empty when it has none."
+    },
+    "at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When it happened; null only for a trending card."
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When a scheduled event begins; present only on event cards."
+    },
+    "site": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "The source service: live, community, media-hub, pics, games, quest, chat, today, work, deals, news, report, wiki, blog, tools, network…"
+    },
+    "site_name": { "type": "string", "maxLength": 40 },
+    "actor": {
+      "type": ["object", "null"],
+      "description": "Who did it; null for AI, system, aggregate and trending cards.",
+      "required": ["name", "avatar"],
+      "properties": {
+        "name": { "type": ["string", "null"], "maxLength": 80 },
+        "avatar": { "type": ["string", "null"], "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    },
+    "subject": {
+      "type": ["string", "null"],
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The acting person's subject, when one is known; null for AI, system and aggregate cards. The Following filter and For you ranking read it."
+    },
+    "media": {
+      "type": ["object", "null"],
+      "description": "The card's first picture, as a Media thumbnail; null when it has none.",
+      "required": ["thumb", "ratio"],
+      "properties": {
+        "thumb": { "type": "string", "pattern": "^https://", "maxLength": 2000 },
+        "preview": { "type": "string", "pattern": "^https://", "maxLength": 2000 },
+        "ratio": { "type": "number", "exclusiveMinimum": 0 },
+        "length": { "type": "number", "minimum": 0, "description": "Seconds, when the card is a video." }
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "description": "The numbers the source knows; each present only when it knows it.",
+      "properties": {
+        "views": { "type": "integer", "minimum": 0 },
+        "likes": { "type": "integer", "minimum": 0 },
+        "comments": { "type": "integer", "minimum": 0 },
+        "watchers": { "type": "integer", "minimum": 0, "description": "People who watched a stream (peak for a past broadcast)." },
+        "people": { "type": "integer", "minimum": 0, "description": "A count a report card is about (people online, jobs, stories)." }
+      },
+      "additionalProperties": false
+    },
+    "live_now": {
+      "type": "boolean",
+      "description": "Present on live and stream cards: true only while the channel is on air."
+    },
+    "trend": {
+      "type": "object",
+      "description": "Present on report cards: which way the number moved and by how much.",
+      "required": ["direction"],
+      "properties": {
+        "direction": { "enum": ["up", "down", "flat"] },
+        "pct": { "type": "number", "minimum": 0 },
+        "previous": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "group": {
+      "type": "object",
+      "description": "A run of the same kind folded into one card (two or more items).",
+      "required": ["count", "items"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 2 },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["id", "url", "title", "media"],
+            "properties": {
+              "id": { "type": "string" },
+              "url": { "type": "string", "pattern": "^https://" },
+              "title": { "type": "string" },
+              "media": { "type": ["object", "null"] }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "label": {
+      "enum": ["Trending", "AI", "System", "Live"],
+      "description": "Present only when the card needs one."
+    },
+    "visibility": {
+      "enum": ["followers"],
+      "description": "Present only for an item returned to a follower or its author; never public."
+    }
+  }
+}

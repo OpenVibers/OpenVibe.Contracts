@@ -1,0 +1,15 @@
+{
+  "id": "f:example:meme:1",
+  "kind": "meme",
+  "url": "https://openvibe.meme/m/example",
+  "title": "A meme with receipts",
+  "text": "Weaker rulers show mercy.",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "meme",
+  "site_name": "Meme",
+  "actor": null,
+  "subject": null,
+  "media": null,
+  "counts": {},
+  "label": "System"
+}

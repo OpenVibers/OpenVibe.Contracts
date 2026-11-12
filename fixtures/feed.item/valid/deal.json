@@ -1,0 +1,19 @@
+{
+  "id": "f:example:deal:1",
+  "kind": "deal",
+  "url": "https://openvibe.deals/d/example",
+  "title": "A deal on a keyboard",
+  "text": "20% off",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "deals",
+  "site_name": "Deals",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {
+    "likes": 3
+  }
+}

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.415.0 — 2026-11-12
+
+One feed for all of OpenVibe: the card OpenVibe.Network serves from /api/v1/feed and /api/frame/feed, and that
+OpenVibe.Community's Pulse reads instead of its own collector.
+
+- Add `feed.item@1`: each card's stable id, kind (post, pic, clip, video, live, stream, rundown, quest, member,
+  chat, event, wiki, update, work, deal, news, report, poll, game, meme, paste, episode, space, avatar, banner,
+  follow, site), link, source site, actor and subject, first picture, counts (views, likes, comments, watchers,
+  people), live_now, a folded group of the same kind, a report trend, starts_at and follower visibility.
+- Fixtures for every kind, plus invalid ones (unknown kind, missing id, a URL without a scheme, a negative count, a
+  subject that is not a usr_ id, private visibility, a one-item group, a trend without a direction), and the
+  generated JSON Schema and TypeScript. Additive and new: no existing contract changes.
+
 ## 0.414.0 — 2026-11-12
 
 The whole run (the agent engine, `docs/agents-runs.md`; design `agent-engine.md`). The owner, 11-12, with the menu's
