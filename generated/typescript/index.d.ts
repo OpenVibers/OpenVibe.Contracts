@@ -219410,6 +219410,155 @@ export interface BotRobotProfile {
   };
 }
 
+/** bot.robot-manifest@1.0.0 (owner: bot) */
+/**
+ * bot.robot-manifest@1: what a robot's driver says the robot can do, written and versioned by the driver's maker (a Link plugin's author), so a new control is a version bump of the manifest instead of an OpenVibe release. Each command names its kind, its class (motion moves something and is held to a lifetime and a release; state sets something that stays, like a light; action happens once), its value's fields and ranges, how long it lives, the delivery window Bot gives it, the time it must still have left when the robot reads it, how often it may be sent, what the robot does when no fresh command comes (release), and which control draws it. Each telemetry entry names a reading the driver reports, its fields, its unit and range, where it comes from, and the control that shows it. Bot derives the panel and the ui.surface@1 parts from it, Link forwards only the kinds it declares, and OpenVibe AI reads the same facts when it suggests a layout or writes a control. The manifest is data: no code and no addresses.
+ */
+export interface BotRobotManifest {
+  /**
+   * The robot model this manifest describes, e.g. looi. The same id as its Bot profile.
+   */
+  id: string;
+  /**
+   * What people call the robot.
+   */
+  name: string;
+  /**
+   * The maker of the driver that publishes this manifest (an OpenVibe username).
+   */
+  by?: string;
+  /**
+   * The manifest's own version (semver). A new or changed command is a new version; a frozen version is never edited.
+   */
+  version: string;
+  /**
+   * True once the maker and OpenVibe have checked this version against the driver's real command list: it is the contract both sides hold to.
+   */
+  frozen?: boolean;
+  description?: string;
+  /**
+   * @minItems 1
+   * @maxItems 32
+   */
+  commands: [
+    {
+      [k: string]: unknown | undefined;
+    } & {
+      [k: string]: unknown | undefined;
+    },
+    ...({
+      [k: string]: unknown | undefined;
+    } & {
+      [k: string]: unknown | undefined;
+    })[]
+  ];
+  /**
+   * @maxItems 32
+   */
+  telemetry?: {
+    /**
+     * Where the reading arrives: a top-level telemetry key (battery) or a sensors key (p7_commander).
+     */
+    key: string;
+    label?: string;
+    unit?: string;
+    /**
+     * [least, most], inclusive.
+     *
+     * @minItems 2
+     * @maxItems 2
+     */
+    range?: [number, number];
+    fields?: {
+      /**
+       * One field of a value or a reading: a numeric range, "boolean", "string", "ms" (a time in milliseconds since the epoch), or the list of the values it may take.
+       */
+      [k: string]:
+        | (
+            | [number, number]
+            | ("boolean" | "string" | "ms" | "integer" | "number")
+            | [string]
+            | [string, string]
+            | [string, string, string]
+            | [string, string, string, string]
+            | [string, string, string, string, string]
+            | [string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string]
+            | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+            | [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string
+              ]
+          )
+        | undefined;
+    };
+    /**
+     * poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after).
+     */
+    source?: "poll" | "push" | "connect";
+    /**
+     * A reading older than this is shown as stale.
+     */
+    fresh_ms?: number;
+    /**
+     * The control that shows it.
+     */
+    control: "meter" | "readout" | "badge" | "list";
+  }[];
+}
+
 /** bot.device-message@1.0.0 (owner: bot) */
 /**
  * bot.device-message@1 (ADR-043 decision 5): one frame on OpenVibe.Bot's device WebSocket (wss://openvibe.bot/device), JSON with v, seq and ts on every frame. Server to device: hello, config, command, estop, heartbeat_ack, error, paired (after a pair frame), rotate (a Network-paired machine is asked to rotate its credential with Network), voice_answer (Vibe's answer to a voice_ask). Device to server: pair (the only frame an unauthenticated socket may send), status, telemetry, ack, nack, heartbeat, reauth (Network-paired machines), estop_state, voice_ask (what the person asked after the machine's call word). The job frames on the same socket are platform.job-frame@1, not this contract. This duplicates two implementations that must not drift: OpenVibe.Bot server/realtime.js (the sender and reader in Bot) and OpenVibe Link internal/protocol/protocol.go (the Go structs of the device agent).
