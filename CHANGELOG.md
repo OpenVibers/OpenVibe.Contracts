@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.411.1 — 2026-11-12
+
+- Add the `code` category to `sources.source@1`, `sources.item@1`, `sources.category@1` and `sources.source-write-request@1`: GitHub repositories (trending, top, new and star-gain rankings) enter OpenVibe.Sources under one category, with a 30-day item window. Additive: no existing field changes, and an older reader ignores the new enum value.
+
 ## 0.411.0 — 2026-11-12
 
 The composer's Frame (Post · Ask · Do; Network #858): what its Model sheet lists and what an Ask sends.

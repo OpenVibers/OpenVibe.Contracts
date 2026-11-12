@@ -13255,7 +13255,8 @@ export interface Source {
     | "games"
     | "housing"
     | "food"
-    | "jobs";
+    | "jobs"
+    | "code";
   homepage_url?: string | null;
   /**
    * @maxItems 20
@@ -85922,7 +85923,8 @@ export interface SourceCategory {
     | "games"
     | "housing"
     | "food"
-    | "jobs";
+    | "jobs"
+    | "code";
   /**
    * How long Sources keeps an item of this category: a window in days, or "keep" for reference data that is never pruned by age.
    */
@@ -85959,7 +85961,8 @@ export interface SourceItem {
     | "games"
     | "housing"
     | "food"
-    | "jobs";
+    | "jobs"
+    | "code";
   /**
    * article | url | sitemap | product | offer | review | review_signal | record | coupon …
    */
@@ -89155,7 +89158,8 @@ export type SourcesSourceWriteRequest =
         | "games"
         | "housing"
         | "food"
-        | "jobs";
+        | "jobs"
+        | "code";
       homepage_url?: string | null;
       /**
        * @maxItems 20
