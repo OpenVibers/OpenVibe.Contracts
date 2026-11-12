@@ -34,7 +34,7 @@
       "required": [
         "id"
       ],
-      "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it. Since 1.2.0, CAPABILITIES says what its harness can do.",
+      "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it. Since 1.2.0, CAPABILITIES says what its harness can do. Since 1.3.0, BLUEPRINT is the blueprint version it ran.",
       "properties": {
         "id": {
           "type": "string",
@@ -95,6 +95,11 @@
               "voice"
             ]
           }
+        },
+        "blueprint": {
+          "type": "string",
+          "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
+          "description": "Since 1.3.0: the blueprint version this agent ran (agents.blueprint@1), when it was made from one."
         }
       }
     },

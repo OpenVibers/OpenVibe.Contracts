@@ -1,0 +1,64 @@
+{
+  "id": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PG",
+  "version": 1,
+  "state": "published",
+  "name": "Recipe scaler",
+  "summary": "Scales a recipe to a number of people and converts the units.",
+  "author": {
+    "type": "user",
+    "id": "usr_01JD8C4QJ7Z3K9W2X5V6N1M0PB"
+  },
+  "visibility": "link",
+  "brain": {
+    "pick": "size",
+    "size": "small",
+    "caps": [
+      "json"
+    ]
+  },
+  "knows": {
+    "instructions": "Scale the recipe to the number of people asked for. Metric units unless asked."
+  },
+  "rules": {
+    "level": "full",
+    "budget": {
+      "run_usd": 0.01
+    }
+  },
+  "makes": {
+    "answer": [
+      "text"
+    ],
+    "schema": {
+      "type": "object",
+      "required": [
+        "ingredients"
+      ],
+      "properties": {
+        "ingredients": {
+          "type": "array"
+        }
+      }
+    },
+    "serve": {
+      "a2a": true,
+      "mcp": true,
+      "input": {
+        "type": "object",
+        "required": [
+          "recipe",
+          "people"
+        ],
+        "properties": {
+          "recipe": {
+            "type": "string"
+          },
+          "people": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "published_at": "2026-11-12T21:00:00Z"
+}

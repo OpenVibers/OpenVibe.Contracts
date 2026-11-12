@@ -135582,7 +135582,7 @@
       }
     },
     "agents.run": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "owner": "actor",
       "status": "active",
       "schema": {
@@ -135621,7 +135621,7 @@
             "required": [
               "id"
             ],
-            "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it. Since 1.2.0, CAPABILITIES says what its harness can do.",
+            "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it. Since 1.2.0, CAPABILITIES says what its harness can do. Since 1.3.0, BLUEPRINT is the blueprint version it ran.",
             "properties": {
               "id": {
                 "type": "string",
@@ -135682,6 +135682,11 @@
                     "voice"
                   ]
                 }
+              },
+              "blueprint": {
+                "type": "string",
+                "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
+                "description": "Since 1.3.0: the blueprint version this agent ran (agents.blueprint@1), when it was made from one."
               }
             }
           },
@@ -136781,7 +136786,7 @@
       }
     },
     "agents.run-start": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -137176,6 +137181,11 @@
                 ]
               }
             }
+          },
+          "blueprint": {
+            "type": "string",
+            "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
+            "description": "Since 1.2.0: run this blueprint version once without installing it (Try it; a public agent used one time). The run uses the starter's own keys and places, and every tool asks first whatever the blueprint says. With AGENT, AGENT wins."
           }
         }
       }
@@ -137798,6 +137808,1085 @@
             ]
           },
           "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "agents.blueprint": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agents/blueprint.v1.json",
+        "title": "AgentsBlueprint",
+        "description": "agents.blueprint@1 (agent-blueprints.md, 2026-11-12): an agent anyone can read, change, share and run, as one small document of ten parts. FACE is how it looks and sounds (Design), BRAIN which models it may use and what it may pay (Exchange), KNOWS its instructions, skills and knowledge, HANDS the tools it may use (allowed or ask first), PLACES where its work runs (your machines, machines shared with you, OpenVibe computers, a sandbox; Link), MEMORY what it keeps, RULES its approval level, budget and who may ask it, WHEN what starts it, MAKES what it answers with and whether other agents and apps may call it, TEAM a play whose roles are other blueprints. INPUTS are what an installer fills in ({{id}} in KNOWS and WHEN); NEEDS are what an installer must connect first. A blueprint carries no secret and grants nothing: it asks, and an install (agents.install@1) is the installer agreeing. A published version never changes; a new version that asks for more waits for each installer's yes. Money, passwords, deletions, new recipients and posting in a person's name always ask, whatever the level: no field lowers that floor. openvibe-sdk/agents/blueprint validates, fills, compiles and prices one.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "state",
+          "name",
+          "summary",
+          "author",
+          "visibility",
+          "knows"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^bp_[A-Za-z0-9_-]{3,40}$",
+            "description": "bp_<ULID>, or a short stock id such as bp_vibe."
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999999,
+            "description": "Counts up from 1. A published version never changes; a draft is the next number."
+          },
+          "state": {
+            "enum": [
+              "draft",
+              "published",
+              "retired"
+            ],
+            "description": "retired: no new installs; existing ones keep running."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "What it does, in a sentence or two."
+          },
+          "author": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "id"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "user",
+                  "service"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            }
+          },
+          "visibility": {
+            "enum": [
+              "private",
+              "link",
+              "public"
+            ],
+            "description": "link: anyone with its address may read and install it. public: also listed on openvibe.design's gallery, every part readable."
+          },
+          "forked_from": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
+            "description": "The version it was remixed from (bp_…@N); the gallery credits it."
+          },
+          "licence": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "description": "An SPDX id (MIT, CC-BY-4.0, …) for remixes; absent means remixes need the author's yes."
+          },
+          "tags": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,40}$"
+            }
+          },
+          "inputs": {
+            "type": "array",
+            "maxItems": 12,
+            "description": "What an installer fills in. Each is used as {{id}} in KNOWS and WHEN.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "type",
+                "label"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{0,30}$"
+                },
+                "type": {
+                  "enum": [
+                    "text",
+                    "number",
+                    "boolean",
+                    "choice",
+                    "channel",
+                    "room",
+                    "repository",
+                    "machine",
+                    "url"
+                  ]
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "help": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "default": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                },
+                "choices": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 30,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "choice"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "choices"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "needs": {
+            "type": "array",
+            "maxItems": 12,
+            "description": "What an installer must have connected; the install screen checks each and offers the way to connect it.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "what"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "machine",
+                    "key",
+                    "plan",
+                    "app",
+                    "robot"
+                  ]
+                },
+                "what": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_.-]{0,60}$",
+                  "description": "machine: gpu, desk, browser, linux, windows, macos, android; key and plan: a provider (gemini, openai, …); app: a Connect app; robot: a manifest id."
+                },
+                "why": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            }
+          },
+          "face": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "How it looks and sounds wherever it shows up: chat, a stream overlay, a robot, a run card.",
+            "properties": {
+              "avatar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "description": "An https image, a Media id, or a preset such as preset:researcher."
+              },
+              "glyph": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,40}$",
+                "description": "A glyph from the registry, when it has no picture."
+              },
+              "hue": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 359
+              },
+              "voice": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 80,
+                "description": "A TTS voice id, or null for none."
+              },
+              "tone": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300,
+                "description": "How it talks, in words."
+              },
+              "greeting": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "elements": {
+                "type": "array",
+                "maxItems": 8,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "description": "Design elements it shows (a co-host card on the overlay, a reaction)."
+              }
+            }
+          },
+          "brain": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Which models it may use. pick auto: the Dispatcher, cheapest that can, escalating only on evidence; size: the cheapest of that size; exact: MODEL only (a person's own pick always wins).",
+            "properties": {
+              "pick": {
+                "enum": [
+                  "auto",
+                  "size",
+                  "exact"
+                ]
+              },
+              "size": {
+                "enum": [
+                  "small",
+                  "medium",
+                  "strong"
+                ]
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "description": "An Exchange offer or provider:model id, for pick exact."
+              },
+              "rungs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "machine",
+                    "plan",
+                    "key",
+                    "allowance",
+                    "credits"
+                  ]
+                },
+                "description": "The ladder rungs it may use: the installer's machine, a signed-in plan, their key, the free allowance, credits."
+              },
+              "max_usd_per_m": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10000,
+                "description": "The most it may pay per million tokens on any rung paid per token."
+              },
+              "caps": {
+                "type": "array",
+                "uniqueItems": true,
+                "maxItems": 8,
+                "items": {
+                  "enum": [
+                    "tools",
+                    "vision",
+                    "audio",
+                    "json",
+                    "thinking",
+                    "long-context"
+                  ]
+                }
+              },
+              "depth": {
+                "enum": [
+                  "quick",
+                  "balanced",
+                  "deep"
+                ]
+              },
+              "advisor": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "required": [
+                  "consults"
+                ],
+                "description": "A stronger model it may consult at hard decisions, at most CONSULTS times a run.",
+                "properties": {
+                  "size": {
+                    "enum": [
+                      "medium",
+                      "strong"
+                    ]
+                  },
+                  "consults": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20
+                  }
+                }
+              },
+              "decisions": {
+                "type": "boolean",
+                "description": "Yes/no, choose-one and rubric steps go to Decisions (POST /api/v1/decisions) instead of a model writing an answer."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "pick": {
+                      "const": "exact"
+                    }
+                  },
+                  "required": [
+                    "pick"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "model"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "pick": {
+                      "const": "size"
+                    }
+                  },
+                  "required": [
+                    "pick"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "size"
+                  ]
+                }
+              }
+            ]
+          },
+          "knows": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "instructions"
+            ],
+            "properties": {
+              "instructions": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000,
+                "description": "Its instructions, in words. {{id}} is an input."
+              },
+              "skills": {
+                "type": "array",
+                "maxItems": 32,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "description": "Skill ids (Actor's skills, Run's shared skills)."
+              },
+              "knowledge": {
+                "type": "array",
+                "maxItems": 32,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "ref"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "file",
+                        "media",
+                        "wiki",
+                        "search",
+                        "repository",
+                        "url"
+                      ]
+                    },
+                    "ref": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "note": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "type": "array",
+                "maxItems": 20,
+                "description": "Asks with what a good answer does; Try it offers them and Bench grades with them.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "ask",
+                    "good"
+                  ],
+                  "properties": {
+                    "ask": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "good": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "hands": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tools": {
+                "type": "array",
+                "maxItems": 64,
+                "description": "ov:<product>.<tool> a product's tool on the one MCP endpoint; tools:<app> an openvibe.tools app; connect:<app> a Connect app; mcp:https://… the installer's own server; machine:files|shell|desk|browser|screen on its PLACE; robot:<command> a robot's manifest command; harness:<name> a coding harness for code work; agent:bp_…|agt_… another agent as a tool. MODE ask: every use asks first.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "tool",
+                    "mode"
+                  ],
+                  "properties": {
+                    "tool": {
+                      "type": "string",
+                      "maxLength": 1900,
+                      "pattern": "^(?:ov:[a-z][a-z0-9-]{0,40}(?:\\.[a-z0-9_-]{1,60}){1,4}|tools:[a-z0-9][a-z0-9-]{0,60}(?:\\.[a-z0-9_-]{1,60}){0,3}|connect:[a-z0-9][a-z0-9-]{0,60}(?:\\.[a-z0-9_-]{1,60}){0,3}|mcp:https://[^\\s]{4,1800}|machine:(?:files|shell|desk|browser|screen)|robot:[a-z0-9_][a-z0-9_.-]{0,80}|harness:(?:auto|dsh|codex|claude-code|opencode|hermes|gemini)|agent:(?:bp_[A-Za-z0-9_-]{3,40}(?:@[1-9][0-9]{0,5})?|agt_[A-Za-z0-9]{6,40}))$"
+                    },
+                    "mode": {
+                      "enum": [
+                        "allow",
+                        "ask"
+                      ]
+                    },
+                    "note": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    }
+                  }
+                }
+              },
+              "search": {
+                "type": "boolean",
+                "description": "It may find more tools on the one MCP endpoint by search; each found tool asks first."
+              }
+            }
+          },
+          "places": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "order": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 5,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "none",
+                    "own",
+                    "shared",
+                    "openvibe",
+                    "sandbox"
+                  ]
+                },
+                "description": "Where its work may run, tried in order: none (it only talks and calls tools), own (the installer's machines through Link), shared (machines shared with the installer by a grant), openvibe (OpenVibe computers), sandbox (a throwaway one). A blueprint never names a machine; the install does."
+              },
+              "needs": {
+                "type": "array",
+                "maxItems": 8,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "gpu",
+                    "desk",
+                    "browser",
+                    "linux",
+                    "windows",
+                    "macos",
+                    "android",
+                    "robot"
+                  ]
+                }
+              }
+            }
+          },
+          "memory": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "scope"
+            ],
+            "properties": {
+              "scope": {
+                "enum": [
+                  "none",
+                  "person",
+                  "thread",
+                  "team"
+                ],
+                "description": "person: one memory per installer; thread: per conversation; team: shared by a TEAM's roles."
+              },
+              "remember": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000,
+                "description": "What is worth keeping, in words."
+              },
+              "keep_days": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 3650
+              }
+            }
+          },
+          "rules": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "level": {
+                "enum": [
+                  "ask",
+                  "auto-edits",
+                  "approve-for-me",
+                  "full"
+                ],
+                "description": "actor.agent@1's levels. The floor (money, passwords, deletions, new recipients, posting in a person's name) asks at every level."
+              },
+              "budget": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "run_usd": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10000
+                  },
+                  "day_usd": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10000
+                  },
+                  "run_seconds": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 604800
+                  },
+                  "run_steps": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  }
+                }
+              },
+              "who": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "may"
+                ],
+                "description": "Who may start it besides its installer (agents.source@1's WHO). Another person's words start a run with a mandate; they are information, never permission.",
+                "properties": {
+                  "may": {
+                    "enum": [
+                      "owner",
+                      "list",
+                      "followers",
+                      "anyone"
+                    ]
+                  }
+                }
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "level": {
+                      "const": "full"
+                    }
+                  },
+                  "required": [
+                    "level"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "budget"
+                  ],
+                  "properties": {
+                    "budget": {
+                      "type": "object",
+                      "anyOf": [
+                        {
+                          "required": [
+                            "run_usd"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "day_usd"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "when": {
+            "type": "array",
+            "maxItems": 16,
+            "description": "What starts it, besides being asked directly. KIND is agents.source@1's kinds plus manual and event.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "manual",
+                    "chat",
+                    "feed",
+                    "comments",
+                    "git",
+                    "composer",
+                    "notifications",
+                    "mail",
+                    "schedule",
+                    "goal",
+                    "event",
+                    "webhook",
+                    "machine"
+                  ]
+                },
+                "rule": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1000,
+                  "description": "What counts, in words (a message that names it; a post that reports a bug)."
+                },
+                "where": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "service"
+                  ],
+                  "properties": {
+                    "service": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]{0,40}$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_-]{0,40}$"
+                    },
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "description": "An id or an {{input}}."
+                    }
+                  }
+                },
+                "event": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9]{0,40}(?:\\.[a-z0-9_]{1,60}){1,4}$",
+                  "description": "An OpenVibe.Events type, for kind event."
+                },
+                "cron": {
+                  "type": "string",
+                  "pattern": "^\\S+(?: \\S+){4}$",
+                  "description": "Five fields, for kind schedule."
+                },
+                "tz": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "kind": {
+                        "const": "schedule"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "cron"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "kind": {
+                        "const": "event"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "event"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "makes": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "answer": {
+                "type": "array",
+                "maxItems": 12,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^(?:text|file|post|notice|pull-request|robot|card:[a-z][a-z0-9-]{0,40})$"
+                },
+                "description": "What it answers with: text, a card of a registered type (card:clip), a file, a post, a notice, a pull request, a robot action."
+              },
+              "schema": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The exact shape of its answer (a JSON Schema), when it has one."
+              },
+              "serve": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "a2a": {
+                    "type": "boolean",
+                    "description": "Listed in Network's A2A directory, so other agents may ask it (behind its RULES.WHO)."
+                  },
+                  "mcp": {
+                    "type": "boolean",
+                    "description": "Offered as a tool on the one MCP endpoint; needs SCHEMA and INPUT."
+                  },
+                  "input": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "description": "The JSON Schema of what a caller sends, for mcp."
+                  }
+                }
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "serve": {
+                      "type": "object",
+                      "properties": {
+                        "mcp": {
+                          "const": true
+                        }
+                      },
+                      "required": [
+                        "mcp"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "serve"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "schema"
+                  ],
+                  "properties": {
+                    "schema": {
+                      "type": "object"
+                    },
+                    "serve": {
+                      "type": "object",
+                      "required": [
+                        "input"
+                      ],
+                      "properties": {
+                        "input": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "team": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "play",
+              "roles"
+            ],
+            "description": "A play (agents.play@1) whose roles are filled by other blueprints at fixed versions. Absent or null: it works alone.",
+            "properties": {
+              "play": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,60}$"
+              },
+              "roles": {
+                "type": "object",
+                "minProperties": 1,
+                "maxProperties": 12,
+                "propertyNames": {
+                  "pattern": "^[a-z][a-z0-9-]{0,60}$"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$"
+                }
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "published"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "published_at"
+              ],
+              "properties": {
+                "published_at": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "agents.install": {
+      "version": "1.0.0",
+      "owner": "actor",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/agents/install.v1.json",
+        "title": "AgentsInstall",
+        "description": "agents.install@1 (agent-blueprints.md, 2026-11-12): a person's own agent made from one blueprint version. AGENT is the agent it made (actor.agent@1's id), BLUEPRINT the version it runs, INPUTS what the person filled in, AGREED the asks the install screen showed and the person accepted (openvibe-sdk/agents/blueprint asks(), by key), PLACES the machines the person chose for the blueprint's places (their own, or shared with them by a grant), UPDATES whether a new version that asks for no more is taken without asking (a version that asks for more always waits for a yes). Keys and grants are the person's own and are never copied into an install.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "agent",
+          "owner",
+          "blueprint",
+          "agreed",
+          "updates",
+          "installed_at"
+        ],
+        "properties": {
+          "agent": {
+            "type": "string",
+            "pattern": "^agt_[A-Za-z0-9]{6,40}$"
+          },
+          "owner": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "id"
+            ],
+            "properties": {
+              "type": {
+                "const": "user"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^usr_[A-Za-z0-9]{6,40}$"
+              }
+            }
+          },
+          "blueprint": {
+            "type": "string",
+            "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$"
+          },
+          "inputs": {
+            "type": "object",
+            "maxProperties": 12,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]{0,30}$"
+            },
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
+          },
+          "agreed": {
+            "type": "array",
+            "maxItems": 120,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z]+:[^\\s]{1,1900}$"
+            },
+            "description": "The keys of the asks agreed to (hands:ov:live.chat.post, places:own, when:event:live.stream.started, …)."
+          },
+          "places": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "own": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "description": "The person's own Link machines."
+              },
+              "shared": {
+                "type": "array",
+                "maxItems": 20,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "description": "Machines shared with the person; each use still needs that machine's grant."
+              }
+            }
+          },
+          "updates": {
+            "enum": [
+              "ask",
+              "same-or-less"
+            ]
+          },
+          "pending": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
+            "description": "A newer version that waits for the person's yes."
+          },
+          "installed_at": {
             "type": "string",
             "format": "date-time"
           },

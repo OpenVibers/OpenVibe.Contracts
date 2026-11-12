@@ -212,3 +212,26 @@ is the run's `ref`):
 
 `openvibe-sdk/agents` is the client (`runs`, `approvals`, the desks calls) and the kit a product mounts to serve these
 routes from its own store.
+
+## Blueprints: `agents.blueprint@1`, `agents.install@1` (0.419.0)
+
+What a person makes is a **blueprint**. It has ten parts: face, brain, knows, hands, places, memory, rules, when,
+makes and team. Above them sit `inputs`, which an installer fills in, and `needs`, which they must connect first.
+Design: `~/openvibe/research-2026-11-12/agent-blueprints.md`.
+
+- **Versions.** A version is `bp_…@N`. Once `published`, it never changes. A draft is the next number.
+- **Installs.** An install is a person's own agent (`agt_…`), made from one version. It holds their inputs, the asks
+  they agreed to and their machines. Keys and grants are never copied into it.
+- **Wider needs a yes.** A version can ask for more: a tool, a place, a level, a budget or a trigger. It stays
+  `pending` on each install until that install's person agrees. With `updates: "same-or-less"`, every other new
+  version is taken without asking.
+- **The floor is not a field.** Money, passwords, deletions, new recipients and posting in a person's name ask at
+  every level.
+- **Run one without installing.** `agents.run-start@1`'s `blueprint` does it (Try it). Every tool asks first.
+- **The SDK.** `openvibe-sdk/agents/blueprint` handles a blueprint in code:
+  - validates it;
+  - fills its `{{inputs}}`;
+  - lists its asks;
+  - finds what a new version asks for that the old one did not;
+  - compiles a version to a run;
+  - prices it.

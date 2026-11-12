@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.419.0 — 2026-11-12
+
+**Make your own agent: `agents.blueprint@1`.** An agent anyone can read, change, share and run anywhere, as one small
+document of ten parts:
+
+- **face** (Design);
+- **brain** (Exchange): auto, a size or one model; the ladder rungs it may use; the most it pays; an advisor;
+  Decisions;
+- **knows:** instructions with `{{inputs}}`, skills, knowledge, and examples for Try it and Bench;
+- **hands:** each tool allowed or ask first, plus tool search. The tools are `ov:` product tools, `tools:` apps,
+  `connect:` apps, the installer's own `mcp:` servers, `machine:` files/shell/desk/browser/screen, `robot:` manifest
+  commands, `harness:` coding harnesses and `agent:` other agents;
+- **places:** none, own, shared, openvibe or sandbox, and what the work needs; never a machine by name;
+- **memory;**
+- **rules:** level, budget, who may ask;
+- **when:** the Source kinds plus `event` and `schedule`;
+- **makes:** answers, an exact shape, and whether it is served to other agents over A2A or as an MCP tool;
+- **team:** a play whose roles are other blueprints at fixed versions.
+
+Inputs and needs sit above the parts. A blueprint carries no secret and grants nothing. A published version never
+changes. Design note: `agent-blueprints.md`.
+
+- **`agents.install@1`:** a person's own agent, made from one blueprint version. It records the inputs they filled,
+  the asks they agreed to (by key) and the machines they chose. It says whether a version that asks for no more is
+  taken without asking, and holds a `pending` version that waits for their yes.
+- **`agents.run-start@1` 1.2.0:** `blueprint` runs a version once without installing it (Try it). Every tool asks
+  first.
+- **`agents.run@1` 1.3.0:** `agent.blueprint`, the version a run's agent was made from.
+- **Fixtures:**
+  - five blueprints: Clip finder, Vibe as `bp_vibe`, a draft with a grader team, a tool for other agents, a robot
+    driver;
+  - ten refusals: full level without a budget, a tool nobody has, a schedule without a time, served as a tool
+    without a shape, a team role without a version, published without a date, a key in the brain, a machine by
+    name, an exact pick without a model, no instructions.
+
 ## 0.418.1 — 2026-11-12
 
 **LOOI's manifest, exactly as the P7 list says it, and not frozen until Maticus has checked it.** The head has its own

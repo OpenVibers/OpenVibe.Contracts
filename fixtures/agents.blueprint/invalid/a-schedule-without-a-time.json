@@ -1,0 +1,115 @@
+{
+  "id": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PA",
+  "version": 3,
+  "state": "published",
+  "name": "Clip finder",
+  "summary": "Watches your stream's chat and speech, and clips the moments people react to.",
+  "author": {
+    "type": "user",
+    "id": "usr_01JD8C4QJ7Z3K9W2X5V6N1M0PB"
+  },
+  "visibility": "public",
+  "forked_from": null,
+  "licence": "MIT",
+  "tags": [
+    "live",
+    "clips"
+  ],
+  "inputs": [
+    {
+      "id": "channel",
+      "type": "channel",
+      "label": "Your channel",
+      "required": true
+    }
+  ],
+  "face": {
+    "avatar": "preset:scissors",
+    "hue": 270,
+    "voice": null,
+    "tone": "Short and cheerful."
+  },
+  "brain": {
+    "pick": "auto",
+    "rungs": [
+      "machine",
+      "plan",
+      "key",
+      "allowance",
+      "credits"
+    ],
+    "max_usd_per_m": 1,
+    "caps": [
+      "tools"
+    ],
+    "decisions": true
+  },
+  "knows": {
+    "instructions": "You watch {{channel}}'s stream. A moment is worth a clip when chat reacts within ten seconds of it. Clip twenty to forty seconds around it and name it in five words.",
+    "examples": [
+      {
+        "ask": "Chat floods with LOL after the streamer drops the cup.",
+        "good": "One clip of the drop, named in five words, no post in chat."
+      }
+    ]
+  },
+  "hands": {
+    "tools": [
+      {
+        "tool": "ov:live.transcript.read",
+        "mode": "allow"
+      },
+      {
+        "tool": "ov:live.chat.read",
+        "mode": "allow"
+      },
+      {
+        "tool": "ov:media.clip.create",
+        "mode": "allow"
+      },
+      {
+        "tool": "ov:live.chat.post",
+        "mode": "ask"
+      }
+    ],
+    "search": false
+  },
+  "places": {
+    "order": [
+      "none"
+    ]
+  },
+  "memory": {
+    "scope": "person",
+    "remember": "Which kinds of moments the streamer kept or deleted.",
+    "keep_days": 30
+  },
+  "rules": {
+    "level": "auto-edits",
+    "budget": {
+      "run_usd": 0.05,
+      "day_usd": 0.5
+    },
+    "who": {
+      "may": "owner"
+    }
+  },
+  "when": [
+    {
+      "kind": "schedule"
+    }
+  ],
+  "makes": {
+    "answer": [
+      "card:clip"
+    ],
+    "serve": {
+      "a2a": false,
+      "mcp": false
+    }
+  },
+  "team": null,
+  "created_at": "2026-11-10T09:00:00Z",
+  "updated_at": "2026-11-12T21:00:00Z",
+  "published_at": "2026-11-12T21:00:00Z"
+}
