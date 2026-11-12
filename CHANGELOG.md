@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.419.1 — 2026-11-12
+
+**`actor.agent.manage` lists the blueprint routes** Actor serves: the person's blueprints and the public gallery, one
+version, the draft, publish, remix, the install screen, install, and an installed agent's version
+(`agents.blueprint@1`, `agents.install@1`).
+
 ## 0.419.0 — 2026-11-12
 
 **Make your own agent: `agents.blueprint@1`.** An agent anyone can read, change, share and run anywhere, as one small

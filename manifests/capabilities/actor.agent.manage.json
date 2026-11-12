@@ -5,7 +5,7 @@
   "status": "active",
   "visibility": "public",
   "sensitive": true,
-  "description": "Keep your agents on OpenVibe.Actor. A contact (plan §12 A-1; actor.agent@1, actor.agent-list@1): GET/POST /api/v1/agents, GET/PATCH/DELETE /api/v1/agents/:id and PUT /api/v1/agents/:id/level (actor.level-change@1), with Vibe created on the first read and never deletable and four presets at GET /api/v1/agents/presets to copy. A personal run (standing instructions, mode, a budget per run, a daily run cap and a schedule): create, read, change and delete one, read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404.",
+  "description": "Keep your agents on OpenVibe.Actor. A contact (plan \u00a712 A-1; actor.agent@1, actor.agent-list@1): GET/POST /api/v1/agents, GET/PATCH/DELETE /api/v1/agents/:id and PUT /api/v1/agents/:id/level (actor.level-change@1), with Vibe created on the first read and never deletable and four presets at GET /api/v1/agents/presets to copy. A personal run (standing instructions, mode, a budget per run, a daily run cap and a schedule): create, read, change and delete one, read, add, edit and delete what it remembers, or forget everything, and read what it suggested adding to its instructions and apply, dismiss or undo a suggestion. A person's agents are theirs alone; another person's agent is 404. Blueprints (agents.blueprint@1, 0.419.0): a person's own blueprints and the public gallery, one version, the draft, publish, remix, the install screen, install (agents.install@1), and an installed agent's version.",
   "inputSchema": "actor.agent-manage-request@1",
   "outputSchema": "actor.agent-manage-result@1",
   "permissions": [
@@ -33,6 +33,16 @@
     "GET /api/v1/agents/:id",
     "PATCH /api/v1/agents/:id",
     "DELETE /api/v1/agents/:id",
-    "PUT /api/v1/agents/:id/level"
+    "PUT /api/v1/agents/:id/level",
+    "GET /api/v1/blueprints",
+    "POST /api/v1/blueprints",
+    "GET /api/v1/blueprints/:id",
+    "PUT /api/v1/blueprints/:id/draft",
+    "POST /api/v1/blueprints/:id/publish",
+    "POST /api/v1/blueprints/:id/remix",
+    "GET /api/v1/blueprints/:id/asks",
+    "POST /api/v1/blueprints/:id/install",
+    "GET /api/v1/agents/:id/install",
+    "POST /api/v1/agents/:id/install/update"
   ]
 }
