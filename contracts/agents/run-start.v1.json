@@ -390,6 +390,11 @@
           ]
         }
       }
+    },
+    "blueprint": {
+      "type": "string",
+      "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
+      "description": "Since 1.2.0: run this blueprint version once without installing it (Try it; a public agent used one time). The run uses the starter's own keys and places, and every tool asks first whatever the blueprint says. With AGENT, AGENT wins."
     }
   }
 }

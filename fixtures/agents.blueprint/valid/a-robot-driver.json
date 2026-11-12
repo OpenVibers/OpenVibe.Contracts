@@ -1,0 +1,65 @@
+{
+  "id": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PH",
+  "version": 1,
+  "state": "published",
+  "name": "Desk buddy",
+  "summary": "Drives a small desk robot: looks at whoever talks, nods, and says hello.",
+  "author": {
+    "type": "user",
+    "id": "usr_01JD8C4QJ7Z3K9W2X5V6N1M0PB"
+  },
+  "visibility": "public",
+  "needs": [
+    {
+      "kind": "robot",
+      "what": "looi",
+      "why": "It drives a LOOI."
+    }
+  ],
+  "brain": {
+    "pick": "size",
+    "size": "small",
+    "caps": [
+      "vision"
+    ]
+  },
+  "knows": {
+    "instructions": "Turn the head toward whoever is talking. Nod when someone says your name."
+  },
+  "hands": {
+    "tools": [
+      {
+        "tool": "robot:head",
+        "mode": "allow"
+      },
+      {
+        "tool": "robot:drive",
+        "mode": "ask"
+      },
+      {
+        "tool": "machine:screen",
+        "mode": "allow"
+      }
+    ]
+  },
+  "places": {
+    "order": [
+      "own"
+    ],
+    "needs": [
+      "robot"
+    ]
+  },
+  "when": [
+    {
+      "kind": "machine",
+      "rule": "Someone starts talking near the robot."
+    }
+  ],
+  "makes": {
+    "answer": [
+      "robot"
+    ]
+  },
+  "published_at": "2026-11-12T21:00:00Z"
+}

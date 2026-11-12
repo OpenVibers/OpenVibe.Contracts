@@ -1,0 +1,27 @@
+{
+  "agent": "agt_01JD8C4QJ7Z3K9W2X5V6N1M0PJ",
+  "owner": {
+    "type": "user",
+    "id": "usr_01JD8C4QJ7Z3K9W2X5V6N1M0PK"
+  },
+  "blueprint": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PA",
+  "inputs": {
+    "channel": "maticus"
+  },
+  "agreed": [
+    "hands:ov:live.transcript.read",
+    "hands:ov:live.chat.read",
+    "hands:ov:media.clip.create",
+    "hands:ov:live.chat.post",
+    "when:event:live.stream.started",
+    "memory:person"
+  ],
+  "places": {
+    "own": [],
+    "shared": []
+  },
+  "updates": "same-or-less",
+  "pending": null,
+  "installed_at": "2026-11-12T21:00:00Z",
+  "updated_at": "2026-11-12T21:00:00Z"
+}

@@ -1,0 +1,53 @@
+{
+  "id": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PC",
+  "version": 2,
+  "state": "draft",
+  "name": "Patch notes, checked",
+  "summary": "Writes patch notes from merged pull requests and has another model check them against the diff.",
+  "author": {
+    "type": "user",
+    "id": "usr_01JD8C4QJ7Z3K9W2X5V6N1M0PB"
+  },
+  "visibility": "private",
+  "forked_from": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PD@4",
+  "inputs": [
+    {
+      "id": "repo",
+      "type": "repository",
+      "label": "Repository"
+    },
+    {
+      "id": "style",
+      "type": "choice",
+      "label": "Style",
+      "choices": [
+        "short",
+        "full"
+      ],
+      "default": "short"
+    }
+  ],
+  "knows": {
+    "instructions": "Write {{style}} patch notes for {{repo}} from the pull requests merged since the last release."
+  },
+  "team": {
+    "play": "grader-loop",
+    "roles": {
+      "doer": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PE@1",
+      "grader": "bp_01JD8C4QJ7Z3K9W2X5V6N1M0PF@3"
+    }
+  },
+  "when": [
+    {
+      "kind": "schedule",
+      "cron": "0 9 * * 1",
+      "tz": "Europe/London"
+    }
+  ],
+  "makes": {
+    "answer": [
+      "post",
+      "pull-request"
+    ]
+  }
+}

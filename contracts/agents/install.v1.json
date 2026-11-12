@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/install.v1.json",
+  "title": "AgentsInstall",
+  "description": "agents.install@1 (agent-blueprints.md, 2026-11-12): a person's own agent made from one blueprint version. AGENT is the agent it made (actor.agent@1's id), BLUEPRINT the version it runs, INPUTS what the person filled in, AGREED the asks the install screen showed and the person accepted (openvibe-sdk/agents/blueprint asks(), by key), PLACES the machines the person chose for the blueprint's places (their own, or shared with them by a grant), UPDATES whether a new version that asks for no more is taken without asking (a version that asks for more always waits for a yes). Keys and grants are the person's own and are never copied into an install.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "agent",
+    "owner",
+    "blueprint",
+    "agreed",
+    "updates",
+    "installed_at"
+  ],
+  "properties": {
+    "agent": {
+      "type": "string",
+      "pattern": "^agt_[A-Za-z0-9]{6,40}$"
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "const": "user"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^usr_[A-Za-z0-9]{6,40}$"
+        }
+      }
+    },
+    "blueprint": {
+      "type": "string",
+      "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$"
+    },
+    "inputs": {
+      "type": "object",
+      "maxProperties": 12,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]{0,30}$"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean"
+        ]
+      }
+    },
+    "agreed": {
+      "type": "array",
+      "maxItems": 120,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z]+:[^\\s]{1,1900}$"
+      },
+      "description": "The keys of the asks agreed to (hands:ov:live.chat.post, places:own, when:event:live.stream.started, …)."
+    },
+    "places": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "own": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "description": "The person's own Link machines."
+        },
+        "shared": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "description": "Machines shared with the person; each use still needs that machine's grant."
+        }
+      }
+    },
+    "updates": {
+      "enum": [
+        "ask",
+        "same-or-less"
+      ]
+    },
+    "pending": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
+      "description": "A newer version that waits for the person's yes."
+    },
+    "installed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
