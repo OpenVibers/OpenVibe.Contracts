@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.412.0 — 2026-11-12
+
+One agent system, stage 2: one run shape for Actor, Codes and Run, and the step event that follows it.
+
+- Add `agents.run@1`: a run's id, owner, agent and product, parent run, budget (USD, tokens, seconds and steps),
+  status (`planning`, `running`, `waiting`, `done`, `failed`, `stopped`), created and updated times, a result summary
+  and what it spent. One shape for OpenVibe.Actor, OpenVibe.Codes and OpenVibe.Run.
+- Add `agents.step@1`: one entry of a run's append-only log (run id, seq, kind `think|tool|message|approval|child|file`,
+  text, the tool call and its input, the result, the step's cost, start and end, and the child run it started).
+- Add `agents.approval@1`: an ask attached to a run's step (what, the options with their labels, who decided and when,
+  and the answer).
+- Add the event `agents.step.appended@1`: the appended step as the payload, on OpenVibe.Events. The `agents` namespace
+  is hyphen-free because an event type cannot carry a hyphen; Actor registers the producer.
+- Add valid and invalid fixtures for all four, the generated JSON Schema, TypeScript and per-service OpenAPI, and
+  `docs/agents-runs.md`: which field of Actor's `tasks`/`task_events` and Codes' `run_tasks`/`codes_session_lines`/
+  `codes_approvals` becomes which field of the new shape, and what does not fit (Actor's `needs_you`, per-step cost,
+  split tool call/result entries, and Codes' attempts as one flat run).
+
 ## 0.411.0 — 2026-11-12
 
 The composer's Frame (Post · Ask · Do; Network #858): what its Model sheet lists and what an Ask sends.

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/approval.v1.json",
+  "title": "AgentsApproval",
+  "description": "agents.approval@1 (one agent system, 2026-11-12): a run stopped at a step to ask its person before it acts. WHAT is the act in plain words; OPTIONS are the answers the product offers, each with an id and the words a person reads; DECIDED_BY and DECIDED_AT are absent (or null) while it waits; ANSWER is the chosen option's id (or the person's own words, when the product allows them). Nothing the approval covers runs before the answer, and an answer decided once is never decided again. The approval is attached to the run's step (STEP_SEQ), so a step log and an approval list line up. OpenVibe.Actor's approval inbox and OpenVibe.Codes' tool approvals are the same shape; the product keeps the grant.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "step_seq",
+    "what",
+    "options"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "The product's own approval id (apr_…), when it has one; STEP_SEQ is still the link to the run."
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "step_seq": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The seq of the run's step that asked (agents.step@1's seq)."
+    },
+    "what": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "The act in plain words, with its exact target: \"post this to your feed\", \"run rm -rf build on your machine\". Never a raw tool payload."
+    },
+    "options": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "The answers the product offers, in the order to show them. The floor categories (money, a password, a deletion, a new recipient) are asked every time and have no standing permission.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        }
+      }
+    },
+    "decided_by": {
+      "description": "Who answered: a person subject, a service or an agent.",
+      "anyOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "decided_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "answer": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000,
+      "description": "The chosen option's id, or the person's own words when the product allows them. Null while it waits."
+    }
+  }
+}
