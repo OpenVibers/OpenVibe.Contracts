@@ -6234,7 +6234,8 @@
               "games",
               "housing",
               "food",
-              "jobs"
+              "jobs",
+              "code"
             ]
           },
           "homepage_url": {
@@ -6712,7 +6713,8 @@
               "games",
               "housing",
               "food",
-              "jobs"
+              "jobs",
+              "code"
             ],
             "description": "The category's key: the same value sources.source@1's category and sources.item@1's category carry."
           },
@@ -6798,7 +6800,8 @@
               "games",
               "housing",
               "food",
-              "jobs"
+              "jobs",
+              "code"
             ]
           },
           "kind": {
@@ -10158,7 +10161,8 @@
                   "games",
                   "housing",
                   "food",
-                  "jobs"
+                  "jobs",
+                  "code"
                 ]
               },
               "homepage_url": {
