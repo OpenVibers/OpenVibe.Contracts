@@ -1,0 +1,21 @@
+{
+  "run_id": "c_8f3k2m",
+  "seq": 1,
+  "kind": "message",
+  "from": "person",
+  "text": "Find me a good deal on a mechanical keyboard like this one.",
+  "attachments": [
+    {
+      "kind": "image",
+      "media_id": "med_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+      "name": "keyboard.jpg",
+      "mime": "image/jpeg",
+      "bytes": 182044,
+      "width": 1200,
+      "height": 800,
+      "alt": "A grey 75% mechanical keyboard"
+    }
+  ],
+  "started_at": "2026-11-12T10:00:00Z",
+  "ended_at": "2026-11-12T10:00:00Z"
+}

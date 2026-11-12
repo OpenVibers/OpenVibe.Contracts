@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/agents/step.v1.json",
   "title": "AgentsStep",
-  "description": "agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored.",
+  "description": "agents.step@1 (one agent system, 2026-11-12): one entry of a run's append-only step log, as GET /api/v1/runs/{id}/steps returns it and as agents.step.appended@1 publishes it. SEQ is the run's own order (1, 2, …), never renumbered; a reader pages with ?after=SEQ. KIND says what the entry is: think (a plan, a check, a note to self), tool (a tool call or its result), message (words for the person), approval (the run asked), child (a sub-agent or a hand-off) or file (a file the run made). TEXT is what a person reads; TOOL_CALL is the tool's name and input on a tool entry; RESULT is what came back. The product's own event may split a call and its result into two steps: both carry KIND tool and the call's seq is the earlier one. A step carries no credential, no key and no token; a secret a tool saw is redacted before it is stored. Since 1.1.0 (agent-engine.md) a step also says who spoke (FROM: the person's own words are steps too), whether it is still under way (STATUS), a short TITLE and GLYPH for a tool or a thought, the files that go with it (ATTACHMENTS), numbered SOURCES, a rich card (UI) and, where a computer was used, the DESK picture and action for replay. Every added field is optional.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -115,6 +115,212 @@
       ],
       "maxLength": 160,
       "description": "The child run this step started, on KIND child. Null elsewhere."
+    },
+    "from": {
+      "enum": [
+        "person",
+        "agent",
+        "system",
+        "tool"
+      ],
+      "description": "Who this entry is from. person: the run's person (their message). agent: the agent. system: the product (a notice, a limit reached). tool: a tool's own words. Absent means agent."
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "description": "Who spoke, when a thread has several people or agents: a name and a picture. Absent for the run's own person and agent.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "avatar_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2000,
+          "description": "Their picture."
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "running",
+        "done",
+        "failed"
+      ],
+      "description": "Whether the entry is still under way (a tool that runs, a message being written). Absent means done."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The entry in a few words, for a tool or a thought: \"Searching the web\", \"Reading 3 files\"."
+    },
+    "glyph": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,40}$",
+      "description": "A glyph's name in the openvibe-shared glyph registry (openvibe.design/icons). A reader that does not know it draws its default."
+    },
+    "attachments": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind"
+        ],
+        "description": "A file that goes with a message or a start: by its OpenVibe.Media id, or by an https address.",
+        "properties": {
+          "kind": {
+            "enum": [
+              "image",
+              "file",
+              "audio",
+              "video"
+            ]
+          },
+          "media_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "An https address the reader may fetch."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "mime": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "alt": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "What a picture shows, in words."
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 40,
+      "description": "The sources a message cites, numbered as its text cites them ([1], [2]).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "n",
+          "url"
+        ],
+        "properties": {
+          "n": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "The source's address."
+          },
+          "site": {
+            "type": "string",
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "description": "A rich card for this entry. TYPE names it (link, table, code, diff, image, choice, timer, repo, desk, run, or a product's own, prefixed with its product: live-clip); DATA is that card's own content. A reader that does not know the type shows TEXT instead, so TEXT always says the same thing in words.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,40}$"
+        },
+        "data": {
+          "type": "object",
+          "maxProperties": 64
+        }
+      }
+    },
+    "desk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "description": "The computer this step used, for the screen tile and the replay: the desk, the picture it saw and what it did. A secret field is blanked before a still is stored.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "still_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2000,
+          "description": "The picture the step saw."
+        },
+        "action": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,40}$"
+            },
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        }
+      }
     }
   }
 }

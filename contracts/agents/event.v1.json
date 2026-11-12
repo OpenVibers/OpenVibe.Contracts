@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/event.v1.json",
+  "title": "AgentsEvent",
+  "description": "agents.event@1 (agent-engine.md, 2026-11-12): one event of a run's stream, GET /api/v1/runs/{id}/events (and /api/frame/runs/{ref}/events), as server-sent events whose event name is TYPE and whose id is the newest step's seq, so Last-Event-ID resumes after it. run: the run changed; RUN is its new snapshot. step: a step was appended; STEP is it, whole. delta: more TEXT for the step SEQ that is still being written (its STATUS is running); a reader appends it. approval: an approval was asked or answered; APPROVAL is it. end: the run reached an end status; the stream closes after it. A reader ignores a type it does not know.",
+  "type": "object",
+  "required": [
+    "type"
+  ],
+  "properties": {
+    "type": {
+      "enum": [
+        "run",
+        "step",
+        "delta",
+        "approval",
+        "end"
+      ]
+    },
+    "run": {
+      "$ref": "run.v1.json"
+    },
+    "step": {
+      "$ref": "step.v1.json"
+    },
+    "approval": {
+      "$ref": "approval.v1.json"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 65536
+    },
+    "status": {
+      "enum": [
+        "done",
+        "failed",
+        "stopped"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "run"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "run"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "step"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "step"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "delta"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "run_id",
+          "seq",
+          "text"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "approval"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "approval"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "end"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "run_id",
+          "status"
+        ]
+      }
+    }
+  ]
+}
