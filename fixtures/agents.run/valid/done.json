@@ -1,0 +1,23 @@
+{
+  "id": "job_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "owner": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "agent": {
+    "id": "codes",
+    "name": "Claude Code",
+    "product": "codes"
+  },
+  "parent_run": null,
+  "status": "done",
+  "created_at": "2026-11-12T09:00:00Z",
+  "updated_at": "2026-11-12T09:04:30Z",
+  "result_summary": "Opened a pull request with the two fixes.",
+  "cost": {
+    "usd": 0.42,
+    "tokens": 88000,
+    "seconds": 270,
+    "steps": 18
+  }
+}

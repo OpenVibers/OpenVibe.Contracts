@@ -1,0 +1,20 @@
+{
+  "id": "f:example:pic:1",
+  "kind": "pic",
+  "url": "https://openvibe.pics/p/pic_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "title": "A picture",
+  "text": "",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "pics",
+  "site_name": "Pics",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": {
+    "thumb": "https://openvibe.media/t/example.jpg",
+    "ratio": 1.5
+  },
+  "counts": {}
+}

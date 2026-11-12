@@ -1,0 +1,17 @@
+{
+  "id": "f:example:update:1",
+  "kind": "update",
+  "url": "https://openvibe.blog/p/feed",
+  "title": "New post on the OpenVibe blog",
+  "text": "The feed is one.",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "blog",
+  "site_name": "Blog",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {}
+}

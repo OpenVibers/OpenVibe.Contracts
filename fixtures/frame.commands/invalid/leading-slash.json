@@ -1,0 +1,6 @@
+{
+  "site": { "id": "live", "name": "Live", "host": "openvibe.live" },
+  "commands": [
+    { "name": "/ask", "hint": "Ask Vibe", "insert": "/ask ", "kind": "network", "needs_sign_in": true }
+  ]
+}

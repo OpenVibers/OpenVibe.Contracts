@@ -1,0 +1,17 @@
+{
+  "id": "f:example:space:1",
+  "kind": "space",
+  "url": "https://openvibe.space/s/example",
+  "title": "A new space",
+  "text": "A site for a project.",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "space",
+  "site_name": "Space",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {}
+}

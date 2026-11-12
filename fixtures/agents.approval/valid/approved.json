@@ -1,0 +1,22 @@
+{
+  "id": "apr_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "run_id": "tsk_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "step_seq": 7,
+  "what": "Push the branch and open a pull request on your machine's repository",
+  "options": [
+    {
+      "id": "approve",
+      "label": "Approve"
+    },
+    {
+      "id": "decline",
+      "label": "Decline"
+    }
+  ],
+  "decided_by": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "decided_at": "2026-11-12T10:01:00Z",
+  "answer": "approve"
+}

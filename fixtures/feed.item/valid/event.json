@@ -1,0 +1,15 @@
+{
+  "id": "f:example:event:1",
+  "kind": "event",
+  "url": "https://openvibe.today/e/tev_example",
+  "title": "Coming up: a stream about feeds",
+  "text": "",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "today",
+  "site_name": "Today",
+  "actor": null,
+  "subject": null,
+  "media": null,
+  "counts": {},
+  "starts_at": "2026-11-13T18:00:00.000Z"
+}

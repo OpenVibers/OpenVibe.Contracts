@@ -1,0 +1,20 @@
+{
+  "id": "f:example:post:1",
+  "kind": "post",
+  "url": "https://openvibe.community/forum/status/hello",
+  "title": "Hello, network",
+  "text": "A first post.",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "community",
+  "site_name": "Community",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {
+    "likes": 4,
+    "comments": 2
+  }
+}

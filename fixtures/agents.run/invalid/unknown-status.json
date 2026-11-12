@@ -1,0 +1,13 @@
+{
+  "id": "run_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "owner": {
+    "type": "user",
+    "id": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH"
+  },
+  "agent": {
+    "id": "actor"
+  },
+  "status": "queued",
+  "created_at": "2026-11-12T09:00:00Z",
+  "updated_at": "2026-11-12T09:00:00Z"
+}

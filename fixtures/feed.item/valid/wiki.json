@@ -1,0 +1,17 @@
+{
+  "id": "f:example:wiki:1",
+  "kind": "wiki",
+  "url": "https://openvibe.wiki/space/page",
+  "title": "Wiki: OpenVibe / feed",
+  "text": "How the one feed works.",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "wiki",
+  "site_name": "Wiki",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": null,
+  "counts": {}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "f:example:work:1",
+  "kind": "work",
+  "url": "https://openvibe.work/jobs",
+  "title": "14 new jobs this hour",
+  "text": "Remote: GIS engineer, and more",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "work",
+  "site_name": "Work",
+  "actor": null,
+  "subject": null,
+  "media": null,
+  "counts": {
+    "people": 14
+  }
+}

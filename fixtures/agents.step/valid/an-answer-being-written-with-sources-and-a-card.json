@@ -1,0 +1,51 @@
+{
+  "run_id": "c_8f3k2m",
+  "seq": 4,
+  "kind": "message",
+  "from": "agent",
+  "status": "running",
+  "text": "Three picks under $90 [1][2]:",
+  "sources": [
+    {
+      "n": 1,
+      "title": "Keychron K2 at $74",
+      "url": "https://openvibe.deals/d/keychron-k2",
+      "site": "openvibe.deals"
+    },
+    {
+      "n": 2,
+      "title": "r/MechanicalKeyboards buying guide",
+      "url": "https://www.reddit.com/r/MechanicalKeyboards/wiki/buying_guide",
+      "site": "reddit.com"
+    }
+  ],
+  "ui": {
+    "type": "table",
+    "data": {
+      "columns": [
+        "Keyboard",
+        "Price",
+        "Switches"
+      ],
+      "rows": [
+        [
+          "Keychron K2",
+          "$74",
+          "Gateron Brown"
+        ],
+        [
+          "Royal Kludge RK84",
+          "$59",
+          "Red"
+        ],
+        [
+          "Epomaker TH80",
+          "$89",
+          "Budgerigar"
+        ]
+      ]
+    }
+  },
+  "started_at": "2026-11-12T10:01:40Z",
+  "ended_at": null
+}

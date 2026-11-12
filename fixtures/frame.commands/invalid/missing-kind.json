@@ -1,0 +1,6 @@
+{
+  "site": null,
+  "commands": [
+    { "name": "ask", "hint": "Ask Vibe", "insert": "/ask ", "needs_sign_in": true }
+  ]
+}

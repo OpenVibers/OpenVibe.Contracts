@@ -1,0 +1,28 @@
+{
+  "text": "Add a goal bar overlay streamers can put on their stream, with the sub goal and progress.",
+  "kind": "code",
+  "target": "openvibe",
+  "model": {
+    "id": "openvibe/auto",
+    "source": "openvibe"
+  },
+  "where": {
+    "kind": "openvibe"
+  },
+  "context": {
+    "site": "live",
+    "url": "https://openvibe.live/dashboard",
+    "title": "Dashboard"
+  },
+  "attachments": [
+    {
+      "kind": "image",
+      "media_id": "med_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+      "alt": "A sketch of the bar"
+    }
+  ],
+  "budget": {
+    "usd": 5,
+    "steps": 400
+  }
+}

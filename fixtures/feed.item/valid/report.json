@@ -1,0 +1,21 @@
+{
+  "id": "f:example:report:1",
+  "kind": "report",
+  "url": "https://openvibe.report/network",
+  "title": "Peak today: 1,204 people online at 9 PM",
+  "text": "Online peak across the network",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "report",
+  "site_name": "Report",
+  "actor": null,
+  "subject": null,
+  "media": null,
+  "counts": {
+    "people": 1204
+  },
+  "trend": {
+    "direction": "up",
+    "pct": 12
+  },
+  "label": "System"
+}

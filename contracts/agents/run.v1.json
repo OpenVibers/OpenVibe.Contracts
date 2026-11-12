@@ -1,0 +1,498 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/run.v1.json",
+  "title": "AgentsRun",
+  "description": "agents.run@1 (one agent system, 2026-11-12): one run of an agent, the same shape on every product (Actor, Codes, Run and anything else on openvibe-sdk/agents). The owner is the person or agent the work belongs to; AGENT names the agent or harness that runs it and the product it comes from; PARENT_RUN makes sub-agent runs a tree; BUDGET is the hard limit and COST what the run has spent; STATUS is where the run is now. The run is stored by its product, not here: this contract is the wire shape. GET /api/v1/runs, /api/v1/runs/{id} and /api/v1/runs/{id}/steps serve it (OpenVibe.Actor) and the SDK's runs client reads it. The product's own id is kept, never reused. A run that ends keeps its end status. Since 1.1.0 (agent-engine.md) a run also says what a person calls it (TITLE), what sort it is (KIND), where it lives (REF on the Frame, URL on its product), which model runs it and where, what it is doing now (DOING), what it waits for (WAITING), its last line (PREVIEW), where it was asked (CONTEXT) and what it made (OUTPUTS); a chat with Vibe is a run of KIND chat that is waiting for a message. Every added field is optional. This v1 contract may grow optional fields; a step is agents.step@1 and an approval is agents.approval@1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "owner",
+    "agent",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "The product's own run id (Actor's tsk_…, Codes' tsk_…, a Run job's job_…). Unique within its product and never reused."
+    },
+    "owner": {
+      "description": "The person or agent the run belongs to: the subject the work is done for.",
+      "allOf": [
+        {
+          "$ref": "../identity/subject-ref.v1.json"
+        }
+      ]
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "description": "The agent or harness that runs it. ID is the product's own agent id or slug; NAME is what a person reads; PRODUCT is the product it comes from (actor, codes, run, chat, …). GLYPH, HUE and AVATAR_URL are its face; HARNESS is the loop that runs it.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "product": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "glyph": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,40}$",
+          "description": "The agent's face when it has no picture: a glyph from the registry. A chat's persona sets it per run."
+        },
+        "hue": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 359,
+          "description": "The hue its face is tinted with."
+        },
+        "avatar_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2000,
+          "description": "The agent's picture, when it has one."
+        },
+        "harness": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,59}$",
+          "description": "The loop that runs it: openvibe (the SDK's own), or another harness run through an adapter (codex, claude-code, opencode, deepseek, …)."
+        }
+      }
+    },
+    "parent_run": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160,
+      "description": "The run that started this one (a sub-agent), or null. The parent's run card nests children; the child's budget is a slice of the parent's."
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The hard limit the run may not exceed. A field that is absent is not limited. USD is money; TOKENS counts model tokens in and out; SECONDS is wall time; STEPS counts the appended steps.",
+      "properties": {
+        "usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "planning",
+        "running",
+        "waiting",
+        "done",
+        "failed",
+        "stopped"
+      ],
+      "description": "planning: accepted, no step yet. running: a step is under way. waiting: the run waits for its person (an approval or a takeover) and costs nothing. done, failed and stopped are the end statuses; an end status never changes."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the run last changed: its newest step, its end, or its creation when nothing has happened yet."
+    },
+    "result_summary": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 8000,
+      "description": "What the run answered or what is left, in plain words, for a run card. The full result stays the product's (Actor's result, Codes' result.summary). Null until there is one."
+    },
+    "cost": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "What the run has spent so far, to the product's own precision. Null before anything is known.",
+      "properties": {
+        "usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "What a person calls this run: a chat's name, a task's goal in a few words."
+    },
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,30}$",
+      "description": "What sort of run it is. chat: a conversation that stays open. ask: one question and its answer. task: work an agent does for its person. code: a coding task. machine: a job on a computer or a robot. goal: a standing goal that runs on its own schedule. A product may add its own; a reader treats an unknown kind as task."
+    },
+    "ref": {
+      "type": "string",
+      "maxLength": 200,
+      "pattern": "^[a-z][a-z0-9-]{0,30}:[A-Za-z0-9._~-]{1,160}$",
+      "description": "The run's address on the Frame: its product, a colon, the product's own id (chat:…, codes:tsk_…, actor:tsk_…). /api/frame/runs/{ref} reads it wherever it lives."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2000,
+      "description": "The run's own page on its product."
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "description": "The model that runs it, as the picker chose it (frame.choices@1's choice, with the name a person reads). EFFORT is the reasoning effort where the model has one.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9._:/@+| -]+$"
+        },
+        "source": {
+          "enum": [
+            "openvibe",
+            "keys",
+            "machines",
+            "plans"
+          ],
+          "description": "openvibe: Exchange's directory, paid in credits. keys: the person's own key. machines: a model on the person's own computer (Link). plans: a signed-in plan through a harness."
+        },
+        "machine": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "effort": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      }
+    },
+    "where": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "description": "Where the run's work happens. openvibe: OpenVibe's own computers. machine: the person's own computer or robot through Link (ID is the device). runner: a Codes runner. this-computer: the machine that serves the run itself (Link's agent serve).",
+      "properties": {
+        "kind": {
+          "enum": [
+            "openvibe",
+            "machine",
+            "runner",
+            "this-computer"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    },
+    "target": {
+      "description": "What a code run works on. new: a new project in the person's own space. openvibe: OpenVibe itself; the orchestrator finds the repositories and opens pull requests, never merges. An object names one repository.",
+      "anyOf": [
+        {
+          "enum": [
+            "new",
+            "openvibe"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repo"
+          ],
+          "properties": {
+            "repo": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300,
+              "description": "owner/name, or the repository's address."
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        }
+      ]
+    },
+    "doing": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "text"
+      ],
+      "description": "What the run is doing now, for its agent's face: a few words and a glyph. Null when it is not working.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "glyph": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,40}$",
+          "description": "A glyph's name in the openvibe-shared glyph registry (openvibe.design/icons). A reader that does not know it draws its default."
+        }
+      }
+    },
+    "waiting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "for"
+      ],
+      "description": "Why a waiting run waits. message: it is the person's turn to speak (a conversation between turns). approval: it asked before an act (APPROVAL is the agents.approval@1 id). takeover: it met something only its person can do (a sign-in, a code). payment: it needs funds. WHAT says it in words. Null unless STATUS is waiting.",
+      "properties": {
+        "for": {
+          "enum": [
+            "message",
+            "approval",
+            "takeover",
+            "payment"
+          ]
+        },
+        "what": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "approval": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "since": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "preview": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "text"
+      ],
+      "description": "The last thing said in the run, for a list: the words, who said them and when.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "from": {
+          "enum": [
+            "person",
+            "agent",
+            "system",
+            "tool"
+          ]
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where the run was asked: the site, the page and what the page is about. A run may use it; it never grants access.",
+      "properties": {
+        "site": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2000,
+          "description": "The page's address."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "kind": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 160
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "maxItems": 50,
+      "description": "What the run made, newest last: for its card, and for the feed when it is shared.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "title"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "link",
+              "file",
+              "image",
+              "video",
+              "audio",
+              "pr",
+              "repo",
+              "page",
+              "post",
+              "run"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "Where it is."
+          },
+          "thumb": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000,
+            "description": "A small picture of it."
+          },
+          "media_id": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "A pull request's or a check's state in a word (open, green, red, merged)."
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Counts a list shows without reading the steps.",
+      "properties": {
+        "steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "children": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "approvals": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unread": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "shared",
+        "public"
+      ],
+      "description": "Who may read the run: its owner only, people it was shared with, or anyone with its address."
+    },
+    "ended_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the run reached an end status. Null while it has not."
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "f:example:post:1",
+  "kind": "post",
+  "url": "https://openvibe.example/reference",
+  "title": "An example post",
+  "text": "",
+  "at": "2026-11-12T09:00:00.000Z",
+  "site": "example",
+  "site_name": "Example",
+  "actor": {
+    "name": "Alex",
+    "avatar": null
+  },
+  "subject": "alex",
+  "media": null,
+  "counts": {}
+}
