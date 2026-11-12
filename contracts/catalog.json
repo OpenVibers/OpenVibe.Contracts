@@ -11692,6 +11692,24 @@
       "compatibility": "backward",
       "status": "active",
       "adr": "ADR-015"
+    },
+    {
+      "id": "frame.choices",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "frame/choices.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "frame.ask",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "frame/ask.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
