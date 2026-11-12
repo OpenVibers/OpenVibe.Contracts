@@ -48,13 +48,13 @@ a Cozmo-based robot).
    second control transport when measured latency asks for it; the message set does not change.
 5. **One message set** (JSON, fields `v`, `seq`, `ts` on every frame): server→device `hello`, `config` (limits, heartbeat,
    the operator's allowed commands), `command` (`id` as an idempotency key, `kind` drive/actuator/ptz/say/display/halt,
-   `value`, `deadline_ms`, operator and role), `estop`, `heartbeat_ack`; device→server `status`, `telemetry` (≤ 2 Hz),
-   `ack`/`nack` (with a fault code), `heartbeat`, `estop_state`. Commands are never queued for an offline device and
+   `value`, `deadline_ms`, operator and role), `heartbeat_ack`; device→server `status`, `telemetry` (≤ 2 Hz),
+   `ack`/`nack` (with a fault code), `heartbeat`, and the legacy Stop report frame. A Stop is the ordinary `halt` command. Commands are never queued for an offline device and
    never replayed after a reconnect.
 6. **Safety is not optional.** Every motion command carries an absolute deadline (default 300 ms, at most the robot's
    `max_command_ms`); a held control re-sends every 150 ms; the **device** stops the motors at the deadline, on a lost
    heartbeat (1 s interval, stop after 2 missed) and on every disconnect or crash path, without asking the network. The
-   e-stop is latched on the device and in Bot and only the owner clears it. Speed, turn and range limits and time windows
+   device stops itself, and Bot sends a plain `halt`; a Stop on the tray stays local. Speed, turn and range limits and time windows
    are set by the owner; an operator never exceeds them. Cozmo additionally stops on a cliff or pick-up event. The agent
    never runs or exposes a kit's stock control server (the Adeept `admin:123456` port stays off).
 7. **Robot profiles, not rows.** `bot.robot-profile@1` (Contracts): capabilities (drive differential/mecanum, pan-tilt,
@@ -68,7 +68,7 @@ a Cozmo-based robot).
    kill switch. Chat control (Live, openvibe.chat) is a caller of the same gate: Chat or Live sends a command on behalf of
    the viewer with a service token holding `bot.robot.control`, and Bot applies the role, the allowlist and the limits.
 9. **Everything is recorded.** Each command (robot, device, operator principal, kind, result, latency) goes to an audit
-   table kept 30 days; `bot.robot.online|offline`, `bot.command.refused`, `bot.estop.set|cleared` and telemetry summaries
+   table kept 30 days; `bot.robot.online|offline`, `bot.command.refused` and telemetry summaries
    are Events; Actor agents drive robots only through a delegated `bot.robot.control` grant and the owner's approval.
 10. **The service.** OpenVibe.Bot is its own repository and service on PostgreSQL (the platform chassis: openvibe-sdk db,
     auth, limits, outbox; openvibe-shared Frame and showcase), public origin openvibe.bot. Capabilities
@@ -107,7 +107,7 @@ a Cozmo-based robot).
 - Pairing: a code works once, expires after 10 minutes, dies after 5 wrong tries; the credential is never logged or
   returned twice; rotation keeps the old credential for 60 s; revocation disconnects the device at once.
 - Safety: a drive command without a newer one stops the motors at its deadline; killing the network, the WebSocket or
-  the agent process stops the motors; the e-stop latches on the device and only the owner clears it; limits cap every
+  the agent process stops the motors; a Stop is the ordinary halt command and the tray's own Stop stays local; limits cap every
   operator; Cozmo stops on a cliff event.
 - Access: a viewer cannot drive a private robot; a queued turn ends on its timer; chat commands pass the same gate.
 - Profiles: the Adeept and Cozmo profiles validate and render a panel with no robot-specific frontend code.

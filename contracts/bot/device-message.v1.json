@@ -54,7 +54,7 @@
       }
     },
     {
-      "description": "Server to device: the effective limits (the owner's clamped by the profile's), the kinds the profile takes and the latch; sent again when any of them changes.",
+      "description": "Server to device: the effective limits (the owner's clamped by the profile's), the kinds the profile takes and the legacy latch field; sent again when any of them changes.",
       "type": "object",
       "required": [
         "v",
@@ -121,6 +121,7 @@
           }
         },
         "estop_latched": {
+          "description": "The old latch field: Bot always sends false and no longer latches anything.",
           "type": "boolean"
         },
         "voice": {
@@ -230,7 +231,7 @@
       }
     },
     {
-      "description": "Server to device: the latch moved (true sets it, false is the owner clearing it).",
+      "description": "Legacy server frame: the old stop latch moved. Bot no longer sends it; a device that still accepts it keeps working.",
       "type": "object",
       "required": [
         "v",
@@ -761,7 +762,7 @@
       }
     },
     {
-      "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, estopped, local_stop, expired, …).",
+      "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, local_stop, expired, …).",
       "type": "object",
       "required": [
         "v",
@@ -915,7 +916,7 @@
       }
     },
     {
-      "description": "Device to server: the device's own latch; a device may set the e-stop, never clear the owner's.",
+      "description": "Device to server: the old name of a machine's own Stop report; accepted and ignored. The tray's own Stop stays local.",
       "type": "object",
       "required": [
         "v",

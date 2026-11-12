@@ -3,14 +3,106 @@
   "surface_version": 1,
   "device": "phone",
   "name": "My phone controls",
-  "author": { "name": "Ana", "subject": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" } },
+  "author": {
+    "name": "Ana",
+    "subject": {
+      "type": "user",
+      "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ"
+    }
+  },
   "sharing": "private",
   "parts": [
-    { "id": "stop", "visible": true, "place": { "x": 0, "y": 0, "w": 2, "h": 2 }, "style": { "tint": "danger", "shape": "round", "opacity": 1, "label": true }, "bindings": { "keys": ["Space"], "gamepad": ["south"] } },
-    { "id": "estop", "visible": true, "place": { "x": 2, "y": 0, "w": 2, "h": 2 }, "style": { "tint": "danger", "shape": "square", "opacity": 1, "label": true }, "bindings": { "keys": ["Escape"], "gamepad": ["start"] } },
-    { "id": "stick", "visible": true, "place": { "x": 0, "y": 2, "w": 4, "h": 3 }, "style": { "tint": "surface", "shape": "round", "opacity": 1, "label": false }, "bindings": { "keys": ["W", "A", "S", "D"], "gamepad": ["left-stick"] } },
-    { "id": "battery", "visible": true, "place": { "x": 0, "y": 5, "w": 2, "h": 1 }, "style": { "tint": "success", "shape": "pill", "opacity": 1, "label": true }, "bindings": { "keys": [], "gamepad": [] } },
-    { "id": "latency", "visible": false, "place": { "x": 2, "y": 5, "w": 2, "h": 1 }, "style": { "tint": "muted", "shape": "pill", "opacity": 1, "label": true }, "bindings": { "keys": [], "gamepad": [] } }
+    {
+      "id": "stop",
+      "visible": true,
+      "place": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "style": {
+        "tint": "surface",
+        "shape": "pill",
+        "opacity": 1,
+        "label": true
+      },
+      "bindings": {
+        "keys": [
+          "Space"
+        ],
+        "gamepad": [
+          "south"
+        ]
+      }
+    },
+    {
+      "id": "stick",
+      "visible": true,
+      "place": {
+        "x": 0,
+        "y": 1,
+        "w": 4,
+        "h": 3
+      },
+      "style": {
+        "tint": "surface",
+        "shape": "round",
+        "opacity": 1,
+        "label": false
+      },
+      "bindings": {
+        "keys": [
+          "W",
+          "A",
+          "S",
+          "D"
+        ],
+        "gamepad": [
+          "left-stick"
+        ]
+      }
+    },
+    {
+      "id": "battery",
+      "visible": true,
+      "place": {
+        "x": 0,
+        "y": 4,
+        "w": 2,
+        "h": 1
+      },
+      "style": {
+        "tint": "success",
+        "shape": "pill",
+        "opacity": 1,
+        "label": true
+      },
+      "bindings": {
+        "keys": [],
+        "gamepad": []
+      }
+    },
+    {
+      "id": "latency",
+      "visible": false,
+      "place": {
+        "x": 2,
+        "y": 4,
+        "w": 2,
+        "h": 1
+      },
+      "style": {
+        "tint": "muted",
+        "shape": "pill",
+        "opacity": 1,
+        "label": true
+      },
+      "bindings": {
+        "keys": [],
+        "gamepad": []
+      }
+    }
   ],
   "updated_at": "2026-11-11T12:00:00.000Z"
 }

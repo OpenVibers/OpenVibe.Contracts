@@ -148,7 +148,7 @@ are in no project and have no OVRN, so the project-scoped request cannot name th
 - **Answers:** `common.resource-control-result@1` without `resource`.
 - **Actions per authority**, as each `<service>.resource.control` capability lists them; any other is refused
   `unsupported`:
-  - `bot.robot`: stop (the remote e-stop) and resume (clear it);
+  - `bot.robot`: stop (send the machine's own halt) and resume (a calm no-op: nothing is latched);
   - `chat.room`: archive;
   - `openre.stream`: suspend and resume (the definition disabled or active);
   - `community.paste`: delete.

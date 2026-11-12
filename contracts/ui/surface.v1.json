@@ -99,7 +99,7 @@
         "kind": { "enum": ["stick", "button", "slider", "readout", "video", "list"] },
         "required": {
           "type": "boolean",
-          "description": "A required part is always visible and at its minimum size (Stop and the e-stop). A layout that hides or shrinks it is refused."
+          "description": "A required part is always visible and at its minimum size. A layout that hides or shrinks it is refused. Stop is not required: it is an ordinary part a person may add."
         },
         "pressed": {
           "type": "boolean",

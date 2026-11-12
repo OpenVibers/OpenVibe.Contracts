@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openvibe.network/contracts/bot/robot.v1.json",
   "title": "BotRobot",
-  "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs, who may drive it (access_policy) and the latched e-stop.",
+  "description": "bot.robot@1: a robot on OpenVibe.Bot as its API presents it (domain.present.robot): its owner-chosen name, the device profile it runs and who may drive it (access_policy). The old stop-latch field stays for the contract window and is always false.",
   "type": "object",
   "required": [
     "id",
@@ -39,6 +39,7 @@
       "type": "object"
     },
     "estop": {
+      "description": "The old stop-latch field, kept for the contract window: Bot sends latched false and never reads or writes it. A later contract migration removes it.",
       "type": "object",
       "required": [
         "latched",

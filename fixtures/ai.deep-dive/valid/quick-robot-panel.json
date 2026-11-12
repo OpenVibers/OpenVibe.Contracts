@@ -68,7 +68,7 @@
       "motion": "The frame pulses when connected.",
       "words": "Verbs on buttons, state in the status line.",
       "strengths": ["Every control sits in the bottom third", "State is written, not only coloured"],
-      "weaknesses": ["The emergency stop is the same size as the rest"],
+      "weaknesses": ["The Stop button is the same size as the rest"],
       "accessibility": "The stop button has no accessible name.",
       "speed": "The first frame arrived once the socket opened; no skeleton.",
       "evidence": [
@@ -97,7 +97,7 @@
       "evidence": [{ "claim": "The frame carries the status line", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_1", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }]
     },
     "mistakes": [
-      { "what": "The emergency stop is not separated from the other controls.", "evidence": [{ "claim": "All buttons share one row", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_2", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }] }
+      { "what": "The Stop button is not separated from the other controls.", "evidence": [{ "claim": "All buttons share one row", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_2", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }] }
     ],
     "gap": "No control panel shows what the robot is about to do before the tap is sent.",
     "reference_tokens": {
@@ -113,7 +113,7 @@
   "recommendations": [
     {
       "id": "rec_1",
-      "what": "Put the emergency stop alone, full width, at the bottom.",
+      "what": "Put the Stop button alone, at the bottom.",
       "why": "The best panel suggests it by layout; the failure here is that it does not.",
       "rule": { "id": "control.destructive-separation", "status": "follows", "text": "Destructive actions are separated from ordinary ones." },
       "evidence": [{ "claim": "The stop shares the row", "source_id": "src_1", "capture_id": "cap_1", "crop_id": "crop_2", "url": "https://example.com/robot", "read_at": "2026-11-11T10:00:45.000Z" }]

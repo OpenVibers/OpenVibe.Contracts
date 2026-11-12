@@ -177,7 +177,7 @@
             "stopped",
             "failed"
           ],
-          "description": "exited: the process ended by itself; cancelled: `job_cancel`; ttl: `ttl_ms` ran out; limit: a `limits` cap was hit; stopped: the local kill switch or e-stop; failed: the worker could not run it (spawn error, missing artifact)"
+          "description": "exited: the process ended by itself; cancelled: `job_cancel`; ttl: `ttl_ms` ran out; limit: a `limits` cap was hit; stopped: the local kill switch or Stop; failed: the worker could not run it (spawn error, missing artifact)"
         },
         "code": {
           "type": [

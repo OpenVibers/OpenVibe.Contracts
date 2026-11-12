@@ -16,7 +16,7 @@ const c = require('..');
 // person consented to; Bot stays the authority and checks the machine is that person's own.
 // bot.machine.watch_link: the owner's agent asks for a link that shows the desk it works on, inside a chat (plan L55).
 const BOT_CAPABILITIES = ['bot.robot.read', 'bot.robot.manage', 'bot.robot.control', 'bot.computer.control', 'bot.machine.ai', 'bot.machine.manage', 'bot.machine.watch_link', 'bot.machine.relay', 'bot.desk.session', 'bot.device.connect', 'bot.job.dispatch', 'bot.resource.read', 'bot.resource.control'];
-const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.estop.set', 'bot.estop.cleared', 'bot.command.refused'];
+const BOT_EVENTS = ['bot.robot.online', 'bot.robot.offline', 'bot.command.refused'];
 
 const bot = c.services.get('bot');
 assert.deepStrictEqual([...bot.capabilities].sort(), [...BOT_CAPABILITIES].sort(), 'bot manifest capabilities are Bot STATUS.json capabilities');

@@ -2,63 +2,233 @@
   "id": "bot.controls",
   "version": 1,
   "name": "Robot controls",
-  "description": "The robot's own panel: Stop and the e-stop always visible, then the stick, the head slider and the readouts.",
-  "devices": ["phone", "tablet", "computer"],
+  "description": "The robot's own panel: an optional plain Stop, the stick, the head slider and the readouts.",
+  "devices": [
+    "phone",
+    "tablet",
+    "computer"
+  ],
   "grid": {
-    "columns": { "phone": 4, "tablet": 8, "computer": 12 },
-    "cell_px": { "phone": 44, "tablet": 44, "computer": 44 }
+    "columns": {
+      "phone": 4,
+      "tablet": 8,
+      "computer": 12
+    },
+    "cell_px": {
+      "phone": 44,
+      "tablet": 44,
+      "computer": 44
+    }
   },
-  "theme_tokens": ["accent", "surface", "surface-raised", "text", "muted", "danger", "warning", "success"],
+  "theme_tokens": [
+    "accent",
+    "surface",
+    "surface-raised",
+    "text",
+    "muted",
+    "danger",
+    "warning",
+    "success"
+  ],
   "parts": [
     {
-      "id": "stop", "name": "Stop", "kind": "button",
-      "required": true, "pressed": true,
-      "min": { "w": 2, "h": 2, "px": 64 },
-      "sizes": [{ "w": 2, "h": 2 }, { "w": 3, "h": 2 }],
-      "styles": { "tints": ["danger", "warning"], "shapes": ["round", "pill", "square"], "opacity": { "min": 0.7, "max": 1 }, "label": true },
-      "bindings": { "keys": ["Space", "Escape"], "gamepad": ["south", "start"] },
+      "id": "stop",
+      "name": "Stop",
+      "kind": "button",
+      "required": false,
+      "pressed": true,
+      "min": {
+        "w": 1,
+        "h": 1,
+        "px": 44
+      },
+      "sizes": [
+        {
+          "w": 1,
+          "h": 1
+        },
+        {
+          "w": 2,
+          "h": 2
+        }
+      ],
+      "styles": {
+        "tints": [
+          "surface"
+        ],
+        "shapes": [
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [
+          "Space"
+        ],
+        "gamepad": [
+          "south"
+        ]
+      },
       "never_covers": []
     },
     {
-      "id": "estop", "name": "E-stop", "kind": "button",
-      "required": true, "pressed": true,
-      "min": { "w": 2, "h": 2, "px": 64 },
-      "styles": { "tints": ["danger"], "shapes": ["round", "square"], "opacity": { "min": 0.8, "max": 1 }, "label": true },
-      "bindings": { "keys": ["Escape"], "gamepad": ["start"] },
-      "never_covers": []
+      "id": "stick",
+      "name": "Drive stick",
+      "kind": "stick",
+      "required": false,
+      "pressed": true,
+      "min": {
+        "w": 3,
+        "h": 3
+      },
+      "sizes": [
+        {
+          "w": 3,
+          "h": 3
+        },
+        {
+          "w": 4,
+          "h": 4
+        }
+      ],
+      "styles": {
+        "tints": [
+          "surface",
+          "surface-raised"
+        ],
+        "shapes": [
+          "round"
+        ],
+        "opacity": {
+          "min": 0.6,
+          "max": 1
+        },
+        "label": false
+      },
+      "bindings": {
+        "keys": [
+          "W",
+          "A",
+          "S",
+          "D"
+        ],
+        "gamepad": [
+          "left-stick"
+        ]
+      },
+      "never_covers": [
+        "stop"
+      ]
     },
     {
-      "id": "stick", "name": "Drive stick", "kind": "stick",
-      "required": false, "pressed": true,
-      "min": { "w": 3, "h": 3 },
-      "sizes": [{ "w": 3, "h": 3 }, { "w": 4, "h": 4 }],
-      "styles": { "tints": ["surface", "surface-raised"], "shapes": ["round"], "opacity": { "min": 0.6, "max": 1 }, "label": false },
-      "bindings": { "keys": ["W", "A", "S", "D"], "gamepad": ["left-stick"] },
-      "never_covers": ["stop", "estop"]
+      "id": "head",
+      "name": "Head",
+      "kind": "slider",
+      "required": false,
+      "pressed": true,
+      "min": {
+        "w": 2,
+        "h": 2
+      },
+      "styles": {
+        "tints": [
+          "accent",
+          "surface-raised"
+        ],
+        "shapes": [
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [
+          "ArrowUp",
+          "ArrowDown"
+        ],
+        "gamepad": [
+          "right-stick-y"
+        ]
+      },
+      "never_covers": [
+        "stop"
+      ]
     },
     {
-      "id": "head", "name": "Head", "kind": "slider",
-      "required": false, "pressed": true,
-      "min": { "w": 2, "h": 2 },
-      "styles": { "tints": ["accent", "surface-raised"], "shapes": ["pill", "square"], "opacity": { "min": 0.4, "max": 1 }, "label": true },
-      "bindings": { "keys": ["ArrowUp", "ArrowDown"], "gamepad": ["right-stick-y"] },
-      "never_covers": ["stop", "estop"]
+      "id": "battery",
+      "name": "Battery",
+      "kind": "readout",
+      "required": false,
+      "pressed": false,
+      "min": {
+        "w": 1,
+        "h": 1
+      },
+      "styles": {
+        "tints": [
+          "text",
+          "muted",
+          "success"
+        ],
+        "shapes": [
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [],
+        "gamepad": []
+      },
+      "never_covers": [
+        "stop"
+      ]
     },
     {
-      "id": "battery", "name": "Battery", "kind": "readout",
-      "required": false, "pressed": false,
-      "min": { "w": 1, "h": 1 },
-      "styles": { "tints": ["text", "muted", "success"], "shapes": ["pill", "square"], "opacity": { "min": 0.4, "max": 1 }, "label": true },
-      "bindings": { "keys": [], "gamepad": [] },
-      "never_covers": ["stop", "estop"]
-    },
-    {
-      "id": "latency", "name": "Latency", "kind": "readout",
-      "required": false, "pressed": false,
-      "min": { "w": 1, "h": 1 },
-      "styles": { "tints": ["text", "muted"], "shapes": ["pill", "square"], "opacity": { "min": 0.4, "max": 1 }, "label": true },
-      "bindings": { "keys": [], "gamepad": [] },
-      "never_covers": ["stop", "estop"]
+      "id": "latency",
+      "name": "Latency",
+      "kind": "readout",
+      "required": false,
+      "pressed": false,
+      "min": {
+        "w": 1,
+        "h": 1
+      },
+      "styles": {
+        "tints": [
+          "text",
+          "muted"
+        ],
+        "shapes": [
+          "pill",
+          "square"
+        ],
+        "opacity": {
+          "min": 0.4,
+          "max": 1
+        },
+        "label": true
+      },
+      "bindings": {
+        "keys": [],
+        "gamepad": []
+      },
+      "never_covers": [
+        "stop"
+      ]
     }
   ]
 }

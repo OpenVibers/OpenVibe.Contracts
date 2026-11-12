@@ -159,7 +159,7 @@
       "required": ["kind", "event"],
       "properties": {
         "kind": { "const": "robot_event" },
-        "event": { "enum": ["estop", "stopped", "disconnected", "command_refused", "button"] }
+        "event": { "enum": ["stop", "estop", "stopped", "disconnected", "command_refused", "button"] }
       }
     },
     {
