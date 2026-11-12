@@ -3,8 +3,8 @@
   "name": "LOOI",
   "by": "maticus",
   "version": "1.0.0",
-  "frozen": true,
-  "description": "LOOI through the P7 tray (Maticus's driver), as checked against the tray's real command list on 2026-11-12.",
+  "frozen": false,
+  "description": "LOOI through the P7 tray (Maticus's driver), from the tray's command list of 2026-11-12; frozen once he has checked it.",
   "commands": [
     {
       "kind": "drive",
@@ -39,6 +39,10 @@
         ]
       },
       "lifetime_ms": 500,
+      "delivery_ms": {
+        "min": 1,
+        "max": 300
+      },
       "release": "hold",
       "control": "slider"
     },
@@ -63,8 +67,19 @@
   ],
   "telemetry": [
     {
-      "key": "p7_battery",
+      "key": "battery",
       "label": "Battery",
+      "unit": "%",
+      "range": [
+        0,
+        100
+      ],
+      "source": "poll",
+      "control": "meter"
+    },
+    {
+      "key": "p7_battery",
+      "label": "Battery details",
       "unit": "%",
       "range": [
         0,
@@ -77,10 +92,14 @@
         ],
         "usb": "boolean",
         "raw": "integer",
-        "at": "ms"
+        "at": "ms",
+        "unverified": "boolean"
       },
       "source": "poll",
-      "control": "meter"
+      "control": "readout",
+      "optional": [
+        "unverified"
+      ]
     },
     {
       "key": "p7_commander",

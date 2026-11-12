@@ -142,6 +142,10 @@
           ]
         },
         "lifetime_ms": 500,
+        "delivery_ms": {
+          "min": 1,
+          "max": 300
+        },
         "release": "hold",
         "control": "slider"
       }
@@ -231,22 +235,13 @@
         "gamepad": []
       },
       "reads": {
-        "key": "p7_battery",
+        "key": "battery",
         "label": "Battery",
         "unit": "%",
         "range": [
           0,
           100
         ],
-        "fields": {
-          "pct": [
-            0,
-            100
-          ],
-          "usb": "boolean",
-          "raw": "integer",
-          "at": "ms"
-        },
         "source": "poll",
         "control": "meter"
       }

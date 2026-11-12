@@ -219545,6 +219545,25 @@ export interface BotRobotManifest {
         | undefined;
     };
     /**
+     * The fields that come only sometimes (p7_battery's unverified: only with a read at connect or a stale value).
+     *
+     * @maxItems 12
+     */
+    optional?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string];
+    /**
      * poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after).
      */
     source?: "poll" | "push" | "connect";
@@ -339130,6 +339149,25 @@ export interface UiSurface {
             | undefined;
         };
         /**
+         * The fields that come only sometimes (p7_battery's unverified: only with a read at connect or a stale value).
+         *
+         * @maxItems 12
+         */
+        optional?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string];
+        /**
          * poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after).
          */
         source?: "poll" | "push" | "connect";
@@ -339734,6 +339772,25 @@ export interface UiSurface {
               )
             | undefined;
         };
+        /**
+         * The fields that come only sometimes (p7_battery's unverified: only with a read at connect or a stale value).
+         *
+         * @maxItems 12
+         */
+        optional?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string];
         /**
          * poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after).
          */

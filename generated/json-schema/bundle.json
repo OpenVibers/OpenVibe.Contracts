@@ -82722,6 +82722,16 @@
               "fields": {
                 "$ref": "#/$defs/fields"
               },
+              "optional": {
+                "type": "array",
+                "maxItems": 12,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{0,31}$"
+                },
+                "description": "The fields that come only sometimes (p7_battery's unverified: only with a read at connect or a stale value)."
+              },
               "source": {
                 "enum": [
                   "poll",
