@@ -141361,7 +141361,7 @@
               "object",
               "null"
             ],
-            "description": "Who did it; null for AI, system, aggregate and trending cards.",
+            "description": "Who did it; null for AI, system, aggregate and trending cards. handle and level (1.1.0) let a card name the person (@handle, their level); the name effects come from Inventory by `subject`.",
             "required": [
               "name",
               "avatar"
@@ -141380,6 +141380,23 @@
                   "null"
                 ],
                 "maxLength": 2000
+              },
+              "handle": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[A-Za-z0-9_.-]{1,40}$",
+                "description": "The person's username, without the @ (1.1.0). Optional."
+              },
+              "level": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 1000,
+                "description": "The person's OpenVibe level, when they show it (Network's levels; a person who hides it from the leaderboard sends null) (1.1.0). Optional."
               }
             },
             "additionalProperties": false
@@ -141522,6 +141539,44 @@
                         "object",
                         "null"
                       ]
+                    },
+                    "price": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "description": "What it costs now (1.1.0; deals). Optional.",
+                      "required": [
+                        "amount",
+                        "currency"
+                      ],
+                      "properties": {
+                        "amount": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "currency": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{3}$"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "was": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "description": "What it cost before, in the same currency (1.1.0; deals). Optional."
+                    },
+                    "store": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 60,
+                      "description": "Where it is sold (1.1.0; deals). Optional."
                     }
                   },
                   "additionalProperties": false

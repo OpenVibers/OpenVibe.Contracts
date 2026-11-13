@@ -376490,11 +376490,19 @@ export interface FeedItem {
   site: string;
   site_name: string;
   /**
-   * Who did it; null for AI, system, aggregate and trending cards.
+   * Who did it; null for AI, system, aggregate and trending cards. handle and level (1.1.0) let a card name the person (@handle, their level); the name effects come from Inventory by `subject`.
    */
   actor: {
     name: string | null;
     avatar: string | null;
+    /**
+     * The person's username, without the @ (1.1.0). Optional.
+     */
+    handle?: string | null;
+    /**
+     * The person's OpenVibe level, when they show it (Network's levels; a person who hides it from the leaderboard sends null) (1.1.0). Optional.
+     */
+    level?: number | null;
   } | null;
   /**
    * The acting person's subject, when one is known; null for AI, system and aggregate cards. The Following filter and For you ranking read it.
@@ -376554,18 +376562,63 @@ export interface FeedItem {
         url: string;
         title: string;
         media: {} | null;
+        /**
+         * What it costs now (1.1.0; deals). Optional.
+         */
+        price?: {
+          amount: number;
+          currency: string;
+        } | null;
+        /**
+         * What it cost before, in the same currency (1.1.0; deals). Optional.
+         */
+        was?: number | null;
+        /**
+         * Where it is sold (1.1.0; deals). Optional.
+         */
+        store?: string | null;
       },
       {
         id: string;
         url: string;
         title: string;
         media: {} | null;
+        /**
+         * What it costs now (1.1.0; deals). Optional.
+         */
+        price?: {
+          amount: number;
+          currency: string;
+        } | null;
+        /**
+         * What it cost before, in the same currency (1.1.0; deals). Optional.
+         */
+        was?: number | null;
+        /**
+         * Where it is sold (1.1.0; deals). Optional.
+         */
+        store?: string | null;
       },
       ...{
         id: string;
         url: string;
         title: string;
         media: {} | null;
+        /**
+         * What it costs now (1.1.0; deals). Optional.
+         */
+        price?: {
+          amount: number;
+          currency: string;
+        } | null;
+        /**
+         * What it cost before, in the same currency (1.1.0; deals). Optional.
+         */
+        was?: number | null;
+        /**
+         * Where it is sold (1.1.0; deals). Optional.
+         */
+        store?: string | null;
       }[]
     ];
   };
