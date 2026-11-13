@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.423.0 — 2026-11-13
+
+- **Media lists `media.config.manage`** among the capabilities it enforces: Media now serves its settings to the owner's
+  Setup at `/internal/config` (Media #441), so Network's setup and guide read it like every other service (the guide
+  said "OpenVibe.Media did not answer"). The capability itself has existed since the owner settings proxy.
+
 ## 0.422.0 — 2026-11-13
 
 **One evaluation loop: entrants, matches, and ratings that separate the model from the harness**
