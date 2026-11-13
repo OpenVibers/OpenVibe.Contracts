@@ -72,22 +72,37 @@
       }
     },
     "score": {
-      "type": ["number", "null"],
+      "type": [
+        "number",
+        "null"
+      ],
       "minimum": 0,
       "maximum": 100,
       "description": "The benchmark's score for this run, or null while human judges have not scored it yet."
     },
     "cost_usd": {
-      "type": "number",
-      "minimum": 0
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "What the run cost in US dollars, or null when it was not measured (never 0 for unknown)."
     },
     "ms": {
-      "type": "integer",
-      "minimum": 0
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "How long it took in milliseconds, or null when it was not measured."
     },
     "tokens": {
-      "type": "integer",
-      "minimum": 0
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Tokens used, or null when they were not counted."
     },
     "provenance": {
       "enum": [
@@ -185,22 +200,37 @@
           "maxLength": 80
         },
         "score": {
-          "type": ["number", "null"],
+          "type": [
+            "number",
+            "null"
+          ],
           "minimum": 0,
           "maximum": 100,
           "description": "The task score, or null while human judges have not scored it yet."
         },
         "cost_usd": {
-          "type": "number",
-          "minimum": 0
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "What the run cost in US dollars, or null when it was not measured (never 0 for unknown)."
         },
         "ms": {
-          "type": "integer",
-          "minimum": 0
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "How long it took in milliseconds, or null when it was not measured."
         },
         "tokens": {
-          "type": "integer",
-          "minimum": 0
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Tokens used, or null when they were not counted."
         },
         "artifacts": {
           "type": "array",

@@ -302825,9 +302825,18 @@ export interface BenchRunV2 {
      * The task score, or null while human judges have not scored it yet.
      */
     score: number | null;
-    cost_usd: number;
-    ms: number;
-    tokens: number;
+    /**
+     * What the run cost in US dollars, or null when it was not measured (never 0 for unknown).
+     */
+    cost_usd: number | null;
+    /**
+     * How long it took in milliseconds, or null when it was not measured.
+     */
+    ms: number | null;
+    /**
+     * Tokens used, or null when they were not counted.
+     */
+    tokens: number | null;
     /**
      * @maxItems 40
      */
@@ -302841,9 +302850,18 @@ export interface BenchRunV2 {
    * The benchmark's score for this run, or null while human judges have not scored it yet.
    */
   score: number | null;
-  cost_usd: number;
-  ms: number;
-  tokens: number;
+  /**
+   * What the run cost in US dollars, or null when it was not measured (never 0 for unknown).
+   */
+  cost_usd: number | null;
+  /**
+   * How long it took in milliseconds, or null when it was not measured.
+   */
+  ms: number | null;
+  /**
+   * Tokens used, or null when they were not counted.
+   */
+  tokens: number | null;
   /**
    * verified: an executor ran it. submitted: posted with no executor, badged and out of the default rankings.
    */
