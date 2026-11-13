@@ -297438,9 +297438,9 @@ export interface BenchJudgement {
   at: string;
 }
 
-/** bench.rating@1.0.0 (owner: bench) */
+/** bench.rating@1.1.0 (owner: bench) */
 /**
- * bench.rating@1: a rating on a benchmark board on OpenVibe.Bench. CATEGORY and SUBJECT identify what is rated (a model, a route or a room's own subject); ELO, GAMES, WINS, LOSSES, TIES and WIN_RATE are the score; CI_LOWER and CI_UPPER bound the estimate.
+ * bench.rating@1: a rating on a benchmark board on OpenVibe.Bench. CATEGORY and SUBJECT identify what is rated (a model, a route or a room's own subject); ELO, GAMES, WINS, LOSSES, TIES and WIN_RATE are the score; CI_LOWER and CI_UPPER bound the estimate. 1.1.0 (2026-11-13, compare-arena-ecosystem.md): ENTRANT_KIND says what SUBJECT is (a bench.entrant@1 kind); STYLE_CONTROL says whether length and markdown were held out of the score; FACTORS split an agent's strength into its model, its harness and the two together, each with its interval; beside the score: cost and tokens per solved task, first-token and speed percentiles and reliability, from the matches' receipts.
  */
 export interface BenchRating {
   kind_id: string;
@@ -297454,9 +297454,1235 @@ export interface BenchRating {
   win_rate: number;
   ci_lower: number;
   ci_upper: number;
+  entrant_kind?: "model" | "harness" | "agent" | "product";
+  style_control?: boolean;
+  /**
+   * An agent's strength split: model + harness + model×harness (partial pooling), on the score's scale.
+   */
+  factors?: {
+    model?: {
+      score: number;
+      ci_lower?: number | null;
+      ci_upper?: number | null;
+    };
+    harness?: {
+      score: number;
+      ci_lower?: number | null;
+      ci_upper?: number | null;
+    };
+    interaction?: {
+      score: number;
+      ci_lower?: number | null;
+      ci_upper?: number | null;
+    };
+  } | null;
+  matches?: number;
+  cost_per_solved_usd?: number | null;
+  tokens_per_task?: number | null;
+  ttft_ms?: {
+    p50?: number | null;
+    p95?: number | null;
+    n?: number;
+  } | null;
+  tps?: {
+    p50?: number | null;
+    p95?: number | null;
+    n?: number;
+  } | null;
+  /**
+   * pass^k: the share of tasks solved on all k tries.
+   */
+  reliability?: {
+    k: number;
+    pass_k: number;
+  } | null;
+  as_of?: string;
   median_cost_usd?: number | null;
   median_ms?: number | null;
   provisional?: boolean;
+}
+
+/** bench.entrant@1.0.0 (owner: bench) */
+/**
+ * bench.entrant@1 (compare-arena-ecosystem.md, 2026-11-13): what competes in a match. KIND says which: a MODEL alone (on the neutral harness), a HARNESS alone (rated over a fixed model panel), an AGENT (a harness with a model and its settings, the way people run it; CONFIG_HASH or BLUEPRINT pins the settings) or a PRODUCT (a builder people use whole). ID is the entrant's stable name: model:<model>, harness:<harness>@<version>, agent:<harness>+<model>#<config hash>, product:<slug>. Every rating and every number on a page names the entrant's kind, so a model's score is never shown without its harness.
+ */
+export type BenchEntrant = {
+  [k: string]: unknown | undefined;
+} & {
+  id: string;
+  kind: "model" | "harness" | "agent" | "product";
+  label: string;
+  model?: {
+    id: string;
+    provider?: string | null;
+    maker?: string | null;
+    /**
+     * The model family, so the matchmaker can avoid pairing two of one family.
+     */
+    family?: string | null;
+  };
+  harness?: {
+    /**
+     * claude-code, codex, opencode, goose, gemini-cli, aider, openvibe (the engine's own loop), ov-bare (the neutral harness) …
+     */
+    id: string;
+    version: string;
+  };
+  /**
+   * An agent's settings (tools, effort, prompts) hashed, so a change of settings is a new entrant.
+   */
+  config_hash?: string | null;
+  /**
+   * An agent made as agents.blueprint@1: the blueprint and its version.
+   */
+  blueprint?: {
+    id: string;
+    version: number;
+  } | null;
+  /**
+   * Who entered it: the network's own catalogue, a person's agent or a community machine.
+   */
+  owner?: {
+    type: "network" | "user" | "community";
+    id: string;
+  } | null;
+};
+
+/** bench.match@1.0.0 (owner: bench) */
+/**
+ * bench.match@1 (compare-arena-ecosystem.md, 2026-11-13): one task given to two or more entrants under the same budget and machine class, the receipts of each side, and every judgement that came in. Every comparison on the network is one: an Arena vote, a Chat draft picked, a Codes race whose patch was merged, a check job's tests, a rubric model, a game, a Live chat's poll. SOURCE says where it came from; SLOTS are the sides (a, b, …) with the entrant, the run that answered and its receipts; SHOWN is the order the sides were shown in (position bias is modelled, never ignored); BLIND says whether the names were hidden until the first judgement. OpenVibe.Bench keeps matches and rates entrants from them (bench.rating@1).
+ */
+export interface BenchMatch {
+  id: string;
+  source: "arena" | "chat" | "codes" | "live" | "games" | "exchange" | "space" | "bench" | "check";
+  task: {
+    kind: "chat" | "code" | "design" | "image" | "speech" | "search" | "computer" | "game";
+    /**
+     * What the task is about, from the classifier (code.debug, writing.email, math …), so boards are per category.
+     */
+    category?: string | null;
+    /**
+     * sha256 of the prompt: dedupe and the private pool, never the prompt itself.
+     */
+    prompt_hash?: string | null;
+    /**
+     * Only when the asker opted in to share it (PUBLIC true).
+     */
+    prompt?: string | null;
+    public?: boolean;
+    repo?: string | null;
+    sha?: string | null;
+    /**
+     * A Bench suite and task id, when the task came from one.
+     */
+    suite?: string | null;
+  };
+  /**
+   * @minItems 2
+   * @maxItems 8
+   */
+  slots:
+    | [
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        }
+      ]
+    | [
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        }
+      ]
+    | [
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        }
+      ]
+    | [
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        }
+      ]
+    | [
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        }
+      ]
+    | [
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        }
+      ]
+    | [
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        },
+        {
+          slot: string;
+          /**
+           * A bench.entrant@1 id.
+           */
+          entrant: string;
+          /**
+           * The agents.run@1 (or AI run) that answered, so its steps and receipts can be read.
+           */
+          run_id?: string | null;
+          receipts?: {
+            outcome?: "succeeded" | "failed" | "timed_out" | "refused" | "cancelled";
+            cost_usd?: number | null;
+            tokens_in?: number | null;
+            tokens_out?: number | null;
+            ttft_ms?: number | null;
+            tps?: number | null;
+            wall_ms?: number | null;
+            tool_calls?: number | null;
+            /**
+             * The answer's length, a style covariate.
+             */
+            length_chars?: number | null;
+            /**
+             * Headings, lists and bold spans in the answer, a style covariate.
+             */
+            markdown_items?: number | null;
+          };
+        }
+      ];
+  /**
+   * The order the sides were shown in, left to right or top to bottom.
+   *
+   * @maxItems 8
+   */
+  shown?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  blind?: boolean;
+  /**
+   * The same for every side: a match between unequal budgets is not a match.
+   */
+  budget?: {
+    usd?: number | null;
+    ms?: number | null;
+    machine_class?: string | null;
+  } | null;
+  /**
+   * @maxItems 200
+   */
+  judgements: {
+    judge: "human_pairwise" | "audience_poll" | "implicit" | "test_suite" | "rubric" | "game_outcome";
+    winner?: string | null;
+    /**
+     * Per side: tests passed (0..1), a rubric score, a game's points.
+     */
+    scores?: {
+      [k: string]: number | undefined;
+    } | null;
+    /**
+     * An implicit judge's signal: what the person did with a side.
+     */
+    signal?: null | "merged" | "accepted" | "copied" | "kept" | "retried" | "stopped" | "edited";
+    /**
+     * An audience poll's counts.
+     */
+    votes?: {
+      [k: string]: number | undefined;
+    } | null;
+    by?: {
+      type: "person" | "audience" | "model" | "suite" | "game";
+      /**
+       * A keyed hash of who judged, for rate limits and voter quality; never the person's id.
+       */
+      id_hash?: string | null;
+      /**
+       * A rubric judge's model (of another family than the sides).
+       */
+      model?: string | null;
+    } | null;
+    /**
+     * The voter's quality weight when the judgement was counted (gold pairs, agreement).
+     */
+    weight?: number | null;
+    style_note?: string | null;
+    at: string;
+  }[];
+  /**
+   * The race play and its parent run, when the match was run on the agent engine.
+   */
+  play?: {
+    id: string;
+    run_id?: string | null;
+  } | null;
+  at: string;
 }
 
 /** bench.round.finished@1.0.0 (owner: bench) */
@@ -297484,6 +298710,32 @@ export interface BenchJudgementRecordedPayload {
   method: string;
   outcome?: string | null;
   score?: number | null;
+  at: string;
+}
+
+/** bench.match.recorded@1.0.0 (owner: bench) */
+/**
+ * bench.match.recorded v1 (OpenVibe.Bench, 2026-11-13): a match was recorded or gained a judgement. Envelope: source bench, subject { type: match, id: <match id> }. The payload names the match, its source, its task kind and category, its entrants and the judges so far; the match itself (bench.match@1) is read from Bench. Report keeps the open ledger from these; the AI router and Run's Dispatcher refresh their priors from bench.rating.changed.
+ */
+export interface BenchMatchRecordedPayload {
+  match_id: string;
+  source: "arena" | "chat" | "codes" | "live" | "games" | "exchange" | "space" | "bench" | "check";
+  task_kind: "chat" | "code" | "design" | "image" | "speech" | "search" | "computer" | "game";
+  category?: string | null;
+  /**
+   * @minItems 2
+   * @maxItems 8
+   */
+  entrants:
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  judges: ("human_pairwise" | "audience_poll" | "implicit" | "test_suite" | "rubric" | "game_outcome")[];
+  winner_entrant?: string | null;
   at: string;
 }
 
@@ -364368,7 +365620,7 @@ export interface AgentsRunUpdatedPayload {
   };
 }
 
-/** agents.play@1.0.0 (owner: network) */
+/** agents.play@1.1.0 (owner: network) */
 /**
  * agents.play@1 (agent-engine.md §4, 2026-11-12): a named way for several agents to work on one ask, as data, so a person or an AI can write one and openvibe.run can list it. ROLES are the agents it uses (each with what it does, the size of model it wants, and how many may run at once); PHASES run in order, the roles in a phase together when PARALLEL; CHECKS say who checks whose work, against a written BAR; STOP says when the play is over; BUDGET.SPLIT gives each role its share of the parent's budget. The orchestrator turns a play into child runs (agents.run@1's PARENT_RUN, PLAY and ROLE). Rules every play keeps, whatever it says: a child's end never ends its parent; a person's message never waits behind new work; a child's budget is a slice of its parent's.
  */
@@ -371619,6 +372871,10 @@ export interface AgentsPlay {
     type: "user" | "agent" | "service";
     id: string;
   };
+  /**
+   * 1.1.0 (2026-11-13): the roles' models, harnesses and names are hidden from the person until the play's first judgement (the race play an Arena round runs: one child run per entrant, the same budget, the names after the vote).
+   */
+  blind?: boolean;
 }
 
 /** agents.source@1.0.0 (owner: network) */

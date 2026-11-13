@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/bench.match.recorded.v1.json",
+  "title": "BenchMatchRecordedPayload",
+  "description": "bench.match.recorded v1 (OpenVibe.Bench, 2026-11-13): a match was recorded or gained a judgement. Envelope: source bench, subject { type: match, id: <match id> }. The payload names the match, its source, its task kind and category, its entrants and the judges so far; the match itself (bench.match@1) is read from Bench. Report keeps the open ledger from these; the AI router and Run's Dispatcher refresh their priors from bench.rating.changed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "match_id",
+    "source",
+    "task_kind",
+    "entrants",
+    "judges",
+    "at"
+  ],
+  "properties": {
+    "match_id": {
+      "type": "string",
+      "pattern": "^mat_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "source": {
+      "enum": [
+        "arena",
+        "chat",
+        "codes",
+        "live",
+        "games",
+        "exchange",
+        "space",
+        "bench",
+        "check"
+      ]
+    },
+    "task_kind": {
+      "enum": [
+        "chat",
+        "code",
+        "design",
+        "image",
+        "speech",
+        "search",
+        "computer",
+        "game"
+      ]
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "entrants": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": {
+        "type": "string"
+      }
+    },
+    "judges": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "human_pairwise",
+          "audience_poll",
+          "implicit",
+          "test_suite",
+          "rubric",
+          "game_outcome"
+        ]
+      }
+    },
+    "winner_entrant": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

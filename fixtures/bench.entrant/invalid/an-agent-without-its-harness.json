@@ -1,0 +1,8 @@
+{
+  "id": "agent:codex+gpt-5-mini#3f9a1c22",
+  "kind": "agent",
+  "label": "Codex with GPT-5 mini",
+  "model": {
+    "id": "gpt-5-mini"
+  }
+}

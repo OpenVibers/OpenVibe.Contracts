@@ -1,0 +1,10 @@
+{
+  "id": "model:deepseek-flash",
+  "kind": "model",
+  "label": "DeepSeek Flash",
+  "model": {
+    "id": "deepseek-flash",
+    "provider": "deepseek",
+    "family": "deepseek"
+  }
+}

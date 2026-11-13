@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/entrant.v1.json",
+  "title": "BenchEntrant",
+  "description": "bench.entrant@1 (compare-arena-ecosystem.md, 2026-11-13): what competes in a match. KIND says which: a MODEL alone (on the neutral harness), a HARNESS alone (rated over a fixed model panel), an AGENT (a harness with a model and its settings, the way people run it; CONFIG_HASH or BLUEPRINT pins the settings) or a PRODUCT (a builder people use whole). ID is the entrant's stable name: model:<model>, harness:<harness>@<version>, agent:<harness>+<model>#<config hash>, product:<slug>. Every rating and every number on a page names the entrant's kind, so a model's score is never shown without its harness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "label"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(model:[A-Za-z0-9._/:-]{1,200}|harness:[a-z0-9][a-z0-9._-]{0,60}@[A-Za-z0-9._-]{1,40}|agent:[a-z0-9][a-z0-9._-]{0,60}\\+[A-Za-z0-9._/:-]{1,200}#[a-f0-9]{8,64}|product:[a-z0-9][a-z0-9-]{0,60})$"
+    },
+    "kind": { "enum": ["model", "harness", "agent", "product"] },
+    "label": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "provider": { "type": ["string", "null"], "maxLength": 120 },
+        "maker": { "type": ["string", "null"], "maxLength": 120 },
+        "family": { "type": ["string", "null"], "maxLength": 80, "description": "The model family, so the matchmaker can avoid pairing two of one family." }
+      }
+    },
+    "harness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,60}$", "description": "claude-code, codex, opencode, goose, gemini-cli, aider, openvibe (the engine's own loop), ov-bare (the neutral harness) …" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 40 }
+      }
+    },
+    "config_hash": { "type": ["string", "null"], "pattern": "^[a-f0-9]{8,64}$", "description": "An agent's settings (tools, effort, prompts) hashed, so a change of settings is a new entrant." },
+    "blueprint": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "version": { "type": "integer", "minimum": 1 }
+      },
+      "description": "An agent made as agents.blueprint@1: the blueprint and its version."
+    },
+    "owner": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "enum": ["network", "user", "community"] },
+        "id": { "type": "string", "minLength": 1, "maxLength": 160 }
+      },
+      "description": "Who entered it: the network's own catalogue, a person's agent or a community machine."
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "kind": { "const": "model" } } }, "then": { "required": ["model"] } },
+    { "if": { "properties": { "kind": { "const": "harness" } } }, "then": { "required": ["harness"] } },
+    { "if": { "properties": { "kind": { "const": "agent" } } }, "then": { "required": ["model", "harness"] } }
+  ]
+}

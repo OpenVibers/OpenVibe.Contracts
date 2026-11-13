@@ -1,0 +1,57 @@
+{
+  "id": "mat_01KA0000000000000000000003",
+  "source": "codes",
+  "task": {
+    "kind": "code",
+    "category": "code.bugfix",
+    "repo": "https://github.com/OpenVibers/OpenVibe.Compare",
+    "sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "slots": [
+    {
+      "slot": "a",
+      "entrant": "agent:codex+gpt-5-mini#3f9a1c22",
+      "receipts": {
+        "outcome": "succeeded",
+        "cost_usd": 0.21,
+        "wall_ms": 312000,
+        "tool_calls": 41
+      }
+    },
+    {
+      "slot": "b",
+      "entrant": "agent:opencode+glm-5.3#9b7e2d10",
+      "receipts": {
+        "outcome": "succeeded",
+        "cost_usd": 0.09,
+        "wall_ms": 401000,
+        "tool_calls": 57
+      }
+    }
+  ],
+  "blind": false,
+  "judgements": [
+    {
+      "judge": "test_suite",
+      "scores": {
+        "a": 1,
+        "b": 0.8
+      },
+      "by": {
+        "type": "suite"
+      },
+      "at": "2026-11-13T02:10:00Z"
+    },
+    {
+      "judge": "implicit",
+      "winner": "a",
+      "signal": "merged",
+      "by": {
+        "type": "person",
+        "id_hash": "fedcba9876543210"
+      },
+      "at": "2026-11-13T02:30:00Z"
+    }
+  ],
+  "at": "2026-11-13T02:00:00Z"
+}

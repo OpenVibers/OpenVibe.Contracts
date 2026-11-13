@@ -1,0 +1,9 @@
+{
+  "id": "harness:opencode@1.4.2",
+  "kind": "harness",
+  "label": "OpenCode",
+  "harness": {
+    "id": "opencode",
+    "version": "1.4.2"
+  }
+}

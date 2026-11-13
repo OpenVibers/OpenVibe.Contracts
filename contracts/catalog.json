@@ -9602,10 +9602,28 @@
     },
     {
       "id": "bench.rating",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bench",
       "schema": "bench/rating.v1.json",
       "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.entrant",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/entrant.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.match",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "bench/match.v1.json",
+      "visibility": "public",
       "compatibility": "backward",
       "status": "active"
     },
@@ -9623,6 +9641,15 @@
       "version": "1.0.0",
       "owner": "bench",
       "schema": "events/payloads/bench.judgement.recorded.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "bench.match.recorded",
+      "version": "1.0.0",
+      "owner": "bench",
+      "schema": "events/payloads/bench.match.recorded.v1.json",
       "visibility": "first-party",
       "compatibility": "backward",
       "status": "active"
@@ -11858,7 +11885,7 @@
     },
     {
       "id": "agents.play",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "schema": "agents/play.v1.json",
       "visibility": "public",
