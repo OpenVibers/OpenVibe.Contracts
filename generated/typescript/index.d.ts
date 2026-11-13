@@ -376503,6 +376503,10 @@ export interface FeedItem {
      * The person's OpenVibe level, when they show it (Network's levels; a person who hides it from the leaderboard sends null) (1.1.0). Optional.
      */
     level?: number | null;
+    /**
+     * The name effect the person wears (Inventory's live.name_effect.css@1 token, e.g. name-fx-rainbow), looked up by the feed's server so no site needs Inventory in its connect-src; openvibe-shared items.css draws it (1.1.0). Optional.
+     */
+    fx?: string | null;
   } | null;
   /**
    * The acting person's subject, when one is known; null for AI, system and aggregate cards. The Following filter and For you ranking read it.

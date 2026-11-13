@@ -11,7 +11,8 @@
     "name": "Goosely",
     "avatar": null,
     "handle": "goosely",
-    "level": 23
+    "level": 23,
+    "fx": "name-fx-rainbow"
   },
   "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
   "media": {
