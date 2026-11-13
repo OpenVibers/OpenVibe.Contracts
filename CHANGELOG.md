@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.422.0 — 2026-11-13
+
+**One evaluation loop: entrants, matches, and ratings that separate the model from the harness**
+(compare-arena-ecosystem.md). The owner, 11-13: the Arena "should still use our multi purpose shared universal agentic
+multi harness system", and comparisons should do "harness vs harness and model vs model … better".
+
+- **`bench.entrant@1`:** what competes.
+  - Kinds: a `model` (on the neutral harness), a `harness` (over a fixed model panel), an `agent` (harness + model +
+    settings, a blueprint version), or a `product`.
+  - Stable ids: `model:…`, `harness:…@version`, `agent:harness+model#confighash`, `product:…`.
+- **`bench.match@1`:** one task given to two or more entrants under the same budget.
+  - Each side carries its receipts: cost, tokens, TTFT, TPS, wall time, tool calls, and the length and markdown style
+    covariates.
+  - `shown` records the order the sides were displayed in; `blind` records whether names were hidden.
+  - Judgements come from `human_pairwise`, `audience_poll`, `implicit` (merged, accepted, copied, kept, retried,
+    stopped, edited), `test_suite`, `rubric` and `game_outcome`. A voter is a keyed hash with a quality weight, never
+    an id.
+  - Sources: arena, chat, codes, live, games, exchange, space, bench and check jobs.
+- **`bench.rating@1` 1.1.0** (all optional):
+  - `entrant_kind` and `style_control`;
+  - `factors`: an agent's strength split into model, harness and interaction, each with an interval;
+  - `cost_per_solved_usd`, `tokens_per_task`, `ttft_ms` and `tps` percentiles, `reliability` (pass^k), `matches`,
+    `as_of`.
+- **Event `bench.match.recorded` v1**, produced by Bench.
+- **`agents.play@1` 1.1.0:** `blind` hides the roles' names until the first judgement. This is the race play an Arena
+  round runs on the agent engine.
+- **Fixtures:**
+  - entrants: an agent, a harness, a model;
+  - matches: an Arena vote, and a Codes race judged by its tests and then merged;
+  - a rating with its factors;
+  - invalid: an agent without its harness, a kind nobody has, a one-sided match, an unknown judge.
+
 ## 0.421.0 — 2026-11-12
 
 **Every AI call, measured everywhere** (ai-metrics.md).

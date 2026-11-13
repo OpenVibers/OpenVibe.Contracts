@@ -106591,14 +106591,14 @@
       }
     },
     "bench.rating": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bench",
       "status": "active",
       "schema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://openvibe.network/contracts/bench/rating.v1.json",
         "title": "BenchRating",
-        "description": "bench.rating@1: a rating on a benchmark board on OpenVibe.Bench. CATEGORY and SUBJECT identify what is rated (a model, a route or a room's own subject); ELO, GAMES, WINS, LOSSES, TIES and WIN_RATE are the score; CI_LOWER and CI_UPPER bound the estimate.",
+        "description": "bench.rating@1: a rating on a benchmark board on OpenVibe.Bench. CATEGORY and SUBJECT identify what is rated (a model, a route or a room's own subject); ELO, GAMES, WINS, LOSSES, TIES and WIN_RATE are the score; CI_LOWER and CI_UPPER bound the estimate. 1.1.0 (2026-11-13, compare-arena-ecosystem.md): ENTRANT_KIND says what SUBJECT is (a bench.entrant@1 kind); STYLE_CONTROL says whether length and markdown were held out of the score; FACTORS split an agent's strength into its model, its harness and the two together, each with its interval; beside the score: cost and tokens per solved task, first-token and speed percentiles and reliability, from the matches' receipts.",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -106648,6 +106648,198 @@
           "ci_upper": {
             "type": "number"
           },
+          "entrant_kind": {
+            "enum": [
+              "model",
+              "harness",
+              "agent",
+              "product"
+            ]
+          },
+          "style_control": {
+            "type": "boolean"
+          },
+          "factors": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "model": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "score"
+                ],
+                "properties": {
+                  "score": {
+                    "type": "number"
+                  },
+                  "ci_lower": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "ci_upper": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "harness": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "score"
+                ],
+                "properties": {
+                  "score": {
+                    "type": "number"
+                  },
+                  "ci_lower": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "ci_upper": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "interaction": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "score"
+                ],
+                "properties": {
+                  "score": {
+                    "type": "number"
+                  },
+                  "ci_lower": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "ci_upper": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "An agent's strength split: model + harness + model×harness (partial pooling), on the score's scale."
+          },
+          "matches": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cost_per_solved_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "tokens_per_task": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "ttft_ms": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "p50": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "p95": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "n": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "tps": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "p50": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "p95": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "n": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "reliability": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "k",
+              "pass_k"
+            ],
+            "properties": {
+              "k": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "pass_k": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "description": "pass^k: the share of tasks solved on all k tries."
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
           "median_cost_usd": {
             "type": [
               "number",
@@ -106662,6 +106854,627 @@
           },
           "provisional": {
             "type": "boolean"
+          }
+        }
+      }
+    },
+    "bench.entrant": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/entrant.v1.json",
+        "title": "BenchEntrant",
+        "description": "bench.entrant@1 (compare-arena-ecosystem.md, 2026-11-13): what competes in a match. KIND says which: a MODEL alone (on the neutral harness), a HARNESS alone (rated over a fixed model panel), an AGENT (a harness with a model and its settings, the way people run it; CONFIG_HASH or BLUEPRINT pins the settings) or a PRODUCT (a builder people use whole). ID is the entrant's stable name: model:<model>, harness:<harness>@<version>, agent:<harness>+<model>#<config hash>, product:<slug>. Every rating and every number on a page names the entrant's kind, so a model's score is never shown without its harness.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(model:[A-Za-z0-9._/:-]{1,200}|harness:[a-z0-9][a-z0-9._-]{0,60}@[A-Za-z0-9._-]{1,40}|agent:[a-z0-9][a-z0-9._-]{0,60}\\+[A-Za-z0-9._/:-]{1,200}#[a-f0-9]{8,64}|product:[a-z0-9][a-z0-9-]{0,60})$"
+          },
+          "kind": {
+            "enum": [
+              "model",
+              "harness",
+              "agent",
+              "product"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "model": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 120
+              },
+              "maker": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 120
+              },
+              "family": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 80,
+                "description": "The model family, so the matchmaker can avoid pairing two of one family."
+              }
+            }
+          },
+          "harness": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "version"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9._-]{0,60}$",
+                "description": "claude-code, codex, opencode, goose, gemini-cli, aider, openvibe (the engine's own loop), ov-bare (the neutral harness) …"
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          },
+          "config_hash": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{8,64}$",
+            "description": "An agent's settings (tools, effort, prompts) hashed, so a change of settings is a new entrant."
+          },
+          "blueprint": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "version"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "description": "An agent made as agents.blueprint@1: the blueprint and its version."
+          },
+          "owner": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "id"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "network",
+                  "user",
+                  "community"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "description": "Who entered it: the network's own catalogue, a person's agent or a community machine."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "model"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "model"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "harness"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "harness"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "agent"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "model",
+                "harness"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "bench.match": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/bench/match.v1.json",
+        "title": "BenchMatch",
+        "description": "bench.match@1 (compare-arena-ecosystem.md, 2026-11-13): one task given to two or more entrants under the same budget and machine class, the receipts of each side, and every judgement that came in. Every comparison on the network is one: an Arena vote, a Chat draft picked, a Codes race whose patch was merged, a check job's tests, a rubric model, a game, a Live chat's poll. SOURCE says where it came from; SLOTS are the sides (a, b, …) with the entrant, the run that answered and its receipts; SHOWN is the order the sides were shown in (position bias is modelled, never ignored); BLIND says whether the names were hidden until the first judgement. OpenVibe.Bench keeps matches and rates entrants from them (bench.rating@1).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "source",
+          "task",
+          "slots",
+          "judgements",
+          "at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^mat_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "source": {
+            "enum": [
+              "arena",
+              "chat",
+              "codes",
+              "live",
+              "games",
+              "exchange",
+              "space",
+              "bench",
+              "check"
+            ]
+          },
+          "task": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "chat",
+                  "code",
+                  "design",
+                  "image",
+                  "speech",
+                  "search",
+                  "computer",
+                  "game"
+                ]
+              },
+              "category": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-z][a-z0-9._-]{0,60}$",
+                "description": "What the task is about, from the classifier (code.debug, writing.email, math …), so boards are per category."
+              },
+              "prompt_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{64}$",
+                "description": "sha256 of the prompt: dedupe and the private pool, never the prompt itself."
+              },
+              "prompt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 20000,
+                "description": "Only when the asker opted in to share it (PUBLIC true)."
+              },
+              "public": {
+                "type": "boolean",
+                "default": false
+              },
+              "repo": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              },
+              "sha": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{40}$"
+              },
+              "suite": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 120,
+                "description": "A Bench suite and task id, when the task came from one."
+              }
+            }
+          },
+          "slots": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "slot",
+                "entrant"
+              ],
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "pattern": "^[a-h]$"
+                },
+                "entrant": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "description": "A bench.entrant@1 id."
+                },
+                "run_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120,
+                  "description": "The agents.run@1 (or AI run) that answered, so its steps and receipts can be read."
+                },
+                "receipts": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "outcome": {
+                      "enum": [
+                        "succeeded",
+                        "failed",
+                        "timed_out",
+                        "refused",
+                        "cancelled"
+                      ]
+                    },
+                    "cost_usd": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "tokens_in": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "tokens_out": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "ttft_ms": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "tps": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "wall_ms": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "tool_calls": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "length_chars": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "description": "The answer's length, a style covariate."
+                    },
+                    "markdown_items": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "description": "Headings, lists and bold spans in the answer, a style covariate."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "shown": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-h]$"
+            },
+            "maxItems": 8,
+            "description": "The order the sides were shown in, left to right or top to bottom."
+          },
+          "blind": {
+            "type": "boolean",
+            "default": true
+          },
+          "budget": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "usd": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "ms": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "machine_class": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 60
+              }
+            },
+            "description": "The same for every side: a match between unequal budgets is not a match."
+          },
+          "judgements": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "judge",
+                "at"
+              ],
+              "properties": {
+                "judge": {
+                  "enum": [
+                    "human_pairwise",
+                    "audience_poll",
+                    "implicit",
+                    "test_suite",
+                    "rubric",
+                    "game_outcome"
+                  ]
+                },
+                "winner": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^([a-h]|tie|both_bad)$"
+                },
+                "scores": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "propertyNames": {
+                    "pattern": "^[a-h]$"
+                  },
+                  "additionalProperties": {
+                    "type": "number"
+                  },
+                  "description": "Per side: tests passed (0..1), a rubric score, a game's points."
+                },
+                "signal": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    null,
+                    "merged",
+                    "accepted",
+                    "copied",
+                    "kept",
+                    "retried",
+                    "stopped",
+                    "edited"
+                  ],
+                  "description": "An implicit judge's signal: what the person did with a side."
+                },
+                "votes": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "propertyNames": {
+                    "pattern": "^([a-h]|tie)$"
+                  },
+                  "additionalProperties": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "description": "An audience poll's counts."
+                },
+                "by": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "required": [
+                    "type"
+                  ],
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "person",
+                        "audience",
+                        "model",
+                        "suite",
+                        "game"
+                      ]
+                    },
+                    "id_hash": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "pattern": "^[a-f0-9]{16,64}$",
+                      "description": "A keyed hash of who judged, for rate limits and voter quality; never the person's id."
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 200,
+                      "description": "A rubric judge's model (of another family than the sides)."
+                    }
+                  }
+                },
+                "weight": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "The voter's quality weight when the judgement was counted (gold pairs, agreement)."
+                },
+                "style_note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "play": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "run_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "description": "The race play and its parent run, when the match was run on the agent engine."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
@@ -106755,6 +107568,95 @@
           "score": {
             "type": [
               "number",
+              "null"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "bench.match.recorded": {
+      "version": "1.0.0",
+      "owner": "bench",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/bench.match.recorded.v1.json",
+        "title": "BenchMatchRecordedPayload",
+        "description": "bench.match.recorded v1 (OpenVibe.Bench, 2026-11-13): a match was recorded or gained a judgement. Envelope: source bench, subject { type: match, id: <match id> }. The payload names the match, its source, its task kind and category, its entrants and the judges so far; the match itself (bench.match@1) is read from Bench. Report keeps the open ledger from these; the AI router and Run's Dispatcher refresh their priors from bench.rating.changed.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "match_id",
+          "source",
+          "task_kind",
+          "entrants",
+          "judges",
+          "at"
+        ],
+        "properties": {
+          "match_id": {
+            "type": "string",
+            "pattern": "^mat_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "source": {
+            "enum": [
+              "arena",
+              "chat",
+              "codes",
+              "live",
+              "games",
+              "exchange",
+              "space",
+              "bench",
+              "check"
+            ]
+          },
+          "task_kind": {
+            "enum": [
+              "chat",
+              "code",
+              "design",
+              "image",
+              "speech",
+              "search",
+              "computer",
+              "game"
+            ]
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "entrants": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 8,
+            "items": {
+              "type": "string"
+            }
+          },
+          "judges": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "human_pairwise",
+                "audience_poll",
+                "implicit",
+                "test_suite",
+                "rubric",
+                "game_outcome"
+              ]
+            }
+          },
+          "winner_entrant": {
+            "type": [
+              "string",
               "null"
             ]
           },
@@ -138290,7 +139192,7 @@
       }
     },
     "agents.play": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -138524,6 +139426,11 @@
                 "maxLength": 160
               }
             }
+          },
+          "blind": {
+            "type": "boolean",
+            "default": false,
+            "description": "1.1.0 (2026-11-13): the roles' models, harnesses and names are hidden from the person until the play's first judgement (the race play an Arena round runs: one child run per entrant, the same budget, the names after the vote)."
           }
         }
       }

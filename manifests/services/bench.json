@@ -37,6 +37,7 @@
   "eventsProduced": [
     "bench.round.finished",
     "bench.judgement.recorded",
+    "bench.match.recorded",
     "bench.rating.changed"
   ],
   "eventsConsumed": [

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/bench/match.v1.json",
+  "title": "BenchMatch",
+  "description": "bench.match@1 (compare-arena-ecosystem.md, 2026-11-13): one task given to two or more entrants under the same budget and machine class, the receipts of each side, and every judgement that came in. Every comparison on the network is one: an Arena vote, a Chat draft picked, a Codes race whose patch was merged, a check job's tests, a rubric model, a game, a Live chat's poll. SOURCE says where it came from; SLOTS are the sides (a, b, …) with the entrant, the run that answered and its receipts; SHOWN is the order the sides were shown in (position bias is modelled, never ignored); BLIND says whether the names were hidden until the first judgement. OpenVibe.Bench keeps matches and rates entrants from them (bench.rating@1).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "source", "task", "slots", "judgements", "at"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^mat_[0-9A-HJKMNP-TV-Z]{26}$" },
+    "source": { "enum": ["arena", "chat", "codes", "live", "games", "exchange", "space", "bench", "check"] },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["chat", "code", "design", "image", "speech", "search", "computer", "game"] },
+        "category": { "type": ["string", "null"], "pattern": "^[a-z][a-z0-9._-]{0,60}$", "description": "What the task is about, from the classifier (code.debug, writing.email, math …), so boards are per category." },
+        "prompt_hash": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$", "description": "sha256 of the prompt: dedupe and the private pool, never the prompt itself." },
+        "prompt": { "type": ["string", "null"], "maxLength": 20000, "description": "Only when the asker opted in to share it (PUBLIC true)." },
+        "public": { "type": "boolean", "default": false },
+        "repo": { "type": ["string", "null"], "maxLength": 300 },
+        "sha": { "type": ["string", "null"], "pattern": "^[a-f0-9]{40}$" },
+        "suite": { "type": ["string", "null"], "maxLength": 120, "description": "A Bench suite and task id, when the task came from one." }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot", "entrant"],
+        "properties": {
+          "slot": { "type": "string", "pattern": "^[a-h]$" },
+          "entrant": { "type": "string", "minLength": 1, "maxLength": 300, "description": "A bench.entrant@1 id." },
+          "run_id": { "type": ["string", "null"], "maxLength": 120, "description": "The agents.run@1 (or AI run) that answered, so its steps and receipts can be read." },
+          "receipts": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "outcome": { "enum": ["succeeded", "failed", "timed_out", "refused", "cancelled"] },
+              "cost_usd": { "type": ["number", "null"], "minimum": 0 },
+              "tokens_in": { "type": ["integer", "null"], "minimum": 0 },
+              "tokens_out": { "type": ["integer", "null"], "minimum": 0 },
+              "ttft_ms": { "type": ["number", "null"], "minimum": 0 },
+              "tps": { "type": ["number", "null"], "minimum": 0 },
+              "wall_ms": { "type": ["number", "null"], "minimum": 0 },
+              "tool_calls": { "type": ["integer", "null"], "minimum": 0 },
+              "length_chars": { "type": ["integer", "null"], "minimum": 0, "description": "The answer's length, a style covariate." },
+              "markdown_items": { "type": ["integer", "null"], "minimum": 0, "description": "Headings, lists and bold spans in the answer, a style covariate." }
+            }
+          }
+        }
+      }
+    },
+    "shown": { "type": "array", "items": { "type": "string", "pattern": "^[a-h]$" }, "maxItems": 8, "description": "The order the sides were shown in, left to right or top to bottom." },
+    "blind": { "type": "boolean", "default": true },
+    "budget": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "usd": { "type": ["number", "null"], "minimum": 0 },
+        "ms": { "type": ["integer", "null"], "minimum": 0 },
+        "machine_class": { "type": ["string", "null"], "maxLength": 60 }
+      },
+      "description": "The same for every side: a match between unequal budgets is not a match."
+    },
+    "judgements": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["judge", "at"],
+        "properties": {
+          "judge": { "enum": ["human_pairwise", "audience_poll", "implicit", "test_suite", "rubric", "game_outcome"] },
+          "winner": { "type": ["string", "null"], "pattern": "^([a-h]|tie|both_bad)$" },
+          "scores": { "type": ["object", "null"], "propertyNames": { "pattern": "^[a-h]$" }, "additionalProperties": { "type": "number" }, "description": "Per side: tests passed (0..1), a rubric score, a game's points." },
+          "signal": { "type": ["string", "null"], "enum": [null, "merged", "accepted", "copied", "kept", "retried", "stopped", "edited"], "description": "An implicit judge's signal: what the person did with a side." },
+          "votes": { "type": ["object", "null"], "propertyNames": { "pattern": "^([a-h]|tie)$" }, "additionalProperties": { "type": "integer", "minimum": 0 }, "description": "An audience poll's counts." },
+          "by": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "enum": ["person", "audience", "model", "suite", "game"] },
+              "id_hash": { "type": ["string", "null"], "pattern": "^[a-f0-9]{16,64}$", "description": "A keyed hash of who judged, for rate limits and voter quality; never the person's id." },
+              "model": { "type": ["string", "null"], "maxLength": 200, "description": "A rubric judge's model (of another family than the sides)." }
+            }
+          },
+          "weight": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "The voter's quality weight when the judgement was counted (gold pairs, agreement)." },
+          "style_note": { "type": ["string", "null"], "maxLength": 200 },
+          "at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "play": { "type": ["object", "null"], "additionalProperties": false, "required": ["id"], "properties": { "id": { "type": "string" }, "run_id": { "type": ["string", "null"] } }, "description": "The race play and its parent run, when the match was run on the agent engine." },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

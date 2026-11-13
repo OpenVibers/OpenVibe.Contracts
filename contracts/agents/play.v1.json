@@ -229,6 +229,11 @@
           "maxLength": 160
         }
       }
+    },
+    "blind": {
+      "type": "boolean",
+      "default": false,
+      "description": "1.1.0 (2026-11-13): the roles' models, harnesses and names are hidden from the person until the play's first judgement (the race play an Arena round runs: one child run per entrant, the same budget, the names after the vote)."
     }
   }
 }

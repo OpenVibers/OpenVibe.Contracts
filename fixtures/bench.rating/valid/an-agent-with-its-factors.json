@@ -1,0 +1,53 @@
+{
+  "kind_id": "knd_01J8Z3Q4R5S6T7V8W9X0Y1Z2A3",
+  "category": "model",
+  "subject": "agent:codex+gpt-5-mini#3f9a1c22",
+  "elo": 1500,
+  "games": 10,
+  "wins": 6,
+  "losses": 3,
+  "ties": 1,
+  "win_rate": 0.6,
+  "ci_lower": 1400,
+  "ci_upper": 1600,
+  "median_cost_usd": null,
+  "median_ms": null,
+  "provisional": false,
+  "entrant_kind": "agent",
+  "style_control": true,
+  "factors": {
+    "model": {
+      "score": 1062,
+      "ci_lower": 1040,
+      "ci_upper": 1084
+    },
+    "harness": {
+      "score": 31,
+      "ci_lower": 12,
+      "ci_upper": 50
+    },
+    "interaction": {
+      "score": -4,
+      "ci_lower": -21,
+      "ci_upper": 13
+    }
+  },
+  "matches": 412,
+  "cost_per_solved_usd": 0.31,
+  "tokens_per_task": 48200,
+  "ttft_ms": {
+    "p50": 540,
+    "p95": 1310,
+    "n": 412
+  },
+  "tps": {
+    "p50": 86,
+    "p95": null,
+    "n": 380
+  },
+  "reliability": {
+    "k": 3,
+    "pass_k": 0.71
+  },
+  "as_of": "2026-11-13T02:00:00Z"
+}
