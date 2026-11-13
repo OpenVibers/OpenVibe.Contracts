@@ -124185,7 +124185,7 @@
       }
     },
     "exchange.search-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "exchange",
       "status": "active",
       "schema": {
@@ -124252,6 +124252,95 @@
                 "type": "number",
                 "minimum": 0
               },
+              "class": {
+                "type": "string",
+                "enum": [
+                  "first_party_index",
+                  "independent_index",
+                  "serp_proxy",
+                  "semantic",
+                  "answer_engine",
+                  "metasearch",
+                  "page_reader",
+                  "open_asset_catalog",
+                  "provider_asset_catalog",
+                  "web_image_discovery",
+                  "icon_catalog",
+                  "reverse_image",
+                  "visual_web_detection",
+                  "product_visual_search"
+                ],
+                "description": "The class of the engine that answered."
+              },
+              "classes_allowed": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "first_party_index",
+                    "independent_index",
+                    "serp_proxy",
+                    "semantic",
+                    "answer_engine",
+                    "metasearch",
+                    "page_reader",
+                    "open_asset_catalog",
+                    "provider_asset_catalog",
+                    "web_image_discovery",
+                    "icon_catalog",
+                    "reverse_image",
+                    "visual_web_detection",
+                    "product_visual_search"
+                  ]
+                },
+                "description": "The engine classes this request was allowed to use."
+              },
+              "not_considered": {
+                "type": "array",
+                "maxItems": 32,
+                "description": "The engines that were not considered, and why.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "engine",
+                    "class",
+                    "reason"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "engine": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "class": {
+                      "type": "string",
+                      "enum": [
+                        "first_party_index",
+                        "independent_index",
+                        "serp_proxy",
+                        "semantic",
+                        "answer_engine",
+                        "metasearch",
+                        "page_reader",
+                        "open_asset_catalog",
+                        "provider_asset_catalog",
+                        "web_image_discovery",
+                        "icon_catalog",
+                        "reverse_image",
+                        "visual_web_detection",
+                        "product_visual_search"
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              },
               "attempts": {
                 "description": "Ordered routing attempts with safe reason codes; no provider error bodies or credentials.",
                 "type": "array",
@@ -124275,6 +124364,26 @@
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 100
+                    },
+                    "class": {
+                      "type": "string",
+                      "enum": [
+                        "first_party_index",
+                        "independent_index",
+                        "serp_proxy",
+                        "semantic",
+                        "answer_engine",
+                        "metasearch",
+                        "page_reader",
+                        "open_asset_catalog",
+                        "provider_asset_catalog",
+                        "web_image_discovery",
+                        "icon_catalog",
+                        "reverse_image",
+                        "visual_web_detection",
+                        "product_visual_search"
+                      ],
+                      "description": "The class of that engine."
                     },
                     "model": {
                       "type": [
@@ -124300,7 +124409,12 @@
                         "budget",
                         "timeout",
                         "upstream_error",
-                        "invalid_response"
+                        "invalid_response",
+                        "class_not_considered",
+                        "terms_unreviewed",
+                        "terms_disallow_purpose",
+                        "privacy_incompatible",
+                        "retention_incompatible"
                       ]
                     },
                     "time_ms": {
@@ -124324,7 +124438,7 @@
       }
     },
     "exchange.image-result": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "exchange",
       "status": "active",
       "schema": {
@@ -124425,6 +124539,95 @@
                 "type": "number",
                 "minimum": 0
               },
+              "class": {
+                "type": "string",
+                "enum": [
+                  "first_party_index",
+                  "independent_index",
+                  "serp_proxy",
+                  "semantic",
+                  "answer_engine",
+                  "metasearch",
+                  "page_reader",
+                  "open_asset_catalog",
+                  "provider_asset_catalog",
+                  "web_image_discovery",
+                  "icon_catalog",
+                  "reverse_image",
+                  "visual_web_detection",
+                  "product_visual_search"
+                ],
+                "description": "The class of the engine that answered."
+              },
+              "classes_allowed": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "first_party_index",
+                    "independent_index",
+                    "serp_proxy",
+                    "semantic",
+                    "answer_engine",
+                    "metasearch",
+                    "page_reader",
+                    "open_asset_catalog",
+                    "provider_asset_catalog",
+                    "web_image_discovery",
+                    "icon_catalog",
+                    "reverse_image",
+                    "visual_web_detection",
+                    "product_visual_search"
+                  ]
+                },
+                "description": "The engine classes this request was allowed to use."
+              },
+              "not_considered": {
+                "type": "array",
+                "maxItems": 32,
+                "description": "The engines that were not considered, and why.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "engine",
+                    "class",
+                    "reason"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "engine": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "class": {
+                      "type": "string",
+                      "enum": [
+                        "first_party_index",
+                        "independent_index",
+                        "serp_proxy",
+                        "semantic",
+                        "answer_engine",
+                        "metasearch",
+                        "page_reader",
+                        "open_asset_catalog",
+                        "provider_asset_catalog",
+                        "web_image_discovery",
+                        "icon_catalog",
+                        "reverse_image",
+                        "visual_web_detection",
+                        "product_visual_search"
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              },
               "attempts": {
                 "description": "Ordered routing attempts with safe reason codes; no provider error bodies or credentials.",
                 "type": "array",
@@ -124448,6 +124651,26 @@
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 100
+                    },
+                    "class": {
+                      "type": "string",
+                      "enum": [
+                        "first_party_index",
+                        "independent_index",
+                        "serp_proxy",
+                        "semantic",
+                        "answer_engine",
+                        "metasearch",
+                        "page_reader",
+                        "open_asset_catalog",
+                        "provider_asset_catalog",
+                        "web_image_discovery",
+                        "icon_catalog",
+                        "reverse_image",
+                        "visual_web_detection",
+                        "product_visual_search"
+                      ],
+                      "description": "The class of that engine."
                     },
                     "model": {
                       "type": [
@@ -124473,7 +124696,12 @@
                         "budget",
                         "timeout",
                         "upstream_error",
-                        "invalid_response"
+                        "invalid_response",
+                        "class_not_considered",
+                        "terms_unreviewed",
+                        "terms_disallow_purpose",
+                        "privacy_incompatible",
+                        "retention_incompatible"
                       ]
                     },
                     "time_ms": {

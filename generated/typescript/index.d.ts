@@ -331950,7 +331950,7 @@ export interface ExchangeDeployments {
   status: {};
 }
 
-/** exchange.search-result@1.0.0 (owner: exchange) */
+/** exchange.search-result@1.1.0 (owner: exchange) */
 /**
  * Exchange API platform ExchangeSearchResult response. Private account data is available only to its owner.
  */
@@ -331968,6 +331968,645 @@ export interface ExchangeSearchResult {
     cost_usd: number;
     time_ms: number;
     /**
+     * The class of the engine that answered.
+     */
+    class?:
+      | "first_party_index"
+      | "independent_index"
+      | "serp_proxy"
+      | "semantic"
+      | "answer_engine"
+      | "metasearch"
+      | "page_reader"
+      | "open_asset_catalog"
+      | "provider_asset_catalog"
+      | "web_image_discovery"
+      | "icon_catalog"
+      | "reverse_image"
+      | "visual_web_detection"
+      | "product_visual_search";
+    /**
+     * The engine classes this request was allowed to use.
+     *
+     * @maxItems 8
+     */
+    classes_allowed?:
+      | []
+      | [
+          | "first_party_index"
+          | "independent_index"
+          | "serp_proxy"
+          | "semantic"
+          | "answer_engine"
+          | "metasearch"
+          | "page_reader"
+          | "open_asset_catalog"
+          | "provider_asset_catalog"
+          | "web_image_discovery"
+          | "icon_catalog"
+          | "reverse_image"
+          | "visual_web_detection"
+          | "product_visual_search"
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ];
+    /**
+     * The engines that were not considered, and why.
+     *
+     * @maxItems 32
+     */
+    not_considered?: {
+      engine: string;
+      class:
+        | "first_party_index"
+        | "independent_index"
+        | "serp_proxy"
+        | "semantic"
+        | "answer_engine"
+        | "metasearch"
+        | "page_reader"
+        | "open_asset_catalog"
+        | "provider_asset_catalog"
+        | "web_image_discovery"
+        | "icon_catalog"
+        | "reverse_image"
+        | "visual_web_detection"
+        | "product_visual_search";
+      reason: string;
+    }[];
+    /**
      * Ordered routing attempts with safe reason codes; no provider error bodies or credentials.
      *
      * @maxItems 64
@@ -331975,6 +332614,24 @@ export interface ExchangeSearchResult {
     attempts?: {
       provider: string;
       engine: string;
+      /**
+       * The class of that engine.
+       */
+      class?:
+        | "first_party_index"
+        | "independent_index"
+        | "serp_proxy"
+        | "semantic"
+        | "answer_engine"
+        | "metasearch"
+        | "page_reader"
+        | "open_asset_catalog"
+        | "provider_asset_catalog"
+        | "web_image_discovery"
+        | "icon_catalog"
+        | "reverse_image"
+        | "visual_web_detection"
+        | "product_visual_search";
       model?: string | null;
       status: "ok" | "error" | "skipped";
       reason?:
@@ -331986,14 +332643,19 @@ export interface ExchangeSearchResult {
         | "budget"
         | "timeout"
         | "upstream_error"
-        | "invalid_response";
+        | "invalid_response"
+        | "class_not_considered"
+        | "terms_unreviewed"
+        | "terms_disallow_purpose"
+        | "privacy_incompatible"
+        | "retention_incompatible";
       time_ms: number;
       cost_usd: number;
     }[];
   };
 }
 
-/** exchange.image-result@1.0.0 (owner: exchange) */
+/** exchange.image-result@1.1.0 (owner: exchange) */
 /**
  * Exchange API platform ExchangeImageResult response. Private account data is available only to its owner.
  */
@@ -332016,6 +332678,645 @@ export interface ExchangeImageResult {
     cost_usd: number;
     time_ms: number;
     /**
+     * The class of the engine that answered.
+     */
+    class?:
+      | "first_party_index"
+      | "independent_index"
+      | "serp_proxy"
+      | "semantic"
+      | "answer_engine"
+      | "metasearch"
+      | "page_reader"
+      | "open_asset_catalog"
+      | "provider_asset_catalog"
+      | "web_image_discovery"
+      | "icon_catalog"
+      | "reverse_image"
+      | "visual_web_detection"
+      | "product_visual_search";
+    /**
+     * The engine classes this request was allowed to use.
+     *
+     * @maxItems 8
+     */
+    classes_allowed?:
+      | []
+      | [
+          | "first_party_index"
+          | "independent_index"
+          | "serp_proxy"
+          | "semantic"
+          | "answer_engine"
+          | "metasearch"
+          | "page_reader"
+          | "open_asset_catalog"
+          | "provider_asset_catalog"
+          | "web_image_discovery"
+          | "icon_catalog"
+          | "reverse_image"
+          | "visual_web_detection"
+          | "product_visual_search"
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ]
+      | [
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          ),
+          (
+            | "first_party_index"
+            | "independent_index"
+            | "serp_proxy"
+            | "semantic"
+            | "answer_engine"
+            | "metasearch"
+            | "page_reader"
+            | "open_asset_catalog"
+            | "provider_asset_catalog"
+            | "web_image_discovery"
+            | "icon_catalog"
+            | "reverse_image"
+            | "visual_web_detection"
+            | "product_visual_search"
+          )
+        ];
+    /**
+     * The engines that were not considered, and why.
+     *
+     * @maxItems 32
+     */
+    not_considered?: {
+      engine: string;
+      class:
+        | "first_party_index"
+        | "independent_index"
+        | "serp_proxy"
+        | "semantic"
+        | "answer_engine"
+        | "metasearch"
+        | "page_reader"
+        | "open_asset_catalog"
+        | "provider_asset_catalog"
+        | "web_image_discovery"
+        | "icon_catalog"
+        | "reverse_image"
+        | "visual_web_detection"
+        | "product_visual_search";
+      reason: string;
+    }[];
+    /**
      * Ordered routing attempts with safe reason codes; no provider error bodies or credentials.
      *
      * @maxItems 64
@@ -332023,6 +333324,24 @@ export interface ExchangeImageResult {
     attempts?: {
       provider: string;
       engine: string;
+      /**
+       * The class of that engine.
+       */
+      class?:
+        | "first_party_index"
+        | "independent_index"
+        | "serp_proxy"
+        | "semantic"
+        | "answer_engine"
+        | "metasearch"
+        | "page_reader"
+        | "open_asset_catalog"
+        | "provider_asset_catalog"
+        | "web_image_discovery"
+        | "icon_catalog"
+        | "reverse_image"
+        | "visual_web_detection"
+        | "product_visual_search";
       model?: string | null;
       status: "ok" | "error" | "skipped";
       reason?:
@@ -332034,7 +333353,12 @@ export interface ExchangeImageResult {
         | "budget"
         | "timeout"
         | "upstream_error"
-        | "invalid_response";
+        | "invalid_response"
+        | "class_not_considered"
+        | "terms_unreviewed"
+        | "terms_disallow_purpose"
+        | "privacy_incompatible"
+        | "retention_incompatible";
       time_ms: number;
       cost_usd: number;
     }[];

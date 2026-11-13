@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.428.0 - 2026-11-13
+
+**A search receipt says which class of engine answered** (plan 2026-11-13 §W.2 step 4). `exchange.search-result@1`
+and `exchange.image-result@1` 1.1.0, additive:
+
+- `class`: the class of the engine that answered: `first_party_index`, `independent_index`, `serp_proxy`,
+  `semantic`, `answer_engine`, `metasearch`, `page_reader`, `open_asset_catalog`, `provider_asset_catalog`,
+  `web_image_discovery`, `icon_catalog`, `reverse_image`, `visual_web_detection` or `product_visual_search`.
+- `classes_allowed`: the engine classes the request was allowed to use.
+- `not_considered`: the engines that were not considered, each with its class and the reason.
+- Every attempt names the `class` of its engine, and `class_not_considered`, `terms_unreviewed`,
+  `terms_disallow_purpose`, `privacy_incompatible` and `retention_incompatible` join the safe reason codes.
+
+An engine class says what an engine is, not what it costs: a raw index, a SERP proxy, an answer engine and a
+page reader do not sell the same thing, so their prices are not comparable. OpenVibe.AI keeps the classes a
+request asked for before it compares price, health and terms.
 ## 0.427.0 - 2026-11-13
 
 **The AI reads a video** (the owner, 11-13: "improve our AI system to handle them as well leveraging
