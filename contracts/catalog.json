@@ -11778,6 +11778,24 @@
       "adr": "ADR-015"
     },
     {
+      "id": "ai.video-analysis",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "ai/video-analysis.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "ai.video_analysis.updated",
+      "version": "1.0.0",
+      "owner": "ai",
+      "schema": "events/payloads/ai.video_analysis.updated.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "frame.choices",
       "version": "1.0.0",
       "owner": "network",

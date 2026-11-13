@@ -48,7 +48,8 @@
     "ai.run.failed",
     "ai.run.cached",
     "ai.credential.failed",
-    "ai.deep_dive.updated"
+    "ai.deep_dive.updated",
+    "ai.video_analysis.updated"
   ],
   "eventsConsumed": [],
   "namespacesOwned": [

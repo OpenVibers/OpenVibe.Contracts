@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.427.0 - 2026-11-13
+
+**The AI reads a video** (the owner, 11-13: "improve our AI system to handle them as well leveraging
+openvibe.exchange and openvibe.design and openvibe.video ... so that the AI can handle and analyze and fully extract
+video data"; plan 2026-11-13 Z.9 step 4). `ai.video-analysis@1` (`contracts/ai/video-analysis.v1.json`): what
+OpenVibe.AI's workflow `video.analyze` found in one video.
+
+- `media_id`, `duration_s` and `probe`: what ffprobe measured (the codecs, the frame rate, the rotation, the size).
+- `keyframes`: every frame the run took (the scene cuts and one every 30 s, at most 12, 32 or 96 by depth), each with
+  the time it was taken, the JPEG, what the vision route saw in it and the text on screen.
+- `transcript`: the speech route's words with their times, and the text.
+- `chapters`, `summary`, `entities` (the people, objects and places that were shown or said, each with the time it was
+  seen or heard), `tags` and the `answer` to the question that was asked.
+- `explicit`: the house rule (fine, sex acts, or sexual content involving a minor), and `receipt`: every step and every
+  model call with what it cost. A step that failed says so; nothing is filled in.
+- The event `ai.video_analysis.updated` (one per step and one at the end) so a page can follow a run without polling.
+- Fixtures: valid `screen-recording`, invalid `missing-summary`; the event's valid `reading`, invalid
+  `progress-over-one`.
+
 ## 0.426.0 — 2026-11-13
 
 **A benchmark run that did not measure cost, time or tokens says so** (plan 2026-11-13 §X, "missing stays missing";

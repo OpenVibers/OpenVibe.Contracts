@@ -343462,6 +343462,1990 @@ export interface AiDeepDiveUpdatedPayload {
   occurred_at: string;
 }
 
+/** ai.video-analysis@1.0.0 (owner: ai) */
+/**
+ * A video analysis: what OpenVibe.AI (workflow video.analyze) found in one video. The document holds the video it read, what ffprobe measured, the keyframes it took (each with what the vision route saw in it and the text on screen), the transcript with its word times, the chapters, the summary, the people, objects and places that were named (only what was shown or said, each with the time it was seen or heard), the tags, the answer to the question that was asked, the explicit-content verdict and the receipt of every step and model call. Nothing is made up: a step that failed says so in the receipt.
+ */
+export interface AiVideoAnalysis {
+  media_id: string | null;
+  duration_s: number;
+  probe: {
+    duration_s: number;
+    size_bytes: number;
+    video: {
+      codec: string;
+      width: number;
+      height: number;
+      fps: number;
+      rotation: number;
+    } | null;
+    audio: {
+      codec: string;
+      sample_rate: number;
+      channels: number;
+    } | null;
+  };
+  /**
+   * @maxItems 200
+   */
+  keyframes: {
+    t: number;
+    url: string;
+    caption: string;
+    text: string;
+  }[];
+  transcript: {
+    lang: string;
+    /**
+     * @maxItems 20000
+     */
+    words: {
+      t0: number;
+      t1: number;
+      w: string;
+    }[];
+    text: string;
+  };
+  /**
+   * @maxItems 60
+   */
+  chapters: {
+    start: number;
+    end: number;
+    title: string;
+  }[];
+  summary: string;
+  /**
+   * @maxItems 120
+   */
+  entities: {
+    name: string;
+    kind: "person" | "object" | "place" | "organization" | "other";
+    /**
+     * @maxItems 20
+     */
+    evidence:
+      | []
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ]
+      | [
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          },
+          {
+            t: number;
+            from: "frame" | "speech";
+          }
+        ];
+  }[];
+  /**
+   * @maxItems 40
+   */
+  tags: string[];
+  answer?: string;
+  explicit: {
+    category: "fine" | "sex_acts" | "minor_sexual";
+    reason: string;
+  };
+  receipt: {
+    /**
+     * @maxItems 16
+     */
+    steps:
+      | []
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ]
+      | [
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          },
+          {
+            key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+            status: "done" | "skipped" | "failed";
+            detail?: string | null;
+            cost_usd?: number;
+            ms?: number;
+          }
+        ];
+    /**
+     * @maxItems 400
+     */
+    models: {
+      step: "describe" | "analyse" | "explicit";
+      provider: string | null;
+      model: string | null;
+      tokens_in: number;
+      tokens_out: number;
+      cost_usd: number;
+    }[];
+    cost_usd: number;
+  };
+}
+
+/** ai.video_analysis.updated@1.0.0 (owner: ai) */
+/**
+ * ai.video_analysis.updated v1 (OpenVibe.AI server/video-analysis/): a video analysis' step changed or it ended. One event per step transition and one at the end, so a page (OpenVibe.Video's, or OpenVibe.Exchange's) can follow a run without polling. The payload carries the run and analysis ids, the step, the progress and the status; never the transcript, a frame or a prompt. Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low (important on failed), actor service:ai.
+ */
+export interface AiVideoAnalysisUpdatedPayload {
+  video_analysis_id: string;
+  run_id: string;
+  status: "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  step: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report" | "done" | null;
+  progress: number;
+  steps: {
+    key: "probe" | "keyframes" | "transcript" | "describe" | "analyse" | "explicit" | "report";
+    status: "pending" | "running" | "done" | "skipped" | "failed";
+  }[];
+  depth: "quick" | "standard" | "deep";
+  requester: SubjectRef;
+  on_behalf_of: SubjectRef | null;
+  url: string;
+  error: {
+    code: string;
+    detail: string;
+  } | null;
+  occurred_at: string;
+}
+
 /** frame.choices@1.0.0 (owner: network) */
 /**
  * frame.choices@1: what a composer's Model sheet shows. GET /api/frame/choices?task=chat|agent|code|image|research answers this. recommended and choice are the resolved model and where it comes from; groups are OpenVibe's models (enriched from OpenVibe.Exchange with the maker, the price per million tokens in and out, the measured speed, the rating and the model's Exchange page), the person's own keys, their computers, and their plans. An 18+ row appears only when the person opted in (adult). A group may carry a note when it has no rows or a part of the answer is unavailable.
