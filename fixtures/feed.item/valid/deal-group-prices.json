@@ -1,0 +1,53 @@
+{
+  "id": "g:deal:deals:2026-11-13T08",
+  "kind": "deal",
+  "url": "https://openvibe.deals/d/example-one",
+  "title": "3 new deals",
+  "text": "",
+  "at": "2026-11-13T08:09:37.287Z",
+  "site": "deals",
+  "site_name": "Deals",
+  "actor": null,
+  "subject": null,
+  "media": null,
+  "counts": {
+    "people": 3
+  },
+  "group": {
+    "count": 3,
+    "items": [
+      {
+        "id": "f:deals:offer:1",
+        "url": "https://openvibe.deals/d/example-one",
+        "title": "Class V Brimmer",
+        "media": {
+          "thumb": "https://openvibe.media/t/brimmer.jpg"
+        },
+        "price": {
+          "amount": 24.99,
+          "currency": "USD"
+        },
+        "was": 40,
+        "store": "REI"
+      },
+      {
+        "id": "f:deals:offer:2",
+        "url": "https://openvibe.deals/d/example-two",
+        "title": "Tamriel Rebuilt",
+        "media": null,
+        "price": {
+          "amount": 0,
+          "currency": "USD"
+        },
+        "was": null,
+        "store": "GOG.com"
+      },
+      {
+        "id": "f:deals:offer:3",
+        "url": "https://openvibe.deals/d/example-three",
+        "title": "Trefoil pants",
+        "media": null
+      }
+    ]
+  }
+}

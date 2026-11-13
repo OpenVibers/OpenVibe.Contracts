@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.425.0 — 2026-11-13
+
+**A feed card says who posted it and what a deal costs** (the owner, 11-13: "it should say who posted it, and it
+should show like … their level … more details of the user … their username effects"; "update the listings for
+deals"). `feed.item@1` 1.1.0, every new field optional:
+
+- `actor.handle` (the username, no @), `actor.level` (null when the person hides it) and `actor.fx` (the name effect
+  they wear, an Inventory token such as `name-fx-rainbow`, looked up by the feed's server so no site needs Inventory in
+  its connect-src; Shared's items.css draws it).
+- `group.items[].price` (`{ amount, currency }`), `was` and `store`: a folded run of deals lists each with its price,
+  its old price and where it is sold.
+- Fixtures: `person-handle-level`, `deal-group-prices`; invalid `level-zero`, `price-currency-lowercase`, `fx-not-a-token`.
+
 ## 0.424.0 — 2026-11-13
 
 **Agents have souls** (actor-characters.md; Design rules 175 `actor-is-the-work`, 176 `souls-grow-by-yes`). The owner,

@@ -1,0 +1,25 @@
+{
+  "id": "f:example:post:person",
+  "kind": "post",
+  "url": "https://openvibe.community/p/example",
+  "title": "Livin' large",
+  "text": "",
+  "at": "2026-11-13T04:28:38.000Z",
+  "site": "community",
+  "site_name": "Community",
+  "actor": {
+    "name": "Goosely",
+    "avatar": null,
+    "handle": "goosely",
+    "level": 0
+  },
+  "subject": "usr_01JQ8Z6K6M0V8Y2Q3R4S5T6V7W",
+  "media": {
+    "thumb": "https://openvibe.community/p/example/screenshot?w=640",
+    "ratio": 1.777
+  },
+  "counts": {
+    "likes": 4,
+    "comments": 2
+  }
+}
