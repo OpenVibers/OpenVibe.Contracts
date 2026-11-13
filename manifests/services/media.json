@@ -43,6 +43,7 @@
     "media.avatar.adopt",
     "media.avatar.ingest",
     "media.avatar.release",
+    "media.config.manage",
     "media.derivative.create",
     "media.derivative.read",
     "media.lifecycle.read",

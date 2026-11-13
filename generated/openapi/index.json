@@ -166,8 +166,8 @@
       "service": "media",
       "name": "OpenVibe.Media",
       "origin": "https://openvibe.media",
-      "operations": 24,
-      "capabilities": 14
+      "operations": 30,
+      "capabilities": 15
     },
     {
       "service": "media-hub",
