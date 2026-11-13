@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/ai.video_analysis.updated.v1.json",
+  "title": "AiVideoAnalysisUpdatedPayload",
+  "description": "ai.video_analysis.updated v1 (OpenVibe.AI server/video-analysis/): a video analysis' step changed or it ended. One event per step transition and one at the end, so a page (OpenVibe.Video's, or OpenVibe.Exchange's) can follow a run without polling. The payload carries the run and analysis ids, the step, the progress and the status; never the transcript, a frame or a prompt. Envelope: subject { type: run, id: <run_id> }, visibility internal, priority low (important on failed), actor service:ai.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "video_analysis_id",
+    "run_id",
+    "status",
+    "step",
+    "progress",
+    "steps",
+    "depth",
+    "requester",
+    "on_behalf_of",
+    "url",
+    "error",
+    "occurred_at"
+  ],
+  "properties": {
+    "video_analysis_id": {
+      "type": "string",
+      "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "step": {
+      "enum": [
+        "probe",
+        "keyframes",
+        "transcript",
+        "describe",
+        "analyse",
+        "explicit",
+        "report",
+        "done",
+        null
+      ]
+    },
+    "progress": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "status"
+        ],
+        "properties": {
+          "key": {
+            "enum": [
+              "probe",
+              "keyframes",
+              "transcript",
+              "describe",
+              "analyse",
+              "explicit",
+              "report"
+            ]
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "running",
+              "done",
+              "skipped",
+              "failed"
+            ]
+          }
+        }
+      }
+    },
+    "depth": {
+      "enum": [
+        "quick",
+        "standard",
+        "deep"
+      ]
+    },
+    "requester": {
+      "$ref": "../../identity/subject-ref.v1.json"
+    },
+    "on_behalf_of": {
+      "anyOf": [
+        {
+          "$ref": "../../identity/subject-ref.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "detail"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "detail": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

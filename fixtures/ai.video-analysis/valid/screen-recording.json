@@ -1,0 +1,61 @@
+{
+  "media_id": "med_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "duration_s": 94.5,
+  "probe": {
+    "duration_s": 94.5,
+    "size_bytes": 41943040,
+    "video": { "codec": "h264", "width": 1920, "height": 1080, "fps": 29.97, "rotation": 0 },
+    "audio": { "codec": "aac", "sample_rate": 48000, "channels": 2 }
+  },
+  "keyframes": [
+    {
+      "t": 0,
+      "url": "/api/v1/video-analyses/run_01JAB2C3D4E5F6G7H8J9K0MNPQ/frames/0",
+      "caption": "A desk with a laptop showing a README file and a coffee cup beside it.",
+      "text": "README.md"
+    },
+    {
+      "t": 47.25,
+      "url": "/api/v1/video-analyses/run_01JAB2C3D4E5F6G7H8J9K0MNPQ/frames/1",
+      "caption": "A terminal window with a test run passing.",
+      "text": "12 passing"
+    }
+  ],
+  "transcript": {
+    "lang": "en",
+    "words": [
+      { "t0": 3.2, "t1": 3.8, "w": "we" },
+      { "t0": 3.8, "t1": 4.4, "w": "open" },
+      { "t0": 4.4, "t1": 5.1, "w": "the" },
+      { "t0": 5.1, "t1": 5.7, "w": "readme" }
+    ],
+    "text": "we open the readme"
+  },
+  "chapters": [
+    { "start": 0, "end": 48, "title": "The README" },
+    { "start": 48, "end": 94.5, "title": "The test run" }
+  ],
+  "summary": "A screen recording of a developer opening a README file and running the tests.",
+  "entities": [
+    { "name": "README.md", "kind": "object", "evidence": [{ "t": 0, "from": "frame" }] },
+    { "name": "readme", "kind": "object", "evidence": [{ "t": 5.1, "from": "speech" }] }
+  ],
+  "tags": ["screen recording", "developer"],
+  "answer": "It shows a README file being edited and the tests passing.",
+  "explicit": { "category": "fine", "reason": "the text describes neither sex acts nor a child with nudity" },
+  "receipt": {
+    "steps": [
+      { "key": "probe", "status": "done", "detail": "94.5 s, 1920x1080 h264, aac audio", "cost_usd": 0, "ms": 412 },
+      { "key": "keyframes", "status": "done", "detail": "2 frames (at most 12)", "cost_usd": 0, "ms": 2140 },
+      { "key": "transcript", "status": "done", "detail": "4 words", "cost_usd": 0, "ms": 3100 },
+      { "key": "describe", "status": "done", "detail": "2 of 2 frames read", "cost_usd": 0.0012, "ms": 2600 },
+      { "key": "analyse", "status": "done", "detail": "2 chapters, 2 entities", "cost_usd": 0.0021, "ms": 1800 },
+      { "key": "explicit", "status": "done", "detail": "fine: the text describes neither sex acts nor a child with nudity", "cost_usd": 0, "ms": 1 }
+    ],
+    "models": [
+      { "step": "describe", "provider": "openai", "model": "gpt-4o-mini", "tokens_in": 1046, "tokens_out": 174, "cost_usd": 0.0012 },
+      { "step": "analyse", "provider": "openai", "model": "gpt-4o-mini", "tokens_in": 2210, "tokens_out": 402, "cost_usd": 0.0021 }
+    ],
+    "cost_usd": 0.0033
+  }
+}

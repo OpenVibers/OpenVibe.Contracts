@@ -1,0 +1,414 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/ai/video-analysis.v1.json",
+  "title": "AiVideoAnalysis",
+  "description": "A video analysis: what OpenVibe.AI (workflow video.analyze) found in one video. The document holds the video it read, what ffprobe measured, the keyframes it took (each with what the vision route saw in it and the text on screen), the transcript with its word times, the chapters, the summary, the people, objects and places that were named (only what was shown or said, each with the time it was seen or heard), the tags, the answer to the question that was asked, the explicit-content verdict and the receipt of every step and model call. Nothing is made up: a step that failed says so in the receipt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "media_id",
+    "duration_s",
+    "probe",
+    "keyframes",
+    "transcript",
+    "chapters",
+    "summary",
+    "entities",
+    "tags",
+    "explicit",
+    "receipt"
+  ],
+  "properties": {
+    "media_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^med_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "duration_s": {
+      "type": "number"
+    },
+    "probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duration_s",
+        "size_bytes",
+        "video",
+        "audio"
+      ],
+      "properties": {
+        "duration_s": {
+          "type": "number"
+        },
+        "size_bytes": {
+          "type": "number"
+        },
+        "video": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "codec",
+            "width",
+            "height",
+            "fps",
+            "rotation"
+          ],
+          "properties": {
+            "codec": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "fps": {
+              "type": "number"
+            },
+            "rotation": {
+              "type": "integer",
+              "minimum": -360,
+              "maximum": 360
+            }
+          }
+        },
+        "audio": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "codec",
+            "sample_rate",
+            "channels"
+          ],
+          "properties": {
+            "codec": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "sample_rate": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "channels": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "keyframes": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "t",
+          "url",
+          "caption",
+          "text"
+        ],
+        "properties": {
+          "t": {
+            "type": "number"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "caption": {
+            "type": "string",
+            "maxLength": 1200
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 1200
+          }
+        }
+      }
+    },
+    "transcript": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lang",
+        "words",
+        "text"
+      ],
+      "properties": {
+        "lang": {
+          "type": "string",
+          "maxLength": 8
+        },
+        "words": {
+          "type": "array",
+          "maxItems": 20000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "t0",
+              "t1",
+              "w"
+            ],
+            "properties": {
+              "t0": {
+                "type": "number"
+              },
+              "t1": {
+                "type": "number"
+              },
+              "w": {
+                "type": "string",
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 200000
+        }
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "start",
+          "end",
+          "title"
+        ],
+        "properties": {
+          "start": {
+            "type": "number"
+          },
+          "end": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 6000
+    },
+    "entities": {
+      "type": "array",
+      "maxItems": 120,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "kind",
+          "evidence"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "kind": {
+            "enum": [
+              "person",
+              "object",
+              "place",
+              "organization",
+              "other"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "t",
+                "from"
+              ],
+              "properties": {
+                "t": {
+                  "type": "number"
+                },
+                "from": {
+                  "enum": [
+                    "frame",
+                    "speech"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "type": "string",
+        "maxLength": 60
+      }
+    },
+    "answer": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "explicit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "reason"
+      ],
+      "properties": {
+        "category": {
+          "enum": [
+            "fine",
+            "sex_acts",
+            "minor_sexual"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 300
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "steps",
+        "models",
+        "cost_usd"
+      ],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "key",
+              "status"
+            ],
+            "properties": {
+              "key": {
+                "enum": [
+                  "probe",
+                  "keyframes",
+                  "transcript",
+                  "describe",
+                  "analyse",
+                  "explicit",
+                  "report"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "done",
+                  "skipped",
+                  "failed"
+                ]
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "ms": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "models": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "step",
+              "provider",
+              "model",
+              "tokens_in",
+              "tokens_out",
+              "cost_usd"
+            ],
+            "properties": {
+              "step": {
+                "enum": [
+                  "describe",
+                  "analyse",
+                  "explicit"
+                ]
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 80
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 200
+              },
+              "tokens_in": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "tokens_out": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

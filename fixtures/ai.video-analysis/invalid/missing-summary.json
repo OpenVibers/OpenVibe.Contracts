@@ -1,0 +1,17 @@
+{
+  "media_id": null,
+  "duration_s": 12,
+  "probe": {
+    "duration_s": 12,
+    "size_bytes": 1024,
+    "video": { "codec": "h264", "width": 640, "height": 360, "fps": 25, "rotation": 0 },
+    "audio": null
+  },
+  "keyframes": [],
+  "transcript": { "lang": "und", "words": [], "text": "" },
+  "chapters": [],
+  "entities": [],
+  "tags": [],
+  "explicit": { "category": "fine", "reason": "there is no text to judge" },
+  "receipt": { "steps": [], "models": [], "cost_usd": 0 }
+}

@@ -1,0 +1,22 @@
+{
+  "video_analysis_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "run_id": "run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "status": "running",
+  "step": "describe",
+  "progress": 0.58,
+  "steps": [
+    { "key": "probe", "status": "done" },
+    { "key": "keyframes", "status": "done" },
+    { "key": "transcript", "status": "done" },
+    { "key": "describe", "status": "running" },
+    { "key": "analyse", "status": "pending" },
+    { "key": "explicit", "status": "pending" },
+    { "key": "report", "status": "pending" }
+  ],
+  "depth": "standard",
+  "requester": { "type": "service", "id": "exchange" },
+  "on_behalf_of": { "type": "user", "id": "usr_01JAB2C3D4E5F6G7H8J9K0MNPQ" },
+  "url": "https://openvibe.exchange/video-analysis/run_01JAB2C3D4E5F6G7H8J9K0MNPQ",
+  "error": null,
+  "occurred_at": "2026-11-13T21:00:00.000Z"
+}
