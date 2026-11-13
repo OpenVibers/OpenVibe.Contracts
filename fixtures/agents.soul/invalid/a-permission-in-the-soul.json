@@ -1,0 +1,9 @@
+{
+  "who": "Helpful",
+  "hands": [
+    {
+      "tool": "ov:live.chat.post",
+      "mode": "allow"
+    }
+  ]
+}

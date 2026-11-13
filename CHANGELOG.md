@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.424.0 — 2026-11-13
+
+**Agents have souls** (actor-characters.md; Design rules 175 `actor-is-the-work`, 176 `souls-grow-by-yes`). The owner,
+11-13: "you should have different bots … how you make each character and they each have a soul … your agents are
+created based on your memories and personality".
+
+- **`agents.soul@1`** (`contracts/agents/soul.v1.json`): who an agent is in plain words: `who` (one line), four `dials`
+  (warmth, play, length, edge, each -2 to 2), up to three `quirks`, up to five things it `believes`, how it does
+  `pushback`, what it will `never` do beyond the floor, free `notes` (an imported SOUL.md's body), and how it was
+  `made_from` (words, memories, gallery, twin, soul-md). It shapes the words, never the permissions, and holds no
+  memory of a person: a copy carries the soul, never what was learned.
+- **`agents.blueprint@1`** gains an optional `soul` part (after `face`), by reference. Additive: every blueprint that was
+  valid still is.
+- Fixtures: three valid souls; five invalid (a dial past two, six beliefs, no who, an unknown origin, a permission in
+  the soul).
+
 ## 0.423.0 — 2026-11-13
 
 - **Media lists `media.config.manage`** among the capabilities it enforces: Media now serves its settings to the owner's
