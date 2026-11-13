@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.426.0 — 2026-11-13
+
+**A benchmark run that did not measure cost, time or tokens says so** (plan 2026-11-13 §X, "missing stays missing";
+an outside review found Bench's importers and mirror writing 0 for what they never had). `bench.run@2`: `cost_usd`,
+`ms` and `tokens` may be null, on the run and on each task; null means not measured, never 0. Bench #237 already stores
+null; 91 mirrored production runs were corrected from 0 to unknown on 11-13. Fixtures: valid
+`unmeasured-cost-time-tokens`, invalid `negative-cost`.
+
 ## 0.425.0 — 2026-11-13
 
 **A feed card says who posted it and what a deal costs** (the owner, 11-13: "it should say who posted it, and it
