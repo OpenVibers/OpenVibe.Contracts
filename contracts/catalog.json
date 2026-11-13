@@ -11934,6 +11934,16 @@
       "adr": "ADR-044"
     },
     {
+      "id": "agents.soul",
+      "version": "1.0.0",
+      "owner": "actor",
+      "schema": "agents/soul.v1.json",
+      "visibility": "public",
+      "compatibility": "backward",
+      "status": "active",
+      "adr": "ADR-044"
+    },
+    {
       "id": "agents.job",
       "version": "1.0.0",
       "owner": "actor",

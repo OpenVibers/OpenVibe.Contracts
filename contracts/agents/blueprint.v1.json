@@ -81,13 +81,13 @@
         "null"
       ],
       "pattern": "^bp_[A-Za-z0-9_-]{3,40}@[1-9][0-9]{0,5}$",
-      "description": "The version it was remixed from (bp_\u2026@N); the gallery credits it."
+      "description": "The version it was remixed from (bp_…@N); the gallery credits it."
     },
     "licence": {
       "type": "string",
       "minLength": 1,
       "maxLength": 60,
-      "description": "An SPDX id (MIT, CC-BY-4.0, \u2026) for remixes; absent means remixes need the author's yes."
+      "description": "An SPDX id (MIT, CC-BY-4.0, …) for remixes; absent means remixes need the author's yes."
     },
     "tags": {
       "type": "array",
@@ -201,7 +201,7 @@
           "what": {
             "type": "string",
             "pattern": "^[a-z0-9][a-z0-9_.-]{0,60}$",
-            "description": "machine: gpu, desk, browser, linux, windows, macos, android; key and plan: a provider (gemini, openai, \u2026); app: a Connect app; robot: a manifest id."
+            "description": "machine: gpu, desk, browser, linux, windows, macos, android; key and plan: a provider (gemini, openai, …); app: a Connect app; robot: a manifest id."
           },
           "why": {
             "type": "string",
@@ -263,6 +263,10 @@
           "description": "Design elements it shows (a co-host card on the overlay, a reaction)."
         }
       }
+    },
+    "soul": {
+      "$ref": "soul.v1.json",
+      "description": "Who it is (agents.soul@1): how it talks, what it believes, how it pushes back, what it never does. It shapes the words, never the permissions."
     },
     "brain": {
       "type": "object",
@@ -490,7 +494,7 @@
         "tools": {
           "type": "array",
           "maxItems": 64,
-          "description": "ov:<product>.<tool> a product's tool on the one MCP endpoint; tools:<app> an openvibe.tools app; connect:<app> a Connect app; mcp:https://\u2026 the installer's own server; machine:files|shell|desk|browser|screen on its PLACE; robot:<command> a robot's manifest command; harness:<name> a coding harness for code work; agent:bp_\u2026|agt_\u2026 another agent as a tool. MODE ask: every use asks first.",
+          "description": "ov:<product>.<tool> a product's tool on the one MCP endpoint; tools:<app> an openvibe.tools app; connect:<app> a Connect app; mcp:https://… the installer's own server; machine:files|shell|desk|browser|screen on its PLACE; robot:<command> a robot's manifest command; harness:<name> a coding harness for code work; agent:bp_…|agt_… another agent as a tool. MODE ask: every use asks first.",
           "items": {
             "type": "object",
             "additionalProperties": false,

@@ -373963,6 +373963,7 @@ export type AgentsBlueprint = {
       | [string, string, string, string, string, string, string]
       | [string, string, string, string, string, string, string, string];
   };
+  soul?: AgentsSoul;
   /**
    * Which models it may use. pick auto: the Dispatcher, cheapest that can, escalating only on evidence; size: the cheapest of that size; exact: MODEL only (a person's own pick always wins).
    */
@@ -376152,6 +376153,84 @@ export interface AgentsPermissionRule {
    */
   when?: "attended" | "unattended" | "any";
   reason?: string;
+}
+
+/** agents.soul@1.0.0 (owner: actor) */
+/**
+ * agents.soul@1 (actor-characters.md §3; Design rules 175 actor-is-the-work and 176 souls-grow-by-yes): who an agent is, in plain words. A blueprint carries it as its soul part; on its own it is what an agent imports and exports (as SOUL.md, with its name and face as IDENTITY.md, the layout OpenClaw and Hermes read). The soul shapes how an agent talks, asks and reports; it never changes what the agent may do (that is the blueprint's hands and rules). It changes only with its person's yes: an agent may suggest a change, never write one. The floor (money, passwords, deletions, new recipients, posting in a person's name) holds for every agent and is not listed in never. Memory of the person is not part of a soul: a copy of an agent carries its soul, never what it has learned about someone.
+ */
+export interface AgentsSoul {
+  /**
+   * One line: who it is ("A dry, fast producer who keeps your stream on time").
+   */
+  who: string;
+  /**
+   * How it talks, as four dials from -2 to 2 (0 is the middle; absent is 0).
+   */
+  dials?: {
+    /**
+     * -2 dry, 2 warm.
+     */
+    warmth?: number;
+    /**
+     * -2 serious, 2 playful.
+     */
+    play?: number;
+    /**
+     * -2 brief, 2 thorough.
+     */
+    length?: number;
+    /**
+     * -2 gentle, 2 blunt.
+     */
+    edge?: number;
+  };
+  /**
+   * Small habits that make it itself (a catchphrase, signing off with a stream emote).
+   *
+   * @maxItems 3
+   */
+  quirks?: [] | [string] | [string, string] | [string, string, string];
+  /**
+   * Its principles, at most five.
+   *
+   * @maxItems 5
+   */
+  believes?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string];
+  /**
+   * What it does when it disagrees or is not sure.
+   */
+  pushback?: string;
+  /**
+   * Its own hard stops, beyond the floor every agent keeps.
+   *
+   * @maxItems 8
+   */
+  never?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string];
+  /**
+   * Anything else in its own words (the body of an imported SOUL.md that the fields above do not hold).
+   */
+  notes?: string;
+  /**
+   * How it began: described in words, drafted from its person's memories (with their yes), installed from the gallery, an agent like its person (from their own messages only), or an imported SOUL.md.
+   */
+  made_from?: "words" | "memories" | "gallery" | "twin" | "soul-md";
+  updated_at?: string;
 }
 
 /** agents.job@1.0.0 (owner: actor) */
