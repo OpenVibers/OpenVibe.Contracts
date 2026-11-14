@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.429.0 — 2026-11-14
+
+**LOOI's manifest as the tray sends it** (Maticus and Chief, checked against the tray code): `p7_battery.usb` is the
+integer 0 or 1 (`[0, 1]`), `p7_battery.raw` is a hex string like `"6401"`, `p7_headlight.commanded` may be null until
+the first successful headlight write after a connect or a reset, and `sensors.p7_head` {orientation, min, max, center}
+is listed (landscape 0–255, centre 90; portrait 0 to the maker's floor, read `max` from the sensor, never hard-code it).
+`bot.robot-manifest@1` 1.1.0: a reading takes `nullable`, the fields that may be null. The example stays `frozen: false`
+until Maticus confirms it.
+
 ## 0.428.0 - 2026-11-14
 
 **A report card says its moment in the reader's own time** (the owner, 11-14: "show the time based on the users
