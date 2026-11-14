@@ -380193,3 +380193,155 @@ export interface FeedItem {
    */
   visibility?: "followers";
 }
+
+/** network.friend-circle@1.0.0 (owner: network) */
+/**
+ * network.friend-circle@1 (plan §AB.51; the owner, 11-14: "implement the friend system so it can be used across sites … synced with your network account … SDK and API … send and request … make your own UIs"). GET /api/v1/me/friends on OpenVibe.Network: the person's friends in one read. Adding is one direction; two people are friends when both have added each other. mutual: friends; requests: they added you, you have not added them; asked: you added them, they have not added you. friends: whom you added (both mutual and asked), kept for older readers. Online people first in each list. A block on either side removes the person from every list.
+ */
+export interface NetworkFriendCircle {
+  /**
+   * The person reading.
+   */
+  subject: string;
+  /**
+   * @maxItems 5000
+   */
+  friends: {
+    subject: string;
+  }[];
+  /**
+   * @maxItems 5000
+   */
+  mutual: {
+    subject: string;
+    username: string | null;
+    display_name: string | null;
+    avatar_url?: string | null;
+    /**
+     * Seen on an OpenVibe site in the last few minutes (Network's presence).
+     */
+    online: boolean;
+    /**
+     * Where they are, when online and they share it.
+     */
+    site?: string | null;
+    /**
+     * When this side of the friendship last changed.
+     */
+    since?: string | null;
+  }[];
+  /**
+   * @maxItems 5000
+   */
+  requests: {
+    subject: string;
+    username: string | null;
+    display_name: string | null;
+    avatar_url?: string | null;
+    /**
+     * Seen on an OpenVibe site in the last few minutes (Network's presence).
+     */
+    online: boolean;
+    /**
+     * Where they are, when online and they share it.
+     */
+    site?: string | null;
+    /**
+     * When this side of the friendship last changed.
+     */
+    since?: string | null;
+  }[];
+  /**
+   * @maxItems 5000
+   */
+  asked: {
+    subject: string;
+    username: string | null;
+    display_name: string | null;
+    avatar_url?: string | null;
+    /**
+     * Seen on an OpenVibe site in the last few minutes (Network's presence).
+     */
+    online: boolean;
+    /**
+     * Where they are, when online and they share it.
+     */
+    site?: string | null;
+    /**
+     * When this side of the friendship last changed.
+     */
+    since?: string | null;
+  }[];
+}
+
+/** network.friend-subjects@1.0.0 (owner: network) */
+/**
+ * network.friend-subjects@1 (capability network.friends.read): a person's mutual friends as subjects only, for an owning service (Chat's contacts and DMs, Link's sharing with a friend). GET /internal/friends?subject=usr_… on OpenVibe.Network. Never names, never the one-sided requests.
+ */
+export interface NetworkFriendSubjects {
+  subject: string;
+  /**
+   * @maxItems 5000
+   */
+  friends: string[];
+}
+
+/** network.friend.requested@1.0.0 (owner: network) */
+/**
+ * network.friend.requested v1 (plan §AB.51): `from` added `to` as a friend and `to` has not added `from`: a request `to` can accept (add back) or leave. Adding again what is already added sends nothing. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.
+ */
+export interface NetworkFriendRequestedPayload {
+  /**
+   * Who acted.
+   */
+  from: string;
+  /**
+   * The other person.
+   */
+  to: string;
+  /**
+   * Grows with every change of this pair; apply the latest.
+   */
+  revision: number;
+  at?: string;
+}
+
+/** network.friend.accepted@1.0.0 (owner: network) */
+/**
+ * network.friend.accepted v1 (plan §AB.51): `from` added `to` back, so the two are friends now. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.
+ */
+export interface NetworkFriendAcceptedPayload {
+  /**
+   * Who acted.
+   */
+  from: string;
+  /**
+   * The other person.
+   */
+  to: string;
+  /**
+   * Grows with every change of this pair; apply the latest.
+   */
+  revision: number;
+  at?: string;
+}
+
+/** network.friend.removed@1.0.0 (owner: network) */
+/**
+ * network.friend.removed v1 (plan §AB.51): `from` removed `to` (or blocked them): they are no longer friends, and no request stays open from `from`. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.
+ */
+export interface NetworkFriendRemovedPayload {
+  /**
+   * Who acted.
+   */
+  from: string;
+  /**
+   * The other person.
+   */
+  to: string;
+  /**
+   * Grows with every change of this pair; apply the latest.
+   */
+  revision: number;
+  at?: string;
+}

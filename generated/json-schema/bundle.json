@@ -142479,6 +142479,390 @@
           }
         }
       }
+    },
+    "network.friend-circle": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/friend-circle.v1.json",
+        "title": "NetworkFriendCircle",
+        "description": "network.friend-circle@1 (plan §AB.51; the owner, 11-14: \"implement the friend system so it can be used across sites … synced with your network account … SDK and API … send and request … make your own UIs\"). GET /api/v1/me/friends on OpenVibe.Network: the person's friends in one read. Adding is one direction; two people are friends when both have added each other. mutual: friends; requests: they added you, you have not added them; asked: you added them, they have not added you. friends: whom you added (both mutual and asked), kept for older readers. Online people first in each list. A block on either side removes the person from every list.",
+        "type": "object",
+        "required": [
+          "subject",
+          "friends",
+          "mutual",
+          "requests",
+          "asked"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The person reading."
+          },
+          "friends": {
+            "type": "array",
+            "maxItems": 5000,
+            "items": {
+              "type": "object",
+              "required": [
+                "subject"
+              ],
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                }
+              }
+            }
+          },
+          "mutual": {
+            "type": "array",
+            "maxItems": 5000,
+            "items": {
+              "type": "object",
+              "required": [
+                "subject",
+                "username",
+                "display_name",
+                "online"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "username": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 64
+                },
+                "display_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 128
+                },
+                "avatar_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri",
+                  "pattern": "^https://",
+                  "maxLength": 2048
+                },
+                "online": {
+                  "type": "boolean",
+                  "description": "Seen on an OpenVibe site in the last few minutes (Network's presence)."
+                },
+                "site": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 80,
+                  "description": "Where they are, when online and they share it."
+                },
+                "since": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40,
+                  "description": "When this side of the friendship last changed."
+                }
+              }
+            }
+          },
+          "requests": {
+            "type": "array",
+            "maxItems": 5000,
+            "items": {
+              "type": "object",
+              "required": [
+                "subject",
+                "username",
+                "display_name",
+                "online"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "username": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 64
+                },
+                "display_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 128
+                },
+                "avatar_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri",
+                  "pattern": "^https://",
+                  "maxLength": 2048
+                },
+                "online": {
+                  "type": "boolean",
+                  "description": "Seen on an OpenVibe site in the last few minutes (Network's presence)."
+                },
+                "site": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 80,
+                  "description": "Where they are, when online and they share it."
+                },
+                "since": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40,
+                  "description": "When this side of the friendship last changed."
+                }
+              }
+            }
+          },
+          "asked": {
+            "type": "array",
+            "maxItems": 5000,
+            "items": {
+              "type": "object",
+              "required": [
+                "subject",
+                "username",
+                "display_name",
+                "online"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "username": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 64
+                },
+                "display_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 128
+                },
+                "avatar_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri",
+                  "pattern": "^https://",
+                  "maxLength": 2048
+                },
+                "online": {
+                  "type": "boolean",
+                  "description": "Seen on an OpenVibe site in the last few minutes (Network's presence)."
+                },
+                "site": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 80,
+                  "description": "Where they are, when online and they share it."
+                },
+                "since": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40,
+                  "description": "When this side of the friendship last changed."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "network.friend-subjects": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/network/friend-subjects.v1.json",
+        "title": "NetworkFriendSubjects",
+        "description": "network.friend-subjects@1 (capability network.friends.read): a person's mutual friends as subjects only, for an owning service (Chat's contacts and DMs, Link's sharing with a friend). GET /internal/friends?subject=usr_… on OpenVibe.Network. Never names, never the one-sided requests.",
+        "type": "object",
+        "required": [
+          "subject",
+          "friends"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+          },
+          "friends": {
+            "type": "array",
+            "maxItems": 5000,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          }
+        }
+      }
+    },
+    "network.friend.requested": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.friend.requested.v1.json",
+        "title": "NetworkFriendRequestedPayload",
+        "description": "network.friend.requested v1 (plan §AB.51): `from` added `to` as a friend and `to` has not added `from`: a request `to` can accept (add back) or leave. Adding again what is already added sends nothing. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.",
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Who acted."
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The other person."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Grows with every change of this pair; apply the latest."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.friend.accepted": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.friend.accepted.v1.json",
+        "title": "NetworkFriendAcceptedPayload",
+        "description": "network.friend.accepted v1 (plan §AB.51): `from` added `to` back, so the two are friends now. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.",
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Who acted."
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The other person."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Grows with every change of this pair; apply the latest."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "network.friend.removed": {
+      "version": "1.0.0",
+      "owner": "network",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/events/payloads/network.friend.removed.v1.json",
+        "title": "NetworkFriendRemovedPayload",
+        "description": "network.friend.removed v1 (plan §AB.51): `from` removed `to` (or blocked them): they are no longer friends, and no request stays open from `from`. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.",
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "revision"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Who acted."
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "The other person."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Grows with every change of this pair; apply the latest."
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
     }
   }
 }

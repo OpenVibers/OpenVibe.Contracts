@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/friend-subjects.v1.json",
+  "title": "NetworkFriendSubjects",
+  "description": "network.friend-subjects@1 (capability network.friends.read): a person's mutual friends as subjects only, for an owning service (Chat's contacts and DMs, Link's sharing with a friend). GET /internal/friends?subject=usr_… on OpenVibe.Network. Never names, never the one-sided requests.",
+  "type": "object",
+  "required": [
+    "subject",
+    "friends"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "friends": {
+      "type": "array",
+      "maxItems": 5000,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$"
+      }
+    }
+  }
+}

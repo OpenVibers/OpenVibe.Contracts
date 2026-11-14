@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.431.0 — 2026-11-14
+
+Friends, one system across sites (plan §AB.51; the owner: "implement the friend system so it can be used across sites
+… synced with your network account … SDK and API … send and request … make your own UIs").
+
+- `network.friend-circle@1`: GET /api/v1/me/friends on Network, the person's whole picture in one read: `mutual`
+  (friends), `requests` (they added you), `asked` (you added them), each person with name, picture, whether they are
+  online and where; `friends` (whom you added) kept for older readers.
+- `network.friend-subjects@1` and the capability `network.friends.read` (first-party, never grantable to apps):
+  GET /internal/friends?subject=, a person's mutual friends as subjects, for Chat's contacts and Link's sharing.
+- Events `network.friend.requested`, `network.friend.accepted`, `network.friend.removed` (from, to, revision), from
+  Network's outbox.
+
 ## 0.430.0 - 2026-11-14
 
 **A search receipt says which class of engine answered** (plan 2026-11-13 §W.2 step 4). `exchange.search-result@1`

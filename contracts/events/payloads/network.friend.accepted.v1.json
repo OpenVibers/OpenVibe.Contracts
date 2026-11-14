@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/events/payloads/network.friend.accepted.v1.json",
+  "title": "NetworkFriendAcceptedPayload",
+  "description": "network.friend.accepted v1 (plan §AB.51): `from` added `to` back, so the two are friends now. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.",
+  "type": "object",
+  "required": [
+    "from",
+    "to",
+    "revision"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "from": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Who acted."
+    },
+    "to": {
+      "type": "string",
+      "pattern": "^usr_[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "The other person."
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Grows with every change of this pair; apply the latest."
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

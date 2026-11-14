@@ -1,0 +1,21 @@
+{
+  "subject": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GH",
+  "friends": [
+    {
+      "subject": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GJ"
+    }
+  ],
+  "mutual": [
+    {
+      "subject": "usr_01K9R2V6M8Q4T0B7C3D5E9F2GJ",
+      "username": "ada",
+      "display_name": "Ada",
+      "avatar_url": "https://openvibe.network/avatar/ada?s=80",
+      "online": true,
+      "site": "openvibe.live",
+      "since": "2026-11-14T08:00:00.000Z"
+    }
+  ],
+  "requests": [],
+  "asked": []
+}

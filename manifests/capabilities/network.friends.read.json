@@ -1,0 +1,23 @@
+{
+  "id": "network.friends.read",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Read a person's mutual friends (subjects only), as an owning service: Chat's contacts and DM starts, Link's sharing with a friend (plan §AB.51). The person's own view is GET /api/v1/me/friends with their token. Never grantable to apps.",
+  "permissions": [
+    "friends:read"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "friends-read",
+  "events": [
+    "network.friend.requested",
+    "network.friend.accepted",
+    "network.friend.removed"
+  ],
+  "implementedBy": [
+    "GET /internal/friends"
+  ],
+  "inputSchema": "common.no-body@1",
+  "outputSchema": "network.friend-subjects@1"
+}
