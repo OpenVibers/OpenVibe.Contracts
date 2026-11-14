@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.434.0 — 2026-11-14
+
+Machines that say what they are, and runs whose model changes mid-conversation (the owner, 11-14: every operating
+system "aware of specs"; "resume sessions or swap models with ease").
+
+- `bot.device-message@1`: the status frame's optional `machine` (OpenVibe Link v0.66): OS and version, CPU, memory,
+  GPUs, the state volume's disk, the virtualization it offers (KVM, Apple VZ, Hyper-V, WSL, guest, container) and its
+  display. Bot keeps a bounded copy for the machine card and placement.
+- `agents.message@1` (new): the body of POST /runs/{id}/messages on every product's Run API. `use` swaps the model,
+  the coding harness or the effort from this turn on, in the same run and thread (409 agents.use_unavailable when a
+  product cannot run it); a message to an ended run resumes it (409 agents.run_closed where a product will not).
+  Continuing a run elsewhere stays agents.run-start@1 with `lineage`.
+
 ## 0.433.0 — 2026-11-14
 
 Desktops lent to other people's agents (the owner, 11-14: machines should lend desktops and run other people's coding

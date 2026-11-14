@@ -1,0 +1,8 @@
+{
+  "text": "Hand this to Codex",
+  "use": {
+    "harness": "codex",
+    "effort": "high"
+  },
+  "idempotency_key": "msg-0001-abcdef"
+}
