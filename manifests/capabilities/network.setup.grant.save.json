@@ -1,0 +1,19 @@
+{
+  "id": "network.setup.grant.save",
+  "version": "1.0",
+  "owner": "network",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Save the value(s) a person's own agent read from a provider's page into exactly the one Setup row the person granted, once (plan §AB.44: \"let my agent do it\"). The grant is made by the owner with a fresh sign-in, names one service, one namespace and its key(s), lasts 30 minutes and is spent by the first save; it can never read a value, another row or anything else. OpenVibe.Actor's service client only; never grantable to apps.",
+  "permissions": [
+    "setup:grant:save"
+  ],
+  "resourceConstraints": [],
+  "quotaClass": "setup-grant-save",
+  "events": [],
+  "implementedBy": [
+    "POST /internal/setup/grants/:id/save"
+  ],
+  "inputSchema": "network.setup-grant-save@1",
+  "outputSchema": "network.setup-grant-saved@1"
+}

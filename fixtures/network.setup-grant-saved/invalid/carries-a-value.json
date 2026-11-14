@@ -1,0 +1,12 @@
+{
+  "saved": true,
+  "service": "ai",
+  "namespace": "ai.providers",
+  "keys": [
+    {
+      "key": "deepseek.api_key",
+      "hint": "…page",
+      "value": "pasted-from-the-provider-page"
+    }
+  ]
+}

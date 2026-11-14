@@ -70,6 +70,7 @@
     "network.integration.github.read",
     "network.modules.read",
     "network.modules.write",
+    "network.setup.grant.save",
     "network.link.manage",
     "network.link.report",
     "network.link.self.manage",

@@ -1,0 +1,6 @@
+{
+  "values": {
+    "deepseek.api_key": "pasted-from-the-provider-page"
+  },
+  "run": "run_setup_deepseek"
+}

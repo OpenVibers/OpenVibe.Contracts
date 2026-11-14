@@ -11999,6 +11999,24 @@
       "status": "active"
     },
     {
+      "id": "network.setup-grant-save",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/setup-grant-save.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.setup-grant-saved",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/setup-grant-saved.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
       "id": "network.friend.requested",
       "version": "1.0.0",
       "owner": "network",

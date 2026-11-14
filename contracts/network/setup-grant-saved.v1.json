@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/setup-grant-saved.v1.json",
+  "title": "NetworkSetupGrantSaved",
+  "description": "network.setup-grant-saved@1: what a one-time setup grant saved (plan \u00a7AB.44): the row and each key's last four characters only, never a value. The grant is spent.",
+  "type": "object",
+  "required": [
+    "saved",
+    "service",
+    "namespace",
+    "keys"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "saved": {
+      "const": true
+    },
+    "service": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,39}$"
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.-]{0,79}$"
+    },
+    "keys": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "hint"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$"
+          },
+          "hint": {
+            "type": "string",
+            "maxLength": 8
+          }
+        }
+      }
+    }
+  }
+}
