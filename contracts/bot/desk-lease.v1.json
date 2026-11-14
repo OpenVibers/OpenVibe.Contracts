@@ -34,7 +34,11 @@
       "description": "The session's person, the only one whose commands reach the desk."
     },
     "kind": {
-      "const": "browser"
+      "enum": [
+        "browser",
+        "desktop"
+      ],
+      "description": "The kind the lease was asked for: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only)."
     },
     "width": {
       "type": "integer",

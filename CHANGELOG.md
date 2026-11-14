@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.433.0 — 2026-11-14
+
+Desktops lent to other people's agents (the owner, 11-14: machines should lend desktops and run other people's coding
+sessions and agents, for all users; OpenVibe.Link v0.65.0 runs each lent desktop in its own sandbox).
+
+- `bot.desk-lease-create-request@1`, `bot.desk-lease@1`, `run.session-create-request@1` and `run.session@1`: `kind` is
+  `browser` or `desktop` (it was `browser` only). A desktop is a display with a window manager, a browser and a
+  terminal, on a desk host that lends desktops; it is driven with `screen` and `input` only. Bot refuses a kind the
+  machine does not run (409 `bot.kind_unavailable`); Run places a desktop only where an offer advertises
+  `worker:desktop` and refuses its browser commands (422 `run.session.kind_mismatch`).
+- Fixtures: a desktop lease, session and request are valid; a kind that is neither is not.
+
 ## 0.432.0 — 2026-11-14
 
 Setup done by your agent (plan §AB.44; the owner: "configure all the API keys … using the on-screen system … have the

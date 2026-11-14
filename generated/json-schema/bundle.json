@@ -99550,8 +99550,11 @@
             "description": "The first-party service that asked for the person (service:actor), or null when they asked themselves."
           },
           "kind": {
-            "const": "browser",
-            "description": "A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1."
+            "enum": [
+              "browser",
+              "desktop"
+            ],
+            "description": "A platform.runtime-class@1 name: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only)."
           },
           "state": {
             "enum": [
@@ -99923,7 +99926,11 @@
         ],
         "properties": {
           "kind": {
-            "const": "browser"
+            "enum": [
+              "browser",
+              "desktop"
+            ],
+            "description": "browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only). A desktop session is placed only on a host that lends desktops (its offer advertises worker:desktop); its browser commands are refused (422 run.session.kind_mismatch): a desktop is used through screen and input."
           },
           "width": {
             "$ref": "session.v1.json#/$defs/size/properties/width",
@@ -100620,7 +100627,11 @@
             "description": "The session's person, the only one whose commands reach the desk."
           },
           "kind": {
-            "const": "browser"
+            "enum": [
+              "browser",
+              "desktop"
+            ],
+            "description": "The kind the lease was asked for: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only)."
           },
           "width": {
             "type": "integer",
@@ -100667,7 +100678,11 @@
             "$ref": "desk-lease.v1.json#/properties/desk"
           },
           "kind": {
-            "const": "browser"
+            "enum": [
+              "browser",
+              "desktop"
+            ],
+            "description": "browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only). A machine that does not run that kind (its describe: desk.kinds; on a shared host, what its owner lends and Bot's shared_desktops) is refused 409 bot.kind_unavailable."
           },
           "width": {
             "$ref": "desk-lease.v1.json#/properties/width",

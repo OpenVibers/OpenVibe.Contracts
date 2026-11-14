@@ -282764,9 +282764,9 @@ export type RunSession = {
    */
   via: string | null;
   /**
-   * A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1.
+   * A platform.runtime-class@1 name: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only).
    */
-  kind: "browser";
+  kind: "browser" | "desktop";
   state: "placing" | "starting" | "running" | "ended";
   /**
    * The desk's page size (bot.command@1 kind desk width and height).
@@ -282855,7 +282855,10 @@ export type RunSession = {
  * run.session-create-request@1 (the Desks plan's D6): the body of POST /api/v1/sessions on OpenVibe.Run (capability run.session.create), answered 201 with run.session@1 (state placing). The session is the caller's own: a person's token, or a first-party service acting for a person (X-OV-Subject; the service is recorded as via). MACHINE names one of the person's own machines (an OpenVibe.Bot device they own and let agents use): the session goes there or ends unplaceable, never elsewhere. Without it Run places the desk: on the person's own machines when REQUIREMENTS name user-owned (and only theirs), else on desk hosts that serve other people (first-party, then community, unless REQUIREMENTS narrow it), each of whose desks runs in its own sandbox. Absent REQUIREMENTS mean { kind: run.browser, mobility: session, latency_class: interactive, objective: balanced }. TTL_S (default 3600) and IDLE_S (default 900) bound its life. IDEMPOTENCY_KEY: a repeat from the same person within 24 h with an identical body answers the first session (200); with a different body 409 run.idempotency.conflict.
  */
 export interface RunSessionCreateRequest {
-  kind: "browser";
+  /**
+   * browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only). A desktop session is placed only on a host that lends desktops (its offer advertises worker:desktop); its browser commands are refused (422 run.session.kind_mismatch): a desktop is used through screen and input.
+   */
+  kind: "browser" | "desktop";
   /**
    * Default 1280.
    */
@@ -282955,9 +282958,9 @@ export interface RunSessionStartedPayload {
    */
   via: string | null;
   /**
-   * A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1.
+   * A platform.runtime-class@1 name: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only).
    */
-  kind: "browser";
+  kind: "browser" | "desktop";
   state: "running";
   /**
    * The desk's page size (bot.command@1 kind desk width and height).
@@ -283050,9 +283053,9 @@ export interface RunSessionEndedPayload {
    */
   via: string | null;
   /**
-   * A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1.
+   * A platform.runtime-class@1 name: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only).
    */
-  kind: "browser";
+  kind: "browser" | "desktop";
   state: "ended";
   /**
    * The desk's page size (bot.command@1 kind desk width and height).
@@ -283221,7 +283224,10 @@ export interface BotDeskLease {
    * The session's person, the only one whose commands reach the desk.
    */
   owner: string;
-  kind: "browser";
+  /**
+   * The kind the lease was asked for: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only).
+   */
+  kind: "browser" | "desktop";
   width: number;
   height: number;
   /**
@@ -283238,7 +283244,10 @@ export interface BotDeskLease {
 export interface BotDeskLeaseCreateRequest {
   session: string;
   desk: string;
-  kind: "browser";
+  /**
+   * browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only). A machine that does not run that kind (its describe: desk.kinds; on a shared host, what its owner lends and Bot's shared_desktops) is refused 409 bot.kind_unavailable.
+   */
+  kind: "browser" | "desktop";
   /**
    * Default 1280.
    */
