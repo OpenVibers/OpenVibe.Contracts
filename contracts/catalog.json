@@ -11979,6 +11979,51 @@
       "visibility": "public",
       "compatibility": "backward",
       "status": "active"
+    },
+    {
+      "id": "network.friend-circle",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/friend-circle.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.friend-subjects",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "network/friend-subjects.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.friend.requested",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.friend.requested.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.friend.accepted",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.friend.accepted.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
+    },
+    {
+      "id": "network.friend.removed",
+      "version": "1.0.0",
+      "owner": "network",
+      "schema": "events/payloads/network.friend.removed.v1.json",
+      "visibility": "first-party",
+      "compatibility": "backward",
+      "status": "active"
     }
   ]
 }
