@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.428.0 - 2026-11-14
+
+**A report card says its moment in the reader's own time** (the owner, 11-14: "show the time based on the users
+computer by default"; "add total users per day or other cool metrics to the card showing peak today").
+`feed.item@1` 1.2.0 adds the optional `stat` on report cards:
+
+- `stat.at`: when the number happened (the day's online peak), so each reader's clock and time zone say the time;
+  the card's words no longer carry "at 01:10 UTC".
+- `stat.facts`: up to six side numbers for the same day, each `{ label, n }` (people today, signed in today, page
+  views today, new accounts today, live now).
+
+Backward compatible: an older reader ignores `stat`. The catalog's feed.item entry says 1.2.0 (it said 1.0.0
+through 1.1.0).
+
 ## 0.427.0 - 2026-11-13
 
 **The AI reads a video** (the owner, 11-13: "improve our AI system to handle them as well leveraging
