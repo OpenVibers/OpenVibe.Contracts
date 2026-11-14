@@ -1,0 +1,41 @@
+{
+  "results": [],
+  "receipt": {
+    "engine": "brave",
+    "class": "independent_index",
+    "classes_allowed": [
+      "independent_index",
+      "serp_proxy",
+      "first_party_index",
+      "metasearch"
+    ],
+    "cost_usd": 0.005,
+    "time_ms": 20,
+    "not_considered": [
+      {
+        "engine": "perplexity",
+        "class": "answer_engine",
+        "reason": "class_not_considered"
+      }
+    ],
+    "attempts": [
+      {
+        "provider": "brave",
+        "engine": "brave",
+        "class": "independent_index",
+        "status": "ok",
+        "time_ms": 20,
+        "cost_usd": 0.005
+      },
+      {
+        "provider": "perplexity",
+        "engine": "perplexity",
+        "class": "answer_engine",
+        "status": "skipped",
+        "reason": "class_not_considered",
+        "time_ms": 0,
+        "cost_usd": 0
+      }
+    ]
+  }
+}
