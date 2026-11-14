@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/network/setup-grant-save.v1.json",
+  "title": "NetworkSetupGrantSave",
+  "description": "network.setup-grant-save@1 (capability network.setup.grant.save): the value(s) a person's own agent read from a provider's page, saved into exactly the one Setup row a one-time grant names (plan \u00a7AB.44). POST /internal/setup/grants/:id/save on OpenVibe.Network, with the agent's service token and the live grant: each key must be one of the grant's own; the grant is burnt by the first save; nothing is ever read back.",
+  "type": "object",
+  "required": [
+    "values"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "values": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 4,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9_.-]{0,79}$": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        }
+      }
+    },
+    "run": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,80}$",
+      "description": "The agent run that read the value(s), for the audit line."
+    }
+  }
+}

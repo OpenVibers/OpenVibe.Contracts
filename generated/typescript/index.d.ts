@@ -380286,6 +380286,87 @@ export interface NetworkFriendSubjects {
   friends: string[];
 }
 
+/** network.setup-grant-save@1.0.0 (owner: network) */
+/**
+ * network.setup-grant-save@1 (capability network.setup.grant.save): the value(s) a person's own agent read from a provider's page, saved into exactly the one Setup row a one-time grant names (plan §AB.44). POST /internal/setup/grants/:id/save on OpenVibe.Network, with the agent's service token and the live grant: each key must be one of the grant's own; the grant is burnt by the first save; nothing is ever read back.
+ */
+export interface NetworkSetupGrantSave {
+  values: {
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^[a-z][a-z0-9_.-]{0,79}$".
+     */
+    [k: string]: string;
+  };
+  /**
+   * The agent run that read the value(s), for the audit line.
+   */
+  run?: string;
+}
+
+/** network.setup-grant-saved@1.0.0 (owner: network) */
+/**
+ * network.setup-grant-saved@1: what a one-time setup grant saved (plan §AB.44): the row and each key's last four characters only, never a value. The grant is spent.
+ */
+export interface NetworkSetupGrantSaved {
+  saved: true;
+  service: string;
+  namespace: string;
+  /**
+   * @minItems 1
+   * @maxItems 4
+   */
+  keys:
+    | [
+        {
+          key: string;
+          hint: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          hint: string;
+        },
+        {
+          key: string;
+          hint: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          hint: string;
+        },
+        {
+          key: string;
+          hint: string;
+        },
+        {
+          key: string;
+          hint: string;
+        }
+      ]
+    | [
+        {
+          key: string;
+          hint: string;
+        },
+        {
+          key: string;
+          hint: string;
+        },
+        {
+          key: string;
+          hint: string;
+        },
+        {
+          key: string;
+          hint: string;
+        }
+      ];
+}
+
 /** network.friend.requested@1.0.0 (owner: network) */
 /**
  * network.friend.requested v1 (plan §AB.51): `from` added `to` as a friend and `to` has not added `from`: a request `to` can accept (add back) or leave. Adding again what is already added sends nothing. Written to Network's outbox in the transaction that stores the change. Envelope: subject { type: user, id: <to> }, visibility subject, actor <from>.

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.432.0 — 2026-11-14
+
+Setup done by your agent (plan §AB.44; the owner: "configure all the API keys … using the on-screen system … have the
+user log in or make accounts … and then gather it from that using the agent").
+
+- The capability `network.setup.grant.save` (first-party: OpenVibe.Actor's service client; never grantable to apps):
+  POST /internal/setup/grants/:id/save on Network saves the value(s) a person's own agent read from a provider's page
+  into exactly the one Setup row a one-time grant names. The owner makes the grant with a fresh sign-in; it names one
+  service, one namespace and its key(s), lasts 30 minutes and is spent by the first save; it never reads a value back.
+- `network.setup-grant-save@1` (the request: one to four of the grant's own keys, and the run for the audit line) and
+  `network.setup-grant-saved@1` (the answer: the row and each key's last four characters, never a value).
+
 ## 0.431.0 — 2026-11-14
 
 Friends, one system across sites (plan §AB.51; the owner: "implement the friend system so it can be used across sites
