@@ -141850,7 +141850,7 @@
       }
     },
     "feed.item": {
-      "version": "1.0.0",
+      "version": "1.2.0",
       "owner": "network",
       "status": "active",
       "schema": {
@@ -142098,6 +142098,43 @@
               "previous": {
                 "type": "integer",
                 "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          },
+          "stat": {
+            "type": "object",
+            "description": "Present on report cards (1.2.0): when the number happened, so each reader's own clock and time zone say the time (never UTC in the words), and up to six side numbers for the same day (people today, signed in, page views, new accounts, live now). Optional.",
+            "properties": {
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "The moment the card's number happened (the day's online peak). Optional."
+              },
+              "facts": {
+                "type": "array",
+                "maxItems": 6,
+                "description": "Side numbers, in the order to show them. Optional.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "label",
+                    "n"
+                  ],
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40,
+                      "description": "What the number counts, in words (\"people today\")."
+                    },
+                    "n": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                }
               }
             },
             "additionalProperties": false

@@ -378429,7 +378429,7 @@ export interface AgentsJob {
   updated_at?: string;
 }
 
-/** feed.item@1.0.0 (owner: network) */
+/** feed.item@1.2.0 (owner: network) */
 /**
  * feed.item@1: one card of OpenVibe's one feed, served by OpenVibe.Network (GET /api/v1/feed and GET /api/frame/feed; OpenVibe.Community's Pulse reads the same feed). Every card names the service it came from, a stable id, its own link, and only public or follower-visible activity. Kinds: post, pic, clip, video, live, stream, rundown, quest, member, chat, event, wiki, update, work, deal, news, report, poll, game, meme, paste, episode, space, avatar, banner, follow, site.
  */
@@ -378553,6 +378553,181 @@ export interface FeedItem {
     direction: "up" | "down" | "flat";
     pct?: number;
     previous?: number;
+  };
+  /**
+   * Present on report cards (1.2.0): when the number happened, so each reader's own clock and time zone say the time (never UTC in the words), and up to six side numbers for the same day (people today, signed in, page views, new accounts, live now). Optional.
+   */
+  stat?: {
+    /**
+     * The moment the card's number happened (the day's online peak). Optional.
+     */
+    at?: string;
+    /**
+     * Side numbers, in the order to show them. Optional.
+     *
+     * @maxItems 6
+     */
+    facts?:
+      | []
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ];
   };
   /**
    * A run of the same kind folded into one card (two or more items).
