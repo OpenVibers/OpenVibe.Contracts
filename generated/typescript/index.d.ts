@@ -364430,12 +364430,3638 @@ export interface AgentsRunStart {
  */
 export interface AgentsMessage {
   text: string;
-  attachments?: Attachments;
+  /**
+   * @maxItems 20
+   */
+  attachments?:
+    | []
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ]
+    | [
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        },
+        {
+          kind: "image" | "file" | "audio" | "video";
+          media_id?: string;
+          /**
+           * An https address the reader may fetch.
+           */
+          url?: string;
+          name?: string;
+          mime?: string;
+          bytes?: number;
+          width?: number;
+          height?: number;
+          /**
+           * What a picture shows, in words.
+           */
+          alt?: string;
+        }
+      ];
   /**
    * What runs from this turn on. Absent: the run keeps what it had.
    */
   use?: {
-    model?: Model;
+    /**
+     * The model that runs it, as the picker chose it (frame.choices@1's choice, with the name a person reads). EFFORT is the reasoning effort where the model has one.
+     */
+    model?: {
+      id: string;
+      /**
+       * openvibe: Exchange's directory, paid in credits. keys: the person's own key. machines: a model on the person's own computer (Link). plans: a signed-in plan through a harness.
+       */
+      source?: "openvibe" | "keys" | "machines" | "plans";
+      machine?: string;
+      name?: string;
+      effort?: string;
+    };
     /**
      * A coding harness by its id (claude-code, codex, opencode, openvibe, …): a code run hands its thread to it.
      */
