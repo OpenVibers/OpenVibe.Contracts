@@ -37,8 +37,11 @@
       "description": "The first-party service that asked for the person (service:actor), or null when they asked themselves."
     },
     "kind": {
-      "const": "browser",
-      "description": "A platform.runtime-class@1 name; browser (a headless browser driven over its pipe) is the only kind of session in v1."
+      "enum": [
+        "browser",
+        "desktop"
+      ],
+      "description": "A platform.runtime-class@1 name: browser (a headless browser driven over its pipe) or desktop (0.433.0: a whole desktop, a display with a window manager, a browser and a terminal, on a desk host that lends desktops and keeps each one in its own sandbox; driven with screen and input only)."
     },
     "state": {
       "enum": [

@@ -1,0 +1,15 @@
+{
+  "kind": "desktop",
+  "width": 1280,
+  "height": 800,
+  "requirements": {
+    "kind": "run.desktop",
+    "mobility": "session",
+    "latency_class": "interactive",
+    "objective": "balanced",
+    "trust": [
+      "first-party",
+      "community"
+    ]
+  }
+}
