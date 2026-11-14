@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.428.0 - 2026-11-13
+## 0.430.0 - 2026-11-14
 
 **A search receipt says which class of engine answered** (plan 2026-11-13 §W.2 step 4). `exchange.search-result@1`
 and `exchange.image-result@1` 1.1.0, additive:
@@ -16,6 +16,29 @@ and `exchange.image-result@1` 1.1.0, additive:
 An engine class says what an engine is, not what it costs: a raw index, a SERP proxy, an answer engine and a
 page reader do not sell the same thing, so their prices are not comparable. OpenVibe.AI keeps the classes a
 request asked for before it compares price, health and terms.
+## 0.429.0 — 2026-11-14
+
+**LOOI's manifest as the tray sends it** (Maticus and Chief, checked against the tray code): `p7_battery.usb` is the
+integer 0 or 1 (`[0, 1]`), `p7_battery.raw` is a hex string like `"6401"`, `p7_headlight.commanded` may be null until
+the first successful headlight write after a connect or a reset, and `sensors.p7_head` {orientation, min, max, center}
+is listed (landscape 0–255, centre 90; portrait 0 to the maker's floor, read `max` from the sensor, never hard-code it).
+`bot.robot-manifest@1` 1.1.0: a reading takes `nullable`, the fields that may be null. The example stays `frozen: false`
+until Maticus confirms it.
+
+## 0.428.0 - 2026-11-14
+
+**A report card says its moment in the reader's own time** (the owner, 11-14: "show the time based on the users
+computer by default"; "add total users per day or other cool metrics to the card showing peak today").
+`feed.item@1` 1.2.0 adds the optional `stat` on report cards:
+
+- `stat.at`: when the number happened (the day's online peak), so each reader's clock and time zone say the time;
+  the card's words no longer carry "at 01:10 UTC".
+- `stat.facts`: up to six side numbers for the same day, each `{ label, n }` (people today, signed in today, page
+  views today, new accounts today, live now).
+
+Backward compatible: an older reader ignores `stat`. The catalog's feed.item entry says 1.2.0 (it said 1.0.0
+through 1.1.0).
+
 ## 0.427.0 - 2026-11-13
 
 **The AI reads a video** (the owner, 11-13: "improve our AI system to handle them as well leveraging

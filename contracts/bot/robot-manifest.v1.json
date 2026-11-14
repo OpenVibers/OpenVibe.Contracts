@@ -107,6 +107,13 @@
           "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$" },
           "description": "The fields that come only sometimes (p7_battery's unverified: only with a read at connect or a stale value)."
         },
+        "nullable": {
+          "type": "array",
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$" },
+          "description": "The fields that may be null (1.1.0): p7_headlight's commanded is null until the first successful headlight write after a connect or a reset."
+        },
         "source": { "enum": ["poll", "push", "connect"], "description": "poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after)." },
         "fresh_ms": { "type": "integer", "minimum": 1, "maximum": 3600000, "description": "A reading older than this is shown as stale." },
         "control": { "enum": ["meter", "readout", "badge", "list"], "description": "The control that shows it." }

@@ -219658,7 +219658,7 @@ export interface BotRobotProfile {
   };
 }
 
-/** bot.robot-manifest@1.0.0 (owner: bot) */
+/** bot.robot-manifest@1.1.0 (owner: bot) */
 /**
  * bot.robot-manifest@1: what a robot's driver says the robot can do, written and versioned by the driver's maker (a Link plugin's author), so a new control is a version bump of the manifest instead of an OpenVibe release. Each command names its kind, its class (motion moves something and is held to a lifetime and a release; state sets something that stays, like a light; action happens once), its value's fields and ranges, how long it lives, the delivery window Bot gives it, the time it must still have left when the robot reads it, how often it may be sent, what the robot does when no fresh command comes (release), and which control draws it. Each telemetry entry names a reading the driver reports, its fields, its unit and range, where it comes from, and the control that shows it. Bot derives the panel and the ui.surface@1 parts from it, Link forwards only the kinds it declares, and OpenVibe AI reads the same facts when it suggests a layout or writes a control. The manifest is data: no code and no addresses.
  */
@@ -219798,6 +219798,25 @@ export interface BotRobotManifest {
      * @maxItems 12
      */
     optional?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string];
+    /**
+     * The fields that may be null (1.1.0): p7_headlight's commanded is null until the first successful headlight write after a connect or a reset.
+     *
+     * @maxItems 12
+     */
+    nullable?:
       | []
       | [string]
       | [string, string]
@@ -342010,6 +342029,25 @@ export interface UiSurface {
           | [string, string, string, string, string, string, string, string, string, string, string]
           | [string, string, string, string, string, string, string, string, string, string, string, string];
         /**
+         * The fields that may be null (1.1.0): p7_headlight's commanded is null until the first successful headlight write after a connect or a reset.
+         *
+         * @maxItems 12
+         */
+        nullable?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string];
+        /**
          * poll: read again on a timer (fresh); push: sent when it changes; connect: read once when the robot connects (provisional after).
          */
         source?: "poll" | "push" | "connect";
@@ -342620,6 +342658,25 @@ export interface UiSurface {
          * @maxItems 12
          */
         optional?:
+          | []
+          | [string]
+          | [string, string]
+          | [string, string, string]
+          | [string, string, string, string]
+          | [string, string, string, string, string]
+          | [string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string]
+          | [string, string, string, string, string, string, string, string, string, string, string, string];
+        /**
+         * The fields that may be null (1.1.0): p7_headlight's commanded is null until the first successful headlight write after a connect or a reset.
+         *
+         * @maxItems 12
+         */
+        nullable?:
           | []
           | [string]
           | [string, string]
@@ -379753,7 +379810,7 @@ export interface AgentsJob {
   updated_at?: string;
 }
 
-/** feed.item@1.0.0 (owner: network) */
+/** feed.item@1.2.0 (owner: network) */
 /**
  * feed.item@1: one card of OpenVibe's one feed, served by OpenVibe.Network (GET /api/v1/feed and GET /api/frame/feed; OpenVibe.Community's Pulse reads the same feed). Every card names the service it came from, a stable id, its own link, and only public or follower-visible activity. Kinds: post, pic, clip, video, live, stream, rundown, quest, member, chat, event, wiki, update, work, deal, news, report, poll, game, meme, paste, episode, space, avatar, banner, follow, site.
  */
@@ -379877,6 +379934,181 @@ export interface FeedItem {
     direction: "up" | "down" | "flat";
     pct?: number;
     previous?: number;
+  };
+  /**
+   * Present on report cards (1.2.0): when the number happened, so each reader's own clock and time zone say the time (never UTC in the words), and up to six side numbers for the same day (people today, signed in, page views, new accounts, live now). Optional.
+   */
+  stat?: {
+    /**
+     * The moment the card's number happened (the day's online peak). Optional.
+     */
+    at?: string;
+    /**
+     * Side numbers, in the order to show them. Optional.
+     *
+     * @maxItems 6
+     */
+    facts?:
+      | []
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ]
+      | [
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          },
+          {
+            /**
+             * What the number counts, in words ("people today").
+             */
+            label: string;
+            n: number;
+          }
+        ];
   };
   /**
    * A run of the same kind folded into one card (two or more items).

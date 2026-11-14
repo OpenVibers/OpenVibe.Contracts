@@ -91,8 +91,11 @@
           0,
           100
         ],
-        "usb": "boolean",
-        "raw": "integer",
+        "usb": [
+          0,
+          1
+        ],
+        "raw": "string",
         "at": "ms",
         "unverified": "boolean"
       },
@@ -130,8 +133,35 @@
         "pending": "boolean",
         "physical_state_verified": "boolean"
       },
+      "nullable": [
+        "commanded"
+      ],
       "source": "push",
       "control": "badge"
+    },
+    {
+      "key": "p7_head",
+      "label": "Head",
+      "fields": {
+        "orientation": [
+          "landscape",
+          "portrait"
+        ],
+        "min": [
+          0,
+          255
+        ],
+        "max": [
+          0,
+          255
+        ],
+        "center": [
+          0,
+          255
+        ]
+      },
+      "source": "push",
+      "control": "readout"
     }
   ]
 }
