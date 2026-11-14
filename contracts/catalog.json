@@ -7267,7 +7267,7 @@
     },
     {
       "id": "bot.robot-manifest",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "schema": "bot/robot-manifest.v1.json",
       "visibility": "public",

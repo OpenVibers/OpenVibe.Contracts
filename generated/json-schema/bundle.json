@@ -83284,7 +83284,7 @@
       }
     },
     "bot.robot-manifest": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "bot",
       "status": "active",
       "schema": {
@@ -83579,6 +83579,16 @@
                   "pattern": "^[a-z][a-z0-9_]{0,31}$"
                 },
                 "description": "The fields that come only sometimes (p7_battery's unverified: only with a read at connect or a stale value)."
+              },
+              "nullable": {
+                "type": "array",
+                "maxItems": 12,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{0,31}$"
+                },
+                "description": "The fields that may be null (1.1.0): p7_headlight's commanded is null until the first successful headlight write after a connect or a reset."
               },
               "source": {
                 "enum": [
