@@ -1,0 +1,9 @@
+{
+  "text": "Now with a cheaper model",
+  "use": {
+    "model": {
+      "id": "deepseek/deepseek-v4.1-flash",
+      "source": "openvibe"
+    }
+  }
+}

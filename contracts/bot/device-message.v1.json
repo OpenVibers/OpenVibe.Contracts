@@ -312,7 +312,7 @@
       }
     },
     {
-      "description": "Server to device: a refused frame (bot.not_paired, bot.bad_frame, …).",
+      "description": "Server to device: a refused frame (bot.not_paired, bot.bad_frame, \u2026).",
       "type": "object",
       "required": [
         "v",
@@ -633,6 +633,117 @@
         },
         "video": {
           "type": "string"
+        },
+        "machine": {
+          "type": "object",
+          "description": "What the machine is (0.434.0, OpenVibe Link v0.66 internal/specs; the owner, 2026-11-14: every operating system and aware of specs): its OS and version, CPU, memory, GPUs, the disk of the Link's state directory, the virtualization it offers and its display. Best effort: a field the machine could not read is absent. Bot keeps a bounded copy (devices.specs). No serial numbers or user names.",
+          "properties": {
+            "os_name": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "os_version": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "kernel": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "arch": {
+              "type": "string",
+              "maxLength": 16
+            },
+            "model": {
+              "type": "string",
+              "maxLength": 60
+            },
+            "cpu": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                "cores": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "threads": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "memory_mb": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "gpus": {
+              "type": "array",
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "required": [
+                  "model"
+                ],
+                "properties": {
+                  "vendor": {
+                    "type": "string",
+                    "maxLength": 40
+                  },
+                  "model": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "vram_mb": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "disk_total_gb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "disk_free_gb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "virtualization": {
+              "type": "object",
+              "properties": {
+                "kvm": {
+                  "type": "boolean"
+                },
+                "apple_vz": {
+                  "type": "boolean"
+                },
+                "hyperv": {
+                  "type": "boolean"
+                },
+                "wsl": {
+                  "type": "boolean"
+                },
+                "guest": {
+                  "type": "boolean"
+                },
+                "container": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "display": {
+              "enum": [
+                "x11",
+                "wayland",
+                "quartz",
+                "windows",
+                "none"
+              ]
+            }
+          }
         }
       }
     },
@@ -762,7 +873,7 @@
       }
     },
     {
-      "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, local_stop, expired, …).",
+      "description": "Device to server: the command was refused, with OpenVibe Link's fault code (bad_value, local_stop, expired, \u2026).",
       "type": "object",
       "required": [
         "v",
@@ -839,7 +950,11 @@
           "description": "What this machine's coding agents have left (Codes C9c): each agent's id, whether it is installed and signed in, and each limit window's label, what it has used of its limit, and when it frees (RFC 3339 or empty when the agent's login file does not say). OpenVibe Link reads it with the OpenVibe.Codes runner's own logins probe as the machine's own user and reports labels, numbers and times only: no key, token or account name. Absent means the machine has no reading (no OpenVibe.Codes runner, or its probe has not answered yet), never that nothing is installed.",
           "items": {
             "type": "object",
-            "required": ["agent", "installed", "signed_in"],
+            "required": [
+              "agent",
+              "installed",
+              "signed_in"
+            ],
             "additionalProperties": false,
             "properties": {
               "agent": {
@@ -857,7 +972,9 @@
                 "maxItems": 10,
                 "items": {
                   "type": "object",
-                  "required": ["name"],
+                  "required": [
+                    "name"
+                  ],
                   "additionalProperties": false,
                   "properties": {
                     "name": {
@@ -1016,7 +1133,7 @@
       }
     },
     {
-      "description": "Device to server (Vibe by voice, consumer plan §8): the person said the machine's call word, and this is what they asked after it, transcribed on the machine itself (nothing leaves it before the call word). OpenVibe.Bot hands it to Vibe as the machine's owner, only when the owner turned voice on for the machine (config `voice`), and answers with voice_answer frames carrying the same id.",
+      "description": "Device to server (Vibe by voice, consumer plan \u00a78): the person said the machine's call word, and this is what they asked after it, transcribed on the machine itself (nothing leaves it before the call word). OpenVibe.Bot hands it to Vibe as the machine's owner, only when the owner turned voice on for the machine (config `voice`), and answers with voice_answer frames carrying the same id.",
       "type": "object",
       "required": [
         "v",

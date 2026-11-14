@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/agents/message.v1.json",
+  "title": "AgentsMessage",
+  "description": "agents.message@1 (0.434.0; the owner, 2026-11-14: \"resume sessions or swap models with ease\"): the body of POST /runs/{id}/messages on every product's Run API and the Frame (openvibe-sdk/agents/api), answered 201 with the agents.step@1 it made. TEXT is the person's words for the run's next turn. USE swaps what runs that turn and every turn after it, in the same run and the same thread: another MODEL (agents.run@1's model shape, any of Exchange's or the person's own), another HARNESS (a coding harness by its id, for a code run), another EFFORT. The thread carries over whole, so nothing is restated; a product that cannot run the asked model or harness answers 409 agents.use_unavailable and changes nothing. A run that had ended takes the message as a resume: it runs again from its last step (status running), unless its product refuses with 409 agents.run_closed. Starting a new run that continues this one elsewhere is agents.run-start@1 with LINEAGE (fork, handoff, regenerate).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["text"],
+  "properties": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100000
+    },
+    "attachments": {
+      "$ref": "run-start.v1.json#/properties/attachments"
+    },
+    "use": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "description": "What runs from this turn on. Absent: the run keeps what it had.",
+      "properties": {
+        "model": {
+          "$ref": "run.v1.json#/properties/model"
+        },
+        "harness": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,39}$",
+          "description": "A coding harness by its id (claude-code, codex, opencode, openvibe, …): a code run hands its thread to it."
+        },
+        "effort": {
+          "enum": ["low", "medium", "high", "max"]
+        }
+      }
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    }
+  },
+  "examples": [
+    { "text": "Keep going" },
+    { "text": "Now try it with a cheaper model", "use": { "model": { "id": "deepseek/deepseek-v4.1-flash", "source": "openvibe" } } },
+    { "text": "Hand this to Codex and finish the tests", "use": { "harness": "codex", "effort": "high" } }
+  ]
+}

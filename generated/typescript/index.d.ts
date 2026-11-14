@@ -220028,6 +220028,234 @@ export type BotDeviceMessage =
       estop_latched?: boolean;
       local_stop?: boolean;
       video?: string;
+      /**
+       * What the machine is (0.434.0, OpenVibe Link v0.66 internal/specs; the owner, 2026-11-14: every operating system and aware of specs): its OS and version, CPU, memory, GPUs, the disk of the Link's state directory, the virtualization it offers and its display. Best effort: a field the machine could not read is absent. Bot keeps a bounded copy (devices.specs). No serial numbers or user names.
+       */
+      machine?: {
+        os_name?: string;
+        os_version?: string;
+        kernel?: string;
+        arch?: string;
+        model?: string;
+        cpu?: {
+          model?: string;
+          cores?: number;
+          threads?: number;
+        };
+        memory_mb?: number;
+        /**
+         * @maxItems 8
+         */
+        gpus?:
+          | []
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ]
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ]
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ]
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ]
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ]
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ]
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ]
+          | [
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              },
+              {
+                vendor?: string;
+                model: string;
+                vram_mb?: number;
+              }
+            ];
+        disk_total_gb?: number;
+        disk_free_gb?: number;
+        virtualization?: {
+          kvm?: boolean;
+          apple_vz?: boolean;
+          hyperv?: boolean;
+          wsl?: boolean;
+          guest?: boolean;
+          container?: boolean;
+        };
+        display?: "x11" | "wayland" | "quartz" | "windows" | "none";
+      };
     }
   | {
       v: 1;
@@ -364194,6 +364422,27 @@ export interface AgentsRunStart {
    * Since 1.2.0: run this blueprint version once without installing it (Try it; a public agent used one time). The run uses the starter's own keys and places, and every tool asks first whatever the blueprint says. With AGENT, AGENT wins.
    */
   blueprint?: string;
+}
+
+/** agents.message@1.0.0 (owner: network) */
+/**
+ * agents.message@1 (0.434.0; the owner, 2026-11-14: "resume sessions or swap models with ease"): the body of POST /runs/{id}/messages on every product's Run API and the Frame (openvibe-sdk/agents/api), answered 201 with the agents.step@1 it made. TEXT is the person's words for the run's next turn. USE swaps what runs that turn and every turn after it, in the same run and the same thread: another MODEL (agents.run@1's model shape, any of Exchange's or the person's own), another HARNESS (a coding harness by its id, for a code run), another EFFORT. The thread carries over whole, so nothing is restated; a product that cannot run the asked model or harness answers 409 agents.use_unavailable and changes nothing. A run that had ended takes the message as a resume: it runs again from its last step (status running), unless its product refuses with 409 agents.run_closed. Starting a new run that continues this one elsewhere is agents.run-start@1 with LINEAGE (fork, handoff, regenerate).
+ */
+export interface AgentsMessage {
+  text: string;
+  attachments?: Attachments;
+  /**
+   * What runs from this turn on. Absent: the run keeps what it had.
+   */
+  use?: {
+    model?: Model;
+    /**
+     * A coding harness by its id (claude-code, codex, opencode, openvibe, …): a code run hands its thread to it.
+     */
+    harness?: string;
+    effort?: "low" | "medium" | "high" | "max";
+  };
+  idempotency_key?: string;
 }
 
 /** agents.event@1.0.0 (owner: network) */
