@@ -1,0 +1,25 @@
+{
+  "slug": "reply-kindly",
+  "name": "Reply kindly",
+  "summary": "Drafts a kind reply to a message.",
+  "kind": "prompt",
+  "input": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "title": "Text"
+      }
+    },
+    "required": [
+      "text"
+    ]
+  },
+  "output": {
+    "kind": "text"
+  },
+  "prompt": {
+    "instructions": "Write a short, kind reply to the message.",
+    "model": "auto"
+  }
+}

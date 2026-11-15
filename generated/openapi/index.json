@@ -278,8 +278,8 @@
       "service": "tools",
       "name": "OpenVibe.Tools",
       "origin": "https://openvibe.tools",
-      "operations": 16,
-      "capabilities": 8
+      "operations": 18,
+      "capabilities": 9
     },
     {
       "service": "trade",

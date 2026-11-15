@@ -1,0 +1,38 @@
+{
+  "slug": "shout-reply",
+  "name": "Shout, then reply",
+  "summary": "Upper-cases a message, then drafts a reply.",
+  "kind": "chain",
+  "input": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "title": "Text"
+      }
+    },
+    "required": [
+      "text"
+    ]
+  },
+  "output": {
+    "kind": "text"
+  },
+  "visibility": "private",
+  "chain": {
+    "steps": [
+      {
+        "tool": "upper",
+        "input": {
+          "text": "{{input.text}}"
+        }
+      },
+      {
+        "tool": "mtl_01J0000000000000000000000A",
+        "input": {
+          "text": "{{steps.0.text}}"
+        }
+      }
+    ]
+  }
+}

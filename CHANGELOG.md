@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.439.0 - 2026-11-15
+
+**Agents make tools for people** (plan 2026-11-13 §AD.12; the owner, 11-15: "use codes or actor to create a tool for
+you completely end to end"). New capability `tools.made.write`:
+- An agent (Actor, Codes) drafts a tool from the person's words (`POST /api/v1/made-tools/draft`) and saves it
+  (`POST /api/v1/made-tools`) on the person's behalf, with `X-OV-Subject` naming them. The person owns the tool.
+- A tool an agent makes is always private; only the person publishes it, on openvibe.tools/make.
+- Changing or deleting a tool stays the person's own.
+- New contract `tools.made-tool-create-request@1`: the body of `POST /api/v1/made-tools` (a code tool sends its
+  `run(input)` function as `source_code`).
+
 ## 0.438.0 - 2026-11-15
 
 **Chains: tools made of tools** (plan 2026-11-13 §AD.12 (e); the owner, 11-15: "more modular … multi purpose").

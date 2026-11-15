@@ -1,0 +1,21 @@
+{
+  "slug": "calc",
+  "name": "Calc",
+  "summary": "Calculates.",
+  "kind": "code",
+  "input": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "title": "Text"
+      }
+    },
+    "required": [
+      "text"
+    ]
+  },
+  "output": {
+    "kind": "text"
+  }
+}

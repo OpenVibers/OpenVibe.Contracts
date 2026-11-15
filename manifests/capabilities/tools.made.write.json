@@ -1,0 +1,22 @@
+{
+  "id": "tools.made.write",
+  "version": "1.0",
+  "owner": "tools",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Make a tool for a person (tools.made-tool@1) on their behalf: an agent such as Actor or Codes drafts and saves a tool the person asked for. X-OV-Subject (usr_) names the person, who owns the tool. POST /api/v1/made-tools/draft with { description, kind: prompt|code } drafts the fields from words (a model run paid from the person's allowance, Vibes or own keys); POST /api/v1/made-tools with the make form's fields saves it, always private when an agent makes it (only the person publishes, on openvibe.tools/make), answered with the tool. Without X-OV-Subject the token is refused. Changing or deleting a tool stays the person's own.",
+  "permissions": [
+    "tools:write"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "tools-run",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/made-tools/draft",
+    "POST /api/v1/made-tools"
+  ],
+  "inputSchema": "tools.made-tool-create-request@1",
+  "outputSchema": "tools.made-tool@1"
+}

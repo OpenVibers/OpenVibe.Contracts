@@ -189858,6 +189858,613 @@ export type MadeTool = {
   } | null;
 };
 
+/** tools.made-tool-create-request@1.0.0 (owner: tools) */
+/**
+ * Body of POST /api/v1/made-tools on openvibe.tools: a new tool a person makes (tools.made-tool@1), from the make page or, with capability tools.made.write and X-OV-Subject, by an agent on the person's behalf. A code tool sends its run(input) function as source_code (at most 64 KB; the entry and its SHA-256 are built from it) or a built entry as code. visibility defaults to private, and a tool an agent makes is always private: only the person publishes it. Answered 201 with the tool (tools.made-tool@1); refusals are problem+json: 400 tools.made.invalid (a field, in words, with its pointer), 401 token.*, 403 capability.denied, 409 tools.made.slug_taken.
+ */
+export type ToolsMadeToolCreateRequest = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * A short name, unique among the owner's tools (summarize-email), for addresses and an agent's tool list.
+   */
+  slug: string;
+  name: string;
+  /**
+   * One plain sentence: what the tool does. Agents read it to decide when to use the tool.
+   */
+  summary: string;
+  /**
+   * prompt: instructions run by a model through OpenVibe.AI. code: a JavaScript entry run as a skill-runner function job. chain (1.1.0): other tools run in order, each step's input from the chain's input or an earlier step.
+   */
+  kind: "prompt" | "code" | "chain";
+  /**
+   * JSON Schema (2020-12) of a run's input: an object schema.
+   */
+  input: {
+    type: "object";
+  };
+  output: {
+    /**
+     * json: result.data, checked against schema. text: result.text.
+     */
+    kind: "json" | "text";
+    /**
+     * JSON Schema of result.data. Required when kind is json.
+     */
+    schema?: {
+      type: "object";
+    };
+  };
+  /**
+   * A prompt tool's instructions and model; null for a code tool.
+   */
+  prompt?: {
+    /**
+     * What the model is told to do with the input (the system message). The input follows as JSON.
+     */
+    instructions: string;
+    /**
+     * An OpenVibe.Exchange model id, or auto (the router picks the cheapest model that does the job).
+     */
+    model: string;
+    temperature?: number;
+    /**
+     * The longest answer, in tokens (default 1024).
+     */
+    max_tokens?: number;
+  } | null;
+  /**
+   * A code tool's JavaScript: a function run(input) that returns the answer (made/code.js checks it).
+   */
+  source_code?: string | null;
+  /**
+   * A code tool's entry; null for a prompt tool.
+   */
+  code?: {
+    /**
+     * The entry file's SHA-256; a run refuses any other bytes.
+     */
+    sha256: string;
+    /**
+     * The entry file's path in its source (tool.js).
+     */
+    entry: string;
+    /**
+     * Where the file is kept: a git.openvibe.codes repository or a Media object.
+     */
+    source?: string;
+    bytes?: number;
+  } | null;
+  /**
+   * A chain tool's steps (1.1.0); absent or null for the other kinds.
+   */
+  chain?: {
+    /**
+     * @minItems 2
+     * @maxItems 8
+     */
+    steps:
+      | [
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          }
+        ]
+      | [
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          }
+        ]
+      | [
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          }
+        ]
+      | [
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          }
+        ]
+      | [
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          }
+        ]
+      | [
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          }
+        ]
+      | [
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          },
+          {
+            /**
+             * A catalogue tool id, or a made tool's id
+             */
+            tool: string;
+            /**
+             * What this step does, for people
+             */
+            name?: string;
+            /**
+             * The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}
+             */
+            input: {};
+          }
+        ];
+    /**
+     * The chain's answer: the last step's result (default), or every step's
+     */
+    output_from?: "last" | "all";
+  } | null;
+  /**
+   * The network a code tool may reach: none, the public internet (through the egress guard), or OpenVibe's own sites only. A prompt tool reaches no network (deny).
+   */
+  net?: "deny" | "public" | "openvibe-only";
+  /**
+   * Where a code tool runs: OpenVibe's runner, the owner's own Link nodes, or nodes shared with others. A prompt tool runs on OpenVibe (openvibe).
+   */
+  hosting?: "openvibe" | "mine" | "shared";
+  visibility?: "private" | "unlisted" | "public";
+};
+
 /** tools.tool-list@1.0.0 (owner: tools) */
 /**
  * The answer of GET /api/v1/tools on openvibe.tools (capability tools.tool.read; ADR-027): every tool's descriptor (tools.tool@1), with input and output schemas in the { $ref } form (GET /api/v1/tools/:id has them embedded). Filters: ?family=, ?execution=client|sync|job, ?api=true|false, ?status=, ?q= (every word must appear in the id, name, summary or keywords); family, execution and status take comma lists. An unknown execution or status value, or an api that is not true or false, is 400 tools.query.invalid. Every listed tool has one of the descriptor's statuses: there is no planned status, so planned placeholders are not tools and are not listed, and neither are mirrors (GET /api/v1/tools/:id answers 404 tools.tool.not_found for both, with a detail saying why). Cacheable (ETag); updated_at changes when any descriptor does.
