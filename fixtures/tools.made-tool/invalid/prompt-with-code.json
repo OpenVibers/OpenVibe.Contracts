@@ -1,0 +1,58 @@
+{
+  "id": "mtl_01JCZ3NDEKTSV4RRFFQ69G5FAV",
+  "owner": {
+    "subject": "usr_01JCZ3NDEKTSV4RRFFQ69G5FAW",
+    "name": "Ada"
+  },
+  "slug": "reply-kindly",
+  "name": "Reply kindly",
+  "summary": "Drafts a short, kind reply to a message.",
+  "kind": "prompt",
+  "input": {
+    "type": "object",
+    "required": [
+      "message"
+    ],
+    "properties": {
+      "message": {
+        "type": "string",
+        "maxLength": 4000
+      }
+    }
+  },
+  "output": {
+    "kind": "json",
+    "schema": {
+      "type": "object",
+      "required": [
+        "reply"
+      ],
+      "properties": {
+        "reply": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "prompt": {
+    "instructions": "Write a short, kind reply to the message. Answer as JSON: { \"reply\": \"\u2026\" }.",
+    "model": "auto",
+    "temperature": 0.4,
+    "max_tokens": 400
+  },
+  "code": {
+    "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "entry": "tool.js"
+  },
+  "net": "deny",
+  "hosting": "openvibe",
+  "visibility": "public",
+  "version": 3,
+  "run": {
+    "method": "POST",
+    "path": "/api/v1/made-tools/mtl_01JCZ3NDEKTSV4RRFFQ69G5FAV/run"
+  },
+  "runs": 12,
+  "created_at": "2026-11-15T17:00:00.000Z",
+  "updated_at": "2026-11-15T17:40:00.000Z"
+}

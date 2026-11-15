@@ -1,0 +1,19 @@
+{
+  "id": "mtl_01JCZ3NDEKTSV4RRFFQ69G5FAX",
+  "owner": { "subject": "usr_01JCZ3NDEKTSV4RRFFQ69G5FAW" },
+  "slug": "csv-columns",
+  "name": "CSV columns",
+  "summary": "Lists a CSV's columns and how many rows it has.",
+  "kind": "code",
+  "input": { "type": "object", "required": ["csv"], "properties": { "csv": { "type": "string", "maxLength": 60000 } } },
+  "output": { "kind": "json", "schema": { "type": "object", "properties": { "columns": { "type": "array", "items": { "type": "string" } }, "rows": { "type": "integer" } } } },
+  "prompt": null,
+  "code": { "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08", "entry": "tool.js", "source": "https://git.openvibe.codes/ada/csv-columns", "bytes": 1412 },
+  "net": "deny",
+  "hosting": "mine",
+  "visibility": "private",
+  "version": 1,
+  "run": { "method": "POST", "path": "/api/v1/made-tools/mtl_01JCZ3NDEKTSV4RRFFQ69G5FAX/run" },
+  "created_at": "2026-11-15T17:00:00.000Z",
+  "updated_at": "2026-11-15T17:00:00.000Z"
+}
