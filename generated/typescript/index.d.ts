@@ -384000,6 +384000,10 @@ export interface FeedItem {
   group?: {
     count: number;
     /**
+     * How many times the run's items were seen in all, the sum of their own views (1.3.0; the owner, 11-15: "views … total views"). Optional.
+     */
+    views?: number | null;
+    /**
      * @minItems 2
      */
     items: [
@@ -384023,6 +384027,10 @@ export interface FeedItem {
          * Where it is sold (1.1.0; deals). Optional.
          */
         store?: string | null;
+        /**
+         * How many times this item was seen, from the one view store (1.3.0). Optional.
+         */
+        views?: number | null;
       },
       {
         id: string;
@@ -384044,6 +384052,10 @@ export interface FeedItem {
          * Where it is sold (1.1.0; deals). Optional.
          */
         store?: string | null;
+        /**
+         * How many times this item was seen, from the one view store (1.3.0). Optional.
+         */
+        views?: number | null;
       },
       ...{
         id: string;
@@ -384065,6 +384077,10 @@ export interface FeedItem {
          * Where it is sold (1.1.0; deals). Optional.
          */
         store?: string | null;
+        /**
+         * How many times this item was seen, from the one view store (1.3.0). Optional.
+         */
+        views?: number | null;
       }[]
     ];
   };
