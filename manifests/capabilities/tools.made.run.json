@@ -1,0 +1,22 @@
+{
+  "id": "tools.made.run",
+  "version": "1.0",
+  "owner": "tools",
+  "status": "active",
+  "visibility": "first-party",
+  "description": "Run a tool a person made (tools.made-tool@1) on behalf of a person: X-OV-Subject (usr_) names the person the run is for; the run is paid from that person's allowance, Vibes or own keys, never the tool's maker or the calling service. POST /api/v1/made-tools/:id/run with { input } (answered with tools.run@1); a private tool runs only for its owner. GET /api/v1/made-tools lists the public tools, and with mine=1 the person's own (every visibility), for an agent's tool list. Without X-OV-Subject the token is refused (a made tool always runs as someone).",
+  "permissions": [
+    "tools:run"
+  ],
+  "resourceConstraints": [
+    "owner"
+  ],
+  "quotaClass": "tools-run",
+  "events": [],
+  "implementedBy": [
+    "POST /api/v1/made-tools/:id/run",
+    "GET /api/v1/made-tools"
+  ],
+  "inputSchema": "tools.run-request@1",
+  "outputSchema": "tools.run@1"
+}
