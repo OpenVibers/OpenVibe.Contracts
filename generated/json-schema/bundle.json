@@ -142683,6 +142683,14 @@
                 "type": "integer",
                 "minimum": 2
               },
+              "views": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "How many times the run's items were seen in all, the sum of their own views (1.3.0; the owner, 11-15: \"views … total views\"). Optional."
+              },
               "items": {
                 "type": "array",
                 "minItems": 2,
@@ -142748,6 +142756,14 @@
                       ],
                       "maxLength": 60,
                       "description": "Where it is sold (1.1.0; deals). Optional."
+                    },
+                    "views": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "description": "How many times this item was seen, from the one view store (1.3.0). Optional."
                     }
                   },
                   "additionalProperties": false

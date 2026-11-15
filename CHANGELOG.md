@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.435.0 — 2026-11-15
+
+Views on a run of the feed (the owner, 11-15, on a run of deals in the menu: "views … total views").
+
+- `feed.item@1` 1.3.0: `group.views`, how many times the run's items were seen in all, and `group.items[].views`, each
+  item's own views, both from the one view store and optional. Network fills them when it folds a run (each row's
+  card already has its views before the fold); the menu shows the total over the run and each row's count beside its
+  price.
+
 ## 0.434.0 — 2026-11-14
 
 Machines that say what they are, and runs whose model changes mid-conversation (the owner, 11-14: every operating
