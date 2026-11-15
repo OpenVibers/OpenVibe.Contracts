@@ -1,0 +1,33 @@
+{
+  "slug": "price-tax",
+  "name": "Price with tax",
+  "summary": "Adds sales tax to a price.",
+  "kind": "code",
+  "input": {
+    "type": "object",
+    "properties": {
+      "price": {
+        "type": "number"
+      },
+      "rate": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "price",
+      "rate"
+    ]
+  },
+  "output": {
+    "kind": "json",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "source_code": "function run(input) { return { total: Math.round(input.price * (1 + input.rate / 100) * 100) / 100 }; }"
+}

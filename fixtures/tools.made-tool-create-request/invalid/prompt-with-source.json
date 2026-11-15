@@ -1,0 +1,26 @@
+{
+  "slug": "reply",
+  "name": "Reply",
+  "summary": "Replies.",
+  "kind": "prompt",
+  "input": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "title": "Text"
+      }
+    },
+    "required": [
+      "text"
+    ]
+  },
+  "output": {
+    "kind": "text"
+  },
+  "prompt": {
+    "instructions": "Reply.",
+    "model": "auto"
+  },
+  "source_code": "function run(input) { return ''; }"
+}

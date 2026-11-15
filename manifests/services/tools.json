@@ -47,6 +47,7 @@
     "tools.job.create",
     "tools.job.read",
     "tools.made.run",
+    "tools.made.write",
     "tools.net.probe",
     "tools.tool.read",
     "tools.tool.run"

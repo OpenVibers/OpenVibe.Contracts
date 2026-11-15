@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openvibe.network/contracts/tools/made-tool-create-request.v1.json",
+  "title": "ToolsMadeToolCreateRequest",
+  "description": "Body of POST /api/v1/made-tools on openvibe.tools: a new tool a person makes (tools.made-tool@1), from the make page or, with capability tools.made.write and X-OV-Subject, by an agent on the person's behalf. A code tool sends its run(input) function as source_code (at most 64 KB; the entry and its SHA-256 are built from it) or a built entry as code. visibility defaults to private, and a tool an agent makes is always private: only the person publishes it. Answered 201 with the tool (tools.made-tool@1); refusals are problem+json: 400 tools.made.invalid (a field, in words, with its pointer), 401 token.*, 403 capability.denied, 409 tools.made.slug_taken.",
+  "type": "object",
+  "required": [
+    "slug",
+    "name",
+    "summary",
+    "kind",
+    "input",
+    "output"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$",
+      "description": "A short name, unique among the owner's tools (summarize-email), for addresses and an agent's tool list."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "One plain sentence: what the tool does. Agents read it to decide when to use the tool."
+    },
+    "kind": {
+      "enum": [
+        "prompt",
+        "code",
+        "chain"
+      ],
+      "description": "prompt: instructions run by a model through OpenVibe.AI. code: a JavaScript entry run as a skill-runner function job. chain (1.1.0): other tools run in order, each step's input from the chain's input or an earlier step."
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "object"
+        }
+      },
+      "description": "JSON Schema (2020-12) of a run's input: an object schema."
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "json",
+            "text"
+          ],
+          "description": "json: result.data, checked against schema. text: result.text."
+        },
+        "schema": {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "const": "object"
+            }
+          },
+          "description": "JSON Schema of result.data. Required when kind is json."
+        }
+      },
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "json"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "schema"
+        ]
+      }
+    },
+    "prompt": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "instructions",
+        "model"
+      ],
+      "additionalProperties": false,
+      "description": "A prompt tool's instructions and model; null for a code tool.",
+      "properties": {
+        "instructions": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000,
+          "description": "What the model is told to do with the input (the system message). The input follows as JSON."
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "description": "An OpenVibe.Exchange model id, or auto (the router picks the cheapest model that does the job)."
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16000,
+          "description": "The longest answer, in tokens (default 1024)."
+        }
+      }
+    },
+    "source_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 65536,
+      "description": "A code tool's JavaScript: a function run(input) that returns the answer (made/code.js checks it)."
+    },
+    "code": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "sha256",
+        "entry"
+      ],
+      "additionalProperties": false,
+      "description": "A code tool's entry; null for a prompt tool.",
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The entry file's SHA-256; a run refuses any other bytes."
+        },
+        "entry": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9._/-]+\\.m?js$",
+          "description": "The entry file's path in its source (tool.js)."
+        },
+        "source": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "Where the file is kept: a git.openvibe.codes repository or a Media object."
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        }
+      }
+    },
+    "chain": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "steps"
+      ],
+      "additionalProperties": false,
+      "description": "A chain tool's steps (1.1.0); absent or null for the other kinds.",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "tool",
+              "input"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tool": {
+                "type": "string",
+                "pattern": "^([a-z0-9][a-z0-9.-]{0,63}|mtl_[0-9A-HJKMNP-TV-Z]{26})$",
+                "description": "A catalogue tool id, or a made tool's id"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80,
+                "description": "What this step does, for people"
+              },
+              "input": {
+                "type": "object",
+                "description": "The step's input: literal values, or templates {{input.<field>}} and {{steps.<n>.<path>}}"
+              }
+            }
+          }
+        },
+        "output_from": {
+          "enum": [
+            "last",
+            "all"
+          ],
+          "description": "The chain's answer: the last step's result (default), or every step's"
+        }
+      }
+    },
+    "net": {
+      "enum": [
+        "deny",
+        "public",
+        "openvibe-only"
+      ],
+      "description": "The network a code tool may reach: none, the public internet (through the egress guard), or OpenVibe's own sites only. A prompt tool reaches no network (deny)."
+    },
+    "hosting": {
+      "enum": [
+        "openvibe",
+        "mine",
+        "shared"
+      ],
+      "description": "Where a code tool runs: OpenVibe's runner, the owner's own Link nodes, or nodes shared with others. A prompt tool runs on OpenVibe (openvibe)."
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "unlisted",
+        "public"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "prompt"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "prompt": {
+            "type": "object"
+          },
+          "source_code": {
+            "type": "null"
+          },
+          "code": {
+            "type": "null"
+          },
+          "chain": {
+            "type": "null"
+          },
+          "net": {
+            "const": "deny"
+          },
+          "hosting": {
+            "const": "openvibe"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "code"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "required": [
+              "source_code"
+            ],
+            "properties": {
+              "source_code": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "object"
+              }
+            }
+          }
+        ],
+        "properties": {
+          "prompt": {
+            "type": "null"
+          },
+          "chain": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "chain"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "chain"
+        ],
+        "properties": {
+          "chain": {
+            "type": "object"
+          },
+          "prompt": {
+            "type": "null"
+          },
+          "source_code": {
+            "type": "null"
+          },
+          "code": {
+            "type": "null"
+          },
+          "hosting": {
+            "const": "openvibe"
+          }
+        }
+      }
+    }
+  ]
+}
