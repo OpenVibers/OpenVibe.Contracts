@@ -189227,6 +189227,119 @@ export interface ToolDescriptor {
   docs: string;
 }
 
+/** tools.made-tool@1.0.0 (owner: tools) */
+/**
+ * A tool a person made on openvibe.tools (plan 2026-11-13 §AD.7 step 2; the owner, 11-15: "people should be able to make their own tools … AI or Codes to generate them … model selection and OpenVibe.exchange"). GET /api/v1/made-tools/:id answers one, GET /api/v1/made-tools (public ones) and /api/v1/made-tools?mine=1 (the caller's own) list them; POST makes one and PATCH changes it (each change is the next version); DELETE removes it. KIND says how it runs. A prompt tool is instructions and a model: a run sends the instructions and the input to the model through OpenVibe.AI as the person who runs it (on_behalf_of: their free allowance, their Vibes or their own keys pay, never the tool's maker), and the answer is result.data (output.kind json, checked against output.schema) or result.text (output.kind text). A code tool is one JavaScript entry pinned by its sha256 that runs as a skill-runner function job (JSON in on stdin, at most 64 KiB of JSON out, no spawn, write or eval, the network that NET allows) placed by OpenVibe.Run on HOSTING: openvibe (OpenVibe's runner), mine (the owner's own Link nodes) or shared (nodes that serve others). INPUT is the JSON Schema (2020-12) a run's input must match. VISIBILITY: private (the owner alone sees and runs it), unlisted (anyone with its id runs it; never listed or indexed) or public (listed, searchable, runnable by anyone signed in). RUN.PATH is POST /api/v1/made-tools/{id}/run, body { input }, answered with tools.run@1. RULES this schema enforces: a prompt tool has prompt and no code; a code tool has code and no prompt; json output has a schema.
+ */
+export type MadeTool = {
+  [k: string]: unknown | undefined;
+} & {
+  /**
+   * The tool's id. It never changes.
+   */
+  id: string;
+  /**
+   * Who made it.
+   */
+  owner: {
+    subject: string;
+    /**
+     * Their display name when the tool was read, for people.
+     */
+    name?: string;
+  };
+  /**
+   * A short name, unique among the owner's tools (summarize-email), for addresses and an agent's tool list.
+   */
+  slug: string;
+  name: string;
+  /**
+   * One plain sentence: what the tool does. Agents read it to decide when to use the tool.
+   */
+  summary: string;
+  /**
+   * prompt: instructions run by a model through OpenVibe.AI. code: a JavaScript entry run as a skill-runner function job.
+   */
+  kind: "prompt" | "code";
+  /**
+   * JSON Schema (2020-12) of a run's input: an object schema.
+   */
+  input: {
+    type: "object";
+  };
+  output: {
+    /**
+     * json: result.data, checked against schema. text: result.text.
+     */
+    kind: "json" | "text";
+    /**
+     * JSON Schema of result.data. Required when kind is json.
+     */
+    schema?: {
+      type: "object";
+    };
+  };
+  /**
+   * A prompt tool's instructions and model; null for a code tool.
+   */
+  prompt: {
+    /**
+     * What the model is told to do with the input (the system message). The input follows as JSON.
+     */
+    instructions: string;
+    /**
+     * An OpenVibe.Exchange model id, or auto (the router picks the cheapest model that does the job).
+     */
+    model: string;
+    temperature?: number;
+    /**
+     * The longest answer, in tokens (default 1024).
+     */
+    max_tokens?: number;
+  } | null;
+  /**
+   * A code tool's entry; null for a prompt tool.
+   */
+  code: {
+    /**
+     * The entry file's SHA-256; a run refuses any other bytes.
+     */
+    sha256: string;
+    /**
+     * The entry file's path in its source (tool.js).
+     */
+    entry: string;
+    /**
+     * Where the file is kept: a git.openvibe.codes repository or a Media object.
+     */
+    source?: string;
+    bytes?: number;
+  } | null;
+  /**
+   * The network a code tool may reach: none, the public internet (through the egress guard), or OpenVibe's own sites only. A prompt tool reaches no network (deny).
+   */
+  net: "deny" | "public" | "openvibe-only";
+  /**
+   * Where a code tool runs: OpenVibe's runner, the owner's own Link nodes, or nodes shared with others. A prompt tool runs on OpenVibe (openvibe).
+   */
+  hosting: "openvibe" | "mine" | "shared";
+  visibility: "private" | "unlisted" | "public";
+  /**
+   * 1 when made; each change adds one.
+   */
+  version: number;
+  run: {
+    method: "POST";
+    path: string;
+  };
+  /**
+   * How many times it has run (all callers).
+   */
+  runs?: number;
+  created_at: string;
+  updated_at: string;
+};
+
 /** tools.tool-list@1.0.0 (owner: tools) */
 /**
  * The answer of GET /api/v1/tools on openvibe.tools (capability tools.tool.read; ADR-027): every tool's descriptor (tools.tool@1), with input and output schemas in the { $ref } form (GET /api/v1/tools/:id has them embedded). Filters: ?family=, ?execution=client|sync|job, ?api=true|false, ?status=, ?q= (every word must appear in the id, name, summary or keywords); family, execution and status take comma lists. An unknown execution or status value, or an api that is not true or false, is 400 tools.query.invalid. Every listed tool has one of the descriptor's statuses: there is no planned status, so planned placeholders are not tools and are not listed, and neither are mirrors (GET /api/v1/tools/:id answers 404 tools.tool.not_found for both, with a detail saying why). Cacheable (ETag); updated_at changes when any descriptor does.

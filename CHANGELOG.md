@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.436.0 - 2026-11-15
+
+**Tools people make** (the owner, 11-15: "people should be able to make their own tools … AI or Codes to generate them
+… model selection and OpenVibe.exchange"; plan 2026-11-13 §AD.7 step 2). `tools.made-tool@1`
+(`contracts/tools/made-tool.v1.json`): a tool a person made on openvibe.tools.
+
+- `kind` prompt: instructions and a model (an Exchange model id or `auto`). A run sends them with the input to the model
+  through OpenVibe.AI as the person who runs it, so their allowance, Vibes or own keys pay, never the maker's.
+- `kind` code: one JavaScript entry pinned by its `sha256`, run as a skill-runner function job on `hosting` (openvibe,
+  the owner's own Link nodes, or shared nodes) with the network `net` allows.
+- `input` and `output` are JSON Schemas; `visibility` private, unlisted or public; `version` counts the changes; `run`
+  is `POST /api/v1/made-tools/{id}/run` (tools.run@1).
+- Rules: a prompt tool has no code and reaches no network; a code tool has no prompt; JSON output has a schema.
+- Fixtures: valid `prompt-tool`, `code-tool`; invalid `prompt-with-code`, `json-without-schema`, `bad-slug`,
+  `prompt-with-network`.
+
 ## 0.435.0 — 2026-11-15
 
 Views on a run of the feed (the owner, 11-15, on a run of deals in the menu: "views … total views").
