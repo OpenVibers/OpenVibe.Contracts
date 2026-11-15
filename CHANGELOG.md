@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.438.0 - 2026-11-15
+
+**Chains: tools made of tools** (plan 2026-11-13 §AD.12 (e); the owner, 11-15: "more modular … multi purpose").
+`tools.made-tool@1` 1.1.0 adds the kind `chain`, which runs other tools in order.
+- `chain.steps` holds 2 to 8 steps. Each step names a catalogue tool or a made tool and its input. Input values can be
+  templates: `{{input.<field>}}` for the chain's own input, and `{{steps.<n>.<path>}}` for an earlier step's result.
+- A value that is only a template keeps its value as it is; a template inside other words is written in as text.
+- `chain.output_from` says what the chain answers: `last` (the default) or `all`.
+- The chain runs as the person who runs it, so every step is their run.
+- The new field is optional and null for the other kinds, so 1.0.0 documents stay valid.
+- Fixtures: valid `chain-tool`; invalid `chain-one-step`, `chain-with-prompt`.
+
 ## 0.437.0 - 2026-11-15
 
 **Agents run the tools people make, as the person** (plan 2026-11-13 §AD.7 step 2: made tools in every agent's tools).
