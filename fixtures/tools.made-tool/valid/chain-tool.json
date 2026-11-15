@@ -1,0 +1,57 @@
+{
+  "id": "mtl_01JCZ3NDEKTSV4RRFFQ69G5FB1",
+  "owner": {
+    "subject": "usr_01JCZ3NDEKTSV4RRFFQ69G5FAW",
+    "name": "Ada"
+  },
+  "slug": "site-check",
+  "name": "Site check",
+  "summary": "Looks up a domain's DNS, then summarizes it in plain words.",
+  "kind": "chain",
+  "input": {
+    "type": "object",
+    "required": [
+      "domain"
+    ],
+    "properties": {
+      "domain": {
+        "type": "string"
+      }
+    }
+  },
+  "output": {
+    "kind": "text"
+  },
+  "prompt": null,
+  "code": null,
+  "net": "deny",
+  "hosting": "openvibe",
+  "visibility": "public",
+  "version": 3,
+  "run": {
+    "method": "POST",
+    "path": "/api/v1/made-tools/mtl_01JCZ3NDEKTSV4RRFFQ69G5FB1/run"
+  },
+  "runs": 12,
+  "created_at": "2026-11-15T17:00:00.000Z",
+  "updated_at": "2026-11-15T17:40:00.000Z",
+  "chain": {
+    "steps": [
+      {
+        "tool": "dns",
+        "name": "Look up the DNS",
+        "input": {
+          "target": "{{input.domain}}"
+        }
+      },
+      {
+        "tool": "mtl_01JCZ3NDEKTSV4RRFFQ69G5FAV",
+        "name": "Say it plainly",
+        "input": {
+          "message": "The DNS of {{input.domain}}: {{steps.0.records}}"
+        }
+      }
+    ],
+    "output_from": "last"
+  }
+}
