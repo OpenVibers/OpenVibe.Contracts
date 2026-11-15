@@ -136849,7 +136849,7 @@
       }
     },
     "ai.deep-dive": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "owner": "ai",
       "status": "active",
       "schema": {
@@ -136951,6 +136951,7 @@
                   "enum": [
                     "plan",
                     "search",
+                    "read",
                     "choose",
                     "capture",
                     "analyse",
@@ -137662,6 +137663,7 @@
                     "step": {
                       "enum": [
                         "plan",
+                        "read",
                         "choose",
                         "analyse",
                         "synthesise"
@@ -137724,6 +137726,326 @@
               "null"
             ],
             "format": "date-time"
+          },
+          "research": {
+            "description": "Optional (AI deep-dive-research, 11-15): the general deep dive this design dive is built on, its \"read\" step. The questions its plan wrote, the write-ups it read as text with their notes, and the answer, with citations by source id (the same shapes as ai.research@1).",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "questions",
+              "reads",
+              "answer"
+            ],
+            "properties": {
+              "questions": {
+                "type": "array",
+                "maxItems": 12,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "question"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "question": {
+                      "type": "string",
+                      "maxLength": 400
+                    }
+                  }
+                }
+              },
+              "reads": {
+                "type": "array",
+                "maxItems": 40,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "source_id",
+                    "url",
+                    "status",
+                    "read_at"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "source_id": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "url": {
+                      "type": "string",
+                      "maxLength": 2048
+                    },
+                    "final_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 2048
+                    },
+                    "title": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 400
+                    },
+                    "site": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 200
+                    },
+                    "published": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 40
+                    },
+                    "read_at": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "words": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "status": {
+                      "enum": [
+                        "read",
+                        "skipped"
+                      ]
+                    },
+                    "reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 300
+                    },
+                    "relevant": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "summary": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 1500
+                    },
+                    "kind": {
+                      "enum": [
+                        "primary",
+                        "reference",
+                        "news",
+                        "opinion",
+                        "vendor",
+                        "forum",
+                        "other",
+                        null
+                      ]
+                    },
+                    "findings": {
+                      "type": "array",
+                      "maxItems": 10,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "point"
+                        ],
+                        "properties": {
+                          "point": {
+                            "type": "string",
+                            "maxLength": 600
+                          },
+                          "quote": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 400
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "answer": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "summary",
+                  "key_points",
+                  "answers",
+                  "comparison",
+                  "disagreements",
+                  "open_questions",
+                  "next_steps"
+                ],
+                "properties": {
+                  "summary": {
+                    "type": "string",
+                    "maxLength": 3000
+                  },
+                  "key_points": {
+                    "type": "array",
+                    "maxItems": 12,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "text",
+                        "sources"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "maxLength": 800
+                        },
+                        "sources": {
+                          "type": "array",
+                          "maxItems": 8,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 40
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "answers": {
+                    "type": "array",
+                    "maxItems": 12,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "question",
+                        "answer",
+                        "confidence",
+                        "sources"
+                      ],
+                      "properties": {
+                        "question": {
+                          "type": "string",
+                          "maxLength": 400
+                        },
+                        "answer": {
+                          "type": "string",
+                          "maxLength": 2000
+                        },
+                        "confidence": {
+                          "enum": [
+                            "high",
+                            "medium",
+                            "low"
+                          ]
+                        },
+                        "sources": {
+                          "type": "array",
+                          "maxItems": 8,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 40
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "comparison": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "additionalProperties": false,
+                    "required": [
+                      "columns",
+                      "rows"
+                    ],
+                    "properties": {
+                      "columns": {
+                        "type": "array",
+                        "maxItems": 8,
+                        "items": {
+                          "type": "string",
+                          "maxLength": 120
+                        }
+                      },
+                      "rows": {
+                        "type": "array",
+                        "maxItems": 20,
+                        "items": {
+                          "type": "array",
+                          "maxItems": 8,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 600
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "disagreements": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "what",
+                        "sources"
+                      ],
+                      "properties": {
+                        "what": {
+                          "type": "string",
+                          "maxLength": 800
+                        },
+                        "sources": {
+                          "type": "array",
+                          "maxItems": 8,
+                          "items": {
+                            "type": "string",
+                            "maxLength": 40
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "open_questions": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "maxLength": 400
+                    }
+                  },
+                  "next_steps": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "maxLength": 400
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "$defs": {
@@ -137778,8 +138100,638 @@
         }
       }
     },
-    "ai.deep_dive.updated": {
+    "ai.research": {
       "version": "1.0.0",
+      "owner": "ai",
+      "status": "active",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openvibe.network/contracts/ai/research.v1.json",
+        "title": "AiResearch",
+        "description": "ai.research v1 (OpenVibe.AI workflow research.deep_dive, server/deep-dive/research.js): the general deep dive's report. Any question, researched the way an expert would: the plan's questions, every source the searches found, every page chosen and read as text (or why it could not be), the notes on each page (what it says, short exact quotes, what kind of source it is), and the answer, where every claim cites the pages it rests on by source id: a summary, key points, an answer per question with its confidence, a comparison when the question compares, where the sources disagree, what is still open and the next steps. The receipt lists every model call. OpenVibe.Exchange shows it (/deep-dive); OpenVibe.Design's design deep dive carries the same research block (ai.deep-dive@1 research).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "schema",
+          "run_id",
+          "status",
+          "input",
+          "steps",
+          "questions",
+          "sources",
+          "reads",
+          "answer",
+          "receipt",
+          "gaps",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "schema": {
+            "const": "ai.research@1"
+          },
+          "run_id": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "question",
+              "depth",
+              "max_pages"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "depth": {
+                "enum": [
+                  "quick",
+                  "thorough",
+                  "expert"
+                ]
+              },
+              "max_pages": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 40
+              },
+              "sites": {
+                "type": "array",
+                "maxItems": 30,
+                "items": {
+                  "type": "string",
+                  "maxLength": 2048
+                }
+              }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "maxItems": 6,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "status"
+              ],
+              "properties": {
+                "key": {
+                  "enum": [
+                    "plan",
+                    "search",
+                    "choose",
+                    "read",
+                    "analyse",
+                    "write"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "running",
+                    "done",
+                    "skipped",
+                    "failed"
+                  ]
+                },
+                "detail": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 300
+                },
+                "started_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "finished_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "questions": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "question"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "question": {
+                  "type": "string",
+                  "maxLength": 400
+                }
+              }
+            }
+          },
+          "sources": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "kind",
+                "title",
+                "url",
+                "read_at"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "kind": {
+                  "enum": [
+                    "web",
+                    "picture",
+                    "icon",
+                    "project",
+                    "rules",
+                    "component",
+                    "named"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048
+                },
+                "publisher": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "engine": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 80
+                },
+                "snippet": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2000
+                },
+                "license": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "read_at": {
+                  "type": "string",
+                  "maxLength": 40
+                }
+              }
+            }
+          },
+          "reads": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "source_id",
+                "url",
+                "status",
+                "read_at"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "source_id": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048
+                },
+                "final_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 2048
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400
+                },
+                "site": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "published": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "read_at": {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                "words": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "status": {
+                  "enum": [
+                    "read",
+                    "skipped"
+                  ]
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 300
+                },
+                "relevant": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "summary": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 1500
+                },
+                "kind": {
+                  "enum": [
+                    "primary",
+                    "reference",
+                    "news",
+                    "opinion",
+                    "vendor",
+                    "forum",
+                    "other",
+                    null
+                  ]
+                },
+                "findings": {
+                  "type": "array",
+                  "maxItems": 10,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "point"
+                    ],
+                    "properties": {
+                      "point": {
+                        "type": "string",
+                        "maxLength": 600
+                      },
+                      "quote": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 400
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "answer": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "summary",
+              "key_points",
+              "answers",
+              "comparison",
+              "disagreements",
+              "open_questions",
+              "next_steps"
+            ],
+            "properties": {
+              "summary": {
+                "type": "string",
+                "maxLength": 3000
+              },
+              "key_points": {
+                "type": "array",
+                "maxItems": 12,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "text",
+                    "sources"
+                  ],
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "maxLength": 800
+                    },
+                    "sources": {
+                      "type": "array",
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 40
+                      }
+                    }
+                  }
+                }
+              },
+              "answers": {
+                "type": "array",
+                "maxItems": 12,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "question",
+                    "answer",
+                    "confidence",
+                    "sources"
+                  ],
+                  "properties": {
+                    "question": {
+                      "type": "string",
+                      "maxLength": 400
+                    },
+                    "answer": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "confidence": {
+                      "enum": [
+                        "high",
+                        "medium",
+                        "low"
+                      ]
+                    },
+                    "sources": {
+                      "type": "array",
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 40
+                      }
+                    }
+                  }
+                }
+              },
+              "comparison": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "required": [
+                  "columns",
+                  "rows"
+                ],
+                "properties": {
+                  "columns": {
+                    "type": "array",
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "maxLength": 120
+                    }
+                  },
+                  "rows": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                      "type": "array",
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 600
+                      }
+                    }
+                  }
+                }
+              },
+              "disagreements": {
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "what",
+                    "sources"
+                  ],
+                  "properties": {
+                    "what": {
+                      "type": "string",
+                      "maxLength": 800
+                    },
+                    "sources": {
+                      "type": "array",
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 40
+                      }
+                    }
+                  }
+                }
+              },
+              "open_questions": {
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "type": "string",
+                  "maxLength": 400
+                }
+              },
+              "next_steps": {
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "type": "string",
+                  "maxLength": 400
+                }
+              }
+            }
+          },
+          "receipt": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "price_usd",
+              "held_usd",
+              "cost_usd",
+              "models",
+              "pages_read",
+              "synthetic"
+            ],
+            "properties": {
+              "price_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "held_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0
+              },
+              "pages_read": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "synthetic": {
+                "type": "boolean"
+              },
+              "models": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "step",
+                    "provider",
+                    "model",
+                    "tokens_in",
+                    "tokens_out",
+                    "cost_usd",
+                    "ms"
+                  ],
+                  "properties": {
+                    "step": {
+                      "enum": [
+                        "plan",
+                        "choose",
+                        "analyse",
+                        "write"
+                      ]
+                    },
+                    "provider": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 80
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 200
+                    },
+                    "tokens_in": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "tokens_out": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "cost_usd": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "ms": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "gaps": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "string",
+              "maxLength": 400
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "updated_at": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "ai.deep_dive.updated": {
+      "version": "1.1.0",
       "owner": "ai",
       "status": "active",
       "schema": {
@@ -137826,6 +138778,7 @@
             "enum": [
               "plan",
               "search",
+              "read",
               "choose",
               "capture",
               "analyse",
@@ -137854,6 +138807,7 @@
                   "enum": [
                     "plan",
                     "search",
+                    "read",
                     "choose",
                     "capture",
                     "analyse",
