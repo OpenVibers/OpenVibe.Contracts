@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.437.0 - 2026-11-15
+
+**Agents run the tools people make, as the person** (plan 2026-11-13 §AD.7 step 2: made tools in every agent's tools).
+`tools.made.run` (first-party, owner tools): a service runs a made tool (`tools.made-tool@1`) on behalf of the person
+named in `X-OV-Subject`, who pays (allowance, Vibes or own keys), never the tool's maker or the calling service.
+
+- `POST /api/v1/made-tools/:id/run` answers with `tools.run@1`. A private tool runs only for its owner.
+- `GET /api/v1/made-tools` lists the public tools, and with `mine=1` the person's own, for an agent's tool list.
+- Without `X-OV-Subject` the token is refused: a made tool always runs as someone.
+- The tools service manifest lists the capability.
+
 ## 0.436.0 - 2026-11-15
 
 **Tools people make** (the owner, 11-15: "people should be able to make their own tools … AI or Codes to generate them
